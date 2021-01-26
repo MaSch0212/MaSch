@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using MaSch.Common.Extensions;
+using MaSch.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace MaSch.Common.Test.Extensions
+namespace MaSch.Core.Test.Extensions
 {
     [TestClass]
     public class TypeExtensionsTests

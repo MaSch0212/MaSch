@@ -1,5 +1,5 @@
 ﻿
-namespace MaSch.Common.Logging
+namespace MaSch.Core.Logging
 {
     /// <summary>
     /// The type of a log entry.

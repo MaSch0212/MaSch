@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MaSch.Common.Collections;
+using MaSch.Core.Collections;
+using MaSch.Core.Observable.Collections;
 
-namespace MaSch.Common.Extensions
+namespace MaSch.Core.Extensions
 {
     /// <summary>
     /// Cointains extensions for <see cref="IEnumerable{T}"/> and <see cref="IEnumerable"/>.
@@ -1429,6 +1432,12 @@ namespace MaSch.Common.Extensions
                 yield return previousResult;
             }
         }
+
+        public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> enumerable)
+            => new ObservableCollection<T>(enumerable);
+
+        public static FullyObservableCollection<T> ToFullyObservableCollection<T>(this IEnumerable<T> enumerable) where T : INotifyPropertyChanged
+            => new FullyObservableCollection<T>(enumerable);
         #endregion
 
         #region IEnumerable extensions

@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace MaSch.Native.Explorer
+namespace MaSch.Native.Windows.Explorer
 {
     public static class NativeFile
     {

@@ -20,9 +20,9 @@ namespace MaSch.Generators
 
         public void Execute(GeneratorExecutionContext context)
         {
-            var debugGeneratorSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Common.Attributes.DebugGeneratorAttribute");
-            var definitionAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Common.Attributes.ObservablePropertyDefinition");
-            var observableObjectSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Common.Observable.IObservableObject");
+            var debugGeneratorSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.DebugGeneratorAttribute");
+            var definitionAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.ObservablePropertyDefinition");
+            var observableObjectSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Observable.IObservableObject");
 
             if (definitionAttributeSymbol == null || observableObjectSymbol == null)
                 return;

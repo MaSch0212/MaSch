@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MaSch.Common
+namespace MaSch.Core
 {
     /// <summary>
     /// Provides methods for managing multiple <see cref="IObjectConverter"/>.

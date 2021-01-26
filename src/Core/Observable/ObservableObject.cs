@@ -2,10 +2,10 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
-using MaSch.Common.Attributes;
-using MaSch.Common.Observable.Modules;
+using MaSch.Core.Attributes;
+using MaSch.Core.Observable.Modules;
 
-namespace MaSch.Common.Observable
+namespace MaSch.Core.Observable
 {
     /// <summary>
     /// Represents an observable class.

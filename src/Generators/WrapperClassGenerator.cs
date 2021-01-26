@@ -17,8 +17,8 @@ namespace MaSch.Generators
 
         public void Execute(GeneratorExecutionContext context)
         {
-            var debugGeneratorSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Common.Attributes.DebugGeneratorAttribute");
-            var wrappingAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Common.Attributes.WrappingAttribute");
+            var debugGeneratorSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.DebugGeneratorAttribute");
+            var wrappingAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.WrappingAttribute");
 
             if (wrappingAttributeSymbol == null)
                 return;

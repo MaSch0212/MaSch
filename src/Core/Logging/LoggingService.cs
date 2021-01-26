@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MaSch.Common.Extensions;
+using MaSch.Core.Extensions;
 
-namespace MaSch.Common.Logging
+namespace MaSch.Core.Logging
 {
     /// <summary>
     /// The default implementation of <see cref="ILoggingService"/>.

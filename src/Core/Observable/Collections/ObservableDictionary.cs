@@ -7,9 +7,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using MaSch.Common.Extensions;
+using MaSch.Core.Extensions;
 
-namespace MaSch.Presentation.Observable.Collections
+namespace MaSch.Core.Observable.Collections
 {
     /// <summary>
     /// Represents a generic, observable collection of key/value pairs.

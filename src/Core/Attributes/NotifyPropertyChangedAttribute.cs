@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using MaSch.Common.Extensions;
+using MaSch.Core.Extensions;
 
-namespace MaSch.Common.Attributes
+namespace MaSch.Core.Attributes
 {
     /// <summary>
     /// When applied to a property, the given method is executed if the property have changed.

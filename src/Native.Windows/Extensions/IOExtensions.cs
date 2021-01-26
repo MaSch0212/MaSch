@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
-using MaSch.Native.Explorer;
+using MaSch.Native.Windows.Explorer;
 
-namespace MaSch.Native.Extensions
+namespace MaSch.Native.Windows.Extensions
 {
     public static class IOExtensions
     {

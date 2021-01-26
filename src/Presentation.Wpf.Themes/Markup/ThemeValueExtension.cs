@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
-using MaSch.Common.Extensions;
+using MaSch.Core.Extensions;
 using MaSch.Presentation.Wpf.DependencyProperties;
 using MaSch.Presentation.Wpf.Themes;
 

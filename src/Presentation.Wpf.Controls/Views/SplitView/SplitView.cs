@@ -1,5 +1,5 @@
-﻿using MaSch.Common;
-using MaSch.Common.Extensions;
+﻿using MaSch.Core;
+using MaSch.Core.Extensions;
 using MaSch.Presentation.Translation;
 using MaSch.Presentation.Wpf.Animation;
 using MaSch.Presentation.Wpf.Controls;

@@ -1,4 +1,4 @@
-﻿using MaSch.Common;
+﻿using MaSch.Core;
 using MaSch.Console.Cli.Configuration;
 using System;
 using System.Collections.Generic;

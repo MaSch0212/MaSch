@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 #pragma warning disable 1591
 
-namespace MaSch.Native
+namespace MaSch.Native.Windows
 {
     public static class User32
     {

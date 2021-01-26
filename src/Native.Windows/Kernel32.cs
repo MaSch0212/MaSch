@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MaSch.Native
+namespace MaSch.Native.Windows
 {
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public static class Kernel32

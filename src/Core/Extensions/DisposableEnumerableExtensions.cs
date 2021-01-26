@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MaSch.Common.Extensions
+namespace MaSch.Core.Extensions
 {
     /// <summary>
     /// Provides extension methods for <see cref="IDisposableEnumerable{T}"/> and <see cref="IDisposableEnumerable"/>.

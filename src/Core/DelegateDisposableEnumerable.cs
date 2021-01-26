@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MaSch.Common
+namespace MaSch.Core
 {
     /// <summary>
     /// Represents a wrappoer for an <see cref="IEnumerable{T}"/> which executes an action if it is disposed.

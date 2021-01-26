@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace MaSch.Common.Observable.Modules
+namespace MaSch.Core.Observable.Modules
 {
     /// <summary>
     /// Describes a class that handles change tracking.

@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace MaSch.Common
+namespace MaSch.Core
 {
     /// <summary>
     /// Describes a class that contains cached data.

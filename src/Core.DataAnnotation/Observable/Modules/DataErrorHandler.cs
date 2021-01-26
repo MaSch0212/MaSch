@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 
-namespace MaSch.Common.Observable.Modules
+namespace MaSch.Core.Observable.Modules
 {
     public class DataErrorHandler : IDataErrorHandler
     {

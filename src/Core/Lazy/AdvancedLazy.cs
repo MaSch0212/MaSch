@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace MaSch.Common.Lazy
+namespace MaSch.Core.Lazy
 {
     public class AdvancedLazy<T1>
     {

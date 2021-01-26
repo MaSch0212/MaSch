@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using MaSch.Common;
-using MaSch.Common.Extensions;
+using MaSch.Core;
+using MaSch.Core.Extensions;
 
 namespace MaSch.Data.Extensions
 {

@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace MaSch.Common.Extensions
+namespace MaSch.Core.Extensions
 {
     /// <summary>
     /// Provides extension methods for <see cref="string"/>.

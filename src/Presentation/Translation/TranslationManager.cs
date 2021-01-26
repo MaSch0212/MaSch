@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MaSch.Common.Extensions;
+using MaSch.Core.Extensions;
 
 namespace MaSch.Presentation.Translation
 {

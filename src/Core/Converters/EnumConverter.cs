@@ -1,7 +1,7 @@
 ﻿using System;
-using MaSch.Common.Extensions;
+using MaSch.Core.Extensions;
 
-namespace MaSch.Common.Converters
+namespace MaSch.Core.Converters
 {
     /// <summary>
     /// A <see cref="IObjectConverter"/> that is converting one Enum to another.

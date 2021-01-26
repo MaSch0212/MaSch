@@ -1,5 +1,5 @@
-﻿using MaSch.Common;
-using MaSch.Common.Extensions;
+﻿using MaSch.Core;
+using MaSch.Core.Extensions;
 using MaSch.Console.Cli.Configuration;
 using System;
 using System.Linq;

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using MaSch.Common.Helper;
+using MaSch.Core.Helper;
 using MaSch.Presentation.Translation;
 
 namespace MaSch.Presentation.Wpf.Markup

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace MaSch.Native.Input
+namespace MaSch.Native.Windows.Input
 {
     public class KeyListener
     {

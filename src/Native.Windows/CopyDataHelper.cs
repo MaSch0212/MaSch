@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace MaSch.Native
+namespace MaSch.Native.Windows
 {
     /// <summary>
     /// Represents a class for helping with inter process communication over windows api.

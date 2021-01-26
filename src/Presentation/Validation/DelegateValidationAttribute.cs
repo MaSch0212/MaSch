@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using MaSch.Common.Extensions;
+using MaSch.Core.Extensions;
 
 namespace MaSch.Presentation.Validation
 {

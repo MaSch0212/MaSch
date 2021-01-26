@@ -1,4 +1,4 @@
-﻿using MaSch.Common.Lazy;
+﻿using MaSch.Core.Lazy;
 using System;
 using System.Drawing;
 using System.IO;

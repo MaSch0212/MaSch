@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
-using MaSch.Common.Observable.Modules;
+using MaSch.Core.Observable.Modules;
 
-namespace MaSch.Common.Observable
+namespace MaSch.Core.Observable
 {
     public class ObservableDataErrorObject : ObservableObject, IDataErrorObject
     {

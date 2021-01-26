@@ -1,4 +1,4 @@
-﻿using MaSch.Common;
+﻿using MaSch.Core;
 using MaSch.Presentation.Wpf.Themes;
 using System;
 using System.Collections.Generic;

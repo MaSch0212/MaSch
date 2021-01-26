@@ -1,5 +1,5 @@
-﻿using MaSch.Common;
-using MaSch.Common.Extensions;
+﻿using MaSch.Core;
+using MaSch.Core.Extensions;
 using System;
 using System.Drawing;
 using System.Threading;

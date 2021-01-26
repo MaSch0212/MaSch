@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using MaSch.Native.Explorer.Taskbar;
+using MaSch.Native.Windows.Explorer.Taskbar;
 #pragma warning disable 1591
 
-namespace MaSch.Native
+namespace MaSch.Native.Windows
 {
     internal static class Shell32
     {

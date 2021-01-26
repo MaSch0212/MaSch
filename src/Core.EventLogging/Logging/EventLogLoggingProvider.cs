@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace MaSch.Common.Logging
+namespace MaSch.Core.Logging
 {
     public class EventLogLoggingProvider : ILoggingProvider
     {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using MaSch.Common;
+using MaSch.Core;
 using MaSch.Console.Cli.Internal;
 
 namespace MaSch.Console.Cli

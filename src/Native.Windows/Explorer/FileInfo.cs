@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace MaSch.Native.Explorer
+namespace MaSch.Native.Windows.Explorer
 {
     public static class FileInfo
     {

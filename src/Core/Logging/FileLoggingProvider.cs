@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using static System.Environment;
 
-namespace MaSch.Common.Logging
+namespace MaSch.Core.Logging
 {
     /// <summary>
     /// A <see cref="ILoggingProvider"/> that logs to a file.

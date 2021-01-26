@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MaSch.Common.Converters
+namespace MaSch.Core.Converters
 {
     /// <summary>
     /// A <see cref="IObjectConverter"/> that is using no convertion.

@@ -1,10 +1,10 @@
-﻿using MaSch.Common.Logging;
+﻿using MaSch.Core.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-namespace MaSch.Common
+namespace MaSch.Core
 {
     /// <summary>
     /// Provides methods for waiting on specific conditions.

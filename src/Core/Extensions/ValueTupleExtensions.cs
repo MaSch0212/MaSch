@@ -1,6 +1,5 @@
 ﻿
-
-namespace MaSch.Common.Extensions
+namespace MaSch.Core.Extensions
 {
     /// <summary>
     /// Provides extension methods for value tuples.

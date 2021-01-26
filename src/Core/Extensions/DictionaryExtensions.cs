@@ -1,9 +1,10 @@
-﻿using System;
+﻿using MaSch.Core.Observable.Collections;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace MaSch.Common.Extensions
+namespace MaSch.Core.Extensions
 {
     /// <summary>
     /// Provides extension methods for <see cref="IDictionary{TKey,TValue}"/> and <see cref="IDictionary"/>.
@@ -159,6 +160,19 @@ namespace MaSch.Common.Extensions
                 dict.Add(key, new List<TValue>());
             dict[key].Add(valueToAdd);
         }
+
+        public static ObservableDictionary<TKey, TValue> ToObservableDictionary<TEnum, TKey, TValue>(this IEnumerable<TEnum> enumerable, Func<TEnum, TKey> keySelector, Func<TEnum, TValue> valueSelector)
+        {
+            var result = new ObservableDictionary<TKey, TValue>();
+            foreach (var item in enumerable)
+            {
+                result.Add(keySelector(item), valueSelector(item));
+            }
+            return result;
+        }
+
+        public static ObservableDictionary<TKey, TValue> ToObservableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> dict)
+            => new ObservableDictionary<TKey, TValue>(dict);
         #endregion
 
         #region IDictionary extensions

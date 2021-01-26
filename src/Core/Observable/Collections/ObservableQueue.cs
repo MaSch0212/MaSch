@@ -3,9 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using MaSch.Common;
 
-namespace MaSch.Presentation.Observable.Collections
+namespace MaSch.Core.Observable.Collections
 {
     /// <summary>
     /// Represents an observable <see cref="Queue{T}"/>.

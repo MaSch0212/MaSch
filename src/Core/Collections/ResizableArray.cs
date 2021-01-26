@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using MaSch.Common.Extensions;
+using MaSch.Core.Extensions;
 
-namespace MaSch.Common.Collections
+namespace MaSch.Core.Collections
 {
     /// <summary>
     /// A wrapper class for an array, so it is resizable.

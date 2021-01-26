@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MaSch.Common.Lazy
+namespace MaSch.Core.Lazy
 {
     public class ModifiableAdvancedLazy<T1>
     {

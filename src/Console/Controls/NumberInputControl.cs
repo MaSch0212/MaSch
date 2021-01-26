@@ -1,4 +1,4 @@
-﻿using MaSch.Common;
+﻿using MaSch.Core;
 using System;
 using System.Drawing;
 using System.Globalization;

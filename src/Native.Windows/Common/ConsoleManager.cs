@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 
-namespace MaSch.Native.Common
+namespace MaSch.Native.Windows.Common
 {
     public static class ConsoleManager
     {

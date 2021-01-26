@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MaSch.Common.Converters
+namespace MaSch.Core.Converters
 {
     /// <summary>
     /// A <see cref="IObjectConverter"/> that converts any object by using the ToString-Method to string.

@@ -6,8 +6,8 @@
     <LangVersion>latest</LangVersion>
 
     <!-- Assembly Info -->
-    <AssemblyTitle>MaSch.Common.Test</AssemblyTitle>
-    <Product>MaSch.Common.Test</Product>
+    <AssemblyTitle>MaSch.Core.Test</AssemblyTitle>
+    <Product>MaSch.Core.Test</Product>
     <Copyright>Copyright © Marc Schmidt</Copyright>
 
     <!-- Output info -->

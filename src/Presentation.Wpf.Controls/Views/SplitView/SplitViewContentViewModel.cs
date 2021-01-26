@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
-using MaSch.Common.Observable;
+using MaSch.Core.Observable;
 using MaSch.Presentation.Services;
 using MaSch.Presentation.Wpf.Services;
 

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using MaSch.Common.Extensions;
+using MaSch.Core.Extensions;
 
-namespace MaSch.Common
+namespace MaSch.Core
 {
     /// <summary>
     /// Represents a static wrapper for the <see cref="ServiceContextInstance"/> class.

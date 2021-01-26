@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Media;
-using MaSch.Common;
-using MaSch.Common.Extensions;
-using MaSch.Common.Attributes;
+using MaSch.Core;
+using MaSch.Core.Extensions;
+using MaSch.Core.Attributes;
 using MaSch.Presentation.Wpf.JsonConverters;
 using MaSch.Presentation.Wpf.Models;
 using Newtonsoft.Json;

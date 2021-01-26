@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MaSch.Common.Logging
+namespace MaSch.Core.Logging
 {
     /// <summary>
     /// Provides extension methods for <see cref="ILoggingProvider"/>.

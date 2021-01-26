@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using MaSch.Common.Extensions;
+using MaSch.Core.Extensions;
 
 namespace MaSch.Presentation.Wpf.Common
 {

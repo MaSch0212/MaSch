@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MaSch.Native
+namespace MaSch.Native.Windows
 {
     public static class Rstrtmgr
     {

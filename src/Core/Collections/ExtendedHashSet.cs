@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MaSch.Common.Collections
+namespace MaSch.Core.Collections
 {
     /// <summary>
     /// Represents a <see cref="T:System.Collections.Generic.HashSet`1" /> that enables the ability to use a specific hashing function.
     /// </summary>
-    /// <typeparam name="TItem">The type of the items in this <see cref="T:MaSch.Common.Collections.ExtendedHashSet`2" />.</typeparam>
-    /// <typeparam name="THash">The type of the hash values in this <see cref="T:MaSch.Common.Collections.ExtendedHashSet`2" />.</typeparam>
+    /// <typeparam name="TItem">The type of the items in this <see cref="T:MaSch.Core.Collections.ExtendedHashSet`2" />.</typeparam>
+    /// <typeparam name="THash">The type of the hash values in this <see cref="T:MaSch.Core.Collections.ExtendedHashSet`2" />.</typeparam>
     public class ExtendedHashSet<TItem, THash> : ICollection<TItem>, IReadOnlyCollection<TItem> where THash : notnull
     {
         private readonly Dictionary<THash, TItem> _dict;

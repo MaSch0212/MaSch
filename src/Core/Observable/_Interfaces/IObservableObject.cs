@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace MaSch.Common.Observable
+namespace MaSch.Core.Observable
 {
     /// <summary>
     /// Describes an object on which property changes can be observed.

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MaSch.Common
+namespace MaSch.Core
 {
     /// <summary>
     /// Exposes a disposable enumerator, which support a single iteration over a non-generic collection.

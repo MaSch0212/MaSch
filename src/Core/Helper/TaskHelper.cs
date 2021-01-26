@@ -3,7 +3,7 @@ using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MaSch.Common.Helper
+namespace MaSch.Core.Helper
 {
     /// <summary>
     /// Provides helper methods for <see cref="Task"/>s.

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MaSch.Common
+namespace MaSch.Core
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [Obsolete("Use the switch statement from C# 8 instead.")]

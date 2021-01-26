@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 #pragma warning disable 1591
 
-namespace MaSch.Native
+namespace MaSch.Native.Windows
 {
     public static class Gdi32
     {

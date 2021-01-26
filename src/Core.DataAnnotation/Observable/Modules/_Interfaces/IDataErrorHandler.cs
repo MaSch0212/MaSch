@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace MaSch.Common.Observable.Modules
+namespace MaSch.Core.Observable.Modules
 {
     public interface IDataErrorHandler : INotifyDataErrorInfo, IObservableObjectModule
     {

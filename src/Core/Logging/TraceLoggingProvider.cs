@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using static System.Environment;
 
-namespace MaSch.Common.Logging
+namespace MaSch.Core.Logging
 {
     /// <summary>
     /// A <see cref="ILoggingProvider"/> that logs to the <see cref="Trace"/>.

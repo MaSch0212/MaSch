@@ -9,8 +9,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using MaSch.Common.Attributes;
-using MaSch.Common.Observable;
+using MaSch.Core.Attributes;
+using MaSch.Core.Observable;
 using MaSch.Presentation.Wpf.Commands;
 using ThreadState = System.Threading.ThreadState;
 

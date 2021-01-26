@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MaSch.Common
+namespace MaSch.Core
 {
     /// <summary>
     /// Represents a <see cref="IEqualityComparer{T}"/> that uses delegates to compare values.

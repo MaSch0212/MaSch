@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using MaSch.Common.Observable;
+using MaSch.Core.Observable;
 
 namespace MaSch.Presentation.Update
 {

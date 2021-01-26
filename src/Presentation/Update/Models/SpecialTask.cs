@@ -1,5 +1,5 @@
 ﻿using System.Xml.Serialization;
-using MaSch.Common.Observable;
+using MaSch.Core.Observable;
 
 namespace MaSch.Presentation.Update.Models
 {

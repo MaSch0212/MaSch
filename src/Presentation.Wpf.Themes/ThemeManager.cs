@@ -7,9 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
-using MaSch.Common;
-using MaSch.Common.Extensions;
-using MaSch.Presentation.Observable.Collections;
+using MaSch.Core;
+using MaSch.Core.Extensions;
+using MaSch.Core.Observable.Collections;
 using MaSch.Presentation.Wpf.Models;
 using MaSch.Presentation.Wpf.ThemeValues;
 

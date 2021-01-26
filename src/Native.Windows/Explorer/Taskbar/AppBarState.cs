@@ -1,4 +1,4 @@
-﻿namespace MaSch.Native.Explorer.Taskbar
+﻿namespace MaSch.Native.Windows.Explorer.Taskbar
 {
     public static class AppBarState
     {

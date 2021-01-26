@@ -1,4 +1,4 @@
-﻿namespace MaSch.Common.Logging
+﻿namespace MaSch.Core.Logging
 {
     /// <summary>
     /// Describes a logging service.

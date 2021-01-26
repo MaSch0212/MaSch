@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace MaSch.Native.Explorer.Taskbar
+namespace MaSch.Native.Windows.Explorer.Taskbar
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct AppBarData

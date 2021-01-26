@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace MaSch.Common.Lazy
+namespace MaSch.Core.Lazy
 {
     public class LazyPoint : AdvancedLazy<int, int>
     {

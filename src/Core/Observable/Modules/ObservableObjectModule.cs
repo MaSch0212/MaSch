@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Input;
-using MaSch.Common.Attributes;
+using MaSch.Core.Attributes;
 
-namespace MaSch.Common.Observable.Modules
+namespace MaSch.Core.Observable.Modules
 {
     /// <summary>
     /// The module that handles the calling of events of an <see cref="IObservableObject"/> class.

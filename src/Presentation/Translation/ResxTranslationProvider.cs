@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
-using MaSch.Common;
-using MaSch.Common.Extensions;
+using MaSch.Core;
+using MaSch.Core.Extensions;
 
 namespace MaSch.Presentation.Translation
 {

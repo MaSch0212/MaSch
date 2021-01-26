@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MaSch.Common.Logging
+namespace MaSch.Core.Logging
 {
     /// <summary>
     /// Describes a provider of logging functionality.

@@ -2,9 +2,9 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
-using MaSch.Common.Observable.Modules;
+using MaSch.Core.Observable.Modules;
 
-namespace MaSch.Common.Observable
+namespace MaSch.Core.Observable
 {
     public class ObservableChangeTrackingDataErrorObject : ObservableDataErrorObject, IChangeTrackedObject
     {

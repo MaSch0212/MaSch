@@ -3,7 +3,7 @@ using System;
 using System.Xml.Linq;
 using System.Linq;
 
-namespace MaSch.Common.Extensions
+namespace MaSch.Core.Extensions
 {
     /// <summary>
     /// Provides extension methods for the <see cref="AppDomain"/> class.

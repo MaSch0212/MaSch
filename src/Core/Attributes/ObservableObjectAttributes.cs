@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace MaSch.Common.Attributes
+namespace MaSch.Core.Attributes
 {
     /// <summary>
     /// Marks the property dependent on other properties in the same class.

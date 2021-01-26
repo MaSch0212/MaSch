@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace MaSch.Common.Helper
+namespace MaSch.Core.Helper
 {
     /// <summary>
     /// Provides helper methods for Service Location.

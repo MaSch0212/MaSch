@@ -5,9 +5,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using MaSch.Common.Extensions;
+using MaSch.Core.Extensions;
 
-namespace MaSch.Common
+namespace MaSch.Core
 {
     /// <summary>
     /// Represents a cache that stores runtime information.
@@ -40,10 +40,10 @@ namespace MaSch.Common
         }
 
         /// <summary>
-        /// Gets a value of a specified key. If no value exists a specified getter is used to insert the value to the <see cref="T:MaSch.Common.ICache" /> and return it.
+        /// Gets a value of a specified key. If no value exists a specified getter is used to insert the value to the <see cref="T:MaSch.Core.ICache" /> and return it.
         /// </summary>
         /// <typeparam name="T">The type of the value to get.</typeparam>
-        /// <param name="valueGetter">The getter which is used if no value for the key exists in the <see cref="T:MaSch.Common.ICache" />.</param>
+        /// <param name="valueGetter">The getter which is used if no value for the key exists in the <see cref="T:MaSch.Core.ICache" />.</param>
         /// <param name="key">The key to get the value from.</param>
         /// <returns>
         /// The value of the <paramref name="key" /> typed as <typeparamref name="T" />.
@@ -62,10 +62,10 @@ namespace MaSch.Common
         }
 
         /// <summary>
-        /// Gets a value of a specified key. If no value exists a specified getter is used to insert the value to the <see cref="T:MaSch.Common.ICache" /> and return it.
+        /// Gets a value of a specified key. If no value exists a specified getter is used to insert the value to the <see cref="T:MaSch.Core.ICache" /> and return it.
         /// </summary>
         /// <typeparam name="T">The type of the value to get.</typeparam>
-        /// <param name="valueGetter">The getter which is used if no value for the key exists in the <see cref="T:MaSch.Common.ICache" />.</param>
+        /// <param name="valueGetter">The getter which is used if no value for the key exists in the <see cref="T:MaSch.Core.ICache" />.</param>
         /// <param name="key">The key to get the value from.</param>
         /// <returns>
         /// The value of the <paramref name="key" /> typed as <typeparamref name="T" />.
@@ -158,7 +158,7 @@ namespace MaSch.Common
         }
 
         /// <summary>
-        /// Sets the value for a specific key on this <see cref="T:MaSch.Common.ICache" />.
+        /// Sets the value for a specific key on this <see cref="T:MaSch.Core.ICache" />.
         /// </summary>
         /// <typeparam name="T">The type of the value to set.</typeparam>
         /// <param name="value">The value to set.</param>
@@ -171,7 +171,7 @@ namespace MaSch.Common
         }
 
         /// <summary>
-        /// Clears all data from the <see cref="T:MaSch.Common.ICache" />.
+        /// Clears all data from the <see cref="T:MaSch.Core.ICache" />.
         /// </summary>
         public virtual void Clear()
         {
@@ -180,7 +180,7 @@ namespace MaSch.Common
         }
 
         /// <summary>
-        /// Clears and disposes all data from the <see cref="T:MaSch.Common.ICache" />.
+        /// Clears and disposes all data from the <see cref="T:MaSch.Core.ICache" />.
         /// </summary>
         /// <remarks>
         /// Dispose is executed only if the value is of type <see cref="T:System.IDisposable" />; otherwise the value is just removed from the cache.

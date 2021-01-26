@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace MaSch.Common.Cryptography
+namespace MaSch.Core.Cryptography
 {
     /// <summary>
     /// Represents a class with which data can be encrypted and decrypted with the AES256 encryption.

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MaSch.Common
+namespace MaSch.Core
 {
     /// <summary>
     /// Represents an object that executes an action if disposed.

@@ -7,9 +7,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using MaSch.Common.Attributes;
-using MaSch.Common.Observable;
-using MaSch.Common.Observable.Modules;
+using MaSch.Core.Attributes;
+using MaSch.Core.Observable;
+using MaSch.Core.Observable.Modules;
 
 namespace MaSch.Presentation.Wpf.Controls
 {

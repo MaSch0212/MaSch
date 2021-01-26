@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Win32;
 
-namespace MaSch.Native.Explorer
+namespace MaSch.Native.Windows.Explorer
 {
     public static class FileExtensionHelper
     {

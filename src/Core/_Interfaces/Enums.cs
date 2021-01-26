@@ -1,4 +1,4 @@
-﻿namespace MaSch.Common
+﻿namespace MaSch.Core
 {
     /// <summary>
     /// Specifies how a string should be checked for emptiness.

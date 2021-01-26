@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using MaSch.Common.Extensions;
+using MaSch.Core.Extensions;
 
-namespace MaSch.Common.Converters
+namespace MaSch.Core.Converters
 {
     /// <summary>
     /// A <see cref="IObjectConverter"/> that is using the <see cref="IConvertible"/> interface.

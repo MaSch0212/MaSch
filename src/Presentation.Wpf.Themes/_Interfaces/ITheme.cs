@@ -1,4 +1,4 @@
-﻿using MaSch.Presentation.Observable.Collections;
+﻿using MaSch.Core.Observable.Collections;
 using MaSch.Presentation.Wpf.JsonConverters;
 using Newtonsoft.Json;
 

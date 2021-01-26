@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MaSch.Common.Attributes
+namespace MaSch.Core.Attributes
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
     public class WrappingAttribute : Attribute

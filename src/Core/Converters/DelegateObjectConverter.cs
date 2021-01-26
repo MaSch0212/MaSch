@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace MaSch.Common.Converters
+namespace MaSch.Core.Converters
 {
     /// <summary>
     /// A <see cref="IObjectConverter"/> that is using a delegate to convert from the <typeparamref name="TSource"/>-type to the <typeparamref name="TTarget"/>-type.

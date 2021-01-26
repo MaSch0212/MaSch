@@ -6,8 +6,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using MaSch.Common;
-using MaSch.Common.Extensions;
+using MaSch.Core;
+using MaSch.Core.Extensions;
 
 namespace MaSch.Presentation.Wpf.DependencyProperties
 {

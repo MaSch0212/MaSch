@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using MaSch.Common;
+using MaSch.Core;
 using MaSch.Presentation.Wpf.Controls;
 
 namespace MaSch.Presentation.Wpf.Views.SplitView

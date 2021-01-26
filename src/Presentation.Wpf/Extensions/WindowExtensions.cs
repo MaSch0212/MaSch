@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
-using MaSch.Common;
+using MaSch.Core;
 
 namespace MaSch.Presentation.Wpf.Extensions
 {

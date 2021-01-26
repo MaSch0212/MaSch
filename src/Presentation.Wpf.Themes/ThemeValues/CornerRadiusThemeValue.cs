@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using MaSch.Common;
+using MaSch.Core;
 using MaSch.Presentation.Wpf.JsonConverters;
 using MaSch.Presentation.Wpf.Models;
 using Newtonsoft.Json;

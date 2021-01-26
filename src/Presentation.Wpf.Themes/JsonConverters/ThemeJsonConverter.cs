@@ -1,4 +1,4 @@
-﻿using MaSch.Common.Extensions;
+﻿using MaSch.Core.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;

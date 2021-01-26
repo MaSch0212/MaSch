@@ -4,9 +4,9 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using MaSch.Common.Extensions;
+using MaSch.Core.Extensions;
 
-namespace MaSch.Presentation.Observable.Collections
+namespace MaSch.Core.Observable.Collections
 {
     /// <summary>
     /// Represents a dynamic data collection that provides notifications when items get added, removed, are changed, or when the whole list is refreshed.

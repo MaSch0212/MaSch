@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using MaSch.Common.Extensions;
-using MaSch.Common.Attributes;
+using MaSch.Core.Extensions;
+using MaSch.Core.Attributes;
 
-namespace MaSch.Common.Observable.Modules
+namespace MaSch.Core.Observable.Modules
 {
     /// <summary>
     /// The default <see cref="IChangeTracker"/> implementation.

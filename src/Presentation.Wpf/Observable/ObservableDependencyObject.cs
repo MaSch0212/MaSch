@@ -5,9 +5,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Xml.Serialization;
-using MaSch.Common.Attributes;
-using MaSch.Common.Observable;
-using MaSch.Common.Observable.Modules;
+using MaSch.Core.Attributes;
+using MaSch.Core.Observable;
+using MaSch.Core.Observable.Modules;
 using MaSch.Presentation.Wpf.Attributes;
 
 namespace MaSch.Presentation.Wpf.Observable

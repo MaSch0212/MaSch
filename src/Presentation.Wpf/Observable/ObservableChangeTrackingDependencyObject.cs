@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
-using MaSch.Common.Observable.Modules;
+using MaSch.Core.Observable.Modules;
 
 namespace MaSch.Presentation.Wpf.Observable
 {

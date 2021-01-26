@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using MaSch.Common.Extensions;
+using MaSch.Core.Extensions;
 
-namespace MaSch.Common.Helper
+namespace MaSch.Core.Helper
 {
     /// <summary>
     /// Provides common helper methods.

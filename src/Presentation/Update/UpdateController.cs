@@ -7,8 +7,8 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using MaSch.Common;
-using MaSch.Common.Observable;
+using MaSch.Core;
+using MaSch.Core.Observable;
 using MaSch.Presentation.Update.Models;
 
 namespace MaSch.Presentation.Update

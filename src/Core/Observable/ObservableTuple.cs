@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using MaSch.Common.Helper;
+using MaSch.Core.Helper;
 
-namespace MaSch.Common.Observable
+namespace MaSch.Core.Observable
 {
     /// <summary>
     /// Provides extension methods for the observable tuple classes.

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using MaSch.Common.Converters;
+using MaSch.Core.Converters;
 
-namespace MaSch.Common
+namespace MaSch.Core
 {
     /// <summary>
     /// The default implementation of the <see cref="IObjectConvertManager"/> interface.

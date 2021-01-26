@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
-using MaSch.Common.Extensions;
+using MaSch.Core.Extensions;
 
 namespace MaSch.Presentation.Wpf.Commands
 {

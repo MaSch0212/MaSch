@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using MaSch.Common;
+using MaSch.Core;
 using MaSch.Presentation.Wpf.Extensions;
 using Win = System.Windows.Controls;
 

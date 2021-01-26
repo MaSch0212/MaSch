@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace MaSch.Native.Explorer.Taskbar
+namespace MaSch.Native.Windows.Explorer.Taskbar
 {
     public sealed class Taskbar
     {

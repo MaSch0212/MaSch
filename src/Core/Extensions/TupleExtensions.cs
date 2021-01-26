@@ -1,7 +1,7 @@
 ﻿using System;
-using MaSch.Common.Observable;
+using MaSch.Core.Observable;
 
-namespace MaSch.Presentation.Extensions
+namespace MaSch.Core.Extensions
 {
     public static class TupleExtensions
     {
