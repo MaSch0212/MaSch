@@ -1,23 +1,25 @@
 ﻿using MaSch.Generators.Common;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Text;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using static MaSch.Generators.Common.CodeGenerationHelpers;
 
 namespace MaSch.Generators
 {
+    /// <summary>
+    /// A C# 9 Source Generator that generates properties for observable objects.
+    /// </summary>
+    /// <seealso cref="ISourceGenerator" />
     [Generator]
     public class ObservableObjectGenerator : ISourceGenerator
     {
+        /// <inheritdoc />
         public void Initialize(GeneratorInitializationContext context)
         {
             // No initialization required for this one
         }
 
+        /// <inheritdoc />
         public void Execute(GeneratorExecutionContext context)
         {
             var debugGeneratorSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.DebugGeneratorAttribute");
@@ -34,7 +36,7 @@ namespace MaSch.Generators
                         from property in @interface.GetMembers().OfType<IPropertySymbol>()
                         group property by typeSymbol into g
                         select g;
-                
+
             foreach (var type in query)
             {
                 if (type.Key.GetAttributes().Any(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, debugGeneratorSymbol)))
@@ -59,7 +61,7 @@ namespace MaSch.Generators
 
                         foreach (var attribute in propInfo.GetAllAttributes())
                         {
-                            builder.AppendLine($"[{Regex.Replace(attribute.ToString(), @"[\{\}]", "")}]");
+                            builder.AppendLine($"[{Regex.Replace(attribute.ToString(), @"[\{\}]", string.Empty)}]");
                         }
 
                         using (builder.AddBlock($"public {propInfo.Type} {propertyName}"))
@@ -71,6 +73,7 @@ namespace MaSch.Generators
                                        .AppendLine($"SetProperty(ref {fieldName}, value);")
                                        .AppendLine($"On{propertyName}Changed(previous, value);");
                             }
+
                             builder.AppendLine($"[System.Diagnostics.CodeAnalysis.SuppressMessage(\"Style\", \"IDE0060:Remove unused parameter\", Justification = \"Partial Method!\")]")
                                    .AppendLine($"partial void On{propertyName}Changed({propInfo.Type} previous, {propInfo.Type} value);");
                         }

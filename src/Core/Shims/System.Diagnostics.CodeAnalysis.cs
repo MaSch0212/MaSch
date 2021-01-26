@@ -1,5 +1,6 @@
-﻿
-#if NETFX
+﻿#if NETFX
+#pragma warning disable
+
 namespace System.Diagnostics.CodeAnalysis
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, Inherited = false)]
@@ -61,4 +62,5 @@ namespace System.Diagnostics.CodeAnalysis
         }
     }
 }
+
 #endif

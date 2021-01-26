@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-#pragma warning disable 1591
 
 namespace MaSch.Native.Windows
 {
@@ -9,7 +9,7 @@ namespace MaSch.Native.Windows
     {
         /// <summary>
         ///     An application sends the WM_COPYDATA message to pass data to another
-        ///     application
+        ///     application.
         /// </summary>
         public const int WmCopyData = 0x004A;
 
@@ -21,8 +21,8 @@ namespace MaSch.Native.Windows
         ///     function does not search child windows. This function does not
         ///     perform a case-sensitive search.
         /// </summary>
-        /// <param name="lpClassName">Class name</param>
-        /// <param name="lpWindowName">Window caption</param>
+        /// <param name="lpClassName">Class name.</param>
+        /// <param name="lpWindowName">Window caption.</param>
         /// <returns></returns>
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
@@ -56,6 +56,7 @@ namespace MaSch.Native.Windows
         /// </param>
         /// <returns></returns>
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1625:Element documentation should not be copied and pasted", Justification = "Works in this case.")]
         public static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, ref PostStruct lParam);
 
         [DllImport("user32")]

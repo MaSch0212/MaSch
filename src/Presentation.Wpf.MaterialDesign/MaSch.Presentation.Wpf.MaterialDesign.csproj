@@ -5,12 +5,13 @@
     <TargetFrameworks>net5.0-windows;net48</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <UseWPF>true</UseWPF>
+    <CodeAnalysisRuleSet>../../build/MaSch.ruleset</CodeAnalysisRuleSet>
 
     <!-- Output info -->
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
-    <Platforms>AnyCPU;x86;x64</Platforms>
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
     
     <!-- Package Info -->
     <Description>Contains an icon set for Material Design provided by https://materialdesignicons.com/ for use in .NET WPF applications.</Description>
@@ -29,18 +30,6 @@
     <DefineConstants>NETFX</DefineConstants>
   </PropertyGroup>
   
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Presentation.Wpf\MaSch.Presentation.Wpf.csproj" />
   </ItemGroup>
@@ -58,6 +47,14 @@
   
   <ItemGroup>
     <None Include="Properties\MaSch.snk" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <Resource Include="materialdesignicons-webfont.ttf" />
   </ItemGroup>
   

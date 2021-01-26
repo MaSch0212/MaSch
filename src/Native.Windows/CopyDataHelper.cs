@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace MaSch.Native.Windows
@@ -7,7 +8,9 @@ namespace MaSch.Native.Windows
     /// Represents a class for helping with inter process communication over windows api.
     /// </summary>
     /// <typeparam name="T">The data struct.</typeparam>
-    public class PostHelper<T> where T : struct
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Will not fix for this project.")]
+    public class PostHelper<T>
+        where T : struct
     {
         /// <summary>
         /// Occurs when a new message was received from another process.
@@ -21,7 +24,7 @@ namespace MaSch.Native.Windows
         /// <param name="targetHwnd">The target window handle.</param>
         /// <param name="wParam">The w parameter.</param>
         /// <exception cref="Exception">
-        /// SendMessage(WM_COPYDATA) failed with error 0x[Error]
+        /// SendMessage(WM_COPYDATA) failed with error 0x[Error].
         /// </exception>
         public void SendData(T data, IntPtr targetHwnd, IntPtr? wParam = null)
         {
@@ -33,15 +36,18 @@ namespace MaSch.Native.Windows
                 var ps = new PostStruct
                 {
                     cbData = dataSize,
-                    lpData = dataPointer
+                    lpData = dataPointer,
                 };
 
                 var result = User32.SendMessage(targetHwnd, User32.WmCopyData, wParam ?? IntPtr.Zero, ref ps);
-                
-                if(result.ToInt32() > 1)
+
+                if (result.ToInt32() > 1)
                     throw new Exception($"SendMessage(WM_COPYDATA) failed with error 0x{result.ToInt32():X}");
             }
-            finally { Marshal.FreeHGlobal(dataPointer); }
+            finally
+            {
+                Marshal.FreeHGlobal(dataPointer);
+            }
         }
 
         /// <summary>
@@ -66,6 +72,7 @@ namespace MaSch.Native.Windows
                     handled = e.Handled;
                 }
             }
+
             return IntPtr.Zero;
         }
     }
@@ -77,10 +84,12 @@ namespace MaSch.Native.Windows
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="CopyDataMessageReceivedEventArgs{T}"/> instance containing the event data.</param>
     public delegate void CopyDataMessageReceivedEventHandler<T>(object sender, CopyDataMessageReceivedEventArgs<T> e);
+
     /// <summary>
     /// Represents the event data for the <see cref="PostHelper{T}.MessageReceived"/> event.
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Will not fix for this project.")]
     public class CopyDataMessageReceivedEventArgs<T>
     {
         /// <summary>
@@ -90,6 +99,7 @@ namespace MaSch.Native.Windows
         ///   <c>true</c> if handled; otherwise, <c>false</c>.
         /// </value>
         public bool Handled { get; set; }
+
         /// <summary>
         /// Gets or sets the w parameter.
         /// </summary>
@@ -97,6 +107,7 @@ namespace MaSch.Native.Windows
         /// The w parameter.
         /// </value>
         public IntPtr WParam { get; set; }
+
         /// <summary>
         /// Gets or sets the data.
         /// </summary>

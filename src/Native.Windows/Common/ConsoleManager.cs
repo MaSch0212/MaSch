@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 
 namespace MaSch.Native.Windows.Common
 {
@@ -47,31 +48,28 @@ namespace MaSch.Native.Windows.Common
             }
         }
 
-        static void InvalidateOutAndError()
+        internal static void InvalidateOutAndError()
         {
             Type type = typeof(Console);
 
-            System.Reflection.FieldInfo _out = type.GetField("_out",
-                System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            var @out = type.GetField("_out", BindingFlags.Static | BindingFlags.NonPublic);
 
-            System.Reflection.FieldInfo _error = type.GetField("_error",
-                System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            var error = type.GetField("_error", BindingFlags.Static | BindingFlags.NonPublic);
 
-            System.Reflection.MethodInfo _InitializeStdOutError = type.GetMethod("InitializeStdOutError",
-                System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            var initializeStdOutError = type.GetMethod("InitializeStdOutError", BindingFlags.Static | BindingFlags.NonPublic);
 
-            Debug.Assert(_out != null);
-            Debug.Assert(_error != null);
+            Debug.Assert(@out != null);
+            Debug.Assert(error != null);
 
-            Debug.Assert(_InitializeStdOutError != null);
+            Debug.Assert(initializeStdOutError != null);
 
-            _out.SetValue(null, null);
-            _error.SetValue(null, null);
+            @out.SetValue(null, null);
+            error.SetValue(null, null);
 
-            _InitializeStdOutError.Invoke(null, new object[] { true });
+            initializeStdOutError.Invoke(null, new object[] { true });
         }
 
-        static void SetOutAndErrorNull()
+        internal static void SetOutAndErrorNull()
         {
             Console.SetOut(TextWriter.Null);
             Console.SetError(TextWriter.Null);

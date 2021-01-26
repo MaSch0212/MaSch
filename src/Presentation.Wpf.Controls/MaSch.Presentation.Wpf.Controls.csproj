@@ -6,12 +6,13 @@
     <TargetFrameworks>net5.0-windows;net48</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <UseWPF>true</UseWPF>
+    <CodeAnalysisRuleSet>../../build/MaSch.ruleset</CodeAnalysisRuleSet>
 
     <!-- Output info -->
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
-    <Platforms>AnyCPU;x86;x64</Platforms>
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
 
     <!-- Package Info -->
     <Description>Contains advanced controls for .NET WPF applications.</Description>
@@ -34,18 +35,6 @@
     <None Remove="FastWPF.DesignerSettings" />
     <None Remove="**\*.FastWPF" />
   </ItemGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Core\MaSch.Core.csproj" />
@@ -74,6 +63,14 @@
       <DependentUpon>SplitView.xaml</DependentUpon>
     </Compile>
     <None Include="Properties\MaSch.snk" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <None Update="Controls\IconButton.FastWPF">
       <DependentUpon>Controls\IconButton.xaml</DependentUpon>
     </None>

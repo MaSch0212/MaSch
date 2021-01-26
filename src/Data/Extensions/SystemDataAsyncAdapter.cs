@@ -11,10 +11,8 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-// ReSharper disable InconsistentNaming
-// ReSharper disable MemberHidesStaticFromOuterClass
+#pragma warning disable
 
-// ReSharper disable once CheckNamespace
 namespace System.Data
 {
     public static class AsyncAdapter

@@ -7,14 +7,20 @@ using static MaSch.Generators.Common.CodeGenerationHelpers;
 
 namespace MaSch.Generators
 {
+    /// <summary>
+    /// A C# 9 Source Generator that generates members to wrap a different class or interface.
+    /// </summary>
+    /// <seealso cref="ISourceGenerator" />
     [Generator]
     public class WrapperClassGenerator : ISourceGenerator
     {
+        /// <inheritdoc />
         public void Initialize(GeneratorInitializationContext context)
         {
             // No initialization required
         }
 
+        /// <inheritdoc />
         public void Execute(GeneratorExecutionContext context)
         {
             var debugGeneratorSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.DebugGeneratorAttribute");
@@ -73,7 +79,7 @@ namespace MaSch.Generators
             }
         }
 
-        private void GenerateWrapperClassRegion(SourceBuilder builder, IList<ISymbol> existingMembers, ITypeSymbol wrappedType, string wrapperPropName)
+        private static void GenerateWrapperClassRegion(SourceBuilder builder, IList<ISymbol> existingMembers, ITypeSymbol wrappedType, string wrapperPropName)
         {
             var wName = wrapperPropName;
             using (builder.AddRegion($"{wrappedType.Name} members"))

@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 
 namespace MaSch.Native.Windows
 {
     public static class Rstrtmgr
     {
         [DllImport("rstrtmgr.dll", CharSet = CharSet.Unicode)]
-        public static extern int RmRegisterResources(uint pSessionHandle,
-            UInt32 nFiles,
+        public static extern int RmRegisterResources(
+            uint pSessionHandle,
+            uint nFiles,
             string[] rgsFilenames,
-            UInt32 nApplications,
+            uint nApplications,
             [In] RmUniqueProcess[] rgApplications,
-            UInt32 nServices,
+            uint nServices,
             string[] rgsServiceNames);
 
         [DllImport("rstrtmgr.dll", CharSet = CharSet.Auto)]
@@ -25,7 +21,8 @@ namespace MaSch.Native.Windows
         public static extern int RmEndSession(uint pSessionHandle);
 
         [DllImport("rstrtmgr.dll")]
-        public static extern int RmGetList(uint dwSessionHandle,
+        public static extern int RmGetList(
+            uint dwSessionHandle,
             out uint pnProcInfoNeeded,
             ref uint pnProcInfo,
             [In, Out] RmProcessInfo[] rgAffectedApps,

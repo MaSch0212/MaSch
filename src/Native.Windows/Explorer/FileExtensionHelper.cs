@@ -12,7 +12,7 @@ namespace MaSch.Native.Windows.Explorer
 
         public static bool SetAssociation(string extension, string keyName, string openWith, int iconId, string fileDescription)
         {
-            if(keyName == null)
+            if (keyName == null)
                 throw new ArgumentNullException(nameof(keyName));
 
             bool hasChange = false;
@@ -24,9 +24,10 @@ namespace MaSch.Native.Windows.Explorer
                 baseKey = root?.CreateSubKey(extension);
                 hasChange = true;
             }
-            if (baseKey?.GetValue("")?.ToString() != keyName)
+
+            if (baseKey?.GetValue(string.Empty)?.ToString() != keyName)
             {
-                baseKey?.SetValue("", keyName);
+                baseKey?.SetValue(string.Empty, keyName);
                 hasChange = true;
             }
 
@@ -36,15 +37,17 @@ namespace MaSch.Native.Windows.Explorer
                 openMethod = root?.CreateSubKey(keyName);
                 hasChange = true;
             }
-            if (openMethod?.GetValue("")?.ToString() != fileDescription)
+
+            if (openMethod?.GetValue(string.Empty)?.ToString() != fileDescription)
             {
-                openMethod?.SetValue("", fileDescription);
+                openMethod?.SetValue(string.Empty, fileDescription);
                 hasChange = true;
             }
+
             var iconPath = $"\"{openWith}\",{iconId}";
-            if (openMethod?.OpenSubKey("DefaultIcon")?.GetValue("")?.ToString() != iconPath)
+            if (openMethod?.OpenSubKey("DefaultIcon")?.GetValue(string.Empty)?.ToString() != iconPath)
             {
-                openMethod?.CreateSubKey("DefaultIcon")?.SetValue("", $"\"{openWith}\",{iconId}");
+                openMethod?.CreateSubKey("DefaultIcon")?.SetValue(string.Empty, $"\"{openWith}\",{iconId}");
                 hasChange = true;
             }
 
@@ -54,10 +57,11 @@ namespace MaSch.Native.Windows.Explorer
                 shell = openMethod?.CreateSubKey("Shell");
                 hasChange = true;
             }
+
             var command = $"\"{openWith}\" \"%1\"";
-            if (shell?.OpenSubKey("open")?.OpenSubKey("command")?.GetValue("")?.ToString() != command)
+            if (shell?.OpenSubKey("open")?.OpenSubKey("command")?.GetValue(string.Empty)?.ToString() != command)
             {
-                shell?.CreateSubKey("open")?.CreateSubKey("command")?.SetValue("", "\"" + openWith + "\"" + " \"%1\"");
+                shell?.CreateSubKey("open")?.CreateSubKey("command")?.SetValue(string.Empty, "\"" + openWith + "\"" + " \"%1\"");
                 hasChange = true;
             }
 
@@ -75,6 +79,7 @@ namespace MaSch.Native.Windows.Explorer
                     currentUser.Close();
                 }
             }
+
             return hasChange;
         }
     }

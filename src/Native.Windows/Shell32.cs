@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using MaSch.Native.Windows.Explorer.Taskbar;
-#pragma warning disable 1591
 
 namespace MaSch.Native.Windows
 {
@@ -40,8 +39,7 @@ namespace MaSch.Native.Windows
             uint dwFileAttributes,
             ref ShFileInfo psfi,
             uint cbFileInfo,
-            uint uFlags
-        );
+            uint uFlags);
 
         [DllImport("shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern void SHChangeNotify(uint wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);

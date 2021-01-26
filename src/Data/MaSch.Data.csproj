@@ -4,11 +4,13 @@
     <!-- General Project info -->
     <TargetFrameworks>net5.0;net48</TargetFrameworks>
     <LangVersion>latest</LangVersion>
+    <CodeAnalysisRuleSet>../../build/MaSch.ruleset</CodeAnalysisRuleSet>
 
     <!-- Output info -->
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
 
     <!-- Package Info -->
     <Description>Contains supporting code for data access in .NET applications.</Description>
@@ -21,17 +23,21 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>masch data database</PackageTags>
   </PropertyGroup>
-  
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
 
   <ItemGroup>
     <None Include="Properties\MaSch.snk" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

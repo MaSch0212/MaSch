@@ -21,8 +21,8 @@ namespace MaSch.Native.Windows.Explorer.Taskbar
 
             var data = new AppBarData
             {
-                cbSize = (uint) Marshal.SizeOf(typeof(AppBarData)),
-                hWnd = taskBarHandle
+                cbSize = (uint)Marshal.SizeOf(typeof(AppBarData)),
+                hWnd = taskBarHandle,
             };
             var result = Shell32.SHAppBarMessage(AppBarMessage.GetTaskbarPos, ref data);
             if (result == IntPtr.Zero)

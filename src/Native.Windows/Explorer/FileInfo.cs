@@ -11,23 +11,25 @@ namespace MaSch.Native.Windows.Explorer
     {
         private static int GetFileIconIndex(string pszFile)
         {
-            var sfi = new ShFileInfo();
-            Shell32.SHGetFileInfo(pszFile
-                , 0
-                , ref sfi
-                , (uint)Marshal.SizeOf(sfi)
-                , (uint)(Shgfi.SysIconIndex | Shgfi.LargeIcon | Shgfi.UseFileAttributes));
+            var sfi = default(ShFileInfo);
+            Shell32.SHGetFileInfo(
+                pszFile,
+                0,
+                ref sfi,
+                (uint)Marshal.SizeOf(sfi),
+                (uint)(Shgfi.SysIconIndex | Shgfi.LargeIcon | Shgfi.UseFileAttributes));
             return sfi.iIcon;
         }
 
         private static int GetDirectoryIconIndex(string pszFile)
         {
-            var sfi = new ShFileInfo();
-            Shell32.SHGetFileInfo(pszFile
-                , Shell32.FileAttributeDirectory
-                , ref sfi
-                , (uint)Marshal.SizeOf(sfi)
-                , (uint)(Shgfi.SysIconIndex | Shgfi.LargeIcon | Shgfi.UseFileAttributes | Shgfi.OpenIcon));
+            var sfi = default(ShFileInfo);
+            Shell32.SHGetFileInfo(
+                pszFile,
+                Shell32.FileAttributeDirectory,
+                ref sfi,
+                (uint)Marshal.SizeOf(sfi),
+                (uint)(Shgfi.SysIconIndex | Shgfi.LargeIcon | Shgfi.UseFileAttributes | Shgfi.OpenIcon));
             return sfi.iIcon;
         }
 
@@ -59,22 +61,22 @@ namespace MaSch.Native.Windows.Explorer
 
         public static ShFileInfo GetFileInfo(string filePath)
         {
-            ShFileInfo sfi = new ShFileInfo();
-            Shell32.SHGetFileInfo(filePath
-                , 0
-                , ref sfi
-                , (uint)Marshal.SizeOf(sfi)
-                , (uint)(Shgfi.UseFileAttributes | Shgfi.DisplayName | Shgfi.TypeName));
+            ShFileInfo sfi = default(ShFileInfo);
+            Shell32.SHGetFileInfo(
+                filePath,
+                0,
+                ref sfi,
+                (uint)Marshal.SizeOf(sfi),
+                (uint)(Shgfi.UseFileAttributes | Shgfi.DisplayName | Shgfi.TypeName));
             return sfi;
         }
 
         public static IList<Process> WhoIsLocking(string path)
         {
-            uint handle;
             string key = Guid.NewGuid().ToString();
             List<Process> processes = new List<Process>();
 
-            int res = Rstrtmgr.RmStartSession(out handle, 0, key);
+            int res = Rstrtmgr.RmStartSession(out uint handle, 0, key);
 
             if (res != 0)
                 throw new Exception("Could not begin restart session.  Unable to determine file locker.");
@@ -82,8 +84,7 @@ namespace MaSch.Native.Windows.Explorer
             try
             {
                 const int ERROR_MORE_DATA = 234;
-                uint pnProcInfoNeeded = 0,
-                     pnProcInfo = 0,
+                uint pnProcInfo = 0,
                      lpdwRebootReasons = Constants.RmRebootReasonNone;
 
                 string[] resources = new string[] { path }; // Just checking on one resource.
@@ -93,10 +94,10 @@ namespace MaSch.Native.Windows.Explorer
                 if (res != 0)
                     throw new Exception("Could not register resource.");
 
-                //Note: there's a race condition here -- the first call to RmGetList() returns
-                //      the total number of process. However, when we call RmGetList() again to get
-                //      the actual processes this number may have increased.
-                res = Rstrtmgr.RmGetList(handle, out pnProcInfoNeeded, ref pnProcInfo, null, ref lpdwRebootReasons);
+                // Note: there's a race condition here -- the first call to RmGetList() returns
+                //       the total number of process. However, when we call RmGetList() again to get
+                //       the actual processes this number may have increased.
+                res = Rstrtmgr.RmGetList(handle, out uint pnProcInfoNeeded, ref pnProcInfo, null, ref lpdwRebootReasons);
 
                 if (res == ERROR_MORE_DATA)
                 {
@@ -111,7 +112,7 @@ namespace MaSch.Native.Windows.Explorer
                     {
                         processes = new List<Process>((int)pnProcInfo);
 
-                        // Enumerate all of the results and add them to the 
+                        // Enumerate all of the results and add them to the
                         // list to be returned
                         for (int i = 0; i < pnProcInfo; i++)
                         {
@@ -119,15 +120,22 @@ namespace MaSch.Native.Windows.Explorer
                             {
                                 processes.Add(Process.GetProcessById(processInfo[i].Process.dwProcessId));
                             }
+
                             // catch the error -- in case the process is no longer running
-                            catch (ArgumentException) { }
+                            catch (ArgumentException)
+                            {
+                            }
                         }
                     }
                     else
+                    {
                         throw new Exception("Could not list processes locking resource.");
+                    }
                 }
                 else if (res != 0)
+                {
                     throw new Exception("Could not list processes locking resource. Failed to get size of result.");
+                }
             }
             finally
             {
@@ -138,24 +146,26 @@ namespace MaSch.Native.Windows.Explorer
         }
     }
 
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public enum IconSize
     {
         /// <summary>
         /// 16x16
         /// </summary>
         Small = Shell32.ShilSmall,
+
         /// <summary>
         /// 32x32
         /// </summary>
         Medium = Shell32.ShilLarge,
+
         /// <summary>
         /// 48x48
         /// </summary>
         Large = Shell32.ShilExtralarge,
+
         /// <summary>
         /// 256x256
         /// </summary>
-        Jumbo = Shell32.ShilJumbo
+        Jumbo = Shell32.ShilJumbo,
     }
 }

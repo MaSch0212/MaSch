@@ -5,12 +5,14 @@
     <TargetFrameworks>net5.0-windows;net48</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <UseWindowsForms>true</UseWindowsForms>
+    <CodeAnalysisRuleSet>Properties/MaSch.Native.Windows.ruleset</CodeAnalysisRuleSet>
 
     <!-- Output info -->
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
-
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+    
     <!-- Package Info -->
     <Description>A small collection of native API calls.</Description>
     <Version>1.0.0</Version>
@@ -28,10 +30,6 @@
     <DefineConstants>NETFX</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-
   <ItemGroup>
     <None Include="Properties\MaSch.snk" />
   </ItemGroup>
@@ -42,5 +40,12 @@
 
   <ItemGroup Condition=" '$(TargetFramework)'!='net48' ">
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 </Project>

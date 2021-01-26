@@ -11,14 +11,23 @@ namespace MaSch.Native.Windows.Explorer
         {
             bool canceled = false;
 
-            Kernel32.CopyProgressResult ProgressRoutine(long size, long transferred, long streamSize, long bytesTransferred,
-                uint number, Kernel32.CopyProgressCallbackReason reason, IntPtr file, IntPtr destFile, IntPtr data)
+            Kernel32.CopyProgressResult ProgressRoutine(
+                long size,
+                long transferred,
+                long streamSize,
+                long bytesTransferred,
+                uint number,
+                Kernel32.CopyProgressCallbackReason reason,
+                IntPtr file,
+                IntPtr destFile,
+                IntPtr data)
             {
                 if (token.IsCancellationRequested)
                 {
                     canceled = true;
                     return Kernel32.CopyProgressResult.ProgressCancel;
                 }
+
                 return Kernel32.CopyProgressResult.ProgressContinue;
             }
 

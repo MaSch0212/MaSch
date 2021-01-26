@@ -6,12 +6,13 @@
     <TargetFrameworks>net5.0-windows;net48</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <UseWPF>true</UseWPF>
+    <CodeAnalysisRuleSet>../../build/MaSch.ruleset</CodeAnalysisRuleSet>
 
     <!-- Output info -->
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
-    <Platforms>AnyCPU;x86;x64</Platforms>
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
 
     <!-- Package Info -->
     <Description>Contains modern themes for .NET WPF application</Description>
@@ -34,19 +35,7 @@
     <None Remove="FastWPF.DesignerSettings" />
     <None Remove="**\*.FastWPF" />
   </ItemGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-
+  
   <ItemGroup>
     <None Remove="Themes\Base\Theme.json" />
     <None Remove="Themes\Dark\Colors.json" />
@@ -75,7 +64,15 @@
 
   <ItemGroup>
     <None Include="Properties\MaSch.snk" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <Resource Include="Themes\Base\Theme.json" />
     <Resource Include="Themes\Dark\DefaultWindowIcon.ico" />
     <Resource Include="Themes\Dark\Theme.json">

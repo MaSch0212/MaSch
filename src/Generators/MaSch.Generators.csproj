@@ -7,12 +7,13 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <DefineConstants>NETFX</DefineConstants>
+    <CodeAnalysisRuleSet>../../build/MaSch.ruleset</CodeAnalysisRuleSet>
 
     <!-- Output info -->
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
-    <Platforms>AnyCPU;x86;x64</Platforms>
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
 
     <!-- Package Info -->
     <Description>Contains some useful Code Generators. Most of these generators requires a reference to the MaSch.Core NuGet package.</Description>
@@ -24,10 +25,6 @@
     <RepositoryUrl>https://github.com/MaSch0212/MaSch</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>masch generator sourcegenerator wrapper observable wpf</PackageTags>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -44,6 +41,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0-5.final" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

@@ -8,25 +8,26 @@ using System.Reflection;
 
 namespace MaSch.Core.Observable.Modules
 {
+    /// <summary>
+    /// Handler for data errors in classes that implement the <see cref="IDataErrorObject"/> interface.
+    /// </summary>
+    /// <seealso cref="IDataErrorHandler" />
     public class DataErrorHandler : IDataErrorHandler
     {
-        #region Fields
-
         private readonly ICollection<PropertyInfo> _properties;
         private readonly IDictionary<string, IEnumerable<ValidationResult>> _errors;
         private readonly object _dataErrorObject;
 
-        #endregion
-
-        #region Properties
-        
+        /// <inheritdoc />
         public bool HasErrors => _errors.Count > 0;
+
+        /// <inheritdoc />
         public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
 
-        #endregion
-
-        #region Ctor
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataErrorHandler"/> class.
+        /// </summary>
+        /// <param name="dataErrorObject">The data error object.</param>
         public DataErrorHandler(object dataErrorObject)
         {
             _errors = new Dictionary<string, IEnumerable<ValidationResult>>();
@@ -34,48 +35,49 @@ namespace MaSch.Core.Observable.Modules
             _dataErrorObject = dataErrorObject;
         }
 
-        #endregion
-
-        #region Public Methods
-
+        /// <inheritdoc />
         public IDictionary<string, IEnumerable> GetErrors()
         {
             return _errors.ToDictionary(x => x.Key, x => (IEnumerable)x.Value.ToList());
-        } 
+        }
 
+        /// <inheritdoc />
         public IEnumerable GetErrors(string? propertyName)
         {
             return propertyName != null && _errors.ContainsKey(propertyName) ? _errors[propertyName] : Enumerable.Empty<ValidationResult>();
         }
 
+        /// <inheritdoc />
         public void OnSetValue(object? value, string propertyName = "")
         {
             var property = _properties.FirstOrDefault(x => x.Name == propertyName);
-            if (property == null) throw new ArgumentException($"A public property with the name \"{propertyName}\" could not be found", nameof(propertyName));
+            if (property == null)
+                throw new ArgumentException($"A public property with the name \"{propertyName}\" could not be found", nameof(propertyName));
             CheckForError(property, value);
         }
 
+        /// <inheritdoc />
         public bool CheckForErrors()
         {
             foreach (var propertyInfo in _properties)
             {
                 CheckForError(propertyInfo, propertyInfo.GetValue(_dataErrorObject));
             }
+
             return HasErrors;
         }
 
+        /// <inheritdoc />
         public bool CheckForError(string? propertyName)
         {
             var property = _properties.FirstOrDefault(x => x.Name == propertyName);
-            if (property == null) throw new ArgumentException($"A public property with the name \"{propertyName}\" could not be found", nameof(propertyName));
+            if (property == null)
+                throw new ArgumentException($"A public property with the name \"{propertyName}\" could not be found", nameof(propertyName));
             return CheckForError(property, property.GetValue(_dataErrorObject));
         }
 
+        /// <inheritdoc />
         public bool IsPropertyExistant(string? propertyName) => _properties.Any(x => x.Name == propertyName);
-
-        #endregion
-
-        #region Private Methods
 
         private bool CheckForError(PropertyInfo property, object? value)
         {
@@ -84,8 +86,7 @@ namespace MaSch.Core.Observable.Modules
 
             if (property.GetCustomAttributes<ValidationAttribute>(true).Any())
             {
-                isValid = Validator.TryValidateProperty(value,
-                    new ValidationContext(_dataErrorObject, null, null) { MemberName = property.Name }, results);
+                isValid = Validator.TryValidateProperty(value, new ValidationContext(_dataErrorObject, null, null) { MemberName = property.Name }, results);
             }
 
             var wasValid = !_errors.ContainsKey(property.Name);
@@ -102,7 +103,5 @@ namespace MaSch.Core.Observable.Modules
                 ErrorsChanged?.Invoke(_dataErrorObject, new DataErrorsChangedEventArgs(property.Name));
             return isValid;
         }
-
-        #endregion
     }
 }
