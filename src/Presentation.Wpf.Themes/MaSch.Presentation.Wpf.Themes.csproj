@@ -15,9 +15,15 @@
 
     <!-- Package Info -->
     <Description>Contains modern themes for .NET WPF application</Description>
-    <Version>3.2.0</Version>
+    <Version>1.0.0</Version>
     <Authors>Marc Schmidt</Authors>
     <SupportedOSPlatform>windows</SupportedOSPlatform>
+    <Copyright>Copyright © Marc Schmidt 2021</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/MaSch0212/MaSch</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/MaSch0212/MaSch</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>masch presentation ui frontend wpf themes theming</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)'=='net48' ">

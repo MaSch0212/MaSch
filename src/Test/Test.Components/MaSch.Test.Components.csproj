@@ -12,9 +12,15 @@
     <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
 
     <!-- Package Info -->
-    <Version>3.2.0</Version>
+    <Description>Contains some supporting code for MSTest Unit Tests.</Description>
+    <Version>1.0.0</Version>
     <Authors>Marc Schmidt</Authors>
-    <SupportedOSPlatform>windows</SupportedOSPlatform>
+    <Copyright>Copyright © Marc Schmidt 2021</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/MaSch0212/MaSch</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/MaSch0212/MaSch</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>masch test mstest</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

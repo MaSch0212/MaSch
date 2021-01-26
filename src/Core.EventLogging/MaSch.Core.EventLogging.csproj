@@ -13,9 +13,16 @@
     <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
 
     <!-- Package Info -->
-    <Version>3.2.0</Version>
+    <Description>Contains a logging provider for windows Event Logging.</Description>
+    <Version>1.0.0</Version>
     <Authors>Marc Schmidt</Authors>
     <SupportedOSPlatform>windows</SupportedOSPlatform>
+    <Copyright>Copyright © Marc Schmidt 2021</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/MaSch0212/MaSch</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/MaSch0212/MaSch</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>masch generator sourcegenerator wrapper observable wpf</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)'=='net48' ">
