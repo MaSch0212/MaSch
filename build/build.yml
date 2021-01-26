@@ -1,11 +1,21 @@
 trigger:
-- main
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - build
+    - src
+    - src/Test/Test.Components
+    exclude:
+    - src/Test
 
 pool:
   vmImage: 'windows-2019'
 
 steps:
 - task: DotNetCoreCLI@2
+  displayName: "\U0001F6E0 Build and pack projects"
   inputs:
     command: 'pack'
     packagesToPack: '**/*.csproj;!src/Test/*/*.csproj;src/Test/Test.*/*.csproj'
@@ -14,6 +24,7 @@ steps:
     verbosityPack: 'Minimal'
 
 - task: PublishBuildArtifacts@1
+  displayName: "\U0001F6EB Publish packages to Azure Pipeline"
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
