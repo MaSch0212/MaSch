@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-2019'
 
 steps:
 - task: DotNetCoreCLI@2
@@ -11,7 +11,7 @@ steps:
     packagesToPack: '**/*.csproj;!src/Test/*/*.csproj;src/Test/Test.*/*.csproj'
     configuration: 'Release'
     versioningScheme: 'off'
-    verbosityPack: 'Normal'
+    verbosityPack: 'Minimal'
 
 - task: PublishBuildArtifacts@1
   inputs:
