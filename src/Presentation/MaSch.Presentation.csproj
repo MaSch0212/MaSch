@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+
+    <!-- General Project info -->
+    <TargetFrameworks>net5.0;net48</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+
+    <!-- Output info -->
+    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
+    <Platforms>AnyCPU;x86;x64</Platforms>
+
+    <!-- Package Info -->
+    <Description>Contains supporting code for .NET front-end applications.</Description>
+    <Version>3.2.0</Version>
+    <Authors>Marc Schmidt</Authors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Properties\MaSch.snk" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\MaSch.Core.csproj" />
+  </ItemGroup>
+</Project>

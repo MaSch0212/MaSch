@@ -1,0 +1,180 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MaSch.Presentation.Wpf.Controls"
+                    xmlns:tm="http://schemas.masch212.de/MaSch/Wpf">
+
+    <Style TargetType="controls:BusyIndicator">
+        <Setter Property="DotBrush" Value="{tm:ThemeValue Key=LoadingDotBrush}" />
+        <Setter Property="IsEnabled" Value="True" />
+        <Setter Property="CircleMode" Value="{tm:ThemeValue Key=LoadingCircleMode}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:BusyIndicator">
+                    <ControlTemplate.Resources>
+                        <Storyboard x:Key="CircleAnimation" RepeatBehavior="Forever">
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_Ellipse0" Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)">
+                                <EasingDoubleKeyFrame KeyTime="0" Value="0" />
+                                <SplineDoubleKeyFrame KeySpline="0,0.7,1,0.3"
+                                                      KeyTime="0:0:1.5"
+                                                      Value="360" />
+                                <SplineDoubleKeyFrame KeySpline="0,0.7,1,0.3"
+                                                      KeyTime="0:0:3"
+                                                      Value="720" />
+                                <SplineDoubleKeyFrame KeyTime="0:0:4.5" Value="720" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_Ellipse1" Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.15" Value="0" />
+                                <SplineDoubleKeyFrame KeySpline="0,0.6,1,0.3"
+                                                      KeyTime="0:0:1.65"
+                                                      Value="360" />
+                                <SplineDoubleKeyFrame KeySpline="0,0.6,1,0.3"
+                                                      KeyTime="0:0:3.15"
+                                                      Value="720" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_Ellipse2" Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0" />
+                                <SplineDoubleKeyFrame KeySpline="0,0.5,1,0.3"
+                                                      KeyTime="0:0:1.8"
+                                                      Value="360" />
+                                <SplineDoubleKeyFrame KeySpline="0,0.5,1,0.3"
+                                                      KeyTime="0:0:3.3"
+                                                      Value="720" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_Ellipse3" Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.45" Value="0" />
+                                <SplineDoubleKeyFrame KeySpline="0,0.4,1,0.3"
+                                                      KeyTime="0:0:1.95"
+                                                      Value="360" />
+                                <SplineDoubleKeyFrame KeySpline="0,0.4,1,0.3"
+                                                      KeyTime="0:0:3.45"
+                                                      Value="720" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_Ellipse4" Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="0" />
+                                <SplineDoubleKeyFrame KeySpline="0,0.3,1,0.3"
+                                                      KeyTime="0:0:2.1"
+                                                      Value="360" />
+                                <SplineDoubleKeyFrame KeySpline="0,0.3,1,0.3"
+                                                      KeyTime="0:0:3.6"
+                                                      Value="720" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_Ellipse0" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
+                                <EasingDoubleKeyFrame KeyTime="0:0:2.9" Value="1" />
+                                <EasingDoubleKeyFrame KeyTime="0:0:3" Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_Ellipse1" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.15" Value="0" />
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.15" Value="1" />
+                                <EasingDoubleKeyFrame KeyTime="0:0:3.15" Value="1" />
+                                <EasingDoubleKeyFrame KeyTime="0:0:3.15" Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_Ellipse2" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0" />
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1" />
+                                <EasingDoubleKeyFrame KeyTime="0:0:3.3" Value="1" />
+                                <EasingDoubleKeyFrame KeyTime="0:0:3.3" Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_Ellipse3" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.45" Value="0" />
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.45" Value="1" />
+                                <EasingDoubleKeyFrame KeyTime="0:0:3.45" Value="1" />
+                                <EasingDoubleKeyFrame KeyTime="0:0:3.45" Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_Ellipse4" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="0" />
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="1" />
+                                <EasingDoubleKeyFrame KeyTime="0:0:3.6" Value="1" />
+                                <EasingDoubleKeyFrame KeyTime="0:0:3.6" Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                        <!--  EndRegion  -->
+                        <Style TargetType="{x:Type Ellipse}">
+                            <Setter Property="Fill" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DotBrush}" />
+                        </Style>
+                    </ControlTemplate.Resources>
+                    <Grid ClipToBounds="True">
+                        <Canvas x:Name="PART_BarEllipses"
+                                MaxHeight="20"
+                                Visibility="Hidden">
+                            <Ellipse Canvas.Left="0"
+                                     Width="{Binding ElementName=PART_BarEllipses, Path=ActualHeight}"
+                                     Height="{Binding ElementName=PART_BarEllipses, Path=ActualHeight}" />
+                            <Ellipse Canvas.Left="0"
+                                     Width="{Binding ElementName=PART_BarEllipses, Path=ActualHeight}"
+                                     Height="{Binding ElementName=PART_BarEllipses, Path=ActualHeight}" />
+                            <Ellipse Canvas.Left="0"
+                                     Width="{Binding ElementName=PART_BarEllipses, Path=ActualHeight}"
+                                     Height="{Binding ElementName=PART_BarEllipses, Path=ActualHeight}" />
+                            <Ellipse Canvas.Left="0"
+                                     Width="{Binding ElementName=PART_BarEllipses, Path=ActualHeight}"
+                                     Height="{Binding ElementName=PART_BarEllipses, Path=ActualHeight}" />
+                            <Ellipse Canvas.Left="0"
+                                     Width="{Binding ElementName=PART_BarEllipses, Path=ActualHeight}"
+                                     Height="{Binding ElementName=PART_BarEllipses, Path=ActualHeight}" />
+                        </Canvas>
+                        <Viewbox x:Name="PART_Circle"
+                                 Stretch="Uniform"
+                                 StretchDirection="Both">
+                            <Grid Width="64"
+                                  Height="64"
+                                  Background="Transparent">
+                                <Ellipse x:Name="PART_Ellipse0"
+                                         Width="8"
+                                         Height="8"
+                                         VerticalAlignment="Bottom"
+                                         Opacity="0"
+                                         RenderTransformOrigin="0.5,-3">
+                                    <Ellipse.RenderTransform>
+                                        <RotateTransform Angle="0" />
+                                    </Ellipse.RenderTransform>
+                                </Ellipse>
+                                <Ellipse x:Name="PART_Ellipse1"
+                                         Width="8"
+                                         Height="8"
+                                         VerticalAlignment="Bottom"
+                                         Opacity="0"
+                                         RenderTransformOrigin="0.5,-3">
+                                    <Ellipse.RenderTransform>
+                                        <RotateTransform Angle="0" />
+                                    </Ellipse.RenderTransform>
+                                </Ellipse>
+                                <Ellipse x:Name="PART_Ellipse2"
+                                         Width="8"
+                                         Height="8"
+                                         VerticalAlignment="Bottom"
+                                         Opacity="0"
+                                         RenderTransformOrigin="0.5,-3">
+                                    <Ellipse.RenderTransform>
+                                        <RotateTransform Angle="0" />
+                                    </Ellipse.RenderTransform>
+                                </Ellipse>
+                                <Ellipse x:Name="PART_Ellipse3"
+                                         Width="8"
+                                         Height="8"
+                                         VerticalAlignment="Bottom"
+                                         Opacity="0"
+                                         RenderTransformOrigin="0.5,-3">
+                                    <Ellipse.RenderTransform>
+                                        <RotateTransform Angle="0" />
+                                    </Ellipse.RenderTransform>
+                                </Ellipse>
+                                <Ellipse x:Name="PART_Ellipse4"
+                                         Width="8"
+                                         Height="8"
+                                         VerticalAlignment="Bottom"
+                                         Opacity="0"
+                                         RenderTransformOrigin="0.5,-3">
+                                    <Ellipse.RenderTransform>
+                                        <RotateTransform Angle="0" />
+                                    </Ellipse.RenderTransform>
+                                </Ellipse>
+                            </Grid>
+                        </Viewbox>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+
+    <!-- General Project info -->
+    <TargetFrameworks>net5.0;net48</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+
+    <!-- Output info -->
+    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
+
+    <!-- Package Info -->
+    <Description>Contains supporting code for console CLI applications.</Description>
+    <Version>3.2.0</Version>
+    <Authors>Marc Schmidt</Authors>
+    <SupportedOSPlatform>windows</SupportedOSPlatform>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Properties\MaSch.snk" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\MaSch.Core.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+
+    <!-- General Project info -->
+    <TargetFrameworks>net5.0;net48</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+
+    <!-- Output info -->
+    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
+
+    <!-- Package Info -->
+    <Description>Contains supporting code for console applications.</Description>
+    <Version>3.3.0</Version>
+    <Authors>Marc Schmidt</Authors>
+    <SupportedOSPlatform>windows</SupportedOSPlatform>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net48' ">
+    <DefineConstants>NETFX</DefineConstants>
+    <NoWarn>$(NoWarn);8600;8601;8602;8603;8604</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Core\Shims\RangeAndIndex.cs" Link="Shims\RangeAndIndex.cs" />
+    <Compile Include="..\Core\Shims\System.Diagnostics.CodeAnalysis.cs" Link="Shims\System.Diagnostics.CodeAnalysis.cs" />
+    <Compile Include="..\Core\Shims\System.Runtime.CompilerServices.cs" Link="Shims\System.Runtime.CompilerServices.cs" />
+    <Compile Include="..\Core\Shims\System.Runtime.Versioning.cs" Link="Shims\System.Runtime.Versioning.cs" />
+    <None Include="Properties\MaSch.snk" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\MaSch.Core.csproj" />
+    <ProjectReference Include="..\Generators\MaSch.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,2517 @@
+{
+    "Name": "Theme base",
+    "Description": "This is a base theme and can not be used directly. At least all values that are null needs to be provided in theme that references this theme.",
+    "Values": {
+
+
+        // -------- Colors --------
+        // Highlight colors
+        "HighlightColor": null,
+        "HoverHighlightColor": null,
+        "HighlightContrastColor": null,
+        "HoverHighlightContrastColor": null,
+
+        // Normal state
+        "NormalBackgroundColor": null,
+        "NormalForegroundColor": null,
+        "NormalBorderColor": null,
+
+        // Mouse over state
+        "HoverBackgroundColor": null,
+        "HoverBorderColor": null,
+        "HoverForegroundColor": null,
+
+        // Mouse press state
+        "PressBackgroundColor": null,
+        "PressBorderColor": null,
+        "PressForegroundColor": null,
+
+        // Disabled state
+        "DisabledBackgroundColor": null,
+        "DisabledBorderColor": null,
+        "DisabledForegroundColor": null,
+
+
+
+
+
+
+        // -------- Common Brushes --------
+        // Highlight Brushes
+        "HighlightBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "HoverHighlightBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverHighlightColor}"
+        },
+        "HighlightContrastBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+        "HoverHighlightContrastBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverHighlightContrastColor}"
+        },
+
+        // Normal state
+        "NormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBackgroundColor}"
+        },
+        "NormalForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "NormalBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBorderColor}"
+        },
+
+        // Mouse over state
+        "HoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverBackgroundColor}"
+        },
+        "HoverBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverBorderColor}"
+        },
+        "HoverForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverForegroundColor}"
+        },
+
+        // Mouse press state
+        "PressBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind PressBackgroundColor}"
+        },
+        "PressBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind PressBorderColor}"
+        },
+        "PressForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind PressForegroundColor}"
+        },
+
+        // Disabled state
+        "DisabledBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBackgroundColor}"
+        },
+        "DisabledBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBorderColor}"
+        },
+        "DisabledForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+
+
+
+
+
+
+        // -------- BusyIndicator --------
+        "LoadingDotBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "LoadingCircleMode": {
+            "Type": "Boolean",
+            "Value": true
+        },
+
+
+
+
+
+
+        // -------- Button --------
+        // Normal state
+        "ButtonNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.05
+        },
+        "IconButtonNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "ButtonNormalBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBorderColor}"
+        },
+        "ButtonNormalForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "ButtonNormalBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "ButtonCornerRadius": {
+            "Type": "CornerRadius",
+            "Value": "4"
+        },
+        "ButtonPadding": {
+            "Type": "Thickness",
+            "Value": "16,8"
+        },
+
+        // Mouse Over state
+        "ButtonHoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.15
+        },
+        "ButtonHoverBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverBorderColor}"
+        },
+        "ButtonHoverForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "ButtonHoverBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+
+        // Mouse Press state
+        "ButtonPressBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "ButtonPressBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind PressBorderColor}"
+        },
+        "ButtonPressForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+        "ButtonPressBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+
+        // Disabled state
+        "ButtonDisabledBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBackgroundColor}"
+        },
+        "ButtonDisabledBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBorderColor}"
+        },
+        "ButtonDisabledForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+        "ButtonDisabledBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+
+
+
+
+
+
+        // -------- Calendar --------
+        "CalendarForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "CalendarBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBackgroundColor}"
+        },
+        "CalendarBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBorderColor}"
+        },
+        "CalendarBorderThickness": {
+            "Type": "Thickness",
+            "Value": "1"
+        },
+
+
+
+
+
+
+        // -------- CheckBox --------
+        "CheckBoxCheckIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"
+        },
+
+        // Normal state
+        "CheckBoxNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.2
+        },
+        "CheckBoxNormalBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBorderColor}"
+        },
+        "CheckBoxNormalForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "CheckBoxNormalBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "CheckBoxCornerRadius": {
+            "Type": "CornerRadius",
+            "Value": "2"
+        },
+
+        // Mouse Over on IsChecked=False state
+        "CheckBoxHoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.4
+        },
+        "CheckBoxHoverBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverBorderColor}"
+        },
+        "CheckBoxHoverForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "CheckBoxHoverBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+
+        // Mouse Over on IsChecked=True state
+        "CheckBoxHoverCheckedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.8
+        },
+        "CheckBoxHoverCheckedBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Black"
+        },
+        "CheckBoxHoverCheckedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "CheckBoxHoverCheckedBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "CheckBoxHoverCheckedCheckBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+
+        // IsChecked=True
+        "CheckBoxCheckedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "CheckBoxCheckedBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Black"
+        },
+        "CheckBoxCheckedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "CheckBoxCheckedBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "CheckBoxCheckedCheckBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+
+        // Mouse Press state
+        "CheckBoxPressBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "CheckBoxPressBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind PressBorderColor}"
+        },
+        "CheckBoxPressForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "CheckBoxPressBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+
+        // Mouse press state on IsChecked=True
+        "CheckBoxPressCheckedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "CheckBoxPressCheckedBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind PressBorderColor}"
+        },
+        "CheckBoxPressCheckedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "CheckBoxPressCheckedBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "CheckBoxPressCheckedCheckBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+
+        // Disabled state
+        "CheckBoxDisabledBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBackgroundColor}"
+        },
+        "CheckBoxDisabledBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBorderColor}"
+        },
+        "CheckBoxDisabledForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+        "CheckBoxDisabledBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "CheckBoxDisabledCheckBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+
+
+
+
+
+
+        // -------- ComboBox --------
+        "ComboBoxPopupBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "ComboBoxPopupBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBackgroundColor}"
+        },
+        "ComboBoxPopupBorderThickness": {
+            "Type": "Thickness",
+            "Value": "1"
+        },
+        "ComboBoxArrowIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"
+        },
+        "ComboBoxCornerRadius": {
+            "Type": "CornerRadius",
+            "Value": "4"
+        },
+        "ComboBoxPopupCornerRadius": {
+            "Type": "CornerRadius",
+            "Value": "4"
+        },
+
+        // Normal state
+        "ComboBoxNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.05
+        },
+        "ComboBoxNormalBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBorderColor}"
+        },
+        "ComboBoxNormalForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "ComboBoxNormalBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+
+        // Mouse Over on IsChecked=False state
+        "ComboBoxHoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.15
+        },
+        "ComboBoxHoverBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverBorderColor}"
+        },
+        "ComboBoxHoverForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+
+        // Mouse Over on IsChecked=True state
+        "ComboBoxHoverOpenBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.8
+        },
+        "ComboBoxHoverOpenBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Black"
+        },
+        "ComboBoxHoverOpenForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+
+        // IsChecked=True
+        "ComboBoxOpenBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "ComboBoxOpenBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Black"
+        },
+        "ComboBoxOpenForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+
+        // Mouse Press state
+        "ComboBoxPressBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "ComboBoxPressBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind PressBorderColor}"
+        },
+        "ComboBoxPressForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+
+        // Mouse press state on IsChecked=True
+        "ComboBoxPressOpenBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "ComboBoxPressOpenBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind PressBorderColor}"
+        },
+        "ComboBoxPressOpenForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+
+        // Disabled state
+        "ComboBoxDisabledBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBackgroundColor}"
+        },
+        "ComboBoxDisabledBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBorderColor}"
+        },
+        "ComboBoxDisabledForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+
+
+
+
+
+
+        // -------- ComboBoxItem --------
+        "ComboBoxItemPadding": {
+            "Type": "Thickness",
+            "Value": "10,5,16,5"
+        },
+
+        // Normal state
+        "ComboBoxItemNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "ComboBoxItemNormalForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+
+        // Mouse over state
+        "ComboBoxItemHoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.15
+        },
+        "ComboBoxItemHoverForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverForegroundColor}"
+        },
+
+        // Selected state
+        "ComboBoxItemSelectedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "ComboBoxItemSelectedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+
+        // Selected and Mouse over state
+        "ComboBoxItemSelectedHoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.8
+        },
+        "ComboBoxItemSelectedHoverForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+
+
+
+
+
+
+        // -------- DataGrid --------
+        "DataGridBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBackgroundColor}"
+        },
+        "DataGridForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "DataGridBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "DataGridBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "DataGridSelectAllIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M 0,0 M 0.4,1 1,1 1,0.4"
+        },
+
+
+
+
+
+
+        // -------- DataGridCell --------
+        "DataGridCellBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+
+        // Normal state
+        "DataGridCellNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "DataGridCellNormalForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "DataGridCellNormalBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+
+        // Mouse over state
+        "DataGridCellHoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "DataGridCellHoverForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "DataGridCellHoverBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+
+        // Selected state
+        "DataGridCellSelectedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "DataGridCellSelectedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+        "DataGridCellSelectedBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+
+        // Selected & Mouse over state
+        "DataGridCellSelectedHoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "DataGridCellSelectedHoverForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverHighlightContrastColor}"
+        },
+        "DataGridCellSelectedHoverBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+
+
+
+
+
+
+        // -------- DataGridColumnHeader --------
+        "DataGridColumnHeaderSortAscendingIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M1024 666l915 915l90 -90l-1005 -1005l-1005 1005l90 90l915 -915v0z"
+        },
+        "DataGridColumnHeaderSortDescendingIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M1955 515l-931 930l-931 -930l-90 90l1021 1022l1021 -1022l-90 -90v0z"
+        },
+        "DataGridColumnHeaderBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0,0,0,1"
+        },
+
+        // Normal state
+        "DataGridColumnHeaderNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "DataGridColumnHeaderNormalForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "DataGridColumnHeaderNormalBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+
+        // Mouse over state
+        "DataGridColumnHeaderHoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "DataGridColumnHeaderHoverForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "DataGridColumnHeaderHoverBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+
+        // Pressed state
+        "DataGridColumnHeaderPressedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "DataGridColumnHeaderPressedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "DataGridColumnHeaderPressedBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+
+
+
+
+
+
+        // -------- DataGridRow --------
+        // Normal state
+        "DataGridRowNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+
+        // Mouse over state
+        "DataGridRowHoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.15
+        },
+
+        // Selected state
+        "DataGridRowSelectedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+
+        // Selected & Mouse over state
+        "DataGridRowSelectedHoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverHighlightColor}"
+        },
+
+
+
+
+
+        // -------- Expander --------
+        "ExpanderCornerRadius": {
+            "Type": "CornerRadius",
+            "Value": "0"
+        },
+        "ExpanderBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "ExpanderHeaderPadding": {
+            "Type": "Thickness",
+            "Value": "3"
+        },
+        "ExpanderPadding": {
+            "Type": "Thickness",
+            "Value": "3"
+        },
+        "ExpanderIconSize": {
+            "Type": "Double",
+            "Value": 20
+        },
+        "ExpanderIconUp": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M 0 0 M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z M 24 24"
+        },
+        "ExpanderIconRight": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M 0 0 M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z M 24 24"
+        },
+        "ExpanderIconDown": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M 0 0 M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z M 24 24"
+        },
+        "ExpanderIconLeft": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M 0 0 M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z M 24 24"
+        },
+        // Normal state
+        "ExpanderNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "ExpanderNormalForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "ExpanderNormalBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBorderColor}"
+        },
+
+        // Mouse Over on IsExpanded=False state
+        "ExpanderHoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.15
+        },
+        "ExpanderHoverForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "ExpanderHoverBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverBorderColor}"
+        },
+
+        // Mouse Over on IsExpanded=True state
+        "ExpanderHoverExpandedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.15
+        },
+        "ExpanderHoverExpandedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "ExpanderHoverExpandedBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverBorderColor}"
+        },
+
+        // IsExpanded=True state
+        "ExpanderExpandedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "ExpanderExpandedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "ExpanderExpandedBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBorderColor}"
+        },
+
+        // Mouse Press on IsExpanded=False state
+        "ExpanderPressBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.3
+        },
+        "ExpanderPressForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "ExpanderPressBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverBorderColor}"
+        },
+
+        // Mouse Press on IsExpanded=True state
+        "ExpanderPressExpandedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.3
+        },
+        "ExpanderPressExpandedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "ExpanderPressExpandedBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverBorderColor}"
+        },
+
+        // Disabled state
+        "ExpanderDisabledBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBackgroundColor}"
+        },
+        "ExpanderDisabledForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+        "ExpanderDisabledBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBorderColor}"
+        },
+
+
+
+
+
+
+        // -------- GridSplitter --------
+        "GridSplitterBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}",
+            "Opacity": 0.1
+        },
+        "GridSplitterBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBorderColor}"
+        },
+        "GridSplitterBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+
+
+
+
+
+
+        // -------- GroupBox --------
+        "GroupBoxBackground": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}",
+            "Opacity": 0.025
+        },
+        "GroupBoxForeground": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "GroupBoxPadding": {
+            "Type": "Thickness",
+            "Value": "12,4,12,12"
+        },
+        "GroupBoxFontSize": {
+            "Type": "Double",
+            "Value": 20
+        },
+        "GroupBoxFontWeight": {
+            "Type": "FontWeight",
+            "Value": "Light"
+        },
+        "GroupBoxCornerRadius": {
+            "Type": "CornerRadius",
+            "Value": "4"
+        },
+
+
+
+
+
+
+        // -------- ListBox --------
+        "ListBoxBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "ListBoxBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBorderColor}"
+        },
+        "ListBoxBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "ListBoxPadding": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+
+
+
+
+
+
+        // -------- ListBoxItem --------
+        "ListBoxItemCornerRadius": {
+            "Type": "CornerRadius",
+            "Value": "0"
+        },
+
+        // Normal state
+        "ListBoxItemNormalBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "ListBoxItemNormalBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "ListBoxItemNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "ListBoxItemNormalForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "ListBoxItemPadding": {
+            "Type": "Thickness",
+            "Value": "3"
+        },
+
+        // Mouse Over on IsChecked=False state
+        "ListBoxItemHoverBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "ListBoxItemHoverBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "ListBoxItemHoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.15
+        },
+        "ListBoxItemHoverForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverForegroundColor}"
+        },
+
+        // Mouse Over on IsChecked=True state
+        "ListBoxItemHoverCheckedBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "ListBoxItemHoverCheckedBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "ListBoxItemHoverCheckedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.8
+        },
+        "ListBoxItemHoverCheckedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+
+        // IsChecked=True
+        "ListBoxItemCheckedBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "ListBoxItemCheckedBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "ListBoxItemCheckedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "ListBoxItemCheckedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+
+        // Disabled state
+        "ListBoxItemDisabledBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "ListBoxItemDisabledBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "ListBoxItemDisabledBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBackgroundColor}"
+        },
+        "ListBoxItemDisabledForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+
+
+
+
+
+
+        // -------- Menu --------
+        "MenuBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBackgroundColor}"
+        },
+        "MenuBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBorderColor}"
+        },
+        "MenuBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "MenuSeparatorBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBorderColor}",
+            "Opacity": 0.5
+        },
+        "MenuSeparatorThickness": {
+            "Type": "Double",
+            "Value": 1
+        },
+        "MenuCornerRadius": {
+            "Type": "CornerRadius",
+            "Value": "4"
+        },
+
+
+
+
+
+
+        // -------- MenuItem --------
+        "MenuItemCheckIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,5V19H5V5H19M10,17L6,13L7.41,11.58L10,14.17L16.59,7.58L18,9"
+        },
+        "MenuItemNoCheckIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z"
+        },
+        "MenuItemCheckIntermediateIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,19H5V5H19V19M17,17H7V7H17V17Z"
+        },
+        "MenuItemSubmenuIndicatorIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M515 93l930 931l-930 931l90 90l1022 -1021l-1022 -1021l-90 90v0z"
+        },
+        "MenuItemBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+
+        // Normal state
+        "MenuItemNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "MenuItemNormalForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "MenuItemNormalBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+
+        // Mouse over state
+        "MenuItemHoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.15
+        },
+        "MenuItemHoverForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverForegroundColor}"
+        },
+        "MenuItemHoverBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+
+        // Mouse press state
+        "MenuItemPressBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "MenuItemPressForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+        "MenuItemPressBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+
+        // Disabled state
+        "MenuItemDisabledBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "MenuItemDisabledForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+        "MenuItemDisabledBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+
+
+
+
+
+
+        // -------- MessageBox --------
+        "MessageBoxErrorIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z"
+        },
+        "MessageBoxQuestionIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M11,18H13V16H11V18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,6A4,4 0 0,0 8,10H10A2,2 0 0,1 12,8A2,2 0 0,1 14,10C14,12 11,11.75 11,15H13C13,12.75 16,12.5 16,10A4,4 0 0,0 12,6Z"
+        },
+        "MessageBoxWarningIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M12,2L1,21H23ZM12,6L19.53,19H4.47ZM11,10V14H13V10ZM11,16V18H13V16Z"
+        },
+        "MessageBoxInfoIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M11,9H13V7H11ZM12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z"
+        },
+
+
+
+
+
+        // -------- ExceptionDialog --------
+        "ExceptionDialogIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M13,13H11V7H13M12,17.3A1.3,1.3 0 0,1 10.7,16A1.3,1.3 0 0,1 12,14.7A1.3,1.3 0 0,1 13.3,16A1.3,1.3 0 0,1 12,17.3M15.73,3H8.27L3,8.27V15.73L8.27,21H15.73L21,15.73V8.27L15.73,3Z"
+        },
+
+
+
+
+
+        // -------- UpdateDialog --------
+        "UpdateDialogIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M21,10.12H14.22L16.96,7.3C14.23,4.6 9.81,4.5 7.08,7.2C4.35,9.91 4.35,14.28 7.08,17C9.81,19.7 14.23,19.7 16.96,17C18.32,15.65 19,14.08 19,12.1H21C21,14.08 20.12,16.65 18.36,18.39C14.85,21.87 9.15,21.87 5.64,18.39C2.14,14.92 2.11,9.28 5.62,5.81C9.13,2.34 14.76,2.34 18.27,5.81L21,3V10.12M12.5,8V12.25L16,14.33L15.28,15.54L11,13V8H12.5Z"
+        },
+
+
+
+
+
+        // -------- ProgressBar --------
+        // Normal and ModernUI ProgressBar Members
+        "ProgressBarDefaultBarBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "ProgressBarDisabledBarBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+        "ProgressBarNormalNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverBackgroundColor}"
+        },
+        "ProgressBarDisabledNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBackgroundColor}"
+        },
+        "ProgressBarDefaultNormalHeight": {
+            "Type": "Double",
+            "Value": 5
+        },
+
+        // ModernUIProgressBar Members
+        "ProgressBarNormalGraphLineBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "ProgressBarDisabledGraphLineBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+        "ProgressBarNormalGraphBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBackgroundColor}"
+        },
+        "ProgressBarDisabledGraphBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBackgroundColor}"
+        },
+        "ProgressBarNormalBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBorderColor}"
+        },
+        "ProgressBarDisabledBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBorderColor}"
+        },
+        "ProgressBarDefaultBorderThickness": {
+            "Type": "Thickness",
+            "Value": "1"
+        },
+        "ProgressBarDefaultGraphModeHeight": {
+            "Type": "Double",
+            "Value": 80
+        },
+
+
+
+
+
+
+        // -------- TabControl --------
+        "TabControlDropDownArrowIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"
+        },
+        "TabControlPreviousTabIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"
+        },
+        "TabControlNextTabIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"
+        },
+
+
+
+
+
+
+        // -------- TabItem --------
+        "TabItemUnderlineThickness": {
+            "Type": "Double",
+            "Value": 3
+        },
+        "TabItemFontSize": {
+            "Type": "Double",
+            "Value": 16
+        },
+
+        // Normal state
+        "TabItemNormalForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+
+        // Mouse Over state
+        "TabItemHoverForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverForegroundColor}"
+        },
+
+        // IsSelected=True
+        "TabItemSelectedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+
+        // Mouse Over state IsSelected=True
+        "TabItemHoverSelectedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+
+        // Disabled state
+        "TabItemDisabledForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "DarkGray"
+        },
+
+        // Disabled state IsSelected=True
+        "TabItemDisabledSelectedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+
+
+
+
+
+
+        // -------- RadioButton --------
+        "RadioButtonBulletWidth": {
+            "Type": "Double",
+            "Value": 18
+        },
+        "RadioButtonBulletHeight": {
+            "Type": "Double",
+            "Value": 18
+        },
+
+        // Normal state
+        "RadioButtonNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.2
+        },
+        "RadioButtonNormalBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBorderColor}"
+        },
+        "RadioButtonNormalForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "RadioButtonNormalBorderThickness": {
+            "Type": "Double",
+            "Value": 0
+        },
+
+        // Mouse Over on IsChecked=False state
+        "RadioButtonHoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.4
+        },
+        "RadioButtonHoverBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverBorderColor}"
+        },
+        "RadioButtonHoverForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "RadioButtonHoverBorderThickness": {
+            "Type": "Double",
+            "Value": 0
+        },
+
+        // Mouse Over on IsChecked=True state
+        "RadioButtonHoverCheckedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.8
+        },
+        "RadioButtonHoverCheckedBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Black"
+        },
+        "RadioButtonHoverCheckedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "RadioButtonHoverCheckedBulletBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+        "RadioButtonHoverCheckedBorderThickness": {
+            "Type": "Double",
+            "Value": 0
+        },
+        "RadioButtonHoverCheckedBulletMargin": {
+            "Type": "Thickness",
+            "Value": "5"
+        },
+
+        // IsChecked=True
+        "RadioButtonCheckedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "RadioButtonCheckedBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Black"
+        },
+        "RadioButtonCheckedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "RadioButtonCheckedBulletBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+        "RadioButtonCheckedBorderThickness": {
+            "Type": "Double",
+            "Value": 0
+        },
+        "RadioButtonCheckedBulletMargin": {
+            "Type": "Thickness",
+            "Value": "5"
+        },
+
+        // Mouse Press state
+        "RadioButtonPressBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "RadioButtonPressBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind PressBorderColor}"
+        },
+        "RadioButtonPressForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "RadioButtonPressBulletBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+        "RadioButtonPressBorderThickness": {
+            "Type": "Double",
+            "Value": 0
+        },
+        "RadioButtonPressBulletMargin": {
+            "Type": "Thickness",
+            "Value": "5"
+        },
+
+        // Mouse press state on IsChecked=True
+        "RadioButtonPressCheckedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "RadioButtonPressCheckedBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Black"
+        },
+        "RadioButtonPressCheckedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "RadioButtonPressCheckedBulletBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+        "RadioButtonPressCheckedBorderThickness": {
+            "Type": "Double",
+            "Value": 0
+        },
+        "RadioButtonPressCheckedBulletMargin": {
+            "Type": "Thickness",
+            "Value": "5"
+        },
+
+        // Disabled state
+        "RadioButtonDisabledBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBackgroundColor}"
+        },
+        "RadioButtonDisabledBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBorderColor}"
+        },
+        "RadioButtonDisabledForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+        "RadioButtonDisabledBulletBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+        "RadioButtonDisabledBorderThickness": {
+            "Type": "Double",
+            "Value": 0
+        },
+        "RadioButtonDisabledBulletMargin": {
+            "Type": "Thickness",
+            "Value": "5"
+        },
+
+
+
+
+
+
+        // -------- ScrollBar --------
+        "ScrollBarLineButtonRightIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"
+        },
+        "ScrollBarLineButtonLeftIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"
+        },
+        "ScrollBarLineButtonUpIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z"
+        },
+        "ScrollBarLineButtonDownIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"
+        },
+        "ScrollBarLineButtonBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "ScrollBarBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBackgroundColor}",
+            "Opacity": 0.5
+        },
+
+        // Normal states
+        "ScrollBarNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.05
+        },
+        "ScrollBarLineButtonNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "ScrollBarLineButtonNormalForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "ScrollBarLineButtonNormalBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBorderColor}"
+        },
+        "ScrollBarThumbNormalFillBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+
+        // Mouse over states
+        "ScrollBarLineButtonHoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.1
+        },
+        "ScrollBarLineButtonHoverForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "ScrollBarLineButtonHoverBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverBorderColor}"
+        },
+        "ScrollBarThumbHoverFillBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.8
+        },
+
+        // Press states
+        "ScrollBarLineButtonPressBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "ScrollBarLineButtonPressForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+        "ScrollBarLineButtonPressBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind PressBorderColor}"
+        },
+        "ScrollBarThumbPressFillBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.5
+        },
+
+        // Disabled states
+        "ScrollBarDisabledBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBackgroundColor}"
+        },
+        "ScrollBarLineButtonDisabledBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "ScrollBarLineButtonDisabledForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+        "ScrollBarLineButtonDisabledBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBorderColor}"
+        },
+        "ScrollBarThumbDisabledFillBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+
+
+
+
+
+
+        // -------- ScrollViewer --------
+        "ScrollViewerBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "ScrollViewerBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "ScrollViewerBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+
+
+
+
+
+
+        // -------- Slider --------
+        // Normal state
+        "SliderNormalThumbBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "SliderTrackBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverBackgroundColor}"
+        },
+
+        // Mouse over state
+        "SliderHoverThumbBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.75
+        },
+
+        // Pressed state
+        "SliderPressedThumbBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.5
+        },
+
+        // Disabled state
+        "SliderDisabledThumbBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+
+
+
+
+
+
+        // -------- SplitView --------
+        "SplitViewMenuBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "#101010"
+        },
+        "SplitViewMenuForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "White"
+        },
+        "SplitViewContentBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBackgroundColor}"
+        },
+        "SplitViewContentForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "SplitViewMenuEntryNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "SplitViewMenuEntryNormalForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "White"
+        },
+        "SplitViewMenuEntryHoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "SplitViewMenuEntryHoverForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "White"
+        },
+        "SplitViewMenuEntrySelectedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBackgroundColor}"
+        },
+        "SplitViewMenuEntrySelectedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "SplitViewMenuButtonIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"
+        },
+        "SplitViewMenuScrollIndicatorUpIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M1024 666l915 915l90 -90l-1005 -1005l-1005 1005l90 90l915 -915v0z",
+            "Stretch": "Fill"
+        },
+        "SplitViewMenuScrollIndicatorDownIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M1955 515l-931 930l-931 -930l-90 90l1021 1022l1021 -1022l-90 -90v0z",
+            "Stretch": "Fill"
+        },
+
+        // Extended Split View Content
+        "ExtendedSplitViewContentSuccessBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "#00C000"
+        },
+        "ExtendedSplitViewContentSuccessIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z"
+        },
+        "ExtendedSplitViewContentFailureBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "#C00000"
+        },
+        "ExtendedSplitViewContentFailureIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"
+        },
+        "ExtendedSplitViewContentInformationBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "#0080FF"
+        },
+        "ExtendedSplitViewContentInformationIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
+        },
+        "ExtendedSplitViewContentWarningBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Orange"
+        },
+        "ExtendedSplitViewContentWarningIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M13,14H11V10H13M13,18H11V16H13M1,21H23L12,2L1,21Z"
+        },
+
+
+
+
+
+
+        // -------- Switch --------
+        // Normal state
+        "SwitchNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.2
+        },
+        "SwitchNormalBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBorderColor}"
+        },
+        "SwitchNormalForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "SwitchNormalBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "SwitchNormalDotBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+
+        // Mouse Over on IsChecked=False state
+        "SwitchHoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.4
+        },
+        "SwitchHoverBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverBorderColor}"
+        },
+        "SwitchHoverForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "SwitchHoverBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "SwitchHoverDotBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+
+        // Mouse Over on IsChecked=True state
+        "SwitchHoverCheckedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.8
+        },
+        "SwitchHoverCheckedBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Black"
+        },
+        "SwitchHoverCheckedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "SwitchHoverCheckedBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "SwitchHoverCheckedDotBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+
+        // IsChecked=True
+        "SwitchCheckedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "SwitchCheckedBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Black"
+        },
+        "SwitchCheckedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "SwitchCheckedBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "SwitchCheckedDotBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+
+        // Mouse Press state
+        "SwitchPressBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "SwitchPressBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind PressBorderColor}"
+        },
+        "SwitchPressForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "SwitchPressBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "SwitchPressDotBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+
+        // Mouse press state on IsChecked=True
+        "SwitchPressCheckedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "SwitchPressCheckedBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind PressBorderColor}"
+        },
+        "SwitchPressCheckedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "SwitchPressCheckedBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "SwitchPressCheckedDotBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+
+        // Disabled state
+        "SwitchDisabledBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBackgroundColor}"
+        },
+        "SwitchDisabledBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBorderColor}"
+        },
+        "SwitchDisabledForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+        "SwitchDisabledBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "SwitchDisabledDotBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+
+
+
+
+
+
+        // -------- Text --------
+        "FontNormal": {
+            "Type": "FontFamily",
+            "Value": "Segoe UI"
+        },
+        "LabelPadding": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "TextFontSize": {
+            "Type": "Double",
+            "Value": 12
+        },
+        "TextForeground": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+
+
+
+
+
+
+        // -------- TextBox --------
+        "TextBoxUpButtonIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z"
+        },
+        "TextBoxDownButtonIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"
+        },
+        "TextBoxCornerRadius": {
+            "Type": "CornerRadius",
+            "Value": "4"
+        },
+
+        // UpDown Arrow-Buttons on MaSchTextBox are designed by the section "Button"
+        "TextBoxPadding": {
+            "Type": "Thickness",
+            "Value": "10,8"
+        },
+        "TextBoxBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "TextBoxSelectionBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "TextBoxSelectionOpacity": {
+            "Type": "Double",
+            "Value": 0.25
+        },
+        "TextBoxCaretBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+
+        // Normal state
+        "TextBoxNormalBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "TextBoxNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.05
+        },
+        "TextBoxNormalForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+
+        // Focused state
+        "TextBoxSelectedBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "TextBoxSelectedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.1
+        },
+        "TextBoxSelectedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+
+        // Disabled state
+        "TextBoxDisabledBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "TextBoxDisabledBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBackgroundColor}"
+        },
+        "TextBoxDisabledForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+
+        // ModernUI TextBox Resources
+        "TextBoxDescriptionForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+        "TextBoxDescriptionOpacity": {
+            "Type": "Double",
+            "Value": 0.7
+        },
+        "TextBoxDescriptionFontStyle": {
+            "Type": "FontStyle",
+            "Value": "Italic"
+        },
+
+
+
+
+
+
+        // -------- ToggleButton --------
+        // Normal state
+        "ToggleButtonNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.05
+        },
+        "IconToggleButtonNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "ToggleButtonNormalBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBorderColor}"
+        },
+        "ToggleButtonNormalForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "ToggleButtonNormalBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "ToggleButtonCornerRadius": {
+            "Type": "CornerRadius",
+            "Value": "4"
+        },
+
+        // Mouse Over on IsChecked=False state
+        "ToggleButtonHoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.15
+        },
+        "ToggleButtonHoverBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverBorderColor}"
+        },
+        "ToggleButtonHoverForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "ToggleButtonHoverBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+
+        // Mouse Over on IsChecked=True state
+        "ToggleButtonHoverCheckedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}",
+            "Opacity": 0.8
+        },
+        "ToggleButtonHoverCheckedBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Black"
+        },
+        "ToggleButtonHoverCheckedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+        "ToggleButtonHoverCheckedBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+
+        // IsChecked=True
+        "ToggleButtonCheckedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "ToggleButtonCheckedBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Black"
+        },
+        "ToggleButtonCheckedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+        "ToggleButtonCheckedBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+
+        // Mouse Press state
+        "ToggleButtonPressBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "ToggleButtonPressBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind PressBorderColor}"
+        },
+        "ToggleButtonPressForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+        "ToggleButtonPressBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+
+        // Mouse press state on IsChecked=True
+        "ToggleButtonPressCheckedBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "ToggleButtonPressCheckedBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind PressBorderColor}"
+        },
+        "ToggleButtonPressCheckedForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+        "ToggleButtonPressCheckedBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+
+        // Disabled state
+        "ToggleButtonDisabledBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBackgroundColor}"
+        },
+        "ToggleButtonDisabledBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledBorderColor}"
+        },
+        "ToggleButtonDisabledForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind DisabledForegroundColor}"
+        },
+        "ToggleButtonDisabledBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+
+
+
+
+
+
+        // -------- ToolTip --------
+        "ToolTipBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBackgroundColor}"
+        },
+        "ToolTipBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBorderColor}"
+        },
+        "ToolTipForegroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "ToolTipBorderThickness": {
+            "Type": "Thickness",
+            "Value": "1"
+        },
+        "ToolTipPadding": {
+            "Type": "Thickness",
+            "Value": "5"
+        },
+
+
+
+
+
+
+        // -------- TreeViewItem --------
+        "TreeViewItemCollapsedIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M515 93l930 931l-930 931l90 90l1022 -1021l-1022 -1021l-90 90v0z"
+        },
+        "TreeViewItemExpandedIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M1955 515l-931 930l-931 -930l-90 90l1021 1022l1021 -1022l-90 -90v0z"
+        },
+
+
+
+
+
+
+        // -------- Window --------
+        // The Design for the outer Border of the Window
+        "WindowWindowChromeBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalBackgroundColor}"
+        },
+        "WindowMainBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "WindowMainBorderThickness": {
+            "Type": "Thickness",
+            "Value": "1"
+        },
+
+        // The Design for the Content View
+        "WindowContentBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "#00000000"
+        },
+        "WindowContentBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "#00000000"
+        },
+        "WindowContentBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+
+        // Title
+        "WindowTitleBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "WindowIcon": null,
+
+
+
+
+
+
+        // -------- WindowButtons --------
+        "WindowButtonsCloseIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M 0.5,0.5 10,10 M 0.5,10 10,0.5",
+            "GeometryStrokeThickness": "1",
+            "IsGeometryFilled": "False",
+            "Stretch": "None"
+        },
+        "WindowButtonsMinimizeIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M 0,0.5 10,0.5",
+            "GeometryStrokeThickness": "1",
+            "IsGeometryFilled": "False",
+            "Stretch": "None"
+        },
+        "WindowButtonsNormalizeIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M 2.5,2.5 2.5,0.5 10,0.5 10,7 8,7 8,2.5 0.5,2.5 0.5,10 8,10 8,7",
+            "GeometryStrokeThickness": "1",
+            "IsGeometryFilled": "False",
+            "Stretch": "None"
+        },
+        "WindowButtonsMaximizeIcon": {
+            "Type": "Icon",
+            "IconType": "Geometry",
+            "Geometry": "M 0.5,0.5 10,0.5 10,10 0.5,10 0.5,0.5 Z",
+            "GeometryStrokeThickness": "1",
+            "IsGeometryFilled": "False",
+            "Stretch": "None"
+        },
+        "WindowButtonsBorderThickness": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+        "WindowButtonsPadding": {
+            "Type": "Thickness",
+            "Value": "0"
+        },
+
+        // Normal state
+        "WindowButtonsNormalBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "WindowButtonsNormalSymbolBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "WindowButtonsNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "WindowCloseButtonNormalBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+        "WindowCloseButtonNormalSymbolBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}"
+        },
+        "WindowCloseButtonNormalBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "Transparent"
+        },
+
+        // Mouse over state
+        "WindowButtonsHoverBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "WindowButtonsHoverSymbolBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightContrastColor}"
+        },
+        "WindowButtonsHoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HighlightColor}"
+        },
+        "WindowCloseButtonHoverBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "#FFDB1C00"
+        },
+        "WindowCloseButtonHoverSymbolBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "White"
+        },
+        "WindowCloseButtonHoverBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "#FFDB1C00"
+        },
+
+        // Mouse press state
+        "WindowButtonsPressBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverHighlightColor}"
+        },
+        "WindowButtonsPressSymbolBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverHighlightContrastColor}"
+        },
+        "WindowButtonsPressBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind HoverHighlightColor}"
+        },
+        "WindowCloseButtonPressBorderBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "#FFD84531"
+        },
+        "WindowCloseButtonPressSymbolBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "White"
+        },
+        "WindowCloseButtonPressBackgroundBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "#FFD84531"
+        }
+    }
+}

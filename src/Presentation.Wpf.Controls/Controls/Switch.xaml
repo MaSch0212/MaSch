@@ -1,0 +1,141 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MaSch.Presentation.Wpf.Controls"
+                    xmlns:m="http://schemas.masch212.de/MaSch/Wpf"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <Style TargetType="{x:Type controls:Switch}">
+        <Setter Property="Foreground" Value="{m:ThemeValue Key=SwitchNormalForegroundBrush}" />
+        <Setter Property="Background" Value="{m:ThemeValue Key=SwitchNormalBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{m:ThemeValue Key=SwitchNormalBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{m:ThemeValue Key=SwitchNormalBorderThickness}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:Switch">
+                    <DockPanel>
+                        <Border x:Name="PART_MainBorder"
+                                Width="50"
+                                Height="21"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="10.5">
+                            <Ellipse x:Name="PART_SlideEllipse"
+                                     Width="13"
+                                     Height="13"
+                                     Margin="4"
+                                     HorizontalAlignment="Left"
+                                     Fill="{m:ThemeValue Key=SwitchNormalDotBrush}">
+                                <Ellipse.RenderTransform>
+                                    <TranslateTransform />
+                                </Ellipse.RenderTransform>
+                            </Ellipse>
+                        </Border>
+                        <ContentPresenter Margin="5,0,0,0"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <ContentPresenter.Resources>
+                                <DataTemplate DataType="{x:Type sys:String}">
+                                    <TextBlock Text="{Binding}">
+                                        <TextBlock.Resources>
+                                            <Style TargetType="{x:Type TextBlock}">
+                                                <Setter Property="FontFamily" Value="{m:ThemeValue Key=FontNormal}" />
+                                                <Setter Property="FontSize" Value="{m:ThemeValue Key=TextFontSize}" />
+                                                <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource AncestorType=controls:Switch}, Path=Foreground}" />
+                                                <Setter Property="TextWrapping" Value="Wrap" />
+                                                <Setter Property="SnapsToDevicePixels" Value="True" />
+                                            </Style>
+                                        </TextBlock.Resources>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ContentPresenter.Resources>
+                        </ContentPresenter>
+                    </DockPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{m:ThemeValue Key=SwitchHoverBackgroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{m:ThemeValue Key=SwitchHoverBorderBrush}" />
+                            <Setter Property="BorderThickness" Value="{m:ThemeValue Key=SwitchHoverBorderThickness}" />
+                            <Setter Property="Foreground" Value="{m:ThemeValue Key=SwitchHoverForegroundBrush}" />
+                            <Setter TargetName="PART_SlideEllipse" Property="Fill" Value="{m:ThemeValue Key=SwitchHoverDotBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard Name="Check" HandoffBehavior="Compose">
+                                    <Storyboard Duration="0:0:0.4">
+                                        <DoubleAnimation Storyboard.TargetName="PART_SlideEllipse"
+                                                         Storyboard.TargetProperty="RenderTransform.(TranslateTransform.X)"
+                                                         To="29"
+                                                         Duration="0:0:0.4">
+                                            <DoubleAnimation.EasingFunction>
+                                                <QuarticEase />
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard Name="Uncheck" HandoffBehavior="Compose">
+                                    <Storyboard Duration="0:0:0.4">
+                                        <DoubleAnimation Storyboard.TargetName="PART_SlideEllipse"
+                                                         Storyboard.TargetProperty="RenderTransform.(TranslateTransform.X)"
+                                                         To="0"
+                                                         Duration="0:0:0.4">
+                                            <DoubleAnimation.EasingFunction>
+                                                <QuarticEase />
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                            <Setter Property="Background" Value="{m:ThemeValue Key=SwitchCheckedBackgroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{m:ThemeValue Key=SwitchCheckedBorderBrush}" />
+                            <Setter Property="BorderThickness" Value="{m:ThemeValue Key=SwitchCheckedBorderThickness}" />
+                            <Setter Property="Foreground" Value="{m:ThemeValue Key=SwitchCheckedForegroundBrush}" />
+                            <Setter TargetName="PART_SlideEllipse" Property="Fill" Value="{m:ThemeValue Key=SwitchCheckedDotBrush}" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsChecked" Value="True" />
+                                <Condition Property="IsMouseOver" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" Value="{m:ThemeValue Key=SwitchHoverCheckedBackgroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{m:ThemeValue Key=SwitchHoverCheckedBorderBrush}" />
+                            <Setter Property="BorderThickness" Value="{m:ThemeValue Key=SwitchHoverCheckedBorderThickness}" />
+                            <Setter Property="Foreground" Value="{m:ThemeValue Key=SwitchHoverCheckedForegroundBrush}" />
+                            <Setter TargetName="PART_SlideEllipse" Property="Fill" Value="{m:ThemeValue Key=SwitchHoverCheckedDotBrush}" />
+                        </MultiTrigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" Value="{m:ThemeValue Key=SwitchPressBackgroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{m:ThemeValue Key=SwitchPressBorderBrush}" />
+                            <Setter Property="BorderThickness" Value="{m:ThemeValue Key=SwitchPressBorderThickness}" />
+                            <Setter Property="Foreground" Value="{m:ThemeValue Key=SwitchPressForegroundBrush}" />
+                            <Setter TargetName="PART_SlideEllipse" Property="Fill" Value="{m:ThemeValue Key=SwitchPressDotBrush}" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsChecked" Value="True" />
+                                <Condition Property="IsPressed" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" Value="{m:ThemeValue Key=SwitchPressCheckedBackgroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{m:ThemeValue Key=SwitchPressCheckedBorderBrush}" />
+                            <Setter Property="BorderThickness" Value="{m:ThemeValue Key=SwitchPressCheckedBorderThickness}" />
+                            <Setter Property="Foreground" Value="{m:ThemeValue Key=SwitchPressCheckedForegroundBrush}" />
+                            <Setter TargetName="PART_SlideEllipse" Property="Fill" Value="{m:ThemeValue Key=SwitchPressCheckedDotBrush}" />
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="{m:ThemeValue Key=SwitchDisabledBackgroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{m:ThemeValue Key=SwitchDisabledBorderBrush}" />
+                            <Setter Property="BorderThickness" Value="{m:ThemeValue Key=SwitchDisabledBorderThickness}" />
+                            <Setter Property="Foreground" Value="{m:ThemeValue Key=SwitchDisabledForegroundBrush}" />
+                            <Setter TargetName="PART_SlideEllipse" Property="Fill" Value="{m:ThemeValue Key=SwitchDisabledDotBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

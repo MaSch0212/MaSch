@@ -1,0 +1,117 @@
+{
+    "Name": "Dark",
+    "Description": "The default dark theme for the MaSch library.",
+    "MergedThemes": [
+        "../Base/Theme.json"
+    ],
+    "Values": {
+
+
+        // -------- Colors --------
+        // Highlight colors
+        "HighlightColor": {
+            "Type": "Color",
+            "Value": "#FFF4B300"
+        },
+        "HoverHighlightColor": {
+            "Type": "Color",
+            "Value": "#FFF3C443"
+        },
+        "HighlightContrastColor": {
+            "Type": "Color",
+            "Value": "Black"
+        },
+        "HoverHighlightContrastColor": {
+            "Type": "Color",
+            "Value": "Black"
+        },
+
+        // Normal state
+        "NormalBackgroundColor": {
+            "Type": "Color",
+            "Value": "#FF2D2D2D"
+        },
+        "NormalForegroundColor": {
+            "Type": "Color",
+            "Value": "White"
+        },
+        "NormalBorderColor": {
+            "Type": "Color",
+            "Value": "#FF6F6F6F"
+        },
+
+        // Mouse over state
+        "HoverBackgroundColor": {
+            "Type": "Color",
+            "Value": "#FF3E3E3E"
+        },
+        "HoverBorderColor": {
+            "Type": "Color",
+            "Value": "#FF6F6F6F"
+        },
+        "HoverForegroundColor": {
+            "Type": "Color",
+            "Value": "White"
+        },
+
+        // Mouse press state
+        "PressBackgroundColor": {
+            "Type": "Color",
+            "Value": "#FFF4B300"
+        },
+        "PressBorderColor": {
+            "Type": "Color",
+            "Value": "#FFF4B300"
+        },
+        "PressForegroundColor": {
+            "Type": "Color",
+            "Value": "Black"
+        },
+
+        // Disabled state
+        "DisabledBackgroundColor": {
+            "Type": "Color",
+            "Value": "#FF2F2F2F"
+        },
+        "DisabledBorderColor": {
+            "Type": "Color",
+            "Value": "#FF3E3E3E"
+        },
+        "DisabledForegroundColor": {
+            "Type": "Color",
+            "Value": "#FF8E8E8E"
+        },
+
+
+
+
+
+
+        // -------- Switch --------
+        // Normal state
+        "SwitchNormalDotBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}",
+            "Opacity": 0.75
+        },
+
+        // Mouse Over on IsChecked=False state
+        "SwitchHoverDotBrush": {
+            "Type": "SolidColorBrush",
+            "Color": "{Bind NormalForegroundColor}",
+            "Opacity": 0.9
+        },
+
+
+
+
+
+
+        // -------- Window --------
+        // Title
+        "WindowIcon": {
+            "Type": "ImageSource",
+            "Value": "pack://application:,,,/MaSch.Presentation.Wpf.Themes;component/Themes/Dark/DefaultWindowIcon.ico"
+        }
+    }
+}

@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+
+    <!-- General Project info -->
+    <RootNamespace>MaSch.Core</RootNamespace>
+    <TargetFrameworks>net5.0-windows;net48</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+
+    <!-- Output info -->
+    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
+
+    <!-- Package Info -->
+    <Version>3.2.0</Version>
+    <Authors>Marc Schmidt</Authors>
+    <SupportedOSPlatform>windows</SupportedOSPlatform>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)'=='net48' ">
+    <DefineConstants>NETFX</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Diagnostics.EventLog" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\MaSch.Core.csproj" />
+  </ItemGroup>
+
+</Project>

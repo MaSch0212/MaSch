@@ -1,0 +1,60 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    xmlns:tm="clr-namespace:MaSch.Presentation.Wpf.Markup">
+
+    <Style x:Key="GroupBoxHeaderStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="FontFamily" Value="{tm:ThemeValue Key=FontNormal}" />
+        <Setter Property="FontSize" Value="{tm:ThemeValue Key=GroupBoxFontSize}" />
+        <Setter Property="FontWeight" Value="{tm:ThemeValue Key=GroupBoxFontWeight}" />
+        <Setter Property="Foreground" Value="{tm:ThemeValue Key=GroupBoxForeground}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+    </Style>
+
+    <Style BasedOn="{StaticResource {x:Type GroupBox}}" TargetType="{x:Type GroupBox}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Background" Value="{tm:ThemeValue Key=GroupBoxBackground}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="{tm:ThemeValue Key=GroupBoxPadding}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="GroupBox">
+                    <Grid>
+                        <Border Margin="4"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="{tm:ThemeValue Key=GroupBoxCornerRadius}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Border Margin="4">
+                                    <Border.Resources>
+                                        <Style BasedOn="{StaticResource GroupBoxHeaderStyle}" TargetType="{x:Type TextBlock}" />
+                                    </Border.Resources>
+                                    <ContentPresenter Content="{TemplateBinding Header}">
+                                        <ContentPresenter.Resources>
+                                            <DataTemplate DataType="{x:Type sys:String}">
+                                                <TextBlock Text="{Binding}">
+                                                    <TextBlock.Resources>
+                                                        <Style BasedOn="{StaticResource GroupBoxHeaderStyle}" TargetType="{x:Type TextBlock}" />
+                                                    </TextBlock.Resources>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </ContentPresenter.Resources>
+                                    </ContentPresenter>
+                                </Border>
+                                <ContentPresenter Grid.Row="1"
+                                                  Margin="{TemplateBinding Padding}"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

@@ -1,0 +1,67 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+
+    <!-- General Project info -->
+    <TargetFrameworks>net5.0-windows;net48</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+
+    <!-- Output info -->
+    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
+    <Platforms>AnyCPU;x86;x64</Platforms>
+
+    <!-- Package Info -->
+    <Description>Contains supporting code for .NET WPF applications.</Description>
+    <Version>3.2.0</Version>
+    <Authors>Marc Schmidt</Authors>
+    <SupportedOSPlatform>windows</SupportedOSPlatform>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)'=='net48' ">
+    <DefineConstants>NETFX</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="FastWPF.DesignerSettings" />
+    <None Remove="**\*.FastWPF" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core.DataAnnotation\MaSch.Core.DataAnnotation.csproj" />
+    <ProjectReference Include="..\Core\MaSch.Core.csproj" />
+    <ProjectReference Include="..\Presentation\MaSch.Presentation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)'=='net48' ">
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="ReachFramework" />
+    <Reference Include="System.Printing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)'!='net48' ">
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Properties\MaSch.snk" />
+  </ItemGroup>
+</Project>

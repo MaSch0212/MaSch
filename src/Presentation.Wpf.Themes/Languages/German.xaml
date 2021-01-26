@@ -1,0 +1,62 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!--  ToolTips for the Window Buttons  -->
+    <sys:String x:Key="MaSchWindowButtons_CloseToolTip">Schließen</sys:String>
+    <sys:String x:Key="MaSchWindowButtons_MinimizeToolTip">Minimieren</sys:String>
+    <sys:String x:Key="MaSchWindowButtons_NormalizeToolTip">Verkleinern</sys:String>
+    <sys:String x:Key="MaSchWindowButtons_MaximizeToolTip">Maximieren</sys:String>
+
+    <!--  ProgressBar  -->
+    <sys:String x:Key="MaSchProgressBar_CurrentSpeedLabel">Geschwindigkeit:</sys:String>
+
+    <!--  MessageBox  -->
+    <sys:String x:Key="MaSchMessageBox_OkButtonContent">OK</sys:String>
+    <sys:String x:Key="MaSchMessageBox_CancelButtonContent">Abbrechen</sys:String>
+    <sys:String x:Key="MaSchMessageBox_YesButtonContent">Ja</sys:String>
+    <sys:String x:Key="MaSchMessageBox_NoButtonContent">Nein</sys:String>
+
+    <!--  ExceptionDialog  -->
+    <sys:String x:Key="MaSchExceptionDialog_Title">Ein Fehler ist aufgetreten!</sys:String>
+    <sys:String x:Key="MaSchExceptionDialog_Description">Ein unerwarteter Fehler ist aufgetreten. Bitte schicken Sie den folgenden Fehlerbericht an den Entwickler:</sys:String>
+    <sys:String x:Key="MaSchExceptionDialog_CloseButtonContent">Schließen</sys:String>
+    <sys:String x:Key="MaSchExceptionDialog_ClipboardButtonContent">In Zwischenablage kopieren</sys:String>
+
+    <!--  ExceptionDialog  -->
+    <sys:String x:Key="MaSchUpdateDialog_Title">Version aktualisieren</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_ErrorTryLater">Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal.</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_OkButtonContent">OK</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_NewVersionAvailable">Eine neue Version ist verfügbar.</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_NewVersion">Neue Version</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_ShouldDownloadUpdateNow">Möchten Sie jetzt die neueste Version herunterladen und installieren?</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_YesButtonContent">Ja</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_NoButtonContent">Nein</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_Downloading">Wird heruntergeladen</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_Downloaded">Heruntergeladen</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_CancelButtonContent">Abbrechen</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_DownloadComplete">Der Download ist abgeschlossen!</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_UpdateNowText">
+        Der Download ist abgeschlossen und das Update kann nun gestartet werden. Klicken Sie auf "Jetzt installieren", um das Update jetzt zu starten!&#xA;
+        Nach dem Drücken der Schaltfläche wird die Anwendung neu gestartet.
+    </sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_InstallNowButtonContent">Jetzt aktualisieren</sys:String>
+
+    <!--  Color Picker  -->
+    <sys:String x:Key="MaSchColorPicker_TitleString">Farbauswahl</sys:String>
+    <sys:String x:Key="MaSchColorPicker_OpacityString">Sichtbarkeit</sys:String>
+    <sys:String x:Key="MaSchColorPicker_HexadecimalString">Hexadezimal</sys:String>
+    <sys:String x:Key="MaSchColorPicker_ValuesString">Werte</sys:String>
+    <sys:String x:Key="MaSchColorPicker_AlphaString">Alpha</sys:String>
+    <sys:String x:Key="MaSchColorPicker_RedString">Rot</sys:String>
+    <sys:String x:Key="MaSchColorPicker_GreenString">Grün</sys:String>
+    <sys:String x:Key="MaSchColorPicker_BlueString">Blau</sys:String>
+    <sys:String x:Key="MaSchColorPicker_SelectedColorString">Ausgewählte Farbe</sys:String>
+    <sys:String x:Key="MaSchColorPicker_OkButtonContent">OK</sys:String>
+    <sys:String x:Key="MaSchColorPicker_CancelButtonContent">Abbrechen</sys:String>
+
+    <!--  Split View  -->
+    <sys:String x:Key="MaSchSplitView_PleaseWait">Bitte warten...</sys:String>
+    <sys:String x:Key="MaSchSplitView_MenuItemHeader">Menü</sys:String>
+
+</ResourceDictionary>

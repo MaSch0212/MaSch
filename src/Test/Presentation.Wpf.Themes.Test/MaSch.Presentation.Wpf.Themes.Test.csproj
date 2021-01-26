@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+
+    <!-- General Project info -->
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <UseWPF>true</UseWPF>
+
+    <!-- Assembly Info -->
+    <AssemblyTitle>MaSch.Presentation.Wpf.Themes.Test</AssemblyTitle>
+    <Product>MaSch.Presentation.Wpf.Themes.Test</Product>
+    <Copyright>Copyright © Marc Schmidt</Copyright>
+
+    <!-- Output info -->
+    <OutputPath>..\bin\$(Configuration)\</OutputPath>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\MaSch.Core.csproj" />
+    <ProjectReference Include="..\..\Presentation.Wpf.Themes\MaSch.Presentation.Wpf.Themes.csproj" />
+    <ProjectReference Include="..\..\Presentation.Wpf\MaSch.Presentation.Wpf.csproj" />
+    <ProjectReference Include="..\..\Presentation\MaSch.Presentation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.0" />
+  </ItemGroup>
+</Project>

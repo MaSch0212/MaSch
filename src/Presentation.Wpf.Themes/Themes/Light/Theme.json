@@ -1,0 +1,85 @@
+{
+    "Name": "Light",
+    "Description": "The default light theme for the MaSch library.",
+    "MergedThemes": [
+        "../Base/Theme.json"
+    ],
+    "Values": {
+
+
+        // -------- Colors --------
+        // Highlight colors
+        "HighlightColor": {
+            "Type": "Color",
+            "Value": "#FF0064F8"
+        },
+        "HoverHighlightColor": {
+            "Type": "Color",
+            "Value": "#FF3B7CFF"
+        },
+        "HighlightContrastColor": {
+            "Type": "Color",
+            "Value": "White"
+        },
+        "HoverHighlightContrastColor": {
+            "Type": "Color",
+            "Value": "White"
+        },
+
+        // Normal state
+        "NormalBackgroundColor": {
+            "Type": "Color",
+            "Value": "White"
+        },
+        "NormalForegroundColor": {
+            "Type": "Color",
+            "Value": "Black"
+        },
+        "NormalBorderColor": {
+            "Type": "Color",
+            "Value": "#FFADADAD"
+        },
+
+        // Mouse over state
+        "HoverBackgroundColor": {
+            "Type": "Color",
+            "Value": "Lightgray"
+        },
+        "HoverBorderColor": {
+            "Type": "Color",
+            "Value": "#FFADADAD"
+        },
+        "HoverForegroundColor": {
+            "Type": "Color",
+            "Value": "Black"
+        },
+
+        // Mouse press state
+        "PressBackgroundColor": {
+            "Type": "Color",
+            "Value": "Black"
+        },
+        "PressBorderColor": {
+            "Type": "Color",
+            "Value": "#FFADADAD"
+        },
+        "PressForegroundColor": {
+            "Type": "Color",
+            "Value": "White"
+        },
+
+        // Disabled state
+        "DisabledBackgroundColor": {
+            "Type": "Color",
+            "Value": "#FFF0F0F0"
+        },
+        "DisabledBorderColor": {
+            "Type": "Color",
+            "Value": "#FFC8C8C8"
+        },
+        "DisabledForegroundColor": {
+            "Type": "Color",
+            "Value": "#FFADADAD"
+        }
+    }
+}

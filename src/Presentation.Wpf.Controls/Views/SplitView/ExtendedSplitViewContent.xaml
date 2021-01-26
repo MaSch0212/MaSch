@@ -1,0 +1,128 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MaSch.Presentation.Wpf.Controls"
+                    xmlns:local="clr-namespace:MaSch.Presentation.Wpf.Views.SplitView"
+                    xmlns:m="http://schemas.masch212.de/MaSch/Wpf"
+                    xmlns:mct="http://schemas.masch212.de/MaSch/Wpf/Controls">
+
+    <Style TargetType="{x:Type local:ExtendedSplitViewContent}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="CallCloseAsync" Value="True" />
+        <Setter Property="CallOpenAsync" Value="True" />
+        <Setter Property="SuccessMessageIcon" Value="{m:ThemeValue Key=ExtendedSplitViewContentSuccessIcon}" />
+        <Setter Property="FailureMessageIcon" Value="{m:ThemeValue Key=ExtendedSplitViewContentFailureIcon}" />
+        <Setter Property="InformationMessageIcon" Value="{m:ThemeValue Key=ExtendedSplitViewContentInformationIcon}" />
+        <Setter Property="WarningMessageIcon" Value="{m:ThemeValue Key=ExtendedSplitViewContentWarningIcon}" />
+        <Setter Property="SuccessMessageBrush" Value="{m:ThemeValue Key=ExtendedSplitViewContentSuccessBrush}" />
+        <Setter Property="FailureMessageBrush" Value="{m:ThemeValue Key=ExtendedSplitViewContentFailureBrush}" />
+        <Setter Property="InformationMessageBrush" Value="{m:ThemeValue Key=ExtendedSplitViewContentInformationBrush}" />
+        <Setter Property="WarningMessageBrush" Value="{m:ThemeValue Key=ExtendedSplitViewContentWarningBrush}" />
+        <Setter Property="ToolbarVisibility" Value="Visible" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:ExtendedSplitViewContent}">
+                    <Border x:Name="PART_Root"
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <Border.Resources>
+                            <Storyboard x:Key="ShowMessageStoryboard" Duration="0:0:5.2">
+                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_MessagePanel"
+                                                               Storyboard.TargetProperty="Opacity"
+                                                               Duration="0:0:5.2">
+                                    <LinearDoubleKeyFrame KeyTime="0" Value="0" />
+                                    <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1">
+                                        <EasingDoubleKeyFrame.EasingFunction>
+                                            <ExponentialEase EasingMode="EaseIn" />
+                                        </EasingDoubleKeyFrame.EasingFunction>
+                                    </EasingDoubleKeyFrame>
+                                    <EasingDoubleKeyFrame KeyTime="0:0:3.2" Value="1" />
+                                    <EasingDoubleKeyFrame KeyTime="0:0:5.2" Value="0" />
+                                </DoubleAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </Border.Resources>
+                        <DockPanel x:Name="PART_Content">
+                            <TextBlock Margin="0,0,0,10"
+                                       DockPanel.Dock="Top"
+                                       FontSize="42"
+                                       FontWeight="Thin"
+                                       Text="{TemplateBinding Title}" />
+                            <DockPanel Height="40"
+                                       Margin="0,0,0,10"
+                                       DockPanel.Dock="Top"
+                                       Visibility="{TemplateBinding ToolbarVisibility}">
+                                <DockPanel.Resources>
+                                    <Style TargetType="controls:IconButton">
+                                        <Setter Property="Width" Value="40" />
+                                        <Setter Property="Height" Value="40" />
+                                        <Setter Property="Padding" Value="8" />
+                                    </Style>
+
+                                    <Style TargetType="controls:IconToggleButton">
+                                        <Setter Property="Width" Value="40" />
+                                        <Setter Property="Height" Value="40" />
+                                        <Setter Property="Padding" Value="8" />
+                                    </Style>
+
+                                    <Style TargetType="Separator">
+                                        <Setter Property="Width" Value="20" />
+                                        <Setter Property="Background" Value="Transparent" />
+                                        <Setter Property="BorderThickness" Value="0" />
+                                    </Style>
+                                </DockPanel.Resources>
+                                <ContentPresenter MaxHeight="40"
+                                                  Content="{TemplateBinding ToolbarContent}"
+                                                  ContentTemplate="{TemplateBinding ToolbarContentTemplate}"
+                                                  DockPanel.Dock="Left" />
+                                <ContentPresenter MaxHeight="40"
+                                                  Content="{TemplateBinding ToolbarEndContent}"
+                                                  ContentTemplate="{TemplateBinding ToolbarEndContentTemplate}"
+                                                  DockPanel.Dock="Right" />
+                                <Grid Margin="20,0,10,0">
+                                    <DockPanel x:Name="PART_LoadingPanel">
+                                        <controls:BusyIndicator Width="40"
+                                                                Height="40"
+                                                                HorizontalAlignment="Left"
+                                                                DockPanel.Dock="Left"
+                                                                IsEnabled="{TemplateBinding IsLoading}" />
+                                        <TextBlock Margin="10,0,0,0"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="20"
+                                                   FontWeight="Light"
+                                                   Text="{TemplateBinding LoadingText}"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </DockPanel>
+                                    <DockPanel x:Name="PART_MessagePanel"
+                                               Background="{TemplateBinding Background}"
+                                               Opacity="0">
+                                        <mct:IconPresenter x:Name="PART_MessageIcon"
+                                                           Width="24"
+                                                           Height="24"
+                                                           Margin="0,0,10,0"
+                                                           VerticalAlignment="Center"
+                                                           DockPanel.Dock="Left" />
+                                        <TextBlock x:Name="PART_MessageText"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="20"
+                                                   FontWeight="Light"
+                                                   Text="{x:Null}"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </DockPanel>
+                                </Grid>
+                            </DockPanel>
+                            <ContentPresenter HorizontalAlignment="Stretch"
+                                              VerticalAlignment="Stretch"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}" />
+                        </DockPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

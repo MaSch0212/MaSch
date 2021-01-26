@@ -1,0 +1,62 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!--  ToolTips for the Window Buttons  -->
+    <sys:String x:Key="MaSchWindowButtons_CloseToolTip">Close</sys:String>
+    <sys:String x:Key="MaSchWindowButtons_MinimizeToolTip">Minimize</sys:String>
+    <sys:String x:Key="MaSchWindowButtons_NormalizeToolTip">Reduce</sys:String>
+    <sys:String x:Key="MaSchWindowButtons_MaximizeToolTip">Maximize</sys:String>
+
+    <!--  ProgressBar  -->
+    <sys:String x:Key="MaSchProgressBar_CurrentSpeedLabel">Speed:</sys:String>
+
+    <!--  MessageBox  -->
+    <sys:String x:Key="MaSchMessageBox_OkButtonContent">OK</sys:String>
+    <sys:String x:Key="MaSchMessageBox_CancelButtonContent">Cancel</sys:String>
+    <sys:String x:Key="MaSchMessageBox_YesButtonContent">Yes</sys:String>
+    <sys:String x:Key="MaSchMessageBox_NoButtonContent">No</sys:String>
+
+    <!--  ExceptionDialog  -->
+    <sys:String x:Key="MaSchExceptionDialog_Title">An error occured!</sys:String>
+    <sys:String x:Key="MaSchExceptionDialog_Description">An unexpected error has occurred. Please send the following bug report to the developer:</sys:String>
+    <sys:String x:Key="MaSchExceptionDialog_CloseButtonContent">Close</sys:String>
+    <sys:String x:Key="MaSchExceptionDialog_ClipboardButtonContent">Copy to clipboard</sys:String>
+
+    <!--  ExceptionDialog  -->
+    <sys:String x:Key="MaSchUpdateDialog_Title">Update version</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_ErrorTryLater">An error occurred. Please try again later.</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_OkButtonContent">OK</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_NewVersionAvailable">A new version is available.</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_NewVersion">New version</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_ShouldDownloadUpdateNow">Do you want to download and install the newest version now?</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_YesButtonContent">Yes</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_NoButtonContent">No</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_Downloading">Downloading</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_Downloaded">Downloaded</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_CancelButtonContent">Cancel</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_DownloadComplete">The download has been completed!</sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_UpdateNowText">
+        The download is complete and the update can now be started. Click "Install now" to start the update now!&#xA;
+        After pressing the button, the application is restarted.
+    </sys:String>
+    <sys:String x:Key="MaSchUpdateDialog_InstallNowButtonContent">Install now</sys:String>
+
+    <!--  Color Picker  -->
+    <sys:String x:Key="MaSchColorPicker_TitleString">Color Picker</sys:String>
+    <sys:String x:Key="MaSchColorPicker_OpacityString">Opacity</sys:String>
+    <sys:String x:Key="MaSchColorPicker_HexadecimalString">Hexadecimal</sys:String>
+    <sys:String x:Key="MaSchColorPicker_ValuesString">Values</sys:String>
+    <sys:String x:Key="MaSchColorPicker_AlphaString">Alpha</sys:String>
+    <sys:String x:Key="MaSchColorPicker_RedString">Red</sys:String>
+    <sys:String x:Key="MaSchColorPicker_GreenString">Green</sys:String>
+    <sys:String x:Key="MaSchColorPicker_BlueString">Blue</sys:String>
+    <sys:String x:Key="MaSchColorPicker_SelectedColorString">Selected Color</sys:String>
+    <sys:String x:Key="MaSchColorPicker_OkButtonContent">OK</sys:String>
+    <sys:String x:Key="MaSchColorPicker_CancelButtonContent">Cancel</sys:String>
+
+    <!--  Split View  -->
+    <sys:String x:Key="MaSchSplitView_PleaseWait">Please wait...</sys:String>
+    <sys:String x:Key="MaSchSplitView_MenuItemHeader">Menu</sys:String>
+
+</ResourceDictionary>

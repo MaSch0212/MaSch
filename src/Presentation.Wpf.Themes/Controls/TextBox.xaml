@@ -1,0 +1,151 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:m="http://schemas.masch212.de/MaSch/Wpf"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    xmlns:tm="clr-namespace:MaSch.Presentation.Wpf.Markup">
+
+    <Style BasedOn="{StaticResource {x:Type TextBox}}" TargetType="{x:Type TextBox}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Padding" Value="{tm:ThemeValue Key=TextBoxPadding}" />
+        <Setter Property="BorderThickness" Value="{tm:ThemeValue Key=TextBoxBorderThickness}" />
+        <Setter Property="BorderBrush" Value="{tm:ThemeValue Key=TextBoxNormalBorderBrush}" />
+        <Setter Property="Foreground" Value="{tm:ThemeValue Key=TextBoxNormalForegroundBrush}" />
+        <Setter Property="FontFamily" Value="{tm:ThemeValue Key=FontNormal}" />
+        <Setter Property="FontSize" Value="{tm:ThemeValue Key=TextFontSize}" />
+        <Setter Property="Background" Value="{tm:ThemeValue Key=TextBoxNormalBackgroundBrush}" />
+        <Setter Property="SelectionBrush" Value="{tm:ThemeValue Key=TextBoxSelectionBrush}" />
+        <Setter Property="SelectionOpacity" Value="{tm:ThemeValue Key=TextBoxSelectionOpacity}" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Validation.ErrorTemplate" Value="{DynamicResource DefaultErrorTemplate}" />
+        <Setter Property="CaretBrush" Value="{tm:ThemeValue Key=TextBoxCaretBrush}" />
+        <Setter Property="m:ScrollViewer.IsHorizontalScrollBarOverlaying" Value="False" />
+        <Setter Property="m:ScrollViewer.IsVerticalScrollBarOverlaying" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Grid SnapsToDevicePixels="True">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{tm:ThemeValue Key=TextBoxCornerRadius}">
+                            <Grid>
+                                <TextBlock x:Name="MaSch_Description"
+                                           Margin="{TemplateBinding Padding}"
+                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           FontStyle="{tm:ThemeValue Key=TextBoxDescriptionFontStyle}"
+                                           Foreground="{tm:ThemeValue Key=TextBoxDescriptionForegroundBrush}"
+                                           Opacity="{tm:ThemeValue Key=TextBoxDescriptionOpacity}"
+                                           Text="{TemplateBinding m:TextBox.Description}"
+                                           Visibility="Hidden" />
+                                <ScrollViewer x:Name="PART_ContentHost"
+                                              Margin="-2,0"
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              m:ScrollViewer.HorizontalScrollBarMargin="2,0,0,0"
+                                              m:ScrollViewer.VerticalScrollBarMargin="0,0,2,0"
+                                              CanContentScroll="True"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              SnapsToDevicePixels="True" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Text" Value="">
+                            <Setter TargetName="MaSch_Description" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="AcceptsReturn" Value="True">
+                            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                        </Trigger>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter Property="Background" Value="{tm:ThemeValue Key=TextBoxSelectedBackgroundBrush}" />
+                            <Setter Property="Foreground" Value="{tm:ThemeValue Key=TextBoxSelectedForegroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{tm:ThemeValue Key=TextBoxSelectedBorderBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsReadOnly" Value="True">
+                            <Setter Property="Background" Value="{tm:ThemeValue Key=TextBoxDisabledBackgroundBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="{tm:ThemeValue Key=TextBoxDisabledBackgroundBrush}" />
+                            <Setter Property="Foreground" Value="{tm:ThemeValue Key=TextBoxDisabledForegroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{tm:ThemeValue Key=TextBoxDisabledBorderBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style BasedOn="{StaticResource {x:Type PasswordBox}}" TargetType="{x:Type PasswordBox}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Padding" Value="{tm:ThemeValue Key=TextBoxPadding}" />
+        <Setter Property="BorderThickness" Value="{tm:ThemeValue Key=TextBoxBorderThickness}" />
+        <Setter Property="BorderBrush" Value="{tm:ThemeValue Key=TextBoxNormalBorderBrush}" />
+        <Setter Property="Foreground" Value="{tm:ThemeValue Key=TextBoxNormalForegroundBrush}" />
+        <Setter Property="FontFamily" Value="{tm:ThemeValue Key=FontNormal}" />
+        <Setter Property="FontSize" Value="{tm:ThemeValue Key=TextFontSize}" />
+        <Setter Property="Background" Value="{tm:ThemeValue Key=TextBoxNormalBackgroundBrush}" />
+        <Setter Property="SelectionBrush" Value="{tm:ThemeValue Key=TextBoxSelectionBrush}" />
+        <Setter Property="SelectionOpacity" Value="{tm:ThemeValue Key=TextBoxSelectionOpacity}" />
+        <Setter Property="CaretBrush" Value="{tm:ThemeValue Key=TextBoxCaretBrush}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="m:PasswordBoxAssistant.BindPassword" Value="True" />
+        <Setter Property="m:PasswordBoxAssistant.BoundPassword" Value="{Binding Path=Password}" />
+        <Setter Property="PasswordChar">
+            <Setter.Value>
+                <sys:Char>&#x2022;</sys:Char>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="PasswordBox">
+                    <Grid SnapsToDevicePixels="True">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{tm:ThemeValue Key=TextBoxCornerRadius}">
+                            <Grid>
+                                <TextBlock x:Name="MaSch_Description"
+                                           Margin="{TemplateBinding Padding}"
+                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           FontStyle="{tm:ThemeValue Key=TextBoxDescriptionFontStyle}"
+                                           Foreground="{tm:ThemeValue Key=TextBoxDescriptionForegroundBrush}"
+                                           Opacity="{tm:ThemeValue Key=TextBoxDescriptionOpacity}"
+                                           Text="{TemplateBinding m:TextBox.Description}"
+                                           Visibility="Hidden" />
+                                <ScrollViewer x:Name="PART_ContentHost"
+                                              Margin="-2,0"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              CanContentScroll="True"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              SnapsToDevicePixels="True" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="m:PasswordBoxAssistant.BoundPassword" Value="">
+                            <Setter TargetName="MaSch_Description" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter Property="Background" Value="{tm:ThemeValue Key=TextBoxSelectedBackgroundBrush}" />
+                            <Setter Property="Foreground" Value="{tm:ThemeValue Key=TextBoxSelectedForegroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{tm:ThemeValue Key=TextBoxSelectedBorderBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="{tm:ThemeValue Key=TextBoxDisabledBackgroundBrush}" />
+                            <Setter Property="Foreground" Value="{tm:ThemeValue Key=TextBoxDisabledForegroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{tm:ThemeValue Key=TextBoxDisabledBorderBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

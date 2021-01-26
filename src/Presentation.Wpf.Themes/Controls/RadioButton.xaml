@@ -1,0 +1,95 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:tm="clr-namespace:MaSch.Presentation.Wpf.Markup">
+
+    <Style BasedOn="{StaticResource {x:Type RadioButton}}" TargetType="{x:Type RadioButton}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Background" Value="{tm:ThemeValue Key=RadioButtonNormalBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{tm:ThemeValue Key=RadioButtonNormalBorderBrush}" />
+        <Setter Property="Foreground" Value="{tm:ThemeValue Key=RadioButtonNormalForegroundBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <StackPanel Orientation="Horizontal">
+                        <Grid x:Name="MaSch_Bullet"
+                              Width="{tm:ThemeValue Key=RadioButtonBulletWidth}"
+                              Height="{tm:ThemeValue Key=RadioButtonBulletHeight}"
+                              VerticalAlignment="Center">
+                            <Ellipse x:Name="MaSch_BulletBorder"
+                                     Fill="{TemplateBinding Background}"
+                                     Stroke="{TemplateBinding BorderBrush}"
+                                     StrokeThickness="{tm:ThemeValue Key=RadioButtonNormalBorderThickness}" />
+                            <Ellipse x:Name="MaSch_InnerBullet"
+                                     Margin="{tm:ThemeValue Key=RadioButtonCheckedBulletMargin}"
+                                     Fill="{tm:ThemeValue Key=RadioButtonCheckedBulletBrush}"
+                                     Visibility="Hidden" />
+                        </Grid>
+                        <ContentPresenter Margin="5,0,0,0" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{tm:ThemeValue Key=RadioButtonHoverBackgroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{tm:ThemeValue Key=RadioButtonHoverBorderBrush}" />
+                            <Setter Property="Foreground" Value="{tm:ThemeValue Key=RadioButtonHoverForegroundBrush}" />
+                            <Setter TargetName="MaSch_BulletBorder" Property="StrokeThickness" Value="{tm:ThemeValue Key=RadioButtonHoverBorderThickness}" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Background" Value="{tm:ThemeValue Key=RadioButtonCheckedBackgroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{tm:ThemeValue Key=RadioButtonCheckedBorderBrush}" />
+                            <Setter Property="Foreground" Value="{tm:ThemeValue Key=RadioButtonCheckedForegroundBrush}" />
+                            <Setter TargetName="MaSch_BulletBorder" Property="StrokeThickness" Value="{tm:ThemeValue Key=RadioButtonCheckedBorderThickness}" />
+                            <Setter TargetName="MaSch_BulletBorder" Property="StrokeThickness" Value="{tm:ThemeValue Key=RadioButtonCheckedBorderThickness}" />
+
+                            <Setter TargetName="MaSch_InnerBullet" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsChecked" Value="True" />
+                                <Condition Property="IsMouseOver" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" Value="{tm:ThemeValue Key=RadioButtonHoverCheckedBackgroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{tm:ThemeValue Key=RadioButtonHoverCheckedBorderBrush}" />
+                            <Setter Property="Foreground" Value="{tm:ThemeValue Key=RadioButtonHoverCheckedForegroundBrush}" />
+                            <Setter TargetName="MaSch_BulletBorder" Property="StrokeThickness" Value="{tm:ThemeValue Key=RadioButtonHoverCheckedBorderThickness}" />
+                            <Setter TargetName="MaSch_BulletBorder" Property="StrokeThickness" Value="{tm:ThemeValue Key=RadioButtonHoverCheckedBorderThickness}" />
+                            <Setter TargetName="MaSch_InnerBullet" Property="Margin" Value="{tm:ThemeValue Key=RadioButtonHoverCheckedBulletMargin}" />
+                            <Setter TargetName="MaSch_InnerBullet" Property="Fill" Value="{tm:ThemeValue Key=RadioButtonHoverCheckedBulletBrush}" />
+                        </MultiTrigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" Value="{tm:ThemeValue Key=RadioButtonPressBackgroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{tm:ThemeValue Key=RadioButtonPressBorderBrush}" />
+                            <Setter Property="Foreground" Value="{tm:ThemeValue Key=RadioButtonPressForegroundBrush}" />
+                            <Setter TargetName="MaSch_BulletBorder" Property="StrokeThickness" Value="{tm:ThemeValue Key=RadioButtonPressBorderThickness}" />
+                            <Setter TargetName="MaSch_BulletBorder" Property="StrokeThickness" Value="{tm:ThemeValue Key=RadioButtonPressBorderThickness}" />
+                            <Setter TargetName="MaSch_InnerBullet" Property="Margin" Value="{tm:ThemeValue Key=RadioButtonPressBulletMargin}" />
+                            <Setter TargetName="MaSch_InnerBullet" Property="Fill" Value="{tm:ThemeValue Key=RadioButtonPressBulletBrush}" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsChecked" Value="True" />
+                                <Condition Property="IsPressed" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" Value="{tm:ThemeValue Key=RadioButtonPressCheckedBackgroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{tm:ThemeValue Key=RadioButtonPressCheckedBorderBrush}" />
+                            <Setter Property="Foreground" Value="{tm:ThemeValue Key=RadioButtonPressCheckedForegroundBrush}" />
+                            <Setter TargetName="MaSch_BulletBorder" Property="StrokeThickness" Value="{tm:ThemeValue Key=RadioButtonPressCheckedBorderThickness}" />
+                            <Setter TargetName="MaSch_BulletBorder" Property="StrokeThickness" Value="{tm:ThemeValue Key=RadioButtonPressCheckedBorderThickness}" />
+                            <Setter TargetName="MaSch_InnerBullet" Property="Margin" Value="{tm:ThemeValue Key=RadioButtonPressCheckedBulletMargin}" />
+                            <Setter TargetName="MaSch_InnerBullet" Property="Fill" Value="{tm:ThemeValue Key=RadioButtonPressCheckedBulletBrush}" />
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="{tm:ThemeValue Key=RadioButtonDisabledBackgroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{tm:ThemeValue Key=RadioButtonDisabledBorderBrush}" />
+                            <Setter Property="Foreground" Value="{tm:ThemeValue Key=RadioButtonDisabledForegroundBrush}" />
+                            <Setter TargetName="MaSch_BulletBorder" Property="StrokeThickness" Value="{tm:ThemeValue Key=RadioButtonDisabledBorderThickness}" />
+                            <Setter TargetName="MaSch_BulletBorder" Property="StrokeThickness" Value="{tm:ThemeValue Key=RadioButtonDisabledBorderThickness}" />
+                            <Setter TargetName="MaSch_InnerBullet" Property="Margin" Value="{tm:ThemeValue Key=RadioButtonDisabledBulletMargin}" />
+                            <Setter TargetName="MaSch_InnerBullet" Property="Fill" Value="{tm:ThemeValue Key=RadioButtonDisabledBulletBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

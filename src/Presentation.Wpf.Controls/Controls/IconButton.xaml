@@ -1,0 +1,101 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:MaSch.Presentation.Wpf.Controls"
+                    xmlns:m="http://schemas.masch212.de/MaSch/Wpf"
+                    xmlns:mct="http://schemas.masch212.de/MaSch/Wpf/Controls">
+
+    <Style TargetType="{x:Type local:IconButton}">
+        <Setter Property="Background" Value="{m:ThemeValue Key=IconButtonNormalBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{m:ThemeValue Key=ButtonNormalForegroundBrush}" />
+        <Setter Property="CornerRadius" Value="{m:ThemeValue Key=ButtonCornerRadius}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Padding" Value="2" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:IconButton}">
+                    <Border Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <Grid HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition x:Name="PART_Col1" />
+                                <ColumnDefinition x:Name="PART_Col2" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition x:Name="PART_Row1" />
+                                <RowDefinition x:Name="PART_Row2" />
+                            </Grid.RowDefinitions>
+                            <mct:IconPresenter x:Name="PART_Icon" Icon="{TemplateBinding Icon}" />
+                            <ContentPresenter x:Name="PART_Content" Content="{TemplateBinding Content}" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{m:ThemeValue Key=ButtonHoverBackgroundBrush}" />
+                            <Setter Property="Foreground" Value="{m:ThemeValue Key=ButtonHoverForegroundBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" Value="{m:ThemeValue Key=ButtonPressBackgroundBrush}" />
+                            <Setter Property="Foreground" Value="{m:ThemeValue Key=ButtonPressForegroundBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{m:ThemeValue Key=ButtonDisabledForegroundBrush}" />
+                        </Trigger>
+                        <Trigger Property="ContentAnchor" Value="None">
+                            <Setter TargetName="PART_Content" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="PART_Icon" Property="Grid.Column" Value="0" />
+                            <Setter TargetName="PART_Icon" Property="Grid.Row" Value="0" />
+                            <Setter TargetName="PART_Col1" Property="Width" Value="*" />
+                            <Setter TargetName="PART_Col2" Property="Width" Value="0" />
+                            <Setter TargetName="PART_Row1" Property="Height" Value="*" />
+                            <Setter TargetName="PART_Row2" Property="Height" Value="0" />
+                        </Trigger>
+                        <Trigger Property="ContentAnchor" Value="Bottom">
+                            <Setter TargetName="PART_Icon" Property="Grid.Column" Value="0" />
+                            <Setter TargetName="PART_Icon" Property="Grid.Row" Value="0" />
+                            <Setter TargetName="PART_Content" Property="Grid.Column" Value="0" />
+                            <Setter TargetName="PART_Content" Property="Grid.Row" Value="1" />
+                            <Setter TargetName="PART_Col1" Property="Width" Value="*" />
+                            <Setter TargetName="PART_Col2" Property="Width" Value="0" />
+                            <Setter TargetName="PART_Row1" Property="Height" Value="*" />
+                            <Setter TargetName="PART_Row2" Property="Height" Value="Auto" />
+                        </Trigger>
+                        <Trigger Property="ContentAnchor" Value="Right">
+                            <Setter TargetName="PART_Icon" Property="Grid.Column" Value="0" />
+                            <Setter TargetName="PART_Icon" Property="Grid.Row" Value="0" />
+                            <Setter TargetName="PART_Content" Property="Grid.Column" Value="1" />
+                            <Setter TargetName="PART_Content" Property="Grid.Row" Value="0" />
+                            <Setter TargetName="PART_Col1" Property="Width" Value="*" />
+                            <Setter TargetName="PART_Col2" Property="Width" Value="Auto" />
+                            <Setter TargetName="PART_Row1" Property="Height" Value="*" />
+                            <Setter TargetName="PART_Row2" Property="Height" Value="0" />
+                        </Trigger>
+                        <Trigger Property="ContentAnchor" Value="Top">
+                            <Setter TargetName="PART_Icon" Property="Grid.Column" Value="0" />
+                            <Setter TargetName="PART_Icon" Property="Grid.Row" Value="1" />
+                            <Setter TargetName="PART_Content" Property="Grid.Column" Value="0" />
+                            <Setter TargetName="PART_Content" Property="Grid.Row" Value="0" />
+                            <Setter TargetName="PART_Col1" Property="Width" Value="*" />
+                            <Setter TargetName="PART_Col2" Property="Width" Value="0" />
+                            <Setter TargetName="PART_Row1" Property="Height" Value="Auto" />
+                            <Setter TargetName="PART_Row2" Property="Height" Value="*" />
+                        </Trigger>
+                        <Trigger Property="ContentAnchor" Value="Left">
+                            <Setter TargetName="PART_Icon" Property="Grid.Column" Value="1" />
+                            <Setter TargetName="PART_Icon" Property="Grid.Row" Value="0" />
+                            <Setter TargetName="PART_Content" Property="Grid.Column" Value="0" />
+                            <Setter TargetName="PART_Content" Property="Grid.Row" Value="0" />
+                            <Setter TargetName="PART_Col1" Property="Width" Value="Auto" />
+                            <Setter TargetName="PART_Col2" Property="Width" Value="*" />
+                            <Setter TargetName="PART_Row1" Property="Height" Value="*" />
+                            <Setter TargetName="PART_Row2" Property="Height" Value="0" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

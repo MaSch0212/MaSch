@@ -1,0 +1,119 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MaSch.Presentation.Wpf.Controls"
+                    xmlns:m="http://schemas.masch212.de/MaSch/Wpf">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Languages/German.xaml" />
+
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/IconPresenter.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/Button.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/Calendar.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/CheckBox.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/ComboBox.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/ContextMenu.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/DataGrid.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/DatePicker.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/Expander.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/GridSplitter.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/GroupBox.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/ListBox.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/ListView.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/ProgressBar.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/RadioButton.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/ScrollViewer.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/Slider.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/TabControl.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/TextBlock.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/TextBox.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/ToolTip.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/Controls/TreeView.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <ControlTemplate x:Key="DefaultErrorTemplate">
+        <ControlTemplate.Resources>
+            <CubicEase x:Key="EasingFunction" />
+            <Storyboard x:Key="EnterErrorBobble">
+                <DoubleAnimation EasingFunction="{StaticResource EasingFunction}"
+                                 Storyboard.TargetName="ErrorBubble"
+                                 Storyboard.TargetProperty="Opacity"
+                                 To="1"
+                                 Duration="0:0:0.2" />
+                <DoubleAnimation EasingFunction="{StaticResource EasingFunction}"
+                                 Storyboard.TargetName="ErrorBubble"
+                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                 To="0"
+                                 Duration="0:0:0.2" />
+            </Storyboard>
+            <Storyboard x:Key="LeaveErrorBobble">
+                <DoubleAnimation EasingFunction="{StaticResource EasingFunction}"
+                                 Storyboard.TargetName="ErrorBubble"
+                                 Storyboard.TargetProperty="Opacity"
+                                 To="0"
+                                 Duration="0:0:0.2" />
+                <DoubleAnimation EasingFunction="{StaticResource EasingFunction}"
+                                 Storyboard.TargetName="ErrorBubble"
+                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                 To="-20"
+                                 Duration="0:0:0.2" />
+            </Storyboard>
+        </ControlTemplate.Resources>
+        <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding ElementName=ErrorAdorner, Path=AdornedElement.IsFocused}" Value="True">
+                <DataTrigger.EnterActions>
+                    <StopStoryboard BeginStoryboardName="LeaveErrorBobble" />
+                    <BeginStoryboard Name="EnterErrorBobble" Storyboard="{StaticResource EnterErrorBobble}" />
+                </DataTrigger.EnterActions>
+                <DataTrigger.ExitActions>
+                    <StopStoryboard BeginStoryboardName="EnterErrorBobble" />
+                    <BeginStoryboard Name="LeaveErrorBobble" Storyboard="{StaticResource LeaveErrorBobble}" />
+                </DataTrigger.ExitActions>
+            </DataTrigger>
+        </ControlTemplate.Triggers>
+        <StackPanel SnapsToDevicePixels="True">
+            <StackPanel x:Name="ErrorBubble"
+                        Width="{Binding ElementName=ControlBorder, Path=ActualWidth}"
+                        MinWidth="150"
+                        IsHitTestVisible="False"
+                        Opacity="0">
+                <StackPanel.RenderTransform>
+                    <TranslateTransform X="0" Y="-20" />
+                </StackPanel.RenderTransform>
+                <Border x:Name="ErrorMessage"
+                        MinWidth="100"
+                        MaxWidth="500"
+                        Padding="5"
+                        HorizontalAlignment="Left"
+                        Background="Red">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="8"
+                                          Opacity="0.6"
+                                          ShadowDepth="0"
+                                          Color="Red" />
+                    </Border.Effect>
+                    <TextBlock Foreground="White"
+                               Text="{Binding ElementName=ErrorAdorner, Path=AdornedElement.(Validation.Errors)[0].ErrorContent}"
+                               TextWrapping="Wrap" />
+                </Border>
+                <Path x:Name="Edge"
+                      Width="8"
+                      Height="8"
+                      Margin="10,0,0,0"
+                      HorizontalAlignment="Left"
+                      Data="M 0,0 0,1 1,0"
+                      Fill="Red"
+                      Stretch="Fill" />
+            </StackPanel>
+            <Border x:Name="ControlBorder"
+                    HorizontalAlignment="Left"
+                    BorderBrush="Red"
+                    BorderThickness="2">
+                <AdornedElementPlaceholder x:Name="ErrorAdorner" Margin="-2" />
+            </Border>
+        </StackPanel>
+    </ControlTemplate>
+
+    <DataTemplate DataType="{x:Type m:Icon}">
+        <controls:IconPresenter Icon="{Binding}" />
+    </DataTemplate>
+</ResourceDictionary>

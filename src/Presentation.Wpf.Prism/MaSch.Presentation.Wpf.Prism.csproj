@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+
+    <!-- General Project info -->
+    <RootNamespace>MaSch.Presentation.Wpf</RootNamespace>
+    <TargetFrameworks>net5.0-windows;net48</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <UseWPF>true</UseWPF>
+
+    <!-- Output info -->
+    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
+
+    <!-- Package Info -->
+    <Description>Contains supporting code for .NET WPF applications using the Prism framework from Microsoft.</Description>
+    <Version>3.2.0</Version>
+    <Authors>Marc Schmidt</Authors>
+    <SupportedOSPlatform>windows</SupportedOSPlatform>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)'=='net48' ">
+    <DefineConstants>NETFX</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Prism.Wpf" Version="7.2.0.1422" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)'=='net48' ">
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)'!='net48' ">
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Properties\MaSch.snk" />
+  </ItemGroup>
+</Project>

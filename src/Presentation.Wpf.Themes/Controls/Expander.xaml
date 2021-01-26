@@ -1,0 +1,210 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MaSch.Presentation.Wpf.Controls"
+                    xmlns:m="http://schemas.masch212.de/MaSch/Wpf"
+                    xmlns:tm="clr-namespace:MaSch.Presentation.Wpf.Markup">
+
+    <Style x:Key="MaSchExpanderToggleButton" TargetType="ToggleButton">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Background" Value="{tm:ThemeValue Key=ExpanderNormalBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{tm:ThemeValue Key=ExpanderNormalBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{tm:ThemeValue Key=ExpanderBorderThickness}" />
+        <Setter Property="Foreground" Value="{tm:ThemeValue Key=ExpanderNormalForegroundBrush}" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+        <Setter Property="FontWeight" Value="DemiBold" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{tm:ThemeValue Key=ExpanderCornerRadius}">
+                        <ContentPresenter Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{tm:ThemeValue Key=ExpanderHoverBackgroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{tm:ThemeValue Key=ExpanderHoverBorderBrush}" />
+                            <Setter Property="Foreground" Value="{tm:ThemeValue Key=ExpanderHoverForegroundBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Background" Value="{tm:ThemeValue Key=ExpanderExpandedBackgroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{tm:ThemeValue Key=ExpanderExpandedBorderBrush}" />
+                            <Setter Property="Foreground" Value="{tm:ThemeValue Key=ExpanderExpandedForegroundBrush}" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsChecked" Value="True" />
+                                <Condition Property="IsMouseOver" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" Value="{tm:ThemeValue Key=ExpanderHoverExpandedBackgroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{tm:ThemeValue Key=ExpanderHoverExpandedBorderBrush}" />
+                            <Setter Property="Foreground" Value="{tm:ThemeValue Key=ExpanderHoverExpandedForegroundBrush}" />
+                        </MultiTrigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" Value="{tm:ThemeValue Key=ExpanderPressBackgroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{tm:ThemeValue Key=ExpanderPressBorderBrush}" />
+                            <Setter Property="Foreground" Value="{tm:ThemeValue Key=ExpanderPressForegroundBrush}" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsChecked" Value="True" />
+                                <Condition Property="IsPressed" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" Value="{tm:ThemeValue Key=ExpanderPressExpandedBackgroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{tm:ThemeValue Key=ExpanderPressExpandedBorderBrush}" />
+                            <Setter Property="Foreground" Value="{tm:ThemeValue Key=ExpanderPressExpandedForegroundBrush}" />
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="{tm:ThemeValue Key=ExpanderDisabledBackgroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{tm:ThemeValue Key=ExpanderDisabledBorderBrush}" />
+                            <Setter Property="Foreground" Value="{tm:ThemeValue Key=ExpanderDisabledForegroundBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="MaSchExpanderStyle" TargetType="Expander">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{tm:ThemeValue Key=ExpanderPadding}" />
+        <Setter Property="m:Expander.HeaderPadding" Value="{tm:ThemeValue Key=ExpanderHeaderPadding}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Expander">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition x:Name="Row1" Height="Auto" />
+                                <RowDefinition x:Name="Row2" Height="0" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition x:Name="Col1" Width="*" />
+                                <ColumnDefinition x:Name="Col2" Width="0" />
+                            </Grid.ColumnDefinitions>
+                            <ToggleButton x:Name="PART_Header"
+                                          Grid.Row="0"
+                                          Grid.Column="0"
+                                          Padding="{TemplateBinding m:Expander.HeaderPadding}"
+                                          IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                          Style="{StaticResource MaSchExpanderToggleButton}">
+                                <DockPanel>
+                                    <controls:IconPresenter x:Name="PART_Icon"
+                                                            Width="{tm:ThemeValue Key=ExpanderIconSize}"
+                                                            Height="{tm:ThemeValue Key=ExpanderIconSize}"
+                                                            VerticalAlignment="Center"
+                                                            DockPanel.Dock="Left"
+                                                            Icon="{tm:ThemeValue Key=ExpanderIconRight}" />
+                                    <ContentPresenter x:Name="PART_HeaderText"
+                                                      HorizontalAlignment="Stretch"
+                                                      VerticalAlignment="Center"
+                                                      ContentSource="Header"
+                                                      RecognizesAccessKey="True" />
+                                </DockPanel>
+                            </ToggleButton>
+                            <Border x:Name="PART_Content"
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Padding="{TemplateBinding Padding}"
+                                    Visibility="Collapsed">
+                                <ContentPresenter />
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded" Value="True">
+                            <Setter TargetName="PART_Content" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsExpanded" Value="True" />
+                                <Condition Property="ExpandDirection" Value="Down" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PART_Icon" Property="Icon" Value="{tm:ThemeValue Key=ExpanderIconDown}" />
+                            <Setter TargetName="Row2" Property="Height" Value="*" />
+                        </MultiTrigger>
+                        <Trigger Property="ExpandDirection" Value="Up">
+                            <Setter TargetName="PART_Header" Property="Grid.Column" Value="0" />
+                            <Setter TargetName="PART_Header" Property="Grid.Row" Value="1" />
+                            <Setter TargetName="PART_Content" Property="Grid.Column" Value="0" />
+                            <Setter TargetName="PART_Content" Property="Grid.Row" Value="0" />
+                            <Setter TargetName="PART_Icon" Property="Icon" Value="{tm:ThemeValue Key=ExpanderIconRight}" />
+                            <Setter TargetName="PART_Icon" Property="DockPanel.Dock" Value="Left" />
+                            <Setter TargetName="PART_HeaderText" Property="VerticalAlignment" Value="Center" />
+                            <Setter TargetName="PART_HeaderText" Property="HorizontalAlignment" Value="Stretch" />
+                            <Setter TargetName="Row1" Property="Height" Value="0" />
+                            <Setter TargetName="Row2" Property="Height" Value="Auto" />
+                            <Setter TargetName="Col1" Property="Width" Value="*" />
+                            <Setter TargetName="Col2" Property="Width" Value="0" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsExpanded" Value="True" />
+                                <Condition Property="ExpandDirection" Value="Up" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PART_Icon" Property="Icon" Value="{tm:ThemeValue Key=ExpanderIconUp}" />
+                            <Setter TargetName="Row1" Property="Height" Value="*" />
+                        </MultiTrigger>
+                        <Trigger Property="ExpandDirection" Value="Right">
+                            <Setter TargetName="PART_Header" Property="Grid.Column" Value="0" />
+                            <Setter TargetName="PART_Header" Property="Grid.Row" Value="0" />
+                            <Setter TargetName="PART_Content" Property="Grid.Column" Value="1" />
+                            <Setter TargetName="PART_Content" Property="Grid.Row" Value="0" />
+                            <Setter TargetName="PART_Icon" Property="Icon" Value="{tm:ThemeValue Key=ExpanderIconDown}" />
+                            <Setter TargetName="PART_Icon" Property="DockPanel.Dock" Value="Top" />
+                            <Setter TargetName="PART_HeaderText" Property="VerticalAlignment" Value="Stretch" />
+                            <Setter TargetName="PART_HeaderText" Property="HorizontalAlignment" Value="Center" />
+                            <Setter TargetName="Row1" Property="Height" Value="*" />
+                            <Setter TargetName="Row2" Property="Height" Value="0" />
+                            <Setter TargetName="Col1" Property="Width" Value="Auto" />
+                            <Setter TargetName="Col2" Property="Width" Value="0" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsExpanded" Value="True" />
+                                <Condition Property="ExpandDirection" Value="Right" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PART_Icon" Property="Icon" Value="{tm:ThemeValue Key=ExpanderIconRight}" />
+                            <Setter TargetName="Col2" Property="Width" Value="*" />
+                        </MultiTrigger>
+                        <Trigger Property="ExpandDirection" Value="Left">
+                            <Setter TargetName="PART_Header" Property="Grid.Column" Value="1" />
+                            <Setter TargetName="PART_Header" Property="Grid.Row" Value="0" />
+                            <Setter TargetName="PART_Content" Property="Grid.Column" Value="0" />
+                            <Setter TargetName="PART_Content" Property="Grid.Row" Value="0" />
+                            <Setter TargetName="PART_Icon" Property="Icon" Value="{tm:ThemeValue Key=ExpanderIconDown}" />
+                            <Setter TargetName="PART_Icon" Property="DockPanel.Dock" Value="Top" />
+                            <Setter TargetName="PART_HeaderText" Property="VerticalAlignment" Value="Stretch" />
+                            <Setter TargetName="PART_HeaderText" Property="HorizontalAlignment" Value="Center" />
+                            <Setter TargetName="Row1" Property="Height" Value="*" />
+                            <Setter TargetName="Row2" Property="Height" Value="0" />
+                            <Setter TargetName="Col1" Property="Width" Value="0" />
+                            <Setter TargetName="Col2" Property="Width" Value="Auto" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsExpanded" Value="True" />
+                                <Condition Property="ExpandDirection" Value="Left" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PART_Icon" Property="Icon" Value="{tm:ThemeValue Key=ExpanderIconLeft}" />
+                            <Setter TargetName="Col1" Property="Width" Value="*" />
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style BasedOn="{StaticResource MaSchExpanderStyle}" TargetType="Expander" />
+
+</ResourceDictionary>

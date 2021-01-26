@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+
+    <!-- General Project info -->
+    <TargetFrameworks>net5.0;net48</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+
+    <!-- Output info -->
+    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
+    <Platforms>AnyCPU;x86;x64</Platforms>
+
+    <!-- Package Info -->
+    <Description>Contains common supporting code for .NET applications.</Description>
+    <Version>3.2.0</Version>
+    <Authors>Marc Schmidt</Authors>
+    <SupportedOSPlatform>windows</SupportedOSPlatform>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net48' ">
+    <DefineConstants>NETFX</DefineConstants>
+    <NoWarn>$(NoWarn);8600;8601;8602;8603;8604;8777;8767</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Properties\MaSch.snk" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,37 @@
+﻿<#@ assembly name="System.Core" #>
+<#@ assembly name="$(ProjectDir)..\bin\Debug\net48\Newtonsoft.Json.dll" #>
+<#@ import namespace="Newtonsoft.Json.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Runtime.Remoting.Messaging" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ include file="..\..\T4\T4Common.ttinclude" #>
+<#
+    Generate(@"Base\Theme.json");
+#>
+<#+
+    public void Generate(string filePath)
+    {
+        var @namespace = GetNamespaceHint();
+        var enumName = Path.GetFileNameWithoutExtension(Host.TemplateFile);
+        var themeFile = Path.Combine(Path.GetDirectoryName(Host.TemplateFile), filePath);
+        var json = JToken.Parse(File.ReadAllText(themeFile));
+
+        var sb = new StringBuilder();
+
+        sb.AppendLine($"namespace {@namespace}")
+            .AppendLine("{")
+            .AppendLine($"    public enum {enumName}")
+            .AppendLine("    {");
+
+        foreach (var key in json["Values"].Children<JProperty>())
+        {
+            sb.AppendLine($"        {key.Name},");
+        }
+
+        sb.AppendLine("    }")
+            .AppendLine("}");
+        Write(sb.ToString());
+    }
+#>

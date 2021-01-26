@@ -1,0 +1,253 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MaSch.Presentation.Wpf.Controls"
+                    xmlns:converters="http://schemas.masch212.de/MaSch/Wpf/Converter"
+                    xmlns:m="http://schemas.masch212.de/MaSch/Wpf"
+                    xmlns:mct="http://schemas.masch212.de/MaSch/Wpf/Controls"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <Style x:Key="MaSchTabItem" TargetType="TabItem">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TabItem">
+                    <Grid Background="{TemplateBinding Background}">
+                        <StackPanel HorizontalAlignment="Center" SnapsToDevicePixels="True">
+                            <ContentPresenter x:Name="MaSch_Text"
+                                              Margin="8,0"
+                                              ContentSource="Header"
+                                              TextBlock.FontSize="14"
+                                              TextBlock.Foreground="{m:ThemeValue Key=TabItemNormalForegroundBrush}">
+                                <ContentPresenter.Resources>
+                                    <DataTemplate DataType="{x:Type sys:String}">
+                                        <TextBlock Text="{Binding}">
+                                            <TextBlock.Resources>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Setter Property="FontFamily" Value="{m:ThemeValue Key=FontNormal}" />
+                                                    <Setter Property="FontSize" Value="{m:ThemeValue Key=TabItemFontSize}" />
+                                                    <Setter Property="SnapsToDevicePixels" Value="True" />
+                                                </Style>
+                                            </TextBlock.Resources>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
+                        </StackPanel>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger SourceName="MaSch_Text" Property="IsMouseOver" Value="True">
+                            <Setter TargetName="MaSch_Text" Property="TextBlock.Foreground" Value="{m:ThemeValue Key=TabItemHoverForegroundBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="MaSch_Text" Property="TextBlock.Foreground" Value="{m:ThemeValue Key=TabItemSelectedForegroundBrush}" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True" />
+                                <Condition Property="IsSelected" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="MaSch_Text" Property="TextBlock.Foreground" Value="{m:ThemeValue Key=TabItemHoverSelectedForegroundBrush}" />
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="MaSch_Text" Property="TextBlock.Foreground" Value="{m:ThemeValue Key=TabItemDisabledForegroundBrush}" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsEnabled" Value="False" />
+                                <Condition Property="IsSelected" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="MaSch_Text" Property="TextBlock.Foreground" Value="{m:ThemeValue Key=TabItemDisabledSelectedForegroundBrush}" />
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="MaSchTabControl_ComboBox" TargetType="{x:Type ComboBox}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{m:ThemeValue Key=ComboBoxNormalBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{m:ThemeValue Key=ComboBoxNormalBorderThickness}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+                    <Grid>
+                        <controls:IconToggleButton Padding="{TemplateBinding Padding}"
+                                                   BorderThickness="{TemplateBinding BorderThickness}"
+                                                   Icon="{m:ThemeValue Key=TabControlDropDownArrowIcon}"
+                                                   IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsDropDownOpen, Mode=TwoWay}" />
+                        <!--<ToggleButton x:Name="ToggleButton"
+                                      Padding="{TemplateBinding Padding}"
+                                      HorizontalContentAlignment="Stretch"
+                                      BorderThickness="{TemplateBinding BorderThickness}"
+                                      IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsDropDownOpen, Mode=TwoWay}"
+                                      Style="{m:ThemeValue Key=ComboBoxToggleButton}">
+                            <Grid x:Name="ButtonContent">
+                                <ContentPresenter x:Name="ContentSite"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Content="{TemplateBinding SelectionBoxItem}"
+                                                  ContentStringFormat="{TemplateBinding ItemStringFormat}"
+                                                  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                  ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" />
+
+                                <mct:IconPresenter Padding="4"
+                                                   Foreground="{m:ThemeValue Key=ButtonNormalForegroundBrush}"
+                                                   Icon="{m:ThemeValue Key=TabControlDropDownArrowIcon}" />
+                            </Grid>
+                        </ToggleButton>-->
+
+                        <Popup x:Name="Popup"
+                               AllowsTransparency="True"
+                               Focusable="False"
+                               HorizontalOffset="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
+                               IsOpen="{TemplateBinding IsDropDownOpen}"
+                               Placement="Left"
+                               PopupAnimation="Slide"
+                               VerticalOffset="{Binding ActualHeight, RelativeSource={RelativeSource TemplatedParent}}">
+                            <Grid x:Name="DropDown"
+                                  MinWidth="{TemplateBinding ActualWidth}"
+                                  MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                  SnapsToDevicePixels="True">
+                                <Border x:Name="DropDownBorder"
+                                        Background="{m:ThemeValue Key=ComboBoxPopupBackgroundBrush}"
+                                        BorderBrush="{m:ThemeValue Key=ComboBoxPopupBorderBrush}"
+                                        BorderThickness="{m:ThemeValue Key=ComboBoxPopupBorderThickness}"
+                                        CornerRadius="{m:ThemeValue Key=ComboBoxPopupCornerRadius}">
+                                    <ScrollViewer SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Border>
+                            </Grid>
+                        </Popup>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type controls:TabControl}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:TabControl">
+                    <ControlTemplate.Resources>
+                        <Style BasedOn="{StaticResource MaSchTabItem}" TargetType="{x:Type TabItem}" />
+                        <converters:CornerRadiusConverter x:Key="RemoveLeftCornerRadiusConverter"
+                                                          BottomLeftFormula="0"
+                                                          TopLeftFormula="0" />
+                        <converters:CornerRadiusConverter x:Key="RemoveRightCornerRadiusConverter"
+                                                          BottomRightFormula="0"
+                                                          TopRightFormula="0" />
+                    </ControlTemplate.Resources>
+                    <Grid Background="{TemplateBinding Background}"
+                          KeyboardNavigation.TabNavigation="Local"
+                          SnapsToDevicePixels="True">
+                        <DockPanel>
+                            <Grid Margin="0,5,0,0"
+                                  VerticalAlignment="Top"
+                                  DockPanel.Dock="Top">
+                                <Border x:Name="MaSch_UnderlineTrack"
+                                        Height="{m:ThemeValue Key=TabItemUnderlineThickness}"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Bottom"
+                                        Background="{m:ThemeValue Key=DisabledBackgroundBrush}" />
+                                <ScrollViewer x:Name="MaSch_Tabs"
+                                              Margin="0,0,56,0"
+                                              HorizontalScrollBarVisibility="Hidden"
+                                              VerticalScrollBarVisibility="Hidden">
+                                    <StackPanel x:Name="MaSch_TabsInner">
+                                        <StackPanel x:Name="HeaderPanel"
+                                                    VerticalAlignment="Top"
+                                                    IsItemsHost="True"
+                                                    KeyboardNavigation.TabIndex="1"
+                                                    Orientation="Horizontal" />
+                                        <Border x:Name="MaSch_Underline"
+                                                Width="1"
+                                                Height="{m:ThemeValue Key=TabItemUnderlineThickness}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Bottom"
+                                                Background="{m:ThemeValue Key=TabItemSelectedForegroundBrush}"
+                                                RenderTransformOrigin="0,0">
+                                            <Border.RenderTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform />
+                                                    <TranslateTransform />
+                                                </TransformGroup>
+                                            </Border.RenderTransform>
+                                        </Border>
+                                    </StackPanel>
+                                </ScrollViewer>
+
+                                <StackPanel x:Name="NavigationPart"
+                                            Width="48"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Orientation="Horizontal">
+                                    <controls:IconButton x:Name="MaSch_PrevTab"
+                                                         Width="16"
+                                                         Height="16"
+                                                         Padding="4"
+                                                         CornerRadius="{Binding Converter={StaticResource RemoveRightCornerRadiusConverter}}"
+                                                         DataContext="{m:ThemeValue Key=ButtonCornerRadius}"
+                                                         Icon="{m:ThemeValue Key=TabControlPreviousTabIcon}" />
+                                    <controls:IconButton x:Name="MaSch_NextTab"
+                                                         Width="16"
+                                                         Height="16"
+                                                         Padding="4"
+                                                         CornerRadius="{Binding Converter={StaticResource RemoveLeftCornerRadiusConverter}}"
+                                                         DataContext="{m:ThemeValue Key=ButtonCornerRadius}"
+                                                         Icon="{m:ThemeValue Key=TabControlNextTabIcon}" />
+                                    <ComboBox x:Name="MaSch_AllTabs"
+                                              Width="16"
+                                              Height="16"
+                                              Padding="4"
+                                              DisplayMemberPath="Header"
+                                              ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Items}"
+                                              SelectedItem="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedItem}"
+                                              Style="{StaticResource MaSchTabControl_ComboBox}" />
+                                </StackPanel>
+                            </Grid>
+                            <Border Background="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedItem.(Control.Background)}" DockPanel.Dock="Bottom">
+                                <Grid>
+                                    <ContentPresenter x:Name="MaSch_LastContent"
+                                                      Margin="5"
+                                                      Opacity="0"
+                                                      RenderTransformOrigin="0.5,0.5">
+                                        <ContentPresenter.Style>
+                                            <Style TargetType="ContentPresenter">
+                                                <Style.Triggers>
+                                                    <Trigger Property="Opacity" Value="0">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentPresenter.Style>
+                                    </ContentPresenter>
+                                    <ContentPresenter x:Name="PART_SelectedContentHost"
+                                                      Margin="5"
+                                                      ContentSource="SelectedContent"
+                                                      RenderTransformOrigin="0.5,0.5" />
+                                    <ContentPresenter x:Name="MaSch_PreviewContent"
+                                                      Margin="5"
+                                                      IsHitTestVisible="False"
+                                                      Opacity="0.5"
+                                                      RenderTransformOrigin="0.5,0.5" />
+                                </Grid>
+                            </Border>
+                        </DockPanel>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="MaSch_Underline" Property="Background" Value="{m:ThemeValue Key=TabItemDisabledSelectedForegroundBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsNavigationPartVisible" Value="False">
+                            <Setter TargetName="NavigationPart" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

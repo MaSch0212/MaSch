@@ -1,0 +1,275 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MaSch.Presentation.Wpf.Controls"
+                    xmlns:m="http://schemas.masch212.de/MaSch/Wpf">
+
+    <Style TargetType="{x:Type controls:ProgressBar}">
+        <Setter Property="Foreground" Value="{m:ThemeValue Key=ProgressBarDefaultBarBrush}" />
+        <Setter Property="Background" Value="{m:ThemeValue Key=ProgressBarNormalNormalBackgroundBrush}" />
+        <Setter Property="GraphBackground" Value="{m:ThemeValue Key=ProgressBarNormalGraphBackgroundBrush}" />
+        <!--<Setter Property="CurrentSpeedLabel" Value="{m:ThemeValue Key=ProgressBarCurrentSpeedLabel}" />-->
+        <Setter Property="NormalBarHeight" Value="{m:ThemeValue Key=ProgressBarDefaultNormalHeight}" />
+        <Setter Property="GraphBarHeight" Value="{m:ThemeValue Key=ProgressBarDefaultGraphModeHeight}" />
+        <Setter Property="BorderBrush" Value="{m:ThemeValue Key=ProgressBarNormalBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{m:ThemeValue Key=ProgressBarDefaultBorderThickness}" />
+        <Setter Property="CurrentSpeedForegroundBrush" Value="{m:ThemeValue Key=ProgressBarNormalGraphLineBrush}" />
+        <Setter Property="GraphMode" Value="False" />
+        <Setter Property="Height" Value="{m:ThemeValue Key=ProgressBarDefaultNormalHeight}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:ProgressBar">
+                    <Grid x:Name="Root" SnapsToDevicePixels="True">
+                        <Border Name="ProgressBarTrack" Background="{TemplateBinding Background}" />
+                        <Grid x:Name="ProgressBarRootGrid">
+                            <Grid x:Name="IndeterminateRoot" Opacity="0">
+                                <Rectangle x:Name="IndeterminateGradientFill"
+                                           Fill="{TemplateBinding Foreground}"
+                                           Opacity="1">
+                                    <Rectangle.OpacityMask>
+                                        <LinearGradientBrush MappingMode="RelativeToBoundingBox" SpreadMethod="Repeat" StartPoint="0,0" EndPoint="1,0">
+                                            <LinearGradientBrush.RelativeTransform>
+                                                <TranslateTransform X="0" />
+                                            </LinearGradientBrush.RelativeTransform>
+                                            <GradientStop Offset="0" Color="Black" />
+                                            <GradientStop Offset="0.33" Color="Black" />
+                                            <GradientStop Offset="0.33" Color="Transparent" />
+                                            <GradientStop Offset="1" Color="Transparent" />
+                                        </LinearGradientBrush>
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                            </Grid>
+                            <Grid x:Name="DeterminateRoot">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition x:Name="Indicator_Left" Width="0*" />
+                                    <ColumnDefinition x:Name="Indicator_Right" Width="1*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid x:Name="MaSch_Indicator">
+                                    <Border x:Name="NormalIndicator" Background="{TemplateBinding Foreground}" />
+                                </Grid>
+                            </Grid>
+                            <Grid x:Name="Graph" Opacity="0">
+                                <Border Background="{TemplateBinding GraphBackground}" />
+                                <Grid Opacity="0.33">
+                                    <Border x:Name="GraphIndicator"
+                                            Width="{Binding ElementName=MaSch_Indicator, Path=ActualWidth}"
+                                            HorizontalAlignment="Left"
+                                            Background="{TemplateBinding Foreground}"
+                                            Opacity="{Binding ElementName=DeterminateRoot, Path=Opacity}"
+                                            Visibility="{Binding ElementName=DeterminateRoot, Path=Visibility}" />
+                                </Grid>
+                                <Grid x:Name="GraphIndeterminate"
+                                      Opacity="{Binding ElementName=IndeterminateRoot, Path=Opacity}"
+                                      Visibility="{Binding ElementName=IndeterminateRoot, Path=Visibility}">
+                                    <Rectangle x:Name="GraphIndeterminateGradientFill"
+                                               Fill="{TemplateBinding Foreground}"
+                                               Opacity="0">
+                                        <Rectangle.OpacityMask>
+                                            <LinearGradientBrush MappingMode="RelativeToBoundingBox" SpreadMethod="Repeat" StartPoint="0,0" EndPoint="1,0">
+                                                <LinearGradientBrush.RelativeTransform>
+                                                    <TranslateTransform X="0" />
+                                                </LinearGradientBrush.RelativeTransform>
+                                                <GradientStop Offset="0" Color="Transparent" />
+                                                <GradientStop Offset="0.20" Color="Black" />
+                                                <GradientStop Offset="0.30" Color="Black" />
+                                                <GradientStop Offset="0.50" Color="Transparent" />
+                                                <GradientStop Offset="1" Color="Transparent" />
+                                            </LinearGradientBrush>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </Grid>
+                                <Grid Opacity="0.5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <Border Grid.Row="0"
+                                            Grid.ColumnSpan="12"
+                                            BorderBrush="{TemplateBinding Foreground}"
+                                            BorderThickness="0,0,0,1" />
+                                    <Border Grid.Row="0"
+                                            Grid.RowSpan="5"
+                                            Grid.Column="0"
+                                            BorderBrush="{TemplateBinding Foreground}"
+                                            BorderThickness="0,0,1,0" />
+                                    <Border Grid.Row="0"
+                                            Grid.RowSpan="5"
+                                            Grid.Column="1"
+                                            BorderBrush="{TemplateBinding Foreground}"
+                                            BorderThickness="0,0,1,0" />
+                                    <Border Grid.Row="0"
+                                            Grid.RowSpan="5"
+                                            Grid.Column="2"
+                                            BorderBrush="{TemplateBinding Foreground}"
+                                            BorderThickness="0,0,1,0" />
+                                    <Border Grid.Row="0"
+                                            Grid.RowSpan="5"
+                                            Grid.Column="3"
+                                            BorderBrush="{TemplateBinding Foreground}"
+                                            BorderThickness="0,0,1,0" />
+                                    <Border Grid.Row="0"
+                                            Grid.RowSpan="5"
+                                            Grid.Column="4"
+                                            BorderBrush="{TemplateBinding Foreground}"
+                                            BorderThickness="0,0,1,0" />
+                                    <Border Grid.Row="0"
+                                            Grid.RowSpan="5"
+                                            Grid.Column="5"
+                                            BorderBrush="{TemplateBinding Foreground}"
+                                            BorderThickness="0,0,1,0" />
+                                    <Border Grid.Row="0"
+                                            Grid.RowSpan="5"
+                                            Grid.Column="6"
+                                            BorderBrush="{TemplateBinding Foreground}"
+                                            BorderThickness="0,0,1,0" />
+                                    <Border Grid.Row="0"
+                                            Grid.RowSpan="5"
+                                            Grid.Column="7"
+                                            BorderBrush="{TemplateBinding Foreground}"
+                                            BorderThickness="0,0,1,0" />
+                                    <Border Grid.Row="0"
+                                            Grid.RowSpan="5"
+                                            Grid.Column="8"
+                                            BorderBrush="{TemplateBinding Foreground}"
+                                            BorderThickness="0,0,1,0" />
+                                    <Border Grid.Row="0"
+                                            Grid.RowSpan="5"
+                                            Grid.Column="9"
+                                            BorderBrush="{TemplateBinding Foreground}"
+                                            BorderThickness="0,0,1,0" />
+                                    <Border Grid.Row="0"
+                                            Grid.RowSpan="5"
+                                            Grid.Column="10"
+                                            BorderBrush="{TemplateBinding Foreground}"
+                                            BorderThickness="0,0,1,0" />
+                                    <Border Grid.Row="1"
+                                            Grid.Column="0"
+                                            Grid.ColumnSpan="12"
+                                            BorderBrush="{TemplateBinding Foreground}"
+                                            BorderThickness="0,0,0,1" />
+                                    <Border Grid.Row="2"
+                                            Grid.Column="0"
+                                            Grid.ColumnSpan="12"
+                                            BorderBrush="{TemplateBinding Foreground}"
+                                            BorderThickness="0,0,0,1" />
+                                    <Border Grid.Row="3"
+                                            Grid.Column="0"
+                                            Grid.ColumnSpan="12"
+                                            BorderBrush="{TemplateBinding Foreground}"
+                                            BorderThickness="0,0,0,1" />
+                                </Grid>
+                                <Grid Opacity="{Binding ElementName=DeterminateRoot, Path=Opacity}" Visibility="{Binding ElementName=DeterminateRoot, Path=Visibility}">
+                                    <Path x:Name="GraphPathRaw"
+                                          HorizontalAlignment="Stretch"
+                                          VerticalAlignment="Stretch"
+                                          Stretch="Fill"
+                                          Stroke="Gray"
+                                          StrokeThickness="1" />
+                                    <Path x:Name="GraphPath"
+                                          HorizontalAlignment="Stretch"
+                                          VerticalAlignment="Stretch"
+                                          Fill="{TemplateBinding Foreground}"
+                                          Stretch="Fill" />
+                                    <Border x:Name="MaSch_Line"
+                                            VerticalAlignment="Bottom"
+                                            BorderBrush="{TemplateBinding CurrentSpeedForegroundBrush}"
+                                            BorderThickness="0,0,0,1">
+                                        <StackPanel Margin="0,0,5,0"
+                                                    HorizontalAlignment="Right"
+                                                    Orientation="Horizontal">
+                                            <TextBlock Margin="0,0,5,0"
+                                                       Foreground="{TemplateBinding CurrentSpeedForegroundBrush}"
+                                                       Text="{TemplateBinding CurrentSpeedLabel}" />
+                                            <TextBlock x:Name="MaSch_CurrentSpeed"
+                                                       Margin="0,0,5,0"
+                                                       Foreground="{TemplateBinding CurrentSpeedForegroundBrush}" />
+                                            <TextBlock Foreground="{TemplateBinding CurrentSpeedForegroundBrush}" Text="{TemplateBinding CurrentSpeedUnit}" />
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Border x:Name="ControlBorder"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Opacity="0" />
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Determinate">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="IndeterminateRoot"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0"
+                                                         Duration="0:0:0.2" />
+                                        <DoubleAnimation Storyboard.TargetName="DeterminateRoot"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="1"
+                                                         Duration="0:0:0.2" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Indeterminate">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="IndeterminateRoot"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="1"
+                                                         Duration="0:0:0.2" />
+                                        <DoubleAnimation Storyboard.TargetName="DeterminateRoot"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0"
+                                                         Duration="0:0:0.2" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsIndeterminate" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation RepeatBehavior="Forever"
+                                                         Storyboard.TargetName="IndeterminateGradientFill"
+                                                         Storyboard.TargetProperty="(Shape.OpacityMask).(LinearGradientBrush.RelativeTransform).(TranslateTransform.X)"
+                                                         From="0"
+                                                         To="1"
+                                                         Duration="00:00:2" />
+                                        <DoubleAnimation RepeatBehavior="Forever"
+                                                         Storyboard.TargetName="GraphIndeterminateGradientFill"
+                                                         Storyboard.TargetProperty="(Shape.OpacityMask).(LinearGradientBrush.RelativeTransform).(TranslateTransform.X)"
+                                                         From="0"
+                                                         To="1"
+                                                         Duration="00:00:2" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{m:ThemeValue Key=ProgressBarDisabledBarBrush}" />
+                            <Setter Property="Background" Value="{m:ThemeValue Key=ProgressBarDisabledNormalBackgroundBrush}" />
+                            <Setter Property="GraphBackground" Value="{m:ThemeValue Key=ProgressBarDisabledGraphBackgroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{m:ThemeValue Key=ProgressBarDisabledBorderBrush}" />
+                            <Setter Property="CurrentSpeedForegroundBrush" Value="{m:ThemeValue Key=ProgressBarDisabledGraphLineBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

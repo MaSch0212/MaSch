@@ -1,0 +1,102 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+
+    <!-- General Project info -->
+    <RootNamespace>MaSch.Presentation.Wpf</RootNamespace>
+    <TargetFrameworks>net5.0-windows;net48</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <UseWPF>true</UseWPF>
+
+    <!-- Output info -->
+    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
+    <Platforms>AnyCPU;x86;x64</Platforms>
+
+    <!-- Package Info -->
+    <Description>Contains modern themes for .NET WPF application</Description>
+    <Version>3.2.0</Version>
+    <Authors>Marc Schmidt</Authors>
+    <SupportedOSPlatform>windows</SupportedOSPlatform>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)'=='net48' ">
+    <DefineConstants>NETFX</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="FastWPF.DesignerSettings" />
+    <None Remove="**\*.FastWPF" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Themes\Base\Theme.json" />
+    <None Remove="Themes\Dark\Colors.json" />
+    <None Remove="Themes\Dark\DefaultWindowIcon.ico" />
+    <None Remove="Themes\Dark\Theme.json" />
+    <None Remove="Themes\Light.json" />
+    <None Remove="Themes\Light\DefaultWindowIcon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\MaSch.Core.csproj" />
+    <ProjectReference Include="..\Presentation.Wpf\MaSch.Presentation.Wpf.csproj" />
+    <ProjectReference Include="..\Presentation\MaSch.Presentation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)'=='net48' ">
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)'!='net48' ">
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Properties\MaSch.snk" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <Resource Include="Themes\Base\Theme.json" />
+    <Resource Include="Themes\Dark\DefaultWindowIcon.ico" />
+    <Resource Include="Themes\Dark\Theme.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Themes\Light\DefaultWindowIcon.ico" />
+    <Resource Include="Themes\Light\Theme.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Themes\ThemeKey.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ThemeKey.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Themes\ThemeKey.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ThemeKey.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+</Project>

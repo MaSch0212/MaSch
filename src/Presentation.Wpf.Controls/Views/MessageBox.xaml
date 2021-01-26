@@ -1,0 +1,132 @@
+﻿<controls:Window x:Class="MaSch.Presentation.Wpf.Views.MessageBox"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:controls="clr-namespace:MaSch.Presentation.Wpf.Controls"
+                 xmlns:mct="http://schemas.masch212.de/MaSch/Wpf/Controls"
+                 xmlns:viewModels="clr-namespace:MaSch.Presentation.Wpf.ViewModels"
+                 Title="{Binding Caption}"
+                 Width="300"
+                 Height="150"
+                 MinWidth="300"
+                 MinHeight="150"
+                 x:ClassModifier="internal"
+                 Icon="{x:Null}"
+                 OnlyClose="True"
+                 ResizeMode="NoResize"
+                 ShowInTaskbar="False"
+                 WindowStartupLocation="CenterScreen">
+    <controls:Window.DataContext>
+        <viewModels:MessageBoxViewModel Caption="Test"
+                                        MessageBoxButtons="YesNo"
+                                        MessageBoxImage="Information"
+                                        MessageBoxText="Dies ist eine Test MessageBox!" />
+    </controls:Window.DataContext>
+    <Grid x:Name="ContentGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition x:Name="ButtonRow" Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Canvas Visibility="Hidden">
+            <TextBlock x:Name="OneLineMessageBoxText" Text="{Binding MessageBoxText}" />
+        </Canvas>
+        <mct:IconPresenter x:Name="IconPresenter"
+                           Grid.Row="0"
+                           Grid.Column="0"
+                           Width="32"
+                           Height="32"
+                           Margin="25,0,15,0"
+                           BorderBrush="{Binding Icon.StrokeBrush}"
+                           Foreground="{Binding Icon.FillBrush}"
+                           Icon="{Binding Icon.Icon}">
+            <mct:IconPresenter.Style>
+                <Style TargetType="mct:IconPresenter">
+                    <Setter Property="Visibility" Value="Visible" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Icon.Icon}" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </mct:IconPresenter.Style>
+        </mct:IconPresenter>
+        <TextBox x:Name="MessageBoxContent"
+                 Grid.Row="0"
+                 Grid.Column="1"
+                 Margin="10,5"
+                 HorizontalAlignment="Stretch"
+                 VerticalContentAlignment="Center"
+                 Background="Transparent"
+                 BorderThickness="0"
+                 IsReadOnly="True"
+                 Text="{Binding MessageBoxText}"
+                 TextAlignment="Left"
+                 TextWrapping="Wrap"
+                 VerticalScrollBarVisibility="Auto" />
+        <StackPanel Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Margin="5,5,10,5"
+                    HorizontalAlignment="Right"
+                    Grid.IsSharedSizeScope="True"
+                    Orientation="Horizontal">
+            <Canvas Visibility="Hidden">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="ButtonWidth" />
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="ButtonWidth" />
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="ButtonWidth" />
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="ButtonWidth" />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0"
+                            Margin="5,0,0,0"
+                            Content="{DynamicResource MaSchMessageBox_OKButtonContent}" />
+                    <Button Grid.Column="1"
+                            Margin="5,0,0,0"
+                            Content="{DynamicResource MaSchMessageBox_YesButtonContent}" />
+                    <Button Grid.Column="2"
+                            Margin="5,0,0,0"
+                            Content="{DynamicResource MaSchMessageBox_NoButtonContent}" />
+                    <Button Grid.Column="3"
+                            Margin="5,0,0,0"
+                            Content="{DynamicResource MaSchMessageBox_CancelButtonContent}" />
+                </Grid>
+            </Canvas>
+            <Grid Visibility="{Binding Buttons.Ok}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="ButtonWidth" />
+                </Grid.ColumnDefinitions>
+                <Button Margin="5,0,0,0"
+                        Click="OKButton_Click"
+                        Content="{DynamicResource MaSchMessageBox_OkButtonContent}" />
+            </Grid>
+            <Grid Visibility="{Binding Buttons.Yes}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="ButtonWidth" />
+                </Grid.ColumnDefinitions>
+                <Button Margin="5,0,0,0"
+                        Click="YesButton_Click"
+                        Content="{DynamicResource MaSchMessageBox_YesButtonContent}" />
+            </Grid>
+            <Grid Visibility="{Binding Buttons.No}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="ButtonWidth" />
+                </Grid.ColumnDefinitions>
+                <Button Margin="5,0,0,0"
+                        Click="NoButton_Click"
+                        Content="{DynamicResource MaSchMessageBox_NoButtonContent}" />
+            </Grid>
+            <Grid Visibility="{Binding Buttons.Cancel}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="ButtonWidth" />
+                </Grid.ColumnDefinitions>
+                <Button Margin="5,0,0,0"
+                        Click="CancelButton_Click"
+                        Content="{DynamicResource MaSchMessageBox_CancelButtonContent}" />
+            </Grid>
+        </StackPanel>
+    </Grid>
+</controls:Window>

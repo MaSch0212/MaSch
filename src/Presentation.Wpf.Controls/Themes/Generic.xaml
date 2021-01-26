@@ -1,0 +1,22 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/ControlData/DetailPopupContent.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/BusyIndicator.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/DefaultTileContent.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/DetailPopup.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/IconButton.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/IconToggleButton.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/ProgressBar.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/Switch.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/TabControl.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/TextBox.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/Tile.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/TransitionContentPresenter.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/Window.xaml" />
+
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Views/SplitView/SplitView.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Views/SplitView/ExtendedSplitViewContent.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+</ResourceDictionary>

@@ -1,0 +1,209 @@
+﻿<UserControl x:Class="MaSch.Presentation.Wpf.Controls.WindowButtons"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:MaSch.Presentation.Wpf.Controls"
+             xmlns:m="http://schemas.masch212.de/MaSch/Wpf"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mct="http://schemas.masch212.de/MaSch/Wpf/Controls"
+             Height="26"
+             MinHeight="26"
+             MaxHeight="26"
+             d:DesignWidth="135"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style x:Key="CloseButtonMetroStyle" TargetType="Button">
+            <Setter Property="Background" Value="{m:ThemeValue Key=WindowCloseButtonNormalBackgroundBrush}" />
+            <Setter Property="BorderBrush" Value="{m:ThemeValue Key=WindowCloseButtonNormalBorderBrush}" />
+            <Setter Property="BorderThickness" Value="{m:ThemeValue Key=WindowButtonsBorderThickness}" />
+            <Setter Property="Foreground" Value="{m:ThemeValue Key=WindowCloseButtonNormalSymbolBrush}" />
+            <Setter Property="ToolTip" Value="{DynamicResource MaSchWindowButtons_CloseToolTip}" />
+            <Setter Property="Padding" Value="{m:ThemeValue Key=WindowButtonsPadding}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="BackgroundBorder"
+                                Padding="{TemplateBinding Padding}"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <mct:IconPresenter Icon="{m:ThemeValue Key=WindowButtonsCloseIcon}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{m:ThemeValue Key=WindowCloseButtonHoverBackgroundBrush}" />
+                                <Setter Property="BorderBrush" Value="{m:ThemeValue Key=WindowCloseButtonHoverBorderBrush}" />
+                                <Setter Property="Foreground" Value="{m:ThemeValue Key=WindowCloseButtonHoverSymbolBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="{m:ThemeValue Key=WindowCloseButtonPressBackgroundBrush}" />
+                                <Setter Property="BorderBrush" Value="{m:ThemeValue Key=WindowCloseButtonPressBorderBrush}" />
+                                <Setter Property="Foreground" Value="{m:ThemeValue Key=WindowCloseButtonPressSymbolBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="MinimizeButtonMetroStyle" TargetType="Button">
+            <Setter Property="Background" Value="{m:ThemeValue Key=WindowButtonsNormalBackgroundBrush}" />
+            <Setter Property="BorderBrush" Value="{m:ThemeValue Key=WindowButtonsNormalBorderBrush}" />
+            <Setter Property="BorderThickness" Value="{m:ThemeValue Key=WindowButtonsBorderThickness}" />
+            <Setter Property="Foreground" Value="{m:ThemeValue Key=WindowButtonsNormalSymbolBrush}" />
+            <Setter Property="ToolTip" Value="{DynamicResource MaSchWindowButtons_MinimizeToolTip}" />
+            <Setter Property="Padding" Value="{m:ThemeValue Key=WindowButtonsPadding}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="BackgroundBorder"
+                                Padding="{TemplateBinding Padding}"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <mct:IconPresenter Icon="{m:ThemeValue Key=WindowButtonsMinimizeIcon}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{m:ThemeValue Key=WindowButtonsHoverBackgroundBrush}" />
+                                <Setter Property="BorderBrush" Value="{m:ThemeValue Key=WindowButtonsHoverBorderBrush}" />
+                                <Setter Property="Foreground" Value="{m:ThemeValue Key=WindowButtonsHoverSymbolBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="{m:ThemeValue Key=WindowButtonsPressBackgroundBrush}" />
+                                <Setter Property="BorderBrush" Value="{m:ThemeValue Key=WindowButtonsPressBorderBrush}" />
+                                <Setter Property="Foreground" Value="{m:ThemeValue Key=WindowButtonsPressSymbolBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="MaximizeButtonMetroStyle" TargetType="Button">
+            <Setter Property="Background" Value="{m:ThemeValue Key=WindowButtonsNormalBackgroundBrush}" />
+            <Setter Property="BorderBrush" Value="{m:ThemeValue Key=WindowButtonsNormalBorderBrush}" />
+            <Setter Property="BorderThickness" Value="{m:ThemeValue Key=WindowButtonsBorderThickness}" />
+            <Setter Property="Foreground" Value="{m:ThemeValue Key=WindowButtonsNormalSymbolBrush}" />
+            <Setter Property="ToolTip" Value="{DynamicResource MaSchWindowButtons_MaximizeToolTip}" />
+            <Setter Property="Padding" Value="{m:ThemeValue Key=WindowButtonsPadding}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="BackgroundBorder"
+                                Padding="{TemplateBinding Padding}"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <mct:IconPresenter Icon="{m:ThemeValue Key=WindowButtonsMaximizeIcon}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{m:ThemeValue Key=WindowButtonsHoverBackgroundBrush}" />
+                                <Setter Property="BorderBrush" Value="{m:ThemeValue Key=WindowButtonsHoverBorderBrush}" />
+                                <Setter Property="Foreground" Value="{m:ThemeValue Key=WindowButtonsHoverSymbolBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="{m:ThemeValue Key=WindowButtonsPressBackgroundBrush}" />
+                                <Setter Property="BorderBrush" Value="{m:ThemeValue Key=WindowButtonsPressBorderBrush}" />
+                                <Setter Property="Foreground" Value="{m:ThemeValue Key=WindowButtonsPressSymbolBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="NormalizeButtonMetroStyle" TargetType="Button">
+            <Setter Property="Background" Value="{m:ThemeValue Key=WindowButtonsNormalBackgroundBrush}" />
+            <Setter Property="BorderBrush" Value="{m:ThemeValue Key=WindowButtonsNormalBorderBrush}" />
+            <Setter Property="BorderThickness" Value="{m:ThemeValue Key=WindowButtonsBorderThickness}" />
+            <Setter Property="Foreground" Value="{m:ThemeValue Key=WindowButtonsNormalSymbolBrush}" />
+            <Setter Property="ToolTip" Value="{DynamicResource MaSchWindowButtons_NormalizeToolTip}" />
+            <Setter Property="Padding" Value="{m:ThemeValue Key=WindowButtonsPadding}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="BackgroundBorder"
+                                Padding="{TemplateBinding Padding}"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <mct:IconPresenter Icon="{m:ThemeValue Key=WindowButtonsNormalizeIcon}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{m:ThemeValue Key=WindowButtonsHoverBackgroundBrush}" />
+                                <Setter Property="BorderBrush" Value="{m:ThemeValue Key=WindowButtonsHoverBorderBrush}" />
+                                <Setter Property="Foreground" Value="{m:ThemeValue Key=WindowButtonsHoverSymbolBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="{m:ThemeValue Key=WindowButtonsPressBackgroundBrush}" />
+                                <Setter Property="BorderBrush" Value="{m:ThemeValue Key=WindowButtonsPressBorderBrush}" />
+                                <Setter Property="Foreground" Value="{m:ThemeValue Key=WindowButtonsPressSymbolBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <StackPanel Orientation="Horizontal">
+        <Button x:Name="MinimizeButton"
+                Width="45"
+                Height="26"
+                Click="MinimizeButton_Click">
+            <Button.Style>
+                <Style BasedOn="{StaticResource MinimizeButtonMetroStyle}" TargetType="Button">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=local:WindowButtons}, Path=OnlyClose}" Value="true">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+        <Button x:Name="MaximizeButton"
+                Width="45"
+                Height="26"
+                Click="MaximizeButton_Click">
+            <Button.Style>
+                <Style BasedOn="{StaticResource MaximizeButtonMetroStyle}" TargetType="Button">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=local:WindowButtons}, Path=Maximized}" Value="true">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=local:WindowButtons}, Path=Maximizable}" Value="false">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=local:WindowButtons}, Path=OnlyClose}" Value="true">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+        <Button x:Name="NormalizeButton"
+                Width="45"
+                Height="26"
+                Click="NormalizeButton_Click">
+            <Button.Style>
+                <Style BasedOn="{StaticResource NormalizeButtonMetroStyle}" TargetType="Button">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=local:WindowButtons}, Path=Maximized}" Value="false">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=local:WindowButtons}, Path=Maximizable}" Value="false">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=local:WindowButtons}, Path=OnlyClose}" Value="true">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+        <Button x:Name="CloseButton"
+                Width="45"
+                Height="26"
+                Click="CloseButton_Click"
+                Style="{StaticResource CloseButtonMetroStyle}" />
+    </StackPanel>
+</UserControl>
