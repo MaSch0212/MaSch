@@ -1,7 +1,7 @@
-﻿using MaSch.Core;
-using MaSch.Console.Cli.Configuration;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using MaSch.Console.Cli.Configuration;
+using MaSch.Core;
 
 namespace MaSch.Console.Cli.Internal
 {

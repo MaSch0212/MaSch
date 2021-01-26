@@ -15,8 +15,10 @@ namespace MaSch.Console.Cli.Runtime
         void RegisterCommand(Type commandType, Type? executorType);
         void RegisterCommand(Type commandType, Func<object, int> executorFunction);
         void RegisterCommand<TCommand>(Func<TCommand, int> executorFunction);
-        void RegisterCommand<TCommand>() where TCommand : ICliCommandExecutor;
-        void RegisterCommand<TCommand, TExecutor>() where TExecutor : ICliCommandExecutor<TCommand>;
+        void RegisterCommand<TCommand>()
+            where TCommand : ICliCommandExecutor;
+        void RegisterCommand<TCommand, TExecutor>()
+            where TExecutor : ICliCommandExecutor<TCommand>;
     }
 
     public interface ICliAsyncApplication
@@ -29,7 +31,9 @@ namespace MaSch.Console.Cli.Runtime
         void RegisterCommand(Type commandType, Type? executorType);
         void RegisterCommand(Type commandType, Func<object, Task<int>> executorFunction);
         void RegisterCommand<TCommand>(Func<TCommand, Task<int>> executorFunction);
-        void RegisterCommand<TCommand>() where TCommand : ICliAsyncCommandExecutor;
-        void RegisterCommand<TCommand, TExecutor>() where TExecutor : ICliAsyncCommandExecutor<TCommand>;
+        void RegisterCommand<TCommand>()
+            where TCommand : ICliAsyncCommandExecutor;
+        void RegisterCommand<TCommand, TExecutor>()
+            where TExecutor : ICliAsyncCommandExecutor<TCommand>;
     }
 }

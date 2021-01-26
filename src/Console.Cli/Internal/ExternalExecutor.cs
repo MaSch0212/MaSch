@@ -1,9 +1,10 @@
-﻿using MaSch.Core;
-using MaSch.Core.Extensions;
-using MaSch.Console.Cli.Configuration;
-using System;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using MaSch.Console.Cli.Configuration;
+using MaSch.Core;
+using MaSch.Core.Extensions;
 
 namespace MaSch.Console.Cli.Internal
 {
@@ -21,12 +22,12 @@ namespace MaSch.Console.Cli.Internal
                 : types.FirstOrDefault(x => x.IsAssignableFrom(commandType));
             if (type == null)
                 throw new ArgumentException($"The type {executorType.Name} needs to implement {typeof(ICliCommandExecutor<>).Name} and/or {typeof(ICliAsyncCommandExecutor<>).Name} for type {commandType.Name}.", nameof(executorType));
-            return (IExecutor)Activator.CreateInstance(typeof(ExternalExecutor<>).MakeGenericType(type), executorType)!;
+            return (IExecutor)Activator.CreateInstance(typeof(ExternalExecutor<>).MakeGenericType(type), executorType) !;
         }
 
         public static (object executor, T tObj) PreExecute<T>(Type executorType, object obj)
         {
-            if (!(obj is T tObj))
+            if (obj is not T tObj)
                 throw new ArgumentException($"The object needs to be an instance of class {typeof(T).Name}. (Actual: {obj?.GetType().Name ?? "(null)"})", nameof(obj));
             var executor = Activator.CreateInstance(executorType)
                 ?? throw new ArgumentException($"And instance of type {executorType.Name} could not be created. Please make sure the class has an empty constructor.", nameof(executorType));
@@ -34,6 +35,7 @@ namespace MaSch.Console.Cli.Internal
         }
     }
 
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic counterpart to ExternalExecutor.")]
     internal class ExternalExecutor<T> : IExecutor
     {
         private readonly Type _executorType;

@@ -1,11 +1,11 @@
-﻿using MaSch.Console.Cli.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using MaSch.Core;
+using MaSch.Console.Cli.Configuration;
 using MaSch.Console.Cli.Internal;
+using MaSch.Core;
 
 namespace MaSch.Console.Cli
 {

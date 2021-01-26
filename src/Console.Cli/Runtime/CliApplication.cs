@@ -1,8 +1,9 @@
-﻿using MaSch.Core;
-using MaSch.Console.Cli.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using MaSch.Console.Cli.Configuration;
+using MaSch.Core;
 
 namespace MaSch.Console.Cli.Runtime
 {
@@ -15,7 +16,11 @@ namespace MaSch.Console.Cli.Runtime
 
         public CliApplicationOptions Options { get; }
 
-        public CliApplication() : this(null) { }
+        public CliApplication()
+            : this(null)
+        {
+        }
+
         public CliApplication(CliApplicationOptions? options)
         {
             Options = options ?? new CliApplicationOptions();
@@ -53,9 +58,13 @@ namespace MaSch.Console.Cli.Runtime
 
         public void RegisterCommand<TCommand>(Func<TCommand, int> executorFunction)
             => _commands.Add(CliCommandInfo.From(executorFunction));
-        public void RegisterCommand<TCommand>() where TCommand : ICliCommandExecutor
+
+        public void RegisterCommand<TCommand>()
+            where TCommand : ICliCommandExecutor
             => _commands.Add(CliCommandInfo.From<TCommand>());
-        public void RegisterCommand<TCommand, TExecutor>() where TExecutor : ICliCommandExecutor<TCommand>
+
+        public void RegisterCommand<TCommand, TExecutor>()
+            where TExecutor : ICliCommandExecutor<TCommand>
             => _commands.Add(CliCommandInfo.From<TCommand, TExecutor>());
 
         public int Run(string[] args)
@@ -65,6 +74,7 @@ namespace MaSch.Console.Cli.Runtime
         }
     }
 
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Async counterpart to CliApplication.")]
     public class CliAsyncApplication : ICliAsyncApplication
     {
         private readonly CliCommandInfoCollection _commands;
@@ -74,7 +84,11 @@ namespace MaSch.Console.Cli.Runtime
 
         public CliApplicationOptions Options { get; }
 
-        public CliAsyncApplication() : this(null) { }
+        public CliAsyncApplication()
+            : this(null)
+        {
+        }
+
         public CliAsyncApplication(CliApplicationOptions? options)
         {
             Options = options ?? new CliApplicationOptions();
@@ -112,9 +126,13 @@ namespace MaSch.Console.Cli.Runtime
 
         public void RegisterCommand<TCommand>(Func<TCommand, Task<int>> executorFunction)
             => _commands.Add(CliCommandInfo.From(executorFunction));
-        public void RegisterCommand<TCommand>() where TCommand : ICliAsyncCommandExecutor
+
+        public void RegisterCommand<TCommand>()
+            where TCommand : ICliAsyncCommandExecutor
             => _commands.Add(CliCommandInfo.From<TCommand>());
-        public void RegisterCommand<TCommand, TExecutor>() where TExecutor : ICliAsyncCommandExecutor<TCommand>
+
+        public void RegisterCommand<TCommand, TExecutor>()
+            where TExecutor : ICliAsyncCommandExecutor<TCommand>
             => _commands.Add(CliCommandInfo.From<TCommand, TExecutor>());
 
         public Task<int> RunAsync(string[] args)

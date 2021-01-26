@@ -4,16 +4,6 @@ using System.Threading.Tasks;
 
 namespace MaSch.Console.Cli.Configuration
 {
-    public interface ICliErrorHandlingCommand
-    {
-        IEnumerable<CliError> HandleErrors(IEnumerable<CliError> errors);
-    }
-
-    public interface ICliErrorHandlingCommand<TCommand>
-    {
-        IEnumerable<CliError> HandleErrors(IEnumerable<CliError> errors, TCommand parameters);
-    }
-
     public interface ICliCommandExecutor
     {
         int ExecuteCommand();
@@ -32,5 +22,15 @@ namespace MaSch.Console.Cli.Configuration
     public interface ICliAsyncCommandExecutor<TCommand>
     {
         Task<int> ExecuteCommandAsync(TCommand parameters);
+    }
+
+    public interface ICliErrorHandlingCommand
+    {
+        IEnumerable<CliError> HandleErrors(IEnumerable<CliError> errors);
+    }
+
+    public interface ICliErrorHandlingCommand<TCommand>
+    {
+        IEnumerable<CliError> HandleErrors(IEnumerable<CliError> errors, TCommand parameters);
     }
 }

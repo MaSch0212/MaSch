@@ -11,11 +11,14 @@ namespace MaSch.Console.Cli
         private readonly IDictionary<Type, CliCommandInfo> _allCommands = new Dictionary<Type, CliCommandInfo>();
         private readonly List<CliCommandInfo> _rootCommands = new List<CliCommandInfo>();
 
-        public CliCommandInfo? DefaultCommand;
+        public CliCommandInfo? DefaultCommand { get; private set; }
         public int Count => _allCommands.Count;
         public bool IsReadOnly => false;
 
-        public CliCommandInfoCollection() { }
+        public CliCommandInfoCollection()
+        {
+        }
+
         public CliCommandInfoCollection(IEnumerable<CliCommandInfo> collection)
         {
             if (collection != null)
@@ -35,7 +38,10 @@ namespace MaSch.Console.Cli
                 parent.AddChildCommand(item);
             }
             else
+            {
                 _rootCommands.Add(item);
+            }
+
             _allCommands.Add(item.CommandType, item);
             if (item.IsDefault)
                 DefaultCommand = item;
@@ -51,6 +57,7 @@ namespace MaSch.Console.Cli
                 item.RemoveChildCommand(child);
                 Remove(child);
             }
+
             if (_rootCommands.Contains(item))
                 _rootCommands.Remove(item);
             _allCommands.Remove(item.CommandType);
@@ -86,6 +93,7 @@ namespace MaSch.Console.Cli
                 if (existingNames.Length > 0)
                     throw new ArgumentException($"The name(s) \"{string.Join("\", \"", existingNames)}\" cannot be used for command \"{command.CommandType.FullName}\" because the same name(s) are already used by command \"{c.CommandType.FullName}\".");
             }
+
             if (command.Attribute.ParentCommand == null && command.IsDefault && DefaultCommand != null)
                 throw new ArgumentException($"The command {command.Name} cannot be added because another default command is already added: {DefaultCommand.CommandType.FullName}.");
         }

@@ -1,24 +1,32 @@
 ﻿using MaSch.Console.Cli.Configuration;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace MaSch.Console.Cli.Runtime
 {
     public class CliApplicationBuilder
     {
-        private CliApplication _application = new CliApplication();
+        private readonly CliApplication _application = new CliApplication();
 
         public CliApplicationBuilder WithCommand(Type commandType)
             => Exec(x => x.RegisterCommand(commandType));
+
         public CliApplicationBuilder WithCommand(Type commandType, Type? executorType)
             => Exec(x => x.RegisterCommand(commandType, executorType));
+
         public CliApplicationBuilder WithCommand(Type commandType, Func<object, int> executorFunction)
             => Exec(x => x.RegisterCommand(commandType, executorFunction));
+
         public CliApplicationBuilder WithCommand<TCommand>(Func<TCommand, int> executorFunction)
             => Exec(x => x.RegisterCommand(executorFunction));
-        public CliApplicationBuilder WithCommand<TCommand>() where TCommand : ICliCommandExecutor
+
+        public CliApplicationBuilder WithCommand<TCommand>()
+            where TCommand : ICliCommandExecutor
             => Exec(x => x.RegisterCommand<TCommand>());
-        public CliApplicationBuilder WithCommand<TCommand, TExecutor>() where TExecutor : ICliCommandExecutor<TCommand>
+
+        public CliApplicationBuilder WithCommand<TCommand, TExecutor>()
+            where TExecutor : ICliCommandExecutor<TCommand>
             => Exec(x => x.RegisterCommand<TCommand, TExecutor>());
 
         public CliApplicationBuilder Configure(Action<CliApplicationOptions> action)
@@ -34,21 +42,29 @@ namespace MaSch.Console.Cli.Runtime
         }
     }
 
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Async counterpart to CliApplicationBuilder.")]
     public class CliAsyncApplicatioBuilder
     {
-        private CliAsyncApplication _application = new CliAsyncApplication();
+        private readonly CliAsyncApplication _application = new CliAsyncApplication();
 
         public CliAsyncApplicatioBuilder WithCommand(Type commandType)
             => Exec(x => x.RegisterCommand(commandType));
+
         public CliAsyncApplicatioBuilder WithCommand(Type commandType, Type? executorType)
             => Exec(x => x.RegisterCommand(commandType, executorType));
+
         public CliAsyncApplicatioBuilder WithCommand(Type commandType, Func<object, Task<int>> executorFunction)
             => Exec(x => x.RegisterCommand(commandType, executorFunction));
+
         public CliAsyncApplicatioBuilder WithCommand<TCommand>(Func<TCommand, Task<int>> executorFunction)
             => Exec(x => x.RegisterCommand(executorFunction));
-        public CliAsyncApplicatioBuilder WithCommand<TCommand>() where TCommand : ICliAsyncCommandExecutor
+
+        public CliAsyncApplicatioBuilder WithCommand<TCommand>()
+            where TCommand : ICliAsyncCommandExecutor
             => Exec(x => x.RegisterCommand<TCommand>());
-        public CliAsyncApplicatioBuilder WithCommand<TCommand, TExecutor>() where TExecutor : ICliAsyncCommandExecutor<TCommand>
+
+        public CliAsyncApplicatioBuilder WithCommand<TCommand, TExecutor>()
+            where TExecutor : ICliAsyncCommandExecutor<TCommand>
             => Exec(x => x.RegisterCommand<TCommand, TExecutor>());
 
         public CliAsyncApplicatioBuilder Configure(Action<CliApplicationOptions> action)

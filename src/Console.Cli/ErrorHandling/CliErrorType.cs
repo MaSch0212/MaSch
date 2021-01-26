@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MaSch.Console.Cli.Help
+﻿namespace MaSch.Console.Cli.Help
 {
     public enum CliErrorType
     {
@@ -12,6 +8,6 @@ namespace MaSch.Console.Cli.Help
         UnknownOption,
         UnknownCommand,
         MissingOptionValue,
-        BadOptionValue
+        BadOptionValue,
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MaSch.Core;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace MaSch.Console.Cli.Internal
@@ -30,6 +31,7 @@ namespace MaSch.Console.Cli.Internal
         }
     }
 
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic counterpart to FunctionExecutor")]
     internal class FunctionExecutor<T> : IExecutor
     {
         private readonly Func<T, int>? _executorFunc;
