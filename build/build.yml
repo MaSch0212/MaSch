@@ -15,6 +15,12 @@ pool:
 
 steps:
 - task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: '**/*Test.csproj'
+    arguments: '--collect "Code coverage"'
+
+- task: DotNetCoreCLI@2
   displayName: "\U0001F6E0 Build and pack projects"
   inputs:
     command: 'pack'
