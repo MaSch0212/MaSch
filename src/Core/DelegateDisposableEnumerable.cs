@@ -14,6 +14,7 @@ namespace MaSch.Core
     {
         /// <inheritdoc/>
         public event EventHandler? Disposing;
+
         /// <inheritdoc/>
         public event EventHandler? Disposed;
 
@@ -36,7 +37,9 @@ namespace MaSch.Core
 
         /// <inheritdoc/>
         public IEnumerator<T> GetEnumerator() => _enumerable.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable) _enumerable).GetEnumerator();
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_enumerable).GetEnumerator();
 
         /// <inheritdoc/>
         public void Dispose()
@@ -71,10 +74,12 @@ namespace MaSch.Core
     /// </summary>
     /// <typeparam name="T">The type of the elements in the <see cref="IOrderedDisposableEnumerable{T}"/>.</typeparam>
     /// <seealso cref="IOrderedDisposableEnumerable{T}" />
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Can be in same file.")]
     public class DelegateOrderedDisposableEnumerable<T> : IOrderedDisposableEnumerable<T>
     {
         /// <inheritdoc/>
         public event EventHandler? Disposing;
+
         /// <inheritdoc/>
         public event EventHandler? Disposed;
 
@@ -97,8 +102,11 @@ namespace MaSch.Core
 
         /// <inheritdoc/>
         public IOrderedEnumerable<T> CreateOrderedEnumerable<TKey>(Func<T, TKey> keySelector, IComparer<TKey>? comparer, bool @descending) => _enumerable.CreateOrderedEnumerable(keySelector, comparer, @descending);
+
         /// <inheritdoc/>
         public IEnumerator<T> GetEnumerator() => _enumerable.GetEnumerator();
+
+        /// <inheritdoc/>
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_enumerable).GetEnumerator();
 
         /// <inheritdoc/>

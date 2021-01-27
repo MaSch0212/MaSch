@@ -19,6 +19,7 @@ namespace MaSch.Core.Extensions
         {
             await Task.WhenAll(Guard.NotNull(task, nameof(task)), Task.Delay(miliseconds));
         }
+
         /// <summary>
         /// Waits until the task has finished and the given time has passed.
         /// </summary>
@@ -33,6 +34,7 @@ namespace MaSch.Core.Extensions
         /// <summary>
         /// Waits until the task has finished and the given time has passed.
         /// </summary>
+        /// <typeparam name="T">The type of the return value of the task.</typeparam>
         /// <param name="task">The task to wait for.</param>
         /// <param name="miliseconds">The minimum time to wait in miliseconds.</param>
         /// <returns>Returns an awaitable task.</returns>
@@ -46,9 +48,11 @@ namespace MaSch.Core.Extensions
             });
             return (await Task.WhenAll<T?>(task!, waitTask))[0];
         }
+
         /// <summary>
         /// Waits until the task has finished and the given time has passed.
         /// </summary>
+        /// <typeparam name="T">The type of the return value of the task.</typeparam>
         /// <param name="task">The task to wait for.</param>
         /// <param name="timeSpan">The minimum time to wait.</param>
         /// <returns>Returns an awaitable task.</returns>
@@ -62,7 +66,7 @@ namespace MaSch.Core.Extensions
             });
             return (await Task.WhenAll<T?>(task!, waitTask))[0];
         }
-        
+
         /// <summary>
         /// Forgets the task, so it runs in the background. Use this function if you do not want to await a task.
         /// </summary>
@@ -75,6 +79,7 @@ namespace MaSch.Core.Extensions
         /// <summary>
         /// Forgets the task, so it runs in the background. Use this function if you do not want to await a task.
         /// </summary>
+        /// <typeparam name="T">The type of the return value of the task.</typeparam>
         /// <param name="task">The task to forget.</param>
         public static async void Forget<T>(this Task<T> task)
         {

@@ -14,8 +14,9 @@ namespace MaSch.Core.Attributes
     public class NotifyPropertyChangedAttribute : Attribute
     {
         private readonly Dictionary<object, EventCacheItem> _eventCache = new Dictionary<object, EventCacheItem>();
+
         /// <summary>
-        /// Determines if the <see cref="NotifyPropertyChangedAttribute"/> is initialized.
+        /// Gets a value indicating whether the <see cref="NotifyPropertyChangedAttribute"/> is initialized.
         /// </summary>
         public bool IsInitialized => _propertyInfo != null && _callbackMethod != null;
 
@@ -23,7 +24,6 @@ namespace MaSch.Core.Attributes
         private PropertyInfo? _propertyInfo;
         private MethodInfo? _callbackMethod;
 
-        /// <inheritdoc />
         /// <summary>
         /// Initializes a new instance of the <see cref="NotifyPropertyChangedAttribute"/> class.
         /// </summary>
@@ -52,13 +52,18 @@ namespace MaSch.Core.Attributes
             if (IsInitialized && !reinitialize)
                 return;
             if (!typeof(INotifyPropertyChanged).IsAssignableFrom(property.PropertyType))
+            {
                 throw new InvalidOperationException("The NotifyPropertyChangedAttribute can only be used on Properties which type implements the INotifyPropertyChanged interface. Property: " +
                     property.DeclaringType?.FullName + "." + property.Name);
+            }
 
             _propertyInfo = property;
-            _callbackMethod = _propertyInfo.DeclaringType?.GetMethod(_callbackMethodName,
-                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, null,
-                new[] { typeof(object), typeof(PropertyChangedEventArgs) }, null);
+            _callbackMethod = _propertyInfo.DeclaringType?.GetMethod(
+                _callbackMethodName,
+                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static,
+                null,
+                new[] { typeof(object), typeof(PropertyChangedEventArgs) },
+                null);
             if (_callbackMethod == null)
                throw new InvalidOperationException($"The method \"{_callbackMethodName}(object, PropertyChangedEventArgs)\" could not be found in the class \"{_propertyInfo.PropertyType.FullName}\"");
         }
@@ -114,7 +119,7 @@ namespace MaSch.Core.Attributes
 
         private PropertyChangedEventHandler GetOnPropertyChanged(object classObject)
         {
-            return (s,e) => _callbackMethod?.Invoke(classObject, new[] { s, e });
+            return (s, e) => _callbackMethod?.Invoke(classObject, new[] { s, e });
         }
 
         private static readonly Dictionary<Type, Dictionary<PropertyInfo, NotifyPropertyChangedAttribute>> AttributeCache = new Dictionary<Type, Dictionary<PropertyInfo, NotifyPropertyChangedAttribute>>();
@@ -133,6 +138,7 @@ namespace MaSch.Core.Attributes
                           select new { property = x, attribute = att }).ToDictionary(x => x.property, x => x.attribute);
                 AttributeCache[classType] = result;
             }
+
             return result;
         }
 
@@ -145,7 +151,7 @@ namespace MaSch.Core.Attributes
         public static Dictionary<string, NotifyPropertyChangedAttribute> InitializeAll(object classObject, bool reinitialize = false)
         {
             Guard.NotNull(classObject, nameof(classObject));
-            
+
             var result = GetAttributes(classObject.GetType());
             result.ForEach(x => x.Value.Initialize(x.Key, reinitialize));
             return result.ToDictionary(x => x.Key.Name, x => x.Value);

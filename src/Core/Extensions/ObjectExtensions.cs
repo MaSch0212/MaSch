@@ -65,6 +65,7 @@ namespace MaSch.Core.Extensions
         /// <returns>The converted <paramref name="source"/> to <typeparamref name="TTarget"/>.</returns>
         public static TTarget? ConvertTo<TSource, TTarget>(this TSource source)
             => ConvertManager.Convert<TSource, TTarget>(source);
+
         /// <summary>
         /// Converts this object to the specified type.
         /// </summary>
@@ -84,6 +85,7 @@ namespace MaSch.Core.Extensions
         /// <returns>The converted <paramref name="obj"/> to <typeparamref name="T"/>.</returns>
         public static T? ConvertTo<T>(this object? obj)
             => ConvertManager.Convert<T>(obj);
+
         /// <summary>
         /// Converts this object to the specified type.
         /// </summary>
@@ -102,6 +104,7 @@ namespace MaSch.Core.Extensions
         /// <returns>The converted <paramref name="obj"/> to <paramref name="targetType"/>.</returns>
         public static object? ConvertTo(this object? obj, Type targetType)
             => ConvertManager.Convert(obj, Guard.NotNull(targetType, nameof(targetType)));
+
         /// <summary>
         /// Converts this object to the specified type.
         /// </summary>
@@ -126,6 +129,7 @@ namespace MaSch.Core.Extensions
                 throw new InvalidOperationException("The generic method \"Cast\" was not found.");
             return method.MakeGenericMethod(targetType).Invoke(null, new[] { obj });
         }
+
         /// <summary>
         /// Casts this object to the specified type.
         /// </summary>
@@ -145,7 +149,8 @@ namespace MaSch.Core.Extensions
         /// <param name="source">The source.</param>
         /// <returns>The Switch statement which is based on <paramref name="source"/> and has <typeparamref name="TTarget"/> as the result type.</returns>
         [Obsolete("Use the switch statement from C# 8 instead.")]
-        public static Switch<TSource, TTarget> Switch<TSource, TTarget>(this TSource source) where TSource : notnull
+        public static Switch<TSource, TTarget> Switch<TSource, TTarget>(this TSource source)
+            where TSource : notnull
             => new Switch<TSource, TTarget>(source);
 
         /// <summary>
@@ -155,8 +160,10 @@ namespace MaSch.Core.Extensions
         /// <param name="obj">The object to clone.</param>
         /// <returns>A clone of <paramref name="obj"/> if cloning was possible; otherwise <paramref name="obj"/>.</returns>
         [return: MaybeNull]
-        public static T CloneIfPossible<T>(this T obj) where T : class?
+        public static T CloneIfPossible<T>(this T obj)
+            where T : class?
             => TryClone(obj, out var clone) ? clone : obj;
+
         /// <summary>
         /// Tries to clone an object.
         /// </summary>
@@ -164,7 +171,8 @@ namespace MaSch.Core.Extensions
         /// <param name="obj">The object to clone.</param>
         /// <param name="clone">If cloning was possible, containes the clone; otherwise <see langword="default"/>.</param>
         /// <returns><see langword="true"/> if cloning was possible; otherwise <see langword="false"/>.</returns>
-        public static bool TryClone<T>(this T obj, out T? clone) where T : class?
+        public static bool TryClone<T>(this T obj, out T? clone)
+            where T : class?
         {
             if (obj is ICloneable clonable)
             {

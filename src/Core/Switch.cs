@@ -1,24 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable SA1600 // Elements should be documented
+
 namespace MaSch.Core
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [Obsolete("Use the switch statement from C# 8 instead.")]
-    public class Switch<TSource, TTarget> where TSource : notnull
+    public class Switch<TSource, TTarget>
+        where TSource : notnull
     {
         private readonly IDictionary<TSource, Func<TTarget>> _caseFuncs = new Dictionary<TSource, Func<TTarget>>();
         private readonly bool _hasSource;
         private readonly TSource? _source;
         private Func<TTarget>? _defaultResultFunc;
-        
+
         public Switch(TSource source)
         {
             _hasSource = true;
             _source = source;
         }
 
-        public Switch() { _source = default; }
+        public Switch()
+        {
+            _source = default;
+        }
 
         public Switch<TSource, TTarget> Case(TSource value, Func<TTarget> resultFunc)
         {
@@ -45,5 +51,4 @@ namespace MaSch.Core
             return _defaultResultFunc != null ? _defaultResultFunc() : default;
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

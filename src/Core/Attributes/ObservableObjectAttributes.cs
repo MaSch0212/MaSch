@@ -1,6 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 
+#pragma warning disable SA1649 // File name should match first type name
+#pragma warning disable SA1402 // File may only contain a single type
+
 namespace MaSch.Core.Attributes
 {
     /// <summary>
@@ -29,6 +32,11 @@ namespace MaSch.Core.Attributes
         }
     }
 
+    /// <summary>
+    /// When applied to an interface, the class that implements it will be marked for the ObservableObjectGenerator from
+    /// MaSch.Generators to automatically generate the properties as observable properties.
+    /// </summary>
+    /// <seealso cref="System.Attribute" />
     [AttributeUsage(AttributeTargets.Interface, AllowMultiple = false, Inherited = false)]
     public class ObservablePropertyDefinition : Attribute
     {

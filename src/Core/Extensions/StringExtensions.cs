@@ -11,12 +11,12 @@ namespace MaSch.Core.Extensions
     public static class StringExtensions
     {
         /// <summary>
-        /// Returns the value of the <see cref="string.Contains(string)"/>-Method. If the string is null it returns <see cref="string.IsNullOrEmpty(string)"/> for the value parameter
+        /// Returns the value of the <see cref="string.Contains(string)"/>-Method. If the string is null it returns <see cref="string.IsNullOrEmpty(string)"/> for the value parameter.
         /// </summary>
         /// <param name="s1">The string to check on.</param>
         /// <param name="value">The string to seek.</param>
         /// <param name="ignoreCase">Determines if the case should be ignored.</param>
-        /// <returns></returns>
+        /// <returns>A value indicating wether the <paramref name="value"/> is contained in this string.</returns>
         public static bool ContainsEx(this string? s1, string? value, bool ignoreCase = false)
         {
             var s2 = ignoreCase ? s1?.ToUpper() : s1;
@@ -30,7 +30,7 @@ namespace MaSch.Core.Extensions
         /// <param name="s">The string to trim.</param>
         /// <param name="trimString">The Unicode string to remove.</param>
         /// <returns>
-        ///     The string that remains after all occurrences of the <paramref name="trimString"/> string are removed from the start of the current string. 
+        ///     The string that remains after all occurrences of the <paramref name="trimString"/> string are removed from the start of the current string.
         ///     If the <paramref name="trimString"/> is not found at the start of the current instance, the method returns the current instance unchanged.
         /// </returns>
         [return: NotNullIfNotNull("s")]
@@ -43,7 +43,7 @@ namespace MaSch.Core.Extensions
         /// <param name="s">The string to trim.</param>
         /// <param name="trimString">The Unicode string to remove.</param>
         /// <returns>
-        ///     The string that remains after the first occurrence of the <paramref name="trimString"/> string is removed from the start of the current string. 
+        ///     The string that remains after the first occurrence of the <paramref name="trimString"/> string is removed from the start of the current string.
         ///     If the <paramref name="trimString"/> is not found at the start of the current instance, the method returns the current instance unchanged.
         /// </returns>
         [return: NotNullIfNotNull("s")]
@@ -51,7 +51,7 @@ namespace MaSch.Core.Extensions
             => TrimStartImpl(s, trimString, true);
 
         private static string? TrimStartImpl(string? s, string trimString, bool onlyOnce)
-            => s == null ? s : Regex.Replace(s, $"^({Regex.Escape(trimString)}){(onlyOnce ? "" : "+")}", "");
+            => s == null ? s : Regex.Replace(s, $"^({Regex.Escape(trimString)}){(onlyOnce ? string.Empty : "+")}", string.Empty);
 
         /// <summary>
         /// Removes all the trailing occurrences of a specified string from the current string.
@@ -59,7 +59,7 @@ namespace MaSch.Core.Extensions
         /// <param name="s">The string to trim.</param>
         /// <param name="trimString">The Unicode string to remove.</param>
         /// <returns>
-        ///     The string that remains after all occurrences of the <paramref name="trimString"/> string are removed from the end of the current string. 
+        ///     The string that remains after all occurrences of the <paramref name="trimString"/> string are removed from the end of the current string.
         ///     If the <paramref name="trimString"/> is not found at the end of the current instance, the method returns the current instance unchanged.
         /// </returns>
         [return: NotNullIfNotNull("s")]
@@ -72,7 +72,7 @@ namespace MaSch.Core.Extensions
         /// <param name="s">The string to trim.</param>
         /// <param name="trimString">The Unicode string to remove.</param>
         /// <returns>
-        ///     The string that remains after the first occurrence of the <paramref name="trimString"/> string is removed from the end of the current string. 
+        ///     The string that remains after the first occurrence of the <paramref name="trimString"/> string is removed from the end of the current string.
         ///     If the <paramref name="trimString"/> is not found at the end of the current instance, the method returns the current instance unchanged.
         /// </returns>
         [return: NotNullIfNotNull("s")]
@@ -80,7 +80,7 @@ namespace MaSch.Core.Extensions
             => TrimEndImpl(s, trimString, true);
 
         private static string? TrimEndImpl(string? s, string trimString, bool onlyOnce)
-            => s == null ? s : Regex.Replace(s, $"({Regex.Escape(trimString)}){(onlyOnce ? "" : "+")}$", "");
+            => s == null ? s : Regex.Replace(s, $"({Regex.Escape(trimString)}){(onlyOnce ? string.Empty : "+")}$", string.Empty);
 
         /// <summary>
         /// Removes all leading and trailing instances of a specified string from the current string.
@@ -88,7 +88,7 @@ namespace MaSch.Core.Extensions
         /// <param name="s">The string to trim.</param>
         /// <param name="trimString">The Unicode string to remove.</param>
         /// <returns>
-        ///     The string that remains after all occurrences of the <paramref name="trimString"/> string are removed from the start and end of the current string. 
+        ///     The string that remains after all occurrences of the <paramref name="trimString"/> string are removed from the start and end of the current string.
         ///     If the <paramref name="trimString"/> is not found at the start and end of the current instance, the method returns the current instance unchanged.
         /// </returns>
         [return: NotNullIfNotNull("s")]
@@ -101,7 +101,7 @@ namespace MaSch.Core.Extensions
         /// <param name="s">The string to trim.</param>
         /// <param name="trimString">The Unicode string to remove.</param>
         /// <returns>
-        ///     The string that remains after the first occurrence of the <paramref name="trimString"/> string is removed from the start and end of the current string. 
+        ///     The string that remains after the first occurrence of the <paramref name="trimString"/> string is removed from the start and end of the current string.
         ///     If the <paramref name="trimString"/> is not found at the start and end of the current instance, the method returns the current instance unchanged.
         /// </returns>
         [return: NotNullIfNotNull("s")]
@@ -111,8 +111,8 @@ namespace MaSch.Core.Extensions
         private static string? TrimImpl(string? s, string trimString, bool onlyOnce)
         {
             var ets = Regex.Escape(trimString);
-            var p = onlyOnce ? "" : "+";
-            return s == null ? s : Regex.Replace(s, $"(^({ets}){p}|({ets}){p}$)", "");
+            var p = onlyOnce ? string.Empty : "+";
+            return s == null ? s : Regex.Replace(s, $"(^({ets}){p}|({ets}){p}$)", string.Empty);
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace MaSch.Core.Extensions
         /// <param name="end">The expected end.</param>
         /// <returns>The string with the correct ending string. If the current string already ended with <paramref name="end"/>, the method returns the current instance unchanged.</returns>
         [return: NotNullIfNotNull("s")]
-        public static string? EnsureEndsWith(this string? s, string end) 
+        public static string? EnsureEndsWith(this string? s, string end)
             => s?.EndsWith(end) == true ? s : s + end;
 
         /// <summary>
@@ -138,13 +138,27 @@ namespace MaSch.Core.Extensions
         /// </returns>
         public static string PadBoth(this string s, int totalWidth, char paddingChar)
         {
-            int padLeft = (totalWidth - s.Length) / 2 + s.Length;
+            int padLeft = ((totalWidth - s.Length) / 2) + s.Length;
             return s.PadLeft(padLeft, paddingChar).PadRight(totalWidth, paddingChar);
         }
 
+        /// <summary>
+        /// Indents the string.
+        /// </summary>
+        /// <param name="s">The string to indent.</param>
+        /// <param name="indentation">The number of spaces to use for indentation.</param>
+        /// <returns>The indented string.</returns>
         public static string Indent(this string s, int indentation)
             => Indent(s, indentation, true);
+
+        /// <summary>
+        /// Indents the string.
+        /// </summary>
+        /// <param name="s">The string to indent.</param>
+        /// <param name="indentation">The number of spaces to use for indentation.</param>
+        /// <param name="indentFirstLine">if set to <c>true</c> the first line is also indented.</param>
+        /// <returns>The indented string.</returns>
         public static string Indent(this string s, int indentation, bool indentFirstLine)
-            => (indentFirstLine ? new string(' ', indentation) : string.Empty) + s.Replace("\r", "").Replace("\n", $"{Environment.NewLine}{new string(' ', indentation)}");
+            => (indentFirstLine ? new string(' ', indentation) : string.Empty) + s.Replace("\r", string.Empty).Replace("\n", $"{Environment.NewLine}{new string(' ', indentation)}");
     }
 }

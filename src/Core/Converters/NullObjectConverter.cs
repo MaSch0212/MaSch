@@ -30,7 +30,7 @@ namespace MaSch.Core.Converters
         /// <inheritdoc />
         public object? Convert(object? obj, Type? sourceType, Type targetType, IObjectConvertManager convertManager, IFormatProvider formatProvider)
         {
-            return obj == null ? (object?) null : throw new InvalidCastException("This converter cannot convert objects that are not null.");
+            return obj == null ? (object?)null : throw new InvalidCastException("This converter cannot convert objects that are not null.");
         }
     }
 }

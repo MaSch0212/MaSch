@@ -12,7 +12,7 @@ namespace MaSch.Core.Logging
     /// <seealso cref="ILoggingProvider" />
     public class FileLoggingProvider : ILoggingProvider
     {
-        private const long FileSizeThreshold = 10L * 1024 * 1024; //10 MB
+        private const long FileSizeThreshold = 10L * 1024 * 1024; // 10 MB
 
         private readonly object _lock = new object();
         private readonly string _directoryPath;
@@ -66,6 +66,7 @@ namespace MaSch.Core.Logging
                     _currentFileNumber = 0;
                 }
             }
+
             var path = Path.Combine(_directoryPath, $"{_fileName}.{_currentFileNumber:000}.log");
             if (File.Exists(path) && new FileInfo(path).Length >= FileSizeThreshold)
                 path = Path.Combine(_directoryPath, $"{_fileName}.{++_currentFileNumber:000}.log");

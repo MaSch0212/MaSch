@@ -9,17 +9,19 @@ namespace MaSch.Core.Collections
     /// <summary>
     /// A wrapper class for an array, so it is resizable.
     /// </summary>
-    /// <typeparam name="T">The type of the array elements</typeparam>
+    /// <typeparam name="T">The type of the array elements.</typeparam>
     public class ResizableArray<T> : IList<T>
     {
         private T[] _array;
 
         /// <summary>
-        /// The internal array.
+        /// Gets the internal array.
         /// </summary>
         public T[] InternalArray => _array;
+
         /// <inheritdoc />
         public int Count { get; private set; }
+
         /// <inheritdoc />
         public bool IsReadOnly => false;
 
@@ -27,7 +29,11 @@ namespace MaSch.Core.Collections
         /// Initializes a new instance of the <see cref="ResizableArray{T}"/> class.
         /// </summary>
         /// <param name="initialCapacity">The starting capacity of the array. Default is 4.</param>
-        public ResizableArray(int initialCapacity = 4) : this(new T[initialCapacity]) { }
+        public ResizableArray(int initialCapacity = 4)
+            : this(new T[initialCapacity])
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ResizableArray{T}"/> class.
         /// </summary>
@@ -48,6 +54,7 @@ namespace MaSch.Core.Collections
         }
 
         #region IList<T> Members
+
         /// <inheritdoc />
         public void Add(T element)
         {
@@ -115,6 +122,7 @@ namespace MaSch.Core.Collections
             {
                 Array.Resize(ref _array, _array.Length * 2);
             }
+
             for (int i = index; i < Count; i++)
                 _array[i + 1] = _array[i];
             _array[index] = item;
@@ -143,6 +151,7 @@ namespace MaSch.Core.Collections
                 _array[index] = value;
             }
         }
+
         #endregion
     }
 }

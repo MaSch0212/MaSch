@@ -28,8 +28,8 @@ namespace MaSch.Core.Converters
         {
             if (sourceType == null || targetType == null)
                 return false;
-            return typeof(Enum).IsAssignableFrom(targetType) && ConvertibleConverter.CanConvert(sourceType, Enum.GetUnderlyingType(targetType), convertManager) ||
-                   typeof(Enum).IsAssignableFrom(sourceType) && ConvertibleConverter.CanConvert(targetType, Enum.GetUnderlyingType(sourceType), convertManager);
+            return (typeof(Enum).IsAssignableFrom(targetType) && ConvertibleConverter.CanConvert(sourceType, Enum.GetUnderlyingType(targetType), convertManager)) ||
+                   (typeof(Enum).IsAssignableFrom(sourceType) && ConvertibleConverter.CanConvert(targetType, Enum.GetUnderlyingType(sourceType), convertManager));
         }
 
         /// <inheritdoc />
@@ -43,6 +43,7 @@ namespace MaSch.Core.Converters
                     throw new IndexOutOfRangeException($"A enum member with value \"{result ?? "(null)"}\" is not defined in the enum \"{targetType.FullName}\".");
                 return result.CastTo(targetType);
             }
+
             return ConvertibleConverter.Convert(obj, sourceType, targetType, convertManager, formatProvider);
         }
     }

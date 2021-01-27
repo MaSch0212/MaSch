@@ -2,7 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
+
+#pragma warning disable SA1402 // File may only contain a single type
 
 namespace MaSch.Core
 {
@@ -12,6 +13,7 @@ namespace MaSch.Core
     public static class Waiter
     {
         private static readonly ILoggingService DefaultLoggingService = new LoggingService(new TraceLoggingProvider());
+
         /// <summary>
         /// Gets the default options for waiting actions.
         /// </summary>
@@ -31,6 +33,7 @@ namespace MaSch.Core
             ExceptionMessage = WaiterOptions.DefaultFailMessage,
             LoggingService = DefaultLoggingService,
         };
+
         /// <summary>
         /// Gets the default options for retry actions.
         /// </summary>
@@ -48,6 +51,7 @@ namespace MaSch.Core
         /// <param name="waitAction">The wait action.</param>
         /// <returns>The result of the <paramref name="waitAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in time; otherwise, <see langword="default"/>.</returns>
         public static T? WaitUntil<T>(Func<T> waitAction) => WaitUntil(x => waitAction(), DefaultOptions);
+
         /// <summary>
         /// Waits until the specified action returns a value other than <see langword="default"/> and throws no exceptions.
         /// </summary>
@@ -56,6 +60,7 @@ namespace MaSch.Core
         /// <param name="timeout">The timeout for the wait.</param>
         /// <returns>The result of the <paramref name="waitAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in time; otherwise, <see langword="default"/>.</returns>
         public static T? WaitUntil<T>(Func<T> waitAction, TimeSpan timeout) => WaitUntil(x => waitAction(), new WaiterOptions { Timeout = timeout });
+
         /// <summary>
         /// Waits until the specified action returns a value other than <see langword="default"/> and throws no exceptions.
         /// </summary>
@@ -64,6 +69,7 @@ namespace MaSch.Core
         /// <param name="options">The wait options to use with the wait operation.</param>
         /// <returns>The result of the <paramref name="waitAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in time; otherwise, <see langword="default"/>.</returns>
         public static T? WaitUntil<T>(Func<T> waitAction, WaiterOptions options) => WaitUntil(x => waitAction(), options);
+
         /// <summary>
         /// Waits until the specified action returns a value other than <see langword="default"/> and throws no exceptions.
         /// </summary>
@@ -71,6 +77,7 @@ namespace MaSch.Core
         /// <param name="waitAction">The wait action.</param>
         /// <returns>The result of the <paramref name="waitAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in time; otherwise, <see langword="default"/>.</returns>
         public static T? WaitUntil<T>(Func<WaitingState, T> waitAction) => WaitUntil(waitAction, DefaultOptions);
+
         /// <summary>
         /// Waits until the specified action returns a value other than <see langword="default"/> and throws no exceptions.
         /// </summary>
@@ -79,6 +86,7 @@ namespace MaSch.Core
         /// <param name="timeout">The timeout for the wait.</param>
         /// <returns>The result of the <paramref name="waitAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in time; otherwise, <see langword="default"/>.</returns>
         public static T? WaitUntil<T>(Func<WaitingState, T> waitAction, TimeSpan timeout) => WaitUntil(waitAction, new WaiterOptions { Timeout = timeout });
+
         /// <summary>
         /// Waits until the specified action returns a value other than <see langword="default"/> and throws no exceptions.
         /// </summary>
@@ -92,8 +100,8 @@ namespace MaSch.Core
             T? result = default;
 
             while (Equals(result, default(T)) &&
-                   ((!options.Timeout.HasValue || state.Stopwatch.Elapsed <= options.Timeout) &&
-                   (state.CheckCount < options.MaximumCheckCount || options.MaximumCheckCount < 0) ||
+                   (((!options.Timeout.HasValue || state.Stopwatch.Elapsed <= options.Timeout) &&
+                   (state.CheckCount < options.MaximumCheckCount || options.MaximumCheckCount < 0)) ||
                    state.CheckCount < options.MinimumCheckCount) &&
                    !state.IsCanceled &&
                    (state.OccurredExceptionList.Count <= options.MaximumIgnoredExceptions || options.MaximumIgnoredExceptions < 0))
@@ -110,8 +118,12 @@ namespace MaSch.Core
                     if (options.LogIgnoredExceptions)
                         options.LoggingService?.LogInformation($"Exception while waiting: {(options.IncludeExceptionStackInLog ? ex.ToString() : ex.Message)}");
                 }
-                finally { state.CheckCount++; }
+                finally
+                {
+                    state.CheckCount++;
+                }
             }
+
             state.Stopwatch.Stop();
 
             if (Equals(result, default(T)))
@@ -144,6 +156,7 @@ namespace MaSch.Core
         /// <param name="retryAction">The retry action.</param>
         /// <returns>The result of the <paramref name="retryAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in the specified execution limit; otherwise, <see langword="default"/>.</returns>
         public static T? Retry<T>(Func<T> retryAction) => WaitUntil(x => retryAction(), DefaultRetryOptions);
+
         /// <summary>
         /// Retries the specified action until it returns a value other than <see langword="default"/> and throws no exceptions.
         /// </summary>
@@ -152,6 +165,7 @@ namespace MaSch.Core
         /// <param name="maxCheckCount">The maximum number of retries.</param>
         /// <returns>The result of the <paramref name="retryAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in the specified execution limit; otherwise, <see langword="default"/>.</returns>
         public static T? Retry<T>(Func<T> retryAction, int maxCheckCount) => WaitUntil(x => retryAction(), new RetryOptions { MaximumCheckCount = maxCheckCount });
+
         /// <summary>
         /// Retries the specified action until it returns a value other than <see langword="default"/> and throws no exceptions.
         /// </summary>
@@ -160,6 +174,7 @@ namespace MaSch.Core
         /// <param name="options">The retry options to use with the retry operation.</param>
         /// <returns>The result of the <paramref name="retryAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in the specified execution limit; otherwise, <see langword="default"/>.</returns>
         public static T? Retry<T>(Func<T> retryAction, RetryOptions options) => WaitUntil(x => retryAction(), options);
+
         /// <summary>
         /// Retries the specified action until it returns a value other than <see langword="default"/> and throws no exceptions.
         /// </summary>
@@ -167,6 +182,7 @@ namespace MaSch.Core
         /// <param name="retryAction">The retry action.</param>
         /// <returns>The result of the <paramref name="retryAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in the specified execution limit; otherwise, <see langword="default"/>.</returns>
         public static T? Retry<T>(Func<WaitingState, T> retryAction) => WaitUntil(retryAction, DefaultRetryOptions);
+
         /// <summary>
         /// Retries the specified action until it returns a value other than <see langword="default"/> and throws no exceptions.
         /// </summary>
@@ -175,6 +191,7 @@ namespace MaSch.Core
         /// <param name="maxCheckCount">The maximum number of retries.</param>
         /// <returns>The result of the <paramref name="retryAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in the specified execution limit; otherwise, <see langword="default"/>.</returns>
         public static T? Retry<T>(Func<WaitingState, T> retryAction, int maxCheckCount) => WaitUntil(retryAction, new RetryOptions { MaximumCheckCount = maxCheckCount });
+
         /// <summary>
         /// Retries the specified action until it returns a value other than <see langword="default"/> and throws no exceptions.
         /// </summary>
@@ -190,6 +207,7 @@ namespace MaSch.Core
         /// <param name="retryAction">The retry action.</param>
         /// <returns><see langword="true"/> if the <paramref name="retryAction"/> throws no exceptions in the specified execution limit; otherwise, <see langword="false"/>.</returns>
         public static bool Retry(Action retryAction) => WaitUntil(ToWaitAction(retryAction), DefaultRetryOptions);
+
         /// <summary>
         /// Retries the specified action until it throws no exceptions.
         /// </summary>
@@ -197,6 +215,7 @@ namespace MaSch.Core
         /// <param name="maxCheckCount">The maximum number of retries.</param>
         /// <returns><see langword="true"/> if the <paramref name="retryAction"/> throws no exceptions in the specified execution limit; otherwise, <see langword="false"/>.</returns>
         public static bool Retry(Action retryAction, int maxCheckCount) => WaitUntil(ToWaitAction(retryAction), new RetryOptions { MaximumCheckCount = maxCheckCount });
+
         /// <summary>
         /// Retries the specified action until it throws no exceptions.
         /// </summary>
@@ -204,12 +223,14 @@ namespace MaSch.Core
         /// <param name="options">The retry options to use with the retry operation.</param>
         /// <returns><see langword="true"/> if the <paramref name="retryAction"/> throws no exceptions in the specified execution limit; otherwise, <see langword="false"/>.</returns>
         public static bool Retry(Action retryAction, RetryOptions options) => WaitUntil(ToWaitAction(retryAction), options);
+
         /// <summary>
         /// Retries the specified action until it throws no exceptions.
         /// </summary>
         /// <param name="retryAction">The retry action.</param>
         /// <returns><see langword="true"/> if the <paramref name="retryAction"/> throws no exceptions in the specified execution limit; otherwise, <see langword="false"/>.</returns>
         public static bool Retry(Action<WaitingState> retryAction) => WaitUntil(ToWaitAction(retryAction), DefaultRetryOptions);
+
         /// <summary>
         /// Retries the specified action until it throws no exceptions.
         /// </summary>
@@ -217,6 +238,7 @@ namespace MaSch.Core
         /// <param name="maxCheckCount">The maximum number of retries.</param>
         /// <returns><see langword="true"/> if the <paramref name="retryAction"/> throws no exceptions in the specified execution limit; otherwise, <see langword="false"/>.</returns>
         public static bool Retry(Action<WaitingState> retryAction, int maxCheckCount) => WaitUntil(ToWaitAction(retryAction), new RetryOptions { MaximumCheckCount = maxCheckCount });
+
         /// <summary>
         /// Retries the specified action until it throws no exceptions.
         /// </summary>
@@ -250,56 +272,71 @@ namespace MaSch.Core
     /// <seealso cref="ICloneable" />
     public class WaiterOptions : ICloneable
     {
+        /// <summary>
+        /// The default message that is used when a Waiter action fails.
+        /// </summary>
         internal const string DefaultFailMessage = "The waiting action has ended without result.";
-        
+
         /// <summary>
         /// Gets or sets the timeout of the waiting action.
         /// </summary>
         public TimeSpan? Timeout { get; set; }
+
         /// <summary>
         /// Gets or sets the time that is slepts between wait condition checks.
         /// </summary>
-        public TimeSpan ThinkTimeBetweenChecks { get; set; }        
+        public TimeSpan ThinkTimeBetweenChecks { get; set; }
+
         /// <summary>
         /// Gets or sets the number of checks that needs to be done at minimum while waiting.
         /// </summary>
-        public int MinimumCheckCount { get; set; }        
+        public int MinimumCheckCount { get; set; }
+
         /// <summary>
         /// Gets or sets the number of checks that can be done at maximum while waiting. If set to -1 the number of checks is unlimited.
         /// </summary>
-        public int MaximumCheckCount { get; set; }        
+        public int MaximumCheckCount { get; set; }
+
         /// <summary>
-        /// Gets or sets a value indicating wether all exceptions (and not only the ones defined by <see cref="IgnoredExceptionTypes"/>) should be ignored while waiting.
+        /// Gets or sets a value indicating whether all exceptions (and not only the ones defined by <see cref="IgnoredExceptionTypes"/>) should be ignored while waiting.
         /// </summary>
         public bool IgnoreAllExceptions { get; set; }
+
         /// <summary>
         /// Gets or sets a collection of exception types that should be ignored while waiting (only used if <see cref="IgnoreAllExceptions"/> is set to <see langword="false"/>).
         /// </summary>
         public ICollection<Type>? IgnoredExceptionTypes { get; set; }
+
         /// <summary>
         /// Gets or sets the maximum number of ignored exceptions while waiting. If set to -1 the number fo exceptions is unlimited.
         /// </summary>
         public int MaximumIgnoredExceptions { get; set; }
+
         /// <summary>
         /// Gets or sets an action that is executed when an exception occures while waiting.
         /// </summary>
         public Action<WaitingState>? OnException { get; set; }
+
         /// <summary>
-        /// Gets or sets a value indicating wether occurring exceptions while waiting shuld be logged usingg the <see cref="LoggingService"/>.
+        /// Gets or sets a value indicating whether occurring exceptions while waiting shuld be logged usingg the <see cref="LoggingService"/>.
         /// </summary>
         public bool LogIgnoredExceptions { get; set; }
+
         /// <summary>
-        /// Gets or sets a value indicating wether to include the exception stack in the log if <see cref="LogIgnoredExceptions"/> is set to <see langword="true"/>.
+        /// Gets or sets a value indicating whether to include the exception stack in the log if <see cref="LogIgnoredExceptions"/> is set to <see langword="true"/>.
         /// </summary>
         public bool IncludeExceptionStackInLog { get; set; }
+
         /// <summary>
-        /// Gets or sets a value indicating wether the waiting operation should throw an exception if it runs into a timeout.
+        /// Gets or sets a value indicating whether the waiting operation should throw an exception if it runs into a timeout.
         /// </summary>
         public bool ThrowException { get; set; }
+
         /// <summary>
         /// Gets or sets the error message that should be logged if the waiting operation runs into a timeout. If <see cref="ThrowException"/> is set to <see langword="true"/> this message is also used for the exception.
         /// </summary>
         public string? ExceptionMessage { get; set; }
+
         /// <summary>
         /// Gets or sets a <see cref="ILoggingService"/> that is used for logging. If set to <see langword="null"/> logging is disabled.
         /// </summary>
@@ -308,7 +345,15 @@ namespace MaSch.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="WaiterOptions" /> class with default values defined by <see cref="Waiter.DefaultOptions"/>.
         /// </summary>
-        public WaiterOptions() : this(Waiter.DefaultOptions) { }
+        public WaiterOptions()
+            : this(Waiter.DefaultOptions)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WaiterOptions"/> class.
+        /// </summary>
+        /// <param name="defaultValues">The default values.</param>
         internal WaiterOptions(WaiterOptions? defaultValues)
         {
             if (defaultValues != null)
@@ -328,7 +373,9 @@ namespace MaSch.Core
             }
         }
 
+        /// <inheritdoc />
         object ICloneable.Clone() => MemberwiseClone();
+
         /// <summary>
         /// Clones this instance.
         /// </summary>
@@ -342,13 +389,25 @@ namespace MaSch.Core
     /// <seealso cref="WaiterOptions" />
     public class RetryOptions : WaiterOptions
     {
+        /// <summary>
+        /// The default message that is used when a Waiter action fails.
+        /// </summary>
         internal new const string DefaultFailMessage = "The retry action has ended without result.";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RetryOptions" /> class with default values defined by <see cref="Waiter.DefaultRetryOptions"/>.
         /// </summary>
-        public RetryOptions() : this(Waiter.DefaultRetryOptions) { }
-        internal RetryOptions(WaiterOptions defaultValues) : base(defaultValues)
+        public RetryOptions()
+            : this(Waiter.DefaultRetryOptions)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RetryOptions"/> class.
+        /// </summary>
+        /// <param name="defaultValues">The default values.</param>
+        internal RetryOptions(WaiterOptions defaultValues)
+            : base(defaultValues)
         {
         }
     }
@@ -358,34 +417,50 @@ namespace MaSch.Core
     /// </summary>
     public class WaitingState
     {
+        /// <summary>
+        /// Gets the exceptions that occurred during the waiting action.
+        /// </summary>
         internal List<Exception> OccurredExceptionList { get; }
+
+        /// <summary>
+        /// Gets the stopwatch for this waiting action.
+        /// </summary>
         internal Stopwatch Stopwatch { get; }
-        
+
         /// <summary>
         /// Gets the elapsed time of this waiting operation.
         /// </summary>
         public TimeSpan ElapsedTime => Stopwatch.Elapsed;
+
         /// <summary>
         /// Gets the number of checks executed by this waiting operation.
         /// </summary>
         public int CheckCount { get; internal set; }
+
         /// <summary>
         /// Gets a collection of exceptions occurred while executing this waiting operation.
         /// </summary>
         public IReadOnlyList<Exception> OccurredExceptions { get; }
+
         /// <summary>
         /// Gets the last exception that occurred while executing this waiting operation. If no exception occurred, <see langword="null"/> is returned.
         /// </summary>
         public Exception? LatestException => OccurredExceptions.Count == 0 ? null : OccurredExceptions[OccurredExceptions.Count - 1];
+
         /// <summary>
-        /// Gets a value indicating wether this waiting operation has been canceled.
+        /// Gets a value indicating whether this waiting operation has been canceled.
         /// </summary>
         public bool IsCanceled { get; private set; }
+
         /// <summary>
         /// Gets the options of this waiting operation.
         /// </summary>
         public WaiterOptions Options { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WaitingState"/> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
         internal WaitingState(WaiterOptions options)
         {
             Stopwatch = new Stopwatch();
@@ -411,19 +486,27 @@ namespace MaSch.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="WaiterException" /> class.
         /// </summary>
-        public WaiterException() { }
+        public WaiterException()
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WaiterException" /> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public WaiterException(string message) : base(message) { }
+        public WaiterException(string message)
+            : base(message)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WaiterException" /> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
-        public WaiterException(string message, Exception innerException) : base(message, innerException) { }
+        public WaiterException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
     }
 }

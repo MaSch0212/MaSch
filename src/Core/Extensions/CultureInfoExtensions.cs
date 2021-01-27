@@ -17,7 +17,7 @@ namespace MaSch.Core.Extensions
             Guard.NotNull(culture, nameof(culture));
 
             var current = culture;
-            while (current.IsNeutralCulture == false && !Equals(current, CultureInfo.InvariantCulture)) 
+            while (current.IsNeutralCulture == false && !Equals(current, CultureInfo.InvariantCulture))
                 current = current.Parent;
             return current;
         }

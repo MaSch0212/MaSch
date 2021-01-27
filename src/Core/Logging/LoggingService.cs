@@ -19,12 +19,20 @@ namespace MaSch.Core.Logging
         /// <summary>
         /// Initializes a new instance of the <see cref="LoggingService"/> class.
         /// </summary>
-        public LoggingService() : this((IEnumerable<ILoggingProvider>?)null) { }
+        public LoggingService()
+            : this((IEnumerable<ILoggingProvider>?)null)
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LoggingService"/> class.
         /// </summary>
         /// <param name="providers">The providers to use in the <see cref="LoggingService"/>.</param>
-        public LoggingService(params ILoggingProvider[]? providers) : this((IEnumerable<ILoggingProvider>?)providers) { }
+        public LoggingService(params ILoggingProvider[]? providers)
+            : this((IEnumerable<ILoggingProvider>?)providers)
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LoggingService" /> class.
         /// </summary>
@@ -43,11 +51,11 @@ namespace MaSch.Core.Logging
             => _loggingProviders.ForEach(x => x.Log(logType, message, exception));
 
         /// <inheritdoc/>
-        public virtual bool AddLoggingProvider(ILoggingProvider provider) 
+        public virtual bool AddLoggingProvider(ILoggingProvider provider)
             => _loggingProviders.AddIfNotExists(Guard.NotNull(provider, nameof(provider)));
 
         /// <inheritdoc/>
-        public virtual bool RemoveLoggingProvider(ILoggingProvider provider) 
+        public virtual bool RemoveLoggingProvider(ILoggingProvider provider)
             => _loggingProviders.TryRemove(Guard.NotNull(provider, nameof(provider)));
     }
 }

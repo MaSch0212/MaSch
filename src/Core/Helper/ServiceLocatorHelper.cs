@@ -40,6 +40,7 @@ namespace MaSch.Core.Helper
                         }
                     }
                 }
+
                 return _currentServiceLocator;
             }
         }

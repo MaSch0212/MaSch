@@ -13,7 +13,7 @@ namespace MaSch.Core.Observable.Modules
     {
         private static readonly Dictionary<Type, Dictionary<string, List<string>>> PropertyDependencyCache = new Dictionary<Type, Dictionary<string, List<string>>>();
         private static readonly object FillCacheLock = new object();
-        
+
         private readonly Type _objectType;
         private readonly IObservableObject _observableObject;
         private readonly Dictionary<string, List<string>> _propertyDependencies;
@@ -54,9 +54,11 @@ namespace MaSch.Core.Observable.Modules
                             }
                         }
                     }
+
                     PropertyDependencyCache.Add(type, dependencies);
                     return dependencies;
                 }
+
                 return PropertyDependencyCache[type];
             }
         }
@@ -65,11 +67,11 @@ namespace MaSch.Core.Observable.Modules
         /// Notifies the subscribers that a command has changed.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
-        /// <exception cref="ArgumentException">A property with the name <paramref name="propertyName"/> does not exist in the object. - propertyName</exception>
+        /// <exception cref="ArgumentException">A property with the name <paramref name="propertyName"/> does not exist in the object. - <paramref name="propertyName"/>.</exception>
         public void NotifyCommandChanged(string propertyName)
         {
             var property = _objectType.GetProperty(propertyName);
-            if(property == null)
+            if (property == null)
                 throw new ArgumentException($"A property with the name {propertyName} does not exist in {_objectType.FullName}.", nameof(propertyName));
             var propertyValue = property.GetValue(_observableObject);
             if (propertyValue != null)
@@ -86,18 +88,20 @@ namespace MaSch.Core.Observable.Modules
         /// <param name="propertyName">Name of the property.</param>
         public void NotifyDependentProperties(string propertyName)
         {
-            if(_propertyDependencies.ContainsKey(propertyName))
+            if (_propertyDependencies.ContainsKey(propertyName))
             {
                 foreach (var p in _propertyDependencies[propertyName])
                 {
                     var split = p.Split(':');
-                    if(split.Length > 1)
+                    if (split.Length > 1)
                     {
                         if (split[0] == "command")
                             NotifyCommandChanged(split[1]);
                     }
                     else
+                    {
                         _observableObject.NotifyPropertyChanged(p);
+                    }
                 }
             }
         }

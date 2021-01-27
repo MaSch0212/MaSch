@@ -18,14 +18,14 @@
         /// Adds a specified logging provider.
         /// </summary>
         /// <param name="provider">The provider to add.</param>
-        /// <returns><see langword="true"/> if the provider was added successfully; otherwise, <see langword="false"/></returns>
+        /// <returns><see langword="true"/> if the provider was added successfully; otherwise, <see langword="false"/>.</returns>
         bool AddLoggingProvider(ILoggingProvider provider);
 
         /// <summary>
         /// Removes a specified logging provider.
         /// </summary>
         /// <param name="provider">The provider to remove.</param>
-        /// <returns><see langword="true"/> if the provider was removed successfully; otherwise, <see langword="false"/></returns>
+        /// <returns><see langword="true"/> if the provider was removed successfully; otherwise, <see langword="false"/>.</returns>
         bool RemoveLoggingProvider(ILoggingProvider provider);
     }
 }

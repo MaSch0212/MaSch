@@ -24,6 +24,7 @@ namespace MaSch.Core.Converters
             _converterFunction = converterFunction;
             _basePriority = priority;
         }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DelegateObjectConverter{TSource,TTarget}"/> class.
         /// </summary>
@@ -38,7 +39,7 @@ namespace MaSch.Core.Converters
         /// <inheritdoc />
         public bool CanConvert(Type? sourceType, Type targetType, IObjectConvertManager convertManager)
         {
-            return (sourceType == null && typeof(TSource).IsClass || typeof(TSource).IsAssignableFrom(sourceType)) &&
+            return ((sourceType == null && typeof(TSource).IsClass) || typeof(TSource).IsAssignableFrom(sourceType)) &&
                    typeof(TTarget).IsAssignableFrom(targetType);
         }
 

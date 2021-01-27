@@ -58,7 +58,7 @@ namespace MaSch.Core.Observable
                 return;
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            if(notifyDependencies)
+            if (notifyDependencies)
                 _module.NotifyDependentProperties(propertyName);
         }
 
@@ -74,6 +74,7 @@ namespace MaSch.Core.Observable
         /// <summary>
         /// Gets a value indicating wether the <see cref="IsNotifyEnabled"/> property should be serialized.
         /// </summary>
+        /// <returns><c>true</c> if the <see cref="IsNotifyEnabled"/> property should be serialized; otherwise, <c>false</c>.</returns>
         public virtual bool ShouldSerializeIsNotifyEnabled() => false;
     }
 }

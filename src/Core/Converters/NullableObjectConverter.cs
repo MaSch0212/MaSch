@@ -52,7 +52,7 @@ namespace MaSch.Core.Converters
 
         private static (bool sourceNullable, bool targetNullable, Type? realSourceType, Type realTargetType) GetTypeInformation(Type? sourceType, Type targetType)
         {
-            var sourceNullable = sourceType == null || sourceType.IsGenericType && sourceType.GetGenericTypeDefinition() == typeof(Nullable<>);
+            var sourceNullable = sourceType == null || (sourceType.IsGenericType && sourceType.GetGenericTypeDefinition() == typeof(Nullable<>));
             var targetNullable = targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>);
             var realSourceType = sourceNullable ? sourceType?.GetGenericArguments()[0] : sourceType;
             var realTargetType = targetNullable ? targetType.GetGenericArguments()[0] : targetType;

@@ -12,9 +12,11 @@ namespace MaSch.Core.Extensions
     public static class CollectionExtensions
     {
         #region ICollection<T> Extensions
+
         /// <summary>
         /// Adds items to the <see cref="ICollection{T}"/>.
         /// </summary>
+        /// <typeparam name="T">The type of elements in the <see cref="ICollection{T}"/>.</typeparam>
         /// <param name="collection">The <see cref="ICollection{T}"/> to add the items to.</param>
         /// <param name="items">The objects to add to the <see cref="ICollection{T}"/>.</param>
         /// <exception cref="NotSupportedException"><see cref="ICollection{T}"/> is read-only.</exception>
@@ -23,6 +25,7 @@ namespace MaSch.Core.Extensions
         /// <summary>
         /// Adds items to the <see cref="ICollection{T}"/>.
         /// </summary>
+        /// <typeparam name="T">The type of elements in the <see cref="ICollection{T}"/>.</typeparam>
         /// <param name="collection">The <see cref="ICollection{T}"/> to add the items to.</param>
         /// <param name="items">The objects to add to the <see cref="ICollection{T}"/>.</param>
         /// <exception cref="NotSupportedException"><see cref="ICollection{T}"/> is read-only.</exception>
@@ -40,6 +43,7 @@ namespace MaSch.Core.Extensions
         /// <summary>
         /// Sets the content of the <see cref="ICollection{T}"/>.
         /// </summary>
+        /// <typeparam name="T">The type of elements in the <see cref="ICollection{T}"/>.</typeparam>
         /// <param name="collection">The <see cref="ICollection{T}"/> the set the data to.</param>
         /// <param name="items">The objects to set to the <see cref="ICollection{T}"/>.</param>
         /// <exception cref="NotSupportedException"><see cref="ICollection{T}"/> is read-only.</exception>
@@ -55,6 +59,7 @@ namespace MaSch.Core.Extensions
         /// <summary>
         /// Adds an item to the <see cref="ICollection{T}"/> if it does not exist in the <see cref="ICollection{T}"/>.
         /// </summary>
+        /// <typeparam name="T">The type of elements in the <see cref="ICollection{T}"/>.</typeparam>
         /// <param name="collection">The <see cref="ICollection{T}"/> to add the item to.</param>
         /// <param name="itemToAdd">The object to add to the <see cref="ICollection{T}"/>.</param>
         /// <returns>Return true if the item was added; otherwise false.</returns>
@@ -72,12 +77,14 @@ namespace MaSch.Core.Extensions
                 collection.Add(itemToAdd);
                 return true;
             }
+
             return false;
         }
 
         /// <summary>
         /// Adds items to the <see cref="ICollection{T}"/> if they does not exist in the <see cref="ICollection{T}"/>.
         /// </summary>
+        /// <typeparam name="T">The type of elements in the <see cref="ICollection{T}"/>.</typeparam>
         /// <param name="collection">The <see cref="ICollection{T}"/> to add the items to.</param>
         /// <param name="items">The objects to add to the <see cref="ICollection{T}"/>.</param>
         /// <returns>Return the count of added items.</returns>
@@ -92,6 +99,7 @@ namespace MaSch.Core.Extensions
         /// <summary>
         /// Removes an item from the <see cref="ICollection{T}"/> if it exists in the <see cref="ICollection{T}"/>.
         /// </summary>
+        /// <typeparam name="T">The type of elements in the <see cref="ICollection{T}"/>.</typeparam>
         /// <param name="collection">The <see cref="ICollection{T}"/> to remove the item from.</param>
         /// <param name="itemToRemove">The object to remove from the <see cref="ICollection{T}"/>.</param>
         /// <returns>Returns true if the item was removed; otherwise false.</returns>
@@ -105,6 +113,7 @@ namespace MaSch.Core.Extensions
         /// <summary>
         /// Removes an item from the <see cref="ICollection{T}"/> if it exists in the <see cref="ICollection{T}"/>.
         /// </summary>
+        /// <typeparam name="T">The type of elements in the <see cref="ICollection{T}"/>.</typeparam>
         /// <param name="collection">The <see cref="ICollection{T}"/> to remove the item from.</param>
         /// <param name="itemToRemove">The object to remove from the <see cref="ICollection{T}"/>.</param>
         /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> that should be used for comparison.</param>
@@ -124,6 +133,7 @@ namespace MaSch.Core.Extensions
                 collection.Remove(itemToRemove);
                 return true;
             }
+
             return false;
         }
 
@@ -137,12 +147,14 @@ namespace MaSch.Core.Extensions
                     return true;
                 }
             }
+
             return false;
         }
 
         /// <summary>
         /// Removes items from the <see cref="ICollection{T}"/> if they exists in the <see cref="ICollection{T}"/>.
         /// </summary>
+        /// <typeparam name="T">The type of elements in the <see cref="ICollection{T}"/>.</typeparam>
         /// <param name="collection">The <see cref="ICollection{T}"/> to remove the items from.</param>
         /// <param name="items">The objects to remove from the <see cref="ICollection{T}"/>.</param>
         /// <returns>Return the count of removed items.</returns>
@@ -156,8 +168,10 @@ namespace MaSch.Core.Extensions
         /// <summary>
         /// Removes items from the <see cref="ICollection{T}"/> if they exists in the <see cref="ICollection{T}"/>.
         /// </summary>
+        /// <typeparam name="T">The type of elements in the <see cref="ICollection{T}"/>.</typeparam>
         /// <param name="collection">The <see cref="ICollection{T}"/> to remove the items from.</param>
         /// <param name="items">The objects to remove from the <see cref="ICollection{T}"/>.</param>
+        /// <param name="comparer">The comparer to use.</param>
         /// <returns>Return the count of removed items.</returns>
         public static int Remove<T>(this ICollection<T> collection, IEnumerable<T> items, IEqualityComparer<T> comparer)
         {
@@ -170,6 +184,7 @@ namespace MaSch.Core.Extensions
         /// <summary>
         /// Removes items from the <see cref="ICollection{T}"/> that matches a given condition.
         /// </summary>
+        /// <typeparam name="T">The type of elements in the <see cref="ICollection{T}"/>.</typeparam>
         /// <param name="collection">The <see cref="ICollection{T}"/> to remove the items from.</param>
         /// <param name="condition">The condition that determines which items are to be removed from the <see cref="ICollection{T}"/>.</param>
         /// <returns>Return the count of removed items.</returns>
@@ -180,12 +195,15 @@ namespace MaSch.Core.Extensions
 
             return collection.Where(condition).ToArray().Count(x => TryRemoveImpl(collection, x));
         }
+
         #endregion
 
         #region IList<T> Extensions
+
         /// <summary>
         /// Removes an item from the <see cref="IList{T}"/> if it exists in the <see cref="IList{T}"/>.
         /// </summary>
+        /// <typeparam name="T">The type of elements in the <see cref="IList{T}"/>.</typeparam>
         /// <param name="list">The <see cref="IList{T}"/> to remove the item from.</param>
         /// <param name="itemToRemove">The object to remove from the <see cref="IList{T}"/>.</param>
         /// <returns>Returns true if the item was removed; otherwise false.</returns>
@@ -207,6 +225,7 @@ namespace MaSch.Core.Extensions
         /// <summary>
         /// Removes items from the <see cref="IList{T}"/> if they exists in the <see cref="IList{T}"/>.
         /// </summary>
+        /// <typeparam name="T">The type of elements in the <see cref="IList{T}"/>.</typeparam>
         /// <param name="list">The <see cref="IList{T}"/> to remove the items from.</param>
         /// <param name="items">The objects to remove from the <see cref="IList{T}"/>.</param>
         /// <returns>Return the count of removed items.</returns>
@@ -221,9 +240,10 @@ namespace MaSch.Core.Extensions
         /// <summary>
         /// Removes items from the <see cref="IList{T}"/> if they exists in the <see cref="IList{T}"/>.
         /// </summary>
+        /// <typeparam name="T">The type of elements in the <see cref="IList{T}"/>.</typeparam>
         /// <param name="list">The <see cref="IList{T}"/> to remove the items from.</param>
         /// <param name="items">The objects to remove from the <see cref="IList{T}"/>.</param>
-        /// <param name="removedItems">The items that were deleted from the collection</param>
+        /// <param name="removedItems">The items that were deleted from the collection.</param>
         /// <returns>Return the count of removed items.</returns>
         public static int Remove<T>(this IList<T> list, IEnumerable<T> items, out IList<T> removedItems)
         {
@@ -237,6 +257,7 @@ namespace MaSch.Core.Extensions
         /// <summary>
         /// Removes items from the <see cref="IList{T}"/> that matches a given condition.
         /// </summary>
+        /// <typeparam name="T">The type of elements in the <see cref="IList{T}"/>.</typeparam>
         /// <param name="list">The <see cref="IList{T}"/> to remove the items from.</param>
         /// <param name="condition">The condition that determines which items are to be removed from the <see cref="IList{T}"/>.</param>
         /// <returns>Return the count of removed items.</returns>
@@ -244,12 +265,14 @@ namespace MaSch.Core.Extensions
         {
             Guard.NotNull(list, nameof(list));
             Guard.NotNull(condition, nameof(condition));
-            
+
             return list.Where(condition).ToArray().Count(x => TryRemoveImpl(list, x));
         }
+
         #endregion
 
         #region IList Extensions
+
         /// <summary>
         /// Adds an item to the <see cref="IList"/> if it does not exist in the <see cref="IList"/>.
         /// </summary>
@@ -270,6 +293,7 @@ namespace MaSch.Core.Extensions
                 list.Add(itemToAdd);
                 return true;
             }
+
             return false;
         }
 
@@ -335,9 +359,11 @@ namespace MaSch.Core.Extensions
 
             return list.Cast<object?>().Where(condition).ToArray().Count(x => TryRemoveImpl(list, x));
         }
+
         #endregion
 
         #region Special Types
+
         /// <summary>
         /// Converts the <see cref="IEnumerable{T}"/> to a <see cref="StringCollection"/>.
         /// </summary>
@@ -352,6 +378,7 @@ namespace MaSch.Core.Extensions
                 result.Add(i);
             return result;
         }
+
         #endregion
     }
 }

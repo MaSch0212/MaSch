@@ -29,7 +29,10 @@ namespace MaSch.Core
     /// <typeparam name="T">The type of objects to enumerate.</typeparam>
     /// <seealso cref="IEnumerable" />
     /// <seealso cref="IDisposable" />
-    public interface IDisposableEnumerable<out T> : IDisposableEnumerable, IEnumerable<T> { }
+    public interface IDisposableEnumerable<out T>
+        : IDisposableEnumerable, IEnumerable<T>
+    {
+    }
 
     /// <summary>
     /// Represents a sorted, disposable sequence.
@@ -37,5 +40,8 @@ namespace MaSch.Core
     /// <typeparam name="T">The type of the elements of the sequence.</typeparam>
     /// <seealso cref="IDisposableEnumerable" />
     /// <seealso cref="IOrderedEnumerable{T}" />
-    public interface IOrderedDisposableEnumerable<T> : IDisposableEnumerable, IOrderedEnumerable<T> { }
+    public interface IOrderedDisposableEnumerable<T>
+        : IDisposableEnumerable, IOrderedEnumerable<T>
+    {
+    }
 }

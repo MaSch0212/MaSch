@@ -10,7 +10,8 @@ namespace MaSch.Core.Collections
     /// </summary>
     /// <typeparam name="TItem">The type of the items in this <see cref="T:MaSch.Core.Collections.ExtendedHashSet`2" />.</typeparam>
     /// <typeparam name="THash">The type of the hash values in this <see cref="T:MaSch.Core.Collections.ExtendedHashSet`2" />.</typeparam>
-    public class ExtendedHashSet<TItem, THash> : ICollection<TItem>, IReadOnlyCollection<TItem> where THash : notnull
+    public class ExtendedHashSet<TItem, THash> : ICollection<TItem>, IReadOnlyCollection<TItem>
+        where THash : notnull
     {
         private readonly Dictionary<THash, TItem> _dict;
         private readonly Func<TItem, THash> _hashFunction;
@@ -19,14 +20,18 @@ namespace MaSch.Core.Collections
         /// Gets the number of elements contained in the <see cref="ExtendedHashSet{TItem,THash}"></see>.
         /// </summary>
         public int Count => _dict.Count;
-        
+
+        /// <inheritdoc />
         bool ICollection<TItem>.IsReadOnly => false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExtendedHashSet{TItem, THash}"/> class.
         /// </summary>
         /// <param name="hashFunction">The hash function.</param>
-        public ExtendedHashSet(Func<TItem, THash> hashFunction) : this(null, hashFunction) { }
+        public ExtendedHashSet(Func<TItem, THash> hashFunction)
+            : this(null, hashFunction)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExtendedHashSet{TItem, THash}"/> class.
@@ -56,6 +61,7 @@ namespace MaSch.Core.Collections
         public virtual bool ContainsHashCode(THash hashcode) => _dict.ContainsKey(hashcode);
 
         #region ICollection
+
         /// <summary>
         /// Adds an item to the <see cref="ExtendedHashSet{TItem, THash}"></see>.
         /// </summary>
@@ -100,6 +106,7 @@ namespace MaSch.Core.Collections
         /// </returns>
         public IEnumerator<TItem> GetEnumerator() => _dict.Values.GetEnumerator();
 
+        /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_dict.Values).GetEnumerator();
 
         /// <summary>
@@ -109,8 +116,9 @@ namespace MaSch.Core.Collections
         /// The <typeparamref name="TItem"/>.
         /// </value>
         /// <param name="hashcode">The hashcode.</param>
-        /// <returns></returns>
+        /// <returns>The <typeparamref name="TItem"/> with the specified hashcode.</returns>
         public virtual TItem this[THash hashcode] => _dict[hashcode];
+
         #endregion
     }
 }

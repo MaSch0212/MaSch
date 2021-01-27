@@ -1,5 +1,4 @@
-﻿
-namespace MaSch.Core.Logging
+﻿namespace MaSch.Core.Logging
 {
     /// <summary>
     /// The type of a log entry.
@@ -34,6 +33,6 @@ namespace MaSch.Core.Logging
         /// <summary>
         /// The fatal error type - used for log entries that report fatal errors.
         /// </summary>
-        FatalError
+        FatalError,
     }
 }

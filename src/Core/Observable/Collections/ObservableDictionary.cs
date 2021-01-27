@@ -23,14 +23,17 @@ namespace MaSch.Core.Observable.Collections
     /// <seealso cref="IReadOnlyDictionary{TKey, TValue}" />
     /// <seealso cref="ISerializable" />
     /// <seealso cref="IDeserializationCallback" />
-    public class ObservableDictionary<TKey, TValue> : INotifyCollectionChanged, INotifyPropertyChanged, IDictionary<TKey, TValue>, IDictionary, IReadOnlyDictionary<TKey, TValue>, ISerializable, IDeserializationCallback where TKey : notnull
+    public class ObservableDictionary<TKey, TValue> : INotifyCollectionChanged, INotifyPropertyChanged, IDictionary<TKey, TValue>, IDictionary, IReadOnlyDictionary<TKey, TValue>, ISerializable, IDeserializationCallback
+        where TKey : notnull
     {
         /// <summary>
         /// Occurs when a dictionary item changed.
         /// </summary>
         public event DictionaryItemChangedEventHandler<TKey, TValue>? DictionaryItemChanged;
+
         /// <inheritdoc/>
         public event PropertyChangedEventHandler? PropertyChanged;
+
         /// <inheritdoc/>
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
@@ -46,20 +49,38 @@ namespace MaSch.Core.Observable.Collections
 
         /// <inheritdoc/>
         public ICollection<TKey> Keys => _dictionary.Keys;
+
         /// <inheritdoc/>
         public ICollection<TValue> Values => _dictionary.Values;
+
+        /// <inheritdoc/>
         ICollection IDictionary.Keys => ((IDictionary)_dictionary).Keys;
+
+        /// <inheritdoc/>
         ICollection IDictionary.Values => ((IDictionary)_dictionary).Values;
+
+        /// <inheritdoc/>
         IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => ((IReadOnlyDictionary<TKey, TValue>)_dictionary).Keys;
+
+        /// <inheritdoc/>
         IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => ((IReadOnlyDictionary<TKey, TValue>)_dictionary).Values;
 
         /// <inheritdoc/>
         public int Count => _dictionary.Count;
+
+        /// <inheritdoc/>
         bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).IsReadOnly;
+
+        /// <inheritdoc/>
         bool IDictionary.IsReadOnly => ((IDictionary)_dictionary).IsReadOnly;
-        
+
+        /// <inheritdoc/>
         bool IDictionary.IsFixedSize => ((IDictionary)_dictionary).IsFixedSize;
+
+        /// <inheritdoc/>
         object ICollection.SyncRoot => ((ICollection)_dictionary).SyncRoot;
+
+        /// <inheritdoc/>
         bool ICollection.IsSynchronized => ((ICollection)_dictionary).IsSynchronized;
 
         /// <summary>
@@ -69,6 +90,7 @@ namespace MaSch.Core.Observable.Collections
         {
             _dictionary = new Dictionary<TKey, TValue>();
         }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableDictionary{TKey, TValue}"/> class.
         /// </summary>
@@ -77,6 +99,7 @@ namespace MaSch.Core.Observable.Collections
         {
             _dictionary = enumerable.ToDictionary(x => x.Key, x => x.Value);
         }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableDictionary{TKey, TValue}"/> class.
         /// </summary>
@@ -88,7 +111,11 @@ namespace MaSch.Core.Observable.Collections
 
         /// <inheritdoc/>
         public virtual void Add(TKey key, [AllowNull] TValue value) => ((ICollection<KeyValuePair<TKey, TValue>>)this).Add(new KeyValuePair<TKey, TValue>(key, value!));
+
+        /// <inheritdoc/>
         void IDictionary.Add(object key, object? value) => ((ICollection<KeyValuePair<TKey, TValue>>)this).Add(new KeyValuePair<TKey, TValue>((TKey)key, (TValue)value!));
+
+        /// <inheritdoc/>
         void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
         {
             ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).Add(item);
@@ -105,23 +132,37 @@ namespace MaSch.Core.Observable.Collections
             CountChanged();
         }
 
+        /// <inheritdoc/>
         bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item) => ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).Contains(item);
+
+        /// <inheritdoc/>
         bool IDictionary.Contains(object key) => ((IDictionary)_dictionary).Contains(key);
+
         /// <inheritdoc/>
         public virtual bool ContainsKey(TKey key) => _dictionary.ContainsKey(key);
 
+        /// <inheritdoc/>
         void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) => ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).CopyTo(array, arrayIndex);
+
+        /// <inheritdoc/>
         void ICollection.CopyTo(Array array, int index) => ((ICollection)_dictionary).CopyTo(array, index);
 
         /// <inheritdoc/>
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _dictionary.GetEnumerator();
+
+        /// <inheritdoc/>
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_dictionary).GetEnumerator();
+
+        /// <inheritdoc/>
         IDictionaryEnumerator IDictionary.GetEnumerator() => ((IDictionary)_dictionary).GetEnumerator();
 
         /// <inheritdoc/>
         public virtual bool Remove(TKey key) => ((ICollection<KeyValuePair<TKey, TValue>>)this).Remove(_dictionary.FirstOrDefault(x => x.Key.Equals(key)));
+
         /// <inheritdoc/>
         public void Remove(object key) => ((ICollection<KeyValuePair<TKey, TValue>>)this).Remove(_dictionary.FirstOrDefault(x => x.Key.Equals(key)));
+
+        /// <inheritdoc/>
         bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
         {
             var result = ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).Remove(item);
@@ -130,6 +171,7 @@ namespace MaSch.Core.Observable.Collections
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, new[] { item }));
                 CountChanged();
             }
+
             return result;
         }
 
@@ -211,14 +253,18 @@ namespace MaSch.Core.Observable.Collections
     /// <typeparam name="TValue">The type of the value.</typeparam>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="DictionaryItemChangedEventArgs{TKey, TValue}" /> instance containing the event data.</param>
-    public delegate void DictionaryItemChangedEventHandler<TKey, TValue>(object sender, DictionaryItemChangedEventArgs<TKey, TValue> e) where TKey : notnull;
+    public delegate void DictionaryItemChangedEventHandler<TKey, TValue>(object sender, DictionaryItemChangedEventArgs<TKey, TValue> e)
+        where TKey : notnull;
+
     /// <summary>
     /// The event data for the <see cref="DictionaryItemChangedEventHandler{TKey, TValue}"/> event handler.
     /// </summary>
     /// <typeparam name="TKey">The type of the key.</typeparam>
     /// <typeparam name="TValue">The type of the value.</typeparam>
-    public class DictionaryItemChangedEventArgs<TKey, TValue> : EventArgs where TKey : notnull
-    {        
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Event Args can be in same file.")]
+    public class DictionaryItemChangedEventArgs<TKey, TValue> : EventArgs
+        where TKey : notnull
+    {
         /// <summary>
         /// Gets the index of the item that changed.
         /// </summary>
@@ -228,17 +274,19 @@ namespace MaSch.Core.Observable.Collections
         /// Gets the key of the item that changed.
         /// </summary>
         public TKey Key { get; }
-        
+
         /// <summary>
         /// Gets the old value of the item that changed.
         /// </summary>
-        [MaybeNull, AllowNull]
+        [MaybeNull]
+        [AllowNull]
         public TValue OldValue { get; }
 
         /// <summary>
         /// Gets the new value of the item that chanegd.
         /// </summary>
-        [MaybeNull, AllowNull]
+        [MaybeNull]
+        [AllowNull]
         public TValue NewValue { get; }
 
         /// <summary>

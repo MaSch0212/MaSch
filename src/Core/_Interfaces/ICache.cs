@@ -61,9 +61,9 @@ namespace MaSch.Core
         /// Tries to get the value of a specified key.
         /// </summary>
         /// <typeparam name="T">The type of the value to get.</typeparam>
-        /// <param name="value">The value of the <paramref name="key"/> types as <typeparamref name="T"/> if it exists; otherwise <code>default(T)</code>.</param>
+        /// <param name="value">The value of the <paramref name="key"/> types as <typeparamref name="T"/> if it exists; otherwise <c>default(T)</c>.</param>
         /// <param name="key">The key to get the value from.</param>
-        /// <returns><code>true</code> if a value exists for the <paramref name="key"/>; otherwise <code>false</code>.</returns>
+        /// <returns><c>true</c> if a value exists for the <paramref name="key"/>; otherwise <c>false</c>.</returns>
         /// <exception cref="InvalidCastException">The value in the <see cref="ICache"/> can not be cast to type <typeparamref name="T"/>.</exception>
         bool TryGetValue<T>([MaybeNull] out T value, [CallerMemberName] string key = "<Unknown>");
 

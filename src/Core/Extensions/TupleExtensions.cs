@@ -1,8 +1,15 @@
 ﻿using System;
 using MaSch.Core.Observable;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable SA1600 // Elements should be documented
+#nullable disable
+
 namespace MaSch.Core.Extensions
 {
+    /// <summary>
+    /// Provides extensions for tuples.
+    /// </summary>
     public static class TupleExtensions
     {
         public static ObservableTuple<T1> ToObservableTuple<T1>(this Tuple<T1> tuple)

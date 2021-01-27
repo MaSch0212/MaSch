@@ -12,7 +12,19 @@ namespace MaSch.Core.Logging
         private readonly bool _logExceptionStackTrace;
         private readonly bool _logDebugMessages;
 
-        public ConsoleLoggingProvider() : this(false, false) { }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConsoleLoggingProvider"/> class.
+        /// </summary>
+        public ConsoleLoggingProvider()
+            : this(false, false)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConsoleLoggingProvider"/> class.
+        /// </summary>
+        /// <param name="logExceptionStackTrace">if set to <c>true</c> the stack trace of exception is logged.</param>
+        /// <param name="logDebugMessages">if set to <c>true</c> debug messages are logged.</param>
         public ConsoleLoggingProvider(bool logExceptionStackTrace, bool logDebugMessages)
         {
             _logExceptionStackTrace = logExceptionStackTrace;
@@ -51,10 +63,13 @@ namespace MaSch.Core.Logging
                     message += GetExceptionText(ex, _logExceptionStackTrace);
             }
             else if (exception != null)
+            {
                 message += GetExceptionText(exception, _logExceptionStackTrace);
+            }
+
             return message;
 
-            static string GetExceptionText(Exception ex, bool includeStackTrace) 
+            static string GetExceptionText(Exception ex, bool includeStackTrace)
                 => $"{NewLine}    - {(includeStackTrace ? ex.ToString() : ex.Message).Replace(NewLine, $"{NewLine}      ")}";
         }
     }

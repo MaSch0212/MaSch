@@ -14,6 +14,7 @@ namespace MaSch.Core.Logging
         /// <param name="message">The message to log.</param>
         public static void LogDebug(this ILoggingProvider loggingProvider, string? message)
             => loggingProvider.Log(LogType.Debug, message);
+
         /// <summary>
         /// Logs an exception with a specified message as debug type.
         /// </summary>
@@ -46,6 +47,7 @@ namespace MaSch.Core.Logging
         /// <param name="message">The message to log.</param>
         public static void LogWarning(this ILoggingProvider loggingProvider, string? message)
             => loggingProvider.Log(LogType.Warning, message);
+
         /// <summary>
         /// Logs an exception with a specified message as warning type.
         /// </summary>
@@ -62,6 +64,7 @@ namespace MaSch.Core.Logging
         /// <param name="message">The message to log.</param>
         public static void LogError(this ILoggingProvider loggingProvider, string? message)
             => loggingProvider.Log(LogType.Error, message);
+
         /// <summary>
         /// Logs an exception with a specified message as error type.
         /// </summary>
@@ -78,6 +81,7 @@ namespace MaSch.Core.Logging
         /// <param name="message">The message to log.</param>
         public static void LogFatalError(this ILoggingProvider loggingProvider, string? message)
             => loggingProvider.Log(LogType.FatalError, message);
+
         /// <summary>
         /// Logs an exception with a specified message as fatal error type.
         /// </summary>

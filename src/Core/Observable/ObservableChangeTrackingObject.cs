@@ -15,18 +15,23 @@ namespace MaSch.Core.Observable
     public abstract class ObservableChangeTrackingObject : ObservableObject, IChangeTrackedObject
     {
         #region Properties
+
         /// <inheritdoc/>
         [XmlIgnore]
         public virtual IChangeTracker ChangeTracker { get; }
+
         /// <inheritdoc/>
         [XmlIgnore]
         public virtual bool HasChanges => ChangeTracker.HasChanges;
+
         /// <inheritdoc/>
         [XmlIgnore]
         public virtual bool ImplicitlyRecurse => true;
+
         #endregion
 
         #region Ctor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableChangeTrackingObject"/> class with the default <see cref="IChangeTracker"/>.
         /// </summary>
@@ -39,7 +44,7 @@ namespace MaSch.Core.Observable
         /// Initializes a new instance of the <see cref="ObservableChangeTrackingObject"/> class.
         /// </summary>
         /// <param name="changeTracker">The change tracker to use.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="changeTracker"/></exception>
+        /// <exception cref="ArgumentNullException"><paramref name="changeTracker"/>.</exception>
         protected ObservableChangeTrackingObject(IChangeTracker changeTracker)
         {
             ChangeTracker = Guard.NotNull(changeTracker, nameof(changeTracker));
@@ -52,7 +57,7 @@ namespace MaSch.Core.Observable
         /// <summary>
         /// Tracks the change of a property.
         /// </summary>
-        /// <typeparam name="T">The type of the property value</typeparam>
+        /// <typeparam name="T">The type of the property value.</typeparam>
         /// <param name="value">The value of the property.</param>
         /// <param name="notifyChange">If set to <c>true</c> the <see cref="INotifyPropertyChanged.PropertyChanged"/> event is raised.</param>
         /// <param name="propertyName">Name of the property.</param>
@@ -73,29 +78,37 @@ namespace MaSch.Core.Observable
         /// <inheritdoc/>
         public virtual void ResetChangeTracking()
         {
-            foreach(var property in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            foreach (var property in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 var value = property.GetValue(this);
                 ChangeTracker.SetBaseValue(value, property.Name);
             }
+
             ChangeTracker.ResetChangeTracking();
         }
 
         #endregion
 
-        #region Serialization        
+        #region Serialization
+
         /// <summary>
         /// Gets a value indicating wether the <see cref="ChangeTracker"/> property should be serialized.
         /// </summary>
+        /// <returns><c>true</c> if the <see cref="ChangeTracker"/> property should be serialized; otherwise, <c>false</c>.</returns>
         public virtual bool ShouldSerializeChangeTracker() => false;
+
         /// <summary>
         /// Gets a value indicating wether the <see cref="HasChanges"/> property should be serialized.
         /// </summary>
+        /// <returns><c>true</c> if the <see cref="HasChanges"/> property should be serialized; otherwise, <c>false</c>.</returns>
         public virtual bool ShouldSerializeHasChanges() => false;
+
         /// <summary>
         /// Gets a value indicating wether the <see cref="ImplicitlyRecurse"/> property should be serialized.
         /// </summary>
+        /// <returns><c>true</c> if the <see cref="ImplicitlyRecurse"/> property should be serialized; otherwise, <c>false</c>.</returns>
         public virtual bool ShouldSerializeImplicitlyRecurse() => false;
+
         #endregion
     }
 }

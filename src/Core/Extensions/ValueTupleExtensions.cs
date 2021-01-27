@@ -1,5 +1,4 @@
-﻿
-namespace MaSch.Core.Extensions
+﻿namespace MaSch.Core.Extensions
 {
     /// <summary>
     /// Provides extension methods for value tuples.
@@ -20,6 +19,7 @@ namespace MaSch.Core.Extensions
             (result, out1) = data;
             return result;
         }
+
         /// <summary>
         /// Expands the tuple as out parameters.
         /// </summary>
@@ -36,6 +36,7 @@ namespace MaSch.Core.Extensions
             (result, out1, out2) = data;
             return result;
         }
+
         /// <summary>
         /// Expands the tuple as out parameters.
         /// </summary>
@@ -54,6 +55,7 @@ namespace MaSch.Core.Extensions
             (result, out1, out2, out3) = data;
             return result;
         }
+
         /// <summary>
         /// Expands the tuple as out parameters.
         /// </summary>
@@ -74,6 +76,7 @@ namespace MaSch.Core.Extensions
             (result, out1, out2, out3, out4) = data;
             return result;
         }
+
         /// <summary>
         /// Expands the tuple as out parameters.
         /// </summary>
@@ -96,6 +99,7 @@ namespace MaSch.Core.Extensions
             (result, out1, out2, out3, out4, out5) = data;
             return result;
         }
+
         /// <summary>
         /// Expands the tuple as out parameters.
         /// </summary>

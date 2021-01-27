@@ -27,7 +27,7 @@ namespace MaSch.Core.Helper
                     action();
                     tcs.SetResult(true);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     tcs.SetException(ex);
                 }

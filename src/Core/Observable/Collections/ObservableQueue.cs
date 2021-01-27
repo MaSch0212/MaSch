@@ -20,6 +20,7 @@ namespace MaSch.Core.Observable.Collections
 
         /// <inheritdoc/>
         public event PropertyChangedEventHandler? PropertyChanged;
+
         /// <inheritdoc/>
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
@@ -31,6 +32,7 @@ namespace MaSch.Core.Observable.Collections
         {
             _queue = new Queue<T>();
         }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableQueue{T}"/> class that
         /// contains elements copied from the specified collection and has sufficient capacity
@@ -42,16 +44,18 @@ namespace MaSch.Core.Observable.Collections
         {
             _queue = new Queue<T>(collection);
         }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableQueue{T}"/> class that
         /// is empty and has the specified initial capacity.
         /// </summary>
-        /// <param name="capacity">The initial number of elements that the <see cref="ObservableQueue{T}"/> can contain</param>
+        /// <param name="capacity">The initial number of elements that the <see cref="ObservableQueue{T}"/> can contain.</param>
         /// <exception cref="ArgumentOutOfRangeException">capacity is less than zero.</exception>
         public ObservableQueue(int capacity)
         {
             _queue = new Queue<T>(capacity);
         }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableQueue{T}"/> class that
         /// uses the given queue as internal queue.
@@ -71,6 +75,8 @@ namespace MaSch.Core.Observable.Collections
 
         /// <inheritdoc/>
         public IEnumerator<T> GetEnumerator() => _queue.GetEnumerator();
+
+        /// <inheritdoc/>
         IEnumerator IEnumerable.GetEnumerator() => _queue.GetEnumerator();
 
         #endregion
@@ -82,6 +88,7 @@ namespace MaSch.Core.Observable.Collections
         /// </summary>
         /// <returns>The number of elements contained in the <see cref="ObservableQueue{T}"/>.</returns>
         public int Count => _queue.Count;
+
         /// <summary>
         /// Gets a value indicating whether access to the <see cref="ICollection"/>
         /// is synchronized (thread safe).
@@ -91,11 +98,13 @@ namespace MaSch.Core.Observable.Collections
         /// safe); otherwise, false.
         /// </returns>
         public bool IsSynchronized => ((ICollection)_queue).IsSynchronized;
+
         /// <summary>
         /// Gets an object that can be used to synchronize access to the <see cref="ICollection"/>.
         /// </summary>
         /// <returns>An object that can be used to synchronize access to the <see cref="ICollection"/>.</returns>
         public object SyncRoot => ((ICollection)_queue).SyncRoot;
+
         /// <summary>
         /// Copies the elements of the <see cref="ICollection"/> to an System.Array,
         /// starting at a particular System.Array index.
@@ -196,7 +205,7 @@ namespace MaSch.Core.Observable.Collections
         public T[] ToArray() => _queue.ToArray();
 
         /// <summary>
-        /// Sets the capacity to the actual number of elements in the System.Collections.Generic.Queue`1, 
+        /// Sets the capacity to the actual number of elements in the System.Collections.Generic.Queue`1,
         /// if that number is less than 90 percent of current capacity.
         /// </summary>
         public void TrimExcess() => _queue.TrimExcess();

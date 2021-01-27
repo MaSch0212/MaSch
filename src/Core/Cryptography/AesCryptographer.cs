@@ -20,16 +20,21 @@ namespace MaSch.Core.Cryptography
         /// <summary>
         /// Initializes a new instance of the <see cref="AesCryptographer"/> class.
         /// </summary>
-        public AesCryptographer() 
+        public AesCryptographer()
             : this(
-                  Guid.Parse(Assembly.GetEntryAssembly()?.GetCustomAttribute<GuidAttribute>()?.Value 
-                      ?? throw new InvalidOperationException("You need to either define a GuidAttribute on the assembly or use the other constructors."))) { }
+                  Guid.Parse(Assembly.GetEntryAssembly()?.GetCustomAttribute<GuidAttribute>()?.Value
+                      ?? throw new InvalidOperationException("You need to either define a GuidAttribute on the assembly or use the other constructors.")))
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AesCryptographer"/> class.
         /// </summary>
         /// <param name="initVector">The initialize vector.</param>
-        public AesCryptographer(Guid initVector) : this(initVector.ToByteArray()) { }
+        public AesCryptographer(Guid initVector)
+            : this(initVector.ToByteArray())
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AesCryptographer"/> class.

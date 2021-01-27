@@ -17,6 +17,7 @@ namespace MaSch.Core
         /// <param name="value">The value.</param>
         /// <param name="name">The name of the parameter to verify.</param>
         /// <exception cref="ArgumentNullException">The value is null.</exception>
+        /// <returns>The same instance as <paramref name="value"/>.</returns>
         [return: NotNull]
         public static T NotNull<T>([NotNull] T value, string name)
         {
@@ -31,6 +32,7 @@ namespace MaSch.Core
         /// <param name="value">The value.</param>
         /// <param name="name">The name of the parameter to verify.</param>
         /// <exception cref="ArgumentException">The value is null or empty.</exception>
+        /// <returns>The same instance as <paramref name="value"/>.</returns>
         public static string NotNullOrEmpty([NotNull] string? value, string name)
         {
             if (string.IsNullOrEmpty(value))
@@ -47,7 +49,9 @@ namespace MaSch.Core
         /// <param name="min">The minimum accepted value.</param>
         /// <param name="max">The maximum accepted value.</param>
         /// <exception cref="ArgumentOutOfRangeException">The <paramref name="value"/> is out of the specified range.</exception>
-        public static T? NotOutOfRange<T>(T value, string name, T min, T max) where T : IComparable
+        /// <returns>The same instance as <paramref name="value"/>.</returns>
+        public static T? NotOutOfRange<T>(T value, string name, T min, T max)
+            where T : IComparable
         {
             if (value != null && (value.CompareTo(min) < 0 || value.CompareTo(max) > 0))
                 throw new ArgumentOutOfRangeException(name, $"The parameter value cannot be outside of the range <{min}> to <{max}>.");
@@ -64,6 +68,7 @@ namespace MaSch.Core
         /// <exception cref="ArgumentException">The <paramref name="value"/> is not of type <typeparamref name="T"/>.</exception>
         /// <returns>Returns the <paramref name="value"/> cast to type <typeparamref name="T"/>.</returns>
         public static T OfType<T>(object? value, string name) => OfType<T>(value, name, false)!;
+
         /// <summary>
         /// Verifies that a value is of a specific type.
         /// </summary>
@@ -93,6 +98,7 @@ namespace MaSch.Core
         /// <exception cref="ArgumentException">The <paramref name="value"/> is not of one of the allowed types.</exception>
         /// <returns>Returns the <paramref name="value"/>.</returns>
         public static object OfType(object value, string name, params Type[] allowedTypes) => OfType(value, name, false, allowedTypes)!;
+
         /// <summary>
         /// Verifies that a values type is in a list of types.
         /// </summary>
@@ -111,9 +117,11 @@ namespace MaSch.Core
                     return null;
             }
             else if (allowedTypes.Any(x => x.IsInstanceOfType(value)))
+            {
                 return value;
+            }
 
-            var typesStr = allowedTypes.Any() ? $"{Environment.NewLine}- {string.Join($"{Environment.NewLine}- ", allowedTypes.Select(x => x.FullName))}" : "";
+            var typesStr = allowedTypes.Any() ? $"{Environment.NewLine}- {string.Join($"{Environment.NewLine}- ", allowedTypes.Select(x => x.FullName))}" : string.Empty;
             throw new ArgumentException($"The parameter value should be one of the following types but it is not: {typesStr}{Environment.NewLine}Actual type is \"{value?.GetType().FullName ?? "(null)"}\".", name);
         }
     }

@@ -16,13 +16,14 @@ namespace MaSch.Core
     public class Cache : ICache
     {
         /// <summary>
-        /// An object that is used for locking the <see cref="Objects"/> object.
+        /// Gets an object that is used for locking the <see cref="Objects"/> object.
         /// </summary>
-        protected readonly object ObjectsLock = new object();
+        protected object ObjectsLock { get; } = new object();
+
         /// <summary>
-        /// The objects in this <see cref="Cache"/>.
+        /// Gets the objects in this <see cref="Cache"/>.
         /// </summary>
-        protected readonly IDictionary<string, object?> Objects = new Dictionary<string, object?>();
+        protected IDictionary<string, object?> Objects { get; } = new Dictionary<string, object?>();
 
         /// <summary>
         /// Gets a value of a specified key.
@@ -82,17 +83,20 @@ namespace MaSch.Core
                     Objects[key] = await valueGetter();
                 return (T)Objects[key];
             }
-            finally { Monitor.Exit(ObjectsLock); }
+            finally
+            {
+                Monitor.Exit(ObjectsLock);
+            }
         }
 
         /// <summary>
         /// Tries to get the value of a specified key.
         /// </summary>
         /// <typeparam name="T">The type of the value to get.</typeparam>
-        /// <param name="value">The value of the <paramref name="key" /> types as <typeparamref name="T" /> if it exists; otherwise <code>default(T)</code>.</param>
+        /// <param name="value">The value of the <paramref name="key" /> types as <typeparamref name="T" /> if it exists; otherwise <c>default(T)</c>.</param>
         /// <param name="key">The key to get the value from.</param>
         /// <returns>
-        ///   <code>true</code> if a value exists for the <paramref name="key" />; otherwise <code>false</code>.
+        ///   <c>true</c> if a value exists for the <paramref name="key" />; otherwise <c>false</c>.
         /// </returns>
         public virtual bool TryGetValue<T>([NotNullWhen(true)] out T? value, [CallerMemberName] string? key = null)
         {
@@ -234,11 +238,13 @@ namespace MaSch.Core
     /// Represents a cache that stores runtime information.
     /// </summary>
     /// <typeparam name="TTarget">The type of the cache entries.</typeparam>
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic representation can be in same file.")]
     public static class Cache<TTarget>
     {
         private static readonly object InstanceLock = new object();
 
         private static Cache? _instance;
+
         /// <summary>
         /// Gets the current Cache instance.
         /// </summary>
@@ -259,7 +265,9 @@ namespace MaSch.Core
         /// <returns>The value of the <paramref name="key"/> typed as <typeparamref name="T"/>.</returns>
         /// <exception cref="KeyNotFoundException">A value for the specified <paramref name="key"/> does not exist in the <see cref="ICache"/>.</exception>
         /// <exception cref="InvalidCastException">The value in the <see cref="ICache"/> can not be cast to type <typeparamref name="T"/>.</exception>
-        public static T? GetValue<T>([CallerMemberName] string key = "<Unknown>") => Instance.GetValue<T>(key);
+        public static T? GetValue<T>([CallerMemberName] string key = "<Unknown>")
+            => Instance.GetValue<T>(key);
+
         /// <summary>
         /// Gets a value of a specified key. If no value exists a specified getter is used to insert the value to the <see cref="ICache"/> and return it.
         /// </summary>
@@ -268,7 +276,9 @@ namespace MaSch.Core
         /// <param name="key">The key to get the value from.</param>
         /// <returns>The value of the <paramref name="key"/> typed as <typeparamref name="T"/>.</returns>
         /// <exception cref="InvalidCastException">The value in the <see cref="ICache"/> can not be cast to type <typeparamref name="T"/>.</exception>
-        public static T? GetValue<T>(Func<T> valueGetter, [CallerMemberName] string key = "<Unknown>") => Instance.GetValue(valueGetter, key);
+        public static T? GetValue<T>(Func<T> valueGetter, [CallerMemberName] string key = "<Unknown>")
+            => Instance.GetValue(valueGetter, key);
+
         /// <summary>
         /// Gets a value of a specified key. If no value exists a specified getter is used to insert the value to the <see cref="ICache"/> and return it.
         /// </summary>
@@ -277,44 +287,57 @@ namespace MaSch.Core
         /// <param name="key">The key to get the value from.</param>
         /// <returns>The value of the <paramref name="key"/> typed as <typeparamref name="T"/>.</returns>
         /// <exception cref="InvalidCastException">The value in the <see cref="ICache"/> can not be cast to type <typeparamref name="T"/>.</exception>
-        public static async Task<T?> GetValueAsync<T>(Func<Task<T>> valueGetter, [CallerMemberName] string key = "<Unknown>") => await Instance.GetValueAsync(valueGetter, key);
+        public static async Task<T?> GetValueAsync<T>(Func<Task<T>> valueGetter, [CallerMemberName] string key = "<Unknown>")
+            => await Instance.GetValueAsync(valueGetter, key);
+
         /// <summary>
         /// Tries to get the value of a specified key.
         /// </summary>
         /// <typeparam name="T">The type of the value to get.</typeparam>
-        /// <param name="value">The value of the <paramref name="key"/> types as <typeparamref name="T"/> if it exists; otherwise <code>default(T)</code>.</param>
+        /// <param name="value">The value of the <paramref name="key"/> types as <typeparamref name="T"/> if it exists; otherwise <c>default(T)</c>.</param>
         /// <param name="key">The key to get the value from.</param>
-        /// <returns><code>true</code> if a value exists for the <paramref name="key"/>; otherwise <code>false</code>.</returns>
+        /// <returns><c>true</c> if a value exists for the <paramref name="key"/>; otherwise <c>false</c>.</returns>
         /// <exception cref="InvalidCastException">The value in the <see cref="ICache"/> can not be cast to type <typeparamref name="T"/>.</exception>
-        public static bool TryGetValue<T>([NotNullWhen(true)] out T? value, [CallerMemberName] string key = "<Unknown>") => Instance.TryGetValue(out value, key);
+        public static bool TryGetValue<T>([NotNullWhen(true)] out T? value, [CallerMemberName] string key = "<Unknown>")
+            => Instance.TryGetValue(out value, key);
+
         /// <summary>
         /// Determines whether a value exists for a specific key.
         /// </summary>
         /// <param name="key">The key to check for a value.</param>
         /// <returns>A value indicating whether a value exists for the specified <paramref name="key"/>.</returns>
-        public static bool HasValue([CallerMemberName] string key = "<Unknown>") => Instance.HasValue(key);
+        public static bool HasValue([CallerMemberName] string key = "<Unknown>")
+            => Instance.HasValue(key);
+
         /// <summary>
         /// Removes the value of a specified key if one exists.
         /// </summary>
         /// <param name="key">The key for which the value should be removed.</param>
-        public static void RemoveValue([CallerMemberName] string key = "<Unknown>") => Instance.RemoveValue(key);
+        public static void RemoveValue([CallerMemberName] string key = "<Unknown>")
+            => Instance.RemoveValue(key);
+
         /// <summary>
         /// Removes and disposes the value of a specified key if one exists.
         /// </summary>
         /// <param name="key">The key for which the value should be removed.</param>
         /// <remarks>Dispose is executed only if the value is of type <see cref="IDisposable"/>; otherwise the value is just removed from the cache.</remarks>
-        public static void RemoveAndDisposeValue([CallerMemberName] string key = "<Unknown>") => Instance.RemoveAndDisposeValue(key);
+        public static void RemoveAndDisposeValue([CallerMemberName] string key = "<Unknown>")
+            => Instance.RemoveAndDisposeValue(key);
+
         /// <summary>
         /// Sets the value for a specific key on this <see cref="ICache"/>.
         /// </summary>
         /// <typeparam name="T">The type of the value to set.</typeparam>
         /// <param name="value">The value to set.</param>
         /// <param name="key">The key of the value to set.</param>
-        public static void SetValue<T>(T value, [CallerMemberName] string key = "<Unknown>") => Instance.SetValue(value, key);
+        public static void SetValue<T>(T value, [CallerMemberName] string key = "<Unknown>")
+            => Instance.SetValue(value, key);
+
         /// <summary>
         /// Clears all data from the <see cref="ICache"/>.
         /// </summary>
         public static void Clear() => Instance.Clear();
+
         /// <summary>
         /// Clears and disposes all data from the <see cref="ICache"/>.
         /// </summary>

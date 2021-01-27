@@ -41,7 +41,7 @@ namespace MaSch.Core.Converters
         {
             _priority = priority;
         }
-        
+
         /// <inheritdoc />
         public int GetPriority(Type? sourceType, Type targetType) => _priority;
 
@@ -94,6 +94,7 @@ namespace MaSch.Core.Converters
                 functions = new List<Func<Type, bool>>();
                 CanConvertFunctions.Add(sourceType, functions);
             }
+
             functions.Add(canConvertFunc);
         }
     }

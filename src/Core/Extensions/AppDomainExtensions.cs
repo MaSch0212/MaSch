@@ -1,7 +1,7 @@
 ﻿#if NETFX
 using System;
-using System.Xml.Linq;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace MaSch.Core.Extensions
 {
@@ -10,9 +10,14 @@ namespace MaSch.Core.Extensions
     /// </summary>
     public static class AppDomainExtensions
     {
+        /// <summary>
+        /// Gets the probing paths of this <see cref="AppDomain"/>.
+        /// </summary>
+        /// <param name="appDomain">The app domain from which to get the probing paths from.</param>
+        /// <returns>The probing paths configured in this <see cref="AppDomain"/>.</returns>
         public static string[] GetProbingPaths(this AppDomain appDomain)
         {
-            var configFile = XElement.Load(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
+            var configFile = XElement.Load(appDomain.SetupInformation.ConfigurationFile);
             var probingElement = (
                     from runtime
                     in configFile.Descendants("runtime")

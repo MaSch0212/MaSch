@@ -47,7 +47,6 @@ namespace MaSch.Core.Observable.Modules
         /// </value>
         Func<bool, bool> HasChangesExtension { get; set; }
 
-
         /// <summary>
         /// Gets the changed properties.
         /// </summary>
@@ -86,7 +85,6 @@ namespace MaSch.Core.Observable.Modules
         /// Resets the change tracking.
         /// </summary>
         void ResetChangeTracking();
-
 
         /// <summary>
         /// Adds a fixed change, so that the <see cref="HasChanges"/> property always returns <c>true</c>.

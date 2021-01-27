@@ -48,15 +48,21 @@ namespace MaSch.Core
             }
 
             var converters = from c in _objectConverters
-                             where CanConvertWithConverter(c, sourceType, targetType) || objectToConvert == null && sourceType != null && CanConvertWithConverter(c, null, targetType)
+                             where CanConvertWithConverter(c, sourceType, targetType) || (objectToConvert == null && sourceType != null && CanConvertWithConverter(c, null, targetType))
                              orderby GetPriorityForConverter(c, sourceType, targetType) descending
                              select c;
 
             var errors = new List<string>();
             foreach (var converter in converters)
             {
-                try { return converter.Convert(objectToConvert, sourceType, targetType, this, formatProvider); }
-                catch (Exception ex) { errors.Add(ex.Message); }
+                try
+                {
+                    return converter.Convert(objectToConvert, sourceType, targetType, this, formatProvider);
+                }
+                catch (Exception ex)
+                {
+                    errors.Add(ex.Message);
+                }
             }
 
             if (errors.Count == 0)
@@ -74,14 +80,26 @@ namespace MaSch.Core
 
         private bool CanConvertWithConverter(IObjectConverter converter, Type? sourceType, Type targetType)
         {
-            try { return converter.CanConvert(sourceType, targetType, this); }
-            catch { return false; }
+            try
+            {
+                return converter.CanConvert(sourceType, targetType, this);
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private static int GetPriorityForConverter(IObjectConverter converter, Type? sourceType, Type targetType)
         {
-            try { return converter.GetPriority(sourceType, targetType); }
-            catch { return -100; }
+            try
+            {
+                return converter.GetPriority(sourceType, targetType);
+            }
+            catch
+            {
+                return -100;
+            }
         }
     }
 
@@ -89,15 +107,16 @@ namespace MaSch.Core
     /// Represents a <see cref="IObjectConvertManager"/> that already contains common <see cref="IObjectConverter"/>s.
     /// </summary>
     /// <remarks>
-    ///     Contains the following <see cref="IObjectConverter"/>s: 
-    ///     <see cref="NullableObjectConverter"/>, 
+    ///     Contains the following <see cref="IObjectConverter"/>s:
+    ///     <see cref="NullableObjectConverter"/>,
     ///     <see cref="ConvertibleObjectConverter"/>,
-    ///     <see cref="EnumConverter"/>
-    ///     <see cref="ToStringObjectConverter"/>
-    ///     <see cref="NullObjectConverter"/>
+    ///     <see cref="EnumConverter"/>,
+    ///     <see cref="ToStringObjectConverter"/>,
+    ///     <see cref="NullObjectConverter"/>,
     ///     <see cref="IdentityObjectConverter"/>.
     /// </remarks>
     /// <seealso cref="ObjectConvertManager" />
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Can be in same file.")]
     public class DefaultObjectConvertManager : ObjectConvertManager
     {
         /// <summary>
@@ -125,6 +144,7 @@ namespace MaSch.Core
     /// <summary>
     /// Provides extension methods for the <see cref="IObjectConvertManager"/> interface.
     /// </summary>
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Can be in same file.")]
     public static class ObjectConvertManagerExtensions
     {
         /// <summary>
@@ -149,6 +169,7 @@ namespace MaSch.Core
         /// <returns>An instance of the target type representing the object that was given to convert.</returns>
         public static TTarget? Convert<TSource, TTarget>(this IObjectConvertManager manager, TSource objectToConvert)
             => (TTarget)manager.Convert(objectToConvert, typeof(TSource), typeof(TTarget), CultureInfo.CurrentCulture);
+
         /// <summary>
         /// onverts the given object the another type using the registered <see cref="IObjectConverter"/> objects.
         /// </summary>
@@ -160,6 +181,7 @@ namespace MaSch.Core
         /// <returns>An instance of the target type representing the object that was given to convert.</returns>
         public static TTarget? Convert<TSource, TTarget>(this IObjectConvertManager manager, TSource objectToConvert, IFormatProvider formatProvider)
             => (TTarget)manager.Convert(objectToConvert, typeof(TSource), typeof(TTarget), formatProvider);
+
         /// <summary>
         /// onverts the given object the another type using the registered <see cref="IObjectConverter"/> objects.
         /// </summary>
@@ -169,6 +191,7 @@ namespace MaSch.Core
         /// <returns>An instance of the target type representing the object that was given to convert.</returns>
         public static TTarget? Convert<TTarget>(this IObjectConvertManager manager, object? objectToConvert)
             => (TTarget)manager.Convert(objectToConvert, objectToConvert?.GetType(), typeof(TTarget), CultureInfo.CurrentCulture);
+
         /// <summary>
         /// onverts the given object the another type using the registered <see cref="IObjectConverter"/> objects.
         /// </summary>
@@ -179,6 +202,7 @@ namespace MaSch.Core
         /// <returns>An instance of the target type representing the object that was given to convert.</returns>
         public static TTarget? Convert<TTarget>(this IObjectConvertManager manager, object? objectToConvert, IFormatProvider formatProvider)
             => (TTarget)manager.Convert(objectToConvert, objectToConvert?.GetType(), typeof(TTarget), formatProvider);
+
         /// <summary>
         /// Converts the given object the another type using the registered <see cref="IObjectConverter"/> objects.
         /// </summary>
@@ -188,6 +212,7 @@ namespace MaSch.Core
         /// <returns>An instance of the target type representing the object that was given to convert.</returns>
         public static object? Convert(this IObjectConvertManager manager, object? objectToConvert, Type targetType)
             => manager.Convert(objectToConvert, objectToConvert?.GetType(), targetType, CultureInfo.CurrentCulture);
+
         /// <summary>
         /// Converts the given object the another type using the registered <see cref="IObjectConverter"/> objects.
         /// </summary>
@@ -210,6 +235,7 @@ namespace MaSch.Core
         /// <returns><c>true</c> if the object could be converted; otherwise, <c>false</c>.</returns>
         public static bool TryConvert<TSource, TTarget>(this IObjectConvertManager manager, TSource objectToConvert, out TTarget? convertedObject)
             => TryConvert(manager, objectToConvert, typeof(TSource), typeof(TTarget), CultureInfo.CurrentCulture, out convertedObject);
+
         /// <summary>
         /// Tries to convert the given object the another type using the registered <see cref="IObjectConverter"/> objects.
         /// </summary>
@@ -222,6 +248,7 @@ namespace MaSch.Core
         /// <returns><c>true</c> if the object could be converted; otherwise, <c>false</c>.</returns>
         public static bool TryConvert<TSource, TTarget>(this IObjectConvertManager manager, TSource objectToConvert, IFormatProvider formatProvider, out TTarget? convertedObject)
             => TryConvert(manager, objectToConvert, typeof(TSource), typeof(TTarget), formatProvider, out convertedObject);
+
         /// <summary>
         /// Tries to convert the given object the another type using the registered <see cref="IObjectConverter"/> objects.
         /// </summary>
@@ -232,6 +259,7 @@ namespace MaSch.Core
         /// <returns><c>true</c> if the object could be converted; otherwise, <c>false</c>.</returns>
         public static bool TryConvert<TTarget>(this IObjectConvertManager manager, object? objectToConvert, out TTarget? convertedObject)
             => TryConvert(manager, objectToConvert, objectToConvert?.GetType(), typeof(TTarget), CultureInfo.CurrentCulture, out convertedObject);
+
         /// <summary>
         /// Tries to convert the given object the another type using the registered <see cref="IObjectConverter"/> objects.
         /// </summary>
@@ -243,6 +271,7 @@ namespace MaSch.Core
         /// <returns><c>true</c> if the object could be converted; otherwise, <c>false</c>.</returns>
         public static bool TryConvert<TTarget>(this IObjectConvertManager manager, object? objectToConvert, IFormatProvider formatProvider, out TTarget? convertedObject)
             => TryConvert(manager, objectToConvert, objectToConvert?.GetType(), typeof(TTarget), formatProvider, out convertedObject);
+
         /// <summary>
         /// Tries to convert the given object the another type using the registered <see cref="IObjectConverter"/> objects.
         /// </summary>
@@ -253,6 +282,7 @@ namespace MaSch.Core
         /// <returns><c>true</c> if the object could be converted; otherwise, <c>false</c>.</returns>
         public static bool TryConvert(this IObjectConvertManager manager, object? objectToConvert, Type targetType, out object? convertedObject)
             => TryConvert(manager, objectToConvert, objectToConvert?.GetType(), targetType, CultureInfo.CurrentCulture, out convertedObject);
+
         /// <summary>
         /// Tries to convert the given object the another type using the registered <see cref="IObjectConverter"/> objects.
         /// </summary>
@@ -274,6 +304,7 @@ namespace MaSch.Core
         /// <param name="converterFunction">The converter function.</param>
         public static void RegisterConverter<TSource, TTarget>(this IObjectConvertManager manager, Func<TSource?, TTarget> converterFunction)
             => manager.RegisterConverter(new DelegateObjectConverter<TSource, TTarget>(converterFunction));
+
         /// <summary>
         /// Registers the given function as a <see cref="DelegateObjectConverter{TSource, TTarget}"/> to be used for convertions with this <see cref="IObjectConvertManager"/>.
         /// </summary>
@@ -284,6 +315,7 @@ namespace MaSch.Core
         /// <param name="priority">The priority of the created <see cref="IObjectConverter"/>.</param>
         public static void RegisterConverter<TSource, TTarget>(this IObjectConvertManager manager, Func<TSource?, TTarget> converterFunction, int priority)
             => manager.RegisterConverter(new DelegateObjectConverter<TSource, TTarget>(converterFunction, priority));
+
         /// <summary>
         /// Registers the given function as a <see cref="DelegateObjectConverter{TSource, TTarget}"/> to be used for convertions with this <see cref="IObjectConvertManager"/>.
         /// </summary>
@@ -293,6 +325,7 @@ namespace MaSch.Core
         /// <param name="converterFunction">The converter function.</param>
         public static void RegisterConverter<TSource, TTarget>(this IObjectConvertManager manager, Func<TSource?, IFormatProvider, TTarget> converterFunction)
             => manager.RegisterConverter(new DelegateObjectConverter<TSource, TTarget>(converterFunction));
+
         /// <summary>
         /// Registers the given function as a <see cref="DelegateObjectConverter{TSource, TTarget}"/> to be used for convertions with this <see cref="IObjectConvertManager"/>.
         /// </summary>
@@ -315,8 +348,11 @@ namespace MaSch.Core
                     convertedObject = (T)manager.Convert(objectToConvert, sourceType, targetType, formatProvider);
                     result = true;
                 }
-                catch (InvalidCastException) { }
+                catch (InvalidCastException)
+                {
+                }
             }
+
             return result;
         }
     }

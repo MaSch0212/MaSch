@@ -29,6 +29,7 @@ namespace MaSch.Core
 
         /// <inheritdoc/>
         public bool Equals(T? x, T? y) => _equalsFunc(x, y);
+
         /// <inheritdoc/>
         public int GetHashCode(T obj) => _getHashCodeFunc(obj);
     }

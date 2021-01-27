@@ -18,6 +18,6 @@
         /// <summary>
         /// The string is checked it it is null, an empty string or only contains whitespace characters.
         /// </summary>
-        IsNullOrWhitespace
+        IsNullOrWhitespace,
     }
 }

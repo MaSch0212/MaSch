@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using MaSch.Core.Extensions;
 using MaSch.Core.Attributes;
+using MaSch.Core.Extensions;
 
 namespace MaSch.Core.Observable.Modules
 {
@@ -15,6 +15,7 @@ namespace MaSch.Core.Observable.Modules
     public class ChangeTracker : IChangeTracker
     {
         #region Fields
+
         private const string FixedChangeKey = "{FixedChange}";
 
         private readonly IDictionary<string, ChangeTrackingEntry> _baseValues = new Dictionary<string, ChangeTrackingEntry>();
@@ -22,9 +23,11 @@ namespace MaSch.Core.Observable.Modules
 
         private Func<bool, bool> _hasChangesExtension;
         private bool _lastHasChanges;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets or sets the properties that are excluded from change tracking.
         /// </summary>
@@ -32,8 +35,10 @@ namespace MaSch.Core.Observable.Modules
         /// The properties that are excluded from change tracking.
         /// </value>
         public ICollection<string> ChangeTrackingDisabledProperties { get; set; } = new HashSet<string>();
+
         /// <inheritdoc/>
         public virtual bool HasChanges => HasChangesExtension(_baseValues.Any(x => x.Value.HasChanged));
+
         /// <inheritdoc/>
         public virtual bool ImplicitlyRecurse { get; }
 
@@ -52,6 +57,7 @@ namespace MaSch.Core.Observable.Modules
 
         /// <inheritdoc/>
         public event EventHandler? HasChangesChanged;
+
         #endregion
 
         /// <summary>
@@ -67,6 +73,7 @@ namespace MaSch.Core.Observable.Modules
         }
 
         #region Public Methods
+
         /// <inheritdoc/>
         public virtual string[] GetChangedProperties(bool recursive)
         {
@@ -75,8 +82,9 @@ namespace MaSch.Core.Observable.Modules
             if (recursive)
             {
                 result.AddRange(_baseValues.SelectMany(x => (x.Value.CurrentValue as IChangeTracker)?.GetChangedProperties(true)
-                    .Select(y => $"{x.Key}.{y}") ?? new string[0]));
+                    .Select(y => $"{x.Key}.{y}") ?? Array.Empty<string>()));
             }
+
             return result.ToArray();
         }
 
@@ -103,7 +111,9 @@ namespace MaSch.Core.Observable.Modules
         public void OnSetValue(object? value, [CallerMemberName] string propertyName = "")
         {
             if (!_baseValues.ContainsKey(propertyName))
+            {
                 SetBaseValue(value, propertyName);
+            }
             else
             {
                 _baseValues[propertyName].CurrentValue = value;
@@ -151,9 +161,11 @@ namespace MaSch.Core.Observable.Modules
             if (RemoveFixedChangeInternal())
                 EvaluateHasChangesChanged();
         }
+
         #endregion
 
         #region Private Methods
+
         private bool RemoveFixedChangeInternal()
         {
             if (_baseValues.ContainsKey(FixedChangeKey))
@@ -161,11 +173,14 @@ namespace MaSch.Core.Observable.Modules
                 _baseValues.Remove(FixedChangeKey);
                 return true;
             }
+
             return false;
         }
+
         #endregion
 
         #region Classes
+
         private class ChangeTrackingEntry
         {
             private readonly IChangeTracker _owner;
@@ -213,6 +228,7 @@ namespace MaSch.Core.Observable.Modules
                         _baseValue = value;
                 }
             }
+
             public object? CurrentValue
             {
                 get => _currentValue;
@@ -250,6 +266,7 @@ namespace MaSch.Core.Observable.Modules
                 BaseValue = CurrentValue;
             }
         }
+
         #endregion
     }
 }
