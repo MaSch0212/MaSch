@@ -5,15 +5,31 @@ using System.Drawing;
 
 namespace MaSch.Console.Controls
 {
+    /// <summary>
+    /// Control for a <see cref="IConsoleService"/> with which the user can select an element out of a set of items.
+    /// </summary>
     public class SelectControl
     {
         private readonly IConsoleService _console;
         private int _selectedIndex = -1;
         private string? _selectedItem;
-        private IList<string?>? items;
+        private IList<string?>? _items;
 
+        /// <summary>
+        /// Gets or sets the selection mode to use.
+        /// </summary>
         public OneSelectionMode SelectionMode { get; set; } = OneSelectionMode.UpDown;
+
+        /// <summary>
+        /// Gets or sets the label. This can be a question for example.
+        /// </summary>
         public string? Label { get; set; }
+
+        /// <summary>
+        /// Gets or sets the last selected item.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Set the <see cref="Items"/> property before setting a selected item.</exception>
+        /// <exception cref="ArgumentException">The item was not found in the <see cref="Items"/> list.</exception>
         public string? SelectedItem
         {
             get => _selectedItem;
@@ -26,6 +42,11 @@ namespace MaSch.Console.Controls
                 _selectedIndex = index;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the last selected index.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Set the <see cref="Items"/> property before setting a selected index.</exception>
         public int SelectedIndex
         {
             get => _selectedIndex;
@@ -36,22 +57,33 @@ namespace MaSch.Console.Controls
                 _selectedItem = item;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the items that can be selected.
+        /// </summary>
         public IList<string?>? Items
         {
-            get => items;
+            get => _items;
             set
             {
-                items = value; 
+                _items = value;
                 _selectedIndex = -1;
                 _selectedItem = null;
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SelectControl"/> class.
+        /// </summary>
+        /// <param name="console">The console to use.</param>
         public SelectControl(IConsoleService console)
         {
             _console = console;
         }
 
+        /// <summary>
+        /// Requests the user to select an item.
+        /// </summary>
         public void Show()
         {
             var result = Show(_console, SelectionMode, Label, SelectedIndex, Items);
@@ -59,8 +91,32 @@ namespace MaSch.Console.Controls
             _selectedItem = result.Value;
         }
 
+        /// <summary>
+        /// Requests the user to select an item.
+        /// </summary>
+        /// <param name="console">The console to use.</param>
+        /// <param name="mode">The selection mode to use.</param>
+        /// <param name="label">The label.</param>
+        /// <param name="startIndex">The index of the item to preselect.</param>
+        /// <param name="items">The items from which the user can choose one.</param>
+        /// <returns>The from the user selected item.</returns>
         public static Selection Show(IConsoleService console, OneSelectionMode mode, string? label, int startIndex, params string?[] items)
             => Show(console, mode, label, startIndex, (IList<string?>?)items);
+
+        /// <summary>
+        /// Requests the user to select an item.
+        /// </summary>
+        /// <param name="console">The console to use.</param>
+        /// <param name="mode">The selection mode to use.</param>
+        /// <param name="label">The label.</param>
+        /// <param name="startIndex">The index of the item to preselect.</param>
+        /// <param name="items">The items from which the user can choose one.</param>
+        /// <returns>The from the user selected item.</returns>
+        /// <exception cref="ArgumentException">
+        /// At least one item needs to be present. - <paramref name="items"/>.
+        /// or
+        /// The index is out of the items bounds. - <paramref name="startIndex"/>.
+        /// </exception>
         public static Selection Show(IConsoleService console, OneSelectionMode mode, string? label, int startIndex, IList<string?>? items)
         {
             if (items.IsNullOrEmpty())
@@ -70,7 +126,7 @@ namespace MaSch.Console.Controls
 
             using var scope = ConsoleSynchronizer.Scope();
 
-            Selection result = new Selection();
+            var result = default(Selection);
             console.Write(label);
 
             if (mode == OneSelectionMode.LeftRight)
@@ -99,7 +155,7 @@ namespace MaSch.Console.Controls
                 console.CursorPosition.Point = pos;
                 console.Write(new string(' ', bs.Width - pos.X - 1));
                 console.CursorPosition.Point = pos;
-                if (index == 0 && data.Count > 1 || index < 0)
+                if ((index == 0 && data.Count > 1) || index < 0)
                     console.Write(down);
                 else if (index == data.Count - 1)
                     console.Write(up);
@@ -143,7 +199,7 @@ namespace MaSch.Console.Controls
                 for (int i = 0; i < 3 && start + i < data.Count; i++)
                 {
                     console.CursorPosition.Point = new Point(pos.X, pos.Y + i);
-                    console.Write(new String(' ', space));
+                    console.Write(new string(' ', space));
                     console.CursorPosition.Point = new Point(pos.X, pos.Y + i);
 
                     item = " " + data[start + i] + " ";
@@ -174,8 +230,9 @@ namespace MaSch.Console.Controls
             for (int i = 0; i < 3; i++)
             {
                 console.CursorPosition.Point = new Point(pos.X, pos.Y + i);
-                console.Write(new String(' ', space));
+                console.Write(new string(' ', space));
             }
+
             console.CursorPosition.Point = pos;
             item = " " + data[index] + " ";
             if (item.Length > space)
@@ -216,6 +273,7 @@ namespace MaSch.Console.Controls
                     if (i < data.Count - 1)
                         console.Write(" ");
                 }
+
                 key = console.ReadKey(true);
                 if ((key.Key == ConsoleKey.UpArrow || key.Key == ConsoleKey.LeftArrow) && index > 0)
                     index--;
@@ -231,18 +289,47 @@ namespace MaSch.Console.Controls
             return new Selection(index, data[index]);
         }
 
+        /// <summary>
+        /// The selection mode for the <see cref="SelectControl"/>.
+        /// </summary>
         public enum OneSelectionMode
         {
+            /// <summary>
+            /// Displays one item at a time. The user can switch between the items using the up and down arrow keys.
+            /// </summary>
             UpDown,
+
+            /// <summary>
+            /// Displays the items next to each other. The user can switch between the items using the left and right arrow keys.
+            /// </summary>
             LeftRight,
-            UpDown3
+
+            /// <summary>
+            /// Displays a maximum of three items at a time. The user can switch between the items using the up and down arrow keys.
+            /// </summary>
+            UpDown3,
         }
 
+        /// <summary>
+        /// Represents a user selection that has been made using the <see cref="SelectControl"/>.
+        /// </summary>
         public struct Selection
         {
+            /// <summary>
+            /// Gets or sets the index that has been selected.
+            /// </summary>
             public int Index { get; set; }
+
+            /// <summary>
+            /// Gets or sets the value that has been selected.
+            /// </summary>
             public string? Value { get; set; }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Selection"/> struct.
+            /// </summary>
+            /// <param name="index">The index that has been selected..</param>
+            /// <param name="value">The value that has been selected..</param>
             public Selection(int index, string? value)
             {
                 Index = index;

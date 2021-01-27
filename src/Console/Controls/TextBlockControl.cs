@@ -1,63 +1,86 @@
 ﻿using MaSch.Core.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace MaSch.Console.Controls
 {
-    public enum TextWrap
-    {
-        NoWrap,
-        CharacterWrap,
-        WordWrap
-    }
-
-    public enum TextEllipsis
-    {
-        None,
-        EndCharacter,
-        StartCharacter,
-        CenterCharacter,
-        EndWord,
-        StartWord,
-        CenterWord
-    }
-
-    public enum TextAlignment
-    {
-        Left,
-        Center,
-        Right,
-        Block
-    }
-
+    /// <summary>
+    /// Control for a <see cref="IConsoleService"/> that displays text.
+    /// </summary>
     public partial class TextBlockControl
     {
         private readonly IConsoleService _console;
 
+        /// <summary>
+        /// Gets or sets the x position of this control.
+        /// </summary>
         public int X { get; set; } = 0;
+
+        /// <summary>
+        /// Gets or sets the y postition of this control.
+        /// </summary>
         public int? Y { get; set; }
+
+        /// <summary>
+        /// Gets or sets the width of this control.
+        /// </summary>
         public int? Width { get; set; }
+
+        /// <summary>
+        /// Gets or sets the height of this control.
+        /// </summary>
         public int? Height { get; set; }
 
+        /// <summary>
+        /// Gets or sets the text wrap mode to use.
+        /// </summary>
         public TextWrap? TextWrap { get; set; }
+
+        /// <summary>
+        /// Gets or sets the text ellipsis mode to use.
+        /// </summary>
         public TextEllipsis TextEllipsis { get; set; } = TextEllipsis.EndCharacter;
+
+        /// <summary>
+        /// Gets or sets the text alignment mode to use.
+        /// </summary>
         public TextAlignment TextAlignment { get; set; } = TextAlignment.Left;
 
+        /// <summary>
+        /// Gets or sets the text to display.
+        /// </summary>
         public string? Text { get; set; }
+
+        /// <summary>
+        /// Gets or sets the foreground color of the text.
+        /// </summary>
         public ConsoleColor? ForegroundColor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the background color of the text.
+        /// </summary>
         public ConsoleColor? BackgroundColor { get; set; }
 
+        /// <summary>
+        /// Gets the actual width that this control uses.
+        /// </summary>
         public int ActualWidth => Math.Min(Width ?? int.MaxValue, _console.BufferSize.Width - X - 1);
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextBlockControl"/> class.
+        /// </summary>
+        /// <param name="console">The console to use.</param>
         public TextBlockControl(IConsoleService console)
         {
             _console = console;
         }
 
+        /// <summary>
+        /// Renders this control.
+        /// </summary>
         public void Render()
         {
             if (Height < 1)
@@ -75,6 +98,11 @@ namespace MaSch.Console.Controls
             }
         }
 
+        /// <summary>
+        /// Renders just one line of text.
+        /// </summary>
+        /// <param name="line">The line to render.</param>
+        /// <param name="isLastLine">Determines wether this line should be treated as the last line (used by block alignment).</param>
         public void RenderLine(string line, bool isLastLine)
         {
             var maxWidth = ActualWidth;
@@ -87,6 +115,10 @@ namespace MaSch.Console.Controls
             _console.WriteWithColor(line, ForegroundColor ?? _console.ForegroundColor, BackgroundColor ?? _console.BackgroundColor);
         }
 
+        /// <summary>
+        /// Gets the text lines for rending the text.
+        /// </summary>
+        /// <returns>An array of text lines that are rendered to the console.</returns>
         public string[] GetTextLines()
         {
             if (Height < 1)
@@ -107,7 +139,7 @@ namespace MaSch.Console.Controls
 
         private static string[] WrapText(string text, int maxLineLength, TextWrap wrap)
         {
-            var lines = text.Replace("\r", "").Split(new[] { '\n' }, StringSplitOptions.None);
+            var lines = text.Replace("\r", string.Empty).Split(new[] { '\n' }, StringSplitOptions.None);
             for (int i = 0; i < lines.Length; i++)
                 lines[i] = "\n" + lines[i];
             return wrap switch
@@ -124,13 +156,17 @@ namespace MaSch.Console.Controls
                     var extra = 0;
                     if (i > 0)
                     {
-                        for (; text[i + extra] == ' ' && (i + extra) < text.Length; extra++) ;
+                        for (; text[i + extra] == ' ' && (i + extra) < text.Length; extra++)
+                        {
+                        }
+
                         if ((i + extra) >= text.Length)
                         {
                             yield return text[i..];
                             break;
                         }
                     }
+
                     yield return text.Substring(i, Math.Min(maxLineLength, text.Length - i));
                 }
             }
@@ -191,6 +227,7 @@ namespace MaSch.Console.Controls
                     var iE = text.Length - (endMatches.Peek().Index + endMatches.Peek().Length);
                     cycle.AddLast(((iS < iE ? endMatches : startMatches).Pop(), 1));
                 }
+
                 while (endMatches.Count > 0)
                     cycle.AddLast((endMatches.Pop(), 1));
                 while (startMatches.Count > 0)
@@ -210,11 +247,12 @@ namespace MaSch.Console.Controls
                     result.Append(text[lastIndex..match.Index]).Append(new string(' ', count));
                     lastIndex = match.Index + match.Length;
                 }
+
                 result.Append(text[lastIndex..]);
                 return result.ToString();
             }
         }
-        
+
         private static string[] FormatAndTrimLines(string[] lines, int maxWidth, int maxHeight, TextEllipsis ellipsis, TextAlignment alignment)
         {
             var result = ellipsis switch
@@ -303,6 +341,7 @@ namespace MaSch.Console.Controls
                         break;
                     }
                 }
+
                 return result == null ? TrimEndCharacter(text, maxLength) : result + "...";
             }
 
@@ -319,6 +358,7 @@ namespace MaSch.Console.Controls
                         break;
                     }
                 }
+
                 return result == null ? TrimStartWords(text, maxLength) : "..." + result;
             }
 
@@ -340,10 +380,100 @@ namespace MaSch.Console.Controls
                         end = text[^iE..];
                         break;
                     }
+
                     (iS < iE ? endMatches : startMatches).Pop();
                 }
+
                 return start == null && end == null ? TrimEndWords(text, maxLength) : start + "..." + end;
             }
         }
+    }
+
+    /// <summary>
+    /// Text wrapping mode that is used by the <see cref="TextBlockControl"/>.
+    /// </summary>
+    public enum TextWrap
+    {
+        /// <summary>
+        /// The text is not wrapped across multiple lines.
+        /// </summary>
+        NoWrap,
+
+        /// <summary>
+        /// The text is wrapped across multiple lines. The wrapping can happen in the middle of words.
+        /// </summary>
+        CharacterWrap,
+
+        /// <summary>
+        /// The text is wrapped across multiple lines. The wrapping will not happen in the middle of words.
+        /// </summary>
+        WordWrap,
+    }
+
+    /// <summary>
+    /// Text ellipsis mode that is used by the <see cref="TextBlockControl"/>.
+    /// </summary>
+    public enum TextEllipsis
+    {
+        /// <summary>
+        /// The text is cut at the end without any ellipsis. (e.g.: "Lorem ipsum dolo")
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// The text is cut at the end. The last three visible characters are replaced by "...". (e.g.: "Lorem ipsum d...")
+        /// </summary>
+        EndCharacter,
+
+        /// <summary>
+        /// The text is cut at the start. The first three visible characters are replaced by "...". (e.g.: "...olor sit amet")
+        /// </summary>
+        StartCharacter,
+
+        /// <summary>
+        /// The text is cut at the center. The most center visible characters are replaced by "...". (e.g.: "Lorem ip...sit amet")
+        /// </summary>
+        CenterCharacter,
+
+        /// <summary>
+        /// The text is cut at the end of the last word that still fits. "..." is appended at the end of the text. (e.g.: "Lorem ipsum...")
+        /// </summary>
+        EndWord,
+
+        /// <summary>
+        /// The text is cut at the start of the first word that still fits. "..." is prepended at the start of the text. (e.g.: "...sit amet")
+        /// </summary>
+        StartWord,
+
+        /// <summary>
+        /// The text is cut at the center without cutting though words. "..." is added to the center of the text. (e.g.: "Lorem...sit amet")
+        /// </summary>
+        CenterWord,
+    }
+
+    /// <summary>
+    /// Text alignment mode that is used by the <see cref="TextBlockControl"/>.
+    /// </summary>
+    public enum TextAlignment
+    {
+        /// <summary>
+        /// Aligns the text to the left.
+        /// </summary>
+        Left,
+
+        /// <summary>
+        /// Align the text to the center.
+        /// </summary>
+        Center,
+
+        /// <summary>
+        /// Align the text to the right.
+        /// </summary>
+        Right,
+
+        /// <summary>
+        /// Align the text to the left and right. Additional space is filled in spaces between words.
+        /// </summary>
+        Block,
     }
 }

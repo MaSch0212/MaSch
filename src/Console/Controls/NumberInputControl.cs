@@ -5,33 +5,98 @@ using System.Globalization;
 
 namespace MaSch.Console.Controls
 {
+    /// <summary>
+    /// Control for a <see cref="IConsoleService"/> with which a number can be requested by the user.
+    /// </summary>
     public class NumberInputControl
     {
         private readonly IConsoleService _console;
 
+        /// <summary>
+        /// Gets or sets the minimum value that is allowed.
+        /// </summary>
         public double Minimum { get; set; } = double.MinValue;
+
+        /// <summary>
+        /// Gets or sets the maximum value that is allowed.
+        /// </summary>
         public double Maximum { get; set; } = double.MaxValue;
+
+        /// <summary>
+        /// Gets or sets the last input value from the user.
+        /// </summary>
         public double? Value { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the user can type in decimal numbers.
+        /// </summary>
         public bool IsDecimal { get; set; } = false;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NumberInputControl"/> class.
+        /// </summary>
+        /// <param name="console">The console that is used to request input.</param>
         public NumberInputControl(IConsoleService console)
         {
             _console = Guard.NotNull(console, nameof(console));
         }
 
+        /// <summary>
+        /// Requests a number from the user.
+        /// </summary>
         public void Show()
             => Value = ShowInternal(_console, Value, Minimum, Maximum, IsDecimal);
 
+        /// <summary>
+        /// Requests a number from the user.
+        /// </summary>
+        /// <param name="console">The console that is used to request input.</param>
+        /// <returns>The typed in value by the user.</returns>
         public static double Show(IConsoleService console)
             => ShowInternal(console, null, double.MinValue, double.MaxValue, false);
+
+        /// <summary>
+        /// Requests a number from the user.
+        /// </summary>
+        /// <param name="console">The console that is used to request input.</param>
+        /// <param name="min">The minimum allowed value.</param>
+        /// <param name="max">The maximum allowed value.</param>
+        /// <returns>The typed in value by the user.</returns>
         public static double Show(IConsoleService console, double min, double max)
             => ShowInternal(console, null, min, max, false);
+
+        /// <summary>
+        /// Requests a number from the user.
+        /// </summary>
+        /// <param name="console">The console that is used to request input.</param>
+        /// <param name="value">The value the user can edit.</param>
+        /// <returns>The typed in value by the user.</returns>
         public static double Show(IConsoleService console, double value)
             => ShowInternal(console, value, double.MinValue, double.MaxValue, false);
+
+        /// <summary>
+        /// Requests a number from the user.
+        /// </summary>
+        /// <param name="console">The console that is used to request input.</param>
+        /// <param name="value">The value the user can edit.</param>
+        /// <param name="min">The minimum allowed value.</param>
+        /// <param name="max">The maximum allowed value.</param>
+        /// <returns>The typed in value by the user.</returns>
         public static double Show(IConsoleService console, double value, double min, double max)
             => ShowInternal(console, value, min, max, false);
+
+        /// <summary>
+        /// Requests a number from the user.
+        /// </summary>
+        /// <param name="console">The console that is used to request input.</param>
+        /// <param name="value">The value the user can edit.</param>
+        /// <param name="min">The minimum allowed value.</param>
+        /// <param name="max">The maximum allowed value.</param>
+        /// <param name="isDecimal">if set to <c>true</c> the user can input decimal numbers.</param>
+        /// <returns>The typed in value by the user.</returns>
         public static double Show(IConsoleService console, double value, double min, double max, bool isDecimal)
             => ShowInternal(console, value, min, max, isDecimal);
+
         private static double ShowInternal(IConsoleService console, double? value, double min, double max, bool isDecimal)
         {
             using var scope = ConsoleSynchronizer.Scope();
@@ -68,21 +133,29 @@ namespace MaSch.Console.Controls
                 console.Write(result);
                 console.CursorPosition.Point = new Point(lLeft, lTop);
                 key = console.ReadKey(true);
-                strPos = (lTop - pos.Y) * bs.Width + (lLeft - pos.X);
+                strPos = ((lTop - pos.Y) * bs.Width) + (lLeft - pos.X);
                 temp = result;
                 if (key.Key == ConsoleKey.Backspace && strPos > 0)
+                {
                     temp = temp.Remove(strPos - 1, 1);
+                }
                 else if (key.Key == ConsoleKey.Delete && strPos < temp.Length)
                 {
                     temp = temp.Remove(strPos, 1);
                     lLeft++;
                 }
                 else if (key.Key == ConsoleKey.RightArrow && strPos < temp.Length - 1)
+                {
                     lLeft++;
+                }
                 else if (key.Key == ConsoleKey.LeftArrow && strPos > 0)
+                {
                     lLeft--;
+                }
                 else
+                {
                     temp = temp.Insert(strPos, key.KeyChar.ToString());
+                }
 
                 if (double.TryParse(temp, numberStyle, culture, out var tmp1))
                 {
@@ -93,7 +166,7 @@ namespace MaSch.Console.Controls
                     lLeft += temp.Length - result.Length;
                     result = temp;
                 }
-                else if (temp == "-" || temp == "")
+                else if (temp == "-" || temp == string.Empty)
                 {
                     lLeft += temp.Length - result.Length;
                     result = temp;

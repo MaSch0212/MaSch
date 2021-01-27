@@ -3,7 +3,11 @@ using System.Drawing;
 
 namespace MaSch.Console
 {
-    public class ConsoleScope : IDisposable
+    /// <summary>
+    /// Scopes an instance of the <see cref="IConsoleService"/> interface.
+    /// </summary>
+    /// <seealso cref="System.IDisposable" />
+    public sealed class ConsoleScope : IDisposable
     {
         private readonly IConsoleService _console;
         private readonly int _posY;
@@ -15,6 +19,13 @@ namespace MaSch.Console
         private readonly bool _clear;
         private readonly bool _cursorVisible;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConsoleScope"/> class.
+        /// </summary>
+        /// <param name="console">The console to scope.</param>
+        /// <param name="scopeColor">if set to <c>true</c> the foreground and background color of the console are getting scoped.</param>
+        /// <param name="scopePosition">if set to <c>true</c> the current cursor position of the console is getting scoped.</param>
+        /// <param name="clearContent">if set to <c>true</c> the content that has been written during this scope are getting cleared afterwards.</param>
         public ConsoleScope(IConsoleService console, bool scopeColor, bool scopePosition, bool clearContent)
         {
             _console = console;
@@ -35,6 +46,7 @@ namespace MaSch.Console
             _posY = pos.Y;
         }
 
+        /// <inheritdoc />
         public void Dispose()
         {
             if (_color)
@@ -42,49 +54,22 @@ namespace MaSch.Console
                 _console.ForegroundColor = _foreColor;
                 _console.BackgroundColor = _backColor;
             }
+
             if (_clear)
             {
                 var pos = _console.CursorPosition;
                 var bufferSize = _console.BufferSize;
                 _console.CursorPosition.Point = new Point(_posX, _posY);
-                var count = (pos.Y - _posY) * bufferSize.Width + pos.X + (bufferSize.Width - _posX);
+                var count = ((pos.Y - _posY) * bufferSize.Width) + pos.X + (bufferSize.Width - _posX);
                 _console.Write(new string(' ', count));
             }
+
             if (_pos)
             {
                 _console.CursorPosition.Point = new Point(_posX, _posY);
             }
+
             _console.IsCursorVisible = _cursorVisible;
-        }
-    }
-
-    public sealed class ConsoleColorScope : IDisposable
-    {
-        private readonly IConsoleService _console;
-        private readonly ConsoleColor _backColor;
-        private readonly ConsoleColor _foreColor;
-
-        public ConsoleColorScope(IConsoleService console)
-        {
-            _console = console;
-            _backColor = console.BackgroundColor;
-            _foreColor = console.ForegroundColor;
-        }
-        public ConsoleColorScope(IConsoleService console, ConsoleColor newForegroundColor)
-            : this(console)
-        {
-            console.ForegroundColor = newForegroundColor;
-        }
-        public ConsoleColorScope(IConsoleService console, ConsoleColor newForegroundColor, ConsoleColor newBackgroundColor)
-            : this(console, newForegroundColor)
-        {
-            console.BackgroundColor = newBackgroundColor;
-        }
-
-        public void Dispose()
-        {
-            _console.ForegroundColor = _foreColor;
-            _console.BackgroundColor = _backColor;
         }
     }
 }

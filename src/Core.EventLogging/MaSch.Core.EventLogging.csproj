@@ -6,7 +6,7 @@
     <RootNamespace>MaSch.Core</RootNamespace>
     <TargetFrameworks>net5.0-windows;net48</TargetFrameworks>
     <LangVersion>latest</LangVersion>
-    <CodeAnalysisRuleSet>..\Console.Cli\Properties\MaSch.Console.Cli.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\build\MaSch.ruleset</CodeAnalysisRuleSet>
 
     <!-- Output info -->
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>

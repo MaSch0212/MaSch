@@ -7,15 +7,9 @@ using System.Threading.Tasks;
 
 namespace MaSch.Console.Controls
 {
-    public enum ProgressControlStatus
-    {
-        NotStarted,
-        Loading,
-        Succeeeded,
-        PartiallySucceeded,
-        Failed
-    }
-
+    /// <summary>
+    /// Control for a <see cref="IConsoleService"/> with which the progress of an action can be displayed.
+    /// </summary>
     public class ProgressControl
     {
         private const int ProgressBarLeftMargin = 3;
@@ -46,10 +40,44 @@ namespace MaSch.Console.Controls
         private Task? _renderTask;
         private CancellationTokenSource? _renderCancellationSource;
 
+        /// <summary>
+        /// Gets a value indicating whether this control is visible.
+        /// </summary>
         public bool IsVisible { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the x position of this control.
+        /// </summary>
         public int X { get; set; }
+
+        /// <summary>
+        /// Gets or sets the width of this control.
+        /// </summary>
         public int? Width { get; set; }
+
+        /// <summary>
+        /// Gets or sets the width of the progress bar inside this control.
+        /// </summary>
         public int? ProgressBarWidth { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status of this control.
+        /// </summary>
+        public ProgressControlStatus Status { get; set; } = ProgressControlStatus.NotStarted;
+
+        /// <summary>
+        /// Gets or sets the time in miliseconds between the renders.
+        /// </summary>
+        public int RenderWaitTime { get; set; } = 100;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the control should only use one console row.
+        /// </summary>
+        public bool UseOneLineOnly { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the status text should be shown.
+        /// </summary>
         public bool ShowStatusText
         {
             get => _showStatusText;
@@ -64,25 +92,60 @@ namespace MaSch.Console.Controls
                         _console.Write(new string(' ', _currentWidth!.Value));
                     }
                 }
+
                 _showStatusText = value;
             }
         }
-        public ProgressControlStatus Status { get; set; } = ProgressControlStatus.NotStarted;
-        public int RenderWaitTime { get; set; } = 100;
-        public bool UseOneLineOnly { get; set; } = true;
 
+        /// <summary>
+        /// Gets or sets the progress of this control.
+        /// </summary>
         public double Progress { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status text of this control.
+        /// </summary>
         public string? StatusText { get; set; }
+
+        /// <summary>
+        /// Gets the maximum text length that can be displayed in this control.
+        /// </summary>
         public int MaxStatusTextLength => (_currentWidth ?? (_console.BufferSize.Width - (_currentX ?? X) - 1)) - ProgressBarLeftMargin - 2 - ((_currentUseOneLineOnly ?? UseOneLineOnly) ? (_currentProgressBarWidth ?? ProgressBarWidth ?? ((_currentWidth!.Value - TotalProgressBarMarginAndPadding) / 2)) - ProgressBarRightMargin - 1 : 0);
+
+        /// <summary>
+        /// Gets or sets the color of the status indicator.
+        /// </summary>
         public ConsoleColor IndicatorColor { get; set; } = ConsoleColor.White;
+
+        /// <summary>
+        /// Gets or sets the color of the status text.
+        /// </summary>
         public ConsoleColor StatusTextColor { get; set; } = ConsoleColor.Gray;
+
+        /// <summary>
+        /// Gets or sets the color of the progress bar border.
+        /// </summary>
         public ConsoleColor ProgressBarBorderColor { get; set; } = ConsoleColor.Blue;
+
+        /// <summary>
+        /// Gets or sets the color of the progress bar.
+        /// </summary>
         public ConsoleColor ProgressBarColor { get; set; } = ConsoleColor.Cyan;
+
+        /// <summary>
+        /// Gets or sets the color of the progress percentage.
+        /// </summary>
         public ConsoleColor ProgressColor { get; set; } = ConsoleColor.White;
 
+        /// <summary>
+        /// Gets or sets the indicator characters that are used for the animation when status <see cref="ProgressControlStatus.Loading"/> is set.
+        /// </summary>
         public string[] IndicatorChars { get; set; }
 
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProgressControl" /> class.
+        /// </summary>
+        /// <param name="console">The console on which the progress should be shown.</param>
         public ProgressControl(IConsoleService console)
         {
             _console = Guard.NotNull(console, nameof(console));
@@ -91,7 +154,7 @@ namespace MaSch.Console.Controls
                 ? new[] { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
                 : new[] { "\\", "|", "/", "-" };
 
-            //new[] { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" };
+            // new[] { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" };
             // new[] { "▀", "■", "▄", "■", "▀", "■", "▄", "■", "▀", "■", "▄", "■" };
             // new[] { "\\", "|", "/", "-", "\\", "|", "/", "-", "\\", "|", "/", "-" };
             /*_console.IsFancyConsole
@@ -99,6 +162,9 @@ namespace MaSch.Console.Controls
                 : */
         }
 
+        /// <summary>
+        /// Shows this control. Please make sure to reserve enough space in the console buffer before executing this method.
+        /// </summary>
         public void Show()
         {
             if (IsVisible)
@@ -128,7 +194,17 @@ namespace MaSch.Console.Controls
             _renderTask = RunRender();
         }
 
+        /// <summary>
+        /// Hides this control.
+        /// </summary>
+        /// <param name="setCursorToControlRoot">if set to <c>true</c> the cursor is set to the root of the control.</param>
         public void Hide(bool setCursorToControlRoot) => Hide(setCursorToControlRoot, false);
+
+        /// <summary>
+        /// Hides this control.
+        /// </summary>
+        /// <param name="setCursorToControlRoot">if set to <c>true</c> the cursor is set to the root of the control.</param>
+        /// <param name="skipConsoleSynchronization">if set to <c>true</c> no new console synchronization scope is created.</param>
         public void Hide(bool setCursorToControlRoot, bool skipConsoleSynchronization)
         {
             StopRender();
@@ -146,6 +222,7 @@ namespace MaSch.Console.Controls
                         _console.Write(new string(' ', _currentWidth!.Value));
                     }
                 }
+
                 if (setCursorToControlRoot)
                     _console.CursorPosition.Point = new Point(_currentX!.Value, _currentPosition!.Value);
             }
@@ -157,6 +234,9 @@ namespace MaSch.Console.Controls
             IsVisible = false;
         }
 
+        /// <summary>
+        /// Stops the rendering without hiding this control.
+        /// </summary>
         public void StopRender()
         {
             _renderCancellationSource?.Cancel();
@@ -165,6 +245,9 @@ namespace MaSch.Console.Controls
             _renderTask = null;
         }
 
+        /// <summary>
+        /// Renders this control once.
+        /// </summary>
         public void Render()
         {
             if (!IsVisible)
@@ -185,7 +268,10 @@ namespace MaSch.Console.Controls
                     {
                         await Task.Delay(RenderWaitTime, _renderCancellationSource.Token);
                     }
-                    catch (TaskCanceledException) { return; }
+                    catch (TaskCanceledException)
+                    {
+                        return;
+                    }
 
                     using (ConsoleSynchronizer.Scope())
                     using (new ConsoleScope(_console, false, true, false))
@@ -202,8 +288,12 @@ namespace MaSch.Console.Controls
                 {
                     await Task.Delay(250, _renderCancellationSource!.Token);
                 }
-                catch (TaskCanceledException) { return; }
-                Task.Run(() => 
+                catch (TaskCanceledException)
+                {
+                    return;
+                }
+
+                Task.Run(() =>
                 {
                     IsVisible = false;
                     Show();
@@ -244,9 +334,11 @@ namespace MaSch.Console.Controls
                         break;
                 }
             }
+
             _lastStatus = Status;
 
-            if (double.IsNaN(Progress) && _lastProgress.HasValue && !double.IsNaN(_lastProgress.Value) || !double.IsNaN(Progress) && _lastProgress.HasValue && double.IsNaN(_lastProgress.Value))
+            if ((double.IsNaN(Progress) && _lastProgress.HasValue && !double.IsNaN(_lastProgress.Value)) ||
+                (!double.IsNaN(Progress) && _lastProgress.HasValue && double.IsNaN(_lastProgress.Value)))
             {
                 // Cleanup progress bar
                 _console.CursorPosition.X = progressBarStart;
@@ -284,6 +376,7 @@ namespace MaSch.Console.Controls
                     _console.CursorPosition.X = progressBarStart + Math.Min(progressChars, lpc);
                     _console.WriteWithColor(new string(progressChars > lpc ? '■' : ' ', Math.Abs(progressChars - lpc)), _currentProgressBarColor!.Value);
                 }
+
                 _lastProgressChars = progressChars;
 
                 var lp = _lastProgress.HasValue ? (double.IsNaN(_lastProgress.Value) ? -1 : _lastProgress!.Value) : 0;
@@ -325,10 +418,43 @@ namespace MaSch.Console.Controls
                         _console.CursorPosition.Point = new Point(_currentX!.Value, _currentPosition!.Value + 1);
                         _console.Write(new string(' ', _currentWidth!.Value));
                     }
+
                     OnRender();
                 }
+
                 _console.Write(new string('\n', ShowStatusText && !_currentUseOneLineOnly!.Value ? 2 : 1));
             }
         }
+    }
+
+    /// <summary>
+    /// Status for instances of the <see cref="ProgressControl"/> class.
+    /// </summary>
+    public enum ProgressControlStatus
+    {
+        /// <summary>
+        /// The action has not been started yet.
+        /// </summary>
+        NotStarted,
+
+        /// <summary>
+        /// The action is currently running.
+        /// </summary>
+        Loading,
+
+        /// <summary>
+        /// The action has been completed successfully.
+        /// </summary>
+        Succeeeded,
+
+        /// <summary>
+        /// The action has been partially completed successfully.
+        /// </summary>
+        PartiallySucceeded,
+
+        /// <summary>
+        /// The action failed.
+        /// </summary>
+        Failed,
     }
 }

@@ -4,6 +4,7 @@
     <Rule Id="CS8019" Action="Info" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA1008" Action="None" />
     <Rule Id="SA1009" Action="None" />
     <Rule Id="SA1011" Action="None" />
     <Rule Id="SA1101" Action="None" />

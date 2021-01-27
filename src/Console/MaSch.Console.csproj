@@ -5,7 +5,7 @@
     <TargetFrameworks>net5.0;net48</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <CodeAnalysisRuleSet>..\Console.Cli\Properties\MaSch.Console.Cli.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\build\MaSch.ruleset</CodeAnalysisRuleSet>
 
     <!-- Output info -->
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
