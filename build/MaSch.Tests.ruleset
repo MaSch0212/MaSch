@@ -2,6 +2,7 @@
 <RuleSet Name="New Rule Set" Description=" " ToolsVersion="16.0">
   <Include Path="masch.ruleset" Action="Default" />
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA0001" Action="None" />
     <Rule Id="SA1600" Action="None" />
   </Rules>
 </RuleSet>

@@ -31,7 +31,7 @@ namespace MaSch.Presentation.Wpf.Themes.Test.ThemeValues
                 RawGeometry = Geometry.Parse("M0,0L1,0 1,1 0,1z"),
                 RawIsGeometryFilled = false,
                 RawGeometryStrokeThickness = 2.4,
-                RawStretch = Stretch.Fill
+                RawStretch = Stretch.Fill,
             };
             var jsonSerializer = new JsonSerializerSettings();
             jsonSerializer.Converters.Add(new StringEnumConverter());
@@ -51,7 +51,7 @@ namespace MaSch.Presentation.Wpf.Themes.Test.ThemeValues
                 RawGeometry = new ThemeValueReference("R5"),
                 RawIsGeometryFilled = new ThemeValueReference("R6"),
                 RawGeometryStrokeThickness = new ThemeValueReference("R7"),
-                RawStretch = new ThemeValueReference("R8")
+                RawStretch = new ThemeValueReference("R8"),
             };
             var json = JsonConvert.SerializeObject(value);
             Assert.AreEqual(RefJson, json, "Wrong Json");
@@ -113,7 +113,7 @@ namespace MaSch.Presentation.Wpf.Themes.Test.ThemeValues
         private void AssertReference(string keyName, object reference)
         {
             var @ref = (ThemeValueReference)reference;
-            Assert.AreEqual((keyName, ""), (@ref.CustomKey, @ref.Property));
+            Assert.AreEqual((keyName, string.Empty), (@ref.CustomKey, @ref.Property));
         }
     }
 }

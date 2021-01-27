@@ -50,7 +50,7 @@ namespace MaSch.Presentation.Wpf.Themes.Test.ThemeValues
             Assert.IsInstanceOfType(value.RawValue, typeof(ThemeValueReference));
 
             var reference = (ThemeValueReference)value.RawValue;
-            Assert.AreEqual(("MyTestKey", ""), (reference.CustomKey, reference.Property));
+            Assert.AreEqual(("MyTestKey", string.Empty), (reference.CustomKey, reference.Property));
         }
 
         [TestMethod]

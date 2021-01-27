@@ -4,6 +4,7 @@
     <!-- General Project info -->
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>latest</LangVersion>
+    <CodeAnalysisRuleSet>..\..\..\build\MaSch.Tests.ruleset</CodeAnalysisRuleSet>
 
     <!-- Assembly Info -->
     <AssemblyTitle>MaSch.Core.Test</AssemblyTitle>

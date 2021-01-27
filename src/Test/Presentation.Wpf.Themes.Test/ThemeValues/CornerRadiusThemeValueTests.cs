@@ -16,7 +16,7 @@ namespace MaSch.Presentation.Wpf.Themes.Test.ThemeValues
         [TestMethod]
         public void JsonSerialize_Value()
         {
-            var value = new CornerRadiusThemeValue { RawValue = new CornerRadius(1,2,3,4) };
+            var value = new CornerRadiusThemeValue { RawValue = new CornerRadius(1, 2, 3, 4) };
             var json = JsonConvert.SerializeObject(value);
             Assert.AreEqual(ValueJson, json, "Wrong Json");
         }
@@ -46,7 +46,7 @@ namespace MaSch.Presentation.Wpf.Themes.Test.ThemeValues
             Assert.IsInstanceOfType(value.RawValue, typeof(ThemeValueReference));
 
             var reference = (ThemeValueReference)value.RawValue;
-            Assert.AreEqual(("MyTestKey", ""), (reference.CustomKey, reference.Property));
+            Assert.AreEqual(("MyTestKey", string.Empty), (reference.CustomKey, reference.Property));
         }
 
         [TestMethod]

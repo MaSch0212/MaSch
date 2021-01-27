@@ -13,13 +13,13 @@ namespace MaSch.Core.Test.Extensions
         {
             var typeCasts = new List<Tuple<Type, Type>>()
             {
-                new Tuple<Type, Type>(typeof (string), typeof (byte)),
-                new Tuple<Type, Type>(typeof (string), typeof (short)),
-                new Tuple<Type, Type>(typeof (string), typeof (int)),
-                new Tuple<Type, Type>(typeof (string), typeof (long)),
-                new Tuple<Type, Type>(typeof (string), typeof (float)),
-                new Tuple<Type, Type>(typeof (string), typeof (double)),
-                new Tuple<Type, Type>(typeof (string), typeof (decimal)),
+                new Tuple<Type, Type>(typeof(string), typeof(byte)),
+                new Tuple<Type, Type>(typeof(string), typeof(short)),
+                new Tuple<Type, Type>(typeof(string), typeof(int)),
+                new Tuple<Type, Type>(typeof(string), typeof(long)),
+                new Tuple<Type, Type>(typeof(string), typeof(float)),
+                new Tuple<Type, Type>(typeof(string), typeof(double)),
+                new Tuple<Type, Type>(typeof(string), typeof(decimal)),
             };
 
             foreach (var typeCast in typeCasts)
