@@ -1,9 +1,11 @@
-﻿
-using System;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace MaSch.Presentation.Wpf.Win10
 {
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:Elements should be documented", Justification = "No documentation needed for internal class.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "The file is cleaner that way.")]
     internal static class Win10IconCodeCharMapper
     {
         public static string GetChar(this Win10IconCode iconCode)
@@ -13,6 +15,10 @@ namespace MaSch.Presentation.Wpf.Win10
             => (Win10IconCode)BitConverter.ToUInt32(Encoding.UTF32.GetBytes(s), 0);
     }
 
+    /// <summary>
+    /// Icon codes for the Windows 10 MDL2 Assets icon font.
+    /// </summary>
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1602:Enumeration items should be documented", Justification = "Icons will not be documented.")]
     public enum Win10IconCode : uint
     {
         Account = 0x0000EA8Cu,
