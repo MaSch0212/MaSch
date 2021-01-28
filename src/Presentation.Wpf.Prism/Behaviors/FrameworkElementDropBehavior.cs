@@ -11,7 +11,6 @@ namespace MaSch.Presentation.Wpf.Behaviors
     public class FrameworkElementDropBehavior : Behavior<FrameworkElement>
     {
         private Type _dataType;
-        //private Adorner _adorner;
 
         /// <summary>
         /// Is executed when the behavior is attached to a <see cref="DependencyObject"/>.
@@ -44,6 +43,7 @@ namespace MaSch.Presentation.Wpf.Behaviors
             {
                 _dataType = dropObject.DataType;
             }
+
             e.Handled = true;
         }
 
@@ -69,6 +69,7 @@ namespace MaSch.Presentation.Wpf.Behaviors
         {
             e.Handled = true;
         }
+
         private void AssociatedObject_Drop(object sender, DragEventArgs e)
         {
             if (_dataType != null && e.Data.GetDataPresent(_dataType))

@@ -45,12 +45,13 @@ namespace MaSch.Presentation.Wpf.Behaviors
 
         private void AssociatedObject_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (_isMouseClicked &&AssociatedObject.DataContext is IDragable dragObject)
+            if (_isMouseClicked && AssociatedObject.DataContext is IDragable dragObject)
             {
                 var data = new DataObject();
                 data.SetData(dragObject.DataType, AssociatedObject.DataContext);
                 DragDrop.DoDragDrop(AssociatedObject, data, DragDropEffects.Move);
             }
+
             _isMouseClicked = false;
         }
     }

@@ -8,7 +8,7 @@ namespace MaSch.Presentation.Wpf.Common
     public interface IDragable
     {
         /// <summary>
-        /// Type of the data item.
+        /// Gets the type of the data item.
         /// </summary>
         Type DataType { get; }
 
