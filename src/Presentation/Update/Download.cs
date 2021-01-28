@@ -19,12 +19,14 @@ namespace MaSch.Presentation.Update
         /// Is raised when the progress of the download have changed.
         /// </summary>
         public event DownloadProgressChangedEventHandler DownloadProgressChanged;
+
         /// <summary>
         /// Is raised when the download has completed.
         /// </summary>
         public event AsyncCompletedEventHandler DownloadCompleted;
 
         #region Private fields
+
         private readonly Uri _baseUri;
         private readonly Uri _downloadUri;
         private readonly WebClient _webClient;
@@ -36,51 +38,66 @@ namespace MaSch.Presentation.Update
         private bool _hasFinished;
         private bool _isDownloading;
         private double _downloadSpeed = double.NaN;
+
         #endregion
 
         #region Properties
+
         /// <summary>
-        /// The Progress of this download
+        /// Gets the Progress of this download.
         /// </summary>
         public float Progress
         {
             get => _progress;
             private set => SetProperty(ref _progress, value);
         }
+
         /// <summary>
-        /// The Target path for the file to download
+        /// Gets the Target path for the file to download.
         /// </summary>
         public string LocalFilePath
         {
             get => _localFilePath;
             private set => SetProperty(ref _localFilePath, value);
         }
+
         /// <summary>
-        /// Determines if the download of this object has finished
+        /// Gets a value indicating whether the download of this object has finished.
         /// </summary>
         public bool HasFinished
         {
             get => _hasFinished;
             private set => SetProperty(ref _hasFinished, value);
         }
+
         /// <summary>
-        /// Determindes if this object is downloading a file
+        /// Gets a value indicating whether this object is downloading a file.
         /// </summary>
         public bool IsDownloading
         {
             get => _isDownloading;
             private set => SetProperty(ref _isDownloading, value);
         }
+
         /// <summary>
-        /// The download speed in Bytes/s
+        /// Gets the download speed in Bytes/s.
         /// </summary>
         public double DownloadSpeed
         {
             get => _downloadSpeed;
             private set => SetProperty(ref _downloadSpeed, value);
         }
+
         #endregion
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Download"/> class.
+        /// </summary>
+        /// <param name="baseUri">The base URI.</param>
+        /// <param name="downloadUri">The download URI.</param>
+        /// <param name="webClient">The web client.</param>
+        /// <param name="targetDirectory">The target directory.</param>
+        /// <exception cref="ArgumentException">The download url is not a parent of the base uri. BaseUrl = {baseUri}, DownloadUrl = {downloadUri}.</exception>
         internal Download(Uri baseUri, Uri downloadUri, WebClient webClient, string targetDirectory)
         {
             if (!downloadUri.IsAbsoluteUri)
@@ -95,6 +112,11 @@ namespace MaSch.Presentation.Update
             _counter.SpeedChanged += (s, e) => DownloadSpeed = e;
         }
 
+        /// <summary>
+        /// Starts the download.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">The download has not finished yet. You can stop the download with the method StopDownload.</exception>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         internal async Task StartDownload()
         {
             bool cancelled = false;
@@ -102,7 +124,7 @@ namespace MaSch.Presentation.Update
             if (Progress > 0)
                 throw new InvalidOperationException("The download has not finished yet. You can stop the download with the method StopDownload.");
             IsDownloading = true;
-            var relative = _downloadUri.ToString().Substring(_baseUri.ToString().Length);
+            var relative = _downloadUri.ToString()[_baseUri.ToString().Length..];
 
             var filePath = Path.Combine(new[] { _targetDirectory }.Concat(relative.Split('/', '\\')).ToArray());
             var dirPath = Path.GetDirectoryName(filePath);
@@ -134,6 +156,7 @@ namespace MaSch.Presentation.Update
                 _webClient.DownloadFileCompleted -= progcpl;
                 IsDownloading = false;
             }
+
             if (!cancelled)
             {
                 LocalFilePath = filePath;
@@ -141,12 +164,11 @@ namespace MaSch.Presentation.Update
             }
         }
 
-
-        // https://stackoverflow.com/questions/20794682/accurate-measurement-of-download-speed-of-a-webclient
-        public class NetSpeedCounter
+        // Credit: https://stackoverflow.com/questions/20794682/accurate-measurement-of-download-speed-of-a-webclient
+        private class NetSpeedCounter
         {
-            private long _prevBytes = 0;
             private readonly Stopwatch _stopwatch = new Stopwatch();
+            private long _prevBytes = 0;
 
             public event EventHandler<double> SpeedChanged;
 
@@ -171,6 +193,7 @@ namespace MaSch.Presentation.Update
                     _stopwatch.Restart();
                     return;
                 }
+
                 if (_stopwatch.ElapsedMilliseconds < 100)
                     return;
 

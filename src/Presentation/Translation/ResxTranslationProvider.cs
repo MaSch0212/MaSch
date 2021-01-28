@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
-using MaSch.Core;
 using MaSch.Core.Extensions;
 
 namespace MaSch.Presentation.Translation
@@ -16,12 +15,9 @@ namespace MaSch.Presentation.Translation
     /// <seealso cref="ITranslationProvider" />
     public class ResxTranslationProvider : ITranslationProvider
     {
-        #region Private Fields
         private readonly Type _type;
         private readonly ResourceManager _resourceManager;
-        #endregion
 
-        #region Constructors
         /// <summary>
         /// Initializes a new instance of the <see cref="ResxTranslationProvider"/> class.
         /// </summary>
@@ -36,9 +32,7 @@ namespace MaSch.Presentation.Translation
             _resourceManager = (ResourceManager)resManProperty.GetValue(null);
             _type = resxType;
         }
-        #endregion
 
-        #region ITranslationProvider Members
         /// <summary>
         /// Translates a resource key into a given language.
         /// </summary>
@@ -91,9 +85,9 @@ namespace MaSch.Presentation.Translation
         }
 
         /// <summary>
-        /// Looks for all languages for that at least one translation is available
+        /// Looks for all languages for that at least one translation is available.
         /// </summary>
-        /// <returns>Returns a list of languages that at least have one translation</returns>
+        /// <returns>Returns a list of languages that at least have one translation.</returns>
         public IEnumerable<CultureInfo> GetAvailableLanguages()
         {
             var baseDir = Path.GetDirectoryName(_type.Assembly.Location) ?? throw new InvalidOperationException();
@@ -105,7 +99,9 @@ namespace MaSch.Presentation.Translation
                     var dirName = Path.GetFileName(dir) ?? throw new InvalidOperationException();
                     info = CultureInfo.GetCultureInfoByIetfLanguageTag(dirName);
                 }
-                catch (CultureNotFoundException) { }
+                catch (CultureNotFoundException)
+                {
+                }
 
                 if (info != null && File.Exists(Path.Combine(dir, _type.Assembly.GetName().Name + ".resources.dll")))
                     yield return info;
@@ -113,6 +109,5 @@ namespace MaSch.Presentation.Translation
 
             yield return CultureInfo.InvariantCulture;
         }
-        #endregion
     }
 }

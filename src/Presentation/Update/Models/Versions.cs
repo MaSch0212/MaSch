@@ -15,7 +15,7 @@ namespace MaSch.Presentation.Update.Models
         private ObservableCollection<PreviousVersion> _previousVersions;
 
         /// <summary>
-        /// Determines the latest version of the application.
+        /// Gets or sets the latest version of the application.
         /// </summary>
         [XmlElement]
         public string CurrentVersion
@@ -23,8 +23,9 @@ namespace MaSch.Presentation.Update.Models
             get => _currentVersion;
             set => SetProperty(ref _currentVersion, value);
         }
+
         /// <summary>
-        /// Determines the path to the setup file for the latest version.
+        /// Gets or sets the path to the setup file for the latest version.
         /// </summary>
         [XmlElement]
         public string SetupPath
@@ -32,8 +33,9 @@ namespace MaSch.Presentation.Update.Models
             get => _setupPath;
             set => SetProperty(ref _setupPath, value);
         }
+
         /// <summary>
-        /// The previous versions.
+        /// Gets or sets the previous versions.
         /// </summary>
         [XmlArray("PreviousVersions")]
         [XmlArrayItem("Version")]

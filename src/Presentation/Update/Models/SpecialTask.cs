@@ -13,7 +13,7 @@ namespace MaSch.Presentation.Update.Models
         private bool _runForPrevious;
 
         /// <summary>
-        /// The file to run for the special task.
+        /// Gets or sets the file to run for the special task.
         /// </summary>
         [XmlAttribute("Run")]
         public string FileToRun
@@ -21,8 +21,9 @@ namespace MaSch.Presentation.Update.Models
             get => _fileToRun;
             set => SetProperty(ref _fileToRun, value);
         }
+
         /// <summary>
-        /// To be defined.
+        /// Gets or sets a value indicating whether this special task should be run for future updates as well.
         /// </summary>
         [XmlAttribute]
         public bool RunForPrevious

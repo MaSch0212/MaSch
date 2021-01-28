@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MaSch.Presentation.Translation
+﻿namespace MaSch.Presentation.Translation
 {
+    /// <summary>
+    /// Represents a <see cref="ITranslationProvider"/> that is named.
+    /// </summary>
+    /// <seealso cref="ITranslationProvider" />
     public interface INamedTranslationProvider : ITranslationProvider
     {
+        /// <summary>
+        /// Gets the key for this provider.
+        /// </summary>
         string ProviderKey { get; }
     }
 }

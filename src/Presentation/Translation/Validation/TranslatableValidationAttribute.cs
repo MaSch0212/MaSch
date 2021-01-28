@@ -10,8 +10,6 @@ namespace MaSch.Presentation.Translation.Validation
     /// <seealso cref="ValidationAttribute" />
     public abstract class TranslatableValidationAttribute : ValidationAttribute
     {
-        #region Properties
-
         /// <summary>
         /// Gets or sets the translation provider key which is used for translation.
         /// </summary>
@@ -19,10 +17,6 @@ namespace MaSch.Presentation.Translation.Validation
         /// The translation provider key which is used for translation.
         /// </value>
         public string TranslationProviderKey { get; set; }
-
-        #endregion
-
-        #region Public Methods
 
         /// <summary>
         /// Gets the translated error message.
@@ -48,7 +42,5 @@ namespace MaSch.Presentation.Translation.Validation
                 ? translationManager.GetTranslation(errorMessageResourceName)
                 : translationManager.GetTranslation(errorMessageResourceName, TranslationProviderKey);
         }
-
-        #endregion
     }
 }

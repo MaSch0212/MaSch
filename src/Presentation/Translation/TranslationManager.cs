@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MaSch.Core;
 using MaSch.Core.Extensions;
 
 namespace MaSch.Presentation.Translation
@@ -18,17 +17,11 @@ namespace MaSch.Presentation.Translation
         /// </summary>
         public event LanguageChangedEventHandler LanguageChanged;
 
-        #region Fields
-
-        private CultureInfo _currentLanguage;
         private readonly IDictionary<string, ITranslationProvider> _registeredProviders;
-
-        #endregion
-
-        #region Properties
+        private CultureInfo _currentLanguage;
 
         /// <summary>
-        /// The provider key of the default provider.
+        /// Gets the provider key of the default provider.
         /// </summary>
         public string DefaultProviderKey => "(default)";
 
@@ -51,25 +44,38 @@ namespace MaSch.Presentation.Translation
             }
         }
 
-        #endregion
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TranslationManager"/> class.
+        /// </summary>
+        public TranslationManager()
+            : this(null, (IEnumerable<INamedTranslationProvider>)null)
+        {
+        }
 
-        #region Ctor
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TranslationManager"/> class.
+        /// </summary>
+        /// <param name="defaultProvider">The default provider to use.</param>
+        public TranslationManager(ITranslationProvider defaultProvider)
+            : this(defaultProvider, (IEnumerable<INamedTranslationProvider>)null)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TranslationManager"/> class.
         /// </summary>
-        public TranslationManager() : this(null, (IEnumerable<INamedTranslationProvider>)null) { }
+        /// <param name="defaultProvider">The default provider to use.</param>
+        /// <param name="providers">The named providers to register with this <see cref="TranslationManager"/>.</param>
+        public TranslationManager(ITranslationProvider defaultProvider, params INamedTranslationProvider[] providers)
+            : this(defaultProvider, (IEnumerable<INamedTranslationProvider>)providers)
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TranslationManager"/> class.
         /// </summary>
-        public TranslationManager(ITranslationProvider defaultProvider) : this(defaultProvider, (IEnumerable<INamedTranslationProvider>)null) { }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TranslationManager"/> class.
-        /// </summary>
-        public TranslationManager(ITranslationProvider defaultProvider, params INamedTranslationProvider[] providers) : this(defaultProvider, (IEnumerable<INamedTranslationProvider>)providers) { }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TranslationManager"/> class.
-        /// </summary>
+        /// <param name="defaultProvider">The default provider to use.</param>
+        /// <param name="providers">The named providers to register with this <see cref="TranslationManager"/>.</param>
         public TranslationManager(ITranslationProvider defaultProvider, IEnumerable<INamedTranslationProvider> providers)
         {
             _registeredProviders = new Dictionary<string, ITranslationProvider>();
@@ -79,29 +85,22 @@ namespace MaSch.Presentation.Translation
                 _registeredProviders.Add(providers, x => x.ProviderKey);
         }
 
-        #endregion
-
-        #region ITranslationManager Methods
-
         /// <summary>
         /// Registers a new translation provider.
         /// </summary>
-        /// <param name="provider">The provider to register</param>
-        /// <param name="providerKey">The provider key used to register the provider</param>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <param name="provider">The provider to register.</param>
+        /// <param name="providerKey">The provider key used to register the provider.</param>
         public void RegisterTranslationProvider(ITranslationProvider provider, string providerKey)
         {
-            if (provider == null)
-                throw new ArgumentNullException(nameof(provider));
+            Guard.NotNull(provider, nameof(provider));
             _registeredProviders.Add(providerKey, provider);
         }
 
         /// <summary>
         /// Registers the default translation provider.
         /// </summary>
-        /// <param name="provider">The provider to register as default provider</param>
+        /// <param name="provider">The provider to register as default provider.</param>
         public void RegisterDefaultTranslationProvider(ITranslationProvider provider) => RegisterTranslationProvider(provider, DefaultProviderKey);
-
 
         /// <summary>
         /// Translates a resource key with the default provider into the current language.
@@ -143,7 +142,6 @@ namespace MaSch.Presentation.Translation
             return _registeredProviders[providerKey].GetTranslation(resourceKey, language ?? CurrentLanguage);
         }
 
-
         /// <summary>
         /// Translates multiple resource keys with the default provider into the current language.
         /// </summary>
@@ -184,7 +182,6 @@ namespace MaSch.Presentation.Translation
             return _registeredProviders[providerKey].GetTranslations(resourceKeys, language ?? CurrentLanguage);
         }
 
-
         /// <summary>
         /// Translates all resource keys of the default provider into a given language.
         /// </summary>
@@ -213,7 +210,6 @@ namespace MaSch.Presentation.Translation
                 throw new ArgumentException($"A provider with the key \"{providerKey}\" was not registered yet.");
             return _registeredProviders[providerKey].GetAllTranslations(language ?? CurrentLanguage);
         }
-
 
         /// <summary>
         /// Checks if a translation of the given resource key exists in the current language of the default provider.
@@ -258,7 +254,7 @@ namespace MaSch.Presentation.Translation
         /// <summary>
         /// Looks for all languages for that at least one translation is available in any provider.
         /// </summary>
-        /// <returns>Returns a list of languages that at least have one translation</returns>
+        /// <returns>Returns a list of languages that at least have one translation.</returns>
         public IEnumerable<CultureInfo> GetAvailableLanguages()
             => _registeredProviders.SelectMany(x => x.Value.GetAvailableLanguages()).Select(x => x.LCID).Distinct().Select(CultureInfo.GetCultureInfo);
 
@@ -266,14 +262,12 @@ namespace MaSch.Presentation.Translation
         /// Looks for all languages for that at least one translation is available in the given provider.
         /// </summary>
         /// <param name="providerKey">The provider.</param>
-        /// <returns>Returns a list of languages that at least have one translation</returns>
+        /// <returns>Returns a list of languages that at least have one translation.</returns>
         public IEnumerable<CultureInfo> GetAvailableLanguages(string providerKey)
         {
             if (providerKey == null || !_registeredProviders.ContainsKey(providerKey))
                 throw new ArgumentException($"A provider with the key \"{providerKey}\" was not registered yet.");
             return _registeredProviders[providerKey].GetAvailableLanguages();
         }
-
-        #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using MaSch.Core.Extensions;
@@ -19,22 +20,20 @@ namespace MaSch.Presentation.Translation
     /// <seealso cref="ITranslationProvider" />
     public class DictionaryTranslationProvider : ITranslationProvider
     {
-        #region Private Fields
         private readonly IDictionary<CultureInfo, IReadOnlyDictionary<string, string>> _translationCache = new Dictionary<CultureInfo, IReadOnlyDictionary<string, string>>();
-        #endregion
 
-        #region Properties
         /// <summary>
-        /// The handler for dictionary loading.
+        /// Gets the handler for dictionary loading.
         /// </summary>
         protected RetrieveDictionaryHandler Handler { get; }
-        #endregion
 
-        #region Constructors
         /// <summary>
         /// Initializes a new instance of the <see cref="DictionaryTranslationProvider"/> class.
         /// </summary>
-        protected DictionaryTranslationProvider() : this(null) { }
+        protected DictionaryTranslationProvider()
+            : this(null)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DictionaryTranslationProvider"/> class.
@@ -44,9 +43,7 @@ namespace MaSch.Presentation.Translation
         {
             Handler = handler;
         }
-        #endregion
 
-        #region ITranslationProvider Members
         /// <summary>
         /// Translates a resource key into a given language.
         /// </summary>
@@ -89,7 +86,8 @@ namespace MaSch.Presentation.Translation
             {
                 var dict = GetDictionaryForLanguageInternal(c);
                 result.AddIfNotExists(dict);
-            } while (c.LCID != CultureInfo.InvariantCulture.LCID);
+            }
+            while (c.LCID != CultureInfo.InvariantCulture.LCID);
             return result;
         }
 
@@ -109,7 +107,8 @@ namespace MaSch.Presentation.Translation
                 var dict = GetDictionaryForLanguageInternal(c);
                 if (dict.ContainsKey(resourceKey))
                     return true;
-            } while (c.LCID != CultureInfo.InvariantCulture.LCID);
+            }
+            while (c.LCID != CultureInfo.InvariantCulture.LCID);
             return false;
         }
 
@@ -121,24 +120,20 @@ namespace MaSch.Presentation.Translation
         /// </returns>
         public virtual IEnumerable<CultureInfo> GetAvailableLanguages()
         {
-            return new CultureInfo[0];
+            return Array.Empty<CultureInfo>();
         }
-        #endregion
 
-        #region Protected Methods
         /// <summary>
         /// Gets the translation dictionary for a specified language.
         /// </summary>
         /// <param name="language">The language.</param>
         /// <param name="oldDict">The translation dictionary previously loaded. If no dictionary was loaded yet, this parameter is <c>null</c>.</param>
-        /// <returns></returns>
+        /// <returns>The translation dictionary for the specified language.</returns>
         protected virtual IReadOnlyDictionary<string, string> GetDictionaryForLanguage(CultureInfo language, IReadOnlyDictionary<string, string> oldDict)
         {
             return Handler?.Invoke(language, oldDict);
         }
-        #endregion
 
-        #region Private Methods
         private string GetTranslationInternal(string resourceKey, CultureInfo language, IDictionary<CultureInfo, IReadOnlyDictionary<string, string>> cache)
         {
             IReadOnlyDictionary<string, string> dict;
@@ -148,7 +143,9 @@ namespace MaSch.Presentation.Translation
                 cache?.Add(language, dict);
             }
             else
+            {
                 dict = cache[language];
+            }
 
             if (dict.ContainsKey(resourceKey))
                 return dict[resourceKey];
@@ -167,7 +164,5 @@ namespace MaSch.Presentation.Translation
                 _translationCache[language] = newDict;
             return newDict;
         }
-        #endregion
     }
 }
-

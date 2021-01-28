@@ -11,8 +11,6 @@ namespace MaSch.Presentation.Translation.Validation
     [AttributeUsage(AttributeTargets.Property)]
     public class NotNullAttribute : TranslatableValidationAttribute
     {
-        #region Properties
-
         /// <summary>
         /// Gets or sets the validation rule for string values.
         /// </summary>
@@ -20,10 +18,6 @@ namespace MaSch.Presentation.Translation.Validation
         /// The validation rule for string values.
         /// </value>
         public StringNullMode StringNullMode { get; set; } = StringNullMode.IsNull;
-
-        #endregion
-
-        #region Overrides
 
         /// <summary>
         /// Validates the specified value for not being null.
@@ -37,17 +31,17 @@ namespace MaSch.Presentation.Translation.Validation
         {
             var isError = false;
             if (value == null)
+            {
                 isError = true;
+            }
             else if (value is string sValue)
             {
                 isError = StringNullMode == StringNullMode.IsNull ||
-                          StringNullMode == StringNullMode.IsNullOrEmpty && string.IsNullOrEmpty(sValue) ||
-                          StringNullMode == StringNullMode.IsNullOrWhitespace && string.IsNullOrWhiteSpace(sValue);
+                         (StringNullMode == StringNullMode.IsNullOrEmpty && string.IsNullOrEmpty(sValue)) ||
+                         (StringNullMode == StringNullMode.IsNullOrWhitespace && string.IsNullOrWhiteSpace(sValue));
             }
 
             return isError ? new ValidationResult(GetTranslatedErrorMessage()) : ValidationResult.Success;
         }
-
-        #endregion
     }
 }

@@ -25,6 +25,7 @@ namespace MaSch.Presentation.Update
         private Uri VersionsInformationUri => _cache.GetValue(() => new Uri(RootUri, "versions.xml"));
 
         #region Fields
+
         private readonly WebClient _webClient;
         private bool _wasCanceled;
         private float _progress = float.NaN;
@@ -38,110 +39,125 @@ namespace MaSch.Presentation.Update
         private bool _isChecking;
         private string _changelog;
         private bool _isUpdateAvailable;
-        private Versions _VersionsInformation;
+        private Versions _versionsInformation;
+
         #endregion
 
         #region Properties
+
         /// <summary>
-        /// The root url at which the updater retrieves its information.
+        /// Gets the root url at which the updater retrieves its information.
         /// </summary>
         public Uri RootUri { get; }
+
         /// <summary>
-        /// The Progress of this download
+        /// Gets the Progress of this download.
         /// </summary>
         public float Progress
         {
             get => _progress;
             private set => SetProperty(ref _progress, value);
         }
+
         /// <summary>
-        /// The Target path for the file to download
+        /// Gets the Target path for the file to download.
         /// </summary>
         public string CurrentDownloadedFile
         {
             get => _currentDownloadedFile;
             private set => SetProperty(ref _currentDownloadedFile, value);
         }
+
         /// <summary>
-        /// Determines if the download of this object has finished
+        /// Gets a value indicating whether the download of this object has been finished.
         /// </summary>
         public bool HasFinished
         {
             get => _hasFinished;
             private set => SetProperty(ref _hasFinished, value);
         }
+
         /// <summary>
-        /// Determines if this object is downloading a file
+        /// Gets a value indicating whether this object is downloading a file.
         /// </summary>
         public bool IsDownloading
         {
             get => _isDownloading;
             private set => SetProperty(ref _isDownloading, value);
         }
+
         /// <summary>
-        /// The download speed in Bytes/s
+        /// Gets the download speed in Bytes/s.
         /// </summary>
         public double DownloadSpeed
         {
             get => _downloadSpeed;
             private set => SetProperty(ref _downloadSpeed, value);
         }
+
         /// <summary>
-        /// Determines if a download is currently being prepared.
+        /// Gets a value indicating whether a download is currently being prepared.
         /// </summary>
         public bool IsPreparingDownload
         {
             get => _isPreparingDownload;
             private set => SetProperty(ref _isPreparingDownload, value);
         }
+
         /// <summary>
-        /// Determines how much bytes were already downloaded.
+        /// Gets the number of bytes already downloaded.
         /// </summary>
         public long DownloadedBytes
         {
             get => _downloadedBytes;
             private set => SetProperty(ref _downloadedBytes, value);
         }
+
         /// <summary>
-        /// Determines how much bytes have to be downloaded.
+        /// Gets the number of bytes to downloaded.
         /// </summary>
         public long BytesToDownload
         {
             get => _bytesToDownload;
             private set => SetProperty(ref _bytesToDownload, value);
         }
+
         /// <summary>
-        /// Determines if a check for a new version is currently being executed.
+        /// Gets a value indicating whether a check for a new version is currently being executed.
         /// </summary>
         public bool IsChecking
         {
             get => _isChecking;
             private set => SetProperty(ref _isChecking, value);
         }
+
         /// <summary>
-        /// The changelog.
+        /// Gets the changelog.
         /// </summary>
         public string Changelog
         {
             get => _changelog;
             private set => SetProperty(ref _changelog, value);
         }
+
         /// <summary>
-        /// Determines if a new version is available.
+        /// Gets a value indicating whether a new version is available.
         /// </summary>
         public bool IsUpdateAvailable
         {
             get => _isUpdateAvailable;
             private set => SetProperty(ref _isUpdateAvailable, value);
         }
+
         /// <summary>
-        /// The version information which were downloaded from the server.
+        /// Gets the version information which were downloaded from the server.
         /// </summary>
         public Versions VersionsInformation
         {
-            get => _VersionsInformation;
-            private set => SetProperty(ref _VersionsInformation, value);
+            get => _versionsInformation;
+            private set => SetProperty(ref _versionsInformation, value);
         }
+
         #endregion
 
         /// <summary>
@@ -157,7 +173,7 @@ namespace MaSch.Presentation.Update
         /// <summary>
         /// Downloads the versions information from the remote server asynchronously.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task DownloadVersionsInformation()
         {
             while (_webClient.IsBusy)
@@ -169,9 +185,9 @@ namespace MaSch.Presentation.Update
         }
 
         /// <summary>
-        /// Downloads the versions information asynchronously if necessary and saves them into the <see cref="VersionInformations"/> property.
+        /// Downloads the versions information asynchronously if necessary and saves them into the <see cref="VersionsInformation"/> property.
         /// </summary>
-        /// <returns>Returns true if the versions information was retrieved; otherwise false.</returns>
+        /// <returns><c>true</c> if the versions information was retrieved; otherwise, <c>false</c>.</returns>
         private async Task<bool> EnsureVersionsInformationAvailable()
         {
             if (VersionsInformation == null)
@@ -184,13 +200,15 @@ namespace MaSch.Presentation.Update
         /// </summary>
         /// <param name="assembly">The assembly to check the version number on.</param>
         /// <param name="versionType">The type of version to check on the assembly.</param>
-        /// <returns>Returns true if a new version is available; otherwise false.</returns>
-        public async Task<bool> CheckForUpdates(Assembly assembly, AssemblyVersionType versionType) => await CheckForUpdates(versionType.GetVersion(assembly));
+        /// <returns><c>true</c> if a new version is available; otherwise, <c>false</c>.</returns>
+        public async Task<bool> CheckForUpdates(Assembly assembly, AssemblyVersionType versionType)
+            => await CheckForUpdates(versionType.GetVersion(assembly));
+
         /// <summary>
         /// Downloads the versions information asynchronously if necessary and checks whether the current application is the newest version.
         /// </summary>
         /// <param name="currentVersion">The version number of the current application.</param>
-        /// <returns>Returns true if a new version is available; otherwise false.</returns>
+        /// <returns><c>true</c> if a new version is available; otherwise, <c>false</c>.</returns>
         public async Task<bool> CheckForUpdates(string currentVersion)
         {
             IsChecking = true;
@@ -206,6 +224,7 @@ namespace MaSch.Presentation.Update
                     IsChecking = false;
                     return false;
                 }
+
                 result = IsNewUpdateAvailable(currentVersion);
                 if (result)
                 {
@@ -213,7 +232,11 @@ namespace MaSch.Presentation.Update
                     Changelog = ChangelogToString(changelog);
                 }
             }
-            finally { IsChecking = false; }
+            finally
+            {
+                IsChecking = false;
+            }
+
             return result;
         }
 
@@ -221,7 +244,7 @@ namespace MaSch.Presentation.Update
         /// Downloads the changelog for the given version asynchronously.
         /// </summary>
         /// <param name="toVersion">The version for which the changelog should be downloaded.</param>
-        /// <returns>Returns the changelog for the given version.</returns>
+        /// <returns>The changelog for the given version.</returns>
         public async Task<string> GetSingleChangelog(string toVersion)
         {
             if (!await EnsureVersionsInformationAvailable())
@@ -235,10 +258,10 @@ namespace MaSch.Presentation.Update
         /// Downloads the complete changelog from the given version to the newest version asynchronously.
         /// </summary>
         /// <param name="currentVersion">The version from which the changelog should be downloaded.</param>
-        /// <returns>Returns a dirctionary of versions as key and the changelog as value.</returns>
+        /// <returns>A dirctionary of versions as key and the changelog as value.</returns>
         public async Task<Dictionary<string, string>> GetCompleteChangelog(string currentVersion)
         {
-            if (!await EnsureVersionsInformationAvailable() || !string.IsNullOrEmpty(currentVersion) && !IsNewUpdateAvailable(currentVersion))
+            if (!await EnsureVersionsInformationAvailable() || (!string.IsNullOrEmpty(currentVersion) && !IsNewUpdateAvailable(currentVersion)))
                 return new Dictionary<string, string>();
             var changelog = new Dictionary<string, string>();
             var log = await DownloadChangelogForVersion(VersionsInformation.CurrentVersion);
@@ -260,13 +283,14 @@ namespace MaSch.Presentation.Update
         /// </summary>
         /// <param name="assembly">The assembly to check the version number on.</param>
         /// <param name="versionType">The type of version to check on the assembly.</param>
-        /// <returns>Returns the names of the downloaded files and the directory in which they were stored to.</returns>
+        /// <returns>The names of the downloaded files and the directory in which they were stored to.</returns>
         public async Task<(string[] downloadedFiles, string targetDirectory)> DownloadAllNeededFiles(Assembly assembly, AssemblyVersionType versionType) => await DownloadAllNeededFiles(versionType.GetVersion(assembly));
+
         /// <summary>
         /// Downloads all needed files for the update to the newest version asynchronously.
         /// </summary>
         /// <param name="currentVersion">The version number of the current application.</param>
-        /// <returns>Returns the names of the downloaded files and the directory in which they were stored to.</returns>
+        /// <returns>The names of the downloaded files and the directory in which they were stored to.</returns>
         public async Task<(string[] downloadedFiles, string targetDirectory)> DownloadAllNeededFiles(string currentVersion)
         {
             if (IsDownloading)
@@ -290,6 +314,7 @@ namespace MaSch.Presentation.Update
                     totalByteSize += byteSize;
                 }
             }
+
             BytesToDownload = totalByteSize;
 
             void DownloadPropertyChanged(object s, PropertyChangedEventArgs e)
@@ -300,10 +325,8 @@ namespace MaSch.Presentation.Update
 
             void DownloadProgressChanged(object s, DownloadProgressChangedEventArgs e)
             {
-                // ReSharper disable AccessToModifiedClosure
                 DownloadedBytes = downloadedBytes + e.BytesReceived;
-                Progress = (float) ((double) (downloadedBytes + e.BytesReceived) / totalByteSize);
-                // ReSharper restore AccessToModifiedClosure
+                Progress = (float)((double)(downloadedBytes + e.BytesReceived) / totalByteSize);
             }
 
             IsPreparingDownload = false;
@@ -321,7 +344,7 @@ namespace MaSch.Presentation.Update
                     dl.PropertyChanged -= DownloadPropertyChanged;
                     dl.DownloadProgressChanged -= DownloadProgressChanged;
 
-                    DownloadedBytes = downloadedBytes = downloadedBytesAfterDownload = downloadedBytesAfterDownload + file.Value;
+                    DownloadedBytes = downloadedBytes = downloadedBytesAfterDownload += file.Value;
                     Progress = (float)((double)downloadedBytes / totalByteSize);
                     localDownloadedFiles.Add(dl.LocalFilePath);
 
@@ -333,6 +356,7 @@ namespace MaSch.Presentation.Update
                         break;
                     }
                 }
+
                 DownloadedBytes = BytesToDownload;
                 DownloadSpeed = 0;
                 Progress = 1;
@@ -345,6 +369,7 @@ namespace MaSch.Presentation.Update
                 DownloadSpeed = 0;
                 Progress = 0;
             }
+
             HasFinished = true;
 
             return (localDownloadedFiles.ToArray(), targetDir);
@@ -359,7 +384,6 @@ namespace MaSch.Presentation.Update
                 _webClient.CancelAsync();
             _wasCanceled = true;
         }
-        
 
         private bool IsNewUpdateAvailable(string currentVersion)
         {
@@ -372,7 +396,8 @@ namespace MaSch.Presentation.Update
         private IEnumerable<Uri> GetFilesToDownload(string currentVersion)
         {
             if (!IsNewUpdateAvailable(currentVersion))
-                return new Uri[0];
+                return Array.Empty<Uri>();
+
             var filesToDownload = new List<string> { VersionsInformation.SetupPath };
             foreach (var prevVersion in VersionsInformation.PreviousVersions)
             {
@@ -381,9 +406,11 @@ namespace MaSch.Presentation.Update
                     filesToDownload.AddRange(prevVersion.SpecialTasks.Select(x => x.FileToRun));
                     break;
                 }
+
                 if (prevVersion.SpecialTasks != null)
                     filesToDownload.AddRange(prevVersion.SpecialTasks.Where(x => x.RunForPrevious).Select(x => x.FileToRun));
             }
+
             return filesToDownload.Select(x => new Uri(RootUri, new Uri(x, UriKind.Relative))).ToArray();
         }
 
@@ -403,7 +430,7 @@ namespace MaSch.Presentation.Update
         /// Converts a changelog dictionary (which is retrieved by the <see cref="GetCompleteChangelog"/> method) to a readable string.
         /// </summary>
         /// <param name="changelog">The changelog to convert.</param>
-        /// <returns>Returns a readable string which represents the given changelog.</returns>
+        /// <returns>A readable string which represents the given changelog.</returns>
         public static string ChangelogToString(Dictionary<string, string> changelog)
         {
             var sb = new StringBuilder();
@@ -411,6 +438,7 @@ namespace MaSch.Presentation.Update
             {
                 sb.AppendFormat("{0}:\n{1}\n\n", change.Key, change.Value);
             }
+
             return sb.ToString();
         }
     }

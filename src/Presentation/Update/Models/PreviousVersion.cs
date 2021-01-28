@@ -12,9 +12,9 @@ namespace MaSch.Presentation.Update.Models
     {
         private string _versionNumber;
         private ObservableCollection<SpecialTask> _specialTasks;
-        
+
         /// <summary>
-        /// The version number of this version.
+        /// Gets or sets the version number of this version.
         /// </summary>
         [XmlAttribute("Number")]
         public string VersionNumber
@@ -22,8 +22,9 @@ namespace MaSch.Presentation.Update.Models
             get => _versionNumber;
             set => SetProperty(ref _versionNumber, value);
         }
+
         /// <summary>
-        /// The special tasks to execute when update to the next version.
+        /// Gets or sets the special tasks to execute when update to the next version.
         /// </summary>
         [XmlArray("SpecialTasks")]
         public ObservableCollection<SpecialTask> SpecialTasks

@@ -11,8 +11,6 @@ namespace MaSch.Presentation.Translation.Validation
     [AttributeUsage(AttributeTargets.Property)]
     public class RegexAttribute : TranslatableValidationAttribute
     {
-        #region Properties
-
         /// <summary>
         /// Gets the regular expression to use for validation.
         /// </summary>
@@ -20,10 +18,6 @@ namespace MaSch.Presentation.Translation.Validation
         /// The regular expression that is used for validation.
         /// </value>
         public Regex Regex { get; }
-
-        #endregion
-
-        #region Ctor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RegexAttribute"/> class.
@@ -44,10 +38,6 @@ namespace MaSch.Presentation.Translation.Validation
             Regex = new Regex(regexPattern, regexOptions);
         }
 
-        #endregion
-
-        #region Overrides
-
         /// <summary>
         /// Validates the specified value by using the regular expression defined in <see cref="Regex"/>.
         /// </summary>
@@ -58,12 +48,9 @@ namespace MaSch.Presentation.Translation.Validation
         /// </returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var sValue = value as string;
-            if (sValue == null)
+            if (value is not string sValue)
                 return ValidationResult.Success;
             return Regex.IsMatch(sValue) ? ValidationResult.Success : new ValidationResult(GetTranslatedErrorMessage());
         }
-
-        #endregion
     }
 }

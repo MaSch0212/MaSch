@@ -10,8 +10,6 @@ namespace MaSch.Presentation.Translation.Validation
     [AttributeUsage(AttributeTargets.Property)]
     public class StringLengthAttribute : TranslatableValidationAttribute
     {
-        #region Properties
-
         /// <summary>
         /// Gets the error message to return when the string is to long.
         /// </summary>
@@ -19,6 +17,7 @@ namespace MaSch.Presentation.Translation.Validation
         /// The error message returned when the string is to long.
         /// </value>
         public string ErrorMsgToLarge { get; }
+
         /// <summary>
         /// Gets the error message to return when the string is to short.
         /// </summary>
@@ -26,6 +25,7 @@ namespace MaSch.Presentation.Translation.Validation
         /// The error message returned when the string is to short.
         /// </value>
         public string ErrorMsgToSmall { get; }
+
         /// <summary>
         /// Gets the exact expected length of the string.
         /// </summary>
@@ -33,6 +33,7 @@ namespace MaSch.Presentation.Translation.Validation
         /// The exact expected length of the string. Returns -1 if min and max lengths are used.
         /// </value>
         public int ExactLength { get; }
+
         /// <summary>
         /// Gets or sets a value indicating whether an empty string is defined as valid.
         /// </summary>
@@ -40,6 +41,7 @@ namespace MaSch.Presentation.Translation.Validation
         /// <c>true</c> if an empty string is defined as valid; otherwise, <c>false</c>.
         /// </value>
         public bool IgnoreNullString { get; set; }
+
         /// <summary>
         /// Gets the maximum expected length of the string.
         /// </summary>
@@ -47,6 +49,7 @@ namespace MaSch.Presentation.Translation.Validation
         /// The maximum expected length of the string. Returns -1 if an exact length is used.
         /// </value>
         public int MaxLength { get; }
+
         /// <summary>
         /// Gets the minimum expected length of the string.
         /// </summary>
@@ -54,10 +57,6 @@ namespace MaSch.Presentation.Translation.Validation
         /// The minimum expected length of the string. Returns -1 if an exact length is used.
         /// </value>
         public int MinLength { get; }
-
-        #endregion
-
-        #region Ctor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StringLengthAttribute"/> class.
@@ -87,10 +86,6 @@ namespace MaSch.Presentation.Translation.Validation
             ErrorMsgToSmall = errorMsgToSmall;
         }
 
-        #endregion
-
-        #region Overrides
-
         /// <summary>
         /// Validates the specified value on the specified string length.
         /// </summary>
@@ -112,7 +107,5 @@ namespace MaSch.Presentation.Translation.Validation
                 return new ValidationResult(GetTranslatedErrorMessage(ErrorMsgToLarge));
             return ValidationResult.Success;
         }
-
-        #endregion
     }
 }
