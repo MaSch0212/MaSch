@@ -1,13 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MaSch.Presentation.Wpf
+﻿namespace MaSch.Presentation.Wpf
 {
+    /// <summary>
+    /// Specifies the type of rendering to use for an <see cref="IIcon"/>.
+    /// </summary>
     public enum SymbolType
     {
-        Geometry, Character
+        /// <summary>
+        /// The <see cref="IIcon"/> is rendered using a <see cref="System.Windows.Media.Geometry"/> object.
+        /// </summary>
+        Geometry,
+
+        /// <summary>
+        /// The <see cref="IIcon"/> is rendered using a character inside a font.
+        /// </summary>
+        Character,
     }
 }

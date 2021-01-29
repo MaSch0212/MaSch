@@ -1,6 +1,11 @@
-﻿
+﻿using System.Diagnostics.CodeAnalysis;
+
 namespace MaSch.Presentation.Wpf.Themes
 {
+    /// <summary>
+    /// Specifies fixed theme keys.
+    /// </summary>
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1602:Enumeration items should be documented", Justification = "Will not document all keys. I think they are self explanatory.")]
     public enum ThemeKey
     {
         HighlightColor,

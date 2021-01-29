@@ -1,36 +1,55 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Media.Animation;
 
 namespace MaSch.Presentation.Wpf.Animation
 {
     /// <summary>
-    /// Animates a grid length value just like the DoubleAnimation animates a double value
+    /// Animates a grid length value just like the DoubleAnimation animates a double value.
     /// </summary>
+    /// <remarks>
+    /// Credit: https://social.msdn.microsoft.com/Forums/vstudio/en-US/da47a4b8-4d39-4d6e-a570-7dbe51a842e4/gridlengthanimation.
+    /// </remarks>
     public class GridLengthAnimation : AnimationTimeline
     {
         private bool _isCompleted;
+        private AnimationClock _clock;
 
         /// <summary>
-        /// Marks the animation as completed
+        /// Dependency property. Gets or sets the easing function to use for this animation.
         /// </summary>
-        public bool IsCompleted
-        {
-            get => _isCompleted;
-            set => _isCompleted = value;
-        }
-        
+        public static readonly DependencyProperty EasingFunctionProperty =
+            DependencyProperty.Register("EasingFunction", typeof(EasingFunctionBase), typeof(GridLengthAnimation), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Dependency property. Sets the reverse value for the second animation.
+        /// </summary>
+        public static readonly DependencyProperty ReverseValueProperty =
+            DependencyProperty.Register("ReverseValue", typeof(double), typeof(GridLengthAnimation), new UIPropertyMetadata(0.0));
+
+        /// <summary>
+        /// Dependency property. Gets or sets the starting value for the animation.
+        /// </summary>
+        public static readonly DependencyProperty FromProperty =
+            DependencyProperty.Register("From", typeof(GridLength), typeof(GridLengthAnimation));
+
+        /// <summary>
+        /// Dependency property. Gets or sets the ending value for the animation.
+        /// </summary>
+        public static readonly DependencyProperty ToProperty =
+            DependencyProperty.Register("To", typeof(GridLength), typeof(GridLengthAnimation));
+
+        /// <summary>
+        /// Gets or sets the easing function to use for this animation.
+        /// </summary>
         public EasingFunctionBase EasingFunction
         {
             get => (EasingFunctionBase)GetValue(EasingFunctionProperty);
             set => SetValue(EasingFunctionProperty, value);
         }
-        public static readonly DependencyProperty EasingFunctionProperty =
-            DependencyProperty.Register("EasingFunction", typeof(EasingFunctionBase), typeof(GridLengthAnimation), new PropertyMetadata(null));
-        
+
         /// <summary>
-        /// Sets the reverse value for the second animation
+        /// Gets or sets the reverse value for the second animation.
         /// </summary>
         public double ReverseValue
         {
@@ -39,36 +58,8 @@ namespace MaSch.Presentation.Wpf.Animation
         }
 
         /// <summary>
-        /// Dependency property. Sets the reverse value for the second animation
+        /// Gets or sets the starting value for the animation.
         /// </summary>
-        public static readonly DependencyProperty ReverseValueProperty =
-            DependencyProperty.Register("ReverseValue", typeof(double), typeof(GridLengthAnimation), new UIPropertyMetadata(0.0));
-
-
-        /// <summary>
-        /// Returns the type of object to animate
-        /// </summary>
-        public override Type TargetPropertyType => typeof(GridLength);
-
-        /// <summary>
-        /// Creates an instance of the animation object
-        /// </summary>
-        /// <returns>Returns the instance of the GridLengthAnimation</returns>
-        protected override Freezable CreateInstanceCore()
-        {
-            return new GridLengthAnimation();
-        }
-
-        /// <summary>
-        /// Dependency property for the From property
-        /// </summary>
-        public static readonly DependencyProperty FromProperty = DependencyProperty.Register("From", typeof(GridLength),
-                typeof(GridLengthAnimation));
-
-        /// <summary>
-        /// CLR Wrapper for the From depenendency property
-        /// </summary>
-        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         public GridLength From
         {
             get => (GridLength)GetValue(FromProperty);
@@ -76,171 +67,90 @@ namespace MaSch.Presentation.Wpf.Animation
         }
 
         /// <summary>
-        /// Dependency property for the To property
+        /// Gets or sets the ending value for the animation.
         /// </summary>
-        public static readonly DependencyProperty ToProperty = DependencyProperty.Register("To", typeof(GridLength),
-                typeof(GridLengthAnimation));
-
-        /// <summary>
-        /// CLR Wrapper for the To property
-        /// </summary>
-        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         public GridLength To
         {
             get => (GridLength)GetValue(ToProperty);
             set => SetValue(ToProperty, value);
         }
 
-        private AnimationClock _clock;
+        /// <summary>
+        /// Gets or sets a value indicating whether the animation is completed.
+        /// </summary>
+        public bool IsCompleted
+        {
+            get => _isCompleted;
+            set => _isCompleted = value;
+        }
 
         /// <summary>
-        /// registers to the completed event of the animation clock
+        /// Gets the type of object to animate.
         /// </summary>
-        /// <param name="clock">the animation clock to notify completion status</param>
+        public override Type TargetPropertyType => typeof(GridLength);
+
+        /// <summary>
+        /// Creates an instance of the animation object.
+        /// </summary>
+        /// <returns>Returns the instance of the <see cref="GridLengthAnimation"/>.</returns>
+        protected override Freezable CreateInstanceCore()
+        {
+            return new GridLengthAnimation();
+        }
+
+        /// <summary>
+        /// Registers to the completed event of the animation clock.
+        /// </summary>
+        /// <param name="clock">The animation clock to notify completion status.</param>
         private void VerifyAnimationCompletedStatus(AnimationClock clock)
         {
             if (_clock == null)
             {
                 _clock = clock;
-                _clock.Completed += delegate { _isCompleted = true; };
+                _clock.Completed += (sender, e) => { _isCompleted = true; };
             }
         }
 
         /// <summary>
-        /// Animates the grid let set
+        /// Animates the grid let set.
         /// </summary>
-        /// <param name="defaultOriginValue">The original value to animate</param>
-        /// <param name="defaultDestinationValue">The final value</param>
-        /// <param name="animationClock">The animation clock (timer)</param>
-        /// <returns>Returns the new grid length to set</returns>
-        [SuppressMessage("ReSharper", "PossibleInvalidOperationException")]
-        public override object GetCurrentValue(object defaultOriginValue,
-            object defaultDestinationValue, AnimationClock animationClock)
+        /// <param name="defaultOriginValue">The original value to animate.</param>
+        /// <param name="defaultDestinationValue">The final value.</param>
+        /// <param name="animationClock">The animation clock (timer).</param>
+        /// <returns>Returns the new grid length to set.</returns>
+        public override object GetCurrentValue(object defaultOriginValue, object defaultDestinationValue, AnimationClock animationClock)
         {
-            //check the animation clock event
+            // check the animation clock event
             VerifyAnimationCompletedStatus(animationClock);
 
-            //check if the animation was completed
+            // check if the animation was completed
             if (_isCompleted)
                 return (GridLength)defaultDestinationValue;
 
-            //if not then create the value to animate
+            // if not then create the value to animate
             var fromVal = From.Value;
             var toVal = To.Value;
 
-            //check if the value is already collapsed
-            //if (((GridLength)defaultOriginValue).Value == toVal)
-            //{
-            //    fromVal = toVal;
-            //    toVal = this.ReverseValue;
-            //}
-            //else
-                //check to see if this is the last tick of the animation clock.
-            // ReSharper disable once CompareOfFloatsByEqualityOperator
-                if (animationClock.CurrentProgress.Value == 1.0)
-                    return To;
+            if (animationClock.CurrentProgress.Value == 1.0)
+                return To;
 
             if (fromVal > toVal)
-                return new GridLength((1 - Ease(animationClock.CurrentProgress.Value)) *
-                    (fromVal - toVal) + toVal, From.IsStar ? GridUnitType.Star : GridUnitType.Pixel);
+            {
+                return new GridLength(
+                    ((1 - Ease(animationClock.CurrentProgress.Value)) * (fromVal - toVal)) + toVal,
+                    From.IsStar ? GridUnitType.Star : GridUnitType.Pixel);
+            }
             else
-                return new GridLength(Ease(animationClock.CurrentProgress.Value) *
-                    (toVal - fromVal) + fromVal, From.IsStar ? GridUnitType.Star : GridUnitType.Pixel);
+            {
+                return new GridLength(
+                    (Ease(animationClock.CurrentProgress.Value) * (toVal - fromVal)) + fromVal,
+                    From.IsStar ? GridUnitType.Star : GridUnitType.Pixel);
+            }
         }
 
         private double Ease(double value)
         {
             return EasingFunction?.Ease(value) ?? value;
-        }
-    }
-
-    /// <summary>
-    /// Animates a double value 
-    /// </summary>
-    public class ExpanderDoubleAnimation : DoubleAnimationBase
-    {
-        /// <summary>
-        /// Dependency property for the From property
-        /// </summary>
-        public static readonly DependencyProperty FromProperty = DependencyProperty.Register("From", typeof(double?),
-                typeof(ExpanderDoubleAnimation));
-
-        /// <summary>
-        /// CLR Wrapper for the From depenendency property
-        /// </summary>
-        public double? From
-        {
-            get => (double?)GetValue(FromProperty);
-            set => SetValue(FromProperty, value);
-        }
-
-        /// <summary>
-        /// Dependency property for the To property
-        /// </summary>
-        public static readonly DependencyProperty ToProperty = DependencyProperty.Register("To", typeof(double?),
-                typeof(ExpanderDoubleAnimation));
-
-        /// <summary>
-        /// CLR Wrapper for the To property
-        /// </summary>
-        public double? To
-        {
-            get => (double?)GetValue(ToProperty);
-            set => SetValue(ToProperty, value);
-        }
-
-        /// <summary>
-        /// Sets the reverse value for the second animation
-        /// </summary>
-        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-        public double? ReverseValue
-        {
-            get => (double)GetValue(ReverseValueProperty);
-            set => SetValue(ReverseValueProperty, value);
-        }
-
-        /// <summary>
-        /// Sets the reverse value for the second animation
-        /// </summary>
-        public static readonly DependencyProperty ReverseValueProperty =
-            DependencyProperty.Register("ReverseValue", typeof(double?), typeof(ExpanderDoubleAnimation), new UIPropertyMetadata(0.0));
-
-
-        /// <summary>
-        /// Creates an instance of the animation
-        /// </summary>
-        /// <returns></returns>
-        protected override Freezable CreateInstanceCore()
-        {
-            return new ExpanderDoubleAnimation();
-        }
-
-        /// <summary>
-        /// Animates the double value
-        /// </summary>
-        /// <param name="defaultOriginValue">The original value to animate</param>
-        /// <param name="defaultDestinationValue">The final value</param>
-        /// <param name="animationClock">The animation clock (timer)</param>
-        /// <returns>Returns the new double to set</returns>
-        [SuppressMessage("ReSharper", "PossibleInvalidOperationException")]
-        protected override double GetCurrentValueCore(double defaultOriginValue, double defaultDestinationValue, AnimationClock animationClock)
-        {
-            var fromVal = From.Value;
-            var toVal = To.Value;
-
-            // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (defaultOriginValue == toVal)
-            {
-                fromVal = toVal;
-                toVal = ReverseValue.Value;
-            }
-
-            if (fromVal > toVal)
-                return (1 - animationClock.CurrentProgress.Value) *
-                    (fromVal - toVal) + toVal;
-            else
-                return (animationClock.CurrentProgress.Value *
-                    (toVal - fromVal) + fromVal);
         }
     }
 }
