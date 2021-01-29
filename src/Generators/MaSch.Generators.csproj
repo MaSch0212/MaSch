@@ -28,7 +28,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\Core\Extensions\ArrayExtensions.cs" Link="Extensions\ArrayExtensions.cs" />
     <Compile Include="..\Core\Shims\RangeAndIndex.cs" Link="Shims\RangeAndIndex.cs" />
+    <Compile Include="..\Core\Shims\System.Diagnostics.CodeAnalysis.cs" Link="Shims\System.Diagnostics.CodeAnalysis.cs" />
   </ItemGroup>
   
   <ItemGroup>
@@ -49,6 +51,11 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+    <Folder Include="Shims\" />
   </ItemGroup>
 
 </Project>

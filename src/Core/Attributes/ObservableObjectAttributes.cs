@@ -33,12 +33,21 @@ namespace MaSch.Core.Attributes
     }
 
     /// <summary>
+    /// When applied to a class, the <see cref="INotifyPropertyChanged"/> interfaces is automatically implemented using MaSch.Generators.
+    /// </summary>
+    /// <seealso cref="Attribute" />
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public class ObservableObjectAttribute : Attribute
+    {
+    }
+
+    /// <summary>
     /// When applied to an interface, the class that implements it will be marked for the ObservableObjectGenerator from
     /// MaSch.Generators to automatically generate the properties as observable properties.
     /// </summary>
-    /// <seealso cref="System.Attribute" />
+    /// <seealso cref="Attribute" />
     [AttributeUsage(AttributeTargets.Interface, AllowMultiple = false, Inherited = false)]
-    public class ObservablePropertyDefinition : Attribute
+    public class ObservablePropertyDefinitionAttribute : Attribute
     {
     }
 }

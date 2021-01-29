@@ -1,9 +1,13 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using MaSch.Core.Extensions;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace MaSch.Generators.Common
 {
@@ -87,9 +91,47 @@ namespace MaSch.Generators.Common
         /// Creates a name out of a <see cref="ITypeSymbol"/> that can be used for the generated file.
         /// </summary>
         /// <param name="symbol">The type symbol to use.</param>
+        /// <param name="generatorName">The name of the generator.</param>
         /// <returns>Returns a name that can be used for a generated file.</returns>
-        public static string CreateHintName(this ITypeSymbol symbol)
-            => Regex.Replace(symbol.ToDisplayString(), @"[\.+]", "_");
+        public static string CreateHintName(this ITypeSymbol symbol, string generatorName)
+            => CreateHintName(symbol, x => (x, generatorName).GetHashCode());
+
+        /// <summary>
+        /// Creates a name out of a <see cref="ITypeSymbol"/> that can be used for the generated file.
+        /// </summary>
+        /// <param name="symbol">The type symbol to use.</param>
+        /// <param name="generatorName">The name of the generator.</param>
+        /// <param name="additionalGenerationInfo">Additional info to create a unique hash for this generation.</param>
+        /// <returns>Returns a name that can be used for a generated file.</returns>
+        public static string CreateHintName(this ITypeSymbol symbol, string generatorName, string additionalGenerationInfo)
+            => CreateHintName(symbol, x => (x, generatorName, additionalGenerationInfo).GetHashCode());
+
+        private static string CreateHintName(ITypeSymbol symbol, Func<string, int> hashFunc)
+        {
+            var name = Regex.Replace(symbol.ToDisplayString(), @"[\.+]", "-");
+            return $"{name}-{BitConverter.GetBytes(hashFunc(name)).ToHexString()}";
+        }
+
+        /// <summary>
+        /// Gets the XML (as C# sytax text) for the comment associated with the symbol.
+        /// </summary>
+        /// <param name="symbol">The symbol.</param>
+        /// <returns>The XML that would be written to a C# source file for the symbol.</returns>
+        public static string? GetFormattedDocumentationCommentXml(this ISymbol symbol)
+        {
+            var xml = symbol.GetDocumentationCommentXml();
+            if (string.IsNullOrWhiteSpace(xml))
+                return null;
+
+            var doc = new XmlDocument();
+            doc.LoadXml(xml);
+
+            var innerXmlLines = doc.FirstChild?.InnerXml?.Replace("\r", string.Empty).Split('\n');
+            if (innerXmlLines == null || innerXmlLines.Length == 0)
+                return null;
+
+            return string.Join(Environment.NewLine, innerXmlLines.Select(x => $"/// {x.Trim()}"));
+        }
 
         /// <summary>
         /// Adds a <see cref="SourceBuilder"/> to the compilation.
@@ -97,8 +139,29 @@ namespace MaSch.Generators.Common
         /// <param name="context">The generator execution context.</param>
         /// <param name="forType">The type for which the source was generated for.</param>
         /// <param name="builder">The builder that includes the generated source code.</param>
-        public static void AddSource(this GeneratorExecutionContext context, ITypeSymbol forType, SourceBuilder builder)
-            => context.AddSource(forType.CreateHintName(), SourceText.From(builder.ToString(), Encoding.UTF8));
+        /// <param name="generatorName">The name of the generator.</param>
+        public static void AddSource(this GeneratorExecutionContext context, ITypeSymbol forType, SourceBuilder builder, string generatorName)
+            => context.AddSource(forType.CreateHintName(generatorName), SourceText.From(builder.ToString(), Encoding.UTF8));
+
+        /// <summary>
+        /// Adds a <see cref="SourceBuilder"/> to the compilation.
+        /// </summary>
+        /// <param name="context">The generator execution context.</param>
+        /// <param name="forType">The type for which the source was generated for.</param>
+        /// <param name="builder">The builder that includes the generated source code.</param>
+        /// <param name="generatorName">The name of the generator.</param>
+        /// <param name="additionalGenerationInfo">Additional info to create a unique hash for this generation.</param>
+        public static void AddSource(this GeneratorExecutionContext context, ITypeSymbol forType, SourceBuilder builder, string generatorName, string additionalGenerationInfo)
+            => context.AddSource(forType.CreateHintName(generatorName, additionalGenerationInfo), SourceText.From(builder.ToString(), Encoding.UTF8));
+
+        /// <summary>
+        /// Adds a <see cref="SourceBuilder"/> to the compilation.
+        /// </summary>
+        /// <param name="context">The generator execution context.</param>
+        /// <param name="hintName">The name of the generated file.</param>
+        /// <param name="builder">The builder that includes the generated source code.</param>
+        public static void AddSource(this GeneratorExecutionContext context, string hintName, SourceBuilder builder)
+            => context.AddSource(hintName, SourceText.From(builder.ToString(), Encoding.UTF8));
 
         /// <summary>
         /// Launches the debugger if the generator was not executed from an IDE.

@@ -75,7 +75,7 @@ namespace MaSch.Generators
                     }
                 }
 
-                context.AddSource(type.Key.typeSymbol, builder);
+                context.AddSource(type.Key.typeSymbol, builder, nameof(WrapperClassGenerator));
             }
         }
 
