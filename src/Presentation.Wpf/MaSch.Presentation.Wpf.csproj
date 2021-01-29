@@ -54,7 +54,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)'!='net48' ">
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.1" />
   </ItemGroup>
 
   <ItemGroup>
