@@ -19,7 +19,8 @@ namespace MaSch.Presentation.Wpf.Converter
         public string BottomFormula { get; set; } = "B";
         public string LeftFormula { get; set; } = "L";
         public string RightFormula { get; set; } = "R";
-        
+
+        /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var (lf, tf, rf, bf) = GetFormulas(parameter);
@@ -45,11 +46,13 @@ namespace MaSch.Presentation.Wpf.Converter
                 (double)_mathConverter.Convert(vArr, typeof(double), bf, culture));
         }
 
+        /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException();
         }
 
+        /// <inheritdoc />
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             if (values.IsNullOrEmpty())
@@ -80,6 +83,7 @@ namespace MaSch.Presentation.Wpf.Converter
                 (double)_mathConverter.Convert(vArr, typeof(double), bf, culture));
         }
 
+        /// <inheritdoc />
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException();

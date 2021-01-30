@@ -9,6 +9,7 @@ namespace MaSch.Presentation.Wpf.Converter
         public bool ToUpper { get; set; }
         public bool ToLower { get; set; }
 
+        /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null)
@@ -20,6 +21,7 @@ namespace MaSch.Presentation.Wpf.Converter
             return value.ToString();
         }
 
+        /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException();

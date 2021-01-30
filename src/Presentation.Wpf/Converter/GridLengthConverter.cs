@@ -8,6 +8,7 @@ namespace MaSch.Presentation.Wpf.Converter
 {
     public class GridLengthConverter : IValueConverter
     {
+        /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             double val = value.ConvertTo<double>();
@@ -16,6 +17,7 @@ namespace MaSch.Presentation.Wpf.Converter
             return gridLength;
         }
 
+        /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             GridLength val = (GridLength)value;

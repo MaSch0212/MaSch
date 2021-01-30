@@ -7,6 +7,7 @@ namespace MaSch.Presentation.Wpf.Converter
     [ValueConversion(typeof(int), typeof(int))]
     public class IncrementConverter : IValueConverter
     {
+        /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (!int.TryParse(parameter?.ToString(), out int p))
@@ -15,7 +16,8 @@ namespace MaSch.Presentation.Wpf.Converter
                 return i + p;
             return 0;
         }
-        
+
+        /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (!int.TryParse(parameter?.ToString(), out int p))

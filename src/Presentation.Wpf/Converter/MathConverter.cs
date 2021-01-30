@@ -25,16 +25,19 @@ namespace MaSch.Presentation.Wpf.Converter
     {
         private readonly Dictionary<string, IExpression> _storedExpressions = new Dictionary<string, IExpression>();
 
+        /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return Convert(new[] { value }, targetType, parameter, culture);
         }
 
+        /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException();
         }
 
+        /// <inheritdoc />
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             try
@@ -55,11 +58,13 @@ namespace MaSch.Presentation.Wpf.Converter
             return DependencyProperty.UnsetValue;
         }
 
+        /// <inheritdoc />
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException();
         }
-        
+
+        /// <inheritdoc />
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             return this;

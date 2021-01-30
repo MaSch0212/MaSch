@@ -10,13 +10,24 @@ using MaSch.Core.Extensions;
 
 namespace MaSch.Presentation.Wpf.Commands
 {
+    /// <summary>
+    /// Represents a group of instances of type <see cref="ICommand"/>.
+    /// </summary>
+    /// <seealso cref="DependencyObject" />
+    /// <seealso cref="ICommand" />
     [ContentProperty(nameof(Commands))]
     [DefaultProperty(nameof(Commands))]
     public class CommandGroup : DependencyObject, ICommand
     {
+        /// <summary>
+        /// Dependency property. Gets or sets the commands inside this group.
+        /// </summary>
         public static readonly DependencyProperty CommandsProperty =
             DependencyProperty.Register("Commands", typeof(ObservableCollection<CommandGroupItem>), typeof(CommandGroup), new PropertyMetadata(null, OnCommandsChanged));
 
+        /// <summary>
+        /// Gets or sets the commands inside this group.
+        /// </summary>
         [Bindable(true)]
         public ObservableCollection<CommandGroupItem> Commands
         {
@@ -24,33 +35,26 @@ namespace MaSch.Presentation.Wpf.Commands
             set => SetValue(CommandsProperty, value);
         }
 
-        private static void OnCommandsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
-        {
-            if (obj is CommandGroup command)
-            {
-                if (e.OldValue is ObservableCollection<CommandGroupItem> oldList)
-                {
-                    oldList.CollectionChanged -= command.Commands_CollectionChanged;
-                    oldList.Where(x => x.Command != null).ForEach(x => x.Command.CanExecuteChanged -= command.RaiseCanExecuteChanged);
-                    oldList.ForEach(x => x.CommandChanged -= command.CommandEventHandler);
-                }
-                if (e.NewValue is ObservableCollection<CommandGroupItem> newList)
-                {
-                    newList.CollectionChanged += command.Commands_CollectionChanged;
-                    newList.Where(x => x.Command != null).ForEach(x => x.Command.CanExecuteChanged += command.RaiseCanExecuteChanged);
-                    newList.ForEach(x => x.CommandChanged += command.CommandEventHandler);
-                }
-                command.RaiseCanExecuteChanged(command, new EventArgs());
-            }
-        }
+        /// <summary>
+        /// Occurs when changes occur that affect whether or not the command should execute.
+        /// </summary>
+        public event EventHandler CanExecuteChanged;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandGroup"/> class.
+        /// </summary>
         public CommandGroup()
         {
             Commands = new ObservableCollection<CommandGroupItem>();
         }
 
-        public event EventHandler CanExecuteChanged;
-
+        /// <summary>
+        /// Defines the method that determines whether the command can execute in its current state.
+        /// </summary>
+        /// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
+        /// <returns>
+        ///   <see langword="true" /> if this command can be executed; otherwise, <see langword="false" />.
+        /// </returns>
         public bool CanExecute(object parameter)
         {
             if (Commands?.Any(x => x.Command != null) != true)
@@ -60,14 +64,19 @@ namespace MaSch.Presentation.Wpf.Commands
                 if (!command.CanExecute())
                     return false;
             }
+
             return true;
         }
 
+        /// <summary>
+        /// Defines the method to be called when the command is invoked.
+        /// </summary>
+        /// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
         public void Execute(object parameter)
         {
             if (Commands?.Any(x => x.Command != null) != true)
                 return;
-            foreach(var command in Commands.Where(x => x.Command != null))
+            foreach (var command in Commands.Where(x => x.Command != null))
             {
                 command.Execute();
             }
@@ -92,11 +101,12 @@ namespace MaSch.Presentation.Wpf.Commands
             {
                 foreach (var entry in e.OldItems.OfType<CommandGroupItem>())
                 {
-                    if(entry.Command != null)
+                    if (entry.Command != null)
                         entry.Command.CanExecuteChanged -= RaiseCanExecuteChanged;
                     entry.CommandChanged -= CommandEventHandler;
                 }
             }
+
             if (e.NewItems != null)
             {
                 foreach (var entry in e.NewItems.OfType<CommandGroupItem>())
@@ -106,46 +116,30 @@ namespace MaSch.Presentation.Wpf.Commands
                     entry.CommandChanged += CommandEventHandler;
                 }
             }
+
             RaiseCanExecuteChanged(this, new EventArgs());
         }
-    }
 
-    public class CommandGroupItem : DependencyObject
-    {
-        public static readonly DependencyProperty CommandProperty =
-            DependencyProperty.Register("Command", typeof(ICommand), typeof(CommandGroupItem), new PropertyMetadata(null, OnCommandChanged));
-        public static readonly DependencyProperty ParameterProperty =
-            DependencyProperty.Register("Parameter", typeof(object), typeof(CommandGroupItem), new PropertyMetadata(null));
-
-        public ICommand Command
+        private static void OnCommandsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
-            get => (ICommand)GetValue(CommandProperty);
-            set => SetValue(CommandProperty, value);
-        }
-        public object Parameter
-        {
-            get => GetValue(ParameterProperty);
-            set => SetValue(ParameterProperty, value);
-        }
-
-        private static void OnCommandChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
-        {
-            if(obj is CommandGroupItem entry)
+            if (obj is CommandGroup command)
             {
-                entry.CommandChanged?.Invoke(entry, e);
+                if (e.OldValue is ObservableCollection<CommandGroupItem> oldList)
+                {
+                    oldList.CollectionChanged -= command.Commands_CollectionChanged;
+                    oldList.Where(x => x.Command != null).ForEach(x => x.Command.CanExecuteChanged -= command.RaiseCanExecuteChanged);
+                    oldList.ForEach(x => x.CommandChanged -= command.CommandEventHandler);
+                }
+
+                if (e.NewValue is ObservableCollection<CommandGroupItem> newList)
+                {
+                    newList.CollectionChanged += command.Commands_CollectionChanged;
+                    newList.Where(x => x.Command != null).ForEach(x => x.Command.CanExecuteChanged += command.RaiseCanExecuteChanged);
+                    newList.ForEach(x => x.CommandChanged += command.CommandEventHandler);
+                }
+
+                command.RaiseCanExecuteChanged(command, new EventArgs());
             }
-        }
-
-        public event DependencyPropertyChangedEventHandler CommandChanged;
-
-        public bool CanExecute()
-        {
-            return Command?.CanExecute(Parameter) ?? false;
-        }
-
-        public void Execute()
-        {
-            Command?.Execute(Parameter);
         }
     }
 }

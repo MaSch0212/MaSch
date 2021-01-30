@@ -88,9 +88,9 @@ namespace MaSch.Presentation.Wpf.Commands
     /// <summary>
     /// Default implementation for the <see cref="IAsyncCompositeCommand"/> interface composing <see cref="IAsyncCommand"/>s with parameters of a specific type.
     /// </summary>
+    /// <typeparam name="T">The parameter type for this <see cref="IAsyncCommand"/>.</typeparam>
     /// <seealso cref="AsyncCommandBase" />
     /// <seealso cref="IAsyncCompositeCommand" />
-    /// <typeparam name="T">The parameter type for this <see cref="IAsyncCommand"/>.</typeparam>
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic representation can be in same file.")]
     public class AsyncCompositeCommand<T> : AsyncCommandBase<T>, IAsyncCompositeCommand
     {

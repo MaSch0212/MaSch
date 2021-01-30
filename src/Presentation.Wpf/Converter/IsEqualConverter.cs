@@ -13,6 +13,7 @@ namespace MaSch.Presentation.Wpf.Converter
         public bool CompareStringRepresentation { get; set; } = true;
         public bool CompareExactObject { get; set; } = true;
 
+        /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var otherValue = parameter;
@@ -24,6 +25,7 @@ namespace MaSch.Presentation.Wpf.Converter
                    CompareStringRepresentation && value.ToString().Equals(otherValue?.ToString());
         }
 
+        /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) 
             => throw new NotSupportedException();
     }

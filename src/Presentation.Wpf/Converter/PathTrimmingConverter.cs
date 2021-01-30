@@ -12,6 +12,7 @@ namespace MaSch.Presentation.Wpf.Converter
 {
     public class PathTrimmingConverter : IMultiValueConverter
     {
+        /// <inheritdoc />
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             var path = (string)values[0];
@@ -60,6 +61,7 @@ namespace MaSch.Presentation.Wpf.Converter
             return string.Join(Path.DirectorySeparatorChar.ToString(), s);
         }
 
+        /// <inheritdoc />
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException();

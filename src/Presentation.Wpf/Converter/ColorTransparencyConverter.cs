@@ -9,6 +9,7 @@ namespace MaSch.Presentation.Wpf.Converter
 {
     public class ColorTransparencyConverter : IValueConverter, IMultiValueConverter
     {
+        /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             Color? color = null;
@@ -27,6 +28,7 @@ namespace MaSch.Presentation.Wpf.Converter
             return value;
         }
 
+        /// <inheritdoc />
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             if (values.Length == 2)
@@ -34,11 +36,13 @@ namespace MaSch.Presentation.Wpf.Converter
             throw new InvalidOperationException("This MultiValueConverter needs exactly two bindings. First the color to change, second the new alpha value.");
         }
 
+        /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException("The transparency of a color cannot be restored!");
         }
 
+        /// <inheritdoc />
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException("The transparency of a color cannot be restored!");

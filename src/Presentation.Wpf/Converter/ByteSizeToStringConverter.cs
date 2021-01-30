@@ -4,14 +4,14 @@ using System.Windows.Data;
 
 namespace MaSch.Presentation.Wpf.Converter
 {
-    /// <inheritdoc />
     /// <summary>
     /// Converter for convertion from byte size to string.
     /// </summary>
     public class ByteSizeToStringConverter : IValueConverter
     {
-        private static readonly string[] Suffixes = {
-            "Byte", "KB", "MB", "GB", "TB"
+        private static readonly string[] Suffixes =
+        {
+            "Byte", "KB", "MB", "GB", "TB",
         };
 
         /// <inheritdoc />
@@ -28,6 +28,11 @@ namespace MaSch.Presentation.Wpf.Converter
             return double.Parse(s[0]) * Suffixes.ToList().IndexOf(s[1]);
         }
 
+        /// <summary>
+        /// Formats the specified value to a byte representation.
+        /// </summary>
+        /// <param name="value">The value to format.</param>
+        /// <returns>A <see cref="ValueTuple{T1, T2}"/> containing the number as first item and byte-size-name as the second item.</returns>
         public static (double value, string suffix) Format(double value)
         {
             int i = 0;
@@ -36,6 +41,7 @@ namespace MaSch.Presentation.Wpf.Converter
                 value /= 1024D;
                 i++;
             }
+
             return (value, Suffixes[i]);
         }
     }

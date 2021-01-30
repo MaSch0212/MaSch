@@ -10,6 +10,7 @@ namespace MaSch.Presentation.Wpf.Converter
     {
         private static readonly string[] Measures = { "", "K", "M", "G", "T", "P", "E", "Z", "Y" };
 
+        /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if(double.TryParse(value?.ToString(), out double size) && size >= 0)
@@ -25,6 +26,7 @@ namespace MaSch.Presentation.Wpf.Converter
             return "";
         }
 
+        /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var s = value?.ToString();

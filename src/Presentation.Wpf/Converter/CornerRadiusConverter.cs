@@ -17,7 +17,8 @@ namespace MaSch.Presentation.Wpf.Converter
         public string TopRightFormula { get; set; } = "TR";
         public string BottomLeftFormula { get; set; } = "BL";
         public string BottomRightFormula { get; set; } = "BR";
-        
+
+        /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (!(value is CornerRadius cornerRadius))
@@ -31,6 +32,7 @@ namespace MaSch.Presentation.Wpf.Converter
                 (double)_mathConverter.Convert(values, typeof(double), ConvertExpression(BottomLeftFormula), culture));
         }
 
+        /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException();

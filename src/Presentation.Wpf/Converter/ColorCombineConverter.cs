@@ -11,6 +11,7 @@ namespace MaSch.Presentation.Wpf.Converter
 {
     public class ColorCombineConverter : IMultiValueConverter
     {
+        /// <inheritdoc />
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             var colors = values?.OfType<Color>().ToArray();
@@ -20,6 +21,7 @@ namespace MaSch.Presentation.Wpf.Converter
             return colors.Aggregate(MixColors);
         }
 
+        /// <inheritdoc />
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException("Combined colors cannot be converted back!");
