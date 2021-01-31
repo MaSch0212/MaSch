@@ -5,9 +5,43 @@ using System.Windows.Controls;
 
 namespace MaSch.Presentation.Wpf.Controls
 {
-    // ReSharper disable once InconsistentNaming
     public class Window : System.Windows.Window, IWindow
     {
+        public static readonly DependencyProperty MaximizableProperty =
+            DependencyProperty.Register(
+                "Maximizable",
+                typeof(bool),
+                typeof(Window),
+                new PropertyMetadata(true));
+
+        public static readonly DependencyProperty OnlyCloseProperty =
+            DependencyProperty.Register(
+                "OnlyClose",
+                typeof(bool),
+                typeof(Window),
+                new PropertyMetadata(false));
+
+        public static readonly DependencyProperty DragMoveOnContentBorderProperty =
+            DependencyProperty.Register(
+                "DragMoveOnContentBorder",
+                typeof(bool),
+                typeof(Window),
+                new PropertyMetadata(false));
+
+        public static readonly DependencyProperty CustomIconProperty =
+            DependencyProperty.Register(
+                "CustomIcon",
+                typeof(object),
+                typeof(Window),
+                new PropertyMetadata(null));
+
+        public static readonly DependencyProperty TitleAlignmentProperty =
+            DependencyProperty.Register(
+                "TitleAlignment",
+                typeof(HorizontalAlignment),
+                typeof(Window),
+                new PropertyMetadata(HorizontalAlignment.Left));
+
         static Window()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Window), new FrameworkPropertyMetadata(typeof(Window)));
@@ -18,56 +52,38 @@ namespace MaSch.Presentation.Wpf.Controls
             get => GetValue(MaximizableProperty) as bool? ?? true;
             set => SetValue(MaximizableProperty, value);
         }
-        public static readonly DependencyProperty MaximizableProperty =
-            DependencyProperty.Register("Maximizable", typeof(bool), typeof(Window), new PropertyMetadata(true));
 
         public bool OnlyClose
         {
             get => GetValue(OnlyCloseProperty) as bool? ?? false;
             set => SetValue(OnlyCloseProperty, value);
         }
-        public static readonly DependencyProperty OnlyCloseProperty =
-            DependencyProperty.Register("OnlyClose", typeof(bool), typeof(Window), new PropertyMetadata(false));
 
         public bool DragMoveOnContentBorder
         {
             get => GetValue(DragMoveOnContentBorderProperty) as bool? ?? false;
             set => SetValue(DragMoveOnContentBorderProperty, value);
         }
-        public static readonly DependencyProperty DragMoveOnContentBorderProperty =
-            DependencyProperty.Register("DragMoveOnContentBorder", typeof(bool), typeof(Window), new PropertyMetadata(false));
 
         public object CustomIcon
         {
             get => GetValue(CustomIconProperty);
             set => SetValue(CustomIconProperty, value);
         }
-        public static readonly DependencyProperty CustomIconProperty =
-            DependencyProperty.Register("CustomIcon", typeof(object), typeof(Window), new PropertyMetadata(null));
 
         public HorizontalAlignment TitleAlignment
         {
             get => GetValue(TitleAlignmentProperty) as HorizontalAlignment? ?? HorizontalAlignment.Left;
             set => SetValue(TitleAlignmentProperty, value);
         }
-        public static readonly DependencyProperty TitleAlignmentProperty =
-            DependencyProperty.Register("TitleAlignment", typeof(HorizontalAlignment), typeof(Window), new PropertyMetadata(HorizontalAlignment.Left));
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Window"/> class.
+        /// </summary>
         public Window()
         {
             SizeChanged += ModernUIWindow_SizeChanged;
         }
-
-        private void ModernUIWindow_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            var s = new Size(Math.Ceiling(e.NewSize.Width), Math.Ceiling(e.NewSize.Height));
-            if (Math.Abs(s.Height - e.NewSize.Height) > 0.00001)
-                Height = s.Height;
-            else if (Math.Abs(s.Width - e.NewSize.Width) > 0.00001)
-                Width = s.Width;
-        }
-
-        #region Initialisieren des Fensters
 
         /// <inheritdoc />
         public override void OnApplyTemplate()
@@ -77,7 +93,7 @@ namespace MaSch.Presentation.Wpf.Controls
         }
 
         /// <summary>
-        /// Initialisiert alles, was im Template-XAML nicht gemacht werden kann (z.B. Event setzen)
+        /// Initialisiert alles, was im Template-XAML nicht gemacht werden kann (z.B. Event setzen).
         /// </summary>
         public void InitializeTemplateComponents()
         {
@@ -87,7 +103,7 @@ namespace MaSch.Presentation.Wpf.Controls
         }
 
         /// <summary>
-        /// Initialisiert die Buttons in der Titelleiste
+        /// Initialisiert die Buttons in der Titelleiste.
         /// </summary>
         public void InitializeTitleButtons()
         {
@@ -118,16 +134,16 @@ namespace MaSch.Presentation.Wpf.Controls
         }
 
         /// <summary>
-        /// Initialisiert das Content Grid
+        /// Initialisiert das Content Grid.
         /// </summary>
         public void InitializeContentBorder()
         {
             if (GetTemplateChild("MaSch_ContentBorder") is Border contentBorder)
             {
-                //StateChanged += (s, e) =>
-                //{
-                //    contentBorder.Margin = WindowState == WindowState.Maximized ? new Thickness(0, 30, 0, 0) : new Thickness(5, 35, 5, 5);
-                //};
+                // StateChanged += (s, e) =>
+                // {
+                //     contentBorder.Margin = WindowState == WindowState.Maximized ? new Thickness(0, 30, 0, 0) : new Thickness(5, 35, 5, 5);
+                // };
                 contentBorder.MouseLeftButtonDown += (s, e) =>
                 {
                     if (DragMoveOnContentBorder)
@@ -136,26 +152,34 @@ namespace MaSch.Presentation.Wpf.Controls
             }
         }
 
-        #endregion
-
-        #region IWindow
+        /// <inheritdoc/>
         WindowVisualState IWindow.WindowState
         {
-            get => (WindowVisualState)(int)base.WindowState;
-            set => base.WindowState = (WindowState)(int)value;
+            get => (WindowVisualState)(int)WindowState;
+            set => WindowState = (WindowState)(int)value;
         }
 
+        /// <inheritdoc/>
         double IWindow.Width
         {
-            get => base.ActualWidth;
-            set => base.Width = value;
+            get => ActualWidth;
+            set => Width = value;
         }
 
+        /// <inheritdoc/>
         double IWindow.Height
         {
-            get => base.ActualHeight;
-            set => base.Height = value;
+            get => ActualHeight;
+            set => Height = value;
         }
-        #endregion
+
+        private void ModernUIWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var s = new Size(Math.Ceiling(e.NewSize.Width), Math.Ceiling(e.NewSize.Height));
+            if (Math.Abs(s.Height - e.NewSize.Height) > 0.00001)
+                Height = s.Height;
+            else if (Math.Abs(s.Width - e.NewSize.Width) > 0.00001)
+                Width = s.Width;
+        }
     }
 }

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using MaSch.Core.Attributes;
 using MaSch.Core.Observable;
@@ -15,8 +10,10 @@ namespace MaSch.Presentation.Wpf.Controls
 {
     public class DialogWindow : Window, IObservableObject
     {
+        /// <inheritdoc/>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <inheritdoc/>
         public virtual bool IsNotifyEnabled { get; set; } = true;
 
         private readonly Dictionary<string, NotifyPropertyChangedAttribute> _attributes;
@@ -27,13 +24,16 @@ namespace MaSch.Presentation.Wpf.Controls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DialogWindow), new FrameworkPropertyMetadata(typeof(DialogWindow)));
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DialogWindow"/> class.
+        /// </summary>
         public DialogWindow()
         {
             _module = new ObservableObjectModule(this);
             _attributes = NotifyPropertyChangedAttribute.InitializeAll(this);
         }
 
-        [SuppressMessage("ReSharper", "RedundantAssignment")]
+        /// <inheritdoc/>
         public virtual void SetProperty<T>(ref T property, T value, [CallerMemberName] string propertyName = "")
         {
             if (_attributes.ContainsKey(propertyName))
@@ -44,6 +44,7 @@ namespace MaSch.Presentation.Wpf.Controls
                 _attributes[propertyName].SubscribeEvent(this);
         }
 
+        /// <inheritdoc/>
         public virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = "", bool notifyDependencies = true)
         {
             if (!IsNotifyEnabled)
@@ -54,6 +55,7 @@ namespace MaSch.Presentation.Wpf.Controls
                 _module.NotifyDependentProperties(propertyName);
         }
 
+        /// <inheritdoc/>
         public virtual void NotifyCommandChanged([CallerMemberName] string propertyName = "")
         {
             if (!IsNotifyEnabled)

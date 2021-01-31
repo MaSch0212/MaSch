@@ -7,65 +7,89 @@ namespace MaSch.Presentation.Wpf.Controls
 {
     public class DefaultTileContent : Control
     {
+        public static readonly DependencyProperty TileSymbolControlProperty =
+            DependencyProperty.Register(
+                "TileSymbolControl",
+                typeof(FrameworkElement),
+                typeof(DefaultTileContent),
+                new PropertyMetadata(null));
+
+        public static readonly DependencyProperty TileTitleProperty =
+            DependencyProperty.Register(
+                "TileTitle",
+                typeof(string),
+                typeof(DefaultTileContent),
+                new PropertyMetadata(string.Empty));
+
+        public static readonly DependencyProperty TileSymbolFillProperty =
+            DependencyProperty.Register(
+                "TileSymbolFill",
+                typeof(Brush),
+                typeof(DefaultTileContent),
+                new PropertyMetadata(new SolidColorBrush(Colors.Black)));
+
+        public static readonly DependencyProperty TileSymbolGeometryProperty =
+            DependencyProperty.Register(
+                "TileSymbolGeometry",
+                typeof(Geometry),
+                typeof(DefaultTileContent),
+                new PropertyMetadata(null));
+
+        public static readonly DependencyProperty TileImageProperty =
+            DependencyProperty.Register(
+                "TileImage",
+                typeof(ImageSource),
+                typeof(DefaultTileContent),
+                new PropertyMetadata(null));
+
         private Control _innerBorder;
         private Control _title;
         private bool _isInitialized;
-
-        #region Dependency Properties
-
-        public static readonly DependencyProperty TileSymbolControlProperty =
-            DependencyProperty.Register("TileSymbolControl", typeof(FrameworkElement), typeof(DefaultTileContent), new PropertyMetadata(null));
-        public static readonly DependencyProperty TileTitleProperty =
-            DependencyProperty.Register("TileTitle", typeof(string), typeof(DefaultTileContent), new PropertyMetadata(""));
-        public static readonly DependencyProperty TileSymbolFillProperty =
-            DependencyProperty.Register("TileSymbolFill", typeof(Brush), typeof(DefaultTileContent), new PropertyMetadata(new SolidColorBrush(Colors.Black)));
-        public static readonly DependencyProperty TileSymbolGeometryProperty =
-            DependencyProperty.Register("TileSymbolGeometry", typeof(Geometry), typeof(DefaultTileContent), new PropertyMetadata(null));
-        public static readonly DependencyProperty TileImageProperty =
-            DependencyProperty.Register("TileImage", typeof(ImageSource), typeof(DefaultTileContent), new PropertyMetadata(null));
-
-        #endregion
-
-        #region Properties
 
         public ImageSource TileImage
         {
             get => (ImageSource)GetValue(TileImageProperty);
             set => SetValue(TileImageProperty, value);
         }
+
         public Geometry TileSymbolGeometry
         {
             get => (Geometry)GetValue(TileSymbolGeometryProperty);
             set => SetValue(TileSymbolGeometryProperty, value);
         }
+
         public Brush TileSymbolFill
         {
             get => (Brush)GetValue(TileSymbolFillProperty);
             set => SetValue(TileSymbolFillProperty, value);
         }
+
         public string TileTitle
         {
             get => (string)GetValue(TileTitleProperty);
             set => SetValue(TileTitleProperty, value);
         }
+
         public FrameworkElement TileSymbolControl
         {
             get => (FrameworkElement)GetValue(TileSymbolControlProperty);
             set => SetValue(TileSymbolControlProperty, value);
         }
 
-        #endregion
-
         static DefaultTileContent()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DefaultTileContent), new FrameworkPropertyMetadata(typeof(DefaultTileContent)));
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultTileContent"/> class.
+        /// </summary>
         public DefaultTileContent()
         {
             OnPropertyChanged(new DependencyPropertyChangedEventArgs(BackgroundProperty, null, null));
         }
 
+        /// <inheritdoc />
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -76,6 +100,7 @@ namespace MaSch.Presentation.Wpf.Controls
             _isInitialized = true;
         }
 
+        /// <inheritdoc />
         protected sealed override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
@@ -83,17 +108,16 @@ namespace MaSch.Presentation.Wpf.Controls
                 return;
             if ((e.Property == BackgroundProperty || e.Property == ForegroundProperty) && Background is SolidColorBrush solidBrush)
             {
-                //GradientColor.Color = ContrastColor(solidBrush.Color, 160);
                 _innerBorder.BorderBrush = new SolidColorBrush(ContrastColor(solidBrush.Color));
                 if (Foreground == null)
                     _title.Foreground = new SolidColorBrush(ContrastColor(solidBrush.Color));
             }
         }
 
-        public static Color ContrastColor(Color color, byte alpha = 255)
+        private static Color ContrastColor(Color color, byte alpha = 255)
         {
-            // Counting the perceptive luminance - human eye favors green color... 
-            var a = 1 - (0.299 * color.R + 0.587 * color.G + 0.114 * color.B) / 255;
+            // Counting the perceptive luminance - human eye favors green color...
+            var a = 1 - (((0.299 * color.R) + (0.587 * color.G) + (0.114 * color.B)) / 255);
             var d = (byte)(a < 0.5 ? 0 : 255);
 
             return Color.FromArgb(alpha, d, d, d);

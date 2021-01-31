@@ -11,78 +11,57 @@ namespace MaSch.Presentation.Wpf.Controls
 {
     public class BusyIndicator : Control
     {
-        #region Fields
-        
+        public static readonly DependencyProperty DotBrushProperty =
+            DependencyProperty.Register(
+                "DotBrush",
+                typeof(Brush),
+                typeof(BusyIndicator),
+                new PropertyMetadata(new SolidColorBrush(Colors.Black)));
+
+        public static readonly DependencyProperty CircleModeProperty =
+            DependencyProperty.Register(
+                "CircleMode",
+                typeof(bool),
+                typeof(BusyIndicator),
+                new PropertyMetadata(true, CircleModeChanged));
+
+        public static readonly DependencyProperty BarWidthProperty =
+            DependencyProperty.Register(
+                "BarWidth",
+                typeof(double),
+                typeof(BusyIndicator),
+                new PropertyMetadata(0D));
+
         private Storyboard _bSb;
         private Storyboard _cSb;
         private DispatcherTimer _resizeTimer;
         private Viewbox _circle;
         private Canvas _barEllipses;
 
-        #endregion
-
-        #region Dependency Properties
-
-        public static readonly DependencyProperty DotBrushProperty =
-            DependencyProperty.Register("DotBrush", typeof(Brush), typeof(BusyIndicator), new PropertyMetadata(new SolidColorBrush(Colors.Black)));
-        public static readonly DependencyProperty CircleModeProperty =
-            DependencyProperty.Register("CircleMode", typeof(bool), typeof(BusyIndicator), new PropertyMetadata(true, CircleModeChanged));
-        public static readonly DependencyProperty BarWidthProperty =
-            DependencyProperty.Register("BarWidth", typeof(double), typeof(BusyIndicator), new PropertyMetadata(0D));
-
-        #endregion
-
-        #region Dependency Property Changed Handlers
-        
-        public static void CircleModeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
-        {
-            if (obj is BusyIndicator th && th._circle != null && th._barEllipses != null)
-            {
-                th._circle.Visibility = ((bool)e.NewValue ? Visibility.Visible : Visibility.Hidden);
-                th._barEllipses.Visibility = ((bool)e.NewValue ? Visibility.Hidden : Visibility.Visible);
-                if (e.OldValue != e.NewValue && e.NewValue != null && th.IsEnabled)
-                {
-                    if ((bool)e.NewValue)
-                    {
-                        th._bSb?.Stop(th);
-                        th._cSb.Begin(th, th.Template, true);
-                    }
-                    else
-                    {
-                        th._cSb.Stop(th);
-                        th.InitializeAndStartBarStoryboard();
-                    }
-                }
-            }
-        }
-
-        #endregion
-
-        #region Properties
-
         public Brush DotBrush
         {
             get => (Brush)GetValue(DotBrushProperty);
             set => SetValue(DotBrushProperty, value);
         }
+
         public bool CircleMode
         {
             get => GetValue(CircleModeProperty) as bool? ?? true;
             set => SetValue(CircleModeProperty, value);
         }
+
         public double BarWidth
         {
             get => GetValue(BarWidthProperty) as double? ?? 0D;
             set => SetValue(BarWidthProperty, value);
         }
 
-        #endregion
-
         static BusyIndicator()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(BusyIndicator), new FrameworkPropertyMetadata(typeof(BusyIndicator)));
         }
 
+        /// <inheritdoc />
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -99,13 +78,11 @@ namespace MaSch.Presentation.Wpf.Controls
 
             Loaded += (s, e) =>
             {
-                ModernUILoading_IsEnabledChanged(this, new DependencyPropertyChangedEventArgs());
+                ModernUILoading_IsEnabledChanged(this, default);
                 ModernUILoading_SizeChanged(this, null);
                 CircleModeChanged(this, new DependencyPropertyChangedEventArgs(CircleModeProperty, false, CircleMode));
             };
         }
-
-        #region Event Handler
 
         private void ResizeTimer_Tick(object sender, EventArgs e)
         {
@@ -134,7 +111,9 @@ namespace MaSch.Presentation.Wpf.Controls
             else
             {
                 if (CircleMode)
+                {
                     _cSb.Stop(this);
+                }
                 else if (_bSb != null)
                 {
                     _bSb.Stop(this);
@@ -142,8 +121,6 @@ namespace MaSch.Presentation.Wpf.Controls
                 }
             }
         }
-
-        #endregion
 
         private void InitializeAndStartBarStoryboard()
         {
@@ -166,7 +143,7 @@ namespace MaSch.Presentation.Wpf.Controls
 
             for (var i = 0; i < 5; i++)
             {
-                var middle = ActualWidth / (splineIndicator * 2 + 1);
+                var middle = ActualWidth / ((splineIndicator * 2) + 1);
                 var fromX = -dotHeight;
                 var middleXEnter = splineIndicator * middle;
                 var middleXLeave = middleXEnter + middle;
@@ -175,17 +152,19 @@ namespace MaSch.Presentation.Wpf.Controls
 
                 var daE1 = new DoubleAnimationUsingKeyFrames
                 {
-                    Duration = TimeSpan.FromSeconds(durationTime * 5)
+                    Duration = TimeSpan.FromSeconds(durationTime * 5),
                 };
                 daE1.KeyFrames.Add(new LinearDoubleKeyFrame(fromX, TimeSpan.FromSeconds(0)));
-                daE1.KeyFrames.Add(new LinearDoubleKeyFrame(fromX,
-                    TimeSpan.FromSeconds(beginTime)));
-                daE1.KeyFrames.Add(new SplineDoubleKeyFrame(middleXEnter,
-                    TimeSpan.FromSeconds(durationTime + beginTime), new KeySpline(0, 0, 0, 1 - 1 / splineIndicator)));
-                daE1.KeyFrames.Add(new LinearDoubleKeyFrame(middleXLeave,
-                    TimeSpan.FromSeconds(durationTime * 2 + beginTime)));
-                daE1.KeyFrames.Add(new SplineDoubleKeyFrame(targetX,
-                    TimeSpan.FromSeconds(durationTime * 3 + beginTime), new KeySpline(1, 1 / splineIndicator, 1, 1)));
+                daE1.KeyFrames.Add(new LinearDoubleKeyFrame(fromX, TimeSpan.FromSeconds(beginTime)));
+                daE1.KeyFrames.Add(new SplineDoubleKeyFrame(
+                    middleXEnter,
+                    TimeSpan.FromSeconds(durationTime + beginTime),
+                    new KeySpline(0, 0, 0, 1 - (1 / splineIndicator))));
+                daE1.KeyFrames.Add(new LinearDoubleKeyFrame(middleXLeave, TimeSpan.FromSeconds((durationTime * 2) + beginTime)));
+                daE1.KeyFrames.Add(new SplineDoubleKeyFrame(
+                    targetX,
+                    TimeSpan.FromSeconds((durationTime * 3) + beginTime),
+                    new KeySpline(1, 1 / splineIndicator, 1, 1)));
 
                 if (_barEllipses.Children[i] is Ellipse ellipse)
                 {
@@ -194,7 +173,30 @@ namespace MaSch.Presentation.Wpf.Controls
                     _bSb.Children.Add(daE1);
                 }
             }
+
             _bSb.Begin(this, Template, true);
+        }
+
+        private static void CircleModeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            if (obj is BusyIndicator th && th._circle != null && th._barEllipses != null)
+            {
+                th._circle.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Hidden;
+                th._barEllipses.Visibility = (bool)e.NewValue ? Visibility.Hidden : Visibility.Visible;
+                if (e.OldValue != e.NewValue && e.NewValue != null && th.IsEnabled)
+                {
+                    if ((bool)e.NewValue)
+                    {
+                        th._bSb?.Stop(th);
+                        th._cSb.Begin(th, th.Template, true);
+                    }
+                    else
+                    {
+                        th._cSb.Stop(th);
+                        th.InitializeAndStartBarStoryboard();
+                    }
+                }
+            }
         }
     }
 }

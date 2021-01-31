@@ -12,6 +12,48 @@ namespace MaSch.Presentation.Wpf.Controls
 {
     public class TransitionContentPresenter : ContentControl
     {
+        public static readonly DependencyProperty TransitionInProperty =
+            DependencyProperty.Register(
+                "TransitionIn",
+                typeof(TransitionInType),
+                typeof(TransitionContentPresenter),
+                new PropertyMetadata(TransitionInType.None));
+
+        public static readonly DependencyProperty TransitionOutProperty =
+            DependencyProperty.Register(
+                "TransitionOut",
+                typeof(TransitionOutType),
+                typeof(TransitionContentPresenter),
+                new PropertyMetadata(TransitionOutType.None));
+
+        public static readonly DependencyProperty TransitionDurationProperty =
+            DependencyProperty.Register(
+                "TransitionDuration",
+                typeof(TimeSpan),
+                typeof(TransitionContentPresenter),
+                new PropertyMetadata(TimeSpan.FromSeconds(0.2)));
+
+        public static readonly DependencyProperty TransitionFirstContentProperty =
+            DependencyProperty.Register(
+                "TransitionFirstContent",
+                typeof(bool),
+                typeof(TransitionContentPresenter),
+                new PropertyMetadata(true));
+
+        public static readonly DependencyProperty RunAnimationsSimultaneouslyProperty =
+            DependencyProperty.Register(
+                "RunAnimationsSimultaneously",
+                typeof(bool),
+                typeof(TransitionContentPresenter),
+                new PropertyMetadata(true));
+
+        public static readonly DependencyProperty EasingFunctionProperty =
+            DependencyProperty.Register(
+                "EasingFunction",
+                typeof(IEasingFunction),
+                typeof(TransitionContentPresenter),
+                new PropertyMetadata(null));
+
         public event DependencyPropertyChangedEventHandler ContentChanged;
 
         private int _currentlyActive;
@@ -20,44 +62,36 @@ namespace MaSch.Presentation.Wpf.Controls
         private ContentPresenter _content2;
         private Grid _contentGrid;
 
-        public static readonly DependencyProperty TransitionInProperty =
-            DependencyProperty.Register("TransitionIn", typeof(TransitionInType), typeof(TransitionContentPresenter), new PropertyMetadata(TransitionInType.None));
-        public static readonly DependencyProperty TransitionOutProperty =
-            DependencyProperty.Register("TransitionOut", typeof(TransitionOutType), typeof(TransitionContentPresenter), new PropertyMetadata(TransitionOutType.None));
-        public static readonly DependencyProperty TransitionDurationProperty =
-            DependencyProperty.Register("TransitionDuration", typeof(TimeSpan), typeof(TransitionContentPresenter), new PropertyMetadata(TimeSpan.FromSeconds(0.2)));
-        public static readonly DependencyProperty TransitionFirstContentProperty =
-            DependencyProperty.Register("TransitionFirstContent", typeof(bool), typeof(TransitionContentPresenter), new PropertyMetadata(true));
-        public static readonly DependencyProperty RunAnimationsSimultaneouslyProperty =
-            DependencyProperty.Register("RunAnimationsSimultaneously", typeof(bool), typeof(TransitionContentPresenter), new PropertyMetadata(true));
-        public static readonly DependencyProperty EasingFunctionProperty =
-            DependencyProperty.Register("EasingFunction", typeof(IEasingFunction), typeof(TransitionContentPresenter), new PropertyMetadata(null));
-        
         public TransitionInType TransitionIn
         {
             get => GetValue(TransitionInProperty) as TransitionInType? ?? TransitionInType.None;
             set => SetValue(TransitionInProperty, value);
         }
+
         public TransitionOutType TransitionOut
         {
             get => GetValue(TransitionOutProperty) as TransitionOutType? ?? TransitionOutType.None;
             set => SetValue(TransitionOutProperty, value);
         }
+
         public TimeSpan TransitionDuration
         {
             get => GetValue(TransitionDurationProperty) as TimeSpan? ?? TimeSpan.FromSeconds(0.2);
             set => SetValue(TransitionDurationProperty, value);
         }
+
         public bool TransitionFirstContent
         {
             get => GetValue(TransitionFirstContentProperty) as bool? ?? true;
             set => SetValue(TransitionFirstContentProperty, value);
         }
+
         public bool RunAnimationsSimultaneously
         {
             get => GetValue(RunAnimationsSimultaneouslyProperty) as bool? ?? true;
             set => SetValue(RunAnimationsSimultaneouslyProperty, value);
         }
+
         public IEasingFunction EasingFunction
         {
             get => (IEasingFunction)GetValue(EasingFunctionProperty);
@@ -69,6 +103,7 @@ namespace MaSch.Presentation.Wpf.Controls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(TransitionContentPresenter), new FrameworkPropertyMetadata(typeof(TransitionContentPresenter)));
         }
 
+        /// <inheritdoc/>
         public override void OnApplyTemplate()
         {
             _contentGrid = GetTemplateChild("PART_ContentGrid") as Grid ?? throw new KeyNotFoundException("Control could not be found: PART_ContentGrid");
@@ -87,6 +122,7 @@ namespace MaSch.Presentation.Wpf.Controls
                 Loaded += (s, e) => OnContentChanged(null, Content);
         }
 
+        /// <inheritdoc/>
         protected override void OnContentChanged(object oldContent, object newContent)
         {
             base.OnContentChanged(oldContent, newContent);
@@ -130,24 +166,6 @@ namespace MaSch.Presentation.Wpf.Controls
             ContentChanged?.Invoke(this, new DependencyPropertyChangedEventArgs(ContentProperty, oldContent, newContent));
         }
 
-        private ObjectAnimationUsingKeyFrames CreateObjectAnimation(Duration duration, object value, double percent, DependencyObject target, DependencyProperty property)
-        {
-            var result = new ObjectAnimationUsingKeyFrames { Duration = duration };
-            result.KeyFrames.Add(new DiscreteObjectKeyFrame(value, KeyTime.FromPercent(percent)));
-            result.SetTarget(target, property);
-            return result;
-        }
-
-        private DoubleAnimationUsingKeyFrames CreateDoubleAnimation(double from, double to, TimeSpan beginTime, Duration duration, IEasingFunction easing)
-        {
-            var result = new DoubleAnimationUsingKeyFrames { Duration = duration + beginTime };
-            result.KeyFrames.Add(new EasingDoubleKeyFrame(from, KeyTime.FromPercent(0), easing));
-            if (beginTime > TimeSpan.Zero)
-                result.KeyFrames.Add(new EasingDoubleKeyFrame(from, KeyTime.FromPercent(0.5), easing));
-            result.KeyFrames.Add(new EasingDoubleKeyFrame(to, KeyTime.FromPercent(1), easing));
-            return result;
-        }
-
         protected virtual void FadeIn(ContentPresenter control, TransitionInType transition, IEasingFunction easing, TimeSpan beginTime, Duration duration, Storyboard targetStoryboard)
         {
             TransformGroup transform = control.RenderTransform as TransformGroup ?? new TransformGroup();
@@ -162,19 +180,21 @@ namespace MaSch.Presentation.Wpf.Controls
             var blur = control.Effect as BlurEffect;
             if (transition.HasFlag(TransitionInType.Blur))
             {
-                blur = blur ?? new BlurEffect
-                    {
-                        Radius = 32,
-                        KernelType = KernelType.Gaussian,
-                        RenderingBias = RenderingBias.Performance
-                    };
+                blur ??= new BlurEffect
+                {
+                    Radius = 32,
+                    KernelType = KernelType.Gaussian,
+                    RenderingBias = RenderingBias.Performance,
+                };
                 control.Effect = blur;
                 targetStoryboard.Children.Add(
                     CreateDoubleAnimation(32, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath("Effect.Radius")));
             }
-            else if(blur != null)
+            else if (blur != null)
+            {
                 targetStoryboard.Children.Add(
                     CreateDoubleAnimation(0, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath("Effect.Radius")));
+            }
 
             var scale = transform.Children.OfType<ScaleTransform>().FirstOrDefault();
             if (transition.HasFlag(TransitionInType.ZoomToUser) || transition.HasFlag(TransitionInType.ZoomFromUser))
@@ -186,10 +206,11 @@ namespace MaSch.Presentation.Wpf.Controls
                     scale = new ScaleTransform
                     {
                         ScaleX = x,
-                        ScaleY = y
+                        ScaleY = y,
                     };
                     transform.Children.Add(scale);
                 }
+
                 targetStoryboard.Children.Add(CreateDoubleAnimation(x, 1, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(scale)}].ScaleX")));
                 targetStoryboard.Children.Add(CreateDoubleAnimation(y, 1, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(scale)}].ScaleY")));
             }
@@ -200,7 +221,7 @@ namespace MaSch.Presentation.Wpf.Controls
             }
 
             var translate = transform.Children.OfType<TranslateTransform>().FirstOrDefault();
-            if (transition.HasFlag(TransitionInType.SlideInFromBottom) || transition.HasFlag(TransitionInType.SlideInFromLeft) || 
+            if (transition.HasFlag(TransitionInType.SlideInFromBottom) || transition.HasFlag(TransitionInType.SlideInFromLeft) ||
                 transition.HasFlag(TransitionInType.SlideInFromRight) || transition.HasFlag(TransitionInType.SlideInFromTop))
             {
                 var width = control.ActualWidth;
@@ -208,7 +229,7 @@ namespace MaSch.Presentation.Wpf.Controls
                 var factor = transition.HasFlag(TransitionInType.SlideOnlyQuater) ? 0.25D : (transition.HasFlag(TransitionInType.SlideOnlyHalf) ? 0.5D : 1D);
                 var x = transition.HasFlag(TransitionInType.SlideInFromLeft) ? -(width * factor) : (transition.HasFlag(TransitionInType.SlideInFromRight) ? (width * factor) : 0);
                 var y = transition.HasFlag(TransitionInType.SlideInFromTop) ? -(height * factor) : (transition.HasFlag(TransitionInType.SlideInFromBottom) ? (height * factor) : 0);
-                if(translate == null)
+                if (translate == null)
                 {
                     translate = new TranslateTransform
                     {
@@ -217,6 +238,7 @@ namespace MaSch.Presentation.Wpf.Controls
                     };
                     transform.Children.Add(translate);
                 }
+
                 targetStoryboard.Children.Add(CreateDoubleAnimation(x, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].X")));
                 targetStoryboard.Children.Add(CreateDoubleAnimation(y, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].Y")));
             }
@@ -225,11 +247,6 @@ namespace MaSch.Presentation.Wpf.Controls
                 targetStoryboard.Children.Add(CreateDoubleAnimation(0, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].X")));
                 targetStoryboard.Children.Add(CreateDoubleAnimation(0, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].Y")));
             }
-
-
-            //targetStoryboard.Children.Add(
-            //    CreateObjectAnimation(transitionDuration, null, 1, control, ContentPresenter.EffectProperty),
-            //    CreateObjectAnimation(transitionDuration, null, 1, control, ContentPresenter.RenderTransformProperty));
         }
 
         protected virtual void FadeOut(ContentPresenter control, TransitionOutType transition, IEasingFunction easing, TimeSpan beginTime, Duration duration, Storyboard targetStoryboard)
@@ -246,19 +263,21 @@ namespace MaSch.Presentation.Wpf.Controls
             var blur = control.Effect as BlurEffect;
             if (transition.HasFlag(TransitionOutType.Blur))
             {
-                blur = blur ?? new BlurEffect
-                    {
-                        Radius = 0,
-                        KernelType = KernelType.Gaussian,
-                        RenderingBias = RenderingBias.Performance
-                    };
+                blur ??= new BlurEffect
+                {
+                    Radius = 0,
+                    KernelType = KernelType.Gaussian,
+                    RenderingBias = RenderingBias.Performance,
+                };
                 control.Effect = blur;
                 targetStoryboard.Children.Add(
                     CreateDoubleAnimation(0, 32, beginTime, duration, easing).SetTarget(control, new PropertyPath("Effect.Radius")));
             }
             else if (blur != null)
+            {
                 targetStoryboard.Children.Add(
                     CreateDoubleAnimation(0, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath("Effect.Radius")));
+            }
 
             var scale = transform.Children.OfType<ScaleTransform>().FirstOrDefault();
             if (transition.HasFlag(TransitionOutType.ZoomToUser) || transition.HasFlag(TransitionOutType.ZoomFromUser))
@@ -270,10 +289,11 @@ namespace MaSch.Presentation.Wpf.Controls
                     scale = new ScaleTransform
                     {
                         ScaleX = 1,
-                        ScaleY = 1
+                        ScaleY = 1,
                     };
                     transform.Children.Add(scale);
                 }
+
                 targetStoryboard.Children.Add(CreateDoubleAnimation(1, x, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(scale)}].ScaleX")));
                 targetStoryboard.Children.Add(CreateDoubleAnimation(1, y, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(scale)}].ScaleY")));
             }
@@ -284,7 +304,7 @@ namespace MaSch.Presentation.Wpf.Controls
             }
 
             var translate = transform.Children.OfType<TranslateTransform>().FirstOrDefault();
-            if (transition.HasFlag(TransitionOutType.SlideOutToBottom) || transition.HasFlag(TransitionOutType.SlideOutToLeft) || 
+            if (transition.HasFlag(TransitionOutType.SlideOutToBottom) || transition.HasFlag(TransitionOutType.SlideOutToLeft) ||
                 transition.HasFlag(TransitionOutType.SlideOutToRight) || transition.HasFlag(TransitionOutType.SlideOutToTop))
             {
                 var width = control.ActualWidth;
@@ -309,10 +329,24 @@ namespace MaSch.Presentation.Wpf.Controls
                 targetStoryboard.Children.Add(CreateDoubleAnimation(0, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].X")));
                 targetStoryboard.Children.Add(CreateDoubleAnimation(0, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].Y")));
             }
+        }
 
-            //targetStoryboard.Children.Add(
-            //    CreateObjectAnimation(transitionDuration, effect, 0, control, ContentPresenter.EffectProperty),
-            //    CreateObjectAnimation(transitionDuration, transform, null, control, ContentPresenter.RenderTransformProperty));
+        private static ObjectAnimationUsingKeyFrames CreateObjectAnimation(Duration duration, object value, double percent, DependencyObject target, DependencyProperty property)
+        {
+            var result = new ObjectAnimationUsingKeyFrames { Duration = duration };
+            result.KeyFrames.Add(new DiscreteObjectKeyFrame(value, KeyTime.FromPercent(percent)));
+            result.SetTarget(target, property);
+            return result;
+        }
+
+        private static DoubleAnimationUsingKeyFrames CreateDoubleAnimation(double from, double to, TimeSpan beginTime, Duration duration, IEasingFunction easing)
+        {
+            var result = new DoubleAnimationUsingKeyFrames { Duration = duration + beginTime };
+            result.KeyFrames.Add(new EasingDoubleKeyFrame(from, KeyTime.FromPercent(0), easing));
+            if (beginTime > TimeSpan.Zero)
+                result.KeyFrames.Add(new EasingDoubleKeyFrame(from, KeyTime.FromPercent(0.5), easing));
+            result.KeyFrames.Add(new EasingDoubleKeyFrame(to, KeyTime.FromPercent(1), easing));
+            return result;
         }
     }
 

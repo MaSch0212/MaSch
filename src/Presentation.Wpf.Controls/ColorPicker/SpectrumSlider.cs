@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -9,19 +8,23 @@ namespace MaSch.Presentation.Wpf.ColorPicker
 {
     public class SpectrumSlider : Slider
     {
+        public static readonly DependencyProperty SelectedColorProperty =
+            DependencyProperty.Register(
+                "SelectedColor",
+                typeof(Color),
+                typeof(SpectrumSlider),
+                new PropertyMetadata(Colors.Red));
+
         static SpectrumSlider()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(SpectrumSlider), new FrameworkPropertyMetadata(typeof(SpectrumSlider)));
         }
-        
+
         public Color SelectedColor
         {
             get => GetValue(SelectedColorProperty) as Color? ?? Colors.Red;
             set => SetValue(SelectedColorProperty, value);
         }
-        public static readonly DependencyProperty SelectedColorProperty =
-            DependencyProperty.Register("SelectedColor", typeof(Color), typeof(SpectrumSlider), new PropertyMetadata(Colors.Red));
-
 
         protected override void OnPreviewMouseMove(MouseEventArgs e)
         {
@@ -32,25 +35,25 @@ namespace MaSch.Presentation.Wpf.ColorPicker
                     Mouse.Capture(this);
                 OnPreviewMouseLeftButtonDown(new MouseButtonEventArgs(e.MouseDevice, e.Timestamp, MouseButton.Left)
                 {
-                    RoutedEvent = e.RoutedEvent
+                    RoutedEvent = e.RoutedEvent,
                 });
             }
             else if (Mouse.Captured != null)
+            {
                 Mouse.Capture(null);
+            }
         }
 
         public override void OnApplyTemplate()
         {
-
             base.OnApplyTemplate();
             _spectrumDisplay = GetTemplateChild(SpectrumDisplayName) as Rectangle;
             UpdateColorSpectrum();
-            OnValueChanged(Double.NaN, Value);
+            OnValueChanged(double.NaN, Value);
         }
 
         protected override void OnValueChanged(double oldValue, double newValue)
         {
-
             base.OnValueChanged(oldValue, newValue);
             var theColor = ColorUtilities.ConvertHsvToRgb(360 - newValue, 1, 1);
             SetValue(SelectedColorProperty, theColor);
@@ -66,16 +69,15 @@ namespace MaSch.Presentation.Wpf.ColorPicker
 
         private void CreateSpectrum()
         {
-
             _pickerBrush = new LinearGradientBrush
             {
                 StartPoint = new Point(0.5, 0),
                 EndPoint = new Point(0.5, 1),
-                ColorInterpolationMode = ColorInterpolationMode.SRgbLinearInterpolation
+                ColorInterpolationMode = ColorInterpolationMode.SRgbLinearInterpolation,
             };
 
             var colorsList = ColorUtilities.GenerateHsvSpectrum();
-            var stopIncrement = (double)1 / colorsList.Count;
+            var stopIncrement = 1D / colorsList.Count;
 
             int i;
             for (i = 0; i < colorsList.Count; i++)
@@ -85,7 +87,6 @@ namespace MaSch.Presentation.Wpf.ColorPicker
 
             _pickerBrush.GradientStops[i - 1].Offset = 1.0;
             _spectrumDisplay.Fill = _pickerBrush;
-
         }
 
         private const string SpectrumDisplayName = "PART_SpectrumDisplay";

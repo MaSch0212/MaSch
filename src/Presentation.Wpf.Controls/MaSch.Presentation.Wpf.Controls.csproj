@@ -37,6 +37,7 @@
     <ProjectReference Include="..\Presentation.Wpf.Themes\MaSch.Presentation.Wpf.Themes.csproj" />
     <ProjectReference Include="..\Presentation.Wpf\MaSch.Presentation.Wpf.csproj" />
     <ProjectReference Include="..\Presentation\MaSch.Presentation.csproj" />
+    <ProjectReference Include="..\Generators\MaSch.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)'=='net48' ">    

@@ -92,8 +92,8 @@
         <Setter Property="CaretBrush" Value="{tm:ThemeValue Key=TextBoxCaretBrush}" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-        <Setter Property="m:PasswordBoxAssistant.BindPassword" Value="True" />
-        <Setter Property="m:PasswordBoxAssistant.BoundPassword" Value="{Binding Path=Password}" />
+        <Setter Property="m:PasswordBox.BindPassword" Value="True" />
+        <Setter Property="m:PasswordBox.BoundPassword" Value="{Binding Path=Password}" />
         <Setter Property="PasswordChar">
             <Setter.Value>
                 <sys:Char>&#x2022;</sys:Char>
@@ -129,7 +129,7 @@
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="m:PasswordBoxAssistant.BoundPassword" Value="">
+                        <Trigger Property="m:PasswordBox.BoundPassword" Value="">
                             <Setter TargetName="MaSch_Description" Property="Visibility" Value="Visible" />
                         </Trigger>
                         <Trigger Property="IsFocused" Value="True">

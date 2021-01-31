@@ -3,8 +3,8 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Media;
 using MaSch.Core;
-using MaSch.Core.Extensions;
 using MaSch.Core.Attributes;
+using MaSch.Core.Extensions;
 using MaSch.Presentation.Wpf.JsonConverters;
 using MaSch.Presentation.Wpf.Models;
 using Newtonsoft.Json;
@@ -291,8 +291,8 @@ namespace MaSch.Presentation.Wpf.ThemeValues
 
         public override bool Equals(object obj)
         {
-            return obj is IconThemeValue other && 
-                Equals(other.RawIconType, RawIconType) && 
+            return obj is IconThemeValue other &&
+                Equals(other.RawIconType, RawIconType) &&
                 Equals(other.RawCharacter, RawCharacter) &&
                 Equals(other.RawFont?.GetHashCode(), RawFont?.GetHashCode()) &&
                 Equals(other.RawFontSize, RawFontSize) &&
@@ -305,13 +305,13 @@ namespace MaSch.Presentation.Wpf.ThemeValues
         public override int GetHashCode()
         {
             return (
-                RawIconType, 
-                RawCharacter, 
-                RawFont.GetHashCode(), 
-                RawFontSize, 
-                RawGeometry is Geometry g ? g.ToString(CultureInfo.InvariantCulture) : RawGeometry, 
-                RawIsGeometryFilled, 
-                RawGeometryStrokeThickness, 
+                RawIconType,
+                RawCharacter,
+                RawFont.GetHashCode(),
+                RawFontSize,
+                RawGeometry is Geometry g ? g.ToString(CultureInfo.InvariantCulture) : RawGeometry,
+                RawIsGeometryFilled,
+                RawGeometryStrokeThickness,
                 RawStretch).GetHashCode();
         }
 

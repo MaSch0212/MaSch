@@ -2,6 +2,9 @@
 {
     public enum MessageType
     {
-        Success, Failure, Warning, Information
+        Success,
+        Failure,
+        Warning,
+        Information,
     }
 }

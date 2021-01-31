@@ -12,7 +12,26 @@ namespace MaSch.Presentation.Wpf.ControlData
     [ContentProperty(nameof(PopupContent))]
     public class DetailPopupContent : Control
     {
-        #region Fields
+        public static readonly DependencyProperty ArrowPositionProperty =
+            DependencyProperty.Register(
+                "ArrowPosition",
+                typeof(AnchorStyle),
+                typeof(DetailPopupContent),
+                new PropertyMetadata(AnchorStyle.Top, OnArrowChanged));
+
+        public static readonly DependencyProperty ArrowSizeProperty =
+            DependencyProperty.Register(
+                "ArrowSize",
+                typeof(double),
+                typeof(DetailPopupContent),
+                new PropertyMetadata(16D, OnArrowChanged));
+
+        public static readonly DependencyProperty PopupContentProperty =
+            DependencyProperty.Register(
+                "PopupContent",
+                typeof(UIElement),
+                typeof(DetailPopupContent),
+                new PropertyMetadata(null));
 
         private readonly Dictionary<AnchorStyle, Geometry> _arrowDataDict = new Dictionary<AnchorStyle, Geometry>
         {
@@ -25,31 +44,6 @@ namespace MaSch.Presentation.Wpf.ControlData
 
         private Path _arrow;
         private FrameworkElement _border;
-
-        #endregion
-
-        #region Dependency Properties
-
-        public static readonly DependencyProperty ArrowPositionProperty =
-            DependencyProperty.Register("ArrowPosition", typeof(AnchorStyle), typeof(DetailPopupContent), new PropertyMetadata(AnchorStyle.Top, OnArrowChanged));
-        public static readonly DependencyProperty ArrowSizeProperty =
-            DependencyProperty.Register("ArrowSize", typeof(double), typeof(DetailPopupContent), new PropertyMetadata(16D, OnArrowChanged));
-        public static readonly DependencyProperty PopupContentProperty =
-            DependencyProperty.Register("PopupContent", typeof(UIElement), typeof(DetailPopupContent), new PropertyMetadata(null));
-
-        #endregion
-
-        #region Dependency Property Changed Handler
-
-        public static void OnArrowChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
-        {
-            var owner = obj as DetailPopupContent;
-            owner?.RefreshArrow();
-        }
-
-        #endregion
-
-        #region Properties
 
         public AnchorStyle ArrowPosition
         {
@@ -69,13 +63,12 @@ namespace MaSch.Presentation.Wpf.ControlData
             set => SetValue(PopupContentProperty, value);
         }
 
-        #endregion
-
         static DetailPopupContent()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DetailPopupContent), new FrameworkPropertyMetadata(typeof(DetailPopupContent)));
         }
 
+        /// <inheritdoc />
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -85,8 +78,6 @@ namespace MaSch.Presentation.Wpf.ControlData
 
             RefreshArrow();
         }
-
-        #region Private Methods
 
         private void RefreshArrow()
         {
@@ -133,6 +124,10 @@ namespace MaSch.Presentation.Wpf.ControlData
             }
         }
 
-        #endregion
+        private static void OnArrowChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            var owner = obj as DetailPopupContent;
+            owner?.RefreshArrow();
+        }
     }
 }

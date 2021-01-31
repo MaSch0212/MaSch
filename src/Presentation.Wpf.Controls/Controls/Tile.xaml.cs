@@ -12,20 +12,19 @@ namespace MaSch.Presentation.Wpf.Controls
         private const double CenterBox = 0.4D;
         private const double EdgeBox = 0.133334D;
 
-        #region Fields
-
         private RotateTransform3D _rotate;
         private TranslateTransform3D _translate;
         private AxisAngleRotation3D _angle;
         private Grid _sizeGrid;
-
-        #endregion
 
         static Tile()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Tile), new FrameworkPropertyMetadata(typeof(Tile)));
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Tile"/> class.
+        /// </summary>
         public Tile()
         {
             PreviewMouseLeftButtonDown += Viewport3D_MouseLeftButtonDown;
@@ -33,8 +32,7 @@ namespace MaSch.Presentation.Wpf.Controls
             SizeChanged += ModernUITile_SizeChanged;
         }
 
-        #region Overrides
-        
+        /// <inheritdoc/>
         protected override void OnIsPressedChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnIsPressedChanged(e);
@@ -50,6 +48,7 @@ namespace MaSch.Presentation.Wpf.Controls
             }
         }
 
+        /// <inheritdoc/>
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -59,10 +58,6 @@ namespace MaSch.Presentation.Wpf.Controls
             _sizeGrid = GetTemplateChild("SizeGrid") as Grid;
         }
 
-        #endregion
-
-        #region Event Handlers
-        
         private void ModernUITile_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             _sizeGrid.Margin = new Thickness(-ActualWidth / 2, -ActualHeight / 2, -ActualWidth / 2, -ActualHeight / 2);
@@ -80,10 +75,6 @@ namespace MaSch.Presentation.Wpf.Controls
                 OnClick();
         }
 
-        #endregion
-
-        #region Private Methods
-
         private void SetRotation(double cX, double cY, double aX, double aY)
         {
             _rotate.CenterX = cX;
@@ -91,17 +82,19 @@ namespace MaSch.Presentation.Wpf.Controls
             _rotate.CenterZ = 0;
             _angle.Axis = new Vector3D(aX, aY, 0);
 
-
-            _angle.BeginAnimation(AxisAngleRotation3D.AngleProperty,
+            _angle.BeginAnimation(
+                AxisAngleRotation3D.AngleProperty,
                 new DoubleAnimation(3.6, new Duration(TimeSpan.FromSeconds(0.1))));
         }
 
         private void BeginReleaseAnimation()
         {
-            _angle.BeginAnimation(AxisAngleRotation3D.AngleProperty,
+            _angle.BeginAnimation(
+                AxisAngleRotation3D.AngleProperty,
                 new DoubleAnimation(0, new Duration(TimeSpan.FromSeconds(0.1))));
 
-            _translate.BeginAnimation(TranslateTransform3D.OffsetZProperty,
+            _translate.BeginAnimation(
+                TranslateTransform3D.OffsetZProperty,
                 new DoubleAnimation(0, new Duration(TimeSpan.FromSeconds(0.1))));
         }
 
@@ -110,7 +103,8 @@ namespace MaSch.Presentation.Wpf.Controls
             switch (fd)
             {
                 case FlipDirection.Center:
-                    _translate.BeginAnimation(TranslateTransform3D.OffsetZProperty,
+                    _translate.BeginAnimation(
+                        TranslateTransform3D.OffsetZProperty,
                         new DoubleAnimation(-0.025, new Duration(TimeSpan.FromSeconds(0.1))));
                     break;
                 case FlipDirection.Right:
@@ -141,10 +135,6 @@ namespace MaSch.Presentation.Wpf.Controls
                     throw new ArgumentOutOfRangeException(nameof(fd), fd, null);
             }
         }
-
-        #endregion
-
-        #region Static Methods
 
         public static FlipDirection GetFlipDirection(Point mousePos, double size, double border)
         {
@@ -181,14 +171,21 @@ namespace MaSch.Presentation.Wpf.Controls
             {
                 return pwb.X < size - pwb.Y ? FlipDirection.Left : FlipDirection.Bottom;
             }
+
             return size - pwb.X < pwb.Y ? FlipDirection.Right : FlipDirection.Top;
         }
-
-        #endregion
     }
 
     public enum FlipDirection
     {
-        Center, Right, Left, Top, Bottom, TopLeft, TopRight, BottomLeft, BottomRight
+        Center,
+        Right,
+        Left,
+        Top,
+        Bottom,
+        TopLeft,
+        TopRight,
+        BottomLeft,
+        BottomRight,
     }
 }
