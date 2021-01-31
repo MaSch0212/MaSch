@@ -7,6 +7,10 @@ using MaSch.Core.Observable.Collections;
 
 namespace MaSch.Presentation.Wpf.Printing
 {
+    /// <summary>
+    /// Manages <see cref="PrintTask"/>s.
+    /// </summary>
+    /// <seealso cref="MaSch.Core.Observable.ObservableObject" />
     public class PrintTaskManager : ObservableObject
     {
         private int _nextJobId = 1;
@@ -14,14 +18,28 @@ namespace MaSch.Presentation.Wpf.Printing
         private Task _printerTask;
         private PrintTask _currentlyPrinting;
 
+        /// <summary>
+        /// Gets the currently executed <see cref="PrintTask"/>.
+        /// </summary>
         public PrintTask CurrentlyPrinting
         {
             get => _currentlyPrinting;
             private set => SetProperty(ref _currentlyPrinting, value);
         }
+
+        /// <summary>
+        /// Gets or sets the print history.
+        /// </summary>
         public ObservableCollection<PrintTask> PrintHistory { get; set; }
+
+        /// <summary>
+        /// Gets the print task queue.
+        /// </summary>
         public ObservableQueue<PrintTask> PrintTaskQueue { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PrintTaskManager"/> class.
+        /// </summary>
         public PrintTaskManager()
         {
             PrintHistory = new ObservableCollection<PrintTask>();
@@ -29,6 +47,11 @@ namespace MaSch.Presentation.Wpf.Printing
             PrintTaskQueue.PropertyChanged += PrintTaskQueue_PropertyChanged;
         }
 
+        /// <summary>
+        /// Queues the new <see cref="PrintTask"/>.
+        /// </summary>
+        /// <param name="task">The print task.</param>
+        /// <exception cref="InvalidOperationException">Only a task in the state NotStarted can be queued.</exception>
         public void QueueNewTask(PrintTask task)
         {
             Guard.NotNull(task, nameof(task));
@@ -58,6 +81,7 @@ namespace MaSch.Presentation.Wpf.Printing
                 CurrentlyPrinting.Dispose();
                 PrintHistory.Add(CurrentlyPrinting);
             }
+
             CurrentlyPrinting = null;
         }
     }

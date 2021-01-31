@@ -4,6 +4,10 @@ using System.Windows.Media;
 
 namespace MaSch.Presentation.Wpf.Converter
 {
+    /// <summary>
+    /// A <see cref="IValueConverter"/> that converts a <see cref="SolidColorBrush"/> into a <see cref="Color"/>.
+    /// </summary>
+    /// <seealso cref="IValueConverter" />
     [ValueConversion(typeof(SolidColorBrush), typeof(Color))]
     public class SolidColorBrushToColorConverter : IValueConverter
     {

@@ -6,6 +6,10 @@ using System.Windows.Data;
 
 namespace MaSch.Presentation.Wpf.Converter
 {
+    /// <summary>
+    /// A <see cref="IValueConverter"/> that converts numbers to <see cref="GridLength"/> and back.
+    /// </summary>
+    /// <seealso cref="System.Windows.Data.IValueConverter" />
     public class GridLengthConverter : IValueConverter
     {
         /// <inheritdoc />

@@ -1,26 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+
+#pragma warning disable SA1649 // File name should match first type name
+#pragma warning disable SA1402 // File may only contain a single type
 
 namespace MaSch.Presentation.Wpf.Extensions
 {
     /// <summary>
     /// Adapts a DependencyObject to provide methods required for generate
-    /// a Linq To Tree API
+    /// a Linq To Tree API.
     /// </summary>
     public class VisualTreeAdapter : ILinqTree<DependencyObject>
     {
         private readonly DependencyObject _item;
 
+        /// <summary>
+        /// Gets the parent of the element that is represented by this <see cref="VisualTreeAdapter"/>.
+        /// </summary>
         public DependencyObject Parent => VisualTreeHelper.GetParent(_item);
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VisualTreeAdapter"/> class.
+        /// </summary>
+        /// <param name="item">The item.</param>
         public VisualTreeAdapter(DependencyObject item)
         {
             _item = item;
         }
 
+        /// <summary>
+        /// Gets all children of the element that is represented by this <see cref="VisualTreeAdapter"/>.
+        /// </summary>
+        /// <returns>All children of the element that is represented by this <see cref="VisualTreeAdapter"/>.</returns>
         public IEnumerable<DependencyObject> Children()
         {
             var childrenCount = VisualTreeHelper.GetChildrenCount(_item);
@@ -32,21 +47,33 @@ namespace MaSch.Presentation.Wpf.Extensions
     }
 
     /// <summary>
-    /// Defines an interface that must be implemented to generate the LinqToTree methods
+    /// Defines an interface that must be implemented to generate the LinqToTree methods.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The type of the target.</typeparam>
     public interface ILinqTree<out T>
     {
-        IEnumerable<T> Children();
-
+        /// <summary>
+        /// Gets the parent of this tree.
+        /// </summary>
         T Parent { get; }
+
+        /// <summary>
+        /// Gets the children of this tree.
+        /// </summary>
+        /// <returns>A collection of children of this tree.</returns>
+        IEnumerable<T> Children();
     }
 
+    /// <summary>
+    /// Provides extension methods to the <see cref="DependencyObject"/> class.
+    /// </summary>
     public static class TreeExtensions
     {
         /// <summary>
         /// Returns a collection of descendant elements.
         /// </summary>
+        /// <param name="item">The element to search in.</param>
+        /// <returns>A collection of descendant elements.</returns>
         public static IEnumerable<DependencyObject> Descendants(this DependencyObject item)
         {
             ILinqTree<DependencyObject> adapter = new VisualTreeAdapter(item);
@@ -64,6 +91,8 @@ namespace MaSch.Presentation.Wpf.Extensions
         /// <summary>
         /// Returns a collection containing this element and all descendant elements.
         /// </summary>
+        /// <param name="item">The element to search in.</param>
+        /// <returns>A collection containing this element and all descendant elements.</returns>
         public static IEnumerable<DependencyObject> DescendantsAndSelf(this DependencyObject item)
         {
             yield return item;
@@ -77,6 +106,8 @@ namespace MaSch.Presentation.Wpf.Extensions
         /// <summary>
         /// Returns a collection of ancestor elements.
         /// </summary>
+        /// <param name="item">The element to search in.</param>
+        /// <returns>A collection of ancestor elements.</returns>
         public static IEnumerable<DependencyObject> Ancestors(this DependencyObject item)
         {
             ILinqTree<DependencyObject> adapter = new VisualTreeAdapter(item);
@@ -93,6 +124,8 @@ namespace MaSch.Presentation.Wpf.Extensions
         /// <summary>
         /// Returns a collection containing this element and all ancestor elements.
         /// </summary>
+        /// <param name="item">The element to search in.</param>
+        /// <returns>A collection containing this element and all ancestor elements.</returns>
         public static IEnumerable<DependencyObject> AncestorsAndSelf(this DependencyObject item)
         {
             yield return item;
@@ -106,6 +139,8 @@ namespace MaSch.Presentation.Wpf.Extensions
         /// <summary>
         /// Returns a collection of child elements.
         /// </summary>
+        /// <param name="item">The element to search in.</param>
+        /// <returns>A collection of child elements.</returns>
         public static IEnumerable<DependencyObject> Elements(this DependencyObject item)
         {
             ILinqTree<DependencyObject> adapter = new VisualTreeAdapter(item);
@@ -118,6 +153,8 @@ namespace MaSch.Presentation.Wpf.Extensions
         /// <summary>
         /// Returns a collection of the sibling elements before this node, in document order.
         /// </summary>
+        /// <param name="item">The element to search in.</param>
+        /// <returns>A collection of the sibling elements before this node, in document order.</returns>
         public static IEnumerable<DependencyObject> ElementsBeforeSelf(this DependencyObject item)
         {
             if (item.Ancestors().FirstOrDefault() == null)
@@ -133,6 +170,8 @@ namespace MaSch.Presentation.Wpf.Extensions
         /// <summary>
         /// Returns a collection of the after elements after this node, in document order.
         /// </summary>
+        /// <param name="item">The element to search in.</param>
+        /// <returns>A collection of the after elements after this node, in document order.</returns>
         public static IEnumerable<DependencyObject> ElementsAfterSelf(this DependencyObject item)
         {
             if (item.Ancestors().FirstOrDefault() == null)
@@ -151,6 +190,8 @@ namespace MaSch.Presentation.Wpf.Extensions
         /// <summary>
         /// Returns a collection containing this element and all child elements.
         /// </summary>
+        /// <param name="item">The element to search in.</param>
+        /// <returns>A collection containing this element and all child elements.</returns>
         public static IEnumerable<DependencyObject> ElementsAndSelf(this DependencyObject item)
         {
             yield return item;
@@ -164,17 +205,21 @@ namespace MaSch.Presentation.Wpf.Extensions
         /// <summary>
         /// Returns a collection of descendant elements which match the given type.
         /// </summary>
+        /// <typeparam name="T">The type of the objects to find.</typeparam>
+        /// <param name="item">The element to search in.</param>
+        /// <returns>A collection of descendant elements which match the given type.</returns>
         public static IEnumerable<DependencyObject> Descendants<T>(this DependencyObject item)
         {
             return item.Descendants().Where(i => i is T);
         }
 
-
-
         /// <summary>
         /// Returns a collection of the sibling elements before this node, in document order
         /// which match the given type.
         /// </summary>
+        /// <typeparam name="T">The type of the objects to find.</typeparam>
+        /// <param name="item">The element to search in.</param>
+        /// <returns>A collection of the sibling elements before this node, in document order which match the given type.</returns>
         public static IEnumerable<DependencyObject> ElementsBeforeSelf<T>(this DependencyObject item)
         {
             return item.ElementsBeforeSelf().Where(i => i is T);
@@ -184,6 +229,9 @@ namespace MaSch.Presentation.Wpf.Extensions
         /// Returns a collection of the after elements after this node, in document order
         /// which match the given type.
         /// </summary>
+        /// <typeparam name="T">The type of the objects to find.</typeparam>
+        /// <param name="item">The element to search in.</param>
+        /// <returns>A collection of the after elements after this node, in document order which match the given type.</returns>
         public static IEnumerable<DependencyObject> ElementsAfterSelf<T>(this DependencyObject item)
         {
             return item.ElementsAfterSelf().Where(i => i is T);
@@ -193,6 +241,9 @@ namespace MaSch.Presentation.Wpf.Extensions
         /// Returns a collection containing this element and all descendant elements
         /// which match the given type.
         /// </summary>
+        /// <typeparam name="T">The type of the objects to find.</typeparam>
+        /// <param name="item">The element to search in.</param>
+        /// <returns>A collection containing this element and all descendant elements which match the given type.</returns>
         public static IEnumerable<DependencyObject> DescendantsAndSelf<T>(this DependencyObject item)
         {
             return item.DescendantsAndSelf().Where(i => i is T);
@@ -201,6 +252,9 @@ namespace MaSch.Presentation.Wpf.Extensions
         /// <summary>
         /// Returns a collection of ancestor elements which match the given type.
         /// </summary>
+        /// <typeparam name="T">The type of the objects to find.</typeparam>
+        /// <param name="item">The element to search in.</param>
+        /// <returns>A collection of ancestor elements which match the given type.</returns>
         public static IEnumerable<DependencyObject> Ancestors<T>(this DependencyObject item)
         {
             return item.Ancestors().Where(i => i is T);
@@ -210,6 +264,9 @@ namespace MaSch.Presentation.Wpf.Extensions
         /// Returns a collection containing this element and all ancestor elements
         /// which match the given type.
         /// </summary>
+        /// <typeparam name="T">The type of the objects to find.</typeparam>
+        /// <param name="item">The element to search in.</param>
+        /// <returns>A collection containing this element and all ancestor elements which match the given type.</returns>
         public static IEnumerable<DependencyObject> AncestorsAndSelf<T>(this DependencyObject item)
         {
             return item.AncestorsAndSelf().Where(i => i is T);
@@ -218,29 +275,42 @@ namespace MaSch.Presentation.Wpf.Extensions
         /// <summary>
         /// Returns a collection of child elements which match the given type.
         /// </summary>
+        /// <typeparam name="T">The type of the objects to find.</typeparam>
+        /// <param name="item">The element to search in.</param>
+        /// <returns>A collection of child elements which match the given type.</returns>
         public static IEnumerable<DependencyObject> Elements<T>(this DependencyObject item)
         {
             return item.Elements().Where(i => i is T);
         }
 
         /// <summary>
-        /// Returns a collection containing this element and all child elements.
+        /// Returns a collection containing this element and all child elements
         /// which match the given type.
         /// </summary>
+        /// <typeparam name="T">The type of the objects to find.</typeparam>
+        /// <param name="item">The element to search in.</param>
+        /// <returns>A collection containing this element and all child elements which match the given type.</returns>
         public static IEnumerable<DependencyObject> ElementsAndSelf<T>(this DependencyObject item)
         {
             return item.ElementsAndSelf().Where(i => i is T);
         }
-
     }
 
+#pragma warning disable SA1611 // Element parameters should be documented
+#pragma warning disable SA1615 // Element return value should be documented
+#pragma warning disable SA1618 // Generic type parameters should be documented
+
+    /// <summary>
+    /// Provides extension methods for <see cref="IEnumerable{T}"/> of <see cref="DependencyObject"/>.
+    /// </summary>
     public static class EnumerableTreeExtensions
     {
         /// <summary>
         /// Applies the given function to each of the items in the supplied
         /// IEnumerable.
         /// </summary>
-        private static IEnumerable<DependencyObject> DrillDown(this IEnumerable<DependencyObject> items,
+        private static IEnumerable<DependencyObject> DrillDown(
+            this IEnumerable<DependencyObject> items,
             Func<DependencyObject, IEnumerable<DependencyObject>> function)
         {
             foreach (var item in items)
@@ -252,12 +322,12 @@ namespace MaSch.Presentation.Wpf.Extensions
             }
         }
 
-
         /// <summary>
         /// Applies the given function to each of the items in the supplied
         /// IEnumerable, which match the given type.
         /// </summary>
-        public static IEnumerable<DependencyObject> DrillDown<T>(this IEnumerable<DependencyObject> items,
+        public static IEnumerable<DependencyObject> DrillDown<T>(
+            this IEnumerable<DependencyObject> items,
             Func<DependencyObject, IEnumerable<DependencyObject>> function)
             where T : DependencyObject
         {
@@ -266,7 +336,6 @@ namespace MaSch.Presentation.Wpf.Extensions
                    where itemChild is T
                    select (T)itemChild;
         }
-
 
         /// <summary>
         /// Returns a collection of descendant elements.
@@ -315,7 +384,6 @@ namespace MaSch.Presentation.Wpf.Extensions
         {
             return items.DrillDown(i => i.ElementsAndSelf());
         }
-
 
         /// <summary>
         /// Returns a collection of descendant elements which match the given type.

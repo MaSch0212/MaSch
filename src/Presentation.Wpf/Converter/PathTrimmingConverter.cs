@@ -10,6 +10,10 @@ using System.Windows.Media;
 
 namespace MaSch.Presentation.Wpf.Converter
 {
+    /// <summary>
+    /// A <see cref="IValueConverter"/> that trims paths inside a <see cref="TextBlock"/> control.
+    /// </summary>
+    /// <seealso cref="IMultiValueConverter" />
     public class PathTrimmingConverter : IMultiValueConverter
     {
         /// <inheritdoc />
@@ -32,10 +36,10 @@ namespace MaSch.Presentation.Wpf.Converter
                     textBlock.FlowDirection,
                     textBlock.FontFamily.GetTypefaces().First(),
                     textBlock.FontSize,
-                    textBlock.Foreground, 
-                    new NumberSubstitution(), 
-                    TextFormattingMode.Display, dpi
-                );
+                    textBlock.Foreground,
+                    new NumberSubstitution(),
+                    TextFormattingMode.Display,
+                    dpi);
 
                 widthOk = formatted.Width < textBlock.ActualWidth;
 
@@ -49,14 +53,14 @@ namespace MaSch.Presentation.Wpf.Converter
                     if (leftSegments.Count + rightSegments.Count == 0)
                         return "..." + Path.DirectorySeparatorChar + segments.Last();
                 }
-
-            } while (!widthOk);
+            }
+            while (!widthOk);
 
             IEnumerable<string> s;
             if (leftSegments.Count + rightSegments.Count == segments.Count)
                 s = leftSegments.Concat(rightSegments);
             else
-                s = leftSegments.Concat(new[] {"..."}).Concat(rightSegments);
+                s = leftSegments.Concat(new[] { "..." }).Concat(rightSegments);
 
             return string.Join(Path.DirectorySeparatorChar.ToString(), s);
         }

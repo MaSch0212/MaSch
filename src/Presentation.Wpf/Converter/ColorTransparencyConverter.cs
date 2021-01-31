@@ -7,6 +7,11 @@ using System.Windows.Media;
 
 namespace MaSch.Presentation.Wpf.Converter
 {
+    /// <summary>
+    /// A <see cref="IValueConverter"/> that applies an alpha transparency value to a specified color.
+    /// </summary>
+    /// <seealso cref="IValueConverter" />
+    /// <seealso cref="IMultiValueConverter" />
     public class ColorTransparencyConverter : IValueConverter, IMultiValueConverter
     {
         /// <inheritdoc />
@@ -21,10 +26,11 @@ namespace MaSch.Presentation.Wpf.Converter
             if (color.HasValue)
             {
                 if (ObjectExtensions.ConvertManager.TryConvert<double>(parameter, CultureInfo.InvariantCulture, out var alpha))
-                    return Color.FromArgb((byte)(alpha > 0 && alpha < 1 ? alpha * 255 : alpha), color.Value.R, color.Value.G, color.Value.B);
+                    return Color.FromArgb((byte)(alpha > 0 && alpha <= 1 ? alpha * 255 : alpha), color.Value.R, color.Value.G, color.Value.B);
                 else
                     return color;
             }
+
             return value;
         }
 

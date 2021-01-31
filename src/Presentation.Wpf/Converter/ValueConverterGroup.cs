@@ -6,6 +6,11 @@ using System.Windows.Data;
 
 namespace MaSch.Presentation.Wpf.Converter
 {
+    /// <summary>
+    /// Groups together multiple <see cref="IValueConverter"/>s The value converters are executed in order and the results of each are passed in as parameter to the next.
+    /// </summary>
+    /// <seealso cref="List{T}" />
+    /// <seealso cref="IValueConverter" />
     public class ValueConverterGroup : List<IValueConverter>, IValueConverter
     {
         /// <inheritdoc />

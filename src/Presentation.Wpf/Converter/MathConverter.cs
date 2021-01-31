@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -9,7 +10,7 @@ using System.Windows.Markup;
 namespace MaSch.Presentation.Wpf.Converter
 {
     /// <summary>
-    /// Value converter that performs arithmetic calculations over its argument(s)
+    /// Value converter that performs arithmetic calculations over its argument(s).
     /// </summary>
     /// <remarks>
     /// MathConverter can act as a value converter, or as a multivalue converter (WPF only).
@@ -17,9 +18,8 @@ namespace MaSch.Presentation.Wpf.Converter
     /// ConverterParameter must contain an arithmetic expression over converter arguments. Operations supported are +, -, * and /
     /// Single argument of a value converter may referred as x, a, or {0}
     /// Arguments of multi value converter may be referred as x,y,z,t (first-fourth argument), or a,b,c,d, or {0}, {1}, {2}, {3}, {4}, ...
-    /// The converter supports arithmetic expressions of arbitrary complexity, including nested subexpressions
-    /// 
-    /// This Converter is from: http://www.codeproject.com/Articles/239251/MathConverter-How-to-Do-Math-in-XAML
+    /// The converter supports arithmetic expressions of arbitrary complexity, including nested subexpressions.
+    /// This Converter has been copied from: http://www.codeproject.com/Articles/239251/MathConverter-How-to-Do-Math-in-XAML.
     /// </remarks>
     public class MathConverter : MarkupExtension, IMultiValueConverter, IValueConverter
     {
@@ -43,11 +43,16 @@ namespace MaSch.Presentation.Wpf.Converter
             try
             {
                 var result = Parse(parameter.ToString()).Eval(values);
-                if (targetType == typeof(decimal)) return result;
-                if (targetType == typeof(string)) return result.ToString(CultureInfo.InvariantCulture);
-                if (targetType == typeof(int)) return (int)result;
-                if (targetType == typeof(double) || targetType == typeof(object)) return (double)result;
-                if (targetType == typeof(long)) return (long)result;
+                if (targetType == typeof(decimal))
+                    return result;
+                if (targetType == typeof(string))
+                    return result.ToString(CultureInfo.InvariantCulture);
+                if (targetType == typeof(int))
+                    return (int)result;
+                if (targetType == typeof(double) || targetType == typeof(object))
+                    return (double)result;
+                if (targetType == typeof(long))
+                    return (long)result;
                 throw new ArgumentException($"Unsupported target type {targetType.FullName}");
             }
             catch (Exception ex)
@@ -70,6 +75,10 @@ namespace MaSch.Presentation.Wpf.Converter
             return this;
         }
 
+        /// <summary>
+        /// Handles exceptions that occure during conversion.
+        /// </summary>
+        /// <param name="ex">The exception.</param>
         protected virtual void ProcessException(Exception ex)
         {
             Console.WriteLine(ex.Message);
@@ -77,8 +86,7 @@ namespace MaSch.Presentation.Wpf.Converter
 
         private IExpression Parse(string s)
         {
-            IExpression result;
-            if (!_storedExpressions.TryGetValue(s, out result))
+            if (!_storedExpressions.TryGetValue(s, out IExpression result))
             {
                 result = new Parser().Parse(s);
                 _storedExpressions[s] = result;
@@ -87,6 +95,7 @@ namespace MaSch.Presentation.Wpf.Converter
             return result;
         }
 
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:Elements should be documented", Justification = "Private interfaces do not need to be documented.")]
         private interface IExpression
         {
             decimal Eval(object[] args);
@@ -149,14 +158,14 @@ namespace MaSch.Presentation.Wpf.Converter
             {
                 _left = left;
                 _right = right;
-                switch (operation)
+                _operation = operation switch
                 {
-                    case '+': _operation = (a, b) => (a + b); break;
-                    case '-': _operation = (a, b) => (a - b); break;
-                    case '*': _operation = (a, b) => (a * b); break;
-                    case '/': _operation = (a, b) => (a / b); break;
-                    default: throw new ArgumentException($"Invalid operation {operation}");
-                }
+                    '+' => (a, b) => (a + b),
+                    '-' => (a, b) => (a - b),
+                    '*' => (a, b) => (a * b),
+                    '/' => (a, b) => (a / b),
+                    _ => throw new ArgumentException($"Invalid operation {operation}"),
+                };
             }
 
             public decimal Eval(object[] args)
@@ -210,7 +219,8 @@ namespace MaSch.Presentation.Wpf.Converter
 
                 while (true)
                 {
-                    if (_pos >= _text.Length) return left;
+                    if (_pos >= _text.Length)
+                        return left;
 
                     var c = _text[_pos];
 
@@ -233,7 +243,8 @@ namespace MaSch.Presentation.Wpf.Converter
 
                 while (true)
                 {
-                    if (_pos >= _text.Length) return left;
+                    if (_pos >= _text.Length)
+                        return left;
 
                     var c = _text[_pos];
 
@@ -253,7 +264,8 @@ namespace MaSch.Presentation.Wpf.Converter
             private IExpression ParseFactor()
             {
                 SkipWhiteSpace();
-                if (_pos >= _text.Length) throw new ArgumentException("Unexpected end of text");
+                if (_pos >= _text.Length)
+                    throw new ArgumentException("Unexpected end of text");
 
                 var c = _text[_pos];
 
@@ -269,10 +281,14 @@ namespace MaSch.Presentation.Wpf.Converter
                     return new Negate(ParseFactor());
                 }
 
-                if (c == 'x' || c == 'a') return CreateVariable(0);
-                if (c == 'y' || c == 'b') return CreateVariable(1);
-                if (c == 'z' || c == 'c') return CreateVariable(2);
-                if (c == 't' || c == 'd') return CreateVariable(3);
+                if (c == 'x' || c == 'a')
+                    return CreateVariable(0);
+                if (c == 'y' || c == 'b')
+                    return CreateVariable(1);
+                if (c == 'z' || c == 'c')
+                    return CreateVariable(2);
+                if (c == 't' || c == 'd')
+                    return CreateVariable(3);
 
                 if (c == '(')
                 {
@@ -288,16 +304,25 @@ namespace MaSch.Presentation.Wpf.Converter
                 {
                     ++_pos;
                     var end = _text.IndexOf('}', _pos);
-                    if (end < 0) { --_pos; throw new ArgumentException("Unmatched '{'"); }
-                    if (end == _pos) { throw new ArgumentException("Missing parameter index after '{'"); }
-                    var result = new Variable(_text.Substring(_pos, end - _pos).Trim());
+                    if (end < 0)
+                    {
+                        --_pos;
+                        throw new ArgumentException("Unmatched '{'");
+                    }
+
+                    if (end == _pos)
+                    {
+                        throw new ArgumentException("Missing parameter index after '{'");
+                    }
+
+                    var result = new Variable(_text[_pos..end].Trim());
                     _pos = end + 1;
                     SkipWhiteSpace();
                     return result;
                 }
 
                 const string decimalRegEx = @"(\d+\.?\d*|\d*\.?\d+)";
-                var match = Regex.Match(_text.Substring(_pos), decimalRegEx);
+                var match = Regex.Match(_text[_pos..], decimalRegEx);
                 if (match.Success)
                 {
                     _pos += match.Length;
@@ -319,7 +344,8 @@ namespace MaSch.Presentation.Wpf.Converter
 
             private void SkipWhiteSpace()
             {
-                while (_pos < _text.Length && char.IsWhiteSpace((_text[_pos]))) ++_pos;
+                while (_pos < _text.Length && char.IsWhiteSpace(_text[_pos]))
+                    ++_pos;
             }
 
             private void Require(char c)

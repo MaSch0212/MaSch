@@ -6,7 +6,7 @@ using System.Windows.Markup;
 namespace MaSch.Presentation.Wpf.Markup
 {
     /// <summary>
-    /// Copied from http://www.thomaslevesque.com/2009/07/28/wpf-a-markup-extension-that-can-update-its-target/
+    /// Copied from http://www.thomaslevesque.com/2009/07/28/wpf-a-markup-extension-that-can-update-its-target/.
     /// </summary>
     public abstract class UpdateableMarkupExtension : MarkupExtension
     {
@@ -62,13 +62,14 @@ namespace MaSch.Presentation.Wpf.Markup
 
                     // Check whether the target object can be accessed from the
                     // current thread, and use Dispatcher.Invoke if it can't
-
                     if (obj?.CheckAccess() ?? false)
                         UpdateAction();
                     else
                         obj?.Dispatcher?.Invoke(UpdateAction);
                 }
-                else // _targetProperty is PropertyInfo
+
+                // targetProperty is PropertyInfo
+                else
                 {
                     var prop = TargetProperty as PropertyInfo;
                     prop?.SetValue(TargetObject, value, null);
@@ -80,7 +81,7 @@ namespace MaSch.Presentation.Wpf.Markup
         /// Provides the value internal.
         /// </summary>
         /// <param name="serviceProvider">The service provider.</param>
-        /// <returns></returns>
+        /// <returns>The value.</returns>
         protected abstract object ProvideValueInternal(IServiceProvider serviceProvider);
     }
 }

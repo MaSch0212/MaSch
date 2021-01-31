@@ -5,8 +5,15 @@ using System.Windows.Data;
 
 namespace MaSch.Presentation.Wpf.Converter
 {
+    /// <summary>
+    /// A <see cref="IValueConverter"/> that check if a string is empty.
+    /// </summary>
+    /// <seealso cref="IValueConverter" />
     public class StringEmptyConverter : IValueConverter
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether whitespaces are allowed. If set to <c>true</c> the string needs to be empty so this <see cref="StringEmptyConverter"/> returns <c>true</c>.
+        /// </summary>
         public bool AllowWhitespace { get; set; } = true;
 
         /// <inheritdoc />
@@ -14,7 +21,7 @@ namespace MaSch.Presentation.Wpf.Converter
         {
             if (value == null)
                 return true;
-            if(value is string s)
+            if (value is string s)
                 return AllowWhitespace ? string.IsNullOrEmpty(s) : string.IsNullOrWhiteSpace(s);
             return DependencyProperty.UnsetValue;
         }

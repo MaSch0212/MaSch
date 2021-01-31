@@ -6,10 +6,18 @@ using MaSch.Core;
 
 namespace MaSch.Presentation.Wpf.Markup
 {
+    /// <summary>
+    /// A <see cref="MarkupExtension"/> that returns all elements in an enumeration.
+    /// </summary>
+    /// <seealso cref="System.Windows.Markup.MarkupExtension" />
     public class EnumerationExtension : MarkupExtension
     {
         private Type _enumType;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EnumerationExtension"/> class.
+        /// </summary>
+        /// <param name="enumType">Type of the enum.</param>
         public EnumerationExtension(Type enumType)
         {
             Guard.NotNull(enumType, nameof(enumType));
@@ -17,6 +25,10 @@ namespace MaSch.Presentation.Wpf.Markup
             EnumType = enumType;
         }
 
+        /// <summary>
+        /// Gets the type of the enum.
+        /// </summary>
+        /// <exception cref="ArgumentException">Type must be an Enum.</exception>
         public Type EnumType
         {
             get => _enumType;
@@ -34,6 +46,13 @@ namespace MaSch.Presentation.Wpf.Markup
             }
         }
 
+        /// <summary>
+        /// When implemented in a derived class, returns an object that is provided as the value of the target property for this markup extension.
+        /// </summary>
+        /// <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
+        /// <returns>
+        /// The object value to set on the property where the extension is applied.
+        /// </returns>
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             var enumValues = Enum.GetValues(EnumType);
@@ -43,7 +62,7 @@ namespace MaSch.Presentation.Wpf.Markup
               select new EnumerationMember
               {
                   Value = enumValue,
-                  Description = GetDescription(enumValue)
+                  Description = GetDescription(enumValue),
               }).ToArray();
         }
 
@@ -57,9 +76,19 @@ namespace MaSch.Presentation.Wpf.Markup
               : enumValue.ToString();
         }
 
+        /// <summary>
+        /// Represents a member of an enumeration.
+        /// </summary>
         public class EnumerationMember
         {
+            /// <summary>
+            /// Gets or sets the description.
+            /// </summary>
             public string Description { get; set; }
+
+            /// <summary>
+            /// Gets or sets the value.
+            /// </summary>
             public object Value { get; set; }
         }
     }

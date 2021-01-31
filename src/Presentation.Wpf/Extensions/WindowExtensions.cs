@@ -8,16 +8,20 @@ using MaSch.Core;
 
 namespace MaSch.Presentation.Wpf.Extensions
 {
+    /// <summary>
+    /// Provides extension methods for the <see cref="Window"/> class.
+    /// </summary>
     public static class WindowExtensions
     {
         /// <summary>
-        ///     Intent:  
+        ///     Intent:
         ///     - Shift the window onto the visible screen.
         ///     - Shift the window away from overlapping the task bar.
         /// </summary>
+        /// <param name="window">The window to shift.</param>
         public static void ShiftOntoScreen(this Window window)
         {
-            // Note that "window.BringIntoView()" does not work.                            
+            // Note that "window.BringIntoView()" does not work.
             if (window.Top < SystemParameters.VirtualScreenTop)
             {
                 window.Top = SystemParameters.VirtualScreenTop;
@@ -60,37 +64,35 @@ namespace MaSch.Presentation.Wpf.Extensions
                         // Our window is covering the task bar. Shift it away.
                         var intersection = Rectangle.Intersect(taskBar, windowRect);
 
-                        if (intersection.Width < window.Width
-                            // This next one is a rare corner case. Handles situation where taskbar is big enough to
-                            // completely contain the status window.
-                            || taskBar.Contains(windowRect))
+                        // The second condition is a rare corner case. Handles situation where taskbar is big enough to
+                        // completely contain the status window.
+                        if (intersection.Width < window.Width || taskBar.Contains(windowRect))
                         {
                             if (taskBar.Left == 0)
                             {
                                 // Task bar is on the left. Push away to the right.
-                                window.Left = window.Left + intersection.Width;
+                                window.Left += intersection.Width;
                             }
                             else
                             {
                                 // Task bar is on the right. Push away to the left.
-                                window.Left = window.Left - intersection.Width;
+                                window.Left -= intersection.Width;
                             }
                         }
 
-                        if (intersection.Height < window.Height
-                            // This next one is a rare corner case. Handles situation where taskbar is big enough to
-                            // completely contain the status window.
-                            || taskBar.Contains(windowRect))
+                        // The second condition is a rare corner case. Handles situation where taskbar is big enough to
+                        // completely contain the status window.
+                        if (intersection.Height < window.Height || taskBar.Contains(windowRect))
                         {
                             if (taskBar.Top == 0)
                             {
                                 // Task bar is on the top. Push down.
-                                window.Top = window.Top + intersection.Height;
+                                window.Top += intersection.Height;
                             }
                             else
                             {
                                 // Task bar is on the bottom. Push up.
-                                window.Top = window.Top - intersection.Height;
+                                window.Top -= intersection.Height;
                             }
                         }
 
@@ -116,7 +118,7 @@ namespace MaSch.Presentation.Wpf.Extensions
                     continue;
                 }
 
-                var rect = new Rectangle();
+                var rect = default(Rectangle);
 
                 var leftDockedWidth = Math.Abs(Math.Abs(screen.Bounds.Left) - Math.Abs(screen.WorkingArea.Left));
                 var topDockedHeight = Math.Abs(Math.Abs(screen.Bounds.Top) - Math.Abs(screen.WorkingArea.Top));
@@ -162,6 +164,11 @@ namespace MaSch.Presentation.Wpf.Extensions
             return dockedRects;
         }
 
+        /// <summary>
+        /// Shows the dialog asynchronously.
+        /// </summary>
+        /// <param name="self">The window to show.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static Task<bool?> ShowDialogAsync(this Window self)
         {
             Guard.NotNull(self, nameof(self));

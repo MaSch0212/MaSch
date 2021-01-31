@@ -5,42 +5,51 @@ using Win = System.Windows.Controls.Primitives;
 
 namespace MaSch.Presentation.Wpf.DependencyProperties
 {
+    /// <summary>
+    /// Provides dependency properties for the <see cref="System.Windows.Controls.Primitives.Popup"/> control.
+    /// </summary>
     public static class Popup
     {
+        /// <summary>
+        /// Dependency property. Gets or sets the relative offset in the horizontal direction.
+        /// </summary>
         public static readonly DependencyProperty RelativeHorizontalOffsetProperty =
-            DependencyProperty.RegisterAttached("RelativeHorizontalOffset", typeof(double), typeof(Popup), new PropertyMetadata(0D, OnRelativeHorizontalOffsetChanged));
+            DependencyProperty.RegisterAttached(
+                "RelativeHorizontalOffset",
+                typeof(double),
+                typeof(Popup),
+                new PropertyMetadata(0D, OnRelativeHorizontalOffsetChanged));
+
+        /// <summary>
+        /// Dependency property. Gets or sets the relative offset in the vertical direction.
+        /// </summary>
         public static readonly DependencyProperty RelativeVerticalOffsetProperty =
-            DependencyProperty.RegisterAttached("RelativeVerticalOffset", typeof(double), typeof(Popup), new PropertyMetadata(0D, OnRelativeVerticalOffsetChanged));
+            DependencyProperty.RegisterAttached(
+                "RelativeVerticalOffset",
+                typeof(double),
+                typeof(Popup),
+                new PropertyMetadata(0D, OnRelativeVerticalOffsetChanged));
 
         private static void OnRelativeHorizontalOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            void LocationChangedHandler(object sender, EventArgs ea)
+            static void LocationChangedHandler(object sender, EventArgs ea)
             {
-                if (!(sender is Win.Popup p))
+                if (sender is not Win.Popup p)
                     return;
                 var source = PresentationSource.CurrentSources.OfType<PresentationSource>().FirstOrDefault();
                 var scaleX = source?.CompositionTarget?.TransformToDevice.M11 ?? 1;
                 var pPos = p.Child.PointToScreen(new Point(0, 0));
-                if (!((p.PlacementTarget ?? p.Parent) is FrameworkElement pt))
+                if ((p.PlacementTarget ?? p.Parent) is not FrameworkElement pt)
                     return;
                 var ptPos = pt.PointToScreen(new Point(0, 0));
-                double expectedXPos;
-                switch (p.Placement)
+                var expectedXPos = p.Placement switch
                 {
-                    case Win.PlacementMode.Bottom:
-                    case Win.PlacementMode.Top:
-                        expectedXPos = ptPos.X / scaleX + p.HorizontalOffset;
-                        break;
-                    case Win.PlacementMode.Right:
-                        expectedXPos = ptPos.X / scaleX + pt.ActualWidth + p.HorizontalOffset;
-                        break;
-                    case Win.PlacementMode.Left:
-                        expectedXPos = ptPos.X / scaleX - ((p.Child as FrameworkElement)?.ActualWidth ?? 0D) + p.HorizontalOffset;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-                p.HorizontalOffset = Math.Abs(pPos.X / scaleX - expectedXPos) < 1 ? GetRelativeHorizontalOffset(p) : -GetRelativeHorizontalOffset(p);
+                    Win.PlacementMode.Bottom or Win.PlacementMode.Top => (ptPos.X / scaleX) + p.HorizontalOffset,
+                    Win.PlacementMode.Right => (ptPos.X / scaleX) + pt.ActualWidth + p.HorizontalOffset,
+                    Win.PlacementMode.Left => (ptPos.X / scaleX) - ((p.Child as FrameworkElement)?.ActualWidth ?? 0D) + p.HorizontalOffset,
+                    _ => throw new ArgumentOutOfRangeException(),
+                };
+                p.HorizontalOffset = Math.Abs((pPos.X / scaleX) - expectedXPos) < 1 ? GetRelativeHorizontalOffset(p) : -GetRelativeHorizontalOffset(p);
             }
 
             if (d is Win.Popup popup)
@@ -58,33 +67,24 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
 
         private static void OnRelativeVerticalOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            void PopupOpenedHandler(object sender, EventArgs ea)
+            static void PopupOpenedHandler(object sender, EventArgs ea)
             {
-                if (!(sender is Win.Popup p))
+                if (sender is not Win.Popup p)
                     return;
                 var source = PresentationSource.CurrentSources.OfType<PresentationSource>().FirstOrDefault();
                 var scaleY = source?.CompositionTarget?.TransformToDevice.M22 ?? 1;
                 var pPos = p.Child.PointToScreen(new Point(0, 0));
-                if (!((p.PlacementTarget ?? p.Parent) is FrameworkElement pt))
+                if ((p.PlacementTarget ?? p.Parent) is not FrameworkElement pt)
                     return;
                 var ptPos = pt.PointToScreen(new Point(0, 0));
-                double expectedYPos;
-                switch (p.Placement)
+                var expectedYPos = p.Placement switch
                 {
-                    case Win.PlacementMode.Right:
-                    case Win.PlacementMode.Left:
-                        expectedYPos = ptPos.Y / scaleY + p.VerticalOffset;
-                        break;
-                    case Win.PlacementMode.Bottom:
-                        expectedYPos = ptPos.Y / scaleY + pt.ActualHeight + p.VerticalOffset;
-                        break;
-                    case Win.PlacementMode.Top:
-                        expectedYPos = ptPos.Y / scaleY - p.ActualWidth + p.VerticalOffset;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-                p.VerticalOffset = Math.Abs(pPos.Y / scaleY - expectedYPos) < 1 ? GetRelativeVerticalOffset(p) : -GetRelativeVerticalOffset(p);
+                    Win.PlacementMode.Right or Win.PlacementMode.Left => (ptPos.Y / scaleY) + p.VerticalOffset,
+                    Win.PlacementMode.Bottom => (ptPos.Y / scaleY) + pt.ActualHeight + p.VerticalOffset,
+                    Win.PlacementMode.Top => (ptPos.Y / scaleY) - p.ActualWidth + p.VerticalOffset,
+                    _ => throw new ArgumentOutOfRangeException(),
+                };
+                p.VerticalOffset = Math.Abs((pPos.Y / scaleY) - expectedYPos) < 1 ? GetRelativeVerticalOffset(p) : -GetRelativeVerticalOffset(p);
             }
 
             if (d is Win.Popup popup)
@@ -100,21 +100,41 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
             }
         }
 
+        /// <summary>
+        /// Sets the value of the <see cref="RelativeHorizontalOffsetProperty"/>.
+        /// </summary>
+        /// <param name="obj">The element to set the value to.</param>
+        /// <param name="value">The value to set.</param>
         public static void SetRelativeHorizontalOffset(DependencyObject obj, double value)
         {
             obj.SetValue(RelativeHorizontalOffsetProperty, value);
         }
 
+        /// <summary>
+        /// Gets the value of the <see cref="RelativeHorizontalOffsetProperty"/>.
+        /// </summary>
+        /// <param name="obj">The element to get the value from.</param>
+        /// <returns>The value of the <see cref="RelativeHorizontalOffsetProperty"/>.</returns>
         public static double GetRelativeHorizontalOffset(DependencyObject obj)
         {
             return (double)obj.GetValue(RelativeHorizontalOffsetProperty);
         }
 
+        /// <summary>
+        /// Sets the value of the <see cref="RelativeVerticalOffsetProperty"/>.
+        /// </summary>
+        /// <param name="obj">The element to set the value to.</param>
+        /// <param name="value">The value to set.</param>
         public static void SetRelativeVerticalOffset(DependencyObject obj, double value)
         {
             obj.SetValue(RelativeVerticalOffsetProperty, value);
         }
 
+        /// <summary>
+        /// Gets the value of the <see cref="RelativeVerticalOffsetProperty"/>.
+        /// </summary>
+        /// <param name="obj">The element to get the value from.</param>
+        /// <returns>The value of the <see cref="RelativeVerticalOffsetProperty"/>.</returns>
         public static double GetRelativeVerticalOffset(DependencyObject obj)
         {
             return (double)obj.GetValue(RelativeVerticalOffsetProperty);

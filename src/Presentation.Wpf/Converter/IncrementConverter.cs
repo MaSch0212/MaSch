@@ -4,6 +4,10 @@ using System.Windows.Data;
 
 namespace MaSch.Presentation.Wpf.Converter
 {
+    /// <summary>
+    /// A <see cref="IValueConverter"/> that increments a number by one. Can also increased by more using the parameter.
+    /// </summary>
+    /// <seealso cref="IValueConverter" />
     [ValueConversion(typeof(int), typeof(int))]
     public class IncrementConverter : IValueConverter
     {

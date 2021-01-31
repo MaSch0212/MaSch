@@ -7,23 +7,40 @@ using Win = System.Windows.Controls;
 
 namespace MaSch.Presentation.Wpf.DependencyProperties
 {
+    /// <summary>
+    /// Provides dependency properties for the <see cref="System.Windows.Controls.TextBlock"/> control.
+    /// </summary>
     public static class TextBlock
     {
-        #region RichText attached property
+        /// <summary>
+        /// Dependency property. Gets or sets the inline elements of the text block.
+        /// </summary>
+        public static readonly DependencyProperty RichTextProperty =
+            DependencyProperty.RegisterAttached(
+                "RichText",
+                typeof(IEnumerable<Inline>),
+                typeof(TextBlock),
+                new PropertyMetadata(0.0, OnRichTextPropertyChanged));
 
+        /// <summary>
+        /// Gets the value of the <see cref="RichTextProperty"/>.
+        /// </summary>
+        /// <param name="depObj">The element to get the value from.</param>
+        /// <returns>The value of the <see cref="RichTextProperty"/>.</returns>
         public static IEnumerable<Inline> GetRichText(DependencyObject depObj)
         {
             return (IEnumerable<Inline>)depObj.GetValue(RichTextProperty);
         }
 
+        /// <summary>
+        /// Sets the value of the <see cref="RichTextProperty"/>.
+        /// </summary>
+        /// <param name="depObj">The element to set the value to.</param>
+        /// <param name="value">The value to set.</param>
         public static void SetRichText(DependencyObject depObj, IEnumerable<Inline> value)
         {
             depObj.SetValue(RichTextProperty, value);
         }
-
-        public static readonly DependencyProperty RichTextProperty =
-            DependencyProperty.RegisterAttached("RichText", typeof(IEnumerable<Inline>),
-            typeof(TextBlock), new PropertyMetadata(0.0, OnRichTextPropertyChanged));
 
         private static void OnRichTextPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -32,13 +49,16 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                 void CollectionChanged(object s, NotifyCollectionChangedEventArgs ea)
                 {
                     if (ea.Action == NotifyCollectionChangedAction.Reset)
+                    {
                         tb.Inlines.Clear();
+                    }
                     else
                     {
                         for (int i = 0; i < ea.OldItems.Count; i++)
                         {
                             tb.Inlines.Remove(tb.Inlines.ElementAt(ea.OldStartingIndex));
                         }
+
                         Inline current = null;
                         bool last = false;
                         foreach (Inline item in ea.NewItems)
@@ -46,15 +66,20 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                             if (current == null)
                             {
                                 if (ea.NewStartingIndex == 0)
+                                {
                                     current = tb.Inlines.FirstInline;
+                                }
                                 else if (ea.NewStartingIndex >= tb.Inlines.Count)
                                 {
                                     last = true;
                                     current = tb.Inlines.LastInline;
                                 }
                                 else
+                                {
                                     current = tb.Inlines.ElementAt(ea.NewStartingIndex);
+                                }
                             }
+
                             if (last)
                                 tb.Inlines.InsertAfter(current, item);
                             else
@@ -80,8 +105,5 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                 }
             }
         }
-
-
-        #endregion
     }
 }

@@ -36,11 +36,11 @@ namespace MaSch.Presentation.Wpf.Extensions
             }
         }
 
-        //https://msdn.microsoft.com/en-us/library/windows/desktop/dd145062.aspx
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/dd145062.aspx
         [DllImport("User32.dll")]
         private static extern IntPtr MonitorFromPoint([In]Point pt, [In]uint dwFlags);
 
-        //https://msdn.microsoft.com/en-us/library/windows/desktop/dn280510.aspx
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/dn280510.aspx
         [DllImport("Shcore.dll")]
         private static extern IntPtr GetDpiForMonitor([In]IntPtr hmonitor, [In]DpiType dpiType, [Out]out uint dpiX, [Out]out uint dpiY);
     }
@@ -51,8 +51,19 @@ namespace MaSch.Presentation.Wpf.Extensions
     /// <seealso href="https://msdn.microsoft.com/en-us/library/windows/desktop/dn280511.aspx"/>
     public enum DpiType
     {
+        /// <summary>
+        /// The effective DPI. This value should be used when determining the correct scale factor for scaling UI elements. This incorporates the scale factor set by the user for this specific display.
+        /// </summary>
         Effective = 0,
+
+        /// <summary>
+        /// The angular DPI. This DPI ensures rendering at a compliant angular resolution on the screen. This does not include the scale factor set by the user for this specific display.
+        /// </summary>
         Angular = 1,
+
+        /// <summary>
+        /// The raw DPI. This value is the linear DPI of the screen as measured on the screen itself. Use this value when you want to read the pixel density and not the recommended scaling setting. This does not include the scale factor set by the user for this specific display and is not guaranteed to be a supported DPI value.
+        /// </summary>
         Raw = 2,
     }
 }

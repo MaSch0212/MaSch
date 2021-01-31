@@ -4,9 +4,20 @@ using System.Windows.Data;
 
 namespace MaSch.Presentation.Wpf.Converter
 {
+    /// <summary>
+    /// A <see cref="IValueConverter"/> that transforms a string.
+    /// </summary>
+    /// <seealso cref="IValueConverter" />
     public class StringTransformationConverter : IValueConverter
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether the string should be converted to upper case characters.
+        /// </summary>
         public bool ToUpper { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the string should be converted to lower case characters.
+        /// </summary>
         public bool ToLower { get; set; }
 
         /// <inheritdoc />
