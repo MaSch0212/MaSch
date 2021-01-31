@@ -947,7 +947,7 @@ namespace MaSch.Core.Extensions
             return result;
         }
 
-#if NETFX
+#if NETFRAMEWORK
         /// <summary>
         /// Returns a specified number of continuous elements from the end of a sequence.
         /// </summary>

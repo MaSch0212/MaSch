@@ -256,7 +256,7 @@ namespace MaSch.Presentation.Wpf.Printing
             });
 
             // TODO: Find way to use Cancellation Token instead of Thread.Abort()
-#if NETFX
+#if NETFRAMEWORK
             th.Abort();
 #endif
 

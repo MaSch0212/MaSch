@@ -88,27 +88,32 @@ namespace MaSch.Generators.Common
         }
 
         /// <summary>
-        /// Creates a name out of a <see cref="ITypeSymbol"/> that can be used for the generated file.
+        /// Creates a name out of a <see cref="ISymbol"/> that can be used for the generated file.
         /// </summary>
         /// <param name="symbol">The type symbol to use.</param>
         /// <param name="generatorName">The name of the generator.</param>
         /// <returns>Returns a name that can be used for a generated file.</returns>
-        public static string CreateHintName(this ITypeSymbol symbol, string generatorName)
+        public static string CreateHintName(this ISymbol symbol, string generatorName)
             => CreateHintName(symbol, x => (x, generatorName).GetHashCode());
 
         /// <summary>
-        /// Creates a name out of a <see cref="ITypeSymbol"/> that can be used for the generated file.
+        /// Creates a name out of a <see cref="ISymbol"/> that can be used for the generated file.
         /// </summary>
         /// <param name="symbol">The type symbol to use.</param>
         /// <param name="generatorName">The name of the generator.</param>
         /// <param name="additionalGenerationInfo">Additional info to create a unique hash for this generation.</param>
         /// <returns>Returns a name that can be used for a generated file.</returns>
-        public static string CreateHintName(this ITypeSymbol symbol, string generatorName, string additionalGenerationInfo)
+        public static string CreateHintName(this ISymbol symbol, string generatorName, string additionalGenerationInfo)
             => CreateHintName(symbol, x => (x, generatorName, additionalGenerationInfo).GetHashCode());
 
-        private static string CreateHintName(ITypeSymbol symbol, Func<string, int> hashFunc)
+        private static string CreateHintName(ISymbol symbol, Func<string, int> hashFunc)
         {
-            var name = Regex.Replace(symbol.ToDisplayString(), @"[\.+]", "-");
+            var unescapedName = symbol switch
+            {
+                IAssemblySymbol assembly => assembly.Name,
+                _ => symbol.ToDisplayString()
+            };
+            var name = Regex.Replace(unescapedName, @"[\.+]", "-");
             return $"{name}-{BitConverter.GetBytes(hashFunc(name)).ToHexString()}";
         }
 

@@ -35,7 +35,7 @@ namespace MaSch.Console
 
             _backColor = scopeColor ? console.BackgroundColor : ConsoleColor.Black;
             _foreColor = scopeColor ? console.ForegroundColor : ConsoleColor.Gray;
-#if NETFX
+#if NETFRAMEWORK
             _cursorVisible = console.IsCursorVisible;
 #else
             _cursorVisible = !OperatingSystem.IsWindows() || console.IsCursorVisible;

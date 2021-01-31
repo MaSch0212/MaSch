@@ -25,10 +25,6 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>masch presentation ui frontend wpf icons materialdesign</PackageTags>
   </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)'=='net48' ">
-    <DefineConstants>NETFX</DefineConstants>
-  </PropertyGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\Presentation.Wpf\MaSch.Presentation.Wpf.csproj" />

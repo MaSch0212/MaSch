@@ -26,10 +26,6 @@
     <PackageTags>masch native windows pinvoke</PackageTags>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)'=='net48' ">
-    <DefineConstants>NETFX</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup>
     <None Include="Properties\MaSch.snk" />
   </ItemGroup>

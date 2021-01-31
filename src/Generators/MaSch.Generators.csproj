@@ -6,7 +6,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <DefineConstants>NETFX</DefineConstants>
     <CodeAnalysisRuleSet>..\..\build\MaSch.ruleset</CodeAnalysisRuleSet>
 
     <!-- Output info -->
@@ -14,6 +13,7 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
     <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+    <NoWarn>$(NoWarn);1587;1570</NoWarn>
 
     <!-- Package Info -->
     <Description>Contains some useful Code Generators. Most of these generators requires a reference to the MaSch.Core NuGet package.</Description>
@@ -28,13 +28,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Resources\OSVersioning.cs" />
+    <Compile Remove="Resources\Records.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Core\Attributes\ShimsAttribute.cs" Link="Common\ShimsAttribute.cs" />
     <Compile Include="..\Core\Extensions\ArrayExtensions.cs" Link="Extensions\ArrayExtensions.cs" />
-    <Compile Include="..\Core\Shims\RangeAndIndex.cs" Link="Shims\RangeAndIndex.cs" />
-    <Compile Include="..\Core\Shims\System.Diagnostics.CodeAnalysis.cs" Link="Shims\System.Diagnostics.CodeAnalysis.cs" />
   </ItemGroup>
   
   <ItemGroup>
     <None Include="Properties\MaSch.snk" />
+    <None Include="Resources\OSVersioning.cs" />
+    <None Include="Resources\Records.cs" />
   </ItemGroup>
   
   <ItemGroup>
@@ -55,7 +61,21 @@
   
   <ItemGroup>
     <Folder Include="Extensions\" />
-    <Folder Include="Shims\" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

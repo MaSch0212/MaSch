@@ -27,10 +27,6 @@
     <PackageTags>masch generator sourcegenerator wrapper observable wpf</PackageTags>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)'=='net48' ">
-    <DefineConstants>NETFX</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
       <PrivateAssets>all</PrivateAssets>

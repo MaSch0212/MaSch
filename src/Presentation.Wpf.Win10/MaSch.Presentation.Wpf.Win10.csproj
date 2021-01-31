@@ -26,10 +26,6 @@
     <PackageTags>masch presentation ui frontend wpf icons mdl2 windows</PackageTags>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)'=='net48' ">
-    <DefineConstants>NETFX</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Presentation.Wpf\MaSch.Presentation.Wpf.csproj" />
   </ItemGroup>

@@ -609,7 +609,7 @@ namespace MaSch.Core.Extensions
         public static IDisposableEnumerable<TSource> Skip<TSource>(this IDisposableEnumerable<TSource> source, int count)
             => Redirect(Guard.NotNull(source, nameof(source)), x => x.Skip(count));
 
-#if !NETFX
+#if !NETFRAMEWORK
         /// <summary>
         /// Returns a new enumerable collection that contains the elements from <paramref name="source"/> with the last <paramref name="count"/> elements of the source collection omitted.
         /// </summary>
@@ -651,7 +651,7 @@ namespace MaSch.Core.Extensions
         public static IDisposableEnumerable<TSource> Take<TSource>(this IDisposableEnumerable<TSource> source, int count)
             => Redirect(Guard.NotNull(source, nameof(source)), x => x.Take(count));
 
-#if !NETFX
+#if !NETFRAMEWORK
         /// <summary>
         /// Returns a new enumerable collection that contains the last <paramref name="count"/> elements from <paramref name="source"/>.
         /// </summary>

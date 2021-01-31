@@ -1,4 +1,7 @@
-﻿using System.Windows.Markup;
+﻿using MaSch.Core.Attributes;
+using System.Windows.Markup;
+
+[assembly: Shims(Shims.IndexAndRange)]
 
 [assembly: XmlnsDefinition("http://schemas.masch212.de/MaSch/Wpf/Converter", "MaSch.Presentation.Wpf.Converter")]
 [assembly: XmlnsDefinition("http://schemas.masch212.de/MaSch/Wpf", "MaSch.Presentation.Wpf.DependencyProperties")]
