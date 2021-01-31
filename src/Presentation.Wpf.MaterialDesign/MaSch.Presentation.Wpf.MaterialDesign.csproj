@@ -27,6 +27,19 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <None Remove=".gitignore" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <AdditionalFiles Include="..\.npm\node_modules\%40mdi\font\css\materialdesignicons.css" Link="materialdesignicons.css" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Resource Include="..\.npm\node_modules\%40mdi\font\fonts\materialdesignicons-webfont.ttf" Link="materialdesignicons-webfont.ttf" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Generators\MaSch.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Presentation.Wpf\MaSch.Presentation.Wpf.csproj" />
   </ItemGroup>
 
@@ -51,7 +64,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <Resource Include="materialdesignicons-webfont.ttf" />
   </ItemGroup>
   
   <ItemGroup>
@@ -72,4 +84,12 @@
       <DependentUpon>MaterialDesignIconCode.tt</DependentUpon>
     </Compile>
   </ItemGroup>
+
+  <Target Name="InstallMdiFont" BeforeTargets="MainResourcesGeneration">
+    <PropertyGroup>
+      <NpmTempDir>$(ProjectDir)../.npm</NpmTempDir>
+    </PropertyGroup>
+    <MakeDir Directories="$(NpmTempDir)" />
+    <Exec Command="npm install @mdi/font@5.9.55" WorkingDirectory="$(NpmTempDir)" />
+  </Target>
 </Project>

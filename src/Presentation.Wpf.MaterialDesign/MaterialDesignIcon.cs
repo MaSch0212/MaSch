@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows;
+﻿using MaSch.Presentation.Wpf.Attributes;
 using System.Windows.Media;
 
 namespace MaSch.Presentation.Wpf.MaterialDesign
@@ -9,100 +7,14 @@ namespace MaSch.Presentation.Wpf.MaterialDesign
     /// Represents a icon using the material design icon library.
     /// </summary>
     /// <seealso cref="Wpf.Icon" />
-    public class MaterialDesignIcon : Icon
+    [WpfIconFont("Material Design Icons", "materialdesignicons.css", "mdi-", 0xA000u, DefaultIconCode = 0x000F0131u)]
+    [WpfIconFontExtraGeometry("UndoSettings", "M 0 0 M13.5,7A6.5,6.5 0 0,1 20,13.5A6.5,6.5 0 0,1 13.5,20H10V18H13.5C16,18 18,16 18,13.5C18,11 16,9 13.5,9H7.83L10.91,12.09L9.5,13.5L4,8L9.5,2.5L10.92,3.91L7.83,7H13.5M6,18H8V20H6V18 M11,22H13V24H11V22M7,22H9V24H7V22M15,22H17V24H15V22Z M 24 24")]
+    [WpfIconFontExtraGeometry("GitPlus", "M 0 0 M75,62.5L75,75L62.5,75L62.5,83.333L75,83.333L75,95.833L83.333,95.833L83.333,83.333L95.833,83.333L95.833,75L83.333,75L83.333,62.5L75,62.5ZM56.161,88.915L55.879,89.196C52.627,92.49 47.373,92.49 44.121,89.196L10.804,55.879C7.51,52.627 7.51,47.373 10.804,44.121L34.905,19.977L41.952,27.066C40.952,30.61 42.578,34.488 45.83,36.365L45.83,59.465C43.328,60.883 41.66,63.594 41.66,66.679C41.66,71.254 45.425,75.019 50,75.019C51.812,75.019 53.496,74.428 54.87,73.431C54.432,75.283 54.2,77.214 54.2,79.2C54.2,82.645 54.898,85.929 56.161,88.915ZM58.263,65.541C57.909,62.936 56.359,60.706 54.17,59.465L54.17,39.2L62.801,47.915C62.509,48.541 62.509,49.249 62.509,50C62.509,53.187 64.337,55.981 66.992,57.383C63.467,59.361 60.468,62.169 58.263,65.541ZM78.024,54.227C78.763,52.985 79.189,51.538 79.189,50C79.189,45.425 75.424,41.66 70.849,41.66C70.098,41.66 69.39,41.66 68.764,41.952L58.048,31.236C59.132,27.358 57.13,23.105 53.252,21.479C51.459,20.811 49.583,20.645 47.915,21.103L40.826,14.056L44.121,10.804C47.373,7.51 52.627,7.51 55.879,10.804L89.196,44.121C92.49,47.373 92.49,52.627 89.196,55.879L88.915,56.161C85.929,54.898 82.645,54.2 79.2,54.2C78.805,54.2 78.413,54.209 78.024,54.227Z M 100 100")]
+    public partial class MaterialDesignIcon
     {
-        /// <summary>
-        /// The font family to use for the <see cref="MaterialDesignIcon"/> class.
-        /// </summary>
-        public static readonly FontFamily FontFamily;
-
-        static MaterialDesignIcon()
+        partial void SetTransform()
         {
-            if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
-            {
-                FontFamily = new FontFamily("Material Design Icons");
-            }
-            else
-            {
-                FontFamily = Application.Current != null
-                    ? new FontFamily(new Uri("pack://application:,,,/MaSch.Presentation.Wpf.MaterialDesign;component/"), "./#Material Design Icons")
-                    : new FontFamily("Material Design Icons");
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the icon.
-        /// </summary>
-        public MaterialDesignIconCode Icon
-        {
-            get => Character == null ? 0 : Character.GetMaterialDesignIconCode();
-            set
-            {
-                if (value.IsGeometry(out var geom))
-                {
-                    Character = null;
-                    Geometry = Geometry.Parse(geom);
-                    Type = SymbolType.Geometry;
-                }
-                else
-                {
-                    Character = value.GetChar();
-                    Geometry = null;
-                    Type = SymbolType.Character;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MaterialDesignIcon"/> class.
-        /// </summary>
-        public MaterialDesignIcon()
-        {
-            Font = FontFamily;
-            Type = SymbolType.Character;
             Transform = new ScaleTransform(1.3, 1.3);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MaterialDesignIcon"/> class.
-        /// </summary>
-        /// <param name="icon">The icon to use.</param>
-        public MaterialDesignIcon(MaterialDesignIconCode icon)
-            : this()
-            => Icon = icon;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MaterialDesignIcon"/> class.
-        /// </summary>
-        /// <param name="icon">The icon to use.</param>
-        /// <param name="stretch">The stretch mode.</param>
-        public MaterialDesignIcon(MaterialDesignIconCode icon, Stretch stretch)
-            : this(icon)
-            => Stretch = stretch;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MaterialDesignIcon"/> class.
-        /// </summary>
-        /// <param name="icon">The icon to use.</param>
-        /// <param name="stretch">The stretch mode.</param>
-        /// <param name="fontSize">Size of the font.</param>
-        public MaterialDesignIcon(MaterialDesignIconCode icon, Stretch stretch, double fontSize)
-            : this(icon, stretch)
-            => FontSize = fontSize;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MaterialDesignIcon"/> class.
-        /// </summary>
-        /// <param name="icon">The icon to use.</param>
-        /// <param name="stretch">The stretch mode.</param>
-        /// <param name="fontSize">Size of the font.</param>
-        internal MaterialDesignIcon(MaterialDesignIconCode icon, Stretch? stretch, double? fontSize)
-            : this(icon)
-        {
-            if (stretch.HasValue)
-                Stretch = stretch.Value;
-            if (fontSize.HasValue)
-                FontSize = fontSize.Value;
         }
     }
 }

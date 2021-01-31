@@ -48,9 +48,18 @@ namespace MaSch.Generators.Common
         /// <param name="blockLine">The line before the code block.</param>
         /// <returns>Returns an <see cref="IDisposable"/> object, which closes the code block when disposed.</returns>
         public IDisposable AddBlock(string blockLine)
+            => AddBlock(blockLine, false);
+
+        /// <summary>
+        /// Adds a new code block to the source file.
+        /// </summary>
+        /// <param name="blockLine">The line before the code block.</param>
+        /// <param name="addSemicolon">if <c>true</c> adds a semicolon after the end of the block.</param>
+        /// <returns>Returns an <see cref="IDisposable"/> object, which closes the code block when disposed.</returns>
+        public IDisposable AddBlock(string blockLine, bool addSemicolon)
         {
             AppendLine(blockLine);
-            return AddBlock();
+            return AddBlock(addSemicolon);
         }
 
         /// <summary>
@@ -58,10 +67,18 @@ namespace MaSch.Generators.Common
         /// </summary>
         /// <returns>Returns an <see cref="IDisposable"/> object, which closes the code block when disposed.</returns>
         public IDisposable AddBlock()
+            => AddBlock(false);
+
+        /// <summary>
+        /// Adds a new code block to the source file.
+        /// </summary>
+        /// <param name="addSemicolon">if <c>true</c> adds a semicolon after the end of the block.</param>
+        /// <returns>Returns an <see cref="IDisposable"/> object, which closes the code block when disposed.</returns>
+        public IDisposable AddBlock(bool addSemicolon)
         {
             AppendLine("{");
             _currentIndent++;
-            return new CodeBlock(this, "}", true);
+            return new CodeBlock(this, addSemicolon ? "};" : "}", true);
         }
 
         /// <summary>
