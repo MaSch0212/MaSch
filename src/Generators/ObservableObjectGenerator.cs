@@ -1,5 +1,6 @@
 ﻿using MaSch.Generators.Common;
 using Microsoft.CodeAnalysis;
+using System;
 using System.Linq;
 using static MaSch.Generators.Common.CodeGenerationHelpers;
 
@@ -22,7 +23,8 @@ namespace MaSch.Generators
         public void Execute(GeneratorExecutionContext context)
         {
             var debugGeneratorSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.DebugGeneratorAttribute");
-            var observableObjectAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.ObservableObjectAttribute");
+            var observableObjectAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.GenerateObservableObjectAttribute");
+            var notifyPropChangeAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.GenerateNotifyPropertyChangedAttribute");
 
             if (observableObjectAttributeSymbol == null)
                 return;
@@ -30,40 +32,122 @@ namespace MaSch.Generators
             var query = from typeSymbol in context.Compilation.SourceModule.GlobalNamespace.GetNamespaceTypes()
                         let attributes = typeSymbol.GetAttributes()
                         let shouldDebug = attributes.Any(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, debugGeneratorSymbol))
-                        from attribute in attributes
-                        where SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, observableObjectAttributeSymbol)
-                        group attribute by (typeSymbol, shouldDebug) into g
-                        select g;
+                        let oo = attributes.FirstOrDefault(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, observableObjectAttributeSymbol))
+                        let npc = attributes.FirstOrDefault(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, notifyPropChangeAttributeSymbol))
+                        let interfaceType = (oo is not null ? InterfaceType.ObservableObject : (InterfaceType?)null) ??
+                                            (npc is not null ? InterfaceType.NotifyPropertyChanged : (InterfaceType?)null) ??
+                                            InterfaceType.None
+                        where interfaceType != InterfaceType.None
+                        select (typeSymbol, interfaceType, attribute: oo ?? npc, shouldDebug);
 
-            foreach (var type in query)
+            foreach (var (typeSymbol, interfaceType, attribute, shouldDebug) in query)
             {
-                if (type.Key.shouldDebug)
+                if (shouldDebug)
                     LaunchDebuggerOnBuild();
 
-                var builder = new SourceBuilder();
-                builder.AppendLine("using System.ComponentModel;")
-                       .AppendLine("using System.Runtime.CompilerServices;")
-                       .AppendLine();
-
-                using (builder.AddBlock($"namespace {type.Key.typeSymbol.ContainingNamespace}"))
-                using (builder.AddBlock($"partial class {type.Key.typeSymbol.Name} : INotifyPropertyChanged"))
+                var interfaceName = interfaceType switch
                 {
-                    builder.AppendLine("public event PropertyChangedEventHandler PropertyChanged;")
+                    InterfaceType.NotifyPropertyChanged => "System.ComponentModel.INotifyPropertyChanged",
+                    InterfaceType.ObservableObject => "MaSch.Core.Observable.IObservableObject",
+                    _ => throw new Exception("Unknown interface type: " + interfaceType)
+                };
+
+                var builder = new SourceBuilder();
+
+                using (builder.AddBlock($"namespace {typeSymbol.ContainingNamespace}"))
+                using (builder.AddBlock($"partial class {typeSymbol.Name} : {interfaceName}"))
+                {
+                    if (interfaceType == InterfaceType.ObservableObject)
+                    {
+                        builder.AppendLine("private readonly System.Collections.Generic.Dictionary<string, MaSch.Core.Attributes.NotifyPropertyChangedAttribute> _attributes;")
+                               .AppendLine("private readonly MaSch.Core.Observable.Modules.ObservableObjectModule _module;")
+                               .AppendLine();
+                    }
+
+                    builder.AppendLine("/// <inheritdoc/>")
+                           .AppendLine("public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;")
                            .AppendLine();
 
-                    using (builder.AddBlock("public virtual void SetProperty<T>(ref T property, T value, [CallerMemberName] string propertyName = null)"))
+                    if (interfaceType == InterfaceType.ObservableObject)
                     {
-                        builder.AppendLine("property = value;")
-                               .AppendLine("OnPropertyChanged(propertyName);");
+                        builder.AppendLine("/// <inheritdoc/>")
+                               .AppendLine("public virtual bool IsNotifyEnabled { get; set; } = true;")
+                               .AppendLine()
+                               .AppendLine($"/// <summary>Initializes a new instance of the <see cref=\"{typeSymbol.Name}\"/> class.</summary>");
+                        using (builder.AddBlock($"public {typeSymbol.Name}()"))
+                        {
+                            builder.AppendLine("_module = new MaSch.Core.Observable.Modules.ObservableObjectModule(this);")
+                                   .AppendLine("_attributes = MaSch.Core.Attributes.NotifyPropertyChangedAttribute.InitializeAll(this);");
+                        }
+
+                        builder.AppendLine()
+                               .AppendLine("/// <inheritdoc/>");
+                    }
+                    else
+                    {
+                        builder.AppendLine("/// <summary>Sets the specified property and notifies subscribers about the change.</summary>")
+                               .AppendLine("/// <typeparam name=\"T\">The type of the property to set.</typeparam>")
+                               .AppendLine("/// <param name=\"property\">The property backing field.</param>")
+                               .AppendLine("/// <param name=\"value\">The value to set.</param>")
+                               .AppendLine("/// <param name=\"propertyName\">Name of the property.</param>");
+                    }
+
+                    using (builder.AddBlock("public virtual void SetProperty<T>(ref T property, T value, [System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)"))
+                    {
+                        if (interfaceType == InterfaceType.ObservableObject)
+                        {
+                            using (builder.AddBlock("if (_attributes.ContainsKey(propertyName))"))
+                                builder.AppendLine("_attributes[propertyName].UnsubscribeEvent(this);");
+                            builder.AppendLine("property = value;")
+                                   .AppendLine("NotifyPropertyChanged(propertyName);");
+                            using (builder.AddBlock("if (_attributes.ContainsKey(propertyName))"))
+                                builder.AppendLine("_attributes[propertyName].SubscribeEvent(this);");
+                        }
+                        else
+                        {
+                            builder.AppendLine("property = value;")
+                                   .AppendLine("OnPropertyChanged(propertyName);");
+                        }
                     }
 
                     builder.AppendLine();
-                    using (builder.AddBlock("protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)"))
-                        builder.AppendLine("PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));");
+                    if (interfaceType == InterfaceType.ObservableObject)
+                    {
+                        builder.AppendLine("/// <inheritdoc/>");
+                        using (builder.AddBlock("public virtual void NotifyPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = \"\", bool notifyDependencies = true)"))
+                        {
+                            using (builder.AddBlock("if (IsNotifyEnabled)"))
+                            {
+                                builder.AppendLine("PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));");
+                                using (builder.AddBlock("if (notifyDependencies)"))
+                                    builder.AppendLine("_module.NotifyDependentProperties(propertyName);");
+                            }
+                        }
+
+                        builder.AppendLine()
+                               .AppendLine("/// <inheritdoc/>");
+                        using (builder.AddBlock("public virtual void NotifyCommandChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = \"\")"))
+                        {
+                            using (builder.AddBlock("if (IsNotifyEnabled)"))
+                                builder.AppendLine("_module.NotifyCommandChanged(propertyName);");
+                        }
+                    }
+                    else
+                    {
+                        using (builder.AddBlock("protected virtual void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)"))
+                            builder.AppendLine("PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));");
+                    }
                 }
 
-                context.AddSource(type.Key.typeSymbol, builder, nameof(ObservableObjectGenerator));
+                context.AddSource(typeSymbol, builder, nameof(ObservableObjectGenerator));
             }
+        }
+
+        private enum InterfaceType
+        {
+            None,
+            ObservableObject,
+            NotifyPropertyChanged,
         }
     }
 }

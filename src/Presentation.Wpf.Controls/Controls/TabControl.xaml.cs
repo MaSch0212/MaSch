@@ -11,8 +11,15 @@ using System.Windows.Media.Effects;
 
 namespace MaSch.Presentation.Wpf.Controls
 {
+    /// <summary>
+    /// Tab control with a lot more features than the default <see cref="System.Windows.Controls.TabControl"/>.
+    /// </summary>
+    /// <seealso cref="System.Windows.Controls.TabControl" />
     public class TabControl : System.Windows.Controls.TabControl
     {
+        /// <summary>
+        /// Dependency property. Gets or sets the duration of the tab switch animation in seconds.
+        /// </summary>
         public static readonly DependencyProperty AnimationDurationSecondsProperty =
             DependencyProperty.Register(
                 "AnimationDurationSeconds",
@@ -20,6 +27,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(TabControl),
                 new PropertyMetadata(0.2D));
 
+        /// <summary>
+        /// Dependency property. Gets or sets a value indicating whether a preview of a tab should be shown when the mouse hovers over a tab header.
+        /// </summary>
         public static readonly DependencyProperty IsPreviewEnabledProperty =
             DependencyProperty.Register(
                 "IsPreviewEnabled",
@@ -27,6 +37,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(TabControl),
                 new PropertyMetadata(true));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the time in miliseconds to wait after the mouse hovers over a tab header to show the tab preview.
+        /// </summary>
         public static readonly DependencyProperty PreviewDelayProperty =
             DependencyProperty.Register(
                 "PreviewDelay",
@@ -34,6 +47,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(TabControl),
                 new PropertyMetadata(1000));
 
+        /// <summary>
+        /// Dependency property. Gets or sets a value indicating whether Buttons for next tab, previous tab and a combobox for all available tabs should be displayed.
+        /// </summary>
         public static readonly DependencyProperty IsNavigationPartVisibleProperty =
             DependencyProperty.Register(
                 "IsNavigationPartVisible",
@@ -47,24 +63,36 @@ namespace MaSch.Presentation.Wpf.Controls
         private bool _isPreview;
         private bool _isNewPreview;
 
+        /// <summary>
+        /// Gets or sets the duration of the tab switch animation in seconds.
+        /// </summary>
         public double AnimationDurationSeconds
         {
             get => GetValue(AnimationDurationSecondsProperty) as double? ?? 0.2D;
             set => SetValue(AnimationDurationSecondsProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether a preview of a tab should be shown when the mouse hovers over a tab header.
+        /// </summary>
         public bool IsPreviewEnabled
         {
             get => GetValue(IsPreviewEnabledProperty) as bool? ?? true;
             set => SetValue(IsPreviewEnabledProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the time in miliseconds to wait after the mouse hovers over a tab header to show the tab preview.
+        /// </summary>
         public int PreviewDelay
         {
             get => GetValue(PreviewDelayProperty) as int? ?? 1000;
             set => SetValue(PreviewDelayProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether Buttons for next tab, previous tab and a combobox for all available tabs should be displayed.
+        /// </summary>
         public bool IsNavigationPartVisible
         {
             get => GetValue(IsNavigationPartVisibleProperty) as bool? ?? true;

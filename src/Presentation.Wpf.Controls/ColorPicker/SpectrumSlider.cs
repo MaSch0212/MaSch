@@ -6,8 +6,15 @@ using System.Windows.Shapes;
 
 namespace MaSch.Presentation.Wpf.ColorPicker
 {
+    /// <summary>
+    /// A control to select a color spectrum.
+    /// </summary>
+    /// <seealso cref="System.Windows.Controls.Slider" />
     public class SpectrumSlider : Slider
     {
+        /// <summary>
+        /// Dependency property. Gets or sets the selected color.
+        /// </summary>
         public static readonly DependencyProperty SelectedColorProperty =
             DependencyProperty.Register(
                 "SelectedColor",
@@ -20,12 +27,16 @@ namespace MaSch.Presentation.Wpf.ColorPicker
             DefaultStyleKeyProperty.OverrideMetadata(typeof(SpectrumSlider), new FrameworkPropertyMetadata(typeof(SpectrumSlider)));
         }
 
+        /// <summary>
+        /// Gets or sets the selected color.
+        /// </summary>
         public Color SelectedColor
         {
             get => GetValue(SelectedColorProperty) as Color? ?? Colors.Red;
             set => SetValue(SelectedColorProperty, value);
         }
 
+        /// <inheritdoc/>
         protected override void OnPreviewMouseMove(MouseEventArgs e)
         {
             base.OnPreviewMouseMove(e);
@@ -44,6 +55,7 @@ namespace MaSch.Presentation.Wpf.ColorPicker
             }
         }
 
+        /// <inheritdoc/>
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -52,6 +64,7 @@ namespace MaSch.Presentation.Wpf.ColorPicker
             OnValueChanged(double.NaN, Value);
         }
 
+        /// <inheritdoc/>
         protected override void OnValueChanged(double oldValue, double newValue)
         {
             base.OnValueChanged(oldValue, newValue);

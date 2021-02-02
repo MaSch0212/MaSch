@@ -5,8 +5,15 @@ using System.Windows.Media;
 
 namespace MaSch.Presentation.Wpf.Controls
 {
+    /// <summary>
+    /// Control to display default content for a <see cref="Tile"/>.
+    /// </summary>
+    /// <seealso cref="System.Windows.Controls.Control" />
     public class DefaultTileContent : Control
     {
+        /// <summary>
+        /// Dependency property. Gets or sets the control that is displayed as the image of the tile.
+        /// </summary>
         public static readonly DependencyProperty TileSymbolControlProperty =
             DependencyProperty.Register(
                 "TileSymbolControl",
@@ -14,6 +21,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(DefaultTileContent),
                 new PropertyMetadata(null));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the title of the tile.
+        /// </summary>
         public static readonly DependencyProperty TileTitleProperty =
             DependencyProperty.Register(
                 "TileTitle",
@@ -21,6 +31,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(DefaultTileContent),
                 new PropertyMetadata(string.Empty));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the brush that is used to fill the tile.
+        /// </summary>
         public static readonly DependencyProperty TileSymbolFillProperty =
             DependencyProperty.Register(
                 "TileSymbolFill",
@@ -28,6 +41,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(DefaultTileContent),
                 new PropertyMetadata(new SolidColorBrush(Colors.Black)));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the geometry that is displayed as the image of the tile.
+        /// </summary>
         public static readonly DependencyProperty TileSymbolGeometryProperty =
             DependencyProperty.Register(
                 "TileSymbolGeometry",
@@ -35,6 +51,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(DefaultTileContent),
                 new PropertyMetadata(null));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the image of the tile.
+        /// </summary>
         public static readonly DependencyProperty TileImageProperty =
             DependencyProperty.Register(
                 "TileImage",
@@ -42,43 +61,58 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(DefaultTileContent),
                 new PropertyMetadata(null));
 
+        static DefaultTileContent()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(DefaultTileContent), new FrameworkPropertyMetadata(typeof(DefaultTileContent)));
+        }
+
         private Control _innerBorder;
         private Control _title;
         private bool _isInitialized;
 
+        /// <summary>
+        /// Gets or sets the image of the tile.
+        /// </summary>
         public ImageSource TileImage
         {
             get => (ImageSource)GetValue(TileImageProperty);
             set => SetValue(TileImageProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the geometry that is displayed as the image of the tile.
+        /// </summary>
         public Geometry TileSymbolGeometry
         {
             get => (Geometry)GetValue(TileSymbolGeometryProperty);
             set => SetValue(TileSymbolGeometryProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the brush that is used to fill the tile.
+        /// </summary>
         public Brush TileSymbolFill
         {
             get => (Brush)GetValue(TileSymbolFillProperty);
             set => SetValue(TileSymbolFillProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the title of the tile.
+        /// </summary>
         public string TileTitle
         {
             get => (string)GetValue(TileTitleProperty);
             set => SetValue(TileTitleProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the control that is displayed as the image of the tile.
+        /// </summary>
         public FrameworkElement TileSymbolControl
         {
             get => (FrameworkElement)GetValue(TileSymbolControlProperty);
             set => SetValue(TileSymbolControlProperty, value);
-        }
-
-        static DefaultTileContent()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(DefaultTileContent), new FrameworkPropertyMetadata(typeof(DefaultTileContent)));
         }
 
         /// <summary>

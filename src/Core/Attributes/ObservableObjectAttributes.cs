@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaSch.Core.Observable;
+using System;
 using System.ComponentModel;
 
 #pragma warning disable SA1649 // File name should match first type name
@@ -33,11 +34,20 @@ namespace MaSch.Core.Attributes
     }
 
     /// <summary>
+    /// When applied to a class, the <see cref="IObservableObject"/> interfaces is automatically implemented using MaSch.Generators.
+    /// </summary>
+    /// <seealso cref="Attribute" />
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public class GenerateObservableObjectAttribute : Attribute
+    {
+    }
+
+    /// <summary>
     /// When applied to a class, the <see cref="INotifyPropertyChanged"/> interfaces is automatically implemented using MaSch.Generators.
     /// </summary>
     /// <seealso cref="Attribute" />
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class ObservableObjectAttribute : Attribute
+    public class GenerateNotifyPropertyChangedAttribute : Attribute
     {
     }
 

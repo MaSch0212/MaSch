@@ -4,16 +4,49 @@ using MaSch.Presentation.Wpf.ViewModels;
 
 namespace MaSch.Presentation.Wpf
 {
+    /// <summary>
+    /// Static class to show a styled MessageBox.
+    /// </summary>
     public static class MessageBox
     {
-        public static MessageBoxResult Show(string messageBoxText, string caption = null, MessageBoxButton button = MessageBoxButton.OK, 
-            MessageBoxImage icon = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.None, MessageBoxOptions options = MessageBoxOptions.None)
+        /// <summary>
+        /// Shows the specified message box.
+        /// </summary>
+        /// <param name="messageBoxText">The message box text.</param>
+        /// <param name="caption">The caption.</param>
+        /// <param name="button">The buttons to show.</param>
+        /// <param name="icon">The icon to show.</param>
+        /// <param name="defaultResult">The default result.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The result of the message box.</returns>
+        public static MessageBoxResult Show(
+            string messageBoxText,
+            string caption = null,
+            MessageBoxButton button = MessageBoxButton.OK,
+            MessageBoxImage icon = MessageBoxImage.None,
+            MessageBoxResult defaultResult = MessageBoxResult.None,
+            MessageBoxOptions options = MessageBoxOptions.None)
         {
             return Show(null, messageBoxText, caption, button, icon, defaultResult, options);
         }
 
-        internal static AlertResult ShowAlert(string messageBoxText, string caption = null, AlertButton button = AlertButton.Ok,
-            AlertImage icon = AlertImage.None, AlertResult defaultResult = AlertResult.None, AlertOptions options = AlertOptions.None)
+        /// <summary>
+        /// Shows the specified alert.
+        /// </summary>
+        /// <param name="messageBoxText">The alert text.</param>
+        /// <param name="caption">The caption.</param>
+        /// <param name="button">The buttons to show.</param>
+        /// <param name="icon">The icon to show.</param>
+        /// <param name="defaultResult">The default result.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The result of the alert.</returns>
+        internal static AlertResult ShowAlert(
+            string messageBoxText,
+            string caption = null,
+            AlertButton button = AlertButton.Ok,
+            AlertImage icon = AlertImage.None,
+            AlertResult defaultResult = AlertResult.None,
+            AlertOptions options = AlertOptions.None)
         {
             var msgButton = Convert(button);
             var msgIcon = Convert(icon);
@@ -25,8 +58,25 @@ namespace MaSch.Presentation.Wpf
             return Convert(result);
         }
 
-        public static MessageBoxResult Show(Window owner, string messageBoxText, string caption = null, MessageBoxButton button = MessageBoxButton.OK, 
-            MessageBoxImage icon = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.None, MessageBoxOptions options = MessageBoxOptions.None)
+        /// <summary>
+        /// Shows the specified message box.
+        /// </summary>
+        /// <param name="owner">The owner of the message box.</param>
+        /// <param name="messageBoxText">The message box text.</param>
+        /// <param name="caption">The caption.</param>
+        /// <param name="button">The buttons to show.</param>
+        /// <param name="icon">The icon to show.</param>
+        /// <param name="defaultResult">The default result.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The result of the message box.</returns>
+        public static MessageBoxResult Show(
+            Window owner,
+            string messageBoxText,
+            string caption = null,
+            MessageBoxButton button = MessageBoxButton.OK,
+            MessageBoxImage icon = MessageBoxImage.None,
+            MessageBoxResult defaultResult = MessageBoxResult.None,
+            MessageBoxOptions options = MessageBoxOptions.None)
         {
             return Application.Current.Dispatcher.Invoke(() =>
             {
@@ -36,7 +86,7 @@ namespace MaSch.Presentation.Wpf
                     MessageBoxText = messageBoxText,
                     MessageBoxButtons = button,
                     MessageBoxImage = icon,
-                    DefaultResult = defaultResult
+                    DefaultResult = defaultResult,
                 };
                 var dialog = new Views.MessageBox {DataContext = vm};
                 dialog.Owner = owner ?? (ReferenceEquals(Application.Current?.MainWindow, dialog) ? null : Application.Current?.MainWindow);
@@ -45,98 +95,68 @@ namespace MaSch.Presentation.Wpf
             });
         }
 
-
         private static MessageBoxButton Convert(AlertButton button)
         {
-            switch (button)
+            return button switch
             {
-                case AlertButton.Ok:
-                    return MessageBoxButton.OK;
-                case AlertButton.OkCancel:
-                    return MessageBoxButton.OKCancel;
-                case AlertButton.YesNoCancel:
-                    return MessageBoxButton.YesNoCancel;
-                case AlertButton.YesNo:
-                    return MessageBoxButton.YesNo;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(button), button, null);
-            }
+                AlertButton.Ok => MessageBoxButton.OK,
+                AlertButton.OkCancel => MessageBoxButton.OKCancel,
+                AlertButton.YesNoCancel => MessageBoxButton.YesNoCancel,
+                AlertButton.YesNo => MessageBoxButton.YesNo,
+                _ => throw new ArgumentOutOfRangeException(nameof(button), button, null),
+            };
         }
 
         private static MessageBoxImage Convert(AlertImage icon)
         {
-            switch (icon)
+            return icon switch
             {
-                case AlertImage.None:
-                    return MessageBoxImage.None;
-                case AlertImage.Hand:
-                    return MessageBoxImage.Hand;
-                case AlertImage.Question:
-                    return MessageBoxImage.Question;
-                case AlertImage.Exclamation:
-                    return MessageBoxImage.Exclamation;
-                case AlertImage.Asterisk:
-                    return MessageBoxImage.Asterisk;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(icon), icon, null);
-            }
+                AlertImage.None => MessageBoxImage.None,
+                AlertImage.Hand => MessageBoxImage.Hand,
+                AlertImage.Question => MessageBoxImage.Question,
+                AlertImage.Exclamation => MessageBoxImage.Exclamation,
+                AlertImage.Asterisk => MessageBoxImage.Asterisk,
+                _ => throw new ArgumentOutOfRangeException(nameof(icon), icon, null),
+            };
         }
 
         private static MessageBoxOptions Convert(AlertOptions options)
         {
-            switch (options)
+            return options switch
             {
-                case AlertOptions.None:
-                    return MessageBoxOptions.None;
-                case AlertOptions.DefaultDesktopOnly:
-                    return MessageBoxOptions.DefaultDesktopOnly;
-                case AlertOptions.RightAlign:
-                    return MessageBoxOptions.RightAlign;
-                case AlertOptions.RtlReading:
-                    return MessageBoxOptions.RtlReading;
-                case AlertOptions.ServiceNotification:
-                    return MessageBoxOptions.ServiceNotification;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(options), options, null);
-            }
+                AlertOptions.None => MessageBoxOptions.None,
+                AlertOptions.DefaultDesktopOnly => MessageBoxOptions.DefaultDesktopOnly,
+                AlertOptions.RightAlign => MessageBoxOptions.RightAlign,
+                AlertOptions.RtlReading => MessageBoxOptions.RtlReading,
+                AlertOptions.ServiceNotification => MessageBoxOptions.ServiceNotification,
+                _ => throw new ArgumentOutOfRangeException(nameof(options), options, null),
+            };
         }
 
         private static MessageBoxResult Convert(AlertResult result)
         {
-            switch (result)
+            return result switch
             {
-                case AlertResult.None:
-                    return MessageBoxResult.None;
-                case AlertResult.Ok:
-                    return MessageBoxResult.OK;
-                case AlertResult.Cancel:
-                    return MessageBoxResult.Cancel;
-                case AlertResult.Yes:
-                    return MessageBoxResult.Yes;
-                case AlertResult.No:
-                    return MessageBoxResult.No;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(result), result, null);
-            }
+                AlertResult.None => MessageBoxResult.None,
+                AlertResult.Ok => MessageBoxResult.OK,
+                AlertResult.Cancel => MessageBoxResult.Cancel,
+                AlertResult.Yes => MessageBoxResult.Yes,
+                AlertResult.No => MessageBoxResult.No,
+                _ => throw new ArgumentOutOfRangeException(nameof(result), result, null),
+            };
         }
 
         private static AlertResult Convert(MessageBoxResult result)
         {
-            switch (result)
+            return result switch
             {
-                case MessageBoxResult.None:
-                    return AlertResult.None;
-                case MessageBoxResult.OK:
-                    return AlertResult.Ok;
-                case MessageBoxResult.Cancel:
-                    return AlertResult.Cancel;
-                case MessageBoxResult.Yes:
-                    return AlertResult.Yes;
-                case MessageBoxResult.No:
-                    return AlertResult.No;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(result), result, null);
-            }
+                MessageBoxResult.None => AlertResult.None,
+                MessageBoxResult.OK => AlertResult.Ok,
+                MessageBoxResult.Cancel => AlertResult.Cancel,
+                MessageBoxResult.Yes => AlertResult.Yes,
+                MessageBoxResult.No => AlertResult.No,
+                _ => throw new ArgumentOutOfRangeException(nameof(result), result, null),
+            };
         }
     }
 }

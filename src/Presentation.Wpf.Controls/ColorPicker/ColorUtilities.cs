@@ -4,9 +4,18 @@ using System.Windows.Media;
 
 namespace MaSch.Presentation.Wpf.ColorPicker
 {
+    /// <summary>
+    /// Utilities to work with colors.
+    /// </summary>
     internal static class ColorUtilities
     {
-        // Converts an RGB color to an HSV color.
+        /// <summary>
+        /// Converts an RGB color to an HSV color.
+        /// </summary>
+        /// <param name="r">The red part of the color.</param>
+        /// <param name="b">The blue part of the color.</param>
+        /// <param name="g">The green part of the color.</param>
+        /// <returns>A HSV representation of the given color.</returns>
         public static HsvColor ConvertRgbToHsv(int r, int b, int g)
         {
             double h = 0, s;
@@ -39,7 +48,7 @@ namespace MaSch.Presentation.Wpf.ColorPicker
 
                 h *= 60;
                 if (h < 0.0)
-                    h = h + 360;
+                    h += 360;
             }
 
             return new HsvColor
@@ -50,7 +59,13 @@ namespace MaSch.Presentation.Wpf.ColorPicker
             };
         }
 
-        // Converts an HSV color to an RGB color.
+        /// <summary>
+        /// Converts an HSV color to an RGB color.
+        /// </summary>
+        /// <param name="h">The h value of the color.</param>
+        /// <param name="s">The s value of the color.</param>
+        /// <param name="v">The v value of the color.</param>
+        /// <returns>A RGB representation of the color.</returns>
         public static Color ConvertHsvToRgb(double h, double s, double v)
         {
             double r, g, b;
@@ -66,7 +81,7 @@ namespace MaSch.Presentation.Wpf.ColorPicker
                 if (h == 360)
                     h = 0;
                 else
-                    h = h / 60;
+                    h /= 60;
 
                 var i = (int)Math.Truncate(h);
                 var f = h - i;
@@ -118,8 +133,10 @@ namespace MaSch.Presentation.Wpf.ColorPicker
             return Color.FromArgb(255, (byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
         }
 
-        // Generates a list of colors with hues ranging from 0 360
-        // and a saturation and value of 1.
+        /// <summary>
+        /// Generates a list of colors with hues ranging from 0-360 and a saturation and value of 1.
+        /// </summary>
+        /// <returns>A list of colors representing the HSV spectrum.</returns>
         public static List<Color> GenerateHsvSpectrum()
         {
             var colorsList = new List<Color>(8);

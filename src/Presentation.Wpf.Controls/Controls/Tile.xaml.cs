@@ -7,6 +7,10 @@ using System.Windows.Media.Media3D;
 
 namespace MaSch.Presentation.Wpf.Controls
 {
+    /// <summary>
+    /// Button that is displayed as a tile.
+    /// </summary>
+    /// <seealso cref="System.Windows.Controls.Button" />
     public class Tile : Button
     {
         private const double CenterBox = 0.4D;
@@ -136,6 +140,13 @@ namespace MaSch.Presentation.Wpf.Controls
             }
         }
 
+        /// <summary>
+        /// Gets the flip direction depending on the mouse position.
+        /// </summary>
+        /// <param name="mousePos">The mouse position.</param>
+        /// <param name="size">The size.</param>
+        /// <param name="border">The border.</param>
+        /// <returns>A value representing the direction the tile should flip.</returns>
         public static FlipDirection GetFlipDirection(Point mousePos, double size, double border)
         {
             var pwb = new Point(mousePos.X - border, mousePos.Y - border); // Point without border
@@ -176,16 +187,54 @@ namespace MaSch.Presentation.Wpf.Controls
         }
     }
 
+    /// <summary>
+    /// Specifies the direction in which a <see cref="Tile"/> should flip.
+    /// </summary>
     public enum FlipDirection
     {
+        /// <summary>
+        /// The tile should be pressed a bit away from the camera.
+        /// </summary>
         Center,
+
+        /// <summary>
+        /// The tile should tilt to the right.
+        /// </summary>
         Right,
+
+        /// <summary>
+        /// The tile should tilt to the left.
+        /// </summary>
         Left,
+
+        /// <summary>
+        /// The tile should tilt to the top.
+        /// </summary>
         Top,
+
+        /// <summary>
+        /// The tile should tilt to the bottom.
+        /// </summary>
         Bottom,
+
+        /// <summary>
+        /// The tile should tilt to the top left.
+        /// </summary>
         TopLeft,
+
+        /// <summary>
+        /// The tile should tilt to the rop right.
+        /// </summary>
         TopRight,
+
+        /// <summary>
+        /// The tile should tilt to the bottom left.
+        /// </summary>
         BottomLeft,
+
+        /// <summary>
+        /// The tile should tilt to the bottom right.
+        /// </summary>
         BottomRight,
     }
 }

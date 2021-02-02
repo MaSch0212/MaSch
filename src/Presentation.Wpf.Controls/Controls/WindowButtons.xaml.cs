@@ -2,9 +2,11 @@
 using System.Windows;
 using System.Windows.Controls;
 
+#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable SA1601 // Partial elements should be documented
+
 namespace MaSch.Presentation.Wpf.Controls
 {
-    // ReSharper disable once InconsistentNaming
     public partial class WindowButtons : UserControl
     {
         public static readonly DependencyProperty MaximizableProperty =

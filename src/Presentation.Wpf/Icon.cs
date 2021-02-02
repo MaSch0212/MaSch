@@ -16,7 +16,7 @@ namespace MaSch.Presentation.Wpf
     /// <summary>
     /// Represents an icon that can be rendered by a WPF application.
     /// </summary>
-    [ObservableObject]
+    [GenerateNotifyPropertyChanged]
     public partial class Icon : IIcon_Props
     {
         /// <summary>

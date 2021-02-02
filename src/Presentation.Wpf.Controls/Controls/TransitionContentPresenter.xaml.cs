@@ -10,8 +10,15 @@ using MaSch.Presentation.Wpf.Extensions;
 
 namespace MaSch.Presentation.Wpf.Controls
 {
+    /// <summary>
+    /// Content presenter that can transition between contents using an animation.
+    /// </summary>
+    /// <seealso cref="System.Windows.Controls.ContentControl" />
     public class TransitionContentPresenter : ContentControl
     {
+        /// <summary>
+        /// Dependency property. Gets or sets the animation for transitioning content into view.
+        /// </summary>
         public static readonly DependencyProperty TransitionInProperty =
             DependencyProperty.Register(
                 "TransitionIn",
@@ -19,6 +26,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(TransitionContentPresenter),
                 new PropertyMetadata(TransitionInType.None));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the animation for transitioning content out of view.
+        /// </summary>
         public static readonly DependencyProperty TransitionOutProperty =
             DependencyProperty.Register(
                 "TransitionOut",
@@ -26,6 +36,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(TransitionContentPresenter),
                 new PropertyMetadata(TransitionOutType.None));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the duration of the transition animation.
+        /// </summary>
         public static readonly DependencyProperty TransitionDurationProperty =
             DependencyProperty.Register(
                 "TransitionDuration",
@@ -33,6 +46,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(TransitionContentPresenter),
                 new PropertyMetadata(TimeSpan.FromSeconds(0.2)));
 
+        /// <summary>
+        /// Dependency property. Gets or sets a value indicating whether to animate the first content of the <see cref="TransitionContentPresenter"/>.
+        /// </summary>
         public static readonly DependencyProperty TransitionFirstContentProperty =
             DependencyProperty.Register(
                 "TransitionFirstContent",
@@ -40,6 +56,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(TransitionContentPresenter),
                 new PropertyMetadata(true));
 
+        /// <summary>
+        /// Dependency property. Gets or sets a value indicating whether in and out animations should run simultaneously or after each other.
+        /// </summary>
         public static readonly DependencyProperty RunAnimationsSimultaneouslyProperty =
             DependencyProperty.Register(
                 "RunAnimationsSimultaneously",
@@ -47,6 +66,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(TransitionContentPresenter),
                 new PropertyMetadata(true));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the easing function to use for the animations.
+        /// </summary>
         public static readonly DependencyProperty EasingFunctionProperty =
             DependencyProperty.Register(
                 "EasingFunction",
@@ -54,6 +76,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(TransitionContentPresenter),
                 new PropertyMetadata(null));
 
+        /// <summary>
+        /// Occurs when the content changed.
+        /// </summary>
         public event DependencyPropertyChangedEventHandler ContentChanged;
 
         private int _currentlyActive;
@@ -62,36 +87,54 @@ namespace MaSch.Presentation.Wpf.Controls
         private ContentPresenter _content2;
         private Grid _contentGrid;
 
+        /// <summary>
+        /// Gets or sets the animation for transitioning content into view.
+        /// </summary>
         public TransitionInType TransitionIn
         {
             get => GetValue(TransitionInProperty) as TransitionInType? ?? TransitionInType.None;
             set => SetValue(TransitionInProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the animation for transitioning content out of view.
+        /// </summary>
         public TransitionOutType TransitionOut
         {
             get => GetValue(TransitionOutProperty) as TransitionOutType? ?? TransitionOutType.None;
             set => SetValue(TransitionOutProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the duration of the transition animation.
+        /// </summary>
         public TimeSpan TransitionDuration
         {
             get => GetValue(TransitionDurationProperty) as TimeSpan? ?? TimeSpan.FromSeconds(0.2);
             set => SetValue(TransitionDurationProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to animate the first content of the <see cref="TransitionContentPresenter"/>.
+        /// </summary>
         public bool TransitionFirstContent
         {
             get => GetValue(TransitionFirstContentProperty) as bool? ?? true;
             set => SetValue(TransitionFirstContentProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether in and out animations should run simultaneously or after each other.
+        /// </summary>
         public bool RunAnimationsSimultaneously
         {
             get => GetValue(RunAnimationsSimultaneouslyProperty) as bool? ?? true;
             set => SetValue(RunAnimationsSimultaneouslyProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the easing function to use for the animations.
+        /// </summary>
         public IEasingFunction EasingFunction
         {
             get => (IEasingFunction)GetValue(EasingFunctionProperty);
@@ -166,6 +209,15 @@ namespace MaSch.Presentation.Wpf.Controls
             ContentChanged?.Invoke(this, new DependencyPropertyChangedEventArgs(ContentProperty, oldContent, newContent));
         }
 
+        /// <summary>
+        /// Fades a specific content presenter into view.
+        /// </summary>
+        /// <param name="control">The control to fade in.</param>
+        /// <param name="transition">The transition to use.</param>
+        /// <param name="easing">The easing function to apply on the animation.</param>
+        /// <param name="beginTime">The begin time of the animation.</param>
+        /// <param name="duration">The duration of the animation.</param>
+        /// <param name="targetStoryboard">The target storyboard.</param>
         protected virtual void FadeIn(ContentPresenter control, TransitionInType transition, IEasingFunction easing, TimeSpan beginTime, Duration duration, Storyboard targetStoryboard)
         {
             TransformGroup transform = control.RenderTransform as TransformGroup ?? new TransformGroup();
@@ -249,6 +301,15 @@ namespace MaSch.Presentation.Wpf.Controls
             }
         }
 
+        /// <summary>
+        /// Fades a specific content presenter out of view.
+        /// </summary>
+        /// <param name="control">The control to fade out.</param>
+        /// <param name="transition">The transition to use.</param>
+        /// <param name="easing">The easing function to apply on the animation.</param>
+        /// <param name="beginTime">The begin time of the animation.</param>
+        /// <param name="duration">The duration of the animation.</param>
+        /// <param name="targetStoryboard">The target storyboard.</param>
         protected virtual void FadeOut(ContentPresenter control, TransitionOutType transition, IEasingFunction easing, TimeSpan beginTime, Duration duration, Storyboard targetStoryboard)
         {
             TransformGroup transform = control.RenderTransform as TransformGroup ?? new TransformGroup();
@@ -321,6 +382,7 @@ namespace MaSch.Presentation.Wpf.Controls
                     };
                     transform.Children.Add(translate);
                 }
+
                 targetStoryboard.Children.Add(CreateDoubleAnimation(0, x, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].X")));
                 targetStoryboard.Children.Add(CreateDoubleAnimation(0, y, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].Y")));
             }
@@ -350,35 +412,127 @@ namespace MaSch.Presentation.Wpf.Controls
         }
     }
 
+    /// <summary>
+    /// Specifies the transitions to use to fade in content. Multiple can be used at the same time.
+    /// </summary>
     [Flags]
     public enum TransitionInType
     {
+        /// <summary>
+        /// No animation is used.
+        /// </summary>
         None = 0b0,
+
+        /// <summary>
+        /// The Opacity is animated.
+        /// </summary>
         Fade = 0b1,
+
+        /// <summary>
+        /// A blur effect is added and animated.
+        /// </summary>
         Blur = 0b10,
+
+        /// <summary>
+        /// The control starts very zoomed in and animates to normal size.
+        /// </summary>
         ZoomFromUser = 0b100,
+
+        /// <summary>
+        /// The control starts very zoomed out and animates to normal size.
+        /// </summary>
         ZoomToUser = 0b1000,
+
+        /// <summary>
+        /// The control moves from the left side into view.
+        /// </summary>
         SlideInFromLeft = 0b1_0000_0000,
+
+        /// <summary>
+        /// The control moves from the top side into view.
+        /// </summary>
         SlideInFromTop = 0b10_0000_0000,
+
+        /// <summary>
+        /// The control moves from the right side into view.
+        /// </summary>
         SlideInFromRight = 0b100_0000_0000,
+
+        /// <summary>
+        /// The control moves from the bottom side into view.
+        /// </summary>
         SlideInFromBottom = 0b1000_0000_0000,
+
+        /// <summary>
+        /// When used in combination with a slide transition, the control starts only move half of the size.
+        /// </summary>
         SlideOnlyHalf = 0b1_0000_0000_0000,
+
+        /// <summary>
+        /// When used in combination with a slide transition, the control starts only move a quater of the size.
+        /// </summary>
         SlideOnlyQuater = 0b10_0000_0000_0000,
     }
 
+    /// <summary>
+    /// Specifies the transitions to use to fade out content. Multiple can be used at the same time.
+    /// </summary>
     [Flags]
     public enum TransitionOutType
     {
+        /// <summary>
+        /// No animation is used.
+        /// </summary>
         None = 0b0,
+
+        /// <summary>
+        /// The Opacity is animated.
+        /// </summary>
         Fade = 0b1,
+
+        /// <summary>
+        /// A blur effect is added and animated.
+        /// </summary>
         Blur = 0b10,
+
+        /// <summary>
+        /// The control animates to zoom in.
+        /// </summary>
         ZoomFromUser = 0b100,
+
+        /// <summary>
+        /// The control animates to zoom out.
+        /// </summary>
         ZoomToUser = 0b1000,
+
+        /// <summary>
+        /// The control moves to the left side out of view.
+        /// </summary>
         SlideOutToLeft = 0b1_0000_0000,
+
+        /// <summary>
+        /// The control moves to the top side out of view.
+        /// </summary>
         SlideOutToTop = 0b10_0000_0000,
+
+        /// <summary>
+        /// The control moves to the right side out of view.
+        /// </summary>
         SlideOutToRight = 0b100_0000_0000,
+
+        /// <summary>
+        /// The control moves to the bottom side out of view.
+        /// </summary>
         SlideOutToBottom = 0b1000_0000_0000,
+
+        /// <summary>
+        /// When used in combination with a slide transition, the control starts only move half of the size.
+        /// </summary>
         SlideOnlyHalf = 0b1_0000_0000_0000,
+
+        /// <summary>
+        /// When used in combination with a slide transition, the control starts only move a quater of the size.
+        /// </summary>
         SlideOnlyQuater = 0b10_0000_0000_0000,
     }
 }

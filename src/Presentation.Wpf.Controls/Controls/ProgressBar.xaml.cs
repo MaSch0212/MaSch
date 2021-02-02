@@ -10,8 +10,15 @@ using MaSch.Presentation.Wpf.Helper;
 
 namespace MaSch.Presentation.Wpf.Controls
 {
+    /// <summary>
+    /// Progress bar with a lot more features than the default <see cref="System.Windows.Controls.ProgressBar"/>.
+    /// </summary>
+    /// <seealso cref="System.Windows.Controls.ProgressBar" />
     public class ProgressBar : System.Windows.Controls.ProgressBar
     {
+        /// <summary>
+        /// Dependency property. Gets or sets a value indicating whether the progress bar should show a graph.
+        /// </summary>
         public static readonly DependencyProperty GraphModeProperty =
             DependencyProperty.Register(
                 "GraphMode",
@@ -19,6 +26,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(ProgressBar),
                 new PropertyMetadata(false, GraphModeChanged));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the current speed.
+        /// </summary>
         public static readonly DependencyProperty CurrentSpeedProperty =
             DependencyProperty.Register(
                 "CurrentSpeed",
@@ -26,6 +36,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(ProgressBar),
                 new PropertyMetadata(0D));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the current speed unit.
+        /// </summary>
         public static readonly DependencyProperty CurrentSpeedUnitProperty =
             DependencyProperty.Register(
                 "CurrentSpeedUnit",
@@ -33,6 +46,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(ProgressBar),
                 new PropertyMetadata("KB/s"));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the height of the progress bar when it does not show the graph.
+        /// </summary>
         public static readonly DependencyProperty NormalBarHeightProperty =
             DependencyProperty.Register(
                 "NormalBarHeight",
@@ -40,6 +56,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(ProgressBar),
                 new PropertyMetadata(5D, NormalBarHeightChanged));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the height of the progress bar when it shows the graph.
+        /// </summary>
         public static readonly DependencyProperty GraphBarHeightProperty =
             DependencyProperty.Register(
                 "GraphBarHeight",
@@ -47,6 +66,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(ProgressBar),
                 new PropertyMetadata(80D, GraphBarHeightChanged));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the current speed label.
+        /// </summary>
         public static readonly DependencyProperty CurrentSpeedLabelProperty =
             DependencyProperty.Register(
                 "CurrentSpeedLabel",
@@ -54,6 +76,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(ProgressBar),
                 new PropertyMetadata(string.Empty));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the brush that should be used for the background when the graph is shown.
+        /// </summary>
         public static readonly DependencyProperty GraphBackgroundProperty =
             DependencyProperty.Register(
                 "GraphBackground",
@@ -61,6 +86,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(ProgressBar),
                 new PropertyMetadata(new SolidColorBrush(Colors.White)));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the current speed string format.
+        /// </summary>
         public static readonly DependencyProperty CurrentSpeedFormatProperty =
             DependencyProperty.Register(
                 "CurrentSpeedFormat",
@@ -68,6 +96,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(ProgressBar),
                 new PropertyMetadata("{0:N2}"));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the brush which is used for the current speed.
+        /// </summary>
         public static readonly DependencyProperty CurrentSpeedForegroundBrushProperty =
             DependencyProperty.Register(
                 "CurrentSpeedForegroundBrush",
@@ -93,54 +124,81 @@ namespace MaSch.Presentation.Wpf.Controls
         private Border _controlBorder;
         private TextBlock _currentSpeed;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the progress bar should show a graph.
+        /// </summary>
         public bool GraphMode
         {
             get => GetValue(GraphModeProperty) as bool? ?? false;
             set => SetValue(GraphModeProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the current speed.
+        /// </summary>
         public double CurrentSpeed
         {
             get => GetValue(CurrentSpeedProperty) as double? ?? 0D;
             set => SetValue(CurrentSpeedProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the current speed unit.
+        /// </summary>
         public string CurrentSpeedUnit
         {
             get => (string)GetValue(CurrentSpeedUnitProperty);
             set => SetValue(CurrentSpeedUnitProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the height of the progress bar when it does not show the graph.
+        /// </summary>
         public double NormalBarHeight
         {
             get => GetValue(NormalBarHeightProperty) as double? ?? 5D;
             set => SetValue(NormalBarHeightProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the height of the progress bar when it shows the graph.
+        /// </summary>
         public double GraphBarHeight
         {
             get => GetValue(GraphBarHeightProperty) as double? ?? 80D;
             set => SetValue(GraphBarHeightProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the current speed label.
+        /// </summary>
         public string CurrentSpeedLabel
         {
             get => (string)GetValue(CurrentSpeedLabelProperty);
             set => SetValue(CurrentSpeedLabelProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the brush that should be used for the background when the graph is shown.
+        /// </summary>
         public Brush GraphBackground
         {
             get => (Brush)GetValue(GraphBackgroundProperty);
             set => SetValue(GraphBackgroundProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the current speed string format.
+        /// </summary>
         public string CurrentSpeedFormat
         {
             get => (string)GetValue(CurrentSpeedFormatProperty);
             set => SetValue(CurrentSpeedFormatProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the brush which is used for the current speed.
+        /// </summary>
         public Brush CurrentSpeedForegroundBrush
         {
             get => (Brush)GetValue(CurrentSpeedForegroundBrushProperty);

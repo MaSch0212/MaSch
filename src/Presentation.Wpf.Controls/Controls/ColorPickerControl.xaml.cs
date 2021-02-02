@@ -7,8 +7,16 @@ using MaSch.Presentation.Wpf.ColorPicker;
 
 namespace MaSch.Presentation.Wpf.Controls
 {
+    /// <summary>
+    /// Control with which the user can pick a color.
+    /// </summary>
+    /// <seealso cref="System.Windows.Controls.UserControl" />
+    /// <seealso cref="System.Windows.Markup.IComponentConnector" />
     public partial class ColorPickerControl
     {
+        /// <summary>
+        /// Dependency property. Gets or sets the currently selected color.
+        /// </summary>
         public static readonly DependencyProperty SelectedColorProperty =
             DependencyProperty.Register(
                 "SelectedColor",
@@ -16,6 +24,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(ColorPickerControl),
                 new PropertyMetadata(Colors.White, OnSelectedColorChanged));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the transparency of the color.
+        /// </summary>
         public static readonly DependencyProperty AProperty =
             DependencyProperty.Register(
                 "A",
@@ -23,6 +34,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(ColorPickerControl),
                 new PropertyMetadata((byte)255, OnAChanged));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the red value of the color.
+        /// </summary>
         public static readonly DependencyProperty RProperty =
             DependencyProperty.Register(
                 "R",
@@ -30,6 +44,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(ColorPickerControl),
                 new PropertyMetadata((byte)255, OnRChanged));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the green value of the color.
+        /// </summary>
         public static readonly DependencyProperty GProperty =
             DependencyProperty.Register(
                 "G",
@@ -37,6 +54,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(ColorPickerControl),
                 new PropertyMetadata((byte)255, OnGChanged));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the blue value of the color.
+        /// </summary>
         public static readonly DependencyProperty BProperty =
             DependencyProperty.Register(
                 "B",
@@ -44,6 +64,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(ColorPickerControl),
                 new PropertyMetadata((byte)255, OnBChanged));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the hexadecimal representation of the selected color.
+        /// </summary>
         public static readonly DependencyProperty HexadecimalStringProperty =
             DependencyProperty.Register(
                 "HexadecimalString",
@@ -51,6 +74,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(ColorPickerControl),
                 new PropertyMetadata("#FFFFFFFF", OnHexadecimalChanged));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the ScRGB transparency of the color.
+        /// </summary>
         public static readonly DependencyProperty ScAProperty =
             DependencyProperty.Register(
                 "ScA",
@@ -58,6 +84,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(ColorPickerControl),
                 new PropertyMetadata(1F, OnScAChanged));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the ScRGB red value of the color.
+        /// </summary>
         public static readonly DependencyProperty ScRProperty =
             DependencyProperty.Register(
                 "ScR",
@@ -65,6 +94,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(ColorPickerControl),
                 new PropertyMetadata(1F, OnScRChanged));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the ScRGB green value of the color.
+        /// </summary>
         public static readonly DependencyProperty ScGProperty =
             DependencyProperty.Register(
                 "ScG",
@@ -72,6 +104,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(ColorPickerControl),
                 new PropertyMetadata(1F, OnScGChanged));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the ScRGB blue value of the value.
+        /// </summary>
         public static readonly DependencyProperty ScBProperty =
             DependencyProperty.Register(
                 "ScB",
@@ -79,6 +114,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(ColorPickerControl),
                 new PropertyMetadata(1F, OnScBChanged));
 
+        /// <summary>
+        /// Dependency property. Gets or sets a value indicating whether this control should be shown in a minimized view.
+        /// </summary>
         public static readonly DependencyProperty IsMiniViewProperty =
             DependencyProperty.Register(
                 "IsMiniView",
@@ -87,72 +125,108 @@ namespace MaSch.Presentation.Wpf.Controls
                 new PropertyMetadata(false));
 
         private Color _color = Colors.White;
-        private Point? _colorPosition = new Point(0,0);
+        private Point? _colorPosition = new Point(0, 0);
         private bool _shouldSetPoint = true;
         private bool _update = true;
 
+        /// <summary>
+        /// Occurs when the selected color changed.
+        /// </summary>
         public event EventHandler<Color> SelectedColorChanged;
 
+        /// <summary>
+        /// Gets or sets the currently selected color.
+        /// </summary>
         public Color SelectedColor
         {
             get => GetValue(SelectedColorProperty) as Color? ?? Colors.White;
             set => SetValue(SelectedColorProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the transparency of the color.
+        /// </summary>
         public byte A
         {
             get => GetValue(AProperty) as byte? ?? 255;
             set => SetValue(AProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the red value of the color.
+        /// </summary>
         public byte R
         {
             get => GetValue(RProperty) as byte? ?? 255;
             set => SetValue(RProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the green value of the color.
+        /// </summary>
         public byte G
         {
             get => GetValue(GProperty) as byte? ?? 255;
             set => SetValue(GProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the blue value of the color.
+        /// </summary>
         public byte B
         {
             get => GetValue(BProperty) as byte? ?? 255;
             set => SetValue(BProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the hexadecimal representation of the selected color.
+        /// </summary>
         public string HexadecimalString
         {
             get => (string)GetValue(HexadecimalStringProperty);
             set => SetValue(HexadecimalStringProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the ScRGB transparency of the color.
+        /// </summary>
         public float ScA
         {
             get => GetValue(ScAProperty) as float? ?? 1F;
             set => SetValue(ScAProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the ScRGB red value of the color.
+        /// </summary>
         public float ScR
         {
             get => GetValue(ScRProperty) as float? ?? 1F;
             set => SetValue(ScRProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the ScRGB green value of the color.
+        /// </summary>
         public float ScG
         {
             get => GetValue(ScGProperty) as float? ?? 1F;
             set => SetValue(ScGProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the ScRGB blue value of the value.
+        /// </summary>
         public float ScB
         {
             get => GetValue(ScBProperty) as float? ?? 1F;
             set => SetValue(ScBProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this control should be shown in a minimized view.
+        /// </summary>
         public bool IsMiniView
         {
             get => GetValue(IsMiniViewProperty) as bool? ?? false;

@@ -5,8 +5,16 @@ using System.Windows.Controls;
 
 namespace MaSch.Presentation.Wpf.Controls
 {
+    /// <summary>
+    /// Window that is styled more modern that the default <see cref="System.Windows.Window"/>.
+    /// </summary>
+    /// <seealso cref="System.Windows.Window" />
+    /// <seealso cref="MaSch.Presentation.Views.IWindow" />
     public class Window : System.Windows.Window, IWindow
     {
+        /// <summary>
+        /// Dependency property. Gets or sets a value indicating whether this <see cref="Window"/> is maximizable.
+        /// </summary>
         public static readonly DependencyProperty MaximizableProperty =
             DependencyProperty.Register(
                 "Maximizable",
@@ -14,6 +22,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(Window),
                 new PropertyMetadata(true));
 
+        /// <summary>
+        /// Dependency property. Gets or sets a value indicating whether only the close button should be shown in the top right corner of the <see cref="Window"/>.
+        /// </summary>
         public static readonly DependencyProperty OnlyCloseProperty =
             DependencyProperty.Register(
                 "OnlyClose",
@@ -21,6 +32,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(Window),
                 new PropertyMetadata(false));
 
+        /// <summary>
+        /// Dependency property. Gets or sets a value indicating whether the <see cref="Window"/> can be dragged in the content as well as the title.
+        /// </summary>
         public static readonly DependencyProperty DragMoveOnContentBorderProperty =
             DependencyProperty.Register(
                 "DragMoveOnContentBorder",
@@ -28,6 +42,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(Window),
                 new PropertyMetadata(false));
 
+        /// <summary>
+        /// Dependency property. Gets or sets a custom element that is shown instead of the <see cref="System.Windows.Window.Icon"/>.
+        /// </summary>
         public static readonly DependencyProperty CustomIconProperty =
             DependencyProperty.Register(
                 "CustomIcon",
@@ -35,6 +52,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(Window),
                 new PropertyMetadata(null));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the horizontal alignment of the title.
+        /// </summary>
         public static readonly DependencyProperty TitleAlignmentProperty =
             DependencyProperty.Register(
                 "TitleAlignment",
@@ -47,30 +67,45 @@ namespace MaSch.Presentation.Wpf.Controls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Window), new FrameworkPropertyMetadata(typeof(Window)));
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="Window"/> is maximizable.
+        /// </summary>
         public bool Maximizable
         {
             get => GetValue(MaximizableProperty) as bool? ?? true;
             set => SetValue(MaximizableProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether only the close button should be shown in the top right corner of the <see cref="Window"/>.
+        /// </summary>
         public bool OnlyClose
         {
             get => GetValue(OnlyCloseProperty) as bool? ?? false;
             set => SetValue(OnlyCloseProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the <see cref="Window"/> can be dragged in the content as well as the title.
+        /// </summary>
         public bool DragMoveOnContentBorder
         {
             get => GetValue(DragMoveOnContentBorderProperty) as bool? ?? false;
             set => SetValue(DragMoveOnContentBorderProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets a custom element that is shown instead of the <see cref="System.Windows.Window.Icon"/>.
+        /// </summary>
         public object CustomIcon
         {
             get => GetValue(CustomIconProperty);
             set => SetValue(CustomIconProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the horizontal alignment of the title.
+        /// </summary>
         public HorizontalAlignment TitleAlignment
         {
             get => GetValue(TitleAlignmentProperty) as HorizontalAlignment? ?? HorizontalAlignment.Left;

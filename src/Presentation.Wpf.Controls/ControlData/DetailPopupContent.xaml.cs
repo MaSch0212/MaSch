@@ -5,13 +5,21 @@ using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using MaSch.Presentation.Wpf.Controls;
 using MaSch.Presentation.Wpf.Extensions;
 
 namespace MaSch.Presentation.Wpf.ControlData
 {
+    /// <summary>
+    /// Content for a <see cref="DetailPopup"/>.
+    /// </summary>
+    /// <seealso cref="System.Windows.Controls.Control" />
     [ContentProperty(nameof(PopupContent))]
     public class DetailPopupContent : Control
     {
+        /// <summary>
+        /// Dependency property. Gets or sets the arrow position.
+        /// </summary>
         public static readonly DependencyProperty ArrowPositionProperty =
             DependencyProperty.Register(
                 "ArrowPosition",
@@ -19,6 +27,9 @@ namespace MaSch.Presentation.Wpf.ControlData
                 typeof(DetailPopupContent),
                 new PropertyMetadata(AnchorStyle.Top, OnArrowChanged));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the size of the arrow.
+        /// </summary>
         public static readonly DependencyProperty ArrowSizeProperty =
             DependencyProperty.Register(
                 "ArrowSize",
@@ -26,6 +37,9 @@ namespace MaSch.Presentation.Wpf.ControlData
                 typeof(DetailPopupContent),
                 new PropertyMetadata(16D, OnArrowChanged));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the content of the popup.
+        /// </summary>
         public static readonly DependencyProperty PopupContentProperty =
             DependencyProperty.Register(
                 "PopupContent",
@@ -33,7 +47,7 @@ namespace MaSch.Presentation.Wpf.ControlData
                 typeof(DetailPopupContent),
                 new PropertyMetadata(null));
 
-        private readonly Dictionary<AnchorStyle, Geometry> _arrowDataDict = new Dictionary<AnchorStyle, Geometry>
+        private static readonly Dictionary<AnchorStyle, Geometry> ArrowDataDict = new Dictionary<AnchorStyle, Geometry>
         {
             { AnchorStyle.None, null },
             { AnchorStyle.Left, Geometry.Parse("M 1,0 0,1 1,2") },
@@ -45,18 +59,27 @@ namespace MaSch.Presentation.Wpf.ControlData
         private Path _arrow;
         private FrameworkElement _border;
 
+        /// <summary>
+        /// Gets or sets the arrow position.
+        /// </summary>
         public AnchorStyle ArrowPosition
         {
             get => GetValue(ArrowPositionProperty) as AnchorStyle? ?? AnchorStyle.Top;
             set => SetValue(ArrowPositionProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the size of the arrow.
+        /// </summary>
         public double ArrowSize
         {
             get => GetValue(ArrowSizeProperty) as double? ?? 16D;
             set => SetValue(ArrowSizeProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the content of the popup.
+        /// </summary>
         public UIElement PopupContent
         {
             get => (UIElement)GetValue(PopupContentProperty);
@@ -84,7 +107,7 @@ namespace MaSch.Presentation.Wpf.ControlData
             double shortSize = ArrowSize + 2, longSize = shortSize * 2;
             if (_arrow == null)
                 return;
-            _arrow.Data = _arrowDataDict[ArrowPosition];
+            _arrow.Data = ArrowDataDict[ArrowPosition];
             switch (ArrowPosition)
             {
                 case AnchorStyle.Left:

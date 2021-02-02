@@ -12,6 +12,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using WinControls=System.Windows.Controls;
 
+#pragma warning disable SA1600 // Elements should be documented
+
 namespace MaSch.Presentation.Wpf.Controls
 {
     public class VirtualizingWrapPanel : VirtualizingPanel, IScrollInfo
@@ -459,6 +461,7 @@ namespace MaSch.Presentation.Wpf.Controls
                     child.Arrange(layoutInfo);
                 }
             }
+
             return finalSize;
         }
 
@@ -744,7 +747,7 @@ namespace MaSch.Presentation.Wpf.Controls
 
         private class ItemAbstraction
         {
-            private WrapPanelAbstraction _panel;
+            private readonly WrapPanelAbstraction _panel;
             private int _sectionIndex = -1;
             private int _section = -1;
 

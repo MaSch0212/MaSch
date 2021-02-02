@@ -25,14 +25,17 @@ namespace MaSch.Generators
             var debugGeneratorSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.DebugGeneratorAttribute");
             var definitionAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.ObservablePropertyDefinitionAttribute");
             var observableObjectSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Observable.IObservableObject");
-            var observableObjectAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.ObservableObjectAttribute");
+            var observableObjectAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.GenerateObservableObjectAttribute");
+            var notifyPropChangeAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.GenerateNotifyPropertyChangedAttribute");
 
             if (definitionAttributeSymbol == null || (observableObjectSymbol == null && observableObjectAttributeSymbol == null))
                 return;
 
             var query = from typeSymbol in context.Compilation.SourceModule.GlobalNamespace.GetNamespaceTypes()
                         where (observableObjectSymbol != null && typeSymbol.AllInterfaces.Contains(observableObjectSymbol)) ||
-                              (observableObjectAttributeSymbol != null && typeSymbol.GetAllAttributes().FirstOrDefault(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, observableObjectAttributeSymbol)) != null)
+                              (observableObjectAttributeSymbol != null && typeSymbol.GetAllAttributes().FirstOrDefault(x =>
+                                SymbolEqualityComparer.Default.Equals(x.AttributeClass, observableObjectAttributeSymbol) ||
+                                SymbolEqualityComparer.Default.Equals(x.AttributeClass, notifyPropChangeAttributeSymbol)) != null)
                         from @interface in typeSymbol.Interfaces
                         where @interface.GetAttributes().FirstOrDefault(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, definitionAttributeSymbol)) != null
                         from propertySource in @interface.AllInterfaces.Prepend(@interface)

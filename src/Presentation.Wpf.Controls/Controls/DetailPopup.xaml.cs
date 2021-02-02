@@ -5,8 +5,15 @@ using MaSch.Presentation.Wpf.ControlData;
 
 namespace MaSch.Presentation.Wpf.Controls
 {
+    /// <summary>
+    /// Popup that is used to show details for a different control.
+    /// </summary>
+    /// <seealso cref="System.Windows.Controls.Primitives.Popup" />
     public class DetailPopup : Popup
     {
+        /// <summary>
+        /// Dependency property. Gets or sets the size of the arrow.
+        /// </summary>
         public static readonly DependencyProperty ArrowSizeProperty =
             DependencyProperty.Register(
                 "ArrowSize",
@@ -14,6 +21,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(DetailPopup),
                 new PropertyMetadata(16));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the arrow position.
+        /// </summary>
         public static readonly DependencyProperty ArrowPositionProperty =
             DependencyProperty.Register(
                 "ArrowPosition",
@@ -21,23 +31,30 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(DetailPopup),
                 new PropertyMetadata(AnchorStyle.Top));
 
+        static DetailPopup()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(DetailPopup), new FrameworkPropertyMetadata(typeof(DetailPopup)));
+        }
+
+        /// <summary>
+        /// Gets or sets the size of the arrow.
+        /// </summary>
         public int ArrowSize
         {
             get => GetValue(ArrowSizeProperty) as int? ?? 16;
             set => SetValue(ArrowSizeProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the arrow position.
+        /// </summary>
         public AnchorStyle ArrowPosition
         {
             get => GetValue(ArrowPositionProperty) as AnchorStyle? ?? AnchorStyle.Top;
             set => SetValue(ArrowPositionProperty, value);
         }
 
-        static DetailPopup()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(DetailPopup), new FrameworkPropertyMetadata(typeof(DetailPopup)));
-        }
-
+        /// <inheritdoc/>
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             if (e.Property == IsOpenProperty && (bool)e.NewValue)

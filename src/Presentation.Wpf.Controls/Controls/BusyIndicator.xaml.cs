@@ -9,8 +9,15 @@ using System.Windows.Threading;
 
 namespace MaSch.Presentation.Wpf.Controls
 {
+    /// <summary>
+    /// Control that indicates something is loading.
+    /// </summary>
+    /// <seealso cref="System.Windows.Controls.Control" />
     public class BusyIndicator : Control
     {
+        /// <summary>
+        /// Dependency property. Gets or sets the Brush to use for the dots.
+        /// </summary>
         public static readonly DependencyProperty DotBrushProperty =
             DependencyProperty.Register(
                 "DotBrush",
@@ -18,6 +25,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(BusyIndicator),
                 new PropertyMetadata(new SolidColorBrush(Colors.Black)));
 
+        /// <summary>
+        /// Dependency property. Gets or sets a value indicating whether this <see cref="BusyIndicator"/> should be a circle instead of a horizontal line.
+        /// </summary>
         public static readonly DependencyProperty CircleModeProperty =
             DependencyProperty.Register(
                 "CircleMode",
@@ -25,6 +35,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(BusyIndicator),
                 new PropertyMetadata(true, CircleModeChanged));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the width of the bar.
+        /// </summary>
         public static readonly DependencyProperty BarWidthProperty =
             DependencyProperty.Register(
                 "BarWidth",
@@ -38,18 +51,27 @@ namespace MaSch.Presentation.Wpf.Controls
         private Viewbox _circle;
         private Canvas _barEllipses;
 
+        /// <summary>
+        /// Gets or sets the Brush to use for the dots.
+        /// </summary>
         public Brush DotBrush
         {
             get => (Brush)GetValue(DotBrushProperty);
             set => SetValue(DotBrushProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="BusyIndicator"/> should be a circle instead of a horizontal line.
+        /// </summary>
         public bool CircleMode
         {
             get => GetValue(CircleModeProperty) as bool? ?? true;
             set => SetValue(CircleModeProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the width of the bar.
+        /// </summary>
         public double BarWidth
         {
             get => GetValue(BarWidthProperty) as double? ?? 0D;
