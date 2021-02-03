@@ -38,12 +38,7 @@ steps:
     ArtifactName: 'drop'
     publishLocation: 'Container'
     
-- task: DotNetCoreCLI@2
+- script: dotnet nuget push --api-key $(NuGetApiKey) --skip-duplicate --source https://api.nuget.org/v3/index.json *.nupkg
   displayName: "\U0001F680 Publish packages to nuget.org"
-  inputs:
-    command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-    nuGetFeedType: 'external'
-    publishFeedCredentials: 'NuGet.org (MaSch)'
-    arguments: '--skip-duplicate'
+  workingDirectory: $(Build.ArtifactStagingDirectory)
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
