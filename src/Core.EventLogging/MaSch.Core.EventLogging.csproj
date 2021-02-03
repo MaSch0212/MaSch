@@ -16,7 +16,7 @@
 
     <!-- Package Info -->
     <Description>Contains a logging provider for windows Event Logging.</Description>
-    <Version>1.0.0</Version>
+    <Version>0.1.0</Version>
     <Authors>Marc Schmidt</Authors>
     <SupportedOSPlatform>windows</SupportedOSPlatform>
     <Copyright>Copyright © Marc Schmidt 2021</Copyright>
