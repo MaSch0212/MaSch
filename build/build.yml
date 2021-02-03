@@ -38,12 +38,6 @@ steps:
     ArtifactName: 'drop'
     publishLocation: 'Container'
     
-- task: NuGetAuthenticate@0
-  displayName: "\U0001F513 Authenticate NuGet"
-  inputs:
-    nuGetServiceConnections: 'NuGet.org (MaSch)'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-    
 - task: DotNetCoreCLI@2
   displayName: "\U0001F680 Publish packages to nuget.org"
   inputs:
