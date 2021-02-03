@@ -88,7 +88,10 @@ namespace MaSch.Presentation.Wpf
                     MessageBoxImage = icon,
                     DefaultResult = defaultResult,
                 };
-                var dialog = new Views.MessageBox {DataContext = vm};
+                var dialog = new Views.MessageBox
+                {
+                    DataContext = vm,
+                };
                 dialog.Owner = owner ?? (ReferenceEquals(Application.Current?.MainWindow, dialog) ? null : Application.Current?.MainWindow);
                 dialog.ShowDialog();
                 return dialog.MessageBoxResult;

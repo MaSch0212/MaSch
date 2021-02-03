@@ -9,7 +9,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +23,10 @@ using Window = System.Windows.Window;
 
 namespace MaSch.Presentation.Wpf.Views.SplitView
 {
+    /// <summary>
+    /// Control that shows a hamburger menu.
+    /// </summary>
+    /// <seealso cref="System.Windows.Controls.Control" />
     [ContentProperty(nameof(ItemSource))]
     [DefaultProperty(nameof(ItemSource))]
     public class SplitView : Control
@@ -52,37 +55,99 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
 
         #region Dependency Properties
 
+        /// <summary>
+        /// Dependency property. Gets or sets the item source for the groups and pages.
+        /// </summary>
         public static readonly DependencyProperty ItemSourceProperty =
             DependencyProperty.Register("ItemSource", typeof(IList), typeof(SplitView), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Dependency property. Gets or sets a value indicating whether the menu of this <see cref="SplitView"/> is expanded.
+        /// </summary>
         public static readonly DependencyProperty IsExpandedProperty =
             DependencyProperty.Register("IsExpanded", typeof(bool), typeof(SplitView), new PropertyMetadata(true, OnIsExpandedChanged));
+
+        /// <summary>
+        /// Dependency property. Gets or sets a value indicating whether animations should be used.
+        /// </summary>
         public static readonly DependencyProperty UseAnimationsProperty =
             DependencyProperty.Register("UseAnimations", typeof(bool), typeof(SplitView), new PropertyMetadata(true, OnUseAnimationsChanged));
+
+        /// <summary>
+        /// Dependency property. Gets or sets the content of the menu button.
+        /// </summary>
         public static readonly DependencyProperty MenuButtonContentProperty =
             DependencyProperty.Register("MenuButtonContent", typeof(string), typeof(SplitView), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Dependency property. Gets or sets the content that is displayed directly below the last menu item when the menu is expanded.
+        /// </summary>
         public static readonly DependencyProperty MenuInfoAreaExpandedTopProperty =
             DependencyProperty.Register("MenuInfoAreaExpandedTop", typeof(object), typeof(SplitView), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Dependency property. Gets or sets the content that is displayed at the bottom of the menu bar when the menu is expanded.
+        /// </summary>
         public static readonly DependencyProperty MenuInfoAreaExpandedBottomProperty =
             DependencyProperty.Register("MenuInfoAreaExpandedBottom", typeof(object), typeof(SplitView), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Dependency property. Gets or sets the content that is displayed directly below the last menu item when the menu is collapsed.
+        /// </summary>
         public static readonly DependencyProperty MenuInfoAreaCollapsedTopProperty =
             DependencyProperty.Register("MenuInfoAreaCollapsedTop", typeof(object), typeof(SplitView), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Dependency property. Gets or sets the content that is displayed at the bottom of the menu bar when the menu is collapsed.
+        /// </summary>
         public static readonly DependencyProperty MenuInfoAreaCollapsedBottomProperty =
             DependencyProperty.Register("MenuInfoAreaCollapsedBottom", typeof(object), typeof(SplitView), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Dependency property. Gets or sets a value indicating whether the current page is loading.
+        /// </summary>
         public static readonly DependencyProperty IsLoadingPageProperty =
             DependencyProperty.Register("IsLoadingPage", typeof(bool), typeof(SplitView), new PropertyMetadata(false));
+
+        /// <summary>
+        /// Dependency property. Gets or sets a value indicating whether the loading animation should be shown.
+        /// </summary>
         public static readonly DependencyProperty ShowLoadingPaneProperty =
             DependencyProperty.Register("ShowLoadingPane", typeof(bool), typeof(SplitView), new PropertyMetadata(false));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the transition type that should be used to animate pages into view.
+        /// </summary>
         public static readonly DependencyProperty TransitionInProperty =
             DependencyProperty.Register("TransitionIn", typeof(TransitionInType), typeof(SplitView), new PropertyMetadata(TransitionInType.None));
+
+        /// <summary>
+        /// Dependency property. Gets or sets the transition type that should be used to animate pages out of view.
+        /// </summary>
         public static readonly DependencyProperty TransitionOutProperty =
             DependencyProperty.Register("TransitionOut", typeof(TransitionOutType), typeof(SplitView), new PropertyMetadata(TransitionOutType.None));
+
+        /// <summary>
+        /// Dependency property. Gets or sets the duration of the transition between two pages.
+        /// </summary>
         public static readonly DependencyProperty TransitionDurationProperty =
             DependencyProperty.Register("TransitionDuration", typeof(TimeSpan), typeof(SplitView), new PropertyMetadata(TimeSpan.FromSeconds(0.2)));
+
+        /// <summary>
+        /// Dependency property. Gets or sets a value indicating whether the first selected page should be animated in.
+        /// </summary>
         public static readonly DependencyProperty TransitionFirstContentProperty =
             DependencyProperty.Register("TransitionFirstContent", typeof(bool), typeof(SplitView), new PropertyMetadata(true));
+
+        /// <summary>
+        /// Dependency property. Gets or sets a value indicating whether the animations for transitioning pages in and out shoudl run simultaneously.
+        /// </summary>
         public static readonly DependencyProperty RunAnimationsSimultaneouslyProperty =
             DependencyProperty.Register("RunAnimationsSimultaneously", typeof(bool), typeof(SplitView), new PropertyMetadata(true));
+
+        /// <summary>
+        /// Dependency property. Gets or sets the easing function to use on the transition animations.
+        /// </summary>
         public static readonly DependencyProperty EasingFunctionProperty =
             DependencyProperty.Register("EasingFunction", typeof(IEasingFunction), typeof(SplitView), new PropertyMetadata(null));
 
@@ -114,88 +179,154 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
 
         #region Properties
 
+        /// <summary>
+        /// Gets or sets the item source for the groups and pages.
+        /// </summary>
         [Bindable(true)]
         public IList ItemSource
         {
             get => (IList)GetValue(ItemSourceProperty);
             set => SetValue(ItemSourceProperty, value);
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the menu of this <see cref="SplitView"/> is expanded.
+        /// </summary>
         public bool IsExpanded
         {
             get => GetValue(IsExpandedProperty) as bool? ?? true;
             set => SetValue(IsExpandedProperty, value);
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether animations should be used.
+        /// </summary>
         public bool UseAnimations
         {
             get => GetValue(UseAnimationsProperty) as bool? ?? true;
             set => SetValue(UseAnimationsProperty, value);
         }
+
+        /// <summary>
+        /// Gets or sets the content of the menu button.
+        /// </summary>
         public string MenuButtonContent
         {
             get => (string)GetValue(MenuButtonContentProperty);
             set => SetValue(MenuButtonContentProperty, value);
         }
+
+        /// <summary>
+        /// Gets or sets the content that is displayed directly below the last menu item when the menu is expanded.
+        /// </summary>
         public object MenuInfoAreaExpandedTop
         {
             get => GetValue(MenuInfoAreaExpandedTopProperty);
             set => SetValue(MenuInfoAreaExpandedTopProperty, value);
         }
+
+        /// <summary>
+        /// Gets or sets the content that is displayed at the bottom of the menu bar when the menu is expanded.
+        /// </summary>
         public object MenuInfoAreaExpandedBottom
         {
             get => GetValue(MenuInfoAreaExpandedBottomProperty);
             set => SetValue(MenuInfoAreaExpandedBottomProperty, value);
         }
+
+        /// <summary>
+        /// Gets or sets the content that is displayed directly below the last menu item when the menu is collapsed.
+        /// </summary>
         public object MenuInfoAreaCollapsedTop
         {
             get => GetValue(MenuInfoAreaCollapsedTopProperty);
             set => SetValue(MenuInfoAreaCollapsedTopProperty, value);
         }
+
+        /// <summary>
+        /// Gets or sets the content that is displayed at the bottom of the menu bar when the menu is collapsed.
+        /// </summary>
         public object MenuInfoAreaCollapsedBottom
         {
             get => GetValue(MenuInfoAreaCollapsedBottomProperty);
             set => SetValue(MenuInfoAreaCollapsedBottomProperty, value);
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the current page is loading.
+        /// </summary>
         public bool IsLoadingPage
         {
             get => GetValue(IsLoadingPageProperty) as bool? ?? true;
             set => SetValue(IsLoadingPageProperty, value);
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the loading animation should be shown.
+        /// </summary>
         public bool ShowLoadingPane
         {
             get => GetValue(ShowLoadingPaneProperty) as bool? ?? true;
             set => SetValue(ShowLoadingPaneProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the selected page.
+        /// </summary>
         public SplitViewItemBase SelectedItem
         {
             get => (SplitViewItemBase)_treeView?.SelectedItem;
             set => value.IsSelected = true;
         }
+
+        /// <summary>
+        /// Gets or sets the transition type that should be used to animate pages into view.
+        /// </summary>
         public TransitionInType TransitionIn
         {
             get => GetValue(TransitionInProperty) as TransitionInType? ?? TransitionInType.None;
             set => SetValue(TransitionInProperty, value);
         }
+
+        /// <summary>
+        /// Gets or sets the transition type that should be used to animate pages out of view.
+        /// </summary>
         public TransitionOutType TransitionOut
         {
             get => GetValue(TransitionOutProperty) as TransitionOutType? ?? TransitionOutType.None;
             set => SetValue(TransitionOutProperty, value);
         }
+
+        /// <summary>
+        /// Gets or sets the duration of the transition between two pages.
+        /// </summary>
         public TimeSpan TransitionDuration
         {
             get => GetValue(TransitionDurationProperty) as TimeSpan? ?? TimeSpan.Zero;
             set => SetValue(TransitionDurationProperty, value);
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the first selected page should be animated in.
+        /// </summary>
         public bool TransitionFirstContent
         {
             get => GetValue(TransitionFirstContentProperty) as bool? ?? false;
             set => SetValue(TransitionFirstContentProperty, value);
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the animations for transitioning pages in and out shoudl run simultaneously.
+        /// </summary>
         public bool RunAnimationsSimultaneously
         {
             get => GetValue(RunAnimationsSimultaneouslyProperty) as bool? ?? false;
             set => SetValue(RunAnimationsSimultaneouslyProperty, value);
         }
+
+        /// <summary>
+        /// Gets or sets the easing function to use on the transition animations.
+        /// </summary>
         public IEasingFunction EasingFunction
         {
             get => (IEasingFunction)GetValue(EasingFunctionProperty);
@@ -211,6 +342,9 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             DefaultStyleKeyProperty.OverrideMetadata(typeof(SplitView), new FrameworkPropertyMetadata(typeof(SplitView)));
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SplitView"/> class.
+        /// </summary>
         public SplitView()
         {
             ItemSource = new ObservableCollection<SplitViewItemBase>();
@@ -220,6 +354,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
 
         #region Overrides
 
+        /// <inheritdoc/>
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -247,8 +382,8 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             Guard.NotNull(_indicatorBottom, nameof(_indicatorBottom));
             Guard.NotNull(_indicatorTop, nameof(_indicatorTop));
 
-            _treeView.SelectedItemChanged += _treeView_SelectedItemChanged;
-            _menuButton.Click += _menuButton_Click;
+            _treeView.SelectedItemChanged += TreeView_SelectedItemChanged;
+            _menuButton.Click += MenuButton_Click;
             _treeViewScroll.ScrollChanged += TreeViewScroll_ScrollChanged;
             TreeViewScroll_ScrollChanged(_treeViewScroll, null);
 
@@ -331,10 +466,15 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                             await Task.Run(() => Waiter.Retry(() => Application.Current.Dispatcher.Invoke(() => (sender as Window)?.Close()), new RetryOptions { ThinkTimeBetweenChecks = TimeSpan.FromSeconds(1000) }));
                         }
                     }
-                    finally { IsLoadingPage = false; }
+                    finally
+                    {
+                        IsLoadingPage = false;
+                    }
                 }
                 else
+                {
                     e.Cancel = e.Cancel || !content.Close().Result;
+                }
             }
         }
 
@@ -347,6 +487,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                 SetSelected(newItem, false);
             _content.Content = oldItem?.Content;
         }
+
         private async Task<bool> SwitchContentInternal(SplitViewItem oldItem, SplitViewItem newItem)
         {
             IsLoadingPage = true;
@@ -367,15 +508,21 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                     CancelTreeViewSelection(oldItem, newItem);
                     return false;
                 }
+
                 if (svcOld?.DataContext is SplitViewContentViewModel oldVm)
                     oldVm.IsOpen = false;
                 if (svcNew?.DataContext is SplitViewContentViewModel newVm)
                     newVm.IsOpen = true;
             }
-            finally { IsLoadingPage = false; }
+            finally
+            {
+                IsLoadingPage = false;
+            }
+
             return true;
         }
-        private async void _treeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+
+        private async void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             var o = e.OldValue as SplitViewItem;
             var n = e.NewValue as SplitViewItem;
@@ -406,12 +553,11 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             _treeView.LayoutUpdated += EventHandler;
         }
 
-        private void _menuButton_Click(object sender, RoutedEventArgs e)
+        private void MenuButton_Click(object sender, RoutedEventArgs e)
         {
             IsExpanded = !IsExpanded;
         }
 
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
         private void StartShrinkAnimation()
         {
             var groupItems = GetGroupItems();
@@ -429,11 +575,13 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                         item.Height = item.ActualHeight;
                         item.Tag = item.ActualHeight;
                     }
+
                     item.Height = 10;
-                    //item.Opacity = 0;
                 }
+
                 return;
             }
+
             StopAnimations(false);
 
             _currentStoryboard = new Storyboard { Duration = _animationDuration };
@@ -443,7 +591,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                 From = _buttonsColumn.Width.IsAuto ? new GridLength(_treeView.ActualWidth) : _buttonsColumn.Width,
                 To = new GridLength(36.5),
                 Duration = _animationDuration,
-                EasingFunction = new CubicEase()
+                EasingFunction = new CubicEase(),
             };
             Storyboard.SetTarget(columnAnimation, _buttonsColumn);
             Storyboard.SetTargetProperty(columnAnimation, new PropertyPath(ColumnDefinition.WidthProperty));
@@ -466,26 +614,22 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                     item.Height = item.ActualHeight;
                     item.Tag = item.ActualHeight;
                 }
-                //DoubleAnimation opAnimation = new DoubleAnimation(0, _animationDuration) { EasingFunction = new CubicEase() };
-                //Storyboard.SetTarget(opAnimation, item);
-                //Storyboard.SetTargetProperty(opAnimation, new PropertyPath(Border.OpacityProperty));
-                //_currentStoryboard.Children.Add(opAnimation);
+
                 var hAnimation = new DoubleAnimation(10, _animationDuration) { EasingFunction = new CubicEase() };
                 Storyboard.SetTarget(hAnimation, item);
                 Storyboard.SetTargetProperty(hAnimation, new PropertyPath(HeightProperty));
                 _currentStoryboard.Children.Add(hAnimation);
             }
 
-            _currentStoryboard.Completed += _currentStoryboard_Completed;
+            _currentStoryboard.Completed += CurrentStoryboard_Completed;
             _currentStoryboard.Begin();
         }
 
-        private void _currentStoryboard_Completed(object sender, EventArgs e)
+        private void CurrentStoryboard_Completed(object sender, EventArgs e)
         {
             _currentStoryboard = null;
         }
 
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
         private void StartExpandAnimation()
         {
             var groupItems = GetGroupItems();
@@ -499,10 +643,11 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                 foreach (var item in groupItems)
                 {
                     item.Height = double.NaN;
-                    //item.Opacity = 1;
                 }
+
                 return;
             }
+
             StopAnimations(false);
 
             _currentStoryboard = new Storyboard { Duration = _animationDuration };
@@ -512,7 +657,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                 From = _buttonsColumn.Width.IsAuto ? new GridLength(_treeView.ActualWidth) : _buttonsColumn.Width,
                 To = new GridLength(_treeView.ActualWidth),
                 Duration = _animationDuration,
-                EasingFunction = new CubicEase()
+                EasingFunction = new CubicEase(),
             };
             Storyboard.SetTarget(columnAnimation, _buttonsColumn);
             Storyboard.SetTargetProperty(columnAnimation, new PropertyPath(ColumnDefinition.WidthProperty));
@@ -535,17 +680,14 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                     item.Height = item.ActualHeight;
                     item.Tag = item.ActualHeight;
                 }
-                //var opAnimation = new DoubleAnimation(1, _animationDuration) { EasingFunction = new CubicEase() };
-                //Storyboard.SetTarget(opAnimation, item);
-                //Storyboard.SetTargetProperty(opAnimation, new PropertyPath(Border.OpacityProperty));
-                //_currentStoryboard.Children.Add(opAnimation);
+
                 var hAnimation = new DoubleAnimation((double)item.Tag, _animationDuration) { EasingFunction = new CubicEase() };
                 Storyboard.SetTarget(hAnimation, item);
                 Storyboard.SetTargetProperty(hAnimation, new PropertyPath(HeightProperty));
                 _currentStoryboard.Children.Add(hAnimation);
             }
 
-            _currentStoryboard.Completed += _currentStoryboard_Completed;
+            _currentStoryboard.Completed += CurrentStoryboard_Completed;
             _currentStoryboard.Completed += (s, e) =>
             {
                 Task.Run(() =>
@@ -554,8 +696,6 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                     Dispatcher.Invoke(() =>
                     {
                         _buttonsColumn.Width = GridLength.Auto;
-                        //foreach(var item in groupItems)
-                        //    item.Height = double.NaN;
                     });
                 });
             };
@@ -574,6 +714,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                     GetGroupItemsRec(result, tvi);
                 }
             }
+
             return result;
         }
 
@@ -592,6 +733,11 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
 
         #region Public Methods
 
+        /// <summary>
+        /// Switches to a specified page.
+        /// </summary>
+        /// <param name="item">The item to switch to.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task<bool> SwitchToItem(SplitViewItem item)
         {
             _ignoreNextSwitch = true;
@@ -599,6 +745,10 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             return await SwitchContentInternal(_treeView.SelectedItem as SplitViewItem, item);
         }
 
+        /// <summary>
+        /// Collapses the menu.
+        /// </summary>
+        /// <param name="useAnimation">Determines wether to use an animation. When null uses current value of <see cref="UseAnimations"/>.</param>
         public void CollapseMenu(bool? useAnimation)
         {
             if (!IsExpanded)
@@ -610,9 +760,16 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             {
                 IsExpanded = false;
             }
-            finally { UseAnimations = prevUa; }
+            finally
+            {
+                UseAnimations = prevUa;
+            }
         }
 
+        /// <summary>
+        /// Expands the menu.
+        /// </summary>
+        /// <param name="useAnimation">Determines wether to use an animation. When null uses current value of <see cref="UseAnimations"/>.</param>
         public void ExpandMenu(bool? useAnimation)
         {
             if (IsExpanded)
@@ -624,10 +781,25 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             {
                 IsExpanded = true;
             }
-            finally { UseAnimations = prevUa; }
+            finally
+            {
+                UseAnimations = prevUa;
+            }
         }
 
+        /// <summary>
+        /// Sets the items of this <see cref="SplitView"/>.
+        /// </summary>
+        /// <param name="pageGroups">The page groups.</param>
+        /// <param name="pages">The pages.</param>
         public void SetItems(IEnumerable<IPageGroup> pageGroups, IEnumerable<IPage> pages) => SetItems(pageGroups, pages, null);
+
+        /// <summary>
+        /// Sets the items of this <see cref="SplitView"/>.
+        /// </summary>
+        /// <param name="pageGroups">The page groups.</param>
+        /// <param name="pages">The pages.</param>
+        /// <param name="translationManager">The translation manager to use to translate the items.</param>
         public void SetItems(IEnumerable<IPageGroup> pageGroups, IEnumerable<IPage> pages, ITranslationManager translationManager)
         {
             var items = new List<SplitViewItemBase>();
@@ -645,7 +817,9 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                 {
                     var svGroup = new SplitViewItemGroup
                     {
-                        Header = group.Group.PageGroupName == null ? null : translationManager?.GetTranslation(group.Group.PageGroupName, group.Group.TranslationProviderKey ?? translationManager.DefaultProviderKey) ?? group.Group.PageGroupName
+                        Header = group.Group.PageGroupName == null
+                            ? null
+                            : translationManager?.GetTranslation(group.Group.PageGroupName, group.Group.TranslationProviderKey ?? translationManager.DefaultProviderKey) ?? group.Group.PageGroupName,
                     };
                     if (translationManager != null && group.Group.PageGroupName != null)
                         translationManager.LanguageChanged += (s, e) => svGroup.Header = translationManager.GetTranslation(group.Group.PageGroupName, group.Group.TranslationProviderKey ?? translationManager.DefaultProviderKey);
@@ -660,7 +834,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                     {
                         Icon = page.PageIcon,
                         Header = translationManager?.GetTranslation(page.PageName, page.TranslationProviderKey ?? translationManager.DefaultProviderKey) ?? page.PageName,
-                        Content = page.PageContent
+                        Content = page.PageContent,
                     };
                     if (translationManager != null)
                         translationManager.LanguageChanged += (s, e) => svItem.Header = translationManager.GetTranslation(page.PageName, page.TranslationProviderKey ?? translationManager.DefaultProviderKey);
@@ -673,7 +847,10 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                             items.Insert(idx, svItem);
                     }
                     else
+                    {
                         list.Add(svItem);
+                    }
+
                     if (page.IsPageSelectedByDefault && !selectionSet)
                     {
                         svItem.IsSelected = true;

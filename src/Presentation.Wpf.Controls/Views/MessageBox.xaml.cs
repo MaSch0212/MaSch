@@ -5,12 +5,23 @@ using MaSch.Presentation.Wpf.ViewModels;
 
 namespace MaSch.Presentation.Wpf.Views
 {
+    /// <summary>
+    /// MessageBox that is styled using MaSch.Presentation.Wpf.Themes.
+    /// </summary>
+    /// <seealso cref="MaSch.Presentation.Wpf.Controls.Window" />
+    /// <seealso cref="System.Windows.Markup.IComponentConnector" />
     internal partial class MessageBox
     {
+        /// <summary>
+        /// Gets or sets the message box result.
+        /// </summary>
         public MessageBoxResult MessageBoxResult { get; set; }
         private readonly double[] _steps = { 3D, 2D, 1.5D, 1.1D };
         private int _stepIndex;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MessageBox"/> class.
+        /// </summary>
         public MessageBox()
         {
             InitializeComponent();
@@ -28,11 +39,9 @@ namespace MaSch.Presentation.Wpf.Views
 
         private void MessageBoxContent_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Width = Math.Ceiling(30D + OneLineMessageBoxText.ActualWidth + 
-                (IconPresenter.Visibility == Visibility.Visible ? (IconPresenter.ActualWidth + 50) : 0D));
-            Height = Math.Ceiling(60D + ButtonRow.ActualHeight + Math.Max(MessageBoxContent.ActualHeight,
-                (IconPresenter.Visibility == Visibility.Visible ? IconPresenter.ActualHeight : 0)));
-            if(Height >= MaxHeight && _stepIndex < _steps.Length - 1)
+            Width = Math.Ceiling(30D + OneLineMessageBoxText.ActualWidth + (IconPresenter.Visibility == Visibility.Visible ? (IconPresenter.ActualWidth + 50) : 0D));
+            Height = Math.Ceiling(60D + ButtonRow.ActualHeight + Math.Max(MessageBoxContent.ActualHeight, IconPresenter.Visibility == Visibility.Visible ? IconPresenter.ActualHeight : 0));
+            if (Height >= MaxHeight && _stepIndex < _steps.Length - 1)
             {
                 MaxWidth = SystemParameters.PrimaryScreenWidth / _steps[++_stepIndex];
                 MessageBoxContent_SizeChanged(sender, e);
@@ -41,7 +50,7 @@ namespace MaSch.Presentation.Wpf.Views
 
         private void MessageBox_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if((bool)e.NewValue && DataContext is MessageBoxViewModel vm)
+            if ((bool)e.NewValue && DataContext is MessageBoxViewModel vm)
             {
                 switch (vm.MessageBoxImage)
                 {

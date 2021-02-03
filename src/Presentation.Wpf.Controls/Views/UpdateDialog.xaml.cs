@@ -2,29 +2,27 @@
 using MaSch.Presentation.Wpf.Converter;
 using MaSch.Presentation.Wpf.Helper;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using Window = MaSch.Presentation.Wpf.Controls.Window;
 
 namespace MaSch.Presentation.Wpf.Views
 {
     /// <summary>
-    /// Interaction logic for UpdateDialog.xaml
+    /// Dialog that can be used to update the software using a <see cref="UpdateController"/>.
     /// </summary>
     public partial class UpdateDialog : Window
     {
         private readonly UpdateController _updater;
         private readonly string _currentVersion;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UpdateDialog"/> class.
+        /// </summary>
+        /// <param name="updater">The updater to use.</param>
+        /// <param name="currentVersion">The current version.</param>
         public UpdateDialog(UpdateController updater, string currentVersion)
         {
             DataContext = _updater = updater;
@@ -63,17 +61,24 @@ namespace MaSch.Presentation.Wpf.Views
 
         private void StartSetupButton_Click(object sender, RoutedEventArgs e)
         {
-            var setupFile = Path.Combine(_downloadedFiles.Item2, _updater.VersionsInformation.SetupPath);
+            var setupFile = Path.Combine(_downloadedFiles.targetDir, _updater.VersionsInformation.SetupPath);
             var powershellPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "System32", "WindowsPowerShell", "v1.0", "powershell.exe");
             var script = new StringBuilder();
-            script.Append($"$process = Get-Process -Id {Process.GetCurrentProcess().Id} -ErrorAction SilentlyContinue; ");
+
+#if NETSTANDARD || NETCOREAPP1_0 || NETCOREAPP1_1 || NETCOREAPP2_0 || NETCOREAPP2_1 || NETCOREAPP2_2 || NETCOREAPP3_0 || NETCOREAPP3_1 || NETFRAMEWORK
+            var pid = Process.GetCurrentProcess().Id;
+#else
+            var pid = Environment.ProcessId;
+#endif
+
+            script.Append($"$process = Get-Process -Id {pid} -ErrorAction SilentlyContinue; ");
             script.Append("while($process -ne $null -and -not $process.HasExited) { [System.Threading.Thread]::Sleep(1000); } ");
             script.Append($"& '{setupFile}' -d'{Path.GetDirectoryName(GetType().Assembly.Location)}' -s");
             Process.Start(new ProcessStartInfo(powershellPath, $"-ExecutionPolicy ByPass -Command \"{script}\"")
             {
                 CreateNoWindow = true,
                 RedirectStandardOutput = true,
-                UseShellExecute = false
+                UseShellExecute = false,
             });
             DialogResult = true;
             Application.Current.Shutdown();
@@ -90,11 +95,28 @@ namespace MaSch.Presentation.Wpf.Views
                 _downloadedFiles = await _updater.DownloadAllNeededFiles(_currentVersion);
                 AnimationHelper.SwitchViews(PageDownload, PageFinish, SwitchDirection.Right);
             }
-            catch (Exception) { AnimationHelper.SwitchViews(PageDownload, PageError, SwitchDirection.Down); }
+            catch (Exception)
+            {
+                AnimationHelper.SwitchViews(PageDownload, PageError, SwitchDirection.Down);
+            }
         }
 
+        /// <summary>
+        /// Shows a new <see cref="UpdateDialog"/> as a dialog.
+        /// </summary>
+        /// <param name="updater">The updater to use.</param>
+        /// <param name="currentVersion">The current version.</param>
+        /// <returns>The result of the dialog.</returns>
         public static bool? ShowDialog(UpdateController updater, string currentVersion)
             => ShowDialog(updater, currentVersion, null);
+
+        /// <summary>
+        /// Shows a new <see cref="UpdateDialog"/> as a dialog.
+        /// </summary>
+        /// <param name="updater">The updater to use.</param>
+        /// <param name="currentVersion">The current version.</param>
+        /// <param name="owner">The owner window of the dialog to show.</param>
+        /// <returns>The result of the dialog.</returns>
         public static bool? ShowDialog(UpdateController updater, string currentVersion, System.Windows.Window owner)
         {
             var dialog = new UpdateDialog(updater, currentVersion);
