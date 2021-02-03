@@ -7,35 +7,47 @@ using System.Windows.Media.Media3D;
 
 namespace MaSch.Presentation.Wpf.DependencyProperties
 {
+    /// <summary>
+    /// Provides dependency properties used for theming.
+    /// </summary>
     public class Theming
     {
+        /// <summary>
+        /// Dependency property. Gets or sets the theme manager for this control. This property is inherited by child elements.
+        /// </summary>
         public static readonly DependencyProperty ThemeManagerProperty =
-            DependencyProperty.RegisterAttached("ThemeManager",
-                                                typeof(IThemeManager),
-                                                typeof(Theming),
-                                                new FrameworkPropertyMetadata(ThemeManager.DefaultThemeManager, FrameworkPropertyMetadataOptions.Inherits, ThemeManagerPropertyChanged));
+            DependencyProperty.RegisterAttached(
+                "ThemeManager",
+                typeof(IThemeManager),
+                typeof(Theming),
+                new FrameworkPropertyMetadata(ThemeManager.DefaultThemeManager, FrameworkPropertyMetadataOptions.Inherits, ThemeManagerPropertyChanged));
 
+        /// <summary>
+        /// Dependency property. Gets or sets the theme overrides used for this element.
+        /// </summary>
         public static readonly DependencyProperty ThemeOverridesProperty =
-            DependencyProperty.RegisterAttached("ThemeOverrides",
-                                                typeof(ThemeOverrideCollection),
-                                                typeof(Theming),
-                                                new UIPropertyMetadata(ThemeOverridesPropertyChanged));
+            DependencyProperty.RegisterAttached(
+                "ThemeOverrides",
+                typeof(ThemeOverrideCollection),
+                typeof(Theming),
+                new UIPropertyMetadata(ThemeOverridesPropertyChanged));
 
         private static void ThemeOverridesPropertyChanged(DependencyObject source, DependencyPropertyChangedEventArgs e)
         {
-            var oldValue = e.OldValue as ThemeOverrideCollection;
             var newValue = e.NewValue as ThemeOverrideCollection;
 
             IThemeManager themeManager = null;
             if (DependencyPropertyHelper.GetValueSource(source, ThemeManagerProperty).BaseValueSource == BaseValueSource.Local)
+            {
                 themeManager = GetThemeManager(source);
+            }
             else if (newValue != null)
             {
                 themeManager = new ThemeManager(GetThemeManager(source));
                 SetThemeManager(source, themeManager);
             }
 
-            if (oldValue != null)
+            if (e.OldValue is ThemeOverrideCollection oldValue)
                 oldValue.UnregisterThemeManager(themeManager);
 
             if (newValue != null)
@@ -58,9 +70,9 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                 parent = VisualTreeHelper.GetParent(source);
             if (parent != null && GetThemeManager(parent) != e.NewValue)
             {
-                if (!(e.OldValue is IThemeManager oldTm) || oldTm.ParentThemeManager == null)
+                if (e.OldValue is not IThemeManager oldTm || oldTm.ParentThemeManager == null)
                     DependencyPropertyDescriptor.FromProperty(ThemeManagerProperty, parent.GetType()).AddValueChanged(parent, OnParentThemeManagerChanged);
-                else if (!(e.NewValue is IThemeManager newTm) || newTm.ParentThemeManager == null)
+                else if (e.NewValue is not IThemeManager newTm || newTm.ParentThemeManager == null)
                     DependencyPropertyDescriptor.FromProperty(ThemeManagerProperty, parent.GetType()).RemoveValueChanged(parent, OnParentThemeManagerChanged);
             }
 
@@ -76,14 +88,35 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
             }
         }
 
-
+        /// <summary>
+        /// Sets the value of the <see cref="ThemeManagerProperty"/>.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="value">The value.</param>
         public static void SetThemeManager(DependencyObject element, IThemeManager value)
             => element.SetValue(ThemeManagerProperty, value);
+
+        /// <summary>
+        /// Gets the value of the <see cref="ThemeManagerProperty"/>.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns>The value of the <see cref="ThemeManagerProperty"/>.</returns>
         public static IThemeManager GetThemeManager(DependencyObject element)
             => (IThemeManager)element.GetValue(ThemeManagerProperty);
 
+        /// <summary>
+        /// Sets the value of the <see cref="ThemeOverridesProperty"/>.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="value">The value.</param>
         public static void SetThemeOverrides(DependencyObject element, ThemeOverrideCollection value)
             => element.SetValue(ThemeOverridesProperty, value);
+
+        /// <summary>
+        /// Gets the value of the <see cref="ThemeOverridesProperty"/>.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns>The value of the <see cref="ThemeOverridesProperty"/>.</returns>
         public static ThemeOverrideCollection GetThemeOverrides(DependencyObject element)
             => (ThemeOverrideCollection)element.GetValue(ThemeOverridesProperty);
     }

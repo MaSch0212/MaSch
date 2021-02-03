@@ -1,5 +1,4 @@
 ﻿using MaSch.Core.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -8,28 +7,53 @@ using System.Windows;
 
 namespace MaSch.Presentation.Wpf.Models
 {
+    /// <summary>
+    /// Collection of <see cref="ThemeOverride"/>s.
+    /// </summary>
+    /// <seealso cref="System.Collections.ObjectModel.ObservableCollection{T}" />
     public class ThemeOverrideCollection : ObservableCollection<ThemeOverride>
     {
-        private readonly List<IThemeManager> ThemeManagers = new List<IThemeManager>();
+        private readonly List<IThemeManager> _themeManagers = new List<IThemeManager>();
 
-        public ThemeOverrideCollection() { }
-        public ThemeOverrideCollection(IEnumerable<ThemeOverride> overrides) : base(overrides) { }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThemeOverrideCollection"/> class.
+        /// </summary>
+        public ThemeOverrideCollection()
+        {
+        }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThemeOverrideCollection"/> class.
+        /// </summary>
+        /// <param name="overrides">The overrides.</param>
+        public ThemeOverrideCollection(IEnumerable<ThemeOverride> overrides)
+            : base(overrides)
+        {
+        }
+
+        /// <summary>
+        /// Registers a theme manager with the overrides in this collection.
+        /// </summary>
+        /// <param name="themeManager">The theme manager.</param>
         public void RegisterThemeManager(IThemeManager themeManager)
         {
-            if (!ThemeManagers.Contains(themeManager) && themeManager != null && themeManager != ThemeManager.DefaultThemeManager)
+            if (!_themeManagers.Contains(themeManager) && themeManager != null && themeManager != ThemeManager.DefaultThemeManager)
             {
-                ThemeManagers.Add(themeManager);
+                _themeManagers.Add(themeManager);
                 this.ForEach(x => AddOverride(themeManager, x));
             }
         }
 
+        /// <summary>
+        /// Unregisters a theme manager with the overrides in this collection.
+        /// </summary>
+        /// <param name="themeManager">The theme manager.</param>
         public void UnregisterThemeManager(IThemeManager themeManager)
         {
             if (themeManager != null && themeManager != Wpf.ThemeManager.DefaultThemeManager)
             {
                 this.ForEach(x => RemoveOverride(themeManager, x));
-                ThemeManagers.TryRemove(themeManager);
+                _themeManagers.TryRemove(themeManager);
             }
         }
 
@@ -45,9 +69,10 @@ namespace MaSch.Presentation.Wpf.Models
             themeManager.RemoveValue(@override.CustomKey);
         }
 
+        /// <inheritdoc/>
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            foreach(var themeManager in ThemeManagers)
+            foreach (var themeManager in _themeManagers)
             {
                 switch (e.Action)
                 {
@@ -69,6 +94,7 @@ namespace MaSch.Presentation.Wpf.Models
                         break;
                 }
             }
+
             base.OnCollectionChanged(e);
         }
 
@@ -76,10 +102,10 @@ namespace MaSch.Presentation.Wpf.Models
         {
             var @override = (ThemeOverride)sender;
             if (e.Property == ThemeOverride.ValueProperty)
-                ThemeManagers.ForEach(x => x.SetValue(@override.CustomKey, e.NewValue));
+                _themeManagers.ForEach(x => x.SetValue(@override.CustomKey, e.NewValue));
             if (e.Property == ThemeOverride.CustomKeyProperty)
             {
-                foreach (var themeManager in ThemeManagers)
+                foreach (var themeManager in _themeManagers)
                 {
                     themeManager.RemoveValue((string)e.OldValue);
                     themeManager.SetValue((string)e.NewValue, @override.Value);

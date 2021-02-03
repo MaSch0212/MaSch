@@ -7,6 +7,9 @@ using System.Windows.Media;
 
 namespace MaSch.Presentation.Wpf.ThemeValues
 {
+    /// <summary>
+    /// Registry for theme values.
+    /// </summary>
     public static class ThemeValueRegistry
     {
         static ThemeValueRegistry()
@@ -35,13 +38,44 @@ namespace MaSch.Presentation.Wpf.ThemeValues
         private static readonly IDictionary<Type, string> TypeTypeToEnumMapping;
         private static readonly IList<(string typeName, Type type, Type themeValueType)> TypeThemeValueMapping;
 
+        /// <summary>
+        /// Gets the tuntime type of the value type.
+        /// </summary>
+        /// <param name="valueType">Type of the value.</param>
+        /// <returns>The runtime type of the specified value type.</returns>
         public static Type GetRuntimeValueType(string valueType) => TypeEnumToTypeMapping[valueType];
+
+        /// <summary>
+        /// Gets the value type enum.
+        /// </summary>
+        /// <param name="valueType">Type of the value.</param>
+        /// <returns>The name of the value type.</returns>
         public static string GetValueTypeEnum(Type valueType) => TypeTypeToEnumMapping[valueType];
-        public static Type GetThemeValueType(Type actualValueType) 
-            => TypeThemeValueMapping.TryFirst(x => x.type.IsAssignableFrom(actualValueType), out var map) 
-                ? map.themeValueType 
+
+        /// <summary>
+        /// Gets the theme value type of the runtime type.
+        /// </summary>
+        /// <param name="actualValueType">Runtime type of the value.</param>
+        /// <returns>The type of the <see cref="IThemeValue"/> class.</returns>
+        /// <exception cref="InvalidOperationException">The type \"{actualValueType.FullName}\" is currently not supported for Theming.</exception>
+        public static Type GetThemeValueType(Type actualValueType)
+            => TypeThemeValueMapping.TryFirst(x => x.type.IsAssignableFrom(actualValueType), out var map)
+                ? map.themeValueType
                 : throw new InvalidOperationException($"The type \"{actualValueType.FullName}\" is currently not supported for Theming.");
 
+        /// <summary>
+        /// Registers a new mapping between runtime and theme value type..
+        /// </summary>
+        /// <param name="typeName">Name of the type.</param>
+        /// <param name="type">The runtime type.</param>
+        /// <param name="themeValueType">Type of the theme value.</param>
+        /// <exception cref="InvalidOperationException">
+        /// A type with name <paramref name="typeName"/> is already registered.
+        /// or
+        /// The value type class <paramref name="themeValueType"/> is already registered.
+        /// or
+        /// A type mapping for type <paramref name="type"/> already exists.
+        /// </exception>
         public static void RegisterType(string typeName, Type type, Type themeValueType)
         {
             if (TypeEnumToTypeMapping.ContainsKey(typeName))

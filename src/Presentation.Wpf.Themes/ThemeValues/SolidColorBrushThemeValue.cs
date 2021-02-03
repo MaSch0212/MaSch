@@ -9,14 +9,16 @@ using Newtonsoft.Json;
 
 namespace MaSch.Presentation.Wpf.ThemeValues
 {
+    /// <summary>
+    /// <see cref="IThemeValue"/> representing <see cref="SolidColorBrush"/> values.
+    /// </summary>
+    /// <seealso cref="MaSch.Presentation.Wpf.ThemeValues.ThemeValueBase{T}" />
     public class SolidColorBrushThemeValue : ThemeValueBase<SolidColorBrush>
     {
-        #region Fields
         private object _rawColor;
         private object _rawOpacity = 1D;
-        #endregion
 
-        #region Properties
+        /// <inheritdoc/>
         [JsonIgnore]
         public override object RawValue
         {
@@ -24,6 +26,9 @@ namespace MaSch.Presentation.Wpf.ThemeValues
             set => Value = Guard.OfType<SolidColorBrush>(value, nameof(value));
         }
 
+        /// <summary>
+        /// Gets or sets the raw value of the <see cref="Color"/> property.
+        /// </summary>
         [JsonProperty(nameof(Color))]
         [JsonConverter(typeof(ThemeValuePropertyJsonConverter<Color>))]
         public object RawColor
@@ -32,6 +37,9 @@ namespace MaSch.Presentation.Wpf.ThemeValues
             set => SetProperty(ref _rawColor, value);
         }
 
+        /// <summary>
+        /// Gets or sets the raw value of the <see cref="Opacity"/> property.
+        /// </summary>
         [JsonProperty(nameof(Opacity), DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(ThemeValuePropertyJsonConverter<double>))]
         [DefaultValue(1.0D)]
@@ -40,9 +48,8 @@ namespace MaSch.Presentation.Wpf.ThemeValues
             get => _rawOpacity;
             set => SetProperty(ref _rawOpacity, value);
         }
-        #endregion
 
-        #region Parsed Properties
+        /// <inheritdoc/>
         [JsonIgnore]
         [DependsOn(nameof(Opacity), nameof(Color))]
         public override SolidColorBrush Value
@@ -55,7 +62,11 @@ namespace MaSch.Presentation.Wpf.ThemeValues
             }
         }
 
-        [JsonIgnore, ThemeValueParsedProperty(nameof(RawColor))]
+        /// <summary>
+        /// Gets or sets the color of the brush.
+        /// </summary>
+        [JsonIgnore]
+        [ThemeValueParsedProperty(nameof(RawColor))]
         [DependsOn(nameof(RawColor))]
         public Color Color
         {
@@ -63,22 +74,64 @@ namespace MaSch.Presentation.Wpf.ThemeValues
             set => RawColor = value;
         }
 
-        [JsonIgnore, ThemeValueParsedProperty(nameof(RawOpacity))]
+        /// <summary>
+        /// Gets or sets the opacity of the brush.
+        /// </summary>
+        [JsonIgnore]
+        [ThemeValueParsedProperty(nameof(RawOpacity))]
         [DependsOn(nameof(RawOpacity))]
         public double Opacity
         {
             get => ParseValue<double>(RawOpacity);
             set => RawOpacity = value;
         }
-        #endregion
 
-        #region Static Members
+        /// <summary>
+        /// Creates a new <see cref="SolidColorBrushThemeValue"/>.
+        /// </summary>
+        /// <param name="color">The color of the brush.</param>
+        /// <returns>The created <see cref="IThemeValue"/>.</returns>
         public static SolidColorBrushThemeValue Create(Color color) => CreateInternal(color);
+
+        /// <summary>
+        /// Creates a new <see cref="SolidColorBrushThemeValue"/>.
+        /// </summary>
+        /// <param name="colorRef">The reference to the color of the brush.</param>
+        /// <returns>The created <see cref="IThemeValue"/>.</returns>
         public static SolidColorBrushThemeValue Create(ThemeValueReference colorRef) => CreateInternal(colorRef);
+
+        /// <summary>
+        /// Creates a new <see cref="SolidColorBrushThemeValue"/>.
+        /// </summary>
+        /// <param name="color">The color of the brush.</param>
+        /// <param name="opacity">The opacity of the brush.</param>
+        /// <returns>The created <see cref="IThemeValue"/>.</returns>
         public static SolidColorBrushThemeValue Create(Color color, double opacity) => CreateInternal(color, opacity);
+
+        /// <summary>
+        /// Creates a new <see cref="SolidColorBrushThemeValue"/>.
+        /// </summary>
+        /// <param name="colorRef">The reference to the color of the brush.</param>
+        /// <param name="opacity">The opacity of the brush.</param>
+        /// <returns>The created <see cref="IThemeValue"/>.</returns>
         public static SolidColorBrushThemeValue Create(ThemeValueReference colorRef, double opacity) => CreateInternal(colorRef, opacity);
+
+        /// <summary>
+        /// Creates a new <see cref="SolidColorBrushThemeValue"/>.
+        /// </summary>
+        /// <param name="color">The color of the brush.</param>
+        /// <param name="opacityRef">The reference to the opacity of the brush.</param>
+        /// <returns>The created <see cref="IThemeValue"/>.</returns>
         public static SolidColorBrushThemeValue Create(Color color, ThemeValueReference opacityRef) => CreateInternal(color, opacityRef);
+
+        /// <summary>
+        /// Creates a new <see cref="SolidColorBrushThemeValue"/>.
+        /// </summary>
+        /// <param name="colorRef">The reference to the color of the brush.</param>
+        /// <param name="opacityRef">The reference to the opacity of the brush.</param>
+        /// <returns>The created <see cref="IThemeValue"/>.</returns>
         public static SolidColorBrushThemeValue Create(ThemeValueReference colorRef, ThemeValueReference opacityRef) => CreateInternal(colorRef, opacityRef);
+
         private static SolidColorBrushThemeValue CreateInternal(object color)
         {
             return new SolidColorBrushThemeValue
@@ -86,31 +139,34 @@ namespace MaSch.Presentation.Wpf.ThemeValues
                 RawColor = color,
             };
         }
+
         private static SolidColorBrushThemeValue CreateInternal(object color, object opacity)
         {
             return new SolidColorBrushThemeValue
             {
                 RawColor = color,
-                RawOpacity = opacity
+                RawOpacity = opacity,
             };
         }
 
         public static implicit operator SolidColorBrush(SolidColorBrushThemeValue themeValue) => themeValue.Value;
-        #endregion
 
-        public override bool Equals(object obj) 
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
             => obj is SolidColorBrushThemeValue other && Equals(other.RawColor, RawColor) && Equals(other.RawOpacity, RawOpacity);
 
-        public override int GetHashCode() 
+        /// <inheritdoc/>
+        public override int GetHashCode()
             => (RawColor, RawOpacity).GetHashCode();
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new SolidColorBrushThemeValue
             {
                 Key = Key,
                 RawColor = RawColor.CloneIfPossible(),
-                RawOpacity = RawOpacity.CloneIfPossible()
+                RawOpacity = RawOpacity.CloneIfPossible(),
             };
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using MaSch.Presentation.Wpf.Models;
 using Newtonsoft.Json;
@@ -6,24 +7,42 @@ using Newtonsoft.Json.Linq;
 
 namespace MaSch.Presentation.Wpf.JsonConverters
 {
+    /// <summary>
+    /// Base class for the <see cref="ThemeValuePropertyJsonConverter{T}"/>.
+    /// </summary>
+    /// <seealso cref="Newtonsoft.Json.JsonConverter" />
     public abstract class ThemeValuePropertyJsonConverter : JsonConverter
     {
+        /// <summary>
+        /// The regex that is used to get references to other values in the theme.
+        /// </summary>
         protected static readonly Regex ReferenceRegex = new Regex(@"^\{Bind (?<key>[a-zA-Z_\-][a-zA-Z0-9_\-]*)(\.(?<property>[a-zA-Z_\-][a-zA-Z0-9_\-]*))?\}$", RegexOptions.Compiled);
     }
+
+    /// <summary>
+    /// <see cref="JsonConverter"/> that is used to convert a property of a <see cref="IThemeValue"/> to and from json.
+    /// </summary>
+    /// <typeparam name="T">The type of the property.</typeparam>
+    /// <seealso cref="Newtonsoft.Json.JsonConverter" />
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic representation can be in same file")]
     public class ThemeValuePropertyJsonConverter<T> : ThemeValuePropertyJsonConverter
     {
+        /// <inheritdoc/>
         public override bool CanConvert(Type objectType) => true;
 
+        /// <inheritdoc/>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             var valueToSerialize = value;
             if (value is ThemeValueReference reference)
             {
-                valueToSerialize = $"{{Bind {reference.CustomKey}{(string.IsNullOrEmpty(reference.Property) ? "" : $".{reference.Property}")}}}";
+                valueToSerialize = $"{{Bind {reference.CustomKey}{(string.IsNullOrEmpty(reference.Property) ? string.Empty : $".{reference.Property}")}}}";
             }
+
             serializer.Serialize(writer, valueToSerialize);
         }
 
+        /// <inheritdoc/>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var token = JToken.ReadFrom(reader);

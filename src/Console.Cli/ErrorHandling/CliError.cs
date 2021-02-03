@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MaSch.Console.Cli.Help
+﻿namespace MaSch.Console.Cli.Help
 {
     public class CliError
     {

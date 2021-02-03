@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using MaSch.Core;
-using MaSch.Core.Extensions;
 using MaSch.Core.Attributes;
+using MaSch.Core.Extensions;
 using MaSch.Core.Observable;
 using MaSch.Presentation.Wpf.JsonConverters;
 using MaSch.Presentation.Wpf.Models;
@@ -13,18 +14,21 @@ using Newtonsoft.Json;
 
 namespace MaSch.Presentation.Wpf.ThemeValues
 {
+    /// <summary>
+    /// Base class for theme values.
+    /// </summary>
+    /// <seealso cref="MaSch.Core.Observable.ObservableObject" />
+    /// <seealso cref="MaSch.Presentation.Wpf.IThemeValue" />
     [JsonConverter(typeof(ThemeValueJsonConverter), false)]
     public abstract class ThemeValueBase : ObservableObject, IThemeValue
     {
-        #region Fields
         private readonly Dictionary<string, ThemeValueReference> _references;
 
         private string _key;
         private IThemeManager _themeManager;
         private object _rawValue;
-        #endregion
 
-        #region Properties
+        /// <inheritdoc/>
         [JsonIgnore]
         public string Key
         {
@@ -32,6 +36,7 @@ namespace MaSch.Presentation.Wpf.ThemeValues
             set => SetProperty(ref _key, value);
         }
 
+        /// <inheritdoc/>
         [JsonIgnore]
         public IThemeManager ThemeManager
         {
@@ -50,6 +55,7 @@ namespace MaSch.Presentation.Wpf.ThemeValues
             }
         }
 
+        /// <inheritdoc/>
         [JsonProperty("Value")]
         public virtual object RawValue
         {
@@ -57,6 +63,7 @@ namespace MaSch.Presentation.Wpf.ThemeValues
             set => SetProperty(ref _rawValue, value);
         }
 
+        /// <inheritdoc/>
         [JsonIgnore]
         [DependsOn(nameof(RawValue))]
         public object ValueBase
@@ -64,8 +71,10 @@ namespace MaSch.Presentation.Wpf.ThemeValues
             get => ParseValue(RawValue);
             set => RawValue = value;
         }
-        #endregion
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThemeValueBase"/> class.
+        /// </summary>
         protected ThemeValueBase()
         {
             _references = (from p in GetType().GetProperties()
@@ -75,25 +84,29 @@ namespace MaSch.Presentation.Wpf.ThemeValues
             PropertyChanged += OnPropertyChanged;
         }
 
-        #region Public/Protected Methods
+        /// <inheritdoc/>
         public TValue GetPropertyValue<TValue>(string propertyName)
         {
             var property = GetProperty(propertyName, true);
             return ParseValue<TValue>(property.GetValue(this));
         }
 
+        /// <inheritdoc/>
         public object this[string propertyName]
         {
             get => ParseValue(GetProperty(propertyName, false).GetValue(this));
             set => GetProperty(propertyName, true).SetValue(this, value);
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj)
             => obj is IThemeValue other && Equals(other.RawValue, RawValue);
 
+        /// <inheritdoc/>
         public override int GetHashCode()
             => RawValue.GetHashCode();
 
+        /// <inheritdoc/>
         public virtual object Clone()
         {
             var result = (IThemeValue)Activator.CreateInstance(GetType());
@@ -102,35 +115,44 @@ namespace MaSch.Presentation.Wpf.ThemeValues
             return result;
         }
 
+        /// <summary>
+        /// Parses the value and handles <see cref="ThemeValueReference"/>s.
+        /// </summary>
+        /// <typeparam name="TValue">The type of the value.</typeparam>
+        /// <param name="value">The value.</param>
+        /// <returns>The actual value.</returns>
         protected TValue ParseValue<TValue>(object value)
         {
-            if (!(value is ThemeValueReference reference))
+            if (value is not ThemeValueReference reference)
                 return (TValue)value;
 
             if (string.IsNullOrEmpty(reference.Property))
             {
                 var themeValue = ThemeManager.GetValue<TValue>(reference.CustomKey);
-                return themeValue == null ? default(TValue) : themeValue.Value;
+                return themeValue == null ? default : themeValue.Value;
             }
             else
             {
                 var themeValue = ThemeManager.GetValue(reference.CustomKey);
-                return themeValue == null ? default(TValue) : themeValue.GetPropertyValue<TValue>(reference.Property);
+                return themeValue == null ? default : themeValue.GetPropertyValue<TValue>(reference.Property);
             }
         }
 
+        /// <summary>
+        /// Parses the value and handles <see cref="ThemeValueReference"/>s.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The actual value.</returns>
         protected object ParseValue(object value)
         {
-            if (!(value is ThemeValueReference reference))
+            if (value is not ThemeValueReference reference)
                 return value;
 
             return string.IsNullOrEmpty(reference.Property)
                 ? ThemeManager[reference.CustomKey]
                 : ThemeManager[reference.CustomKey, reference.Property];
         }
-        #endregion
 
-        #region Private Methods
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (_references.TryGetValue(e.PropertyName, out var oldReference))
@@ -147,7 +169,7 @@ namespace MaSch.Presentation.Wpf.ThemeValues
         private void ReferenceTargetOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var themeValue = (IThemeValue)sender;
-            var refsToUpdate = _references.Where(x => x.Value != null && x.Value.CustomKey == themeValue.Key && (string.IsNullOrEmpty(x.Value.Property) && e.PropertyName == nameof(IThemeValue.ValueBase) || e.PropertyName == x.Value.Property));
+            var refsToUpdate = _references.Where(x => x.Value != null && x.Value.CustomKey == themeValue.Key && ((string.IsNullOrEmpty(x.Value.Property) && e.PropertyName == nameof(IThemeValue.ValueBase)) || e.PropertyName == x.Value.Property));
             refsToUpdate.ToArray().ForEach(x => NotifyPropertyChanged(x.Key));
         }
 
@@ -234,12 +256,18 @@ namespace MaSch.Presentation.Wpf.ThemeValues
                 throw new InvalidOperationException($"A property with the name \"{propertyName}\" was not found on type \"{type.Name}\".");
             return property;
         }
-        #endregion
     }
 
+    /// <summary>
+    /// Generic base class for a theme value.
+    /// </summary>
+    /// <typeparam name="T">The type of value the theme value is for.</typeparam>
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic representation can be in same file.")]
     public abstract class ThemeValueBase<T> : ThemeValueBase, IThemeValue<T>
     {
-        [JsonIgnore, ThemeValueParsedProperty(nameof(RawValue))]
+        /// <inheritdoc/>
+        [JsonIgnore]
+        [ThemeValueParsedProperty(nameof(RawValue))]
         [DependsOn(nameof(RawValue))]
         public virtual T Value
         {

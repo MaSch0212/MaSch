@@ -9,11 +9,19 @@ using System.Net;
 
 namespace MaSch.Presentation.Wpf.JsonConverters
 {
+    /// <summary>
+    /// <see cref="JsonConverter"/> that is used to convert a <see cref="ITheme"/> to and from json.
+    /// </summary>
+    /// <seealso cref="Newtonsoft.Json.JsonConverter{T}" />
     public class ThemeJsonConverter : JsonConverter<ITheme>
     {
         private static readonly IWebRequestCreate PackRequestFactory = new PackWebRequestFactory();
         private static readonly WebClient WebClient = new WebClient();
 
+        /// <inheritdoc/>
+        public override bool CanWrite => false;
+
+        /// <inheritdoc/>
         public override ITheme ReadJson(JsonReader reader, Type objectType, ITheme existingValue, bool hasExtistingValue, JsonSerializer serializer)
         {
             var jToken = JToken.ReadFrom(reader);
@@ -39,12 +47,18 @@ namespace MaSch.Presentation.Wpf.JsonConverters
             return result;
         }
 
-        public override bool CanWrite => false;
+        /// <inheritdoc/>
         public override void WriteJson(JsonWriter writer, ITheme value, JsonSerializer serializer)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Adds the BaseUri property to a json document.
+        /// </summary>
+        /// <param name="json">The json.</param>
+        /// <param name="baseUri">The base URI.</param>
+        /// <returns>The json document with the attached BaseUri property.</returns>
         public static string AddBaseUriToJson(string json, string baseUri)
         {
             if (JToken.Parse(json) is JObject obj)
@@ -52,9 +66,18 @@ namespace MaSch.Presentation.Wpf.JsonConverters
                 obj.Add("BaseUri", new JValue(baseUri));
                 json = obj.ToString();
             }
+
             return json;
         }
 
+        /// <summary>
+        /// Downloads a string from a <see cref="Uri"/>. Supported Uri schemes are: http, https, file and pack.
+        /// </summary>
+        /// <param name="uri">The URI.</param>
+        /// <param name="baseUri">The base URI.</param>
+        /// <param name="absoluteUri">The absolute URI.</param>
+        /// <returns>The downloaded string.</returns>
+        /// <exception cref="NotSupportedException">Url with the Scheme is not supported.</exception>
         internal static string DownloadString(Uri uri, Uri baseUri, out Uri absoluteUri)
         {
             var uriToCheck = absoluteUri = GetAbsoluteUri(uri, baseUri);
@@ -88,24 +111,23 @@ namespace MaSch.Presentation.Wpf.JsonConverters
                     else
                         throw new InvalidOperationException($"A default theme with the name \"{themeName}\" does not exist.");
                 }
+
                 result = new Uri($"pack://application:,,,/MaSch.Presentation.Wpf.Themes;component/Themes/{themeName}/Theme.json");
             }
             else
+            {
                 result = uri.IsAbsoluteUri ? uri : new Uri(baseUri, uri);
+            }
+
             return result;
         }
 
         private static string ReadJsonFromPackUri(Uri packUri)
         {
             var request = PackRequestFactory.Create(packUri);
-            using (var response = request.GetResponse())
-            {
-                if (response.ContentType != "application/json")
-                    throw new InvalidOperationException("The type has to be application/json!");
-
-                using (var reader = new StreamReader(response.GetResponseStream()))
-                    return reader.ReadToEnd();
-            }
+            using var response = request.GetResponse();
+            using var reader = new StreamReader(response.GetResponseStream());
+            return reader.ReadToEnd();
         }
     }
 }

@@ -5,20 +5,39 @@ using Newtonsoft.Json.Linq;
 
 namespace MaSch.Presentation.Wpf.JsonConverters
 {
+    /// <summary>
+    /// <see cref="JsonConverter"/> that is used to convert <see cref="IThemeValue"/> to and from json.
+    /// </summary>
+    /// <seealso cref="Newtonsoft.Json.JsonConverter{T}" />
     public class ThemeValueJsonConverter : JsonConverter<IThemeValue>
     {
         private bool _canWrite = true;
         private bool _canRead = true;
 
+        /// <inheritdoc/>
         public override bool CanWrite => _canWrite;
+
+        /// <inheritdoc/>
         public override bool CanRead => _canRead;
 
-        public ThemeValueJsonConverter() : this (true) { }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThemeValueJsonConverter"/> class.
+        /// </summary>
+        public ThemeValueJsonConverter()
+            : this (true)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThemeValueJsonConverter"/> class.
+        /// </summary>
+        /// <param name="canRead">if set to <c>true</c> this convert can be used to read json documents.</param>
         public ThemeValueJsonConverter(bool canRead)
         {
             _canRead = canRead;
         }
 
+        /// <inheritdoc/>
         public override void WriteJson(JsonWriter writer, IThemeValue value, JsonSerializer serializer)
         {
             _canWrite = false;
@@ -35,6 +54,7 @@ namespace MaSch.Presentation.Wpf.JsonConverters
             }
         }
 
+        /// <inheritdoc/>
         public override IThemeValue ReadJson(JsonReader reader, Type objectType, IThemeValue existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             _canRead = false;
