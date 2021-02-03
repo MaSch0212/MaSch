@@ -15,10 +15,11 @@ pool:
 
 steps:
 - task: DotNetCoreCLI@2
+  displayName: "\U0001F308 Run Unit Tests"
   inputs:
     command: 'test'
     projects: '**/*Test.csproj'
-    arguments: '--collect "Code coverage"'
+    arguments: '--collect "Code coverage" -p:TreatWarningsAsErrors=true'
 
 - task: DotNetCoreCLI@2
   displayName: "\U0001F6E0 Build and pack projects"
@@ -28,6 +29,7 @@ steps:
     configuration: 'Release'
     versioningScheme: 'off'
     verbosityPack: 'Minimal'
+    arguments: '-p:TreatWarningsAsErrors=true'
 
 - task: PublishBuildArtifacts@1
   displayName: "\U0001F6EB Publish packages to Azure Pipeline"
