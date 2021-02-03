@@ -25,6 +25,8 @@
     <RepositoryUrl>https://github.com/MaSch0212/MaSch</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>masch generator sourcegenerator wrapper observable wpf</PackageTags>
+    <BuildOutputTargetFolder>analyzers</BuildOutputTargetFolder>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
   </PropertyGroup>
 
   <ItemGroup>
