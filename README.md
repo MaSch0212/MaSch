@@ -12,7 +12,7 @@ This repo contains all common libraries I use for my applications
 | `MaSch.Generators` | [![NuGet](https://img.shields.io/nuget/v/MaSch.Generators.svg)](https://www.nuget.org/packages/MaSch.Generators/) | Contains common supporting code for .NET applications |
 | `MaSch.Core` | [![NuGet](https://img.shields.io/nuget/v/MaSch.Core.svg)](https://www.nuget.org/packages/MaSch.Core/) | Contains common supporting code for .NET applications |
 | `MaSch.Core.DataAnnotation` | [![NuGet](https://img.shields.io/nuget/v/MaSch.Core.DataAnnotation.svg)](https://www.nuget.org/packages/MaSch.Core.DataAnnotation/) | Contains common supporting code for .NET applications |
-| `MaSch.Core.EventLogging` | [![NuGet](https://img.shields.io/nuget/v/MaSch.EventLogging.svg)](https://www.nuget.org/packages/MaSch.EventLogging/) | Contains a logging provider for windows Event Logging |
+| `MaSch.Core.EventLogging` | [![NuGet](https://img.shields.io/nuget/v/MaSch.Core.EventLogging.svg)](https://www.nuget.org/packages/MaSch.Core.EventLogging/) | Contains a logging provider for windows Event Logging |
 | `MaSch.Data` | [![NuGet](https://img.shields.io/nuget/v/MaSch.Data.svg)](https://www.nuget.org/packages/MaSch.Data/) | Contains supporting code for data access in .NET applications |
 | `MaSch.Console` | [![NuGet](https://img.shields.io/nuget/v/MaSch.Console.svg)](https://www.nuget.org/packages/MaSch.Console/) | Contains supporting code for console applications |
 | `MaSch.Native.Windows` | [![NuGet](https://img.shields.io/nuget/v/MaSch.Native.Windows.svg)](https://www.nuget.org/packages/MaSch.Native.Windows/) | A small collection of native API calls |
