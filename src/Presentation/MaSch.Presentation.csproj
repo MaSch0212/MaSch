@@ -14,7 +14,7 @@
 
     <!-- Package Info -->
     <Description>Contains supporting code for .NET front-end applications.</Description>
-    <Version>0.1.1</Version>
+    <Version>0.1.2</Version>
     <Authors>Marc Schmidt</Authors>
     <Copyright>Copyright © Marc Schmidt 2021</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
