@@ -3,6 +3,7 @@ using MaSch.Core.Attributes;
 using MaSch.Core.Observable;
 using MaSch.Presentation.Wpf.Themes;
 using MaSch.Presentation.Wpf.ViewModels.MessageBox;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -46,38 +47,34 @@ namespace MaSch.Presentation.Wpf.ViewModels
     /// <seealso cref="MaSch.Presentation.Wpf.ViewModels.IMessageBoxViewModel_Props" />
     public partial class MessageBoxViewModel : ObservableObject, IMessageBoxViewModel_Props
     {
-        private static readonly Dictionary<int, BrushGeometry> IconDict = new Dictionary<int, BrushGeometry>
+        private static readonly Dictionary<int, Func<BrushGeometry>> IconDict = new Dictionary<int, Func<BrushGeometry>>
         {
-            [0] = new BrushGeometry(),
-            [16] = new BrushGeometry
+            [0] = () => new BrushGeometry(),
+            [16] = () => new BrushGeometry
             {
                 Icon = CurrentThemeManager.GetValue<Icon>(ThemeKey.MessageBoxErrorIcon) as Icon,
                 FillBrush = new SolidColorBrush(Colors.Red),
             },
-            [32] = new BrushGeometry
+            [32] = () => new BrushGeometry
             {
                 Icon = CurrentThemeManager.GetValue<Icon>(ThemeKey.MessageBoxQuestionIcon) as Icon,
                 FillBrush = new SolidColorBrush(Color.FromArgb(255, 25, 88, 185 )),
             },
-            [48] = new BrushGeometry
+            [48] = () => new BrushGeometry
             {
                 Icon = CurrentThemeManager.GetValue<Icon>(ThemeKey.MessageBoxWarningIcon) as Icon,
                 FillBrush = new SolidColorBrush(Colors.Orange),
             },
-            [64] = new BrushGeometry
+            [64] = () => new BrushGeometry
             {
                 Icon = CurrentThemeManager.GetValue<Icon>(ThemeKey.MessageBoxInfoIcon) as Icon,
                 FillBrush = new SolidColorBrush(Color.FromArgb(255, 25, 88, 185 )),
             },
         };
 
-        /// <summary>
-        /// Gets the current theme manager.
-        /// </summary>
-        /// <value>
-        /// The current theme manager.
-        /// </value>
-        public static IThemeManager CurrentThemeManager { get; } = ServiceContext.TryGetService<IThemeManager>() ?? ThemeManager.DefaultThemeManager;
+        private static IThemeManager CurrentThemeManager => ServiceContext.TryGetService<IThemeManager>() ?? ThemeManager.DefaultThemeManager;
+
+        private MessageBoxImage _messageBoxImage = MessageBoxImage.None;
 
         /// <summary>
         /// Gets or sets the message box buttons.
@@ -93,14 +90,12 @@ namespace MaSch.Presentation.Wpf.ViewModels
         /// </summary>
         public MessageBoxImage MessageBoxImage
         {
-            get
+            get => _messageBoxImage;
+            set
             {
-                if (!IconDict.ContainsValue(Icon))
-                    return MessageBoxImage.None;
-                else
-                    return (MessageBoxImage)IconDict.FirstOrDefault(i => i.Value.Equals(Icon)).Key;
+                Icon = IconDict.ContainsKey((int)value) ? IconDict[(int)value]() : IconDict.FirstOrDefault().Value();
+                _messageBoxImage = value;
             }
-            set => Icon = IconDict.ContainsKey((int)value) ? IconDict[(int)value] : IconDict.FirstOrDefault().Value;
         }
 
         /// <summary>
