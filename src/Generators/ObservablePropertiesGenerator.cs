@@ -1,4 +1,5 @@
-﻿using MaSch.Generators.Common;
+﻿using MaSch.Core.Attributes;
+using MaSch.Generators.Common;
 using Microsoft.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -27,6 +28,7 @@ namespace MaSch.Generators
             var observableObjectSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Observable.IObservableObject");
             var observableObjectAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.GenerateObservableObjectAttribute");
             var notifyPropChangeAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.GenerateNotifyPropertyChangedAttribute");
+            var accessModifierAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.ObservablePropertyAccessModifierAttribute");
 
             if (definitionAttributeSymbol == null || (observableObjectSymbol == null && observableObjectAttributeSymbol == null))
                 return;
@@ -77,24 +79,58 @@ namespace MaSch.Generators
                             builder.AppendLine($"[{Regex.Replace(attribute.ToString(), @"[\{\}]", string.Empty)}]");
                         }
 
-                        using (builder.AddBlock($"public {propInfo.Type} {propertyName}"))
+                        var accessModifierAttr = accessModifierAttributeSymbol == null ? null : propInfo.GetAttributes().FirstOrDefault(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, accessModifierAttributeSymbol));
+                        string accessModifier = "public";
+                        string setterModifier = string.Empty;
+                        string getterModifier = string.Empty;
+                        if (accessModifierAttr != null)
                         {
-                            builder.AppendLine($"get => {fieldName};");
-                            using (builder.AddBlock("set"))
+                            var iAccessModifier = accessModifierAttr.ConstructorArguments.FirstOrDefault().Value as int? ?? (int)AccessModifier.Public;
+                            accessModifier = GetAccessModifier((AccessModifier)iAccessModifier);
+                            if (accessModifierAttr.NamedArguments.FirstOrDefault(x => x.Key == "IsVirtual").Value.Value as bool? ?? false)
+                                accessModifier += " virtual";
+
+                            if (accessModifierAttr.NamedArguments.FirstOrDefault(x => x.Key == "SetModifier").Value.Value is int iSetterModifier && iSetterModifier != iAccessModifier)
+                                setterModifier = GetAccessModifier((AccessModifier)iSetterModifier) + " ";
+
+                            if (accessModifierAttr.NamedArguments.FirstOrDefault(x => x.Key == "GetModifier").Value.Value is int iGetterModifier && iGetterModifier != iAccessModifier)
+                                getterModifier = GetAccessModifier((AccessModifier)iGetterModifier) + " ";
+                        }
+
+                        using (builder.AddBlock($"{accessModifier} {propInfo.Type} {propertyName}"))
+                        {
+                            builder.AppendLine($"{getterModifier}get => {fieldName};");
+                            using (builder.AddBlock($"{setterModifier}set"))
                             {
                                 builder.AppendLine($"var previous = {fieldName};")
+                                       .AppendLine($"On{propertyName}Changing(previous, ref value);")
                                        .AppendLine($"SetProperty(ref {fieldName}, value);")
                                        .AppendLine($"On{propertyName}Changed(previous, value);");
                             }
                         }
 
                         builder.AppendLine($"[SuppressMessage(\"Style\", \"IDE0060:Remove unused parameter\", Justification = \"Partial Method!\")]")
+                               .AppendLine($"partial void On{propertyName}Changing({propInfo.Type} previous, ref {propInfo.Type} value);")
+                               .AppendLine($"[SuppressMessage(\"Style\", \"IDE0060:Remove unused parameter\", Justification = \"Partial Method!\")]")
                                .AppendLine($"partial void On{propertyName}Changed({propInfo.Type} previous, {propInfo.Type} value);");
                     }
                 }
 
                 context.AddSource(type.Key, builder, nameof(ObservablePropertiesGenerator));
             }
+        }
+
+        private static string GetAccessModifier(AccessModifier accessModifier)
+        {
+            return accessModifier switch
+            {
+                AccessModifier.ProtectedInternal => "protected internal",
+                AccessModifier.Internal => "internal",
+                AccessModifier.Protected => "protected",
+                AccessModifier.PrivateProtected => "private protected",
+                AccessModifier.Private => "private",
+                _ => "public"
+            };
         }
     }
 }

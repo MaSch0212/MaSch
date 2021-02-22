@@ -17,7 +17,7 @@
 
     <!-- Package Info -->
     <Description>Contains some useful Code Generators. Most of these generators requires a reference to the MaSch.Core NuGet package.</Description>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>Marc Schmidt</Authors>
     <Copyright>Copyright © Marc Schmidt 2021</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -35,7 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\Core\Attributes\ShimsAttribute.cs" Link="Common\ShimsAttribute.cs" />
+    <Compile Include="..\Core\Attributes\Enums.cs" Link="Common\Enums.cs" />
     <Compile Include="..\Core\Extensions\ArrayExtensions.cs" Link="Extensions\ArrayExtensions.cs" />
   </ItemGroup>
   
