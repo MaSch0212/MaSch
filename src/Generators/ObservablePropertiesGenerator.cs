@@ -99,7 +99,12 @@ namespace MaSch.Generators
 
                         using (builder.AddBlock($"{accessModifier} {propInfo.Type} {propertyName}"))
                         {
-                            builder.AppendLine($"{getterModifier}get => {fieldName};");
+                            using (builder.AddBlock($"{getterModifier}get"))
+                            {
+                                builder.AppendLine($"var result = {fieldName};")
+                                       .AppendLine($"OnGet{propertyName}(ref result);")
+                                       .AppendLine("return result;");
+                            }
                             using (builder.AddBlock($"{setterModifier}set"))
                             {
                                 builder.AppendLine($"var previous = {fieldName};")
@@ -110,6 +115,8 @@ namespace MaSch.Generators
                         }
 
                         builder.AppendLine($"[SuppressMessage(\"Style\", \"IDE0060:Remove unused parameter\", Justification = \"Partial Method!\")]")
+                               .AppendLine($"partial void OnGet{propertyName}(ref {propInfo.Type} value);")
+                               .AppendLine($"[SuppressMessage(\"Style\", \"IDE0060:Remove unused parameter\", Justification = \"Partial Method!\")]")
                                .AppendLine($"partial void On{propertyName}Changing({propInfo.Type} previous, ref {propInfo.Type} value);")
                                .AppendLine($"[SuppressMessage(\"Style\", \"IDE0060:Remove unused parameter\", Justification = \"Partial Method!\")]")
                                .AppendLine($"partial void On{propertyName}Changed({propInfo.Type} previous, {propInfo.Type} value);");
