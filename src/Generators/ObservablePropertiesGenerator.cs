@@ -105,6 +105,7 @@ namespace MaSch.Generators
                                        .AppendLine($"OnGet{propertyName}(ref result);")
                                        .AppendLine("return result;");
                             }
+
                             using (builder.AddBlock($"{setterModifier}set"))
                             {
                                 builder.AppendLine($"var previous = {fieldName};")
