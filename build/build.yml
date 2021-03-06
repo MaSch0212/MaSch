@@ -14,7 +14,7 @@ pool:
   vmImage: 'windows-2019'
 
 steps:
-- script: dotnet clean ./Bumbo-Web/Bumbo-Web.sln --configuration Release && dotnet nuget locals all --clear
+- script: dotnet nuget locals all --clear
   displayName: "Clean"
 
 - task: DotNetCoreCLI@2
