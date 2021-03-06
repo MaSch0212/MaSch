@@ -141,7 +141,7 @@ namespace MaSch.Presentation.Wpf.Commands
         /// </summary>
         /// <param name="parameter">The parameter for the command.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public override async Task Execute(T parameter)
+        public override async Task Execute(T? parameter)
         {
             foreach (var c in _commands)
                 await c.ExecuteAsync(parameter);

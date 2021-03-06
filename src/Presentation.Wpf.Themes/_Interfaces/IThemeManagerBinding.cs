@@ -16,6 +16,6 @@ namespace MaSch.Presentation.Wpf
         /// <summary>
         /// Gets the value to bind to.
         /// </summary>
-        IThemeValue Value { get; }
+        IThemeValue? Value { get; }
     }
 }

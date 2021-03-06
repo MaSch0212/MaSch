@@ -15,23 +15,23 @@ namespace MaSch.Presentation.Wpf.Services
             => MessageBox.ShowAlert(messageBoxText);
 
         /// <inheritdoc/>
-        public AlertResult Show(string messageBoxText, string caption)
+        public AlertResult Show(string messageBoxText, string? caption)
             => MessageBox.ShowAlert(messageBoxText, caption);
 
         /// <inheritdoc/>
-        public AlertResult Show(string messageBoxText, string caption, AlertButton button)
+        public AlertResult Show(string messageBoxText, string? caption, AlertButton button)
             => MessageBox.ShowAlert(messageBoxText, caption, button);
 
         /// <inheritdoc/>
-        public AlertResult Show(string messageBoxText, string caption, AlertButton button, AlertImage icon)
+        public AlertResult Show(string messageBoxText, string? caption, AlertButton button, AlertImage icon)
             => MessageBox.ShowAlert(messageBoxText, caption, button, icon);
 
         /// <inheritdoc/>
-        public AlertResult Show(string messageBoxText, string caption, AlertButton button, AlertImage icon, AlertResult defaultResult)
+        public AlertResult Show(string messageBoxText, string? caption, AlertButton button, AlertImage icon, AlertResult defaultResult)
             => MessageBox.ShowAlert(messageBoxText, caption, button, icon, defaultResult);
 
         /// <inheritdoc/>
-        public AlertResult Show(string messageBoxText, string caption, AlertButton button, AlertImage icon, AlertResult defaultResult, AlertOptions options)
+        public AlertResult Show(string messageBoxText, string? caption, AlertButton button, AlertImage icon, AlertResult defaultResult, AlertOptions options)
             => MessageBox.ShowAlert(messageBoxText, caption, button, icon, defaultResult, options);
     }
 }

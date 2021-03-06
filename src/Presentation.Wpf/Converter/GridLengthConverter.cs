@@ -22,7 +22,7 @@ namespace MaSch.Presentation.Wpf.Converter
         }
 
         /// <inheritdoc />
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             GridLength val = (GridLength)value;
 

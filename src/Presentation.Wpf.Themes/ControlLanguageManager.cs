@@ -15,7 +15,7 @@ namespace MaSch.Presentation.Wpf
         /// </summary>
         /// <param name="app">The application.</param>
         /// <param name="translationProviderName">Name of the translation provider.</param>
-        public static void SetLanguageKeys(Application app, string translationProviderName = null)
+        public static void SetLanguageKeys(Application app, string? translationProviderName = null)
         {
             var rd = new ResourceDictionary
             {
@@ -26,7 +26,7 @@ namespace MaSch.Presentation.Wpf
                 SetLanguageKey(app, key, translationProviderName);
         }
 
-        private static void SetLanguageKey(Application app, string key, string translationProviderName)
+        private static void SetLanguageKey(Application app, string key, string? translationProviderName)
         {
             var value = new TranslationExtension(key, translationProviderName);
             if (app.Resources.Contains(key))

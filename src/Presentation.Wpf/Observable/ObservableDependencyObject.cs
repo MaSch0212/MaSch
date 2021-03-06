@@ -19,16 +19,16 @@ namespace MaSch.Presentation.Wpf.Observable
     public class ObservableDependencyObject : DependencyObject, IObservableObject
     {
         private readonly Dictionary<string, NotifyPropertyChangedAttribute> _attributes;
-        private readonly List<(string propertyName, NotifyDependencyPropertyChangedAttribute attribute)> _dependencyPropertyAttributes;
+        private readonly List<(string PropertyName, NotifyDependencyPropertyChangedAttribute Attribute)> _dependencyPropertyAttributes;
         private readonly ObservableObjectModule _module;
 
         /// <inheritdoc/>
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// Occurs when a dependency property changed.
         /// </summary>
-        public event DependencyPropertyChangedEventHandler DependencyPropertyChanged;
+        public event DependencyPropertyChangedEventHandler? DependencyPropertyChanged;
 
         /// <summary>
         /// Gets a value indicating whether this instance is in design mode.
@@ -87,8 +87,8 @@ namespace MaSch.Presentation.Wpf.Observable
             DependencyPropertyChanged?.Invoke(this, e);
 
             var propertiesToNotify = from x in _dependencyPropertyAttributes
-                                     where x.attribute.PropertyName == e.Property.Name && (x.attribute.OwnerType ?? GetType()) == e.Property.OwnerType
-                                     select x.propertyName;
+                                     where x.Attribute.PropertyName == e.Property.Name && (x.Attribute.OwnerType ?? GetType()) == e.Property.OwnerType
+                                     select x.PropertyName;
             foreach (var p in propertiesToNotify)
                 NotifyPropertyChanged(p);
         }

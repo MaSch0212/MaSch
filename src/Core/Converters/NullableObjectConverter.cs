@@ -50,7 +50,7 @@ namespace MaSch.Core.Converters
             return targetNullable ? Activator.CreateInstance(targetType, result) : result;
         }
 
-        private static (bool sourceNullable, bool targetNullable, Type? realSourceType, Type realTargetType) GetTypeInformation(Type? sourceType, Type targetType)
+        private static (bool SourceNullable, bool TargetNullable, Type? RealSourceType, Type RealTargetType) GetTypeInformation(Type? sourceType, Type targetType)
         {
             var sourceNullable = sourceType == null || (sourceType.IsGenericType && sourceType.GetGenericTypeDefinition() == typeof(Nullable<>));
             var targetNullable = targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>);

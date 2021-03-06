@@ -3,46 +3,18 @@
 
     <!-- General Project info -->
     <TargetFrameworks>net5.0;net48</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
-    <CodeAnalysisRuleSet>..\..\build\MaSch.ruleset</CodeAnalysisRuleSet>
+    <ConfigureSourceLink>true</ConfigureSourceLink>
 
     <!-- Output info -->
-    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
-    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
 
     <!-- Package Info -->
     <Description>Contains common supporting code for .NET applications.</Description>
-    <Version>0.2.0</Version>
-    <Authors>Marc Schmidt</Authors>
-    <Copyright>Copyright © Marc Schmidt 2021</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/MaSch0212/MaSch</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/MaSch0212/MaSch</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
+    <Version>0.2.1</Version>
     <PackageTags>masch core common observable logging extensions</PackageTags>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net48' ">
-    <NoWarn>$(NoWarn);8600;8601;8602;8603;8604;8777;8767</NoWarn>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="Properties\MaSch.snk" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+  <Import Project="../../build/MaSch.props" />
 
   <ItemGroup>
     <ProjectReference Include="..\Generators\MaSch.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />

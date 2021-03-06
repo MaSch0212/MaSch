@@ -41,7 +41,7 @@ namespace MaSch.Presentation.Wpf.Converter
         public string RightFormula { get; set; } = "R";
 
         /// <inheritdoc />
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var (lf, tf, rf, bf) = GetFormulas(parameter);
             var v = new List<object>();
@@ -74,7 +74,7 @@ namespace MaSch.Presentation.Wpf.Converter
         }
 
         /// <inheritdoc />
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             if (values.IsNullOrEmpty())
                 return null;
@@ -111,7 +111,7 @@ namespace MaSch.Presentation.Wpf.Converter
             throw new NotSupportedException();
         }
 
-        private (string left, string top, string right, string bottom) GetFormulas(object parameter)
+        private (string Left, string Top, string Right, string Bottom) GetFormulas(object parameter)
         {
             string lf = LeftFormula, tf = TopFormula, rf = RightFormula, bf = BottomFormula;
             if (parameter is string f)

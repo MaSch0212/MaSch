@@ -50,9 +50,9 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <summary>
         /// Gets or sets the header.
         /// </summary>
-        public string Header
+        public string? Header
         {
-            get { return (string)GetValue(HeaderProperty); }
+            get { return (string?)GetValue(HeaderProperty); }
             set { SetValue(HeaderProperty, value); }
         }
 

@@ -48,7 +48,7 @@ namespace MaSch.Generators
                 using (builder.AddBlock($"partial class {type.Key.typeSymbol.Name}"))
                 {
                     var existingMembers = type.Key.typeSymbol.GetMembers();
-                    var wrappedTypes = new List<(INamedTypeSymbol type, string propName)>();
+                    var wrappedTypes = new List<(INamedTypeSymbol Type, string PropName)>();
                     bool isFirstRegion = true;
                     foreach (var attribute in type)
                     {
@@ -67,10 +67,10 @@ namespace MaSch.Generators
                     if (!existingMembers.OfType<IMethodSymbol>().Any(x => x.MethodKind == MethodKind.Constructor && x.Parameters.Length > 0))
                     {
                         builder.AppendLine();
-                        using (builder.AddBlock($"public {type.Key.typeSymbol.Name}({string.Join(", ", wrappedTypes.Select(x => $"{x} wrapped{x.type.Name}"))})"))
+                        using (builder.AddBlock($"public {type.Key.typeSymbol.Name}({string.Join(", ", wrappedTypes.Select(x => $"{x} wrapped{x.Type.Name}"))})"))
                         {
                             foreach (var t in wrappedTypes)
-                                builder.AppendLine($"{t.propName} = wrapped{t.type.Name};");
+                                builder.AppendLine($"{t.PropName} = wrapped{t.Type.Name};");
                         }
                     }
                 }
@@ -122,10 +122,8 @@ namespace MaSch.Generators
                 foreach (var m in members.OfType<IMethodSymbol>().Where(x => x.MethodKind == MethodKind.Ordinary))
                 {
                     hadMethod = true;
-#pragma warning disable RS1024 // Compare symbols correctly
                     if (existingMembers.OfType<IMethodSymbol>().Any(x => x.Name == m.Name && x.TypeParameters.Length == m.TypeParameters.Length && x.Parameters.Select(y => y.Type).SequenceEqual(m.Parameters.Select(y => y.Type), SymbolEqualityComparer.Default)))
                         continue;
-#pragma warning restore RS1024 // Compare symbols correctly
                     builder.AppendLine($"public virtual {m.ToDisplayString(DefinitionFormat)} => {wName}.{m.ToDisplayString(UsageFormat)};");
                 }
 

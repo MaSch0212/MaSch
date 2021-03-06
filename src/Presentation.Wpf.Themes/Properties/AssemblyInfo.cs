@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using MaSch.Core.Attributes;
+using System.Windows;
 using System.Windows.Markup;
 
 [assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
@@ -7,3 +8,5 @@ using System.Windows.Markup;
 [assembly: XmlnsDefinition("http://schemas.masch212.de/MaSch/Wpf", "MaSch.Presentation.Wpf.Markup")]
 [assembly: XmlnsDefinition("http://schemas.masch212.de/MaSch/Wpf", "MaSch.Presentation.Wpf.DependencyProperties")]
 [assembly: XmlnsDefinition("http://schemas.masch212.de/MaSch/Wpf", "MaSch.Presentation.Wpf.Models")]
+
+[assembly: Shims(Shims.NullableReferenceTypes)]

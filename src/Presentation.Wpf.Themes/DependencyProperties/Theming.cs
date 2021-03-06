@@ -36,7 +36,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
         {
             var newValue = e.NewValue as ThemeOverrideCollection;
 
-            IThemeManager themeManager = null;
+            IThemeManager? themeManager = null;
             if (DependencyPropertyHelper.GetValueSource(source, ThemeManagerProperty).BaseValueSource == BaseValueSource.Local)
             {
                 themeManager = GetThemeManager(source);
@@ -50,7 +50,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
             if (e.OldValue is ThemeOverrideCollection oldValue)
                 oldValue.UnregisterThemeManager(themeManager);
 
-            if (newValue != null)
+            if (newValue != null && themeManager != null)
                 newValue.RegisterThemeManager(themeManager);
         }
 
@@ -63,7 +63,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                 overrides.RegisterThemeManager((IThemeManager)e.NewValue);
             }
 
-            DependencyObject parent = null;
+            DependencyObject? parent = null;
             if (source is FrameworkElement element)
                 parent = element.Parent;
             else if (source is Visual || source is Visual3D)
@@ -76,7 +76,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                     DependencyPropertyDescriptor.FromProperty(ThemeManagerProperty, parent.GetType()).RemoveValueChanged(parent, OnParentThemeManagerChanged);
             }
 
-            void OnParentThemeManagerChanged(object sender, EventArgs ea)
+            void OnParentThemeManagerChanged(object? sender, EventArgs ea)
             {
                 if (sender is DependencyObject obj)
                 {

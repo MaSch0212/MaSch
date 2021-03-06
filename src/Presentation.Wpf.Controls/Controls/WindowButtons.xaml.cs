@@ -30,10 +30,10 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(WindowButtons),
                 new PropertyMetadata(false));
 
-        public event Action CloseButtonClicked;
-        public event Action MaximizeButtonClicked;
-        public event Action MinimizeButtonClicked;
-        public event Action NormalizeButtonClicked;
+        public event Action? CloseButtonClicked;
+        public event Action? MaximizeButtonClicked;
+        public event Action? MinimizeButtonClicked;
+        public event Action? NormalizeButtonClicked;
 
         public bool Maximizable
         {

@@ -13,7 +13,7 @@ namespace MaSch.Presentation.Wpf.Animation
     public class GridLengthAnimation : AnimationTimeline
     {
         private bool _isCompleted;
-        private AnimationClock _clock;
+        private AnimationClock? _clock;
 
         /// <summary>
         /// Dependency property. Gets or sets the easing function to use for this animation.
@@ -131,19 +131,19 @@ namespace MaSch.Presentation.Wpf.Animation
             var fromVal = From.Value;
             var toVal = To.Value;
 
-            if (animationClock.CurrentProgress.Value == 1.0)
+            if ((animationClock.CurrentProgress ?? 0) == 1.0)
                 return To;
 
             if (fromVal > toVal)
             {
                 return new GridLength(
-                    ((1 - Ease(animationClock.CurrentProgress.Value)) * (fromVal - toVal)) + toVal,
+                    ((1 - Ease(animationClock.CurrentProgress ?? 0)) * (fromVal - toVal)) + toVal,
                     From.IsStar ? GridUnitType.Star : GridUnitType.Pixel);
             }
             else
             {
                 return new GridLength(
-                    (Ease(animationClock.CurrentProgress.Value) * (toVal - fromVal)) + fromVal,
+                    (Ease(animationClock.CurrentProgress ?? 0) * (toVal - fromVal)) + fromVal,
                     From.IsStar ? GridUnitType.Star : GridUnitType.Pixel);
             }
         }

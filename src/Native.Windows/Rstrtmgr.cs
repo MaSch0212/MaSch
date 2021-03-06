@@ -10,9 +10,9 @@ namespace MaSch.Native.Windows
             uint nFiles,
             string[] rgsFilenames,
             uint nApplications,
-            [In] RmUniqueProcess[] rgApplications,
+            [In] RmUniqueProcess[]? rgApplications,
             uint nServices,
-            string[] rgsServiceNames);
+            string[]? rgsServiceNames);
 
         [DllImport("rstrtmgr.dll", CharSet = CharSet.Auto)]
         public static extern int RmStartSession(out uint pSessionHandle, int dwSessionFlags, string strSessionKey);
@@ -25,7 +25,7 @@ namespace MaSch.Native.Windows
             uint dwSessionHandle,
             out uint pnProcInfoNeeded,
             ref uint pnProcInfo,
-            [In, Out] RmProcessInfo[] rgAffectedApps,
+            [In, Out] RmProcessInfo[]? rgAffectedApps,
             ref uint lpdwRebootReasons);
     }
 }

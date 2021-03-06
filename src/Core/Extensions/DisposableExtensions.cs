@@ -53,7 +53,7 @@ namespace MaSch.Core.Extensions
         /// <param name="function">The function to execute.</param>
         /// <param name="out1">The first <c>out</c> parameter.</param>
         /// <returns>The first element of the function result.</returns>
-        public static TResult DoAndDispose<TDisposable, TResult, TOut1>(this TDisposable disposable, Func<TDisposable, (TResult, TOut1)> function, out TOut1 out1)
+        public static TResult DoAndDispose<TDisposable, TResult, TOut1>(this TDisposable disposable, Func<TDisposable, (TResult Result, TOut1 Out1)> function, out TOut1 out1)
             where TDisposable : IDisposable
             => disposable.DoAndDispose(function).ExpandOut(out out1);
 
@@ -69,7 +69,7 @@ namespace MaSch.Core.Extensions
         /// <param name="out1">The first <c>out</c> parameter.</param>
         /// <param name="out2">The second <c>out</c> parameter.</param>
         /// <returns>The first element of the function result.</returns>
-        public static TResult DoAndDispose<TDisposable, TResult, TOut1, TOut2>(this TDisposable disposable, Func<TDisposable, (TResult, TOut1, TOut2)> function, out TOut1 out1, out TOut2 out2)
+        public static TResult DoAndDispose<TDisposable, TResult, TOut1, TOut2>(this TDisposable disposable, Func<TDisposable, (TResult Result, TOut1 Out1, TOut2 Out2)> function, out TOut1 out1, out TOut2 out2)
             where TDisposable : IDisposable
             => disposable.DoAndDispose(function).ExpandOut(out out1, out out2);
 
@@ -87,7 +87,7 @@ namespace MaSch.Core.Extensions
         /// <param name="out2">The second <c>out</c> parameter.</param>
         /// <param name="out3">The third <c>out</c> parameter.</param>
         /// <returns>The first element of the function result.</returns>
-        public static TResult DoAndDispose<TDisposable, TResult, TOut1, TOut2, TOut3>(this TDisposable disposable, Func<TDisposable, (TResult, TOut1, TOut2, TOut3)> function, out TOut1 out1, out TOut2 out2, out TOut3 out3)
+        public static TResult DoAndDispose<TDisposable, TResult, TOut1, TOut2, TOut3>(this TDisposable disposable, Func<TDisposable, (TResult Result, TOut1 Out1, TOut2 Out2, TOut3 Out3)> function, out TOut1 out1, out TOut2 out2, out TOut3 out3)
             where TDisposable : IDisposable
             => disposable.DoAndDispose(function).ExpandOut(out out1, out out2, out out3);
 
@@ -107,7 +107,7 @@ namespace MaSch.Core.Extensions
         /// <param name="out3">The third <c>out</c> parameter.</param>
         /// <param name="out4">The fourth <c>out</c> parameter.</param>
         /// <returns>The first element of the function result.</returns>
-        public static TResult DoAndDispose<TDisposable, TResult, TOut1, TOut2, TOut3, TOut4>(this TDisposable disposable, Func<TDisposable, (TResult, TOut1, TOut2, TOut3, TOut4)> function, out TOut1 out1, out TOut2 out2, out TOut3 out3, out TOut4 out4)
+        public static TResult DoAndDispose<TDisposable, TResult, TOut1, TOut2, TOut3, TOut4>(this TDisposable disposable, Func<TDisposable, (TResult Result, TOut1 Out1, TOut2 Out2, TOut3 Out3, TOut4 Out4)> function, out TOut1 out1, out TOut2 out2, out TOut3 out3, out TOut4 out4)
             where TDisposable : IDisposable
             => disposable.DoAndDispose(function).ExpandOut(out out1, out out2, out out3, out out4);
 
@@ -129,7 +129,7 @@ namespace MaSch.Core.Extensions
         /// <param name="out4">The fourth <c>out</c> parameter.</param>
         /// <param name="out5">The fifth <c>out</c> parameter.</param>
         /// <returns>The first element of the function result.</returns>
-        public static TResult DoAndDispose<TDisposable, TResult, TOut1, TOut2, TOut3, TOut4, TOut5>(this TDisposable disposable, Func<TDisposable, (TResult, TOut1, TOut2, TOut3, TOut4, TOut5)> function, out TOut1 out1, out TOut2 out2, out TOut3 out3, out TOut4 out4, out TOut5 out5)
+        public static TResult DoAndDispose<TDisposable, TResult, TOut1, TOut2, TOut3, TOut4, TOut5>(this TDisposable disposable, Func<TDisposable, (TResult Result, TOut1 Out1, TOut2 Out2, TOut3 Out3, TOut4 Out4, TOut5 Out5)> function, out TOut1 out1, out TOut2 out2, out TOut3 out3, out TOut4 out4, out TOut5 out5)
             where TDisposable : IDisposable
             => disposable.DoAndDispose(function).ExpandOut(out out1, out out2, out out3, out out4, out out5);
 
@@ -153,7 +153,7 @@ namespace MaSch.Core.Extensions
         /// <param name="out5">The fifth <c>out</c> parameter.</param>
         /// <param name="out6">The sixth <c>out</c> parameter.</param>
         /// <returns>The first element of the function result.</returns>
-        public static TResult DoAndDispose<TDisposable, TResult, TOut1, TOut2, TOut3, TOut4, TOut5, TOut6>(this TDisposable disposable, Func<TDisposable, (TResult, TOut1, TOut2, TOut3, TOut4, TOut5, TOut6)> function, out TOut1 out1, out TOut2 out2, out TOut3 out3, out TOut4 out4, out TOut5 out5, out TOut6 out6)
+        public static TResult DoAndDispose<TDisposable, TResult, TOut1, TOut2, TOut3, TOut4, TOut5, TOut6>(this TDisposable disposable, Func<TDisposable, (TResult Result, TOut1 Out1, TOut2 Out2, TOut3 Out3, TOut4 Ou4, TOut5 Ou5, TOut6 Out6)> function, out TOut1 out1, out TOut2 out2, out TOut3 out3, out TOut4 out4, out TOut5 out5, out TOut6 out6)
             where TDisposable : IDisposable
             => disposable.DoAndDispose(function).ExpandOut(out out1, out out2, out out3, out out4, out out5, out out6);
 

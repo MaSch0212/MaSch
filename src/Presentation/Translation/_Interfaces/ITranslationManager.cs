@@ -199,14 +199,14 @@ namespace MaSch.Presentation.Translation
         /// <value>
         /// The old language.
         /// </value>
-        public CultureInfo OldLanguage { get; }
+        public CultureInfo? OldLanguage { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LanguageChangedEventArgs"/> class.
         /// </summary>
         /// <param name="oldLanguage">The old language.</param>
         /// <param name="newLanguage">The new language.</param>
-        public LanguageChangedEventArgs(CultureInfo oldLanguage, CultureInfo newLanguage)
+        public LanguageChangedEventArgs(CultureInfo? oldLanguage, CultureInfo newLanguage)
         {
             NewLanguage = newLanguage;
             OldLanguage = oldLanguage;

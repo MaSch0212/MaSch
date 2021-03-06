@@ -39,7 +39,7 @@ namespace MaSch.Core.Extensions
         /// <param name="enumerable">The enumerable.</param>
         /// <param name="action">The action to execute.</param>
         /// <returns>Returns each item with the exception that occurred after the action has been executed. If no exception occurred, the exception entry is <c>null</c>.</returns>
-        public static IDisposableEnumerable<(T item, Exception? error)> TryEach<T>(this IDisposableEnumerable<T> enumerable, Action<T> action)
+        public static IDisposableEnumerable<(T Item, Exception? Error)> TryEach<T>(this IDisposableEnumerable<T> enumerable, Action<T> action)
             => Redirect(Guard.NotNull(enumerable, nameof(enumerable)), x => x.TryEach(Guard.NotNull(action, nameof(action))));
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace MaSch.Core.Extensions
         /// <param name="enumerable">The enumerable.</param>
         /// <param name="action">The action to execute.</param>
         /// <returns>Returns each item with the exception that occurred after the action has been executed. If no exception occurred, the exception entry is <c>null</c>.</returns>
-        public static IDisposableEnumerable<(T item, Exception? error)> TryEach<T>(this IDisposableEnumerable<T> enumerable, Action<T, LoopState> action)
+        public static IDisposableEnumerable<(T Item, Exception? Error)> TryEach<T>(this IDisposableEnumerable<T> enumerable, Action<T, LoopState> action)
             => Redirect(Guard.NotNull(enumerable, nameof(enumerable)), x => x.TryEach(Guard.NotNull(action, nameof(action))));
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace MaSch.Core.Extensions
         /// <param name="action">The action to execute.</param>
         /// <param name="errors">A collection containing the errors that occurred.</param>
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
-        public static bool TryForEachAndDispose<T>(this IDisposableEnumerable<T> enumerable, Action<T> action, out ICollection<(T item, Exception error)> errors)
+        public static bool TryForEachAndDispose<T>(this IDisposableEnumerable<T> enumerable, Action<T> action, out ICollection<(T Item, Exception Error)> errors)
             => Guard.NotNull(enumerable, nameof(enumerable)).DoAndDispose(x => (x.TryForEach(Guard.NotNull(action, nameof(action)), out var err), err), out errors);
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace MaSch.Core.Extensions
         /// <param name="errors">A collection containing the errors that occurred.</param>
         /// <param name="continueOnError">Determines wether the loop should continue if an error occurres.</param>
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
-        public static bool TryForEachAndDispose<T>(this IDisposableEnumerable<T> enumerable, Action<T> action, out ICollection<(T item, Exception error)> errors, bool continueOnError)
+        public static bool TryForEachAndDispose<T>(this IDisposableEnumerable<T> enumerable, Action<T> action, out ICollection<(T Item, Exception Error)> errors, bool continueOnError)
             => Guard.NotNull(enumerable, nameof(enumerable)).DoAndDispose(x => (x.TryForEach(Guard.NotNull(action, nameof(action)), out var err, continueOnError), err), out errors);
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace MaSch.Core.Extensions
         /// <param name="action">The action to execute.</param>
         /// <param name="errors">A collection containing the errors that occurred.</param>
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
-        public static bool TryForEachAndDispose<T>(this IDisposableEnumerable<T> enumerable, Action<T, LoopState> action, out ICollection<(T item, int index, Exception error)> errors)
+        public static bool TryForEachAndDispose<T>(this IDisposableEnumerable<T> enumerable, Action<T, LoopState> action, out ICollection<(T Item, int Index, Exception Error)> errors)
             => Guard.NotNull(enumerable, nameof(enumerable)).DoAndDispose(x => (x.TryForEach(Guard.NotNull(action, nameof(action)), out var err), err), out errors);
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace MaSch.Core.Extensions
         /// <param name="errors">A collection containing the errors that occurred.</param>
         /// <param name="continueOnError">Determines wether the loop should continue if an error occurres.</param>
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
-        public static bool TryForEachAndDispose<T>(this IDisposableEnumerable<T> enumerable, Action<T, LoopState> action, out ICollection<(T item, int index, Exception error)> errors, bool continueOnError)
+        public static bool TryForEachAndDispose<T>(this IDisposableEnumerable<T> enumerable, Action<T, LoopState> action, out ICollection<(T Item, int Index, Exception Error)> errors, bool continueOnError)
             => Guard.NotNull(enumerable, nameof(enumerable)).DoAndDispose(x => (x.TryForEach(Guard.NotNull(action, nameof(action)), out var err, continueOnError), err), out errors);
 
         #region Linq wrappers

@@ -20,7 +20,7 @@ namespace MaSch.Presentation.Validation
         /// <summary>
         /// Gets or sets the type in which the method defined by <see cref="MethodName"/> is located in.
         /// </summary>
-        public Type ContainingType { get; set; }
+        public Type? ContainingType { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DelegateValidationAttribute"/> class.
@@ -39,7 +39,7 @@ namespace MaSch.Presentation.Validation
         /// <inheritdoc />
         /// <exception cref="MissingMethodException">The method \"{MethodName}(object)\" could not be found.</exception>
         /// <exception cref="NotSupportedException">The Method \"{MethodName}(object)\" has to have a return type of \"ValidationResult\" or a derived type.</exception>
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             var type = validationContext.ObjectType;
             var bindingFlags = BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;

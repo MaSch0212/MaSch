@@ -3,45 +3,21 @@
 
     <!-- General Project info -->
     <TargetFrameworks>net5.0-windows;net48</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
     <UseWindowsForms>true</UseWindowsForms>
-    <CodeAnalysisRuleSet>Properties\MaSch.Native.Windows.ruleset</CodeAnalysisRuleSet>
+    <ConfigureSourceLink>true</ConfigureSourceLink>
 
     <!-- Output info -->
-    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
-    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
     
     <!-- Package Info -->
     <Description>A small collection of native API calls.</Description>
-    <Version>0.1.0</Version>
-    <Authors>Marc Schmidt</Authors>
-    <SupportedOSPlatform>windows</SupportedOSPlatform>
-    <Copyright>Copyright © Marc Schmidt 2021</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/MaSch0212/MaSch</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/MaSch0212/MaSch</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
+    <Version>0.1.1</Version>
     <PackageTags>masch native windows pinvoke</PackageTags>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="Properties\MaSch.snk" />
-  </ItemGroup>
+  <Import Project="../../build/MaSch.props" />
 
-  <ItemGroup Condition=" '$(TargetFramework)'=='net48' ">
-    <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)'!='net48' ">
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>Properties\MaSch.Native.Windows.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
 </Project>

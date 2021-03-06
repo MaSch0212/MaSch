@@ -4,33 +4,22 @@
     <!-- General Project info -->
     <RootNamespace>MaSch.Presentation.Wpf</RootNamespace>
     <TargetFrameworks>net5.0-windows;net48</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
     <UseWPF>true</UseWPF>
-    <CodeAnalysisRuleSet>../../build/MaSch.ruleset</CodeAnalysisRuleSet>
-    <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
+    <ConfigureSourceLink>true</ConfigureSourceLink>
 
     <!-- Output info -->
-    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
-    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
 
     <!-- Package Info -->
     <Description>Contains advanced controls for .NET WPF applications.</Description>
-    <Version>0.1.2</Version>
-    <Authors>Marc Schmidt</Authors>
-    <SupportedOSPlatform>windows</SupportedOSPlatform>
-    <Copyright>Copyright © Marc Schmidt 2021</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/MaSch0212/MaSch</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/MaSch0212/MaSch</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
+    <Version>0.1.3</Version>
     <PackageTags>masch presentation ui frontend wpf controls</PackageTags>
   </PropertyGroup>
 
+  <Import Project="../../build/MaSch.props" />
+
   <ItemGroup>
-    <None Remove="FastWPF.DesignerSettings" />
-    <None Remove="**\*.FastWPF" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,19 +29,7 @@
     <ProjectReference Include="..\Presentation\MaSch.Presentation.csproj" />
     <ProjectReference Include="..\Generators\MaSch.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)'=='net48' ">    
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)'!='net48' ">
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.1" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <Compile Update="Views\SplitView\ExtendedSplitViewContent.cs">
       <DependentUpon>ExtendedSplitViewContent.xaml</DependentUpon>
@@ -60,17 +37,5 @@
     <Compile Update="Views\SplitView\SplitView.cs">
       <DependentUpon>SplitView.xaml</DependentUpon>
     </Compile>
-    <None Include="Properties\MaSch.snk" />
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <None Update="Controls\IconButton.FastWPF">
-      <DependentUpon>Controls\IconButton.xaml</DependentUpon>
-    </None>
   </ItemGroup>
 </Project>

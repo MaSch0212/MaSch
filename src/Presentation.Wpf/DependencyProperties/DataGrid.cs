@@ -44,19 +44,23 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                 {
                     case NotifyCollectionChangedAction.Reset:
                         dataGrid.Columns.Clear();
-                        dataGrid.Columns.Add(e2.NewItems.OfType<DataGridColumn>());
+                        if (e2.NewItems != null)
+                            dataGrid.Columns.Add(e2.NewItems.OfType<DataGridColumn>());
                         break;
                     case NotifyCollectionChangedAction.Add:
-                        dataGrid.Columns.Add(e2.NewItems.OfType<DataGridColumn>());
+                        if (e2.NewItems != null)
+                            dataGrid.Columns.Add(e2.NewItems.OfType<DataGridColumn>());
                         break;
                     case NotifyCollectionChangedAction.Move:
                         dataGrid.Columns.Move(e2.OldStartingIndex, e2.NewStartingIndex);
                         break;
                     case NotifyCollectionChangedAction.Remove:
-                        dataGrid.Columns.Remove(e2.OldItems.OfType<DataGridColumn>());
+                        if (e2.OldItems != null)
+                            dataGrid.Columns.Remove(e2.OldItems.OfType<DataGridColumn>());
                         break;
                     case NotifyCollectionChangedAction.Replace:
-                        dataGrid.Columns[e2.NewStartingIndex] = e2.NewItems[0] as DataGridColumn;
+                        if (e2.NewItems != null)
+                            dataGrid.Columns[e2.NewStartingIndex] = e2.NewItems[0] as DataGridColumn;
                         break;
                 }
             };

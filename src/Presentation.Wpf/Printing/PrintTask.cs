@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using MaSch.Core;
 using MaSch.Core.Attributes;
 using MaSch.Core.Observable;
 using MaSch.Presentation.Wpf.Commands;
@@ -30,7 +31,7 @@ namespace MaSch.Presentation.Wpf.Printing
         /// <param name="page">The page of the document.</param>
         /// <param name="data">The data attached to the page.</param>
         /// <returns>The elements to print.</returns>
-        public delegate FrameworkElement[] CreateDocumentDelegate(PrintTask task, int page, object data);
+        public delegate FrameworkElement[]? CreateDocumentDelegate(PrintTask task, int page, object data);
 
         private int _totalPageCount;
         private int _currentDocument;
@@ -139,12 +140,12 @@ namespace MaSch.Presentation.Wpf.Printing
         /// <summary>
         /// Gets or sets the print queue.
         /// </summary>
-        public PrintQueue PrintQueue { get; set; }
+        public PrintQueue? PrintQueue { get; set; }
 
         /// <summary>
         /// Gets or sets the print ticket.
         /// </summary>
-        public PrintTicket PrintTicket { get; set; }
+        public PrintTicket? PrintTicket { get; set; }
 
         /// <summary>
         /// Gets or sets temporary data for this <see cref="PrintTask"/>.
@@ -184,7 +185,7 @@ namespace MaSch.Presentation.Wpf.Printing
         {
             PrintData = data;
             CreateDocumentFunction = createDocument;
-            Name = "Print task for application " + Assembly.GetEntryAssembly().GetName().Name;
+            Name = "Print task for application " + Assembly.GetEntryAssembly()?.GetName().Name;
 
             CancelPrintCommand = new DelegateCommand(CanCancel, Cancel);
         }
@@ -266,6 +267,9 @@ namespace MaSch.Presentation.Wpf.Printing
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task RunAsync(int runId)
         {
+            Guard.NotNull(PrintQueue, nameof(PrintQueue));
+            Guard.NotNull(PrintTicket, nameof(PrintTicket));
+
             var pqServerName = PrintQueue.HostingPrintServer.Name;
             var pqName = PrintQueue.Name;
             var jobName = $"{Name} ({runId})";
@@ -338,7 +342,7 @@ namespace MaSch.Presentation.Wpf.Printing
             await Task.Run(() =>
             {
                 using var pq = new PrintQueue(new PrintServer(pqServerName), pqName);
-                PrintSystemJobInfo p = null;
+                PrintSystemJobInfo? p = null;
                 while (th.ThreadState == ThreadState.Running || th.ThreadState == ThreadState.WaitSleepJoin || (Progress < 100 && State != PrintTaskState.Cancelled) ||
                     State == PrintTaskState.Preparing || State == PrintTaskState.WaitingForPrint)
                 {
@@ -389,7 +393,7 @@ namespace MaSch.Presentation.Wpf.Printing
         /// </summary>
         /// <param name="dialog">The dialog.</param>
         /// <returns><c>true</c> if a printer was chosen by the user; otherwise, <c>false</c>.</returns>
-        public bool? ChoosePrinter(PrintDialog dialog = null)
+        public bool? ChoosePrinter(PrintDialog? dialog = null)
         {
             if (dialog == null)
                 dialog = new PrintDialog();
@@ -408,13 +412,13 @@ namespace MaSch.Presentation.Wpf.Printing
         /// </summary>
         public void Dispose()
         {
-            PrintQueue.Dispose();
+            PrintQueue?.Dispose();
             CancelPrintCommand = new DelegateCommand(() => false, () => { });
-            CreateDocumentFunction = null;
+            CreateDocumentFunction = null!;
             CurrentDocument = -1;
-            PrintData = null;
+            PrintData = null!;
             PrintTicket = null;
-            TempData = null;
+            TempData = null!;
         }
     }
 }

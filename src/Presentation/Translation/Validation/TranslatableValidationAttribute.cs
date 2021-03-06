@@ -16,7 +16,7 @@ namespace MaSch.Presentation.Translation.Validation
         /// <value>
         /// The translation provider key which is used for translation.
         /// </value>
-        public string TranslationProviderKey { get; set; }
+        public string? TranslationProviderKey { get; set; }
 
         /// <summary>
         /// Gets the translated error message.
@@ -24,6 +24,8 @@ namespace MaSch.Presentation.Translation.Validation
         /// <returns>A translated representation of the <see cref="ValidationAttribute.ErrorMessageResourceName"/> property value.</returns>
         public string GetTranslatedErrorMessage()
         {
+            if (ErrorMessageResourceName == null)
+                return string.Empty;
             return GetTranslatedErrorMessage(ErrorMessageResourceName);
         }
 

@@ -34,9 +34,9 @@ namespace MaSch.Presentation.Wpf.Views
         /// <summary>
         /// Gets or sets an extra message that is shown to the user.
         /// </summary>
-        public string ExtraMessage
+        public string? ExtraMessage
         {
-            get { return (string)GetValue(ExtraMessageProperty); }
+            get { return (string?)GetValue(ExtraMessageProperty); }
             set { SetValue(ExtraMessageProperty, value); }
         }
 
@@ -82,7 +82,7 @@ namespace MaSch.Presentation.Wpf.Views
         /// <param name="extraMessage">The extra message to show to the user.</param>
         /// <param name="ex">The exception to handle.</param>
         /// <returns><c>true</c> if the exception has been handled; otherwise, <c>false</c>.</returns>
-        public static bool HandleException(string extraMessage, Exception ex)
+        public static bool HandleException(string? extraMessage, Exception ex)
         {
             try
             {

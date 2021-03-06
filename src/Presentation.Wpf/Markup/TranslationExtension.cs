@@ -13,22 +13,22 @@ namespace MaSch.Presentation.Wpf.Markup
     /// <seealso cref="UpdateableMarkupExtension" />
     public class TranslationExtension : UpdateableMarkupExtension
     {
-        private ITranslationManager _translationManager;
+        private ITranslationManager? _translationManager;
 
         /// <summary>
         /// Gets or sets the resource key.
         /// </summary>
-        public string ResourceKey { get; set; }
+        public string? ResourceKey { get; set; }
 
         /// <summary>
         /// Gets or sets the provider key.
         /// </summary>
-        public string ProviderKey { get; set; }
+        public string? ProviderKey { get; set; }
 
         /// <summary>
         /// Gets or sets the language.
         /// </summary>
-        public CultureInfo Language { get; set; }
+        public CultureInfo? Language { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TranslationExtension"/> class.
@@ -52,7 +52,7 @@ namespace MaSch.Presentation.Wpf.Markup
         /// </summary>
         /// <param name="resourceKey">The resource key of the translation.</param>
         /// <param name="providerKey">The key of the provider that should be used.</param>
-        public TranslationExtension(string resourceKey, string providerKey)
+        public TranslationExtension(string resourceKey, string? providerKey)
             : this(resourceKey)
         {
             ProviderKey = providerKey;
@@ -64,7 +64,7 @@ namespace MaSch.Presentation.Wpf.Markup
         /// <param name="resourceKey">The resource key of the translation.</param>
         /// <param name="providerKey">The key of the provider that should be used.</param>
         /// <param name="language">The language in which should be translated in.</param>
-        public TranslationExtension(string resourceKey, string providerKey, CultureInfo language)
+        public TranslationExtension(string resourceKey, string? providerKey, CultureInfo? language)
             : this(resourceKey, providerKey)
         {
             Language = language;
@@ -81,7 +81,7 @@ namespace MaSch.Presentation.Wpf.Markup
         /// </summary>
         /// <param name="serviceProvider">The service provider.</param>
         /// <returns>The value.</returns>
-        protected override object ProvideValueInternal(IServiceProvider serviceProvider)
+        protected override object ProvideValueInternal(IServiceProvider? serviceProvider)
         {
             if (_translationManager == null)
             {
@@ -97,7 +97,7 @@ namespace MaSch.Presentation.Wpf.Markup
                     _translationManager.LanguageChanged += TranslationManager_LanguageChanged;
             }
 
-            if (_translationManager == null)
+            if (_translationManager == null || ResourceKey == null)
                 return $"### {ResourceKey} ###";
             if (string.IsNullOrEmpty(ProviderKey))
                 return Language == null ? _translationManager.GetTranslation(ResourceKey) : _translationManager.GetTranslation(ResourceKey, Language);

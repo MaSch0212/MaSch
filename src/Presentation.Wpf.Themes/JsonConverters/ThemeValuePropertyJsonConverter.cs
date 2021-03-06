@@ -31,7 +31,7 @@ namespace MaSch.Presentation.Wpf.JsonConverters
         public override bool CanConvert(Type objectType) => true;
 
         /// <inheritdoc/>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
             var valueToSerialize = value;
             if (value is ThemeValueReference reference)
@@ -43,13 +43,13 @@ namespace MaSch.Presentation.Wpf.JsonConverters
         }
 
         /// <inheritdoc/>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
             var token = JToken.ReadFrom(reader);
             if (token.Type == JTokenType.String)
             {
                 var value = token.ToObject<string>();
-                var match = ReferenceRegex.Match(value);
+                var match = ReferenceRegex.Match(value ?? string.Empty);
                 if (match.Success)
                 {
                     var key = match.Groups["key"].Value;

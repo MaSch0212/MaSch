@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaSch.Core;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -42,7 +43,7 @@ namespace MaSch.Presentation.Wpf.Converter
         {
             try
             {
-                var result = Parse(parameter.ToString()).Eval(values);
+                var result = Parse(Guard.NotNull(parameter.ToString(), nameof(parameter))).Eval(values);
                 if (targetType == typeof(decimal))
                     return result;
                 if (targetType == typeof(string))
@@ -86,7 +87,7 @@ namespace MaSch.Presentation.Wpf.Converter
 
         private IExpression Parse(string s)
         {
-            if (!_storedExpressions.TryGetValue(s, out IExpression result))
+            if (!_storedExpressions.TryGetValue(s, out IExpression? result))
             {
                 result = new Parser().Parse(s);
                 _storedExpressions[s] = result;
@@ -191,7 +192,7 @@ namespace MaSch.Presentation.Wpf.Converter
 
         private class Parser
         {
-            private string _text;
+            private string? _text;
             private int _pos;
 
             public IExpression Parse(string text)
@@ -219,7 +220,7 @@ namespace MaSch.Presentation.Wpf.Converter
 
                 while (true)
                 {
-                    if (_pos >= _text.Length)
+                    if (_pos >= _text!.Length)
                         return left;
 
                     var c = _text[_pos];
@@ -243,7 +244,7 @@ namespace MaSch.Presentation.Wpf.Converter
 
                 while (true)
                 {
-                    if (_pos >= _text.Length)
+                    if (_pos >= _text!.Length)
                         return left;
 
                     var c = _text[_pos];
@@ -264,7 +265,7 @@ namespace MaSch.Presentation.Wpf.Converter
             private IExpression ParseFactor()
             {
                 SkipWhiteSpace();
-                if (_pos >= _text.Length)
+                if (_pos >= _text!.Length)
                     throw new ArgumentException("Unexpected end of text");
 
                 var c = _text[_pos];
@@ -344,13 +345,13 @@ namespace MaSch.Presentation.Wpf.Converter
 
             private void SkipWhiteSpace()
             {
-                while (_pos < _text.Length && char.IsWhiteSpace(_text[_pos]))
+                while (_pos < _text!.Length && char.IsWhiteSpace(_text[_pos]))
                     ++_pos;
             }
 
             private void Require(char c)
             {
-                if (_pos >= _text.Length || _text[_pos] != c)
+                if (_pos >= _text!.Length || _text[_pos] != c)
                 {
                     throw new ArgumentException($"Expected '{c}'");
                 }
@@ -360,7 +361,7 @@ namespace MaSch.Presentation.Wpf.Converter
 
             private void RequireEndOfText()
             {
-                if (_pos != _text.Length)
+                if (_pos != _text!.Length)
                 {
                     throw new ArgumentException($"Unexpected character '{_text[_pos]}'");
                 }

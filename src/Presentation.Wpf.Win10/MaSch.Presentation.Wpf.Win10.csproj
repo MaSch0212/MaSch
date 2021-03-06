@@ -3,54 +3,25 @@
 
     <!-- General Project info -->
     <TargetFrameworks>net5.0-windows;net48</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
     <UseWPF>true</UseWPF>
-    <CodeAnalysisRuleSet>../../build/MaSch.ruleset</CodeAnalysisRuleSet>
+    <ConfigureSourceLink>true</ConfigureSourceLink>
 
     <!-- Output info -->
-    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
-    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
 
     <!-- Package Info -->
     <Description>Contains the icon set used in Windows 10 provided by Microsoft for use in .NET WPF applications.</Description>
-    <Version>0.1.0</Version>
-    <Authors>Marc Schmidt</Authors>
-    <SupportedOSPlatform>windows</SupportedOSPlatform>
-    <Copyright>Copyright © Marc Schmidt 2021</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/MaSch0212/MaSch</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/MaSch0212/MaSch</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
+    <Version>0.1.1</Version>
     <PackageTags>masch presentation ui frontend wpf icons mdl2 windows</PackageTags>
   </PropertyGroup>
+
+  <Import Project="../../build/MaSch.props" />
 
   <ItemGroup>
     <ProjectReference Include="..\Presentation.Wpf\MaSch.Presentation.Wpf.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)'=='net48' ">
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)'!='net48' ">
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.1" />
-  </ItemGroup>
-
   <ItemGroup>
-    <None Include="Properties\MaSch.snk" />
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <Resource Include="SEGMDL2.TTF" />
   </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@ namespace MaSch.Presentation.Wpf.Behaviors
     /// </summary>
     public class FrameworkElementDropBehavior : Behavior<FrameworkElement>
     {
-        private Type _dataType;
+        private Type? _dataType;
 
         /// <summary>
         /// Is executed when the behavior is attached to a <see cref="DependencyObject"/>.

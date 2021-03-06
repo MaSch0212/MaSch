@@ -86,22 +86,22 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <summary>
         /// Occurs when the view opened.
         /// </summary>
-        public event CancelEventHandler ViewOpened;
+        public event CancelEventHandler? ViewOpened;
 
         /// <summary>
         /// Asynchronous event that occurs when the view opened.
         /// </summary>
-        public event AsyncCancelEventHandler ViewOpenedAsync;
+        public event AsyncCancelEventHandler? ViewOpenedAsync;
 
         /// <summary>
         /// Occurs when the view closed.
         /// </summary>
-        public event CancelEventHandler ViewClosed;
+        public event CancelEventHandler? ViewClosed;
 
         /// <summary>
         /// Asynchronous event that occurs when the view closed.
         /// </summary>
-        public event AsyncCancelEventHandler ViewClosedAsync;
+        public event AsyncCancelEventHandler? ViewClosedAsync;
 
         /// <summary>
         /// Opens this page.

@@ -206,13 +206,15 @@ namespace MaSch.Presentation
         /// <param name="type">The version type to get.</param>
         /// <param name="assembly">The assembly to get the version from.</param>
         /// <returns>The version as <see cref="string"/> for the given <see cref="Assembly"/>.</returns>
-        public static string GetVersion(this AssemblyVersionType type, Assembly assembly)
+        public static string? GetVersion(this AssemblyVersionType type, Assembly? assembly)
         {
+            if (assembly == null)
+                return null;
             return type switch
             {
-                AssemblyVersionType.AssemblyFileVersion => assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version,
-                AssemblyVersionType.AssemblyInformationalVersion => assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion,
-                _ => assembly.GetName().Version.ToString(),
+                AssemblyVersionType.AssemblyFileVersion => assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version,
+                AssemblyVersionType.AssemblyInformationalVersion => assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion,
+                _ => assembly.GetName().Version?.ToString(),
             };
         }
 
@@ -221,7 +223,7 @@ namespace MaSch.Presentation
         /// </summary>
         /// <param name="type">The version type to get.</param>
         /// <returns>The version as <see cref="string"/> for the entry <see cref="Assembly"/>.</returns>
-        public static string GetVersion(this AssemblyVersionType type)
+        public static string? GetVersion(this AssemblyVersionType type)
         {
             return GetVersion(type, Assembly.GetEntryAssembly());
         }

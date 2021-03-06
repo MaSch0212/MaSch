@@ -17,7 +17,7 @@ namespace MaSch.Presentation.Wpf.Markup
         /// Gets or sets the geometry to use.
         /// </summary>
         [ConstructorArgument("gemetry")]
-        public Geometry Geometry { get; set; }
+        public Geometry? Geometry { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the geometry is filled.

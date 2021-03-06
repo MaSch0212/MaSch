@@ -22,7 +22,7 @@ namespace MaSch.Presentation.Wpf.Markup
         {
             Guard.NotNull(enumType, nameof(enumType));
 
-            EnumType = enumType;
+            _enumType = ValidateType(enumType);
         }
 
         /// <summary>
@@ -36,13 +36,7 @@ namespace MaSch.Presentation.Wpf.Markup
             {
                 if (_enumType == value)
                     return;
-
-                var enumType = Nullable.GetUnderlyingType(value) ?? value;
-
-                if (enumType.IsEnum == false)
-                    throw new ArgumentException("Type must be an Enum.");
-
-                _enumType = value;
+                _enumType = ValidateType(value);
             }
         }
 
@@ -66,14 +60,27 @@ namespace MaSch.Presentation.Wpf.Markup
               }).ToArray();
         }
 
-        private string GetDescription(object enumValue)
+        private string? GetDescription(object enumValue)
         {
+            var enumValueName = enumValue.ToString();
+            if (enumValueName == null)
+                return enumValueName;
             return EnumType
-                .GetField(enumValue.ToString())
+                .GetField(enumValueName)?
                 .GetCustomAttributes(typeof(DescriptionAttribute), false)
                 .FirstOrDefault() is DescriptionAttribute descriptionAttribute
               ? descriptionAttribute.Description
-              : enumValue.ToString();
+              : enumValueName;
+        }
+
+        private static Type ValidateType(Type value)
+        {
+            var enumType = Nullable.GetUnderlyingType(value) ?? value;
+
+            if (enumType.IsEnum == false)
+                throw new ArgumentException("Type must be an Enum.");
+
+            return enumType;
         }
 
         /// <summary>
@@ -84,12 +91,12 @@ namespace MaSch.Presentation.Wpf.Markup
             /// <summary>
             /// Gets or sets the description.
             /// </summary>
-            public string Description { get; set; }
+            public string? Description { get; set; }
 
             /// <summary>
             /// Gets or sets the value.
             /// </summary>
-            public object Value { get; set; }
+            public object? Value { get; set; }
         }
     }
 }

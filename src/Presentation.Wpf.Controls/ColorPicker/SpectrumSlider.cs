@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -59,7 +60,7 @@ namespace MaSch.Presentation.Wpf.ColorPicker
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            _spectrumDisplay = GetTemplateChild(SpectrumDisplayName) as Rectangle;
+            _spectrumDisplay = GetTemplateChild(SpectrumDisplayName) as Rectangle ?? throw new InvalidOperationException($"Control with name \"{SpectrumDisplayName}\" was not found.");
             UpdateColorSpectrum();
             OnValueChanged(double.NaN, Value);
         }
@@ -99,11 +100,11 @@ namespace MaSch.Presentation.Wpf.ColorPicker
             }
 
             _pickerBrush.GradientStops[i - 1].Offset = 1.0;
-            _spectrumDisplay.Fill = _pickerBrush;
+            _spectrumDisplay!.Fill = _pickerBrush;
         }
 
         private const string SpectrumDisplayName = "PART_SpectrumDisplay";
-        private Rectangle _spectrumDisplay;
-        private LinearGradientBrush _pickerBrush;
+        private Rectangle? _spectrumDisplay;
+        private LinearGradientBrush? _pickerBrush;
     }
 }

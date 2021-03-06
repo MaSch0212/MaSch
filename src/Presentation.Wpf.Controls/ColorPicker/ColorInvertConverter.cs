@@ -11,11 +11,11 @@ namespace MaSch.Presentation.Wpf.ColorPicker
     internal class ColorInvertConverter : IValueConverter
     {
         /// <inheritdoc/>
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object? Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
             => InvertColor(value as Color?);
 
         /// <inheritdoc/>
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object? ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
             => InvertColor(value as Color?);
 
         private static Color? InvertColor(Color? c)

@@ -22,19 +22,19 @@ namespace MaSch.Presentation.Wpf
     [JsonConverter(typeof(NoJsonConverter))]
     public class Theme : ObservableObject, ITheme
     {
-        private string _name;
-        private string _description;
-        private ObservableDictionary<string, IThemeValue> _values;
+        private string? _name;
+        private string? _description;
+        private ObservableDictionary<string, IThemeValue> _values = null!;
 
         /// <inheritdoc/>
-        public string Name
+        public string? Name
         {
             get => _name;
             set => SetProperty(ref _name, value);
         }
 
         /// <inheritdoc/>
-        public string Description
+        public string? Description
         {
             get => _description;
             set => SetProperty(ref _description, value);
@@ -76,9 +76,9 @@ namespace MaSch.Presentation.Wpf
         public string ToJson()
             => JsonConvert.SerializeObject(this, Formatting.Indented, new StringEnumConverter());
 
-        private void ValuesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void ValuesOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangedAction.Add)
+            if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems != null)
                 e.NewItems.Cast<KeyValuePair<string, IThemeValue>>().ForEach(x => ValidateValue(x.Key, x.Value));
         }
 
@@ -153,7 +153,7 @@ namespace MaSch.Presentation.Wpf
             return FromJson(ThemeJsonConverter.DownloadString(uri, null, out _), new Uri(uri, ".").ToString());
         }
 
-        private static void ValidateValue(string key, IThemeValue value)
+        private static void ValidateValue(string key, IThemeValue? value)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new InvalidOperationException("A theme value key cannot be empty.");

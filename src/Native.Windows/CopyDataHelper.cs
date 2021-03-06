@@ -15,7 +15,7 @@ namespace MaSch.Native.Windows
         /// <summary>
         /// Occurs when a new message was received from another process.
         /// </summary>
-        public event CopyDataMessageReceivedEventHandler<T> MessageReceived;
+        public event CopyDataMessageReceivedEventHandler<T>? MessageReceived;
 
         /// <summary>
         /// Sends the secified data to another process.
@@ -63,10 +63,10 @@ namespace MaSch.Native.Windows
         {
             if (msg == User32.WmCopyData)
             {
-                var ps = (PostStruct)Marshal.PtrToStructure(lParam, typeof(PostStruct));
-                if (ps.cbData == Marshal.SizeOf(typeof(T)))
+                if (Marshal.PtrToStructure(lParam, typeof(PostStruct)) is PostStruct ps &&
+                    ps.cbData == Marshal.SizeOf(typeof(T)) &&
+                    Marshal.PtrToStructure(ps.lpData, typeof(T)) is T data)
                 {
-                    var data = (T)Marshal.PtrToStructure(ps.lpData, typeof(T));
                     var e = new CopyDataMessageReceivedEventArgs<T> { Data = data, WParam = wParam };
                     MessageReceived?.Invoke(this, e);
                     handled = e.Handled;
@@ -114,6 +114,6 @@ namespace MaSch.Native.Windows
         /// <value>
         /// The data.
         /// </value>
-        public T Data { get; set; }
+        public T? Data { get; set; }
     }
 }

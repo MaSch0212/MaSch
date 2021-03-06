@@ -48,7 +48,7 @@ namespace MaSch.Presentation.Wpf.Models
         /// Unregisters a theme manager with the overrides in this collection.
         /// </summary>
         /// <param name="themeManager">The theme manager.</param>
-        public void UnregisterThemeManager(IThemeManager themeManager)
+        public void UnregisterThemeManager(IThemeManager? themeManager)
         {
             if (themeManager != null && themeManager != Wpf.ThemeManager.DefaultThemeManager)
             {
@@ -77,14 +77,18 @@ namespace MaSch.Presentation.Wpf.Models
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                        e.NewItems.OfType<ThemeOverride>().ForEach(x => AddOverride(themeManager, x));
+                        if (e.NewItems != null)
+                            e.NewItems.OfType<ThemeOverride>().ForEach(x => AddOverride(themeManager, x));
                         break;
                     case NotifyCollectionChangedAction.Remove:
-                        e.OldItems.OfType<ThemeOverride>().ForEach(x => RemoveOverride(themeManager, x));
+                        if (e.OldItems != null)
+                            e.OldItems.OfType<ThemeOverride>().ForEach(x => RemoveOverride(themeManager, x));
                         break;
                     case NotifyCollectionChangedAction.Replace:
-                        e.OldItems.OfType<ThemeOverride>().ForEach(x => RemoveOverride(themeManager, x));
-                        e.NewItems.OfType<ThemeOverride>().ForEach(x => AddOverride(themeManager, x));
+                        if (e.OldItems != null)
+                            e.OldItems.OfType<ThemeOverride>().ForEach(x => RemoveOverride(themeManager, x));
+                        if (e.NewItems != null)
+                            e.NewItems.OfType<ThemeOverride>().ForEach(x => AddOverride(themeManager, x));
                         break;
                     case NotifyCollectionChangedAction.Reset:
                         themeManager.CurrentTheme.Values.Clear();

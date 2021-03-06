@@ -69,7 +69,7 @@ namespace MaSch.Core.Extensions
         /// <param name="enumerable">The enumerable.</param>
         /// <param name="action">The action to execute.</param>
         /// <returns>Returns each item with the exception that occurred after the action has been executed. If no exception occurred, the exception entry is <c>null</c>.</returns>
-        public static IEnumerable<(T item, Exception? error)> TryEach<T>(this IEnumerable<T> enumerable, Action<T> action)
+        public static IEnumerable<(T Item, Exception? Error)> TryEach<T>(this IEnumerable<T> enumerable, Action<T> action)
         {
             Guard.NotNull(enumerable, nameof(enumerable));
             Guard.NotNull(action, nameof(action));
@@ -96,7 +96,7 @@ namespace MaSch.Core.Extensions
         /// <param name="enumerable">The enumerable.</param>
         /// <param name="action">The action to execute.</param>
         /// <returns>Returns each item with the exception that occurred after the action has been executed. If no exception occurred, the exception entry is <c>null</c>.</returns>
-        public static IEnumerable<(T item, Exception? error)> TryEach<T>(this IEnumerable<T> enumerable, Action<T, LoopState> action)
+        public static IEnumerable<(T Item, Exception? Error)> TryEach<T>(this IEnumerable<T> enumerable, Action<T, LoopState> action)
         {
             Guard.NotNull(enumerable, nameof(enumerable));
             Guard.NotNull(action, nameof(action));
@@ -269,7 +269,7 @@ namespace MaSch.Core.Extensions
         /// <param name="action">The action to execute.</param>
         /// <param name="errors">A collection containing the errors that occurred.</param>
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
-        public static bool TryForEach<T>(this IEnumerable<T> enumerable, Action<T> action, out ICollection<(T item, Exception error)> errors)
+        public static bool TryForEach<T>(this IEnumerable<T> enumerable, Action<T> action, out ICollection<(T Item, Exception Error)> errors)
             => TryForEach(enumerable, action, out errors, true);
 
         /// <summary>
@@ -281,7 +281,7 @@ namespace MaSch.Core.Extensions
         /// <param name="errors">A collection containing the errors that occurred.</param>
         /// <param name="continueOnError">Determines wether the loop should continue if an error occurres.</param>
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
-        public static bool TryForEach<T>(this IEnumerable<T> enumerable, Action<T> action, out ICollection<(T item, Exception error)> errors, bool continueOnError)
+        public static bool TryForEach<T>(this IEnumerable<T> enumerable, Action<T> action, out ICollection<(T Item, Exception Error)> errors, bool continueOnError)
         {
             Guard.NotNull(enumerable, nameof(enumerable));
             Guard.NotNull(action, nameof(action));
@@ -311,7 +311,7 @@ namespace MaSch.Core.Extensions
         /// <param name="action">The action to execute.</param>
         /// <param name="errors">A collection containing the errors that occurred.</param>
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
-        public static bool TryForEach<T>(this IEnumerable<T> enumerable, Action<T, LoopState> action, out ICollection<(T item, int index, Exception error)> errors)
+        public static bool TryForEach<T>(this IEnumerable<T> enumerable, Action<T, LoopState> action, out ICollection<(T Item, int Index, Exception Error)> errors)
             => TryForEach(enumerable, action, out errors, true);
 
         /// <summary>
@@ -323,7 +323,7 @@ namespace MaSch.Core.Extensions
         /// <param name="errors">A collection containing the errors that occurred.</param>
         /// <param name="continueOnError">Determines wether the loop should continue if an error occurres.</param>
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
-        public static bool TryForEach<T>(this IEnumerable<T> enumerable, Action<T, LoopState> action, out ICollection<(T item, int index, Exception error)> errors, bool continueOnError)
+        public static bool TryForEach<T>(this IEnumerable<T> enumerable, Action<T, LoopState> action, out ICollection<(T Item, int Index, Exception Error)> errors, bool continueOnError)
         {
             Guard.NotNull(enumerable, nameof(enumerable));
             Guard.NotNull(action, nameof(action));
@@ -1510,7 +1510,7 @@ namespace MaSch.Core.Extensions
         /// <typeparam name="T">The type of the elements of <paramref name="enumerable" />.</typeparam>
         /// <param name="enumerable">The enumerable.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> containing the previous entry for each element in <paramref name="enumerable"/>.</returns>
-        public static IEnumerable<(T? previous, T current)> WithPrevious<T>(this IEnumerable<T> enumerable)
+        public static IEnumerable<(T? Previous, T Current)> WithPrevious<T>(this IEnumerable<T> enumerable)
         {
             T previous = default;
             foreach (var item in enumerable)
@@ -1526,7 +1526,7 @@ namespace MaSch.Core.Extensions
         /// <typeparam name="T">The type of the elements of <paramref name="enumerable" />.</typeparam>
         /// <param name="enumerable">The enumerable.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> containing the next entry for each element in <paramref name="enumerable"/>.</returns>
-        public static IEnumerable<(T current, T? next)> WithNext<T>(this IEnumerable<T> enumerable)
+        public static IEnumerable<(T Current, T? Next)> WithNext<T>(this IEnumerable<T> enumerable)
         {
             T current = default;
             bool hasCurrent = false;
@@ -1548,7 +1548,7 @@ namespace MaSch.Core.Extensions
         /// <typeparam name="T">The type of the elements of <paramref name="enumerable" />.</typeparam>
         /// <param name="enumerable">The enumerable.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> containing the previous and next entry for each element in <paramref name="enumerable"/>.</returns>
-        public static IEnumerable<(T? previous, T current, T? next)> WithPreviousAndNext<T>(this IEnumerable<T> enumerable)
+        public static IEnumerable<(T? Previous, T Current, T? Next)> WithPreviousAndNext<T>(this IEnumerable<T> enumerable)
         {
             T? previous = default;
             T current = default;
@@ -1575,7 +1575,7 @@ namespace MaSch.Core.Extensions
         /// <typeparam name="T">The type of the elements of <paramref name="enumerable" />.</typeparam>
         /// <param name="enumerable">The enumerable.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> containing the index for each element in <paramref name="enumerable"/>.</returns>
-        public static IEnumerable<(int index, T item)> WithIndex<T>(this IEnumerable<T> enumerable)
+        public static IEnumerable<(int Index, T Item)> WithIndex<T>(this IEnumerable<T> enumerable)
         {
             int i = 0;
             foreach (var item in enumerable)
@@ -1622,6 +1622,22 @@ namespace MaSch.Core.Extensions
         public static FullyObservableCollection<T> ToFullyObservableCollection<T>(this IEnumerable<T> enumerable)
             where T : INotifyPropertyChanged
             => new FullyObservableCollection<T>(enumerable);
+
+        /// <summary>
+        /// Filters out null values from an <see cref="IEnumerable{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the <see cref="IEnumerable{T}"/>.</typeparam>
+        /// <param name="enumerable">The enumerable to filter.</param>
+        /// <returns>Returns a new <see cref="IEnumerable{T}"/> that has all non-null values from the <paramref name="enumerable"/>.</returns>
+        public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> enumerable)
+                    where T : class
+        {
+            foreach (var element in enumerable)
+            {
+                if (element == null)
+                    yield return element!;
+            }
+        }
 
         #endregion
 

@@ -12,18 +12,18 @@ namespace MaSch.Native.Windows
         /// <summary>
         /// Gets or sets folder in which dialog will be open.
         /// </summary>
-        public string InitialFolder { get; set; }
+        public string? InitialFolder { get; set; }
 
         /// <summary>
         /// Gets or sets directory in which dialog will be open
         /// if there is no recent directory available.
         /// </summary>
-        public string DefaultFolder { get; set; }
+        public string? DefaultFolder { get; set; }
 
         /// <summary>
         /// Gets or sets the selected folder.
         /// </summary>
-        public string Folder { get; set; }
+        public string? Folder { get; set; }
 
         public DialogResult ShowDialog()
         {

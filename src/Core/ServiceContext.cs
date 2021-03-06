@@ -31,7 +31,7 @@ namespace MaSch.Core
         /// Gets all services of the current <see cref="ServiceContextInstance"/>.
         /// </summary>
         /// <returns>All services of the current <see cref="ServiceContextInstance"/>.</returns>
-        public static IReadOnlyDictionary<(Type type, string? name), object> GetAllServices()
+        public static IReadOnlyDictionary<(Type Type, string? Name), object> GetAllServices()
             => Instance.GetAllServices();
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace MaSch.Core
         /// </summary>
         /// <typeparam name="T">The type of services to get.</typeparam>
         /// <returns>All services of the current <see cref="ServiceContextInstance"/> of type <typeparamref name="T"/>.</returns>
-        public static IEnumerable<(string? name, T service)> GetAllServices<T>()
+        public static IEnumerable<(string? Name, T Service)> GetAllServices<T>()
             => Instance.GetAllServices<T>();
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace MaSch.Core
         /// </summary>
         /// <param name="serviceType">The type of services to get.</param>
         /// <returns>All services of the current <see cref="ServiceContextInstance"/> of type <paramref name="serviceType"/>.</returns>
-        public static IEnumerable<(string? name, object service)> GetAllServices(Type serviceType)
+        public static IEnumerable<(string? Name, object Service)> GetAllServices(Type serviceType)
             => Instance.GetAllServices(serviceType);
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace MaSch.Core
         /// </summary>
         public event ServiceContextEventHandler? Changed;
 
-        private readonly Dictionary<(Type type, string? name), object> _services = new Dictionary<(Type type, string? name), object>();
+        private readonly Dictionary<(Type Type, string? Name), object> _services = new Dictionary<(Type Type, string? Name), object>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceContextInstance" /> class.
@@ -239,24 +239,24 @@ namespace MaSch.Core
         /// Gets all services.
         /// </summary>
         /// <returns>All services of this <see cref="ServiceContextInstance"/>.</returns>
-        public IReadOnlyDictionary<(Type type, string? name), object> GetAllServices()
-            => new ReadOnlyDictionary<(Type type, string? name), object>(_services);
+        public IReadOnlyDictionary<(Type Type, string? Name), object> GetAllServices()
+            => new ReadOnlyDictionary<(Type Type, string? Name), object>(_services);
 
         /// <summary>
         /// Gets all services of a specified type.
         /// </summary>
         /// <typeparam name="T">The type of services to get.</typeparam>
         /// <returns>All services of this <see cref="ServiceContextInstance"/> of type <typeparamref name="T"/>.</returns>
-        public IEnumerable<(string? name, T service)> GetAllServices<T>()
-            => _services.Where(x => x.Key.type == typeof(T)).Select(x => ((string?)x.Key.name, (T)x.Value));
+        public IEnumerable<(string? Name, T Service)> GetAllServices<T>()
+            => _services.Where(x => x.Key.Type == typeof(T)).Select(x => ((string?)x.Key.Name, (T)x.Value));
 
         /// <summary>
         /// Gets all services of a specified type.
         /// </summary>
         /// <param name="serviceType">The type of services to get.</param>
         /// <returns>All services of this <see cref="ServiceContextInstance"/> of type <paramref name="serviceType"/>.</returns>
-        public IEnumerable<(string? name, object service)> GetAllServices(Type serviceType)
-            => _services.Where(x => x.Key.type == serviceType).Select(x => ((string?)x.Key.name, x.Value));
+        public IEnumerable<(string? Name, object Service)> GetAllServices(Type serviceType)
+            => _services.Where(x => x.Key.Type == serviceType).Select(x => ((string?)x.Key.Name, x.Value));
 
         /// <summary>
         /// Adds or replaces a specified service.
@@ -456,7 +456,7 @@ namespace MaSch.Core
         /// Removes all services.
         /// </summary>
         public void Reset()
-            => _services.Select(x => x.Key).ToArray().ForEach(x => RemoveService(x.type, x.name));
+            => _services.Select(x => x.Key).ToArray().ForEach(x => RemoveService(x.Type, x.Name));
 
         /// <summary>
         /// Removes all services with the specified type.
@@ -470,7 +470,7 @@ namespace MaSch.Core
         /// </summary>
         /// <param name="type">The type of services to remove.</param>
         public void Reset(Type type)
-            => _services.Where(x => x.Key.type == type).Select(x => x.Key).ToArray().ForEach(x => RemoveService(x.type, x.name));
+            => _services.Where(x => x.Key.Type == type).Select(x => x.Key).ToArray().ForEach(x => RemoveService(x.Type, x.Name));
     }
 
     /// <summary>
@@ -490,7 +490,7 @@ namespace MaSch.Core
         /// Gets all services of the current <see cref="ServiceContextInstance{T}"/> of type <typeparamref name="T"/>.
         /// </summary>
         /// <returns>All services of the current <see cref="ServiceContextInstance{T}"/> of type <typeparamref name="T"/>.</returns>
-        public static IEnumerable<(string? name, T service)> GetAllServices()
+        public static IEnumerable<(string? Name, T Service)> GetAllServices()
             => Instance.GetAllServices();
 
         /// <summary>
@@ -637,7 +637,7 @@ namespace MaSch.Core
         /// Gets all services of type <typeparamref name="T"/>.
         /// </summary>
         /// <returns>All services of this <see cref="ServiceContextInstance{T}"/> of type <typeparamref name="T"/>.</returns>
-        public IEnumerable<(string? name, T service)> GetAllServices()
+        public IEnumerable<(string? Name, T Service)> GetAllServices()
             => Context.GetAllServices<T>();
 
         /// <summary>

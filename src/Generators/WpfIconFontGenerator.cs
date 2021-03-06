@@ -242,7 +242,7 @@ namespace MaSch.Generators
             }
         }
 
-        private static IEnumerable<(string name, string code)> GetCodes(Regex regex, string? fileContent)
+        private static IEnumerable<(string Name, string Code)> GetCodes(Regex regex, string? fileContent)
         {
             foreach (Match match in regex.Matches(fileContent ?? string.Empty))
             {

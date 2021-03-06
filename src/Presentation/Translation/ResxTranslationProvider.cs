@@ -28,8 +28,8 @@ namespace MaSch.Presentation.Translation
             var resManProperty = resxType.GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
                 .FirstOrDefault(x => typeof(ResourceManager).IsAssignableFrom(x.PropertyType));
             if (resManProperty == null)
-                throw new ArgumentException($"The given type has to have a static Property with a Type of {typeof(ResourceManager).FullName}");
-            _resourceManager = (ResourceManager)resManProperty.GetValue(null);
+                throw new ArgumentException($"The given type has to have a static Property with a Type of {typeof(ResourceManager).FullName}.");
+            _resourceManager = resManProperty.GetValue(null) as ResourceManager ?? throw new ArgumentException($"Could not retrieve ResourceManager from type {typeof(ResourceManager).FullName}.");
             _type = resxType;
         }
 
@@ -93,7 +93,7 @@ namespace MaSch.Presentation.Translation
             var baseDir = Path.GetDirectoryName(_type.Assembly.Location) ?? throw new InvalidOperationException();
             foreach (var dir in Directory.GetDirectories(baseDir))
             {
-                CultureInfo info = null;
+                CultureInfo? info = null;
                 try
                 {
                     var dirName = Path.GetFileName(dir) ?? throw new InvalidOperationException();

@@ -25,7 +25,7 @@ namespace MaSch.Native.Windows
         public static extern IntPtr SHAppBarMessage(AppBarMessage dwMessage, [In] ref AppBarData pData);
 
         [DllImport("shell32.dll", EntryPoint = "#727")]
-        public static extern int SHGetImageList(int iImageList, ref Guid riid, ref IImageList ppv);
+        public static extern int SHGetImageList(int iImageList, ref Guid riid, ref IImageList? ppv);
 
         [DllImport("user32.dll", EntryPoint = "DestroyIcon", SetLastError = true)]
         public static extern int DestroyIcon(IntPtr hIcon);

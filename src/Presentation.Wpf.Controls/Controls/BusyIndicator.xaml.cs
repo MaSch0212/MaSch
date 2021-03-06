@@ -45,11 +45,11 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(BusyIndicator),
                 new PropertyMetadata(0D));
 
-        private Storyboard _bSb;
-        private Storyboard _cSb;
-        private DispatcherTimer _resizeTimer;
-        private Viewbox _circle;
-        private Canvas _barEllipses;
+        private Storyboard? _bSb;
+        private Storyboard? _cSb;
+        private DispatcherTimer? _resizeTimer;
+        private Viewbox? _circle;
+        private Canvas? _barEllipses;
 
         /// <summary>
         /// Gets or sets the Brush to use for the dots.
@@ -106,15 +106,15 @@ namespace MaSch.Presentation.Wpf.Controls
             };
         }
 
-        private void ResizeTimer_Tick(object sender, EventArgs e)
+        private void ResizeTimer_Tick(object? sender, EventArgs e)
         {
-            _resizeTimer.IsEnabled = false;
+            _resizeTimer!.IsEnabled = false;
             InitializeAndStartBarStoryboard();
         }
 
-        private void ModernUILoading_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void ModernUILoading_SizeChanged(object sender, SizeChangedEventArgs? e)
         {
-            if (!_resizeTimer.IsEnabled)
+            if (!_resizeTimer!.IsEnabled)
                 _bSb?.Pause();
             _resizeTimer.IsEnabled = true;
             _resizeTimer.Stop();
@@ -126,7 +126,7 @@ namespace MaSch.Presentation.Wpf.Controls
             if (IsEnabled && IsVisible)
             {
                 if (CircleMode)
-                    _cSb.Begin(this, Template, true);
+                    _cSb?.Begin(this, Template, true);
                 else
                     InitializeAndStartBarStoryboard();
             }
@@ -134,12 +134,12 @@ namespace MaSch.Presentation.Wpf.Controls
             {
                 if (CircleMode)
                 {
-                    _cSb.Stop(this);
+                    _cSb?.Stop(this);
                 }
                 else if (_bSb != null)
                 {
                     _bSb.Stop(this);
-                    _barEllipses.Visibility = Visibility.Hidden;
+                    _barEllipses!.Visibility = Visibility.Hidden;
                 }
             }
         }
@@ -151,7 +151,7 @@ namespace MaSch.Presentation.Wpf.Controls
             if (!IsEnabled || CircleMode)
                 return;
 
-            _barEllipses.Visibility = Visibility.Visible;
+            _barEllipses!.Visibility = Visibility.Visible;
             var dotHeight = _barEllipses.ActualHeight;
             var splineIndicator = ActualWidth / ((20 * dotHeight) + 100);
             if (splineIndicator < 1)
@@ -210,11 +210,11 @@ namespace MaSch.Presentation.Wpf.Controls
                     if ((bool)e.NewValue)
                     {
                         th._bSb?.Stop(th);
-                        th._cSb.Begin(th, th.Template, true);
+                        th._cSb?.Begin(th, th.Template, true);
                     }
                     else
                     {
-                        th._cSb.Stop(th);
+                        th._cSb?.Stop(th);
                         th.InitializeAndStartBarStoryboard();
                     }
                 }

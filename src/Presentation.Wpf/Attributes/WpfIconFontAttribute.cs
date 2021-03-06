@@ -34,7 +34,7 @@ namespace MaSch.Presentation.Wpf.Attributes
         /// <summary>
         /// Gets or sets the suffix of the classes in the CSS file.
         /// </summary>
-        public string CssClassSuffix { get; set; }
+        public string? CssClassSuffix { get; set; }
 
         /// <summary>
         /// Gets or sets the default icon code.

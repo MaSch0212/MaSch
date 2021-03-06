@@ -21,14 +21,14 @@ namespace MaSch.Presentation.Wpf.Converter
         public bool ToLower { get; set; }
 
         /// <inheritdoc />
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null)
                 return null;
             if (ToUpper)
-                return value.ToString().ToUpper();
+                return value.ToString()?.ToUpper();
             if (ToLower)
-                return value.ToString().ToLower();
+                return value.ToString()?.ToLower();
             return value.ToString();
         }
 

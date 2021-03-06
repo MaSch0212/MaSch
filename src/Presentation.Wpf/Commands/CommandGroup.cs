@@ -38,7 +38,7 @@ namespace MaSch.Presentation.Wpf.Commands
         /// <summary>
         /// Occurs when changes occur that affect whether or not the command should execute.
         /// </summary>
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandGroup"/> class.
@@ -55,7 +55,7 @@ namespace MaSch.Presentation.Wpf.Commands
         /// <returns>
         ///   <see langword="true" /> if this command can be executed; otherwise, <see langword="false" />.
         /// </returns>
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             if (Commands?.Any(x => x.Command != null) != true)
                 return false;
@@ -72,7 +72,7 @@ namespace MaSch.Presentation.Wpf.Commands
         /// Defines the method to be called when the command is invoked.
         /// </summary>
         /// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
             if (Commands?.Any(x => x.Command != null) != true)
                 return;
@@ -82,7 +82,7 @@ namespace MaSch.Presentation.Wpf.Commands
             }
         }
 
-        private void RaiseCanExecuteChanged(object sender, EventArgs e)
+        private void RaiseCanExecuteChanged(object? sender, EventArgs e)
         {
             CanExecuteChanged?.Invoke(sender, e);
         }
@@ -95,7 +95,7 @@ namespace MaSch.Presentation.Wpf.Commands
                 newCommand.CanExecuteChanged += RaiseCanExecuteChanged;
         }
 
-        private void Commands_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void Commands_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.OldItems != null)
             {

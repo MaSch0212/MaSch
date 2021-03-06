@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using MaSch.Core;
 using MaSch.Core.Extensions;
 
 namespace MaSch.Presentation.Translation
@@ -23,7 +24,7 @@ namespace MaSch.Presentation.Translation
         private readonly string _translationFilesPath;
         private readonly string _fileName;
         private readonly string _fileExtension;
-        private readonly IReadOnlyDictionary<string, string> _defaultLanguageValues;
+        private readonly IReadOnlyDictionary<string, string>? _defaultLanguageValues;
         private readonly IDictionary<CultureInfo, DateTime> _loadedDates = new Dictionary<CultureInfo, DateTime>();
 
         #endregion
@@ -36,7 +37,7 @@ namespace MaSch.Presentation.Translation
         /// <param name="translationFilePath">The file path in which the .ini files for translation are contained.</param>
         public IniTranslationProvider(string translationFilePath)
         {
-            _translationFilesPath = Path.GetDirectoryName(translationFilePath);
+            _translationFilesPath = Guard.NotNullOrEmpty(Path.GetDirectoryName(translationFilePath), nameof(translationFilePath));
             _fileName = Path.GetFileNameWithoutExtension(translationFilePath);
             _fileExtension = Path.GetExtension(translationFilePath);
         }
@@ -64,7 +65,7 @@ namespace MaSch.Presentation.Translation
         /// </returns>
         public override IEnumerable<CultureInfo> GetAvailableLanguages()
         {
-            static CultureInfo GetCulture(string ieft)
+            static CultureInfo? GetCulture(string ieft)
             {
                 try
                 {
@@ -90,9 +91,9 @@ namespace MaSch.Presentation.Translation
         /// <param name="language">The language.</param>
         /// <param name="oldDict">The translation dictionary previously loaded. If no dictionary was loaded yet, this parameter is <c>null</c>.</param>
         /// <returns>The translation dictionary for the specified language.</returns>
-        protected override IReadOnlyDictionary<string, string> GetDictionaryForLanguage(CultureInfo language, IReadOnlyDictionary<string, string> oldDict)
+        protected override IReadOnlyDictionary<string, string>? GetDictionaryForLanguage(CultureInfo language, IReadOnlyDictionary<string, string>? oldDict)
         {
-            IReadOnlyDictionary<string, string> result = null;
+            IReadOnlyDictionary<string, string>? result = null;
             if (language.LCID == CultureInfo.InvariantCulture.LCID && _defaultLanguageValues != null)
             {
                 result = _defaultLanguageValues;

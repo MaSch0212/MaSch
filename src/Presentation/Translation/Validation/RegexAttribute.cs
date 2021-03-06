@@ -46,7 +46,7 @@ namespace MaSch.Presentation.Translation.Validation
         /// <returns>
         /// An instance of the <see cref="ValidationResult"></see> class.
         /// </returns>
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             if (value is not string sValue)
                 return ValidationResult.Success;

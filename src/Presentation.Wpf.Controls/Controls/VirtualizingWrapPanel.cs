@@ -13,6 +13,7 @@ using System.Windows.Media;
 using WinControls=System.Windows.Controls;
 
 #pragma warning disable SA1600 // Elements should be documented
+#nullable disable
 
 namespace MaSch.Presentation.Wpf.Controls
 {

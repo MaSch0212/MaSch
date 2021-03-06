@@ -208,25 +208,25 @@ namespace MaSch.Presentation.Wpf.Controls
         /// <summary>
         /// Occurs when the <see cref="NumericValue"/> property changed.
         /// </summary>
-        public event DoubleEventHandler NumericValueChanged;
+        public event DoubleEventHandler? NumericValueChanged;
 
         /// <summary>
         /// Occurs when the <see cref="Maximum"/> property changed.
         /// </summary>
-        public event DoubleEventHandler MaximumChanged;
+        public event DoubleEventHandler? MaximumChanged;
 
         /// <summary>
         /// Occurs when the <see cref="Minimum"/> property changed.
         /// </summary>
-        public event DoubleEventHandler MinimumChanged;
+        public event DoubleEventHandler? MinimumChanged;
 
         /// <summary>
         /// Occurs when the <see cref="OnlyNumericValues"/> property changed.
         /// </summary>
-        public event BooleanEventHandler OnlyNumericValuesChanged;
+        public event BooleanEventHandler? OnlyNumericValuesChanged;
 
         private readonly Regex _valueRegex;
-        private TextBlock _suffixTextBlock;
+        private TextBlock? _suffixTextBlock;
         private double _actualValue;
 
         /// <summary>

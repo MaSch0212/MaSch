@@ -49,7 +49,7 @@ namespace MaSch.Generators
                 {
                     InterfaceType.NotifyPropertyChanged => "System.ComponentModel.INotifyPropertyChanged",
                     InterfaceType.ObservableObject => "MaSch.Core.Observable.IObservableObject",
-                    _ => throw new Exception("Unknown interface type: " + interfaceType)
+                    _ => throw new Exception("Unknown interface type: " + interfaceType),
                 };
 
                 var builder = new SourceBuilder();

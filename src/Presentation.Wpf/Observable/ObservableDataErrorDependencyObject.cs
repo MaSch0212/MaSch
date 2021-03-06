@@ -18,7 +18,7 @@ namespace MaSch.Presentation.Wpf.Observable
         private readonly DataErrorHandler _dataErrorHandler;
 
         /// <inheritdoc />
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged
+        public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged
         {
             add => _dataErrorHandler.ErrorsChanged += value;
             remove => _dataErrorHandler.ErrorsChanged -= value;
@@ -56,13 +56,13 @@ namespace MaSch.Presentation.Wpf.Observable
         public IDictionary<string, IEnumerable> GetErrors() => _dataErrorHandler.GetErrors();
 
         /// <inheritdoc />
-        public IEnumerable GetErrors(string propertyName) => _dataErrorHandler.GetErrors(propertyName);
+        public IEnumerable GetErrors(string? propertyName) => _dataErrorHandler.GetErrors(propertyName);
 
         /// <inheritdoc />
         public bool CheckForErrors() => _dataErrorHandler.CheckForErrors();
 
         /// <inheritdoc />
-        public bool CheckForError(string propertyName) => _dataErrorHandler.CheckForError(propertyName);
+        public bool CheckForError(string? propertyName) => _dataErrorHandler.CheckForError(propertyName);
 
         /// <summary>
         /// Gets a value indicating wether the <see cref="HasErrors"/> property should be serialized.

@@ -4,33 +4,19 @@
     <!-- General Project info -->
     <RootNamespace>MaSch.Presentation.Wpf</RootNamespace>
     <TargetFrameworks>net5.0-windows;net48</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
     <UseWPF>true</UseWPF>
-    <CodeAnalysisRuleSet>../../build/MaSch.ruleset</CodeAnalysisRuleSet>
+    <ConfigureSourceLink>true</ConfigureSourceLink>
 
     <!-- Output info -->
-    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Properties\MaSch.snk</AssemblyOriginatorKeyFile>
-    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
 
     <!-- Package Info -->
     <Description>Contains modern themes for .NET WPF application</Description>
-    <Version>0.1.0</Version>
-    <Authors>Marc Schmidt</Authors>
-    <SupportedOSPlatform>windows</SupportedOSPlatform>
-    <Copyright>Copyright © Marc Schmidt 2021</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/MaSch0212/MaSch</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/MaSch0212/MaSch</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
+    <Version>0.1.1</Version>
     <PackageTags>masch presentation ui frontend wpf themes theming</PackageTags>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="FastWPF.DesignerSettings" />
-    <None Remove="**\*.FastWPF" />
-  </ItemGroup>
+  <Import Project="../../build/MaSch.props" />
   
   <ItemGroup>
     <None Remove="Themes\Base\Theme.json" />
@@ -45,39 +31,19 @@
     <ProjectReference Include="..\Core\MaSch.Core.csproj" />
     <ProjectReference Include="..\Presentation.Wpf\MaSch.Presentation.Wpf.csproj" />
     <ProjectReference Include="..\Presentation\MaSch.Presentation.csproj" />
+    <ProjectReference Include="..\Generators\MaSch.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)'=='net48' ">
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)'!='net48' ">
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.1" />
+  
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Properties\MaSch.snk" />
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <Resource Include="Themes\Base\Theme.json" />
     <Resource Include="Themes\Dark\DefaultWindowIcon.ico" />
-    <Resource Include="Themes\Dark\Theme.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
+    <Resource Include="Themes\Dark\Theme.json" />
     <Resource Include="Themes\Light\DefaultWindowIcon.ico" />
-    <Resource Include="Themes\Light\Theme.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
+    <Resource Include="Themes\Light\Theme.json" />
   </ItemGroup>
 
   <ItemGroup>

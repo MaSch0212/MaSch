@@ -28,7 +28,7 @@ namespace MaSch.Presentation.Wpf.Controls
             if (sender is Win.ScrollViewer sv && sv.Parent is UIElement parentElement)
             {
                 var actualScrollSource = e.OriginalSource as Win.ScrollViewer ??
-                    (e.OriginalSource as DependencyObject).Parents().OfType<Win.ScrollViewer>().FirstOrDefault(x => x.IsHitTestVisible);
+                    (e.OriginalSource as DependencyObject)?.Parents().OfType<Win.ScrollViewer>().FirstOrDefault(x => x.IsHitTestVisible);
 
                 if (actualScrollSource == sv && ((e.Delta > 0 && Math.Abs(sv.VerticalOffset) < 0.5) || (e.Delta < 0 && Math.Abs(sv.VerticalOffset - sv.ScrollableHeight) < 0.5)))
                 {

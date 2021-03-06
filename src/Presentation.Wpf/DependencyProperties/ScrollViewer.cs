@@ -320,7 +320,8 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
 
         private static void OnScrollOnDragDropPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var container = d as FrameworkElement;
+            if (d is not FrameworkElement container)
+                return;
 
             Unsubscribe(container);
             if (true.Equals(e.NewValue))

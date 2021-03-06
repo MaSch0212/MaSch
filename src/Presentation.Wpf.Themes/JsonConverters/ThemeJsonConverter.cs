@@ -22,20 +22,20 @@ namespace MaSch.Presentation.Wpf.JsonConverters
         public override bool CanWrite => false;
 
         /// <inheritdoc/>
-        public override ITheme ReadJson(JsonReader reader, Type objectType, ITheme existingValue, bool hasExtistingValue, JsonSerializer serializer)
+        public override ITheme ReadJson(JsonReader reader, Type objectType, ITheme? existingValue, bool hasExtistingValue, JsonSerializer serializer)
         {
             var jToken = JToken.ReadFrom(reader);
-            var result = serializer.Deserialize<Theme>(jToken.CreateReader());
+            var result = serializer.Deserialize<Theme>(jToken.CreateReader()) ?? new Theme();
 
             var mergedThemesToken = jToken["MergedThemes"];
 
             if (mergedThemesToken is JArray mergedThemesArray)
             {
-                var baseUri = new Uri(jToken["BaseUri"] is JValue fpv ? (string)fpv.Value : AppDomain.CurrentDomain.BaseDirectory);
+                var baseUri = new Uri(jToken["BaseUri"] is JValue fpv ? (string)fpv.Value! : AppDomain.CurrentDomain.BaseDirectory);
 
                 foreach (var item in mergedThemesArray.OfType<JValue>().Where(x => x.Type == JTokenType.String))
                 {
-                    var json = DownloadString(new Uri((string)item.Value, UriKind.RelativeOrAbsolute), baseUri, out var fileUri);
+                    var json = DownloadString(new Uri((string)item.Value!, UriKind.RelativeOrAbsolute), baseUri, out var fileUri);
                     foreach (var value in Theme.FromJson(json, new Uri(fileUri, ".").ToString()).Values)
                     {
                         if (!result.Values.ContainsKey(value.Key))
@@ -48,7 +48,7 @@ namespace MaSch.Presentation.Wpf.JsonConverters
         }
 
         /// <inheritdoc/>
-        public override void WriteJson(JsonWriter writer, ITheme value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, ITheme? value, JsonSerializer serializer)
         {
             throw new NotImplementedException();
         }
@@ -78,9 +78,9 @@ namespace MaSch.Presentation.Wpf.JsonConverters
         /// <param name="absoluteUri">The absolute URI.</param>
         /// <returns>The downloaded string.</returns>
         /// <exception cref="NotSupportedException">Url with the Scheme is not supported.</exception>
-        internal static string DownloadString(Uri uri, Uri baseUri, out Uri absoluteUri)
+        internal static string DownloadString(Uri uri, Uri? baseUri, out Uri absoluteUri)
         {
-            var uriToCheck = absoluteUri = GetAbsoluteUri(uri, baseUri);
+            var uriToCheck = absoluteUri = baseUri == null ? uri : GetAbsoluteUri(uri, baseUri);
 
             bool TestScheme(params string[] acceptedSchemes) => acceptedSchemes.Any(x => string.Equals(uriToCheck.Scheme, x, StringComparison.OrdinalIgnoreCase));
 

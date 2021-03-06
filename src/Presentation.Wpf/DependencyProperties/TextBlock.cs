@@ -46,7 +46,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
         {
             if (d is Win.TextBlock tb)
             {
-                void CollectionChanged(object s, NotifyCollectionChangedEventArgs ea)
+                void CollectionChanged(object? s, NotifyCollectionChangedEventArgs ea)
                 {
                     if (ea.Action == NotifyCollectionChangedAction.Reset)
                     {
@@ -54,36 +54,41 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                     }
                     else
                     {
-                        for (int i = 0; i < ea.OldItems.Count; i++)
+                        if (ea.OldItems != null)
                         {
-                            tb.Inlines.Remove(tb.Inlines.ElementAt(ea.OldStartingIndex));
+                            for (int i = 0; i < ea.OldItems.Count; i++)
+                                tb.Inlines.Remove(tb.Inlines.ElementAt(ea.OldStartingIndex));
                         }
 
-                        Inline current = null;
+                        Inline? current = null;
                         bool last = false;
-                        foreach (Inline item in ea.NewItems)
-                        {
-                            if (current == null)
-                            {
-                                if (ea.NewStartingIndex == 0)
-                                {
-                                    current = tb.Inlines.FirstInline;
-                                }
-                                else if (ea.NewStartingIndex >= tb.Inlines.Count)
-                                {
-                                    last = true;
-                                    current = tb.Inlines.LastInline;
-                                }
-                                else
-                                {
-                                    current = tb.Inlines.ElementAt(ea.NewStartingIndex);
-                                }
-                            }
 
-                            if (last)
-                                tb.Inlines.InsertAfter(current, item);
-                            else
-                                tb.Inlines.InsertBefore(current, item);
+                        if (ea.NewItems != null)
+                        {
+                            foreach (Inline item in ea.NewItems)
+                            {
+                                if (current == null)
+                                {
+                                    if (ea.NewStartingIndex == 0)
+                                    {
+                                        current = tb.Inlines.FirstInline;
+                                    }
+                                    else if (ea.NewStartingIndex >= tb.Inlines.Count)
+                                    {
+                                        last = true;
+                                        current = tb.Inlines.LastInline;
+                                    }
+                                    else
+                                    {
+                                        current = tb.Inlines.ElementAt(ea.NewStartingIndex);
+                                    }
+                                }
+
+                                if (last)
+                                    tb.Inlines.InsertAfter(current, item);
+                                else
+                                    tb.Inlines.InsertBefore(current, item);
+                            }
                         }
                     }
                 }

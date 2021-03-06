@@ -66,8 +66,8 @@ namespace MaSch.Presentation.Wpf.Controls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DefaultTileContent), new FrameworkPropertyMetadata(typeof(DefaultTileContent)));
         }
 
-        private Control _innerBorder;
-        private Control _title;
+        private Control? _innerBorder;
+        private Control? _title;
         private bool _isInitialized;
 
         /// <summary>
@@ -142,9 +142,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 return;
             if ((e.Property == BackgroundProperty || e.Property == ForegroundProperty) && Background is SolidColorBrush solidBrush)
             {
-                _innerBorder.BorderBrush = new SolidColorBrush(ContrastColor(solidBrush.Color));
+                _innerBorder!.BorderBrush = new SolidColorBrush(ContrastColor(solidBrush.Color));
                 if (Foreground == null)
-                    _title.Foreground = new SolidColorBrush(ContrastColor(solidBrush.Color));
+                    _title!.Foreground = new SolidColorBrush(ContrastColor(solidBrush.Color));
             }
         }
 

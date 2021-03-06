@@ -15,13 +15,13 @@ namespace MaSch.Presentation.Wpf.Printing
     {
         private int _nextJobId = 1;
 
-        private Task _printerTask;
-        private PrintTask _currentlyPrinting;
+        private Task? _printerTask;
+        private PrintTask? _currentlyPrinting;
 
         /// <summary>
         /// Gets the currently executed <see cref="PrintTask"/>.
         /// </summary>
-        public PrintTask CurrentlyPrinting
+        public PrintTask? CurrentlyPrinting
         {
             get => _currentlyPrinting;
             private set => SetProperty(ref _currentlyPrinting, value);
@@ -61,7 +61,7 @@ namespace MaSch.Presentation.Wpf.Printing
             PrintTaskQueue.Enqueue(task);
         }
 
-        private void PrintTaskQueue_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void PrintTaskQueue_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (PrintTaskQueue.Count > 0 && (_printerTask == null || _printerTask.Status == TaskStatus.Canceled || _printerTask.Status == TaskStatus.Faulted || _printerTask.Status == TaskStatus.RanToCompletion))
             {

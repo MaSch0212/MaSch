@@ -132,7 +132,7 @@ namespace MaSch.Presentation.Wpf.Controls
         /// <summary>
         /// Occurs when the selected color changed.
         /// </summary>
-        public event EventHandler<Color> SelectedColorChanged;
+        public event EventHandler<Color>? SelectedColorChanged;
 
         /// <summary>
         /// Gets or sets the currently selected color.

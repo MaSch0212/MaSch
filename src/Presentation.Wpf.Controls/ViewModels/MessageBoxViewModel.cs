@@ -22,22 +22,22 @@ namespace MaSch.Presentation.Wpf.ViewModels
         /// <summary>
         /// Gets or sets the message box text.
         /// </summary>
-        string MessageBoxText { get; set; }
+        string? MessageBoxText { get; set; }
 
         /// <summary>
         /// Gets or sets the caption of the message box.
         /// </summary>
-        string Caption { get; set; }
+        string? Caption { get; set; }
 
         /// <summary>
         /// Gets or sets the button state of the message box.
         /// </summary>
-        ButtonVisibilities Buttons { get; set; }
+        ButtonVisibilities? Buttons { get; set; }
 
         /// <summary>
         /// Gets or sets the icon of the message box.
         /// </summary>
-        BrushGeometry Icon { get; set; }
+        BrushGeometry? Icon { get; set; }
     }
 
     /// <summary>
@@ -81,7 +81,7 @@ namespace MaSch.Presentation.Wpf.ViewModels
         /// </summary>
         public MessageBoxButton MessageBoxButtons
         {
-            get => Buttons.GetMessageBoxButton() ?? MessageBoxButton.OK;
+            get => Buttons?.GetMessageBoxButton() ?? MessageBoxButton.OK;
             set => Buttons = new ButtonVisibilities(value);
         }
 

@@ -14,7 +14,7 @@ namespace MaSch.Presentation.Wpf.Common
         /// <summary>
         /// Gets or sets the name of the window class.
         /// </summary>
-        public string WindowClassName { get; set; }
+        public string? WindowClassName { get; set; }
 
         /// <summary>
         /// Gets or sets the position of the window.
@@ -61,7 +61,7 @@ namespace MaSch.Presentation.Wpf.Common
         /// <param name="window">The window to retrieve the information from.</param>
         /// <param name="disableMinimize">if set to <c>true</c> the <see cref="WindowState"/> property is set to <see cref="WindowState.Normal"/> if the window is minimized.</param>
         /// <returns>A new instance of the <see cref="WindowPosition"/> class containing the information from the given window.</returns>
-        public static WindowPosition GetFromWindow(Window window, bool disableMinimize = true)
+        public static WindowPosition? GetFromWindow(Window window, bool disableMinimize = true)
         {
             if (window == null)
                 return null;
@@ -82,7 +82,7 @@ namespace MaSch.Presentation.Wpf.Common
         /// <returns>An <see cref="Array"/> of new instances of the <see cref="WindowPosition"/> class containing the information from the given windows.</returns>
         public static WindowPosition[] GetFromWindows(bool disableMinimize, params Window[] windows)
         {
-            return windows.Select(x => GetFromWindow(x, disableMinimize)).ToArray();
+            return windows.Select(x => GetFromWindow(x, disableMinimize)).WhereNotNull().ToArray();
         }
 
         /// <summary>
@@ -94,10 +94,14 @@ namespace MaSch.Presentation.Wpf.Common
         public static void AddWindowToList(IList<WindowPosition> list, Window window, bool disableMinimize = true)
         {
             var index = list.IndexOf(x => x.WindowClassName == window.GetType().FullName);
-            if (index < 0)
-                list.Add(GetFromWindow(window, disableMinimize));
-            else
-                list[index] = GetFromWindow(window, disableMinimize);
+            var wp = GetFromWindow(window, disableMinimize);
+            if (wp != null)
+            {
+                if (index < 0)
+                    list.Add(wp);
+                else
+                    list[index] = wp;
+            }
         }
 
         /// <summary>

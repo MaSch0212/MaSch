@@ -47,9 +47,10 @@ namespace MaSch.Data.Extensions
         /// Returns a disposable enumerable that enumerates through all rows of this <see cref="IDataReader"/>.
         /// When the enumerable is disposed, the <see cref="IDataReader"/> is disposed as well.
         /// </returns>
-        public static IDisposableEnumerable<T> ToEnumerable<T>(this IDataReader reader)
+        public static IDisposableEnumerable<T?> ToEnumerable<T>(this IDataReader reader)
             => reader.ToEnumerable(r => r.Get<T>(0));
 
+#pragma warning disable SA1414 // Tuple types in signatures should have element names
         /// <summary>
         /// Converts this <see cref="IDataReader"/> to an enumerable.
         /// </summary>
@@ -60,7 +61,7 @@ namespace MaSch.Data.Extensions
         /// Returns a disposable enumerable that enumerates through all rows of this <see cref="IDataReader"/>.
         /// When the enumerable is disposed, the <see cref="IDataReader"/> is disposed as well.
         /// </returns>
-        public static IDisposableEnumerable<(T1, T2)> ToEnumerable<T1, T2>(this IDataReader reader)
+        public static IDisposableEnumerable<(T1?, T2?)> ToEnumerable<T1, T2>(this IDataReader reader)
             => reader.ToEnumerable(r => (r.Get<T1>(0), r.Get<T2>(1)));
 
         /// <summary>
@@ -74,7 +75,7 @@ namespace MaSch.Data.Extensions
         /// Returns a disposable enumerable that enumerates through all rows of this <see cref="IDataReader"/>.
         /// When the enumerable is disposed, the <see cref="IDataReader"/> is disposed as well.
         /// </returns>
-        public static IDisposableEnumerable<(T1, T2, T3)> ToEnumerable<T1, T2, T3>(this IDataReader reader)
+        public static IDisposableEnumerable<(T1?, T2?, T3?)> ToEnumerable<T1, T2, T3>(this IDataReader reader)
             => reader.ToEnumerable(r => (r.Get<T1>(0), r.Get<T2>(1), r.Get<T3>(2)));
 
         /// <summary>
@@ -89,7 +90,7 @@ namespace MaSch.Data.Extensions
         /// Returns a disposable enumerable that enumerates through all rows of this <see cref="IDataReader"/>.
         /// When the enumerable is disposed, the <see cref="IDataReader"/> is disposed as well.
         /// </returns>
-        public static IDisposableEnumerable<(T1, T2, T3, T4)> ToEnumerable<T1, T2, T3, T4>(this IDataReader reader)
+        public static IDisposableEnumerable<(T1?, T2?, T3?, T4?)> ToEnumerable<T1, T2, T3, T4>(this IDataReader reader)
             => reader.ToEnumerable(r => (r.Get<T1>(0), r.Get<T2>(1), r.Get<T3>(2), r.Get<T4>(3)));
 
         /// <summary>
@@ -105,7 +106,7 @@ namespace MaSch.Data.Extensions
         /// Returns a disposable enumerable that enumerates through all rows of this <see cref="IDataReader"/>.
         /// When the enumerable is disposed, the <see cref="IDataReader"/> is disposed as well.
         /// </returns>
-        public static IDisposableEnumerable<(T1, T2, T3, T4, T5)> ToEnumerable<T1, T2, T3, T4, T5>(this IDataReader reader)
+        public static IDisposableEnumerable<(T1?, T2?, T3?, T4?, T5?)> ToEnumerable<T1, T2, T3, T4, T5>(this IDataReader reader)
             => reader.ToEnumerable(r => (r.Get<T1>(0), r.Get<T2>(1), r.Get<T3>(2), r.Get<T4>(3), r.Get<T5>(4)));
 
         /// <summary>
@@ -122,7 +123,7 @@ namespace MaSch.Data.Extensions
         /// Returns a disposable enumerable that enumerates through all rows of this <see cref="IDataReader"/>.
         /// When the enumerable is disposed, the <see cref="IDataReader"/> is disposed as well.
         /// </returns>
-        public static IDisposableEnumerable<(T1, T2, T3, T4, T5, T6)> ToEnumerable<T1, T2, T3, T4, T5, T6>(this IDataReader reader)
+        public static IDisposableEnumerable<(T1?, T2?, T3?, T4?, T5?, T6?)> ToEnumerable<T1, T2, T3, T4, T5, T6>(this IDataReader reader)
             => reader.ToEnumerable(r => (r.Get<T1>(0), r.Get<T2>(1), r.Get<T3>(2), r.Get<T4>(3), r.Get<T5>(4), r.Get<T6>(5)));
 
         /// <summary>
@@ -140,8 +141,9 @@ namespace MaSch.Data.Extensions
         /// Returns a disposable enumerable that enumerates through all rows of this <see cref="IDataReader"/>.
         /// When the enumerable is disposed, the <see cref="IDataReader"/> is disposed as well.
         /// </returns>
-        public static IDisposableEnumerable<(T1, T2, T3, T4, T5, T6, T7)> ToEnumerable<T1, T2, T3, T4, T5, T6, T7>(this IDataReader reader)
+        public static IDisposableEnumerable<(T1?, T2?, T3?, T4?, T5?, T6?, T7?)> ToEnumerable<T1, T2, T3, T4, T5, T6, T7>(this IDataReader reader)
             => reader.ToEnumerable(r => (r.Get<T1>(0), r.Get<T2>(1), r.Get<T3>(2), r.Get<T4>(3), r.Get<T5>(4), r.Get<T6>(5), r.Get<T7>(6)));
+#pragma warning restore SA1414 // Tuple types in signatures should have element names
 
         /// <summary>
         /// Converts this <see cref="IDataReader"/> to an enumerable.
@@ -164,7 +166,7 @@ namespace MaSch.Data.Extensions
         /// <param name="columnId">The zero-based column ordinal.</param>
         /// <returns>The value of the column.</returns>
         /// <exception cref="InvalidCastException">The DBNull value cannot be converted.</exception>
-        public static T Get<T>(this IDataRecord record, int columnId)
+        public static T? Get<T>(this IDataRecord record, int columnId)
         {
             if (record.IsDBNull(columnId))
                 return typeof(T).IsClass ? default(T) : throw new InvalidCastException($"The DBNull value cannot be converted to \"{typeof(T).FullName}\".");
@@ -183,7 +185,7 @@ namespace MaSch.Data.Extensions
         /// <param name="columnName">Name of the column.</param>
         /// <returns>The value of the column.</returns>
         /// <exception cref="InvalidCastException">The DBNull value cannot be converted.</exception>
-        public static T Get<T>(this IDataRecord record, string columnName)
+        public static T? Get<T>(this IDataRecord record, string columnName)
             => record.Get<T>(record.GetOrdinal(columnName));
 
         /// <summary>
@@ -192,7 +194,7 @@ namespace MaSch.Data.Extensions
         /// <param name="record">The data row.</param>
         /// <param name="columnId">The zero-based column ordinal.</param>
         /// <returns>The value of the column.</returns>
-        public static object Get(this IDataRecord record, int columnId)
+        public static object? Get(this IDataRecord record, int columnId)
             => record.IsDBNull(columnId) ? default : record.GetValue(columnId);
 
         /// <summary>
@@ -201,7 +203,7 @@ namespace MaSch.Data.Extensions
         /// <param name="record">The data row.</param>
         /// <param name="columnName">Name of the column.</param>
         /// <returns>The value of the column.</returns>
-        public static object Get(this IDataRecord record, string columnName)
+        public static object? Get(this IDataRecord record, string columnName)
             => record.Get(record.GetOrdinal(columnName));
 
         /// <summary>
@@ -218,8 +220,8 @@ namespace MaSch.Data.Extensions
 
         private class DataReaderEnumerable<T> : IDisposableEnumerable<T>
         {
-            public event EventHandler Disposing;
-            public event EventHandler Disposed;
+            public event EventHandler? Disposing;
+            public event EventHandler? Disposed;
 
             private readonly DataReaderEnumerator<T> _enumerator;
 
@@ -245,7 +247,7 @@ namespace MaSch.Data.Extensions
             private readonly IDataReader _reader;
 
             public T Current => _itemFunction(_reader);
-            object IEnumerator.Current => Current;
+            object? IEnumerator.Current => Current;
 
             public DataReaderEnumerator(IDataReader reader, Func<IDataReader, T> itemFunction)
             {

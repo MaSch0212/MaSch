@@ -146,7 +146,7 @@ namespace MaSch.Console.Controls
             {
                 Controls.TextWrap.CharacterWrap => lines.SelectMany(x => WrapCharacter(x, maxLineLength)).ToArray(),
                 Controls.TextWrap.WordWrap => lines.SelectMany(x => WrapWord(x, maxLineLength)).ToArray(),
-                _ => new[] { text }
+                _ => new[] { text },
             };
 
             static IEnumerable<string> WrapCharacter(string text, int maxLineLength)
@@ -208,7 +208,7 @@ namespace MaSch.Console.Controls
                 TextAlignment.Right => text.PadLeft(maxLength, ' '),
                 TextAlignment.Center => text.PadBoth(maxLength, ' '),
                 TextAlignment.Block => BlockAlign(text, maxLength),
-                _ => text.PadRight(maxLength, ' ')
+                _ => text.PadRight(maxLength, ' '),
             };
 
             static string BlockAlign(string text, int maxLength)
@@ -219,7 +219,7 @@ namespace MaSch.Console.Controls
 
                 var startMatches = new Stack<Match>(matches.OfType<Match>().Where(x => x.Index <= text.Length / 2D));
                 var endMatches = new Stack<Match>(matches.OfType<Match>().Where(x => x.Index > text.Length / 2D).Reverse());
-                var cycle = new LinkedList<(Match match, int count)>();
+                var cycle = new LinkedList<(Match Match, int Count)>();
 
                 while (startMatches.Any() && endMatches.Any())
                 {
@@ -236,13 +236,13 @@ namespace MaSch.Console.Controls
                 var current = cycle.First;
                 for (int i = 0; i < maxLength - text.Length; i++)
                 {
-                    current!.Value = (current.Value.match, current.Value.count + 1);
+                    current!.Value = (current.Value.Match, current.Value.Count + 1);
                     current = current.Next ?? cycle.First;
                 }
 
                 var result = new StringBuilder();
                 int lastIndex = 0;
-                foreach ((Match match, int count) in cycle.OrderBy(x => x.match.Index))
+                foreach ((Match match, int count) in cycle.OrderBy(x => x.Match.Index))
                 {
                     result.Append(text[lastIndex..match.Index]).Append(new string(' ', count));
                     lastIndex = match.Index + match.Length;
@@ -261,7 +261,7 @@ namespace MaSch.Console.Controls
                 TextEllipsis.EndCharacter or TextEllipsis.EndWord => EndTrimming(),
                 TextEllipsis.StartCharacter or TextEllipsis.StartWord => StartTrimming(),
                 TextEllipsis.CenterCharacter or TextEllipsis.CenterWord => CenterTrimming(),
-                _ => lines[..maxHeight]
+                _ => lines[..maxHeight],
             };
 
             for (int i = 0; i < result.Length; i++)
@@ -321,7 +321,7 @@ namespace MaSch.Console.Controls
                 TextEllipsis.EndWord => TrimEndWords(text, maxLength),
                 TextEllipsis.StartWord => TrimStartWords(text, maxLength),
                 TextEllipsis.CenterWord => TrimCenterWords(text, maxLength),
-                _ => text[..maxLength]
+                _ => text[..maxLength],
             };
             return result.Length > maxLength ? result[..maxLength] : result;
 
@@ -416,37 +416,37 @@ namespace MaSch.Console.Controls
     public enum TextEllipsis
     {
         /// <summary>
-        /// The text is cut at the end without any ellipsis. (e.g.: "Lorem ipsum dolo")
+        /// The text is cut at the end without any ellipsis (e.g.: "Lorem ipsum dolo").
         /// </summary>
         None,
 
         /// <summary>
-        /// The text is cut at the end. The last three visible characters are replaced by "...". (e.g.: "Lorem ipsum d...")
+        /// The text is cut at the end. The last three visible characters are replaced by "..." (e.g.: "Lorem ipsum d...").
         /// </summary>
         EndCharacter,
 
         /// <summary>
-        /// The text is cut at the start. The first three visible characters are replaced by "...". (e.g.: "...olor sit amet")
+        /// The text is cut at the start. The first three visible characters are replaced by "..." (e.g.: "...olor sit amet").
         /// </summary>
         StartCharacter,
 
         /// <summary>
-        /// The text is cut at the center. The most center visible characters are replaced by "...". (e.g.: "Lorem ip...sit amet")
+        /// The text is cut at the center. The most center visible characters are replaced by "..." (e.g.: "Lorem ip...sit amet").
         /// </summary>
         CenterCharacter,
 
         /// <summary>
-        /// The text is cut at the end of the last word that still fits. "..." is appended at the end of the text. (e.g.: "Lorem ipsum...")
+        /// The text is cut at the end of the last word that still fits. "..." is appended at the end of the text (e.g.: "Lorem ipsum...").
         /// </summary>
         EndWord,
 
         /// <summary>
-        /// The text is cut at the start of the first word that still fits. "..." is prepended at the start of the text. (e.g.: "...sit amet")
+        /// The text is cut at the start of the first word that still fits. "..." is prepended at the start of the text (e.g.: "...sit amet").
         /// </summary>
         StartWord,
 
         /// <summary>
-        /// The text is cut at the center without cutting though words. "..." is added to the center of the text. (e.g.: "Lorem...sit amet")
+        /// The text is cut at the center without cutting though words. "..." is added to the center of the text (e.g.: "Lorem...sit amet").
         /// </summary>
         CenterWord,
     }

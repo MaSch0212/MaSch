@@ -37,12 +37,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaSch.Presentation.Wpf.Them
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaSch.Presentation.Wpf.Win10", "src\Presentation.Wpf.Win10\MaSch.Presentation.Wpf.Win10.csproj", "{B4E79911-96B1-4165-B111-151C6691D59A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{08B25D75-3B28-4620-803F-245DBD345ABB}"
-	ProjectSection(SolutionItems) = preProject
-		src\Scripts\DotNetPublish.ps1 = src\Scripts\DotNetPublish.ps1
-		src\Scripts\IncrementBuildNumber.ps1 = src\Scripts\IncrementBuildNumber.ps1
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "T4", "T4", "{6BD2E163-C4E4-4071-979D-6E1162B69A73}"
 	ProjectSection(SolutionItems) = preProject
 		src\T4\IconFontCssToEnum.ttinclude = src\T4\IconFontCssToEnum.ttinclude
@@ -60,6 +54,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{703BC87F-2F71-454A-93BA-014D78DF88C2}"
 	ProjectSection(SolutionItems) = preProject
 		build\build.yml = build\build.yml
+		build\MaSch.props = build\MaSch.props
 		build\MaSch.ruleset = build\MaSch.ruleset
 		build\MaSch.Tests.ruleset = build\MaSch.Tests.ruleset
 	EndProjectSection

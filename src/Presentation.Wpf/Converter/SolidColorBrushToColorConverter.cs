@@ -12,10 +12,10 @@ namespace MaSch.Presentation.Wpf.Converter
     public class SolidColorBrushToColorConverter : IValueConverter
     {
         /// <inheritdoc />
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => (value as SolidColorBrush)?.Color;
+        public object? Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => (value as SolidColorBrush)?.Color;
 
         /// <inheritdoc />
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object? ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             return value is Color color ? new SolidColorBrush(color) : null;
         }

@@ -111,7 +111,7 @@ namespace MaSch.Core.Extensions
         /// <typeparam name="T">The result type of the task.</typeparam>
         /// <param name="task">The task for which the <see cref="TaskCanceledException"/> should be catched.</param>
         /// <returns>Return true and the result of the task if the task has ben completed without a cancellation; otherwise false and the default value of <typeparamref name="T"/>.</returns>
-        public static async Task<(bool hasCompleted, T? result)> CatchCancellation<T>(this Task<T> task)
+        public static async Task<(bool HasCompleted, T? Result)> CatchCancellation<T>(this Task<T> task)
         {
             _ = Guard.NotNull(task, nameof(task));
             try

@@ -35,7 +35,7 @@ namespace MaSch.Presentation.Wpf.Common
         /// <returns>
         /// Returns a <see cref="T:System.Windows.DataTemplate" /> or <see langword="null" />. The default value is <see langword="null" />.
         /// </returns>
-        public override DataTemplate SelectTemplate(object item, DependencyObject container)
+        public override DataTemplate? SelectTemplate(object item, DependencyObject container)
         {
             foreach (var dataTemplate in DataTemplates)
             {

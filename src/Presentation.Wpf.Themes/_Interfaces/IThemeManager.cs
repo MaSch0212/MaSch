@@ -29,7 +29,7 @@ namespace MaSch.Presentation.Wpf
         /// <summary>
         /// Gets or sets the parent theme manager.
         /// </summary>
-        IThemeManager ParentThemeManager { get; set; }
+        IThemeManager? ParentThemeManager { get; set; }
 
         /// <summary>
         /// Determines whether the theme contains a specific key.
@@ -55,7 +55,7 @@ namespace MaSch.Presentation.Wpf
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns>The theme value.</returns>
-        IThemeValue GetValue(string key);
+        IThemeValue? GetValue(string key);
 
         /// <summary>
         /// Gets a theme value.
@@ -63,7 +63,7 @@ namespace MaSch.Presentation.Wpf
         /// <typeparam name="T">The type of the value expected.</typeparam>
         /// <param name="key">The key.</param>
         /// <returns>The theme value.</returns>
-        IThemeValue<T> GetValue<T>(string key);
+        IThemeValue<T>? GetValue<T>(string key);
 
         /// <summary>
         /// Loads a theme.
@@ -76,14 +76,14 @@ namespace MaSch.Presentation.Wpf
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
-        void SetValue(string key, object value);
+        void SetValue(string key, object? value);
 
         /// <summary>
         /// Adds a new theme value.
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
-        void AddValue(string key, object value);
+        void AddValue(string key, object? value);
 
         /// <summary>
         /// Removes a theme value.
@@ -96,7 +96,7 @@ namespace MaSch.Presentation.Wpf
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns>The theme value.</returns>
-        object this[string key] { get; set; }
+        object? this[string key] { get; set; }
 
         /// <summary>
         /// Gets or sets the property value of a theme value with the specified key.
@@ -104,7 +104,7 @@ namespace MaSch.Presentation.Wpf
         /// <param name="key">The key.</param>
         /// <param name="propertyName">Name of the property.</param>
         /// <returns>The property value of the theme value.</returns>
-        object this[string key, string propertyName] { get; set; }
+        object? this[string key, string propertyName] { get; set; }
     }
 
     /// <summary>
@@ -141,7 +141,7 @@ namespace MaSch.Presentation.Wpf
         /// <param name="themeManager">The theme manager.</param>
         /// <param name="key">The key.</param>
         /// <returns>The theme value.</returns>
-        public static IThemeValue GetValue(this IThemeManager themeManager, ThemeKey key)
+        public static IThemeValue? GetValue(this IThemeManager themeManager, ThemeKey key)
             => themeManager.GetValue(key.ToString());
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace MaSch.Presentation.Wpf
         /// <param name="themeManager">The theme manager.</param>
         /// <param name="key">The key.</param>
         /// <returns>The theme value.</returns>
-        public static IThemeValue<T> GetValue<T>(this IThemeManager themeManager, ThemeKey key)
+        public static IThemeValue<T>? GetValue<T>(this IThemeManager themeManager, ThemeKey key)
             => themeManager.GetValue<T>(key.ToString());
 
         /// <summary>
@@ -195,24 +195,24 @@ namespace MaSch.Presentation.Wpf
         /// <summary>
         /// Gets the added values.
         /// </summary>
-        public IReadOnlyDictionary<string, IThemeValue> AddedValues { get; }
+        public IReadOnlyDictionary<string, IThemeValue>? AddedValues { get; }
 
         /// <summary>
         /// Gets the removed values.
         /// </summary>
-        public IReadOnlyDictionary<string, IThemeValue> RemovedValues { get; }
+        public IReadOnlyDictionary<string, IThemeValue>? RemovedValues { get; }
 
         /// <summary>
         /// Gets the changed values.
         /// </summary>
-        public IReadOnlyDictionary<string, IThemeValue> ChangedValues { get; }
+        public IReadOnlyDictionary<string, IThemeValue>? ChangedValues { get; }
 
-        private ThemeValueChangedEventArgs(ThemeValueChangeType type, IEnumerable<IThemeValue> addedValues, IEnumerable<IThemeValue> removedValues, IEnumerable<IThemeValue> changedValues)
+        private ThemeValueChangedEventArgs(ThemeValueChangeType type, IEnumerable<IThemeValue>? addedValues, IEnumerable<IThemeValue>? removedValues, IEnumerable<IThemeValue>? changedValues)
         {
             ChangeType = type;
-            AddedValues = addedValues?.ToDictionary(x => x.Key);
-            RemovedValues = removedValues?.ToDictionary(x => x.Key);
-            ChangedValues = changedValues?.ToDictionary(x => x.Key);
+            AddedValues = addedValues?.Where(x => x.Key != null).ToDictionary(x => x.Key!);
+            RemovedValues = removedValues?.Where(x => x.Key != null).ToDictionary(x => x.Key!);
+            ChangedValues = changedValues?.Where(x => x.Key != null).ToDictionary(x => x.Key!);
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace MaSch.Presentation.Wpf
         /// </summary>
         /// <param name="addedValues">The added values.</param>
         /// <returns>The created <see cref="ThemeValueChangedEventArgs"/>.</returns>
-        public static ThemeValueChangedEventArgs ForAdd(IEnumerable<IThemeValue> addedValues)
+        public static ThemeValueChangedEventArgs ForAdd(IEnumerable<IThemeValue>? addedValues)
             => new ThemeValueChangedEventArgs(ThemeValueChangeType.Add, addedValues, null, null);
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace MaSch.Presentation.Wpf
         /// </summary>
         /// <param name="removedValues">The removed values.</param>
         /// <returns>The created <see cref="ThemeValueChangedEventArgs"/>.</returns>
-        public static ThemeValueChangedEventArgs ForRemove(IEnumerable<IThemeValue> removedValues)
+        public static ThemeValueChangedEventArgs ForRemove(IEnumerable<IThemeValue>? removedValues)
             => new ThemeValueChangedEventArgs(ThemeValueChangeType.Remove, null, removedValues, null);
 
         /// <summary>
@@ -248,7 +248,7 @@ namespace MaSch.Presentation.Wpf
         /// <param name="removedValues">The removed values.</param>
         /// <param name="changedValues">The changed values.</param>
         /// <returns>The created <see cref="ThemeValueChangedEventArgs"/>.</returns>
-        public static ThemeValueChangedEventArgs ForChange(IEnumerable<IThemeValue> addedValues, IEnumerable<IThemeValue> removedValues, IEnumerable<IThemeValue> changedValues)
+        public static ThemeValueChangedEventArgs ForChange(IEnumerable<IThemeValue>? addedValues, IEnumerable<IThemeValue>? removedValues, IEnumerable<IThemeValue>? changedValues)
             => new ThemeValueChangedEventArgs(ThemeValueChangeType.Change, addedValues, removedValues, changedValues);
 
         /// <summary>
@@ -256,7 +256,7 @@ namespace MaSch.Presentation.Wpf
         /// </summary>
         /// <param name="removedValues">The removed values.</param>
         /// <returns>The created <see cref="ThemeValueChangedEventArgs"/>.</returns>
-        public static ThemeValueChangedEventArgs ForClear(IEnumerable<IThemeValue> removedValues)
+        public static ThemeValueChangedEventArgs ForClear(IEnumerable<IThemeValue>? removedValues)
             => new ThemeValueChangedEventArgs(ThemeValueChangeType.Clear, null, removedValues, null);
     }
 }

@@ -32,7 +32,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
 
         private static void OnRelativeHorizontalOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            static void LocationChangedHandler(object sender, EventArgs ea)
+            static void LocationChangedHandler(object? sender, EventArgs ea)
             {
                 if (sender is not Win.Popup p)
                     return;
@@ -67,7 +67,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
 
         private static void OnRelativeVerticalOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            static void PopupOpenedHandler(object sender, EventArgs ea)
+            static void PopupOpenedHandler(object? sender, EventArgs ea)
             {
                 if (sender is not Win.Popup p)
                     return;

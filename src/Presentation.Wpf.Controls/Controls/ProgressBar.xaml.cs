@@ -112,17 +112,17 @@ namespace MaSch.Presentation.Wpf.Controls
 
         private Storyboard _ghraphStateStoryboard;
 
-        private ColumnDefinition _indicatorLeft;
-        private ColumnDefinition _indicatorRight;
-        private Path _graphPath;
-        private Path _graphPathRaw;
-        private Border _line;
-        private FrameworkElement _graphIndicator;
-        private FrameworkElement _normalIndicator;
-        private FrameworkElement _normalIndeterminate;
-        private FrameworkElement _graphIndeterminate;
-        private Border _controlBorder;
-        private TextBlock _currentSpeed;
+        private ColumnDefinition? _indicatorLeft;
+        private ColumnDefinition? _indicatorRight;
+        private Path? _graphPath;
+        private Path? _graphPathRaw;
+        private Border? _line;
+        private FrameworkElement? _graphIndicator;
+        private FrameworkElement? _normalIndicator;
+        private FrameworkElement? _normalIndeterminate;
+        private FrameworkElement? _graphIndeterminate;
+        private Border? _controlBorder;
+        private TextBlock? _currentSpeed;
 
         /// <summary>
         /// Gets or sets a value indicating whether the progress bar should show a graph.
@@ -403,11 +403,11 @@ namespace MaSch.Presentation.Wpf.Controls
                 CurrentSpeed = maxDispValue - smoothedPoints.Last().Y;
                 try
                 {
-                    _currentSpeed.Text = string.Format(CurrentSpeedFormat, CurrentSpeed);
+                    _currentSpeed!.Text = string.Format(CurrentSpeedFormat, CurrentSpeed);
                 }
                 catch (Exception)
                 {
-                    _currentSpeed.Text = "Format-Error";
+                    _currentSpeed!.Text = "Format-Error";
                 }
 
                 _lastValueSet = DateTime.Now;

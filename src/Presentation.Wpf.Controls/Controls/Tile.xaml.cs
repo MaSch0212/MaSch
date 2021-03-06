@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -16,10 +17,10 @@ namespace MaSch.Presentation.Wpf.Controls
         private const double CenterBox = 0.4D;
         private const double EdgeBox = 0.133334D;
 
-        private RotateTransform3D _rotate;
-        private TranslateTransform3D _translate;
-        private AxisAngleRotation3D _angle;
-        private Grid _sizeGrid;
+        private RotateTransform3D? _rotate;
+        private TranslateTransform3D? _translate;
+        private AxisAngleRotation3D? _angle;
+        private Grid? _sizeGrid;
 
         static Tile()
         {
@@ -56,15 +57,15 @@ namespace MaSch.Presentation.Wpf.Controls
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            _rotate = GetTemplateChild("TILE_Rotate") as RotateTransform3D;
-            _translate = GetTemplateChild("TILE_Translate") as TranslateTransform3D;
-            _angle = GetTemplateChild("TILE_Angle") as AxisAngleRotation3D;
-            _sizeGrid = GetTemplateChild("SizeGrid") as Grid;
+            _rotate = GetTemplateChild("TILE_Rotate") as RotateTransform3D ?? throw new KeyNotFoundException($"Could not found control \"TILE_Rotate\".");
+            _translate = GetTemplateChild("TILE_Translate") as TranslateTransform3D ?? throw new KeyNotFoundException($"Could not found control \"TILE_Translate\".");
+            _angle = GetTemplateChild("TILE_Angle") as AxisAngleRotation3D ?? throw new KeyNotFoundException($"Could not found control \"TILE_Angle\".");
+            _sizeGrid = GetTemplateChild("SizeGrid") as Grid ?? throw new KeyNotFoundException($"Could not found control \"SizeGrid\".");
         }
 
         private void ModernUITile_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            _sizeGrid.Margin = new Thickness(-ActualWidth / 2, -ActualHeight / 2, -ActualWidth / 2, -ActualHeight / 2);
+            _sizeGrid!.Margin = new Thickness(-ActualWidth / 2, -ActualHeight / 2, -ActualWidth / 2, -ActualHeight / 2);
         }
 
         private void Viewport3D_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -81,10 +82,10 @@ namespace MaSch.Presentation.Wpf.Controls
 
         private void SetRotation(double cX, double cY, double aX, double aY)
         {
-            _rotate.CenterX = cX;
+            _rotate!.CenterX = cX;
             _rotate.CenterY = cY;
             _rotate.CenterZ = 0;
-            _angle.Axis = new Vector3D(aX, aY, 0);
+            _angle!.Axis = new Vector3D(aX, aY, 0);
 
             _angle.BeginAnimation(
                 AxisAngleRotation3D.AngleProperty,
@@ -93,11 +94,11 @@ namespace MaSch.Presentation.Wpf.Controls
 
         private void BeginReleaseAnimation()
         {
-            _angle.BeginAnimation(
+            _angle!.BeginAnimation(
                 AxisAngleRotation3D.AngleProperty,
                 new DoubleAnimation(0, new Duration(TimeSpan.FromSeconds(0.1))));
 
-            _translate.BeginAnimation(
+            _translate!.BeginAnimation(
                 TranslateTransform3D.OffsetZProperty,
                 new DoubleAnimation(0, new Duration(TimeSpan.FromSeconds(0.1))));
         }
@@ -107,7 +108,7 @@ namespace MaSch.Presentation.Wpf.Controls
             switch (fd)
             {
                 case FlipDirection.Center:
-                    _translate.BeginAnimation(
+                    _translate!.BeginAnimation(
                         TranslateTransform3D.OffsetZProperty,
                         new DoubleAnimation(-0.025, new Duration(TimeSpan.FromSeconds(0.1))));
                     break;

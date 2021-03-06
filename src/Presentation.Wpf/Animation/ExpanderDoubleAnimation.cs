@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using MaSch.Core;
+using System.Windows;
 using System.Windows.Media.Animation;
 
 namespace MaSch.Presentation.Wpf.Animation
@@ -71,19 +72,19 @@ namespace MaSch.Presentation.Wpf.Animation
         /// <returns>Returns the new double to set.</returns>
         protected override double GetCurrentValueCore(double defaultOriginValue, double defaultDestinationValue, AnimationClock animationClock)
         {
-            var fromVal = From.Value;
-            var toVal = To.Value;
+            var fromVal = Guard.NotNull(From, nameof(From)).Value;
+            var toVal = Guard.NotNull(To, nameof(To)).Value;
 
-            if (defaultOriginValue == toVal)
+            if (defaultOriginValue == toVal && ReverseValue.HasValue)
             {
                 fromVal = toVal;
                 toVal = ReverseValue.Value;
             }
 
             if (fromVal > toVal)
-                return ((1 - animationClock.CurrentProgress.Value) * (fromVal - toVal)) + toVal;
+                return ((1 - (animationClock.CurrentProgress ?? 0)) * (fromVal - toVal)) + toVal;
             else
-                return (animationClock.CurrentProgress.Value * (toVal - fromVal)) + fromVal;
+                return ((animationClock.CurrentProgress ?? 0) * (toVal - fromVal)) + fromVal;
         }
     }
 }

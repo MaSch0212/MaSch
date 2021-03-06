@@ -91,7 +91,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                 }
             }
 
-            var newList = (IList)e.NewValue;
+            var newList = (IList?)e.NewValue;
             if (newList != null)
             {
                 if (newList is INotifyCollectionChanged obs)
@@ -194,7 +194,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
         /// </summary>
         /// <param name="sender">The listbox or grid.</param>
         /// <param name="e">The added and removed items.</param>
-        private static void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private static void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             // Push the changes to the selected item.
             if (sender is ListBox listbox)
@@ -206,10 +206,17 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                 }
                 else
                 {
-                    foreach (var oldItem in e.OldItems)
-                        listbox.SelectedItems.Remove(oldItem);
-                    foreach (var newItem in e.NewItems)
-                        listbox.SelectedItems.Add(newItem);
+                    if (e.OldItems != null)
+                    {
+                        foreach (var oldItem in e.OldItems)
+                            listbox.SelectedItems.Remove(oldItem);
+                    }
+
+                    if (e.NewItems != null)
+                    {
+                        foreach (var newItem in e.NewItems)
+                            listbox.SelectedItems.Add(newItem);
+                    }
                 }
 
                 listbox.SelectionChanged += OnSelectorSelectionChanged;
@@ -224,10 +231,17 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                 }
                 else
                 {
-                    foreach (var oldItem in e.OldItems)
-                        grid.SelectedItems.Remove(oldItem);
-                    foreach (var newItem in e.NewItems)
-                        grid.SelectedItems.Add(newItem);
+                    if (e.OldItems != null)
+                    {
+                        foreach (var oldItem in e.OldItems)
+                            grid.SelectedItems.Remove(oldItem);
+                    }
+
+                    if (e.NewItems != null)
+                    {
+                        foreach (var newItem in e.NewItems)
+                            grid.SelectedItems.Add(newItem);
+                    }
                 }
 
                 grid.SelectionChanged += OnSelectorSelectionChanged;

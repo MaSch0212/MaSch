@@ -25,7 +25,7 @@ namespace MaSch.Native.Windows
         /// <param name="lpWindowName">Window caption.</param>
         /// <returns></returns>
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+        public static extern IntPtr FindWindow(string lpClassName, string? lpWindowName);
 
         [DllImport("User32.dll")]
         public static extern short GetAsyncKeyState(Keys vKey);

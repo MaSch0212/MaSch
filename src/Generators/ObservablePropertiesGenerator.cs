@@ -23,6 +23,9 @@ namespace MaSch.Generators
         /// <inheritdoc />
         public void Execute(GeneratorExecutionContext context)
         {
+            if (!context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.nullable", out var nullableProperty))
+                nullableProperty = "disable";
+
             var debugGeneratorSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.DebugGeneratorAttribute");
             var definitionAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.ObservablePropertyDefinitionAttribute");
             var observableObjectSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Observable.IObservableObject");
@@ -52,7 +55,9 @@ namespace MaSch.Generators
 
                 var builder = new SourceBuilder();
 
-                builder.AppendLine("using System.Diagnostics.CodeAnalysis;")
+                builder.AppendLine($"#nullable {nullableProperty}")
+                       .AppendLine()
+                       .AppendLine("using System.Diagnostics.CodeAnalysis;")
                        .AppendLine();
 
                 using (builder.AddBlock($"namespace {type.Key.ContainingNamespace}"))
@@ -137,7 +142,7 @@ namespace MaSch.Generators
                 AccessModifier.Protected => "protected",
                 AccessModifier.PrivateProtected => "private protected",
                 AccessModifier.Private => "private",
-                _ => "public"
+                _ => "public",
             };
         }
     }

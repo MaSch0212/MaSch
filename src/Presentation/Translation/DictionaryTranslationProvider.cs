@@ -12,7 +12,7 @@ namespace MaSch.Presentation.Translation
     /// <param name="language">The language.</param>
     /// <param name="oldDict">The dictionary that already has been loaded. If no dictionary has been loaded yet, this value is <c>null</c>.</param>
     /// <returns>The dictionary which contains translations for the specified language.</returns>
-    public delegate IReadOnlyDictionary<string, string> RetrieveDictionaryHandler(CultureInfo language, IReadOnlyDictionary<string, string> oldDict);
+    public delegate IReadOnlyDictionary<string, string> RetrieveDictionaryHandler(CultureInfo language, IReadOnlyDictionary<string, string>? oldDict);
 
     /// <summary>
     /// Represents a translation provider which is using a dictionary for translation.
@@ -20,12 +20,12 @@ namespace MaSch.Presentation.Translation
     /// <seealso cref="ITranslationProvider" />
     public class DictionaryTranslationProvider : ITranslationProvider
     {
-        private readonly IDictionary<CultureInfo, IReadOnlyDictionary<string, string>> _translationCache = new Dictionary<CultureInfo, IReadOnlyDictionary<string, string>>();
+        private readonly IDictionary<CultureInfo, IReadOnlyDictionary<string, string>?> _translationCache = new Dictionary<CultureInfo, IReadOnlyDictionary<string, string>?>();
 
         /// <summary>
         /// Gets the handler for dictionary loading.
         /// </summary>
-        protected RetrieveDictionaryHandler Handler { get; }
+        protected RetrieveDictionaryHandler? Handler { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DictionaryTranslationProvider"/> class.
@@ -39,7 +39,7 @@ namespace MaSch.Presentation.Translation
         /// Initializes a new instance of the <see cref="DictionaryTranslationProvider"/> class.
         /// </summary>
         /// <param name="handler">The handler for dictionary loading.</param>
-        public DictionaryTranslationProvider(RetrieveDictionaryHandler handler)
+        public DictionaryTranslationProvider(RetrieveDictionaryHandler? handler)
         {
             Handler = handler;
         }
@@ -85,7 +85,8 @@ namespace MaSch.Presentation.Translation
             do
             {
                 var dict = GetDictionaryForLanguageInternal(c);
-                result.AddIfNotExists(dict);
+                if (dict != null)
+                    result.AddIfNotExists(dict);
             }
             while (c.LCID != CultureInfo.InvariantCulture.LCID);
             return result;
@@ -105,7 +106,7 @@ namespace MaSch.Presentation.Translation
             do
             {
                 var dict = GetDictionaryForLanguageInternal(c);
-                if (dict.ContainsKey(resourceKey))
+                if (dict?.ContainsKey(resourceKey) == true)
                     return true;
             }
             while (c.LCID != CultureInfo.InvariantCulture.LCID);
@@ -129,32 +130,33 @@ namespace MaSch.Presentation.Translation
         /// <param name="language">The language.</param>
         /// <param name="oldDict">The translation dictionary previously loaded. If no dictionary was loaded yet, this parameter is <c>null</c>.</param>
         /// <returns>The translation dictionary for the specified language.</returns>
-        protected virtual IReadOnlyDictionary<string, string> GetDictionaryForLanguage(CultureInfo language, IReadOnlyDictionary<string, string> oldDict)
+        protected virtual IReadOnlyDictionary<string, string>? GetDictionaryForLanguage(CultureInfo language, IReadOnlyDictionary<string, string>? oldDict)
         {
             return Handler?.Invoke(language, oldDict);
         }
 
-        private string GetTranslationInternal(string resourceKey, CultureInfo language, IDictionary<CultureInfo, IReadOnlyDictionary<string, string>> cache)
+        private string GetTranslationInternal(string resourceKey, CultureInfo language, IDictionary<CultureInfo, IReadOnlyDictionary<string, string>>? cache)
         {
-            IReadOnlyDictionary<string, string> dict;
+            IReadOnlyDictionary<string, string>? dict;
             if (cache == null || !cache.ContainsKey(language))
             {
                 dict = GetDictionaryForLanguageInternal(language);
-                cache?.Add(language, dict);
+                if (dict != null)
+                    cache?.Add(language, dict);
             }
             else
             {
                 dict = cache[language];
             }
 
-            if (dict.ContainsKey(resourceKey))
+            if (dict?.ContainsKey(resourceKey) == true)
                 return dict[resourceKey];
             if (language.LCID != CultureInfo.InvariantCulture.LCID)
                 return GetTranslationInternal(resourceKey, language.Parent, cache);
             return $"### {resourceKey} ###";
         }
 
-        private IReadOnlyDictionary<string, string> GetDictionaryForLanguageInternal(CultureInfo language)
+        private IReadOnlyDictionary<string, string>? GetDictionaryForLanguageInternal(CultureInfo language)
         {
             var oldDict = _translationCache.TryGetValue(language);
             var newDict = GetDictionaryForLanguage(language, oldDict);

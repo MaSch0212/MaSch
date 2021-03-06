@@ -4,6 +4,8 @@ using MaSch.Presentation.Wpf.JsonConverters;
 using MaSch.Presentation.Wpf.Models;
 using Newtonsoft.Json;
 
+#nullable disable
+
 namespace MaSch.Presentation.Wpf.ThemeValues
 {
     /// <summary>

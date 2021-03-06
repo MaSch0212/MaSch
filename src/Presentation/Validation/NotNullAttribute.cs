@@ -17,7 +17,7 @@ namespace MaSch.Presentation.Validation
         public StringNullMode StringNullMode { get; set; } = StringNullMode.IsNull;
 
         /// <inheritdoc />
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             var isError = false;
             if (value == null)

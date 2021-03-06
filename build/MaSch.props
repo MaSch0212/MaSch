@@ -1,0 +1,70 @@
+<Project>
+  <Import Project="$(MSBuildThisFileDirectory)../src/Generators/MaSch.Generators.targets" />
+  
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)MaSch.ruleset</CodeAnalysisRuleSet>
+    <AssemblyOriginatorKeyFile Condition=" $(SignAssembly) == 'true' ">$(MSBuildThisFileDirectory)MaSch.snk</AssemblyOriginatorKeyFile>
+    <Nullable>enable</Nullable>
+    <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
+
+    <OutputPath>$(MSBuildThisFileDirectory)..\bin\$(Configuration)\</OutputPath>
+    <DocumentationFile Condition=" $(NoDocumentation) != 'true' ">$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+    <SupportedOSPlatform Condition=" $(UseWpf) == 'true' or $(UseWindowsForms) == 'true' ">windows</SupportedOSPlatform>
+
+    <Authors>Marc Schmidt</Authors>
+    <Copyright>Copyright © Marc Schmidt 2021</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/MaSch0212/MaSch</PackageProjectUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'netstandard2.0' ">
+    <NoWarn>$(NoWarn);8600;8601;8602;8603;8604;8777;8767</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.321">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition=" $(UseWpf) == 'true' and $(TargetFrameworkIdentifier) == '.NETFramework' ">
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" $(UseWindowsForms) == 'true' and $(TargetFrameworkIdentifier) == '.NETFramework' ">
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  
+  <!-- Source Link -->
+  <PropertyGroup Condition=" $(ConfigureSourceLink) == 'true' ">
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" $(ConfigureSourceLink) == 'true' ">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+  </ItemGroup>
+  
+  <!-- Test Projects -->
+  <PropertyGroup Condition=" $(IsTestProject) == 'true' ">
+    <IsPackable>false</IsPackable>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)MaSch.Tests.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  
+  <ItemGroup Condition=" $(IsTestProject) == 'true' ">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
+  </ItemGroup>
+</Project>

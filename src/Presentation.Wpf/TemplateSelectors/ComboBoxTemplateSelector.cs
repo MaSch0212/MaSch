@@ -18,22 +18,22 @@ namespace MaSch.Presentation.Wpf.TemplateSelectors
         /// <summary>
         /// Gets or sets the template to use for the selected item.
         /// </summary>
-        public DataTemplate SelectedItemTemplate { get; set; }
+        public DataTemplate? SelectedItemTemplate { get; set; }
 
         /// <summary>
         /// Gets or sets the template selector to use for the selected item.
         /// </summary>
-        public DataTemplateSelector SelectedItemTemplateSelector { get; set; }
+        public DataTemplateSelector? SelectedItemTemplateSelector { get; set; }
 
         /// <summary>
         /// Gets or sets the template to use for items in the drop down.
         /// </summary>
-        public DataTemplate DropdownItemsTemplate { get; set; }
+        public DataTemplate? DropdownItemsTemplate { get; set; }
 
         /// <summary>
         /// Gets or sets the template selector to use for items in the drop down.
         /// </summary>
-        public DataTemplateSelector DropdownItemsTemplateSelector { get; set; }
+        public DataTemplateSelector? DropdownItemsTemplateSelector { get; set; }
 
         /// <summary>
         /// When overridden in a derived class, returns a <see cref="T:System.Windows.DataTemplate" /> based on custom logic.
@@ -43,7 +43,7 @@ namespace MaSch.Presentation.Wpf.TemplateSelectors
         /// <returns>
         /// Returns a <see cref="T:System.Windows.DataTemplate" /> or <see langword="null" />. The default value is <see langword="null" />.
         /// </returns>
-        public override DataTemplate SelectTemplate(object item, DependencyObject container)
+        public override DataTemplate? SelectTemplate(object item, DependencyObject container)
         {
             var parent = container;
 
@@ -71,22 +71,22 @@ namespace MaSch.Presentation.Wpf.TemplateSelectors
         /// <summary>
         /// Gets or sets the template to use for the selected item.
         /// </summary>
-        public DataTemplate SelectedItemTemplate { get; set; }
+        public DataTemplate? SelectedItemTemplate { get; set; }
 
         /// <summary>
         /// Gets or sets the template selector to use for the selected item.
         /// </summary>
-        public DataTemplateSelector SelectedItemTemplateSelector { get; set; }
+        public DataTemplateSelector? SelectedItemTemplateSelector { get; set; }
 
         /// <summary>
         /// Gets or sets the template to use for items in the drop down.
         /// </summary>
-        public DataTemplate DropdownItemsTemplate { get; set; }
+        public DataTemplate? DropdownItemsTemplate { get; set; }
 
         /// <summary>
         /// Gets or sets the template selector to use for items in the drop down.
         /// </summary>
-        public DataTemplateSelector DropdownItemsTemplateSelector { get; set; }
+        public DataTemplateSelector? DropdownItemsTemplateSelector { get; set; }
 
         /// <summary>
         /// When implemented in a derived class, returns an object that is provided as the value of the target property for this markup extension.

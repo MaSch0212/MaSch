@@ -34,22 +34,22 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         #region Private Fields
 
         private readonly Duration _animationDuration = new Duration(TimeSpan.FromSeconds(0.25));
-        private TreeView _treeView;
-        private Button _menuButton;
-        private ColumnDefinition _buttonsColumn;
-        private ContentControl _content;
-        private Storyboard _currentStoryboard;
-        private ContentPresenter _infoAreaExpandedTop;
-        private ContentPresenter _infoAreaExpandedBottom;
-        private ContentPresenter _infoAreaCollapsedTop;
-        private ContentPresenter _infoAreaCollapsedBottom;
-        private ScrollViewer _treeViewScroll;
-        private UIElement _indicatorTop;
-        private UIElement _indicatorBottom;
+        private TreeView? _treeView;
+        private Button? _menuButton;
+        private ColumnDefinition? _buttonsColumn;
+        private ContentControl? _content;
+        private Storyboard? _currentStoryboard;
+        private ContentPresenter? _infoAreaExpandedTop;
+        private ContentPresenter? _infoAreaExpandedBottom;
+        private ContentPresenter? _infoAreaCollapsedTop;
+        private ContentPresenter? _infoAreaCollapsedBottom;
+        private ScrollViewer? _treeViewScroll;
+        private UIElement? _indicatorTop;
+        private UIElement? _indicatorBottom;
         private bool _ignoreNextSwitch;
 
-        private DispatcherTimer _scrollTopTimer;
-        private DispatcherTimer _scrollBottomTimer;
+        private DispatcherTimer? _scrollTopTimer;
+        private DispatcherTimer? _scrollBottomTimer;
 
         #endregion
 
@@ -273,10 +273,21 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <summary>
         /// Gets or sets the selected page.
         /// </summary>
-        public SplitViewItemBase SelectedItem
+        public SplitViewItemBase? SelectedItem
         {
-            get => (SplitViewItemBase)_treeView?.SelectedItem;
-            set => value.IsSelected = true;
+            get => (SplitViewItemBase?)_treeView?.SelectedItem;
+            set
+            {
+                if (value == null)
+                {
+                    if (_treeView?.SelectedItem is SplitViewItemBase item)
+                        item.IsSelected = false;
+                }
+                else
+                {
+                    value.IsSelected = true;
+                }
+            }
         }
 
         /// <summary>
@@ -410,22 +421,22 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             }
         }
 
-        private void ScrollTopTimer_Tick(object sender, EventArgs e)
+        private void ScrollTopTimer_Tick(object? sender, EventArgs e)
         {
-            _treeViewScroll.ScrollToVerticalOffset(_treeViewScroll.VerticalOffset - 10);
+            _treeViewScroll!.ScrollToVerticalOffset(_treeViewScroll.VerticalOffset - 10);
         }
 
-        private void ScrollBottomTimer_Tick(object sender, EventArgs e)
+        private void ScrollBottomTimer_Tick(object? sender, EventArgs e)
         {
-            _treeViewScroll.ScrollToVerticalOffset(_treeViewScroll.VerticalOffset + 10);
+            _treeViewScroll!.ScrollToVerticalOffset(_treeViewScroll.VerticalOffset + 10);
         }
 
-        private void TreeViewScroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        private void TreeViewScroll_ScrollChanged(object sender, ScrollChangedEventArgs? e)
         {
             if (sender is ScrollViewer sv)
             {
-                _indicatorTop.Visibility = Math.Abs(sv.VerticalOffset) < 0.00001 ? Visibility.Collapsed : Visibility.Visible;
-                _indicatorBottom.Visibility = Math.Abs(sv.VerticalOffset - sv.ScrollableHeight) < 0.00001 ? Visibility.Collapsed : Visibility.Visible;
+                _indicatorTop!.Visibility = Math.Abs(sv.VerticalOffset) < 0.00001 ? Visibility.Collapsed : Visibility.Visible;
+                _indicatorBottom!.Visibility = Math.Abs(sv.VerticalOffset - sv.ScrollableHeight) < 0.00001 ? Visibility.Collapsed : Visibility.Visible;
             }
         }
 
@@ -433,7 +444,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
 
         #region Private Methods
 
-        private void ParentWindow_StateChanged(object sender, EventArgs e)
+        private void ParentWindow_StateChanged(object? sender, EventArgs e)
         {
             if (sender is Window wdw)
             {
@@ -478,17 +489,17 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             }
         }
 
-        private void CancelTreeViewSelection(SplitViewItem oldItem, SplitViewItem newItem)
+        private void CancelTreeViewSelection(SplitViewItem? oldItem, SplitViewItem? newItem)
         {
             _ignoreNextSwitch = true;
             if (oldItem != null)
                 SetSelected(oldItem);
             else
                 SetSelected(newItem, false);
-            _content.Content = oldItem?.Content;
+            _content!.Content = oldItem?.Content;
         }
 
-        private async Task<bool> SwitchContentInternal(SplitViewItem oldItem, SplitViewItem newItem)
+        private async Task<bool> SwitchContentInternal(SplitViewItem? oldItem, SplitViewItem? newItem)
         {
             IsLoadingPage = true;
             try
@@ -502,7 +513,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                     return false;
                 }
 
-                _content.Content = newItem?.Content;
+                _content!.Content = newItem?.Content;
                 if (svcNew != null && !await svcNew.Open())
                 {
                     CancelTreeViewSelection(oldItem, newItem);
@@ -542,15 +553,15 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                 _ignoreNextSwitch = false;
         }
 
-        private void SetSelected(SplitViewItemBase item, bool value = true)
+        private void SetSelected(SplitViewItemBase? item, bool value = true)
         {
-            void EventHandler(object s, EventArgs ea)
+            void EventHandler(object? s, EventArgs ea)
             {
                 _treeView.LayoutUpdated -= EventHandler;
-                item.IsSelected = value;
+                item!.IsSelected = value;
             }
 
-            _treeView.LayoutUpdated += EventHandler;
+            _treeView!.LayoutUpdated += EventHandler;
         }
 
         private void MenuButton_Click(object sender, RoutedEventArgs e)
@@ -563,11 +574,11 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             var groupItems = GetGroupItems();
             if (!UseAnimations)
             {
-                _buttonsColumn.Width = new GridLength(36.5);
-                _infoAreaExpandedTop.Opacity = 0;
-                _infoAreaExpandedBottom.Opacity = 0;
-                _infoAreaCollapsedTop.Opacity = 1;
-                _infoAreaCollapsedBottom.Opacity = 1;
+                _buttonsColumn!.Width = new GridLength(36.5);
+                _infoAreaExpandedTop!.Opacity = 0;
+                _infoAreaExpandedBottom!.Opacity = 0;
+                _infoAreaCollapsedTop!.Opacity = 1;
+                _infoAreaCollapsedBottom!.Opacity = 1;
                 foreach (var item in groupItems)
                 {
                     if (double.IsNaN(item.Height))
@@ -588,7 +599,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
 
             var columnAnimation = new GridLengthAnimation
             {
-                From = _buttonsColumn.Width.IsAuto ? new GridLength(_treeView.ActualWidth) : _buttonsColumn.Width,
+                From = _buttonsColumn!.Width.IsAuto ? new GridLength(_treeView!.ActualWidth) : _buttonsColumn.Width,
                 To = new GridLength(36.5),
                 Duration = _animationDuration,
                 EasingFunction = new CubicEase(),
@@ -601,10 +612,10 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             var iAEB = new DoubleAnimation(0, _animationDuration) { EasingFunction = new CubicEase() };
             var iACT = new DoubleAnimation(1, _animationDuration) { EasingFunction = new CubicEase() };
             var iACB = new DoubleAnimation(1, _animationDuration) { EasingFunction = new CubicEase() };
-            iAET.SetTarget(_infoAreaExpandedTop, OpacityProperty);
-            iAEB.SetTarget(_infoAreaExpandedBottom, OpacityProperty);
-            iACT.SetTarget(_infoAreaCollapsedTop, OpacityProperty);
-            iACB.SetTarget(_infoAreaCollapsedBottom, OpacityProperty);
+            iAET.SetTarget(_infoAreaExpandedTop!, OpacityProperty);
+            iAEB.SetTarget(_infoAreaExpandedBottom!, OpacityProperty);
+            iACT.SetTarget(_infoAreaCollapsedTop!, OpacityProperty);
+            iACB.SetTarget(_infoAreaCollapsedBottom!, OpacityProperty);
             _currentStoryboard.Children.Add(iAET, iAEB, iACT, iACB);
 
             foreach (var item in groupItems)
@@ -625,7 +636,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             _currentStoryboard.Begin();
         }
 
-        private void CurrentStoryboard_Completed(object sender, EventArgs e)
+        private void CurrentStoryboard_Completed(object? sender, EventArgs e)
         {
             _currentStoryboard = null;
         }
@@ -635,11 +646,11 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             var groupItems = GetGroupItems();
             if (!UseAnimations)
             {
-                _buttonsColumn.Width = GridLength.Auto;
-                _infoAreaExpandedTop.Opacity = 1;
-                _infoAreaExpandedBottom.Opacity = 1;
-                _infoAreaCollapsedTop.Opacity = 0;
-                _infoAreaCollapsedBottom.Opacity = 0;
+                _buttonsColumn!.Width = GridLength.Auto;
+                _infoAreaExpandedTop!.Opacity = 1;
+                _infoAreaExpandedBottom!.Opacity = 1;
+                _infoAreaCollapsedTop!.Opacity = 0;
+                _infoAreaCollapsedBottom!.Opacity = 0;
                 foreach (var item in groupItems)
                 {
                     item.Height = double.NaN;
@@ -654,8 +665,8 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
 
             var columnAnimation = new GridLengthAnimation
             {
-                From = _buttonsColumn.Width.IsAuto ? new GridLength(_treeView.ActualWidth) : _buttonsColumn.Width,
-                To = new GridLength(_treeView.ActualWidth),
+                From = _buttonsColumn!.Width.IsAuto ? new GridLength(_treeView!.ActualWidth) : _buttonsColumn.Width,
+                To = new GridLength(_treeView!.ActualWidth),
                 Duration = _animationDuration,
                 EasingFunction = new CubicEase(),
             };
@@ -667,10 +678,10 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             var iAEB = new DoubleAnimation(1, _animationDuration) { EasingFunction = new CubicEase() };
             var iACT = new DoubleAnimation(0, _animationDuration) { EasingFunction = new CubicEase() };
             var iACB = new DoubleAnimation(0, _animationDuration) { EasingFunction = new CubicEase() };
-            iAET.SetTarget(_infoAreaExpandedTop, OpacityProperty);
-            iAEB.SetTarget(_infoAreaExpandedBottom, OpacityProperty);
-            iACT.SetTarget(_infoAreaCollapsedTop, OpacityProperty);
-            iACB.SetTarget(_infoAreaCollapsedBottom, OpacityProperty);
+            iAET.SetTarget(_infoAreaExpandedTop!, OpacityProperty);
+            iAEB.SetTarget(_infoAreaExpandedBottom!, OpacityProperty);
+            iACT.SetTarget(_infoAreaCollapsedTop!, OpacityProperty);
+            iACB.SetTarget(_infoAreaCollapsedBottom!, OpacityProperty);
             _currentStoryboard.Children.Add(iAET, iAEB, iACT, iACB);
 
             foreach (var item in groupItems)
@@ -708,7 +719,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             if (ItemSource != null)
             {
                 foreach (var tvi in ItemSource.OfType<SplitViewItemGroup>()
-                    .Select(x => _treeView.ItemContainerGenerator.ContainerFromItem(x))
+                    .Select(x => _treeView!.ItemContainerGenerator.ContainerFromItem(x))
                     .OfType<TreeViewItem>())
                 {
                     GetGroupItemsRec(result, tvi);
@@ -742,7 +753,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         {
             _ignoreNextSwitch = true;
             SetSelected(item);
-            return await SwitchContentInternal(_treeView.SelectedItem as SplitViewItem, item);
+            return await SwitchContentInternal(_treeView!.SelectedItem as SplitViewItem, item);
         }
 
         /// <summary>
@@ -800,12 +811,12 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="pageGroups">The page groups.</param>
         /// <param name="pages">The pages.</param>
         /// <param name="translationManager">The translation manager to use to translate the items.</param>
-        public void SetItems(IEnumerable<IPageGroup> pageGroups, IEnumerable<IPage> pages, ITranslationManager translationManager)
+        public void SetItems(IEnumerable<IPageGroup> pageGroups, IEnumerable<IPage> pages, ITranslationManager? translationManager)
         {
             var items = new List<SplitViewItemBase>();
 
             var pageArr = pages.ToArray();
-            var groups = from g in pageGroups.OrderBy(x => x.PageGroupPriority).Append(null)
+            var groups = from g in ((IOrderedEnumerable<IPageGroup?>)pageGroups.OrderBy(x => x.PageGroupPriority)).Append(null)
                          select new { Group = g, Pages = pageArr.Where(x => x.PageGroupId == g?.PageGroupId).OrderBy(x => x.PagePriority) };
 
             bool selectionSet = false;

@@ -23,7 +23,7 @@ namespace MaSch.Presentation.Wpf.Converter
             var b = value as bool?;
             if (!b.HasValue)
                 b = true;
-            if (parameter != null && parameter.ToString().Equals("negate", StringComparison.InvariantCultureIgnoreCase))
+            if (parameter != null && string.Equals(parameter.ToString(), "negate", StringComparison.InvariantCultureIgnoreCase))
                 b = !b.Value;
             return b.Value ? Visibility.Visible : (UseCollapse ? Visibility.Collapsed : Visibility.Hidden);
         }
@@ -31,7 +31,7 @@ namespace MaSch.Presentation.Wpf.Converter
         /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            bool n = parameter != null && parameter.ToString().Equals("negate", StringComparison.InvariantCultureIgnoreCase);
+            bool n = parameter != null && string.Equals(parameter.ToString(), "negate", StringComparison.InvariantCultureIgnoreCase);
             return value as Visibility? == Visibility.Visible ? !n : n;
         }
     }

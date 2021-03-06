@@ -37,7 +37,7 @@ namespace MaSch.Presentation.Wpf.Converter
             if (value == null)
                 return otherValue == null;
             return (CompareExactObject && value.Equals(otherValue)) ||
-                   (CompareStringRepresentation && value.ToString().Equals(otherValue?.ToString()));
+                   (CompareStringRepresentation && string.Equals(value.ToString(), otherValue?.ToString()));
         }
 
         /// <inheritdoc />

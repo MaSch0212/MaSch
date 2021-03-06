@@ -20,19 +20,19 @@ namespace MaSch.Presentation.Wpf
         /// <summary>
         /// Gets or sets a transformation that is applied when rendering this <see cref="IIcon"/>.
         /// </summary>
-        Transform Transform { get; set; }
+        Transform? Transform { get; set; }
 
         #region SymbolType Character
 
         /// <summary>
         /// Gets or sets the character that represents the <see cref="IIcon"/> in the <see cref="Font"/>.
         /// </summary>
-        string Character { get; set; }
+        string? Character { get; set; }
 
         /// <summary>
         /// Gets or sets the font that contains the <see cref="Character"/> that represents the <see cref="IIcon"/>.
         /// </summary>
-        FontFamily Font { get; set; }
+        FontFamily? Font { get; set; }
 
         /// <summary>
         /// Gets or sets the size of the font to use when rendering this <see cref="IIcon"/>.
@@ -46,7 +46,7 @@ namespace MaSch.Presentation.Wpf
         /// <summary>
         /// Gets or sets the geometry that represents this <see cref="IIcon"/>.
         /// </summary>
-        Geometry Geometry { get; set; }
+        Geometry? Geometry { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the <see cref="Geometry"/> should be filled when rendering this <see cref="IIcon"/>.

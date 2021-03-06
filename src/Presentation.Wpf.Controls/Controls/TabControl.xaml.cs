@@ -57,8 +57,8 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(TabControl),
                 new PropertyMetadata(true));
 
-        private ContentPresenter _previewContent;
-        private ContentPresenter _currentContent;
+        private ContentPresenter? _previewContent;
+        private ContentPresenter? _currentContent;
         private int _previewIndex;
         private bool _isPreview;
         private bool _isNewPreview;
@@ -136,7 +136,7 @@ namespace MaSch.Presentation.Wpf.Controls
             InitializeContent();
         }
 
-        private void AddPreviewEventToTabItem(TabItem item, FrameworkElement eventTo = null)
+        private void AddPreviewEventToTabItem(TabItem item, FrameworkElement? eventTo = null)
         {
             if (eventTo == null)
                 eventTo = item;
@@ -252,7 +252,7 @@ namespace MaSch.Presentation.Wpf.Controls
             _currentContent = GetTemplateChild("PART_SelectedContentHost") as ContentPresenter;
             if (GetTemplateChild("MaSch_LastContent") is ContentPresenter lastContent && _currentContent != null)
             {
-                TabItem lastItem = null;
+                TabItem? lastItem = null;
                 var lastIndex = -1;
                 SelectionChanged += (s, e) =>
                 {
@@ -267,7 +267,7 @@ namespace MaSch.Presentation.Wpf.Controls
                         lastContent.Content = lastItem.Content;
                         lastContent.RenderTransform = null;
                         _currentContent.RenderTransform = null;
-                        _previewContent.RenderTransform = null;
+                        _previewContent!.RenderTransform = null;
 
                         if (_isPreview && _previewIndex == lastItem.TabIndex)
                         {
@@ -333,7 +333,7 @@ namespace MaSch.Presentation.Wpf.Controls
                 tg.Children.Add(scTrans);
                 tg.Children.Add(tlTrans);
                 underline.RenderTransform = tg;
-                TabItem lastItem = null;
+                TabItem? lastItem = null;
 
                 Loaded += (s, e) =>
                 {

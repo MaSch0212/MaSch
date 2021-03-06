@@ -41,7 +41,7 @@ namespace MaSch.Presentation.Translation.Validation
         /// <value>
         /// The type that contains the method with the name set in <see cref="MethodName"/>.
         /// </value>
-        public Type ContainingType { get; set; }
+        public Type? ContainingType { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DelegateValidationAttribute"/> class.
@@ -67,7 +67,7 @@ namespace MaSch.Presentation.Translation.Validation
         /// <exception cref="NotSupportedException">
         /// The Method <see cref="MethodName"/> has to have a return type of <see cref="ValidationResult"/> or a derived type.
         /// </exception>
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             var type = validationContext.ObjectType;
             var bindingFlags = BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
@@ -92,7 +92,7 @@ namespace MaSch.Presentation.Translation.Validation
                     ValidationResult;
             if (ReferenceEquals(result, FailedResult))
                 result = new ValidationResult(GetTranslatedErrorMessage());
-            else if (MethodReturnsErrorMessageResourceKey && result != null && result != ValidationResult.Success)
+            else if (MethodReturnsErrorMessageResourceKey && result != null && result != ValidationResult.Success && result.ErrorMessage != null)
                 result.ErrorMessage = GetTranslatedErrorMessage(result.ErrorMessage);
             return result;
         }

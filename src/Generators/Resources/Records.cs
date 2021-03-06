@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 
 #if NETSTANDARD || NETCOREAPP1_0 || NETCOREAPP1_1 || NETCOREAPP2_0 || NETCOREAPP2_1 || NETCOREAPP2_2 || NETCOREAPP3_0 || NETCOREAPP3_1 || NETFRAMEWORK
+#nullable enable
 
 namespace System.Runtime.CompilerServices
 {

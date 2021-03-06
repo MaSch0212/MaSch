@@ -25,7 +25,7 @@ namespace MaSch.Console.Cli.Internal
             return (IExecutor)Activator.CreateInstance(typeof(ExternalExecutor<>).MakeGenericType(type), executorType) !;
         }
 
-        public static (object executor, T tObj) PreExecute<T>(Type executorType, object obj)
+        public static (object Executor, T TObj) PreExecute<T>(Type executorType, object obj)
         {
             if (obj is not T tObj)
                 throw new ArgumentException($"The object needs to be an instance of class {typeof(T).Name}. (Actual: {obj?.GetType().Name ?? "(null)"})", nameof(obj));

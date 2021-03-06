@@ -35,7 +35,7 @@ namespace MaSch.Presentation.Wpf.Markup
         /// <returns>
         /// The object value to set on the property where the markup extension provided value is evaluated.
         /// </returns>
-        public override object ProvideValue(IServiceProvider serviceProvider)
+        public override object? ProvideValue(IServiceProvider serviceProvider)
         {
             if (base.ProvideValue(serviceProvider) is BindingBase binding)
                 return binding.ProvideValue(serviceProvider);

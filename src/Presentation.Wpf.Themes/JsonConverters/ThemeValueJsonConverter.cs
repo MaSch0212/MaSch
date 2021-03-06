@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using MaSch.Presentation.Wpf.ThemeValues;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -38,11 +39,17 @@ namespace MaSch.Presentation.Wpf.JsonConverters
         }
 
         /// <inheritdoc/>
-        public override void WriteJson(JsonWriter writer, IThemeValue value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, IThemeValue? value, JsonSerializer serializer)
         {
             _canWrite = false;
             try
             {
+                if (value == null)
+                {
+                    writer.WriteNull();
+                    return;
+                }
+
                 var jObject = JObject.FromObject(value, serializer);
                 var type = ThemeValueRegistry.GetValueTypeEnum(value.GetType());
                 jObject.AddFirst(new JProperty("Type", type));
@@ -55,18 +62,18 @@ namespace MaSch.Presentation.Wpf.JsonConverters
         }
 
         /// <inheritdoc/>
-        public override IThemeValue ReadJson(JsonReader reader, Type objectType, IThemeValue existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override IThemeValue ReadJson(JsonReader reader, Type objectType, IThemeValue? existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             _canRead = false;
             try
             {
                 var jToken = JToken.ReadFrom(reader);
                 if (jToken.Type == JTokenType.Null)
-                    return null;
+                    return null!;
 
                 var type = jToken.Value<string>("Type");
                 var runtimeType = ThemeValueRegistry.GetRuntimeValueType(type);
-                return (IThemeValue)jToken.ToObject(runtimeType, serializer);
+                return (IThemeValue)jToken.ToObject(runtimeType, serializer)!;
             }
             finally
             {

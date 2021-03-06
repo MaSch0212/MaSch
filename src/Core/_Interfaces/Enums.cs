@@ -1,4 +1,6 @@
-﻿namespace MaSch.Core
+﻿#pragma warning disable SA1649 // File name should match first type name
+
+namespace MaSch.Core
 {
     /// <summary>
     /// Specifies how a string should be checked for emptiness.

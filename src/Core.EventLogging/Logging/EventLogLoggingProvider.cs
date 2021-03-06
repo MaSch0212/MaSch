@@ -32,17 +32,17 @@ namespace MaSch.Core.Logging
         }
 
         /// <inheritdoc />
-        public void Log(LogType logType, string message) => Log(logType, message, null);
+        public void Log(LogType logType, string? message) => Log(logType, message, null);
 
         /// <inheritdoc />
-        public void Log(LogType logType, string message, Exception exception)
+        public void Log(LogType logType, string? message, Exception? exception)
         {
             var type = GetEntryType(logType);
             var msg = GetErrorText(message, exception, type != EventLogEntryType.Information);
             _eventLog.WriteEntry(msg, type);
         }
 
-        private static string GetErrorText(string message, Exception exception, bool writeNoExceptionText)
+        private static string GetErrorText(string? message, Exception? exception, bool writeNoExceptionText)
         {
             if (exception == null)
             {
@@ -54,7 +54,7 @@ namespace MaSch.Core.Logging
                 message += "\n\nRaised Exception:\n" + exception;
             }
 
-            return message;
+            return message ?? string.Empty;
         }
 
         private static EventLog CreateEventLog(string sourceName, string logName)

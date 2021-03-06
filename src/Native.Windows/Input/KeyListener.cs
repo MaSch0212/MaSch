@@ -6,11 +6,11 @@ namespace MaSch.Native.Windows.Input
 {
     public class KeyListener
     {
-        public event Action<Keys> KeyPressed;
+        public event Action<Keys>? KeyPressed;
 
         private readonly bool[] _keyStates = new bool[255];
         private readonly int _interval;
-        private Task _listener;
+        private Task? _listener;
         private bool _stopRequested;
 
         public KeyListener(int checkInterval = 200)

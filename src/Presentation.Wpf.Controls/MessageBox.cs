@@ -21,7 +21,7 @@ namespace MaSch.Presentation.Wpf
         /// <returns>The result of the message box.</returns>
         public static MessageBoxResult Show(
             string messageBoxText,
-            string caption = null,
+            string? caption = null,
             MessageBoxButton button = MessageBoxButton.OK,
             MessageBoxImage icon = MessageBoxImage.None,
             MessageBoxResult defaultResult = MessageBoxResult.None,
@@ -42,7 +42,7 @@ namespace MaSch.Presentation.Wpf
         /// <returns>The result of the alert.</returns>
         internal static AlertResult ShowAlert(
             string messageBoxText,
-            string caption = null,
+            string? caption = null,
             AlertButton button = AlertButton.Ok,
             AlertImage icon = AlertImage.None,
             AlertResult defaultResult = AlertResult.None,
@@ -70,9 +70,9 @@ namespace MaSch.Presentation.Wpf
         /// <param name="options">The options.</param>
         /// <returns>The result of the message box.</returns>
         public static MessageBoxResult Show(
-            Window owner,
+            Window? owner,
             string messageBoxText,
-            string caption = null,
+            string? caption = null,
             MessageBoxButton button = MessageBoxButton.OK,
             MessageBoxImage icon = MessageBoxImage.None,
             MessageBoxResult defaultResult = MessageBoxResult.None,

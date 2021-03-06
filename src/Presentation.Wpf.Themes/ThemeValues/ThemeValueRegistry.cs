@@ -14,7 +14,7 @@ namespace MaSch.Presentation.Wpf.ThemeValues
     {
         static ThemeValueRegistry()
         {
-            var defaultTypeMapping = new (string typeName, Type type, Type themeValueType)[]
+            var defaultTypeMapping = new (string TypeName, Type Type, Type ThemeValueType)[]
             {
                 ("Color", typeof(Color), typeof(ColorThemeValue)),
                 ("Boolean", typeof(bool), typeof(BooleanThemeValue)),
@@ -29,14 +29,14 @@ namespace MaSch.Presentation.Wpf.ThemeValues
                 ("FontWeight", typeof(FontWeight), typeof(FontWeightThemeValue)),
             };
 
-            TypeEnumToTypeMapping = defaultTypeMapping.ToDictionary(x => x.typeName, x => x.themeValueType);
-            TypeTypeToEnumMapping = defaultTypeMapping.ToDictionary(x => x.themeValueType, x => x.typeName);
+            TypeEnumToTypeMapping = defaultTypeMapping.ToDictionary(x => x.TypeName, x => x.ThemeValueType);
+            TypeTypeToEnumMapping = defaultTypeMapping.ToDictionary(x => x.ThemeValueType, x => x.TypeName);
             TypeThemeValueMapping = defaultTypeMapping.ToList();
         }
 
         private static readonly IDictionary<string, Type> TypeEnumToTypeMapping;
         private static readonly IDictionary<Type, string> TypeTypeToEnumMapping;
-        private static readonly IList<(string typeName, Type type, Type themeValueType)> TypeThemeValueMapping;
+        private static readonly IList<(string TypeName, Type Type, Type ThemeValueType)> TypeThemeValueMapping;
 
         /// <summary>
         /// Gets the tuntime type of the value type.
@@ -59,8 +59,8 @@ namespace MaSch.Presentation.Wpf.ThemeValues
         /// <returns>The type of the <see cref="IThemeValue"/> class.</returns>
         /// <exception cref="InvalidOperationException">The type \"{actualValueType.FullName}\" is currently not supported for Theming.</exception>
         public static Type GetThemeValueType(Type actualValueType)
-            => TypeThemeValueMapping.TryFirst(x => x.type.IsAssignableFrom(actualValueType), out var map)
-                ? map.themeValueType
+            => TypeThemeValueMapping.TryFirst(x => x.Type.IsAssignableFrom(actualValueType), out var map)
+                ? map.ThemeValueType
                 : throw new InvalidOperationException($"The type \"{actualValueType.FullName}\" is currently not supported for Theming.");
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace MaSch.Presentation.Wpf.ThemeValues
                 throw new InvalidOperationException($"A type with name \"{typeName}\" is already registered.");
             if (TypeTypeToEnumMapping.ContainsKey(themeValueType))
                 throw new InvalidOperationException($"The value type class \"{themeValueType}\" is already registered.");
-            if (TypeThemeValueMapping.Any(x => x.type.IsAssignableFrom(type)))
+            if (TypeThemeValueMapping.Any(x => x.Type.IsAssignableFrom(type)))
                 throw new InvalidOperationException($"A type mapping for type \"{type.FullName}\" already exists.");
 
             TypeEnumToTypeMapping.Add(typeName, themeValueType);

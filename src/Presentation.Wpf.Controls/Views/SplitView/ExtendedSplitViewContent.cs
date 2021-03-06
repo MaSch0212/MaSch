@@ -175,10 +175,10 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                 typeof(ExtendedSplitViewContent),
                 new PropertyMetadata(string.Empty));
 
-        private Storyboard _showMessageStoryboard;
-        private IconPresenter _messageIcon;
-        private TextBlock _messageText;
-        private FrameworkElement _rootElement;
+        private Storyboard? _showMessageStoryboard;
+        private IconPresenter? _messageIcon;
+        private TextBlock? _messageText;
+        private FrameworkElement? _rootElement;
 
         /// <summary>
         /// Gets or sets the success message icon.
@@ -362,7 +362,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                 nvm.NewMessage += ViewModel_NewMessage;
         }
 
-        private void ViewModel_NewMessage(object sender, Tuple<string, MessageType> e)
+        private void ViewModel_NewMessage(object? sender, Tuple<string, MessageType> e)
         {
             NotifyNewMessage(e.Item1, e.Item2);
         }
@@ -378,28 +378,28 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             switch (type)
             {
                 case MessageType.Success:
-                    _messageIcon.Icon = SuccessMessageIcon;
+                    _messageIcon!.Icon = SuccessMessageIcon;
                     brush = SuccessMessageBrush;
                     break;
                 case MessageType.Failure:
-                    _messageIcon.Icon = FailureMessageIcon;
+                    _messageIcon!.Icon = FailureMessageIcon;
                     brush = FailureMessageBrush;
                     break;
                 case MessageType.Warning:
-                    _messageIcon.Icon = WarningMessageIcon;
+                    _messageIcon!.Icon = WarningMessageIcon;
                     brush = WarningMessageBrush;
                     break;
                 case MessageType.Information:
-                    _messageIcon.Icon = InformationMessageIcon;
+                    _messageIcon!.Icon = InformationMessageIcon;
                     brush = InformationMessageBrush;
                     break;
             }
 
-            _messageIcon.Foreground = brush;
-            _messageText.Foreground = brush;
+            _messageIcon!.Foreground = brush;
+            _messageText!.Foreground = brush;
             _messageText.Text = message;
 
-            _showMessageStoryboard.Begin();
+            _showMessageStoryboard!.Begin();
         }
     }
 }

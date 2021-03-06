@@ -15,17 +15,17 @@ namespace MaSch.Presentation.Wpf.ViewModels.MessageBox
         /// <summary>
         /// Gets or sets the brush that is used for filling the icon.
         /// </summary>
-        Brush FillBrush { get; set; }
+        Brush? FillBrush { get; set; }
 
         /// <summary>
         /// Gets or sets the brush that is used for the stroke of the icon.
         /// </summary>
-        Brush StrokeBrush { get; set; }
+        Brush? StrokeBrush { get; set; }
 
         /// <summary>
         /// Gets or sets the icon.
         /// </summary>
-        Icon Icon { get; set; }
+        Icon? Icon { get; set; }
     }
 
     /// <summary>

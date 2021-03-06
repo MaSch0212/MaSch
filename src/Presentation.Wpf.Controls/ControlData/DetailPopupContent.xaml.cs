@@ -47,7 +47,7 @@ namespace MaSch.Presentation.Wpf.ControlData
                 typeof(DetailPopupContent),
                 new PropertyMetadata(null));
 
-        private static readonly Dictionary<AnchorStyle, Geometry> ArrowDataDict = new Dictionary<AnchorStyle, Geometry>
+        private static readonly Dictionary<AnchorStyle, Geometry?> ArrowDataDict = new Dictionary<AnchorStyle, Geometry?>
         {
             { AnchorStyle.None, null },
             { AnchorStyle.Left, Geometry.Parse("M 1,0 0,1 1,2") },
@@ -56,8 +56,8 @@ namespace MaSch.Presentation.Wpf.ControlData
             { AnchorStyle.Bottom, Geometry.Parse("M 0,0 1,1 2,0") },
         };
 
-        private Path _arrow;
-        private FrameworkElement _border;
+        private Path? _arrow;
+        private FrameworkElement? _border;
 
         /// <summary>
         /// Gets or sets the arrow position.
@@ -114,32 +114,32 @@ namespace MaSch.Presentation.Wpf.ControlData
                     _arrow.SetSize(shortSize, longSize);
                     _arrow.SetAlignment(HorizontalAlignment.Left, VerticalAlignment.Center);
                     _arrow.StrokeThickness = BorderThickness.Left;
-                    _border.Margin = new Thickness(ArrowSize, 0, 0, 0);
+                    _border!.Margin = new Thickness(ArrowSize, 0, 0, 0);
                     _border.SetMinSize(0, longSize * 1.25);
                     break;
                 case AnchorStyle.Top:
                     _arrow.SetSize(longSize, shortSize);
                     _arrow.SetAlignment(HorizontalAlignment.Center, VerticalAlignment.Top);
                     _arrow.StrokeThickness = BorderThickness.Top;
-                    _border.Margin = new Thickness(0, ArrowSize, 0, 0);
+                    _border!.Margin = new Thickness(0, ArrowSize, 0, 0);
                     _border.SetMinSize(longSize * 1.25, 0);
                     break;
                 case AnchorStyle.Right:
                     _arrow.SetSize(shortSize, longSize);
                     _arrow.SetAlignment(HorizontalAlignment.Right, VerticalAlignment.Center);
                     _arrow.StrokeThickness = BorderThickness.Right;
-                    _border.Margin = new Thickness(0, 0, ArrowSize, 0);
+                    _border!.Margin = new Thickness(0, 0, ArrowSize, 0);
                     _border.SetMinSize(0, longSize * 1.25);
                     break;
                 case AnchorStyle.Bottom:
                     _arrow.SetSize(longSize, shortSize);
                     _arrow.SetAlignment(HorizontalAlignment.Center, VerticalAlignment.Bottom);
                     _arrow.StrokeThickness = BorderThickness.Bottom;
-                    _border.Margin = new Thickness(0, 0, 0, ArrowSize);
+                    _border!.Margin = new Thickness(0, 0, 0, ArrowSize);
                     _border.SetMinSize(longSize * 1.25, 0);
                     break;
                 case AnchorStyle.None:
-                    _border.Margin = new Thickness(0);
+                    _border!.Margin = new Thickness(0);
                     _border.SetMinSize(0, 0);
                     break;
                 default:

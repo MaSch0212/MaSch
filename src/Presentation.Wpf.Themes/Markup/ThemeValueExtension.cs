@@ -15,17 +15,17 @@ namespace MaSch.Presentation.Wpf.Markup
     /// <seealso cref="System.Windows.Data.Binding" />
     public class ThemeValueExtension : Binding
     {
-        private string _customKey;
-        private string _propertyName;
+        private string? _customKey;
+        private string? _propertyName;
         private int _ancestorLevel = 0;
 
         /// <summary>
         /// Gets or sets the key.
         /// </summary>
         [ConstructorArgument("key")]
-        public ThemeKey Key
+        public ThemeKey? Key
         {
-            get => (ThemeKey)Enum.Parse(typeof(ThemeKey), CustomKey);
+            get => CustomKey == null ? null : Enum.Parse(typeof(ThemeKey), CustomKey) as ThemeKey?;
             set => CustomKey = value.ToString();
         }
 
@@ -33,7 +33,7 @@ namespace MaSch.Presentation.Wpf.Markup
         /// Gets or sets the custom key.
         /// </summary>
         [ConstructorArgument("customKey")]
-        public string CustomKey
+        public string? CustomKey
         {
             get => _customKey;
             set
@@ -46,7 +46,7 @@ namespace MaSch.Presentation.Wpf.Markup
         /// <summary>
         /// Gets or sets the name of the property to reference from the theme value.
         /// </summary>
-        public string PropertyName
+        public string? PropertyName
         {
             get => _propertyName;
             set

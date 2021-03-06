@@ -16,7 +16,7 @@ namespace MaSch.Presentation.Translation.Validation
         /// <value>
         /// The error message returned when the string is to long.
         /// </value>
-        public string ErrorMsgToLarge { get; }
+        public string? ErrorMsgToLarge { get; }
 
         /// <summary>
         /// Gets the error message to return when the string is to short.
@@ -24,7 +24,7 @@ namespace MaSch.Presentation.Translation.Validation
         /// <value>
         /// The error message returned when the string is to short.
         /// </value>
-        public string ErrorMsgToSmall { get; }
+        public string? ErrorMsgToSmall { get; }
 
         /// <summary>
         /// Gets the exact expected length of the string.
@@ -77,7 +77,7 @@ namespace MaSch.Presentation.Translation.Validation
         /// <param name="maxLength">The maximum expected length of the string.</param>
         /// <param name="errorMsgToSmall">The error message returned if the string is to short.</param>
         /// <param name="errorMsgToLarge">The error message returned if the string is to long.</param>
-        public StringLengthAttribute(int minLength = -1, int maxLength = -1, string errorMsgToSmall = null, string errorMsgToLarge = null)
+        public StringLengthAttribute(int minLength = -1, int maxLength = -1, string? errorMsgToSmall = null, string? errorMsgToLarge = null)
         {
             ExactLength = -1;
             MinLength = minLength;
@@ -94,7 +94,7 @@ namespace MaSch.Presentation.Translation.Validation
         /// <returns>
         /// An instance of the <see cref="ValidationResult"></see> class.
         /// </returns>
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             var sValue = value as string;
             if (string.IsNullOrEmpty(sValue) && IgnoreNullString)
@@ -102,9 +102,9 @@ namespace MaSch.Presentation.Translation.Validation
             if (ExactLength >= 0 && (sValue?.Length ?? 0) != ExactLength)
                 return new ValidationResult(GetTranslatedErrorMessage());
             if (MinLength >= 0 && (sValue?.Length ?? 0) < MinLength)
-                return new ValidationResult(GetTranslatedErrorMessage(ErrorMsgToSmall));
+                return new ValidationResult(GetTranslatedErrorMessage(ErrorMsgToSmall ?? ErrorMessageResourceName ?? string.Empty));
             if (MaxLength >= 0 && (sValue?.Length ?? 0) > MaxLength)
-                return new ValidationResult(GetTranslatedErrorMessage(ErrorMsgToLarge));
+                return new ValidationResult(GetTranslatedErrorMessage(ErrorMsgToLarge ?? ErrorMessageResourceName ?? string.Empty));
             return ValidationResult.Success;
         }
     }

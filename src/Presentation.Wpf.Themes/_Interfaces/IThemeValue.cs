@@ -16,22 +16,22 @@ namespace MaSch.Presentation.Wpf
         /// <summary>
         /// Gets or sets the theme manager the value is part of.
         /// </summary>
-        IThemeManager ThemeManager { get; set; }
+        IThemeManager? ThemeManager { get; set; }
 
         /// <summary>
         /// Gets or sets the key of this value.
         /// </summary>
-        string Key { get; set; }
+        string? Key { get; set; }
 
         /// <summary>
         /// Gets or sets the raw value.
         /// </summary>
-        object RawValue { get; set; }
+        object? RawValue { get; set; }
 
         /// <summary>
         /// Gets or sets the value base.
         /// </summary>
-        object ValueBase { get; set; }
+        object? ValueBase { get; set; }
 
         /// <summary>
         /// Gets the value of a property of this <see cref="IThemeValue"/>.
@@ -39,14 +39,14 @@ namespace MaSch.Presentation.Wpf
         /// <typeparam name="TValue">The type of the value.</typeparam>
         /// <param name="propertyName">Name of the property.</param>
         /// <returns>The value of the specified property of this <see cref="IThemeValue"/>.</returns>
-        TValue GetPropertyValue<TValue>(string propertyName);
+        TValue? GetPropertyValue<TValue>(string propertyName);
 
         /// <summary>
         /// Gets or sets the value of a property with the specified name.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <returns>The value of the specified property.</returns>
-        object this[string propertyName] { get; set; }
+        object? this[string propertyName] { get; set; }
     }
 
     /// <summary>
@@ -60,6 +60,6 @@ namespace MaSch.Presentation.Wpf
         /// <summary>
         /// Gets or sets the value.
         /// </summary>
-        T Value { get; set; }
+        T? Value { get; set; }
     }
 }

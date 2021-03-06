@@ -19,7 +19,7 @@ namespace MaSch.Console.Cli.Internal
             {
                 Type x when x == typeof(int) => (IExecutor)Activator.CreateInstance(eType, executorFunction, null)!,
                 Type x when x == typeof(Task<int>) => (IExecutor)Activator.CreateInstance(eType, null, executorFunction)!,
-                _ => throw new ArgumentException($"The executor function needs to either return int or Task<int>.")
+                _ => throw new ArgumentException($"The executor function needs to either return int or Task<int>."),
             };
         }
 

@@ -55,6 +55,7 @@ namespace MaSch.Core.Extensions
         public static ObservableTuple<T1, T2, T3, T4, T5, T6, T7, ObservableTuple<T8, T9, T10, T11, T12, T13, T14, ObservableTuple<T15, T16, T17, T18, T19, T20, T21>>> ToObservableTuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21>(this Tuple<T1, T2, T3, T4, T5, T6, T7, Tuple<T8, T9, T10, T11, T12, T13, T14, Tuple<T15, T16, T17, T18, T19, T20, T21>>> tuple)
             => new ObservableTuple<T1, T2, T3, T4, T5, T6, T7, ObservableTuple<T8, T9, T10, T11, T12, T13, T14, ObservableTuple<T15, T16, T17, T18, T19, T20, T21>>>(tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4, tuple.Item5, tuple.Item6, tuple.Item7, tuple.Rest.ToObservableTuple());
 
+#pragma warning disable SA1414 // Tuple types in signatures should have element names
         public static ObservableTuple<T1, T2> ToObservableTuple<T1, T2>(this (T1, T2) tuple)
             => new ObservableTuple<T1, T2>(tuple.Item1, tuple.Item2);
         public static ObservableTuple<T1, T2, T3> ToObservableTuple<T1, T2, T3>(this (T1, T2, T3) tuple)
@@ -95,6 +96,7 @@ namespace MaSch.Core.Extensions
             => new ObservableTuple<T1, T2, T3, T4, T5, T6, T7, ObservableTuple<T8, T9, T10, T11, T12, T13, T14, ObservableTuple<T15, T16, T17, T18, T19, T20>>>(tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4, tuple.Item5, tuple.Item6, tuple.Item7, new ObservableTuple<T8, T9, T10, T11, T12, T13, T14, ObservableTuple<T15, T16, T17, T18, T19, T20>>(tuple.Item8, tuple.Item9, tuple.Item10, tuple.Item11, tuple.Item12, tuple.Item13, tuple.Item14, new ObservableTuple<T15, T16, T17, T18, T19, T20>(tuple.Item15, tuple.Item16, tuple.Item17, tuple.Item18, tuple.Item19, tuple.Item20)));
         public static ObservableTuple<T1, T2, T3, T4, T5, T6, T7, ObservableTuple<T8, T9, T10, T11, T12, T13, T14, ObservableTuple<T15, T16, T17, T18, T19, T20, T21>>> ToObservableTuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21>(this (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21) tuple)
             => new ObservableTuple<T1, T2, T3, T4, T5, T6, T7, ObservableTuple<T8, T9, T10, T11, T12, T13, T14, ObservableTuple<T15, T16, T17, T18, T19, T20, T21>>>(tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4, tuple.Item5, tuple.Item6, tuple.Item7, new ObservableTuple<T8, T9, T10, T11, T12, T13, T14, ObservableTuple<T15, T16, T17, T18, T19, T20, T21>>(tuple.Item8, tuple.Item9, tuple.Item10, tuple.Item11, tuple.Item12, tuple.Item13, tuple.Item14, new ObservableTuple<T15, T16, T17, T18, T19, T20, T21>(tuple.Item15, tuple.Item16, tuple.Item17, tuple.Item18, tuple.Item19, tuple.Item20, tuple.Item21)));
+#pragma warning restore SA1414 // Tuple types in signatures should have element names
 
         public static Tuple<T1> ToTuple<T1>(this ObservableTuple<T1> tuple)
             => new Tuple<T1>(tuple.Item1);
@@ -139,6 +141,7 @@ namespace MaSch.Core.Extensions
         public static Tuple<T1, T2, T3, T4, T5, T6, T7, Tuple<T8, T9, T10, T11, T12, T13, T14, Tuple<T15, T16, T17, T18, T19, T20, T21>>> ToTuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21>(this ObservableTuple<T1, T2, T3, T4, T5, T6, T7, ObservableTuple<T8, T9, T10, T11, T12, T13, T14, ObservableTuple<T15, T16, T17, T18, T19, T20, T21>>> tuple)
             => new Tuple<T1, T2, T3, T4, T5, T6, T7, Tuple<T8, T9, T10, T11, T12, T13, T14, Tuple<T15, T16, T17, T18, T19, T20, T21>>>(tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4, tuple.Item5, tuple.Item6, tuple.Item7, tuple.Rest.ToTuple());
 
+#pragma warning disable SA1414 // Tuple types in signatures should have element names
         public static (T1, T2) ToValueTuple<T1, T2>(this ObservableTuple<T1, T2> tuple)
             => (tuple.Item1, tuple.Item2);
         public static (T1, T2, T3) ToValueTuple<T1, T2, T3>(this ObservableTuple<T1, T2, T3> tuple)
@@ -179,5 +182,6 @@ namespace MaSch.Core.Extensions
             => (tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4, tuple.Item5, tuple.Item6, tuple.Item7, tuple.Rest.Item1, tuple.Rest.Item2, tuple.Rest.Item3, tuple.Rest.Item4, tuple.Rest.Item5, tuple.Rest.Item6, tuple.Rest.Item7, tuple.Rest.Rest.Item1, tuple.Rest.Rest.Item2, tuple.Rest.Rest.Item3, tuple.Rest.Rest.Item4, tuple.Rest.Rest.Item5, tuple.Rest.Rest.Item6);
         public static (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21) ToValueTuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21>(this ObservableTuple<T1, T2, T3, T4, T5, T6, T7, ObservableTuple<T8, T9, T10, T11, T12, T13, T14, ObservableTuple<T15, T16, T17, T18, T19, T20, T21>>> tuple)
             => (tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4, tuple.Item5, tuple.Item6, tuple.Item7, tuple.Rest.Item1, tuple.Rest.Item2, tuple.Rest.Item3, tuple.Rest.Item4, tuple.Rest.Item5, tuple.Rest.Item6, tuple.Rest.Item7, tuple.Rest.Rest.Item1, tuple.Rest.Rest.Item2, tuple.Rest.Rest.Item3, tuple.Rest.Rest.Item4, tuple.Rest.Rest.Item5, tuple.Rest.Rest.Item6, tuple.Rest.Rest.Item7);
+#pragma warning restore SA1414 // Tuple types in signatures should have element names
     }
 }

@@ -15,8 +15,8 @@ namespace MaSch.Presentation.Wpf.Attributes
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class NotifyDependencyPropertyChangedAttribute : Attribute
     {
-        private static readonly Dictionary<Type, List<(string propertyName, NotifyDependencyPropertyChangedAttribute attribute)>> AttributeCache =
-            new Dictionary<Type, List<(string propertyName, NotifyDependencyPropertyChangedAttribute attribute)>>();
+        private static readonly Dictionary<Type, List<(string PropertyName, NotifyDependencyPropertyChangedAttribute Attribute)>> AttributeCache =
+            new Dictionary<Type, List<(string PropertyName, NotifyDependencyPropertyChangedAttribute Attribute)>>();
 
         /// <summary>
         /// Gets the name of the dependency property.
@@ -26,7 +26,7 @@ namespace MaSch.Presentation.Wpf.Attributes
         /// <summary>
         /// Gets the type in which the dependency property is defined in.
         /// </summary>
-        public Type OwnerType { get; }
+        public Type? OwnerType { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotifyDependencyPropertyChangedAttribute"/> class.
@@ -42,7 +42,7 @@ namespace MaSch.Presentation.Wpf.Attributes
         /// </summary>
         /// <param name="propertyName">Name of the dependency property.</param>
         /// <param name="ownerType">Type in which the dependency property is defined in.</param>
-        public NotifyDependencyPropertyChangedAttribute(string propertyName, Type ownerType)
+        public NotifyDependencyPropertyChangedAttribute(string propertyName, Type? ownerType)
         {
             PropertyName = propertyName;
             OwnerType = ownerType;
@@ -53,12 +53,12 @@ namespace MaSch.Presentation.Wpf.Attributes
         /// </summary>
         /// <param name="classObject">The object to retrieve the attributes from.</param>
         /// <returns>A <see cref="List{T}"/> of the <see cref="NotifyDependencyPropertyChangedAttribute"/> and the name of the property, the attribute is defined on.</returns>
-        public static List<(string propertyName, NotifyDependencyPropertyChangedAttribute attribute)> GetAttributes(object classObject)
+        public static List<(string PropertyName, NotifyDependencyPropertyChangedAttribute Attribute)> GetAttributes(object classObject)
         {
             Guard.NotNull(classObject, nameof(classObject));
             var classType = classObject.GetType();
 
-            List<(string propertyName, NotifyDependencyPropertyChangedAttribute attribute)> result;
+            List<(string PropertyName, NotifyDependencyPropertyChangedAttribute Attribute)> result;
             if (AttributeCache.ContainsKey(classType))
             {
                 result = AttributeCache[classType];

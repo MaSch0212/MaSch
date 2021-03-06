@@ -1,4 +1,6 @@
-﻿namespace MaSch.Presentation.Wpf.Views.SplitView
+﻿#pragma warning disable SA1649 // File name should match first type name
+
+namespace MaSch.Presentation.Wpf.Views.SplitView
 {
     /// <summary>
     /// Specifies the type of message in a <see cref="ExtendedSplitViewContent"/>.

@@ -138,7 +138,7 @@ namespace MaSch.Presentation.Wpf.Commands
         /// Executes the command.
         /// </summary>
         /// <param name="parameter">The parameter for the command.</param>
-        public override void Execute(T parameter)
+        public override void Execute(T? parameter)
         {
             _commands.ForEach(x => x.Execute(parameter));
         }

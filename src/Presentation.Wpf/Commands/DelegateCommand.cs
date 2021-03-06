@@ -9,7 +9,7 @@ namespace MaSch.Presentation.Wpf.Commands
     /// </summary>
     public class DelegateCommand : CommandBase
     {
-        private readonly Func<bool> _canExecute;
+        private readonly Func<bool>? _canExecute;
         private readonly Action _execute;
 
         /// <summary>
@@ -67,8 +67,8 @@ namespace MaSch.Presentation.Wpf.Commands
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic representation can be in same file.")]
     public class DelegateCommand<T> : CommandBase<T>
     {
-        private readonly Func<T, bool> _canExecute;
-        private readonly Action<T> _execute;
+        private readonly Func<T?, bool>? _canExecute;
+        private readonly Action<T?> _execute;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DelegateCommand{T}"/> class with the given execute behavior with parameters.
@@ -76,7 +76,7 @@ namespace MaSch.Presentation.Wpf.Commands
         /// <param name="execute">The execute behavior.</param>
         /// <param name="throwOnWrongParamType">Determines if an exception should be thrown if a wrong parameter type is passed to the <see cref="Execute"/> or <see cref="CanExecute"/> method.</param>
         /// <param name="requerySuggested">Activate the requery suggested event for automatic updates of the command.</param>
-        public DelegateCommand(Action<T> execute, bool throwOnWrongParamType = true, bool requerySuggested = true)
+        public DelegateCommand(Action<T?> execute, bool throwOnWrongParamType = true, bool requerySuggested = true)
             : base(requerySuggested)
         {
             _execute = execute;
@@ -90,7 +90,7 @@ namespace MaSch.Presentation.Wpf.Commands
         /// <param name="execute">The execute behavior.</param>
         /// <param name="throwOnWrongParamType">Determines if an exception should be thrown if a wrong parameter type is passed to the <see cref="Execute"/> or <see cref="CanExecute"/> method.</param>
         /// <param name="requerySuggested">Activate the requery suggested event for automatic updates of the command.</param>
-        public DelegateCommand(Func<T, bool> canExecute, Action<T> execute, bool throwOnWrongParamType = true, bool requerySuggested = true)
+        public DelegateCommand(Func<T?, bool> canExecute, Action<T?> execute, bool throwOnWrongParamType = true, bool requerySuggested = true)
             : this(execute, throwOnWrongParamType, requerySuggested)
         {
             _canExecute = canExecute;
@@ -101,14 +101,14 @@ namespace MaSch.Presentation.Wpf.Commands
         /// </summary>
         /// <param name="parameter">The parameter for the command.</param>
         /// <returns>true if the Execute method can be executed otherwise false.</returns>
-        public override bool CanExecute(T parameter)
+        public override bool CanExecute(T? parameter)
             => _canExecute?.Invoke(parameter) ?? base.CanExecute(parameter);
 
         /// <summary>
         /// Executes the command.
         /// </summary>
         /// <param name="parameter">The parameter for the command.</param>
-        public override void Execute(T parameter)
+        public override void Execute(T? parameter)
         {
             _execute?.Invoke(parameter);
         }

@@ -1,4 +1,6 @@
-﻿namespace MaSch.Presentation.Wpf
+﻿#pragma warning disable SA1649 // File name should match first type name
+
+namespace MaSch.Presentation.Wpf
 {
     /// <summary>
     /// Specifies the type of rendering to use for an <see cref="IIcon"/>.

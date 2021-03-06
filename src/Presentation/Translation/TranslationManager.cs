@@ -15,10 +15,10 @@ namespace MaSch.Presentation.Translation
         /// <summary>
         /// Occurs when the current language has changed.
         /// </summary>
-        public event LanguageChangedEventHandler LanguageChanged;
+        public event LanguageChangedEventHandler? LanguageChanged;
 
         private readonly IDictionary<string, ITranslationProvider> _registeredProviders;
-        private CultureInfo _currentLanguage;
+        private CultureInfo? _currentLanguage;
 
         /// <summary>
         /// Gets the provider key of the default provider.
@@ -48,7 +48,7 @@ namespace MaSch.Presentation.Translation
         /// Initializes a new instance of the <see cref="TranslationManager"/> class.
         /// </summary>
         public TranslationManager()
-            : this(null, (IEnumerable<INamedTranslationProvider>)null)
+            : this(null, (IEnumerable<INamedTranslationProvider>?)null)
         {
         }
 
@@ -56,8 +56,8 @@ namespace MaSch.Presentation.Translation
         /// Initializes a new instance of the <see cref="TranslationManager"/> class.
         /// </summary>
         /// <param name="defaultProvider">The default provider to use.</param>
-        public TranslationManager(ITranslationProvider defaultProvider)
-            : this(defaultProvider, (IEnumerable<INamedTranslationProvider>)null)
+        public TranslationManager(ITranslationProvider? defaultProvider)
+            : this(defaultProvider, (IEnumerable<INamedTranslationProvider>?)null)
         {
         }
 
@@ -66,7 +66,7 @@ namespace MaSch.Presentation.Translation
         /// </summary>
         /// <param name="defaultProvider">The default provider to use.</param>
         /// <param name="providers">The named providers to register with this <see cref="TranslationManager"/>.</param>
-        public TranslationManager(ITranslationProvider defaultProvider, params INamedTranslationProvider[] providers)
+        public TranslationManager(ITranslationProvider? defaultProvider, params INamedTranslationProvider[] providers)
             : this(defaultProvider, (IEnumerable<INamedTranslationProvider>)providers)
         {
         }
@@ -76,7 +76,7 @@ namespace MaSch.Presentation.Translation
         /// </summary>
         /// <param name="defaultProvider">The default provider to use.</param>
         /// <param name="providers">The named providers to register with this <see cref="TranslationManager"/>.</param>
-        public TranslationManager(ITranslationProvider defaultProvider, IEnumerable<INamedTranslationProvider> providers)
+        public TranslationManager(ITranslationProvider? defaultProvider, IEnumerable<INamedTranslationProvider>? providers)
         {
             _registeredProviders = new Dictionary<string, ITranslationProvider>();
             if (defaultProvider != null)

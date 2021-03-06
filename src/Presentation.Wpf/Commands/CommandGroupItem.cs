@@ -42,7 +42,7 @@ namespace MaSch.Presentation.Wpf.Commands
         /// <summary>
         /// Occurs when the value of the <see cref="Command"/> property changed.
         /// </summary>
-        public event DependencyPropertyChangedEventHandler CommandChanged;
+        public event DependencyPropertyChangedEventHandler? CommandChanged;
 
         /// <summary>
         /// Determines whether this instance can execute.

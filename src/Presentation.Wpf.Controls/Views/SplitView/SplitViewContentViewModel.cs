@@ -1,62 +1,50 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
+using MaSch.Core.Attributes;
 using MaSch.Core.Observable;
 using MaSch.Presentation.Services;
 using MaSch.Presentation.Wpf.Services;
 
 namespace MaSch.Presentation.Wpf.Views.SplitView
 {
-    /// <summary>
-    /// Abstract class that is used for view models of a <see cref="SplitViewContent"/>.
-    /// </summary>
-    /// <seealso cref="MaSch.Core.Observable.ObservableObject" />
-    public abstract class SplitViewContentViewModel : ObservableObject
+    [ObservablePropertyDefinition]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:Elements should be documented", Justification = "Internal interface.")]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Property definition.")]
+    internal interface ISplitViewContentViewModel_Props
     {
-        /// <summary>
-        /// Occurs when a new message has been posted.
-        /// </summary>
-        public event EventHandler<Tuple<string, MessageType>> NewMessage;
-
-        private readonly string _productName;
-        private bool _isLoading;
-        private string _loadingText;
-        private bool _isOpen;
-
         /// <summary>
         /// Gets or sets a value indicating whether the view this model is attached to is loading.
         /// </summary>
-        public bool IsLoading
-        {
-            get => _isLoading;
-            set
-            {
-                SetProperty(ref _isLoading, value);
-                if (!value)
-                    LoadingText = string.Empty;
-            }
-        }
+        bool IsLoading { get; set; }
 
         /// <summary>
         /// Gets or sets the loading text.
         /// </summary>
-        public string LoadingText
-        {
-            get => _loadingText;
-            set => SetProperty(ref _loadingText, value);
-        }
+        string? LoadingText { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the page is currently open.
         /// </summary>
-        public bool IsOpen
-        {
-            get => _isOpen;
-            set => SetProperty(ref _isOpen, value);
-        }
+        bool IsOpen { get; set; }
+    }
+
+    /// <summary>
+    /// Abstract class that is used for view models of a <see cref="SplitViewContent"/>.
+    /// </summary>
+    /// <seealso cref="MaSch.Core.Observable.ObservableObject" />
+    public abstract partial class SplitViewContentViewModel : ObservableObject, ISplitViewContentViewModel_Props
+    {
+        /// <summary>
+        /// Occurs when a new message has been posted.
+        /// </summary>
+        public event EventHandler<Tuple<string, MessageType>>? NewMessage;
+
+        private readonly string? _productName;
 
         /// <summary>
         /// Gets a value indicating whether the view this model is attached to is in design mode.
@@ -73,9 +61,15 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// </summary>
         protected SplitViewContentViewModel()
         {
-            var assemblyPath = Assembly.GetEntryAssembly().Location;
+            var assemblyPath = Assembly.GetEntryAssembly()?.Location;
             _productName = string.IsNullOrEmpty(assemblyPath) ? "Unknown" : FileVersionInfo.GetVersionInfo(assemblyPath).ProductName;
             MessageBox = new MessageBoxService();
+        }
+
+        partial void OnIsLoadingChanged(bool previous, bool value)
+        {
+            if (!value)
+                LoadingText = string.Empty;
         }
 
         /// <summary>
@@ -177,7 +171,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="action">The action.</param>
         /// <param name="succeededMessage">The succeeded message.</param>
         /// <param name="failedMessage">The failed message.</param>
-        protected void ExecuteLoadingAction(bool hasChanges, string askText, string noChangesText, Action action, string succeededMessage, string failedMessage)
+        protected void ExecuteLoadingAction(bool hasChanges, string? askText, string noChangesText, Action action, string succeededMessage, string failedMessage)
             => ExecuteLoadingAction(
                 hasChanges,
                 askText,
@@ -203,7 +197,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="action">The action.</param>
         /// <param name="succeededMessage">The succeeded message.</param>
         /// <param name="failedMessage">The failed message.</param>
-        protected void ExecuteLoadingAction(bool hasChanges, string askText, AlertImage msgBoxImage, AlertResult resultForExec, string noChangesText, Action action, string succeededMessage, string failedMessage)
+        protected void ExecuteLoadingAction(bool hasChanges, string? askText, AlertImage msgBoxImage, AlertResult resultForExec, string noChangesText, Action action, string succeededMessage, string failedMessage)
             => ExecuteLoadingAction(
                 hasChanges,
                 askText,
@@ -238,7 +232,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="action">The action.</param>
         /// <param name="succeededMessage">The succeeded message.</param>
         /// <param name="failedMessage">The failed message.</param>
-        protected void ExecuteLoadingAction(bool hasChanges, string askText, string noChangesText, Func<bool> action, string succeededMessage, string failedMessage)
+        protected void ExecuteLoadingAction(bool hasChanges, string? askText, string noChangesText, Func<bool> action, string succeededMessage, string failedMessage)
             => ExecuteLoadingAction(hasChanges, askText, AlertImage.Warning, AlertResult.Yes, noChangesText, action, succeededMessage, failedMessage);
 
         /// <summary>
@@ -252,15 +246,19 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="action">The action.</param>
         /// <param name="succeededMessage">The succeeded message.</param>
         /// <param name="failedMessage">The failed message.</param>
-        protected void ExecuteLoadingAction(bool hasChanges, string askText, AlertImage msgBoxImage, AlertResult resultForExec, string noChangesText, Func<bool> action, string succeededMessage, string failedMessage)
+        protected void ExecuteLoadingAction(bool hasChanges, string? askText, AlertImage msgBoxImage, AlertResult resultForExec, string noChangesText, Func<bool> action, string succeededMessage, string failedMessage)
         {
             if (hasChanges)
             {
-                bool exec = string.IsNullOrEmpty(askText);
-                if (!exec)
+                bool exec;
+                if (!string.IsNullOrEmpty(askText))
                 {
                     var result = MessageBox.Show(askText, _productName, AlertButton.YesNo, msgBoxImage);
                     exec = result == resultForExec;
+                }
+                else
+                {
+                    exec = true;
                 }
 
                 if (exec)
@@ -359,7 +357,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="succeededMessage">The succeeded message.</param>
         /// <param name="failedMessage">The failed message.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        protected async Task ExecuteLoadingAction(bool hasChanges, string askText, string noChangesText, string loadingText, Func<Task> action, string succeededMessage, string failedMessage)
+        protected async Task ExecuteLoadingAction(bool hasChanges, string? askText, string noChangesText, string loadingText, Func<Task> action, string succeededMessage, string failedMessage)
             => await ExecuteLoadingAction(
                 hasChanges,
                 askText,
@@ -388,7 +386,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="succeededMessage">The succeeded message.</param>
         /// <param name="failedMessage">The failed message.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        protected async Task ExecuteLoadingAction(bool hasChanges, string askText, AlertImage msgBoxImage, AlertResult resultForExec, string noChangesText, string loadingText, Func<Task> action, string succeededMessage, string failedMessage)
+        protected async Task ExecuteLoadingAction(bool hasChanges, string? askText, AlertImage msgBoxImage, AlertResult resultForExec, string noChangesText, string loadingText, Func<Task> action, string succeededMessage, string failedMessage)
             => await ExecuteLoadingAction(
                 hasChanges,
                 askText,
@@ -428,7 +426,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="succeededMessage">The succeeded message.</param>
         /// <param name="failedMessage">The failed message.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        protected async Task ExecuteLoadingAction(bool hasChanges, string askText, string noChangesText, string loadingText, Func<Task<bool>> action, string succeededMessage, string failedMessage)
+        protected async Task ExecuteLoadingAction(bool hasChanges, string? askText, string noChangesText, string loadingText, Func<Task<bool>> action, string succeededMessage, string failedMessage)
             => await ExecuteLoadingAction(hasChanges, askText, AlertImage.Warning, AlertResult.Yes, noChangesText, loadingText, action, succeededMessage, failedMessage);
 
         /// <summary>
@@ -444,15 +442,19 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="succeededMessage">The succeeded message.</param>
         /// <param name="failedMessage">The failed message.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        protected async Task ExecuteLoadingAction(bool hasChanges, string askText, AlertImage msgBoxImage, AlertResult resultForExec, string noChangesText, string loadingText, Func<Task<bool>> action, string succeededMessage, string failedMessage)
+        protected async Task ExecuteLoadingAction(bool hasChanges, string? askText, AlertImage msgBoxImage, AlertResult resultForExec, string noChangesText, string loadingText, Func<Task<bool>> action, string succeededMessage, string failedMessage)
         {
             if (hasChanges)
             {
-                bool exec = string.IsNullOrEmpty(askText);
-                if (!exec)
+                bool exec;
+                if (!string.IsNullOrEmpty(askText))
                 {
                     var result = MessageBox.Show(askText, _productName, AlertButton.YesNo, msgBoxImage);
                     exec = result == resultForExec;
+                }
+                else
+                {
+                    exec = true;
                 }
 
                 if (exec)

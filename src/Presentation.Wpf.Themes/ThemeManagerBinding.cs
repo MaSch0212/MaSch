@@ -15,7 +15,7 @@ namespace MaSch.Presentation.Wpf
         public string Key { get; }
 
         /// <inheritdoc/>
-        public IThemeValue Value => _themeManager.GetValue(Key);
+        public IThemeValue? Value => _themeManager.GetValue(Key);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThemeManagerBinding"/> class.
@@ -30,7 +30,7 @@ namespace MaSch.Presentation.Wpf
             _themeManager.ThemeValueChanged += ThemeManagerOnThemeValueChanged;
         }
 
-        private void ThemeManagerOnThemeValueChanged(object sender, ThemeValueChangedEventArgs e)
+        private void ThemeManagerOnThemeValueChanged(object? sender, ThemeValueChangedEventArgs e)
         {
             if (e.HasChangeForKey(Key))
                 NotifyPropertyChanged(nameof(Value));

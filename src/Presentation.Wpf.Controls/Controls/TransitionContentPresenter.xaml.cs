@@ -79,13 +79,13 @@ namespace MaSch.Presentation.Wpf.Controls
         /// <summary>
         /// Occurs when the content changed.
         /// </summary>
-        public event DependencyPropertyChangedEventHandler ContentChanged;
+        public event DependencyPropertyChangedEventHandler? ContentChanged;
 
         private int _currentlyActive;
-        private Storyboard _lastStoryboard;
-        private ContentPresenter _content1;
-        private ContentPresenter _content2;
-        private Grid _contentGrid;
+        private Storyboard? _lastStoryboard;
+        private ContentPresenter? _content1;
+        private ContentPresenter? _content2;
+        private Grid? _contentGrid;
 
         /// <summary>
         /// Gets or sets the animation for transitioning content into view.
@@ -166,7 +166,7 @@ namespace MaSch.Presentation.Wpf.Controls
         }
 
         /// <inheritdoc/>
-        protected override void OnContentChanged(object oldContent, object newContent)
+        protected override void OnContentChanged(object? oldContent, object newContent)
         {
             base.OnContentChanged(oldContent, newContent);
 
@@ -176,7 +176,7 @@ namespace MaSch.Presentation.Wpf.Controls
             var fadeOut = _currentlyActive == 0 ? _content1 : _content2;
             var fadeIn = _currentlyActive == 0 ? _content2 : _content1;
 
-            _contentGrid.Children.Remove(fadeIn);
+            _contentGrid!.Children.Remove(fadeIn);
             _contentGrid.Children.Insert(_contentGrid.Children.IndexOf(fadeOut) + 1, fadeIn);
 
             var transitionIn = TransitionIn;
@@ -393,7 +393,7 @@ namespace MaSch.Presentation.Wpf.Controls
             }
         }
 
-        private static ObjectAnimationUsingKeyFrames CreateObjectAnimation(Duration duration, object value, double percent, DependencyObject target, DependencyProperty property)
+        private static ObjectAnimationUsingKeyFrames CreateObjectAnimation(Duration duration, object? value, double percent, DependencyObject target, DependencyProperty property)
         {
             var result = new ObjectAnimationUsingKeyFrames { Duration = duration };
             result.KeyFrames.Add(new DiscreteObjectKeyFrame(value, KeyTime.FromPercent(percent)));

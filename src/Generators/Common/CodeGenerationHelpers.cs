@@ -111,7 +111,7 @@ namespace MaSch.Generators.Common
             var unescapedName = symbol switch
             {
                 IAssemblySymbol assembly => assembly.Name,
-                _ => symbol.ToDisplayString()
+                _ => symbol.ToDisplayString(),
             };
             var name = Regex.Replace(unescapedName, @"[\.+]", "-");
             return $"{name}-{BitConverter.GetBytes(hashFunc(name)).ToHexString()}";
