@@ -43,8 +43,22 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
-    
-- script: dotnet nuget push --api-key $(NuGetApiKey) --skip-duplicate --source https://api.nuget.org/v3/index.json *.nupkg
+
+- powershell: |
+    foreach ($file in Get-ChildItem *.nupkg) {
+        Write-Output "Pushing $($file.name)..."
+        [string]$output = dotnet nuget push --api-key $(NuGetApiKey) --source https://api.nuget.org/v3/index.json $file.FullName
+        if ($output.Contains("already exists")) {
+            Write-Output "Package already exists: $($file.Name)"
+            $LASTEXITCODE = 0
+        } elseif ($LASTEXITCODE -ne 0) {
+            Write-Output $output
+            break
+        } else {
+            Write-Output "Successfully pushed package: $($file.Name)"
+        }
+        Write-Output ""
+    }
   displayName: "\U0001F680 Publish packages to nuget.org"
   workingDirectory: $(Build.ArtifactStagingDirectory)
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
