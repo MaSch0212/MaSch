@@ -17,9 +17,8 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: "\U0001F6E0 Build projects"
   inputs:
-    command: 'custom'
+    command: 'build'
     projects: 'MaSch.sln'
-    custom: 'build'
     arguments: '-c Release -p:TreatWarningsAsErrors=true -p:ContinuousIntegrationBuild=true'
 
 - task: DotNetCoreCLI@2
