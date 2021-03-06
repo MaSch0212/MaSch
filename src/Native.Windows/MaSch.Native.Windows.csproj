@@ -11,7 +11,7 @@
     
     <!-- Package Info -->
     <Description>A small collection of native API calls.</Description>
-    <Version>0.1.1</Version>
+    <Version>0.1.2</Version>
     <PackageTags>masch native windows pinvoke</PackageTags>
   </PropertyGroup>
 
