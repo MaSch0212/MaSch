@@ -15,7 +15,7 @@ pool:
 
 steps:
 - script: dotnet nuget locals all --clear
-  displayName: "Clean"
+  displayName: "\U0001F4A3 Cleanup NuGet"
 
 - task: DotNetCoreCLI@2
   displayName: "\U0001F6E0 Build projects"
@@ -32,7 +32,7 @@ steps:
     arguments: '-c Release --no-restore --no-build --collect "Code coverage" -p:TreatWarningsAsErrors=true'
 
 - task: DotNetCoreCLI@2
-  displayName: "\U0001F6E0 Pack projects"
+  displayName: "\U0001F4E6 Pack projects"
   inputs:
     command: 'custom'
     projects: 'MaSch.sln'
