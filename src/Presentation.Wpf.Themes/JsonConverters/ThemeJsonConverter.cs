@@ -80,7 +80,7 @@ namespace MaSch.Presentation.Wpf.JsonConverters
         /// <exception cref="NotSupportedException">Url with the Scheme is not supported.</exception>
         internal static string DownloadString(Uri uri, Uri? baseUri, out Uri absoluteUri)
         {
-            var uriToCheck = absoluteUri = baseUri == null ? uri : GetAbsoluteUri(uri, baseUri);
+            var uriToCheck = absoluteUri = GetAbsoluteUri(uri, baseUri);
 
             bool TestScheme(params string[] acceptedSchemes) => acceptedSchemes.Any(x => string.Equals(uriToCheck.Scheme, x, StringComparison.OrdinalIgnoreCase));
 
@@ -97,7 +97,7 @@ namespace MaSch.Presentation.Wpf.JsonConverters
             return result;
         }
 
-        private static Uri GetAbsoluteUri(Uri uri, Uri baseUri)
+        private static Uri GetAbsoluteUri(Uri uri, Uri? baseUri)
         {
             Uri result;
             if (uri.OriginalString.StartsWith("#DefaultThemes/", StringComparison.OrdinalIgnoreCase))
@@ -116,7 +116,7 @@ namespace MaSch.Presentation.Wpf.JsonConverters
             }
             else
             {
-                result = uri.IsAbsoluteUri ? uri : new Uri(baseUri, uri);
+                result = uri.IsAbsoluteUri ? uri : new Uri(baseUri!, uri);
             }
 
             return result;
