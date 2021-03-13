@@ -1,6 +1,8 @@
 ﻿using MaSch.Core.Attributes;
 using MaSch.Generators.Common;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using static MaSch.Generators.Common.CodeGenerationHelpers;
@@ -45,6 +47,7 @@ namespace MaSch.Generators
                         where @interface.GetAttributes().FirstOrDefault(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, definitionAttributeSymbol)) != null
                         from propertySource in @interface.AllInterfaces.Prepend(@interface)
                         from property in propertySource.GetMembers().OfType<IPropertySymbol>()
+                        where property.GetMethod != null
                         group property by typeSymbol into g
                         select g;
 
@@ -102,30 +105,33 @@ namespace MaSch.Generators
                                 getterModifier = GetAccessModifier((AccessModifier)iGetterModifier) + " ";
                         }
 
+                        if (propInfo.SetMethod == null)
+                            setterModifier = "private ";
+
                         using (builder.AddBlock($"{accessModifier} {propInfo.Type} {propertyName}"))
                         {
                             using (builder.AddBlock($"{getterModifier}get"))
                             {
                                 builder.AppendLine($"var result = {fieldName};")
-                                       .AppendLine($"OnGet{propertyName}(ref result);")
-                                       .AppendLine("return result;");
+                                        .AppendLine($"OnGet{propertyName}(ref result);")
+                                        .AppendLine("return result;");
                             }
 
                             using (builder.AddBlock($"{setterModifier}set"))
                             {
                                 builder.AppendLine($"var previous = {fieldName};")
-                                       .AppendLine($"On{propertyName}Changing(previous, ref value);")
-                                       .AppendLine($"SetProperty(ref {fieldName}, value);")
-                                       .AppendLine($"On{propertyName}Changed(previous, value);");
+                                        .AppendLine($"On{propertyName}Changing(previous, ref value);")
+                                        .AppendLine($"SetProperty(ref {fieldName}, value);")
+                                        .AppendLine($"On{propertyName}Changed(previous, value);");
                             }
                         }
 
                         builder.AppendLine($"[SuppressMessage(\"Style\", \"IDE0060:Remove unused parameter\", Justification = \"Partial Method!\")]")
-                               .AppendLine($"partial void OnGet{propertyName}(ref {propInfo.Type} value);")
-                               .AppendLine($"[SuppressMessage(\"Style\", \"IDE0060:Remove unused parameter\", Justification = \"Partial Method!\")]")
-                               .AppendLine($"partial void On{propertyName}Changing({propInfo.Type} previous, ref {propInfo.Type} value);")
-                               .AppendLine($"[SuppressMessage(\"Style\", \"IDE0060:Remove unused parameter\", Justification = \"Partial Method!\")]")
-                               .AppendLine($"partial void On{propertyName}Changed({propInfo.Type} previous, {propInfo.Type} value);");
+                                .AppendLine($"partial void OnGet{propertyName}(ref {propInfo.Type} value);")
+                                .AppendLine($"[SuppressMessage(\"Style\", \"IDE0060:Remove unused parameter\", Justification = \"Partial Method!\")]")
+                                .AppendLine($"partial void On{propertyName}Changing({propInfo.Type} previous, ref {propInfo.Type} value);")
+                                .AppendLine($"[SuppressMessage(\"Style\", \"IDE0060:Remove unused parameter\", Justification = \"Partial Method!\")]")
+                                .AppendLine($"partial void On{propertyName}Changed({propInfo.Type} previous, {propInfo.Type} value);");
                     }
                 }
 
