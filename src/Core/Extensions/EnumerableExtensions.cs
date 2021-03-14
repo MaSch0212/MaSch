@@ -1451,6 +1451,22 @@ namespace MaSch.Core.Extensions
         /// </summary>
         /// <typeparam name="T">The type of the elements of <paramref name="enumerable" />.</typeparam>
         /// <param name="enumerable">An <see cref="IEnumerable{T}"/> to return an element from.</param>
+        /// <param name="value">When this method returns, contains the first value , if an element was found; otherwise, the default value for <typeparamref name="T"/>.</param>
+        /// <returns><see langword="true"/> if an element was found in the <see cref="IEnumerable{T}"/>; otherwise, <see langword="false"/>.</returns>
+        public static bool TryFirst<T>(this IEnumerable<T> enumerable, [MaybeNullWhen(false)] out T value)
+        {
+            Guard.NotNull(enumerable, nameof(enumerable));
+            using var enumerator = enumerable.GetEnumerator();
+            var result = enumerator.MoveNext();
+            value = result ? enumerator.Current : default;
+            return result;
+        }
+
+        /// <summary>
+        /// Tries to find the first element of an <see cref="IEnumerable{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="enumerable" />.</typeparam>
+        /// <param name="enumerable">An <see cref="IEnumerable{T}"/> to return an element from.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="value">When this method returns, contains the first value that matched the <paramref name="predicate"/>, if an element was found; otherwise, the default value for <typeparamref name="T"/>.</param>
         /// <returns><see langword="true"/> if an element that matches <paramref name="predicate"/> was found in the <see cref="IEnumerable{T}"/>; otherwise, <see langword="false"/>.</returns>
@@ -1460,6 +1476,24 @@ namespace MaSch.Core.Extensions
             using var enumerator = enumerable.Where(predicate).GetEnumerator();
             var result = enumerator.MoveNext();
             value = result ? enumerator.Current : default;
+            return result;
+        }
+
+        /// <summary>
+        /// Tries to find a single element of an <see cref="IEnumerable{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="enumerable" />.</typeparam>
+        /// <param name="enumerable">An <see cref="IEnumerable{T}"/> to return an element from.</param>
+        /// <param name="value">When this method returns, contains the single value, if exactly one element was found; otherwise, the default value for <typeparamref name="T"/>.</param>
+        /// <returns><see langword="true"/> if exactly one element was found in the <see cref="IEnumerable{T}"/>; otherwise, <see langword="false"/>.</returns>
+        public static bool TrySingle<T>(this IEnumerable<T> enumerable, [MaybeNullWhen(false)] out T value)
+        {
+            Guard.NotNull(enumerable, nameof(enumerable));
+            using var enumerator = enumerable.GetEnumerator();
+            var result = enumerator.MoveNext();
+            value = result ? enumerator.Current : default;
+            if (enumerator.MoveNext())
+                throw new InvalidOperationException("Sequence contains more than one matching element");
             return result;
         }
 
@@ -1479,6 +1513,27 @@ namespace MaSch.Core.Extensions
             value = result ? enumerator.Current : default;
             if (enumerator.MoveNext())
                 throw new InvalidOperationException("Sequence contains more than one matching element");
+            return result;
+        }
+
+        /// <summary>
+        /// Tries to find the last element of an <see cref="IEnumerable{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="enumerable" />.</typeparam>
+        /// <param name="enumerable">An <see cref="IEnumerable{T}"/> to return an element from.</param>
+        /// <param name="value">When this method returns, contains the last value, if an element was found; otherwise, the default value for <typeparamref name="T"/>.</param>
+        /// <returns><see langword="true"/> if an element was found in the <see cref="IEnumerable{T}"/>; otherwise, <see langword="false"/>.</returns>
+        public static bool TryLast<T>(this IEnumerable<T> enumerable, [MaybeNullWhen(false)] out T value)
+        {
+            Guard.NotNull(enumerable, nameof(enumerable));
+            bool result = false;
+            value = default;
+            foreach (var item in enumerable)
+            {
+                value = item;
+                result = true;
+            }
+
             return result;
         }
 
