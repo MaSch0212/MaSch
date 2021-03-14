@@ -1,4 +1,4 @@
-﻿using MaSch.Console.Cli.Help;
+﻿using MaSch.Console.Cli.ErrorHandling;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

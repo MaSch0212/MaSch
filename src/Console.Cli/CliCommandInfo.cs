@@ -11,24 +11,24 @@ namespace MaSch.Console.Cli
 {
     public class CliCommandInfo
     {
-        private static readonly Regex IllegalNameCharactersRegex = new Regex(@"[\p{Cc}\s]", RegexOptions.Compiled);
+        private static readonly Regex IllegalNameCharactersRegex = new(@"[\p{Cc}\s]", RegexOptions.Compiled);
 
-        private readonly List<CliCommandInfo> _childCommands = new List<CliCommandInfo>();
-        private readonly List<CliCommandOptionInfo> _options = new List<CliCommandOptionInfo>();
+        private readonly List<CliCommandInfo> _childCommands = new();
+        private readonly List<CliCommandOptionInfo> _options = new();
+        private readonly List<CliCommandValueInfo> _values = new();
         private readonly IExecutor? _executor;
-
-        private IReadOnlyList<CliCommandInfo>? _readonlyChildCommands;
-        private IReadOnlyList<CliCommandOptionInfo>? _readonlyOptions;
+        private readonly Cache _cache = new();
 
         public Type CommandType { get; }
         public string Name => Attribute.Name;
-        public string[] Aliases => Attribute.Aliases;
+        public IReadOnlyList<string> Aliases => Attribute.Aliases;
         public bool IsDefault => Attribute.IsDefault;
         public string? HelpText => Attribute.HelpText;
         public int Order => Attribute.HelpOrder;
         public CliCommandInfo? ParentCommand { get; private set; }
-        public IReadOnlyList<CliCommandInfo> ChildCommands => _readonlyChildCommands ??= _childCommands.AsReadOnly();
-        public IReadOnlyList<CliCommandOptionInfo> Options => _readonlyOptions ??= _options.AsReadOnly();
+        public IReadOnlyList<CliCommandInfo> ChildCommands => _cache.GetValue(() => _childCommands.AsReadOnly())!;
+        public IReadOnlyList<CliCommandOptionInfo> Options => _cache.GetValue(() => _options.AsReadOnly())!;
+        public IReadOnlyList<CliCommandValueInfo> Values => _cache.GetValue(() => _values.AsReadOnly())!;
 
         internal CliCommandAttribute Attribute { get; }
 
@@ -51,6 +51,18 @@ namespace MaSch.Console.Cli
                 else
                     _executor = new DirectExecutor(commandType);
             }
+
+            var properties = commandType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (var p in properties)
+            {
+                var optionAttr = p.GetCustomAttribute<CliCommandOptionAttribute>(true);
+                var valueAttr = p.GetCustomAttribute<CliCommandValueAttribute>(true);
+
+                if (optionAttr != null)
+                    _options.Add(new CliCommandOptionInfo(this, p, optionAttr));
+                if (valueAttr != null)
+                    _values.Add(new CliCommandValueInfo(this, p, valueAttr));
+            }
         }
 
         public int Execute(object obj)
@@ -71,13 +83,13 @@ namespace MaSch.Console.Cli
                 childCommand.ParentCommand = null;
         }
 
-        public static CliCommandInfo From<TCommand>() => new CliCommandInfo(typeof(TCommand), null, null);
-        public static CliCommandInfo From(Type commandType) => new CliCommandInfo(commandType, null, null);
-        public static CliCommandInfo From<TCommand, TExecutor>() => new CliCommandInfo(typeof(TCommand), typeof(TExecutor), null);
-        public static CliCommandInfo From(Type commandType, Type? executorType) => new CliCommandInfo(commandType, executorType, null);
-        public static CliCommandInfo From<TCommand>(Func<TCommand, int> executorFunction) => new CliCommandInfo(typeof(TCommand), null, executorFunction);
-        public static CliCommandInfo From<TCommand>(Func<TCommand, Task<int>> executorFunction) => new CliCommandInfo(typeof(TCommand), null, executorFunction);
-        public static CliCommandInfo From(Type commandType, Func<object, int> executorFunction) => new CliCommandInfo(commandType, null, executorFunction);
-        public static CliCommandInfo From(Type commandType, Func<object, Task<int>> executorFunction) => new CliCommandInfo(commandType, null, executorFunction);
+        public static CliCommandInfo From<TCommand>() => new(typeof(TCommand), null, null);
+        public static CliCommandInfo From(Type commandType) => new(commandType, null, null);
+        public static CliCommandInfo From<TCommand, TExecutor>() => new(typeof(TCommand), typeof(TExecutor), null);
+        public static CliCommandInfo From(Type commandType, Type? executorType) => new(commandType, executorType, null);
+        public static CliCommandInfo From<TCommand>(Func<TCommand, int> executorFunction) => new(typeof(TCommand), null, executorFunction);
+        public static CliCommandInfo From<TCommand>(Func<TCommand, Task<int>> executorFunction) => new(typeof(TCommand), null, executorFunction);
+        public static CliCommandInfo From(Type commandType, Func<object, int> executorFunction) => new(commandType, null, executorFunction);
+        public static CliCommandInfo From(Type commandType, Func<object, Task<int>> executorFunction) => new(commandType, null, executorFunction);
     }
 }

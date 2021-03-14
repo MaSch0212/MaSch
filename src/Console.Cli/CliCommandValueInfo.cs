@@ -2,13 +2,12 @@
 using MaSch.Core.Extensions;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
 namespace MaSch.Console.Cli
 {
-    public class CliCommandOptionInfo
+    public class CliCommandValueInfo
     {
         private readonly PropertyInfo _property;
 
@@ -16,16 +15,15 @@ namespace MaSch.Console.Cli
         public string PropertyName => _property.Name;
         public Type PropertyType => _property.PropertyType;
 
-        public IReadOnlyList<char> ShortAliases => Attribute.ShortAliases;
-        public IReadOnlyList<string> Aliases => Attribute.Aliases;
+        public string DisplayName => Attribute.DisplayName;
+        public int Order => Attribute.Order;
         public object? DefaultValue => Attribute.Default;
         public bool IsRequired => Attribute.Required;
-        public int HelpOrder => Attribute.HelpOrder;
         public string? HelpText => Attribute.HelpText;
 
-        internal CliCommandOptionAttribute Attribute { get; }
+        internal CliCommandValueAttribute Attribute { get; }
 
-        public CliCommandOptionInfo(CliCommandInfo command, PropertyInfo property, CliCommandOptionAttribute attribute)
+        public CliCommandValueInfo(CliCommandInfo command, PropertyInfo property, CliCommandValueAttribute attribute)
         {
             Command = command;
             _property = property;

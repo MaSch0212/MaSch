@@ -1,4 +1,4 @@
-﻿namespace MaSch.Console.Cli.Help
+﻿namespace MaSch.Console.Cli.ErrorHandling
 {
     public enum CliErrorType
     {
