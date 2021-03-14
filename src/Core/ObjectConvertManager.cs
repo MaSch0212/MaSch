@@ -135,6 +135,7 @@ namespace MaSch.Core
             RegisterConverter(new NullableObjectConverter());
             RegisterConverter(new ConvertibleObjectConverter());
             RegisterConverter(new EnumConverter());
+            RegisterConverter(new EnumerableConverter());
             RegisterConverter(new ToStringObjectConverter(-98_000));
             RegisterConverter(new NullObjectConverter(-99_000));
             RegisterConverter(new IdentityObjectConverter(-100_000));
