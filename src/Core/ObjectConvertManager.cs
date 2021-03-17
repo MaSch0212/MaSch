@@ -169,7 +169,7 @@ namespace MaSch.Core
         /// <param name="objectToConvert">The object to convert.</param>
         /// <returns>An instance of the target type representing the object that was given to convert.</returns>
         public static TTarget? Convert<TSource, TTarget>(this IObjectConvertManager manager, TSource objectToConvert)
-            => (TTarget)manager.Convert(objectToConvert, typeof(TSource), typeof(TTarget), CultureInfo.CurrentCulture);
+            => (TTarget?)manager.Convert(objectToConvert, typeof(TSource), typeof(TTarget), CultureInfo.CurrentCulture);
 
         /// <summary>
         /// onverts the given object the another type using the registered <see cref="IObjectConverter"/> objects.
@@ -181,7 +181,7 @@ namespace MaSch.Core
         /// <param name="formatProvider">A provider that is used for formatting.</param>
         /// <returns>An instance of the target type representing the object that was given to convert.</returns>
         public static TTarget? Convert<TSource, TTarget>(this IObjectConvertManager manager, TSource objectToConvert, IFormatProvider formatProvider)
-            => (TTarget)manager.Convert(objectToConvert, typeof(TSource), typeof(TTarget), formatProvider);
+            => (TTarget?)manager.Convert(objectToConvert, typeof(TSource), typeof(TTarget), formatProvider);
 
         /// <summary>
         /// onverts the given object the another type using the registered <see cref="IObjectConverter"/> objects.
@@ -191,7 +191,7 @@ namespace MaSch.Core
         /// <param name="objectToConvert">The object to convert.</param>
         /// <returns>An instance of the target type representing the object that was given to convert.</returns>
         public static TTarget? Convert<TTarget>(this IObjectConvertManager manager, object? objectToConvert)
-            => (TTarget)manager.Convert(objectToConvert, objectToConvert?.GetType(), typeof(TTarget), CultureInfo.CurrentCulture);
+            => (TTarget?)manager.Convert(objectToConvert, objectToConvert?.GetType(), typeof(TTarget), CultureInfo.CurrentCulture);
 
         /// <summary>
         /// onverts the given object the another type using the registered <see cref="IObjectConverter"/> objects.
@@ -202,7 +202,7 @@ namespace MaSch.Core
         /// <param name="formatProvider">A provider that is used for formatting.</param>
         /// <returns>An instance of the target type representing the object that was given to convert.</returns>
         public static TTarget? Convert<TTarget>(this IObjectConvertManager manager, object? objectToConvert, IFormatProvider formatProvider)
-            => (TTarget)manager.Convert(objectToConvert, objectToConvert?.GetType(), typeof(TTarget), formatProvider);
+            => (TTarget?)manager.Convert(objectToConvert, objectToConvert?.GetType(), typeof(TTarget), formatProvider);
 
         /// <summary>
         /// Converts the given object the another type using the registered <see cref="IObjectConverter"/> objects.
@@ -346,7 +346,7 @@ namespace MaSch.Core
             {
                 try
                 {
-                    convertedObject = (T)manager.Convert(objectToConvert, sourceType, targetType, formatProvider);
+                    convertedObject = (T?)manager.Convert(objectToConvert, sourceType, targetType, formatProvider);
                     result = true;
                 }
                 catch (InvalidCastException)

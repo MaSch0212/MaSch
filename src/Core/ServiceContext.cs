@@ -25,7 +25,7 @@ namespace MaSch.Core
         /// Creates a new instance of the <see cref="ServiceContextInstance"/> class.
         /// </summary>
         /// <returns>A new instance of the <see cref="ServiceContextInstance"/> class.</returns>
-        public static ServiceContextInstance CreateContext() => new ServiceContextInstance();
+        public static ServiceContextInstance CreateContext() => new();
 
         /// <summary>
         /// Gets all services of the current <see cref="ServiceContextInstance"/>.
@@ -226,7 +226,7 @@ namespace MaSch.Core
         /// </summary>
         public event ServiceContextEventHandler? Changed;
 
-        private readonly Dictionary<(Type Type, string? Name), object> _services = new Dictionary<(Type Type, string? Name), object>();
+        private readonly Dictionary<(Type Type, string? Name), object> _services = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceContextInstance" /> class.
@@ -344,7 +344,7 @@ namespace MaSch.Core
         {
             var key = (typeof(T), name);
             var r = _services.TryGetValue(key, out var v);
-            result = r ? (T)v : default;
+            result = r ? (T?)v : default;
             return r;
         }
 
@@ -354,7 +354,7 @@ namespace MaSch.Core
         /// <typeparam name="T">The type of the service to retrieve.</typeparam>
         /// <param name="name">The name of the service to retrieve.</param>
         /// <returns>The service of type <typeparamref name="T"/> and name <paramref name="name"/> that was found in this <see cref="ServiceContextInstance"/>. If no service was found <see langword="default"/> is returned.</returns>
-        public T? TryGetService<T>(string? name = null) => (T)(TryGetService(typeof(T), name) ?? default(T));
+        public T? TryGetService<T>(string? name = null) => (T?)(TryGetService(typeof(T), name) ?? default(T));
 
         /// <summary>
         /// Tries to get the service with the specified type and name.
@@ -595,7 +595,7 @@ namespace MaSch.Core
     /// <typeparam name="T">The type of services to manage in this <see cref="ServiceContextInstance{T}"/>.</typeparam>
     public class ServiceContextInstance<T>
     {
-        private static readonly Dictionary<ServiceContextInstance, ServiceContextInstance<T>> ContextCache = new Dictionary<ServiceContextInstance, ServiceContextInstance<T>>();
+        private static readonly Dictionary<ServiceContextInstance, ServiceContextInstance<T>> ContextCache = new();
 
         /// <summary>
         /// Occurs before a service changes.
@@ -619,7 +619,7 @@ namespace MaSch.Core
             {
                 if (typeof(T) == e.Type)
                 {
-                    var eventArgs = new ServiceContextEventArgs<T>(e.Name, (T)e.OldInstance, (T)e.NewInstance, e.Action);
+                    var eventArgs = new ServiceContextEventArgs<T>(e.Name, (T?)e.OldInstance, (T?)e.NewInstance, e.Action);
                     Changing?.Invoke(this, eventArgs);
                 }
             };
@@ -627,7 +627,7 @@ namespace MaSch.Core
             {
                 if (typeof(T) == e.Type)
                 {
-                    var eventArgs = new ServiceContextEventArgs<T>(e.Name, (T)e.OldInstance, (T)e.NewInstance, e.Action);
+                    var eventArgs = new ServiceContextEventArgs<T>(e.Name, (T?)e.OldInstance, (T?)e.NewInstance, e.Action);
                     Changed?.Invoke(this, eventArgs);
                 }
             };
@@ -682,7 +682,7 @@ namespace MaSch.Core
         /// <returns>The service of type <typeparamref name="T"/> and name <paramref name="name"/> that was found in this <see cref="ServiceContextInstance{T}"/>. If no service was found <see langword="default"/> is returned.</returns>
         [return: MaybeNull]
         public T TryGetService(string? name = null)
-            => (T)(Context.TryGetService(typeof(T), name) ?? default(T));
+            => (T?)(Context.TryGetService(typeof(T), name) ?? default(T));
 
         /// <summary>
         /// Removes the service with the type <typeparamref name="T"/> and name.
@@ -717,7 +717,7 @@ namespace MaSch.Core
         {
             void EventHandler(object? sender, ServiceContextEventArgs<T> e) => action(e.NewInstance);
 
-            if (TryGetService(out T service, name))
+            if (TryGetService(out T? service, name))
                 action(service);
             Changed += EventHandler;
             return new ActionOnDispose(() => Changed -= EventHandler);

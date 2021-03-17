@@ -56,7 +56,7 @@ namespace MaSch.Core.Helper
                 return ServiceContext.Instance.TryGetService<T>();
             var method = CurrentServiceLocator.GetType().GetMethod("GetInstance", Array.Empty<Type>()) ?? throw new InvalidOperationException("GetInstance method not found in ServiceLocator.");
             var gMethod = method.MakeGenericMethod(typeof(T));
-            return (T)gMethod.Invoke(CurrentServiceLocator, Array.Empty<object>());
+            return (T?)gMethod.Invoke(CurrentServiceLocator, Array.Empty<object>());
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace MaSch.Core.Helper
                 return ServiceContext.Instance.TryGetService<T>();
             var method = CurrentServiceLocator.GetType().GetMethod("GetInstance", new[] { typeof(string) }) ?? throw new InvalidOperationException("GetInstance method not found in ServiceLocator.");
             var gMethod = method.MakeGenericMethod(typeof(T));
-            return (T)gMethod.Invoke(CurrentServiceLocator, new object[] { key });
+            return (T?)gMethod.Invoke(CurrentServiceLocator, new object[] { key });
         }
     }
 }

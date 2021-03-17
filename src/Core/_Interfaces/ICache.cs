@@ -35,7 +35,7 @@ namespace MaSch.Core
         /// <returns>The value of the <paramref name="key"/> typed as <typeparamref name="T"/>.</returns>
         /// <exception cref="KeyNotFoundException">A value for the specified <paramref name="key"/> does not exist in the <see cref="ICache"/>.</exception>
         /// <exception cref="InvalidCastException">The value in the <see cref="ICache"/> can not be cast to type <typeparamref name="T"/>.</exception>
-        T GetValue<T>([CallerMemberName] string key = "<Unknown>");
+        T? GetValue<T>([CallerMemberName] string key = "<Unknown>");
 
         /// <summary>
         /// Gets a value of a specified key. If no value exists a specified getter is used to insert the value to the <see cref="ICache"/> and return it.
@@ -45,7 +45,7 @@ namespace MaSch.Core
         /// <param name="key">The key to get the value from.</param>
         /// <returns>The value of the <paramref name="key"/> typed as <typeparamref name="T"/>.</returns>
         /// <exception cref="InvalidCastException">The value in the <see cref="ICache"/> can not be cast to type <typeparamref name="T"/>.</exception>
-        T GetValue<T>(Func<T> valueGetter, [CallerMemberName] string key = "<Unknown>");
+        T? GetValue<T>(Func<T> valueGetter, [CallerMemberName] string key = "<Unknown>");
 
         /// <summary>
         /// Gets a value of a specified key. If no value exists a specified getter is used to insert the value to the <see cref="ICache"/> and return it.
@@ -55,7 +55,7 @@ namespace MaSch.Core
         /// <param name="key">The key to get the value from.</param>
         /// <returns>The value of the <paramref name="key"/> typed as <typeparamref name="T"/>.</returns>
         /// <exception cref="InvalidCastException">The value in the <see cref="ICache"/> can not be cast to type <typeparamref name="T"/>.</exception>
-        Task<T> GetValueAsync<T>(Func<Task<T>> valueGetter, [CallerMemberName] string key = "<Unknown>");
+        Task<T?> GetValueAsync<T>(Func<Task<T>> valueGetter, [CallerMemberName] string key = "<Unknown>");
 
         /// <summary>
         /// Tries to get the value of a specified key.

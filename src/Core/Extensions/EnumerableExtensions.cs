@@ -1567,7 +1567,7 @@ namespace MaSch.Core.Extensions
         /// <returns>An <see cref="IEnumerable{T}"/> containing the previous entry for each element in <paramref name="enumerable"/>.</returns>
         public static IEnumerable<(T? Previous, T Current)> WithPrevious<T>(this IEnumerable<T> enumerable)
         {
-            T previous = default;
+            T? previous = default;
             foreach (var item in enumerable)
             {
                 yield return (previous, item);
@@ -1583,7 +1583,7 @@ namespace MaSch.Core.Extensions
         /// <returns>An <see cref="IEnumerable{T}"/> containing the next entry for each element in <paramref name="enumerable"/>.</returns>
         public static IEnumerable<(T Current, T? Next)> WithNext<T>(this IEnumerable<T> enumerable)
         {
-            T current = default;
+            T? current = default;
             bool hasCurrent = false;
             foreach (var item in enumerable)
             {
@@ -1606,7 +1606,7 @@ namespace MaSch.Core.Extensions
         public static IEnumerable<(T? Previous, T Current, T? Next)> WithPreviousAndNext<T>(this IEnumerable<T> enumerable)
         {
             T? previous = default;
-            T current = default;
+            T? current = default;
             bool hasCurrent = false;
             foreach (var item in enumerable)
             {
@@ -1666,7 +1666,7 @@ namespace MaSch.Core.Extensions
         /// <param name="enumerable">The enumerable.</param>
         /// <returns>An <see cref="ObservableCollection{T}"/> containing all elements of the <paramref name="enumerable"/>.</returns>
         public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> enumerable)
-            => new ObservableCollection<T>(enumerable);
+            => new(enumerable);
 
         /// <summary>
         /// Converts the <see cref="IEnumerable{T}"/> to an <see cref="FullyObservableCollection{T}"/>.
@@ -1676,7 +1676,7 @@ namespace MaSch.Core.Extensions
         /// <returns>An <see cref="FullyObservableCollection{T}"/> containing all elements of the <paramref name="enumerable"/>.</returns>
         public static FullyObservableCollection<T> ToFullyObservableCollection<T>(this IEnumerable<T> enumerable)
             where T : INotifyPropertyChanged
-            => new FullyObservableCollection<T>(enumerable);
+            => new(enumerable);
 
         /// <summary>
         /// Filters out null values from an <see cref="IEnumerable{T}"/>.

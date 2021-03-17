@@ -37,7 +37,7 @@ namespace MaSch.Core
         {
             Guard.NotNull(key, nameof(key));
             lock (ObjectsLock)
-                return (T)Objects[key];
+                return (T?)Objects[key];
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace MaSch.Core
             {
                 if (!Objects.ContainsKey(key))
                     Objects[key] = valueGetter();
-                return (T)Objects[key];
+                return (T?)Objects[key];
             }
         }
 
@@ -81,7 +81,7 @@ namespace MaSch.Core
             {
                 if (!Objects.ContainsKey(key))
                     Objects[key] = await valueGetter();
-                return (T)Objects[key];
+                return (T?)Objects[key];
             }
             finally
             {
@@ -229,6 +229,7 @@ namespace MaSch.Core
         /// </summary>
         public void Dispose()
         {
+            GC.SuppressFinalize(this);
             Dispose(true);
         }
         #endregion
@@ -241,7 +242,7 @@ namespace MaSch.Core
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic representation can be in same file.")]
     public static class Cache<TTarget>
     {
-        private static readonly object InstanceLock = new object();
+        private static readonly object InstanceLock = new();
 
         private static Cache? _instance;
 
@@ -253,7 +254,7 @@ namespace MaSch.Core
             get
             {
                 lock (InstanceLock)
-                    return _instance ?? (_instance = new Cache());
+                    return _instance ??= new Cache();
             }
         }
 

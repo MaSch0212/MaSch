@@ -52,9 +52,9 @@ namespace MaSch.Core.Converters
         public object? Convert(object? obj, Type? sourceType, Type targetType, IObjectConvertManager manager, IFormatProvider formatProvider)
         {
             return _converterFunctionWithFormatProvider != null
-                ? _converterFunctionWithFormatProvider((TSource)obj, formatProvider)
+                ? _converterFunctionWithFormatProvider((TSource?)obj, formatProvider)
                 : _converterFunction != null
-                    ? _converterFunction.Invoke((TSource)obj)
+                    ? _converterFunction.Invoke((TSource?)obj)
                     : default;
         }
     }

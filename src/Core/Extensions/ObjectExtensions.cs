@@ -138,7 +138,7 @@ namespace MaSch.Core.Extensions
         /// <returns>The converted <paramref name="obj"/> to <typeparamref name="T"/>.</returns>
         public static T? CastTo<T>(this object? obj)
         {
-            return (T)obj;
+            return (T?)obj;
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace MaSch.Core.Extensions
         [Obsolete("Use the switch statement from C# 8 instead.")]
         public static Switch<TSource, TTarget> Switch<TSource, TTarget>(this TSource source)
             where TSource : notnull
-            => new Switch<TSource, TTarget>(source);
+            => new(source);
 
         /// <summary>
         /// Tries to clone an object.
