@@ -96,7 +96,7 @@ namespace MaSch.Core
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="value"/> is not of one of the allowed types.</exception>
         /// <returns>Returns the <paramref name="value"/>.</returns>
-        public static object OfType(object value, string name, params Type[] allowedTypes) => OfType(value, name, false, allowedTypes)!;
+        public static object OfType(object? value, string name, params Type[] allowedTypes) => OfType(value, name, false, allowedTypes)!;
 
         /// <summary>
         /// Verifies that a values type is in a list of types.
@@ -108,7 +108,7 @@ namespace MaSch.Core
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null and <paramref name="allowNull"/> is set to false.</exception>
         /// <exception cref="ArgumentException">The <paramref name="value"/> is not of one of the allowed types.</exception>
         /// <returns>Returns the <paramref name="value"/>.</returns>
-        public static object? OfType(object value, string name, bool allowNull, params Type[] allowedTypes)
+        public static object? OfType(object? value, string name, bool allowNull, params Type[] allowedTypes)
         {
             if (value is null)
             {

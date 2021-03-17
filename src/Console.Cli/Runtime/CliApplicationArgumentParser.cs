@@ -3,6 +3,7 @@ using MaSch.Core.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace MaSch.Console.Cli.Runtime
@@ -11,43 +12,66 @@ namespace MaSch.Console.Cli.Runtime
     {
         private static readonly object UnsetValue = new();
 
-        public static (CliCommandInfo? Command, object? Options, CliError? Error) Parse(string[] args, CliCommandInfoCollection availableCommands)
+        public static CliApplicationArgumentParserResult Parse(string[] args, CliApplicationOptions appOptions, CliCommandInfoCollection availableCommands)
         {
             if (args == null || args.Length == 0)
             {
                 if (availableCommands.DefaultCommand == null)
-                    return (null, null, new CliError(CliErrorType.UnknownCommand));
+                    return new(new CliError(CliErrorType.UnknownCommand));
                 else
-                    return (availableCommands.DefaultCommand, Activator.CreateInstance(availableCommands.DefaultCommand.CommandType), null);
+                    return new(availableCommands.DefaultCommand, Activator.CreateInstance(availableCommands.DefaultCommand.CommandType)!);
             }
 
-            var currentCommand = availableCommands.FirstOrDefault(x => x.Aliases.Contains(args[0], StringComparer.OrdinalIgnoreCase));
-            var index = 0;
-            if (currentCommand != null)
+            if (!TryParseCommandInfo(args, availableCommands, out var command, out var commandArgIndex))
+                return new(new CliError(CliErrorType.UnknownCommand));
+
+            if (!TryParseOptionsAndValues(args.Skip(commandArgIndex), appOptions, command, out var ovpError, out var values, out var options))
+                return new(ovpError);
+
+            if (!TryCreateOptions(command, values, options, out var optError, out var optionsObj))
+                return new(optError);
+
+            return new(command, optionsObj);
+        }
+
+        private static bool TryParseCommandInfo(string[] args, CliCommandInfoCollection availableCommands, [NotNullWhen(true)] out CliCommandInfo? command, out int commandArgIndex)
+        {
+            command = availableCommands.FirstOrDefault(x => x.Aliases.Contains(args[0], StringComparer.OrdinalIgnoreCase));
+            if (command != null)
             {
-                for (index = 1; index < args.Length; index++)
+                for (commandArgIndex = 1; commandArgIndex < args.Length; commandArgIndex++)
                 {
-                    var next = currentCommand.ChildCommands.FirstOrDefault(x => x.Aliases.Contains(args[index], StringComparer.OrdinalIgnoreCase));
+                    var index = commandArgIndex;
+                    var next = command.ChildCommands.FirstOrDefault(x => x.Aliases.Contains(args[index], StringComparer.OrdinalIgnoreCase));
                     if (next != null)
-                        currentCommand = next;
+                        command = next;
                     else
                         break;
                 }
             }
             else
             {
-                currentCommand = availableCommands.DefaultCommand;
+                commandArgIndex = 0;
+                command = availableCommands.DefaultCommand;
             }
 
-            if (currentCommand == null)
-                return (null, null, new CliError(CliErrorType.UnknownCommand));
+            return command != null;
+        }
 
-            var orderedValueInfos = currentCommand.Values.OrderBy(x => x.Order).ToArray();
-            var values = new List<ValueValue>();
-            var options = new List<OptionValue>();
+        private static bool TryParseOptionsAndValues(
+            IEnumerable<string> args,
+            CliApplicationOptions appOptions,
+            CliCommandInfo command,
+            [NotNullWhen(false)] out CliError? error,
+            out IList<ValueValue> values,
+            out IList<OptionValue> options)
+        {
+            var orderedValueInfos = command.Values.OrderBy(x => x.Order).ToArray();
+            values = new List<ValueValue>();
+            options = new List<OptionValue>();
             OptionValue? currentOption = null;
             bool areOptionsEscaped = false;
-            foreach (var a in args.Skip(index))
+            foreach (var a in args)
             {
                 if (!areOptionsEscaped)
                 {
@@ -68,10 +92,20 @@ namespace MaSch.Console.Cli.Runtime
                             options.Add(currentOption);
 
                         var optionName = a[2..];
-                        var option = currentCommand.Options.FirstOrDefault(x => x.Aliases.Contains(optionName, StringComparer.OrdinalIgnoreCase));
+                        var option = command.Options.FirstOrDefault(x => x.Aliases.Contains(optionName, StringComparer.OrdinalIgnoreCase));
                         if (option == null)
-                            return (null, null, new CliError(CliErrorType.UnknownOption, currentCommand) { OptionName = a });
-                        currentOption = new OptionValue(option);
+                        {
+                            if (!appOptions.IgnoreUnknownOptions)
+                            {
+                                error = new CliError(CliErrorType.UnknownOption, command) { OptionName = a };
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            currentOption = new OptionValue(option);
+                        }
+
                         continue;
                     }
                     else if (a?.StartsWith("-") == true && a.Length > 1)
@@ -80,40 +114,42 @@ namespace MaSch.Console.Cli.Runtime
                         {
                             if (currentOption != null)
                                 options.Add(currentOption);
-                            var option = currentCommand.Options.FirstOrDefault(x => x.ShortAliases.Contains(s));
+                            var option = command.Options.FirstOrDefault(x => x.ShortAliases.Contains(s));
                             if (option == null)
-                                return (null, null, new CliError(CliErrorType.UnknownOption, currentCommand) { OptionName = $"-{s}" });
-                            currentOption = new OptionValue(option);
+                            {
+                                if (!appOptions.IgnoreUnknownOptions)
+                                {
+                                    error = new CliError(CliErrorType.UnknownOption, command) { OptionName = $"-{s}" };
+                                    return false;
+                                }
+                            }
+                            else
+                            {
+                                currentOption = new OptionValue(option);
+                            }
                         }
 
                         continue;
                     }
                     else if (currentOption != null)
                     {
-                        try
+                        if (ReferenceEquals(currentOption.Value, UnsetValue))
                         {
-                            if (ReferenceEquals(currentOption.Value, UnsetValue))
+                            if (typeof(IEnumerable).IsAssignableFrom(currentOption.Option.PropertyType) && currentOption.Option.PropertyType != typeof(string))
                             {
-                                if (typeof(IEnumerable).IsAssignableFrom(currentOption.Option.PropertyType) && currentOption.Option.PropertyType != typeof(string))
-                                {
-                                    currentOption.Value = new List<string?> { a };
-                                }
-                                else
-                                {
-                                    currentOption.Value = a;
-                                    options.Add(currentOption);
-                                    currentOption = null;
-                                }
+                                currentOption.Value = new List<string?> { a };
                             }
                             else
                             {
-                                var list = (List<string?>)currentOption.Value!;
-                                list.Add(a);
+                                currentOption.Value = a;
+                                options.Add(currentOption);
+                                currentOption = null;
                             }
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            return (null, null, new CliError(CliErrorType.BadOptionValue, currentCommand, currentOption?.Option) { Exception = ex });
+                            var list = (List<string?>)currentOption.Value!;
+                            list.Add(a);
                         }
 
                         continue;
@@ -124,7 +160,7 @@ namespace MaSch.Console.Cli.Runtime
                 {
                     listValue.Add(a);
                 }
-                else
+                else if (values.Count < orderedValueInfos.Length)
                 {
                     var valueType = orderedValueInfos[values.Count].PropertyType;
                     if (typeof(IEnumerable).IsAssignableFrom(valueType) && valueType != typeof(string))
@@ -132,22 +168,45 @@ namespace MaSch.Console.Cli.Runtime
                     else
                         values.Add(new ValueValue(orderedValueInfos[values.Count], a));
                 }
+                else if (!appOptions.IgnoreAdditionalValues)
+                {
+                    error = new CliError(CliErrorType.UnknownValue, command);
+                    return false;
+                }
             }
 
             if (currentOption != null)
                 options.Add(currentOption);
 
-            var optionsObj = Activator.CreateInstance(currentCommand.CommandType)!;
-            foreach (var value in currentCommand.Values)
+            error = null;
+            return true;
+        }
+
+        private static bool TryCreateOptions(CliCommandInfo command, IList<ValueValue> values, IList<OptionValue> options, [NotNullWhen(false)] out CliError? error, out object optionsObj)
+        {
+            optionsObj = command.OptionsInstance ?? Activator.CreateInstance(command.CommandType)!;
+            foreach (var value in command.Values.Except(values.Select(x => x.ValueInfo)))
             {
+                if (value.IsRequired)
+                {
+                    error = new CliError(CliErrorType.MissingValue, command, value);
+                    return false;
+                }
+
                 if (typeof(IEnumerable).IsAssignableFrom(value.PropertyType) && value.PropertyType != typeof(string))
                     value.SetValue(optionsObj, Array.Empty<object?>());
                 else
                     value.SetValue(optionsObj, value.DefaultValue ?? value.PropertyType.GetDefault());
             }
 
-            foreach (var option in currentCommand.Options)
+            foreach (var option in command.Options.Except(options.Select(x => x.Option)))
             {
+                if (option.IsRequired)
+                {
+                    error = new CliError(CliErrorType.MissingOption, command, option);
+                    return false;
+                }
+
                 if (typeof(IEnumerable).IsAssignableFrom(option.PropertyType) && option.PropertyType != typeof(string))
                     option.SetValue(optionsObj, Array.Empty<object?>());
                 else
@@ -159,7 +218,15 @@ namespace MaSch.Console.Cli.Runtime
                 var v = value.Value == UnsetValue
                     ? typeof(IEnumerable).IsAssignableFrom(value.ValueInfo.PropertyType) && value.ValueInfo.PropertyType != typeof(string) ? Array.Empty<object?>() : (value.ValueInfo.DefaultValue ?? value.ValueInfo.PropertyType.GetDefault())
                     : value.Value;
-                value.ValueInfo.SetValue(optionsObj, v);
+                try
+                {
+                    value.ValueInfo.SetValue(optionsObj, v);
+                }
+                catch (Exception ex)
+                {
+                    error = new CliError(CliErrorType.WrongValueFormat, command, value.ValueInfo) { Exception = ex };
+                    return false;
+                }
             }
 
             foreach (var option in options)
@@ -167,10 +234,19 @@ namespace MaSch.Console.Cli.Runtime
                 var v = option.Value == UnsetValue
                     ? typeof(IEnumerable).IsAssignableFrom(option.Option.PropertyType) && option.Option.PropertyType != typeof(string) ? Array.Empty<object?>() : (option.Option.DefaultValue ?? option.Option.PropertyType.GetDefault())
                     : option.Value;
-                option.Option.SetValue(optionsObj, v);
+                try
+                {
+                    option.Option.SetValue(optionsObj, v);
+                }
+                catch (Exception ex)
+                {
+                    error = new CliError(CliErrorType.WrongOptionFormat, command, option.Option) { Exception = ex };
+                    return false;
+                }
             }
 
-            return (currentCommand, optionsObj, null);
+            error = null;
+            return true;
         }
 
         private class OptionValue

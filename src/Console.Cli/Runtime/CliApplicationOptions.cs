@@ -2,9 +2,15 @@
 
 namespace MaSch.Console.Cli.Runtime
 {
-    public class CliApplicationOptions
+    public sealed class CliApplicationOptions
     {
-        public ICliHelpPage HelpPage { get; set; }
+        public ICliHelpPage HelpPage { get; init; }
+        public bool IgnoreUnknownOptions { get; init; }
+        public bool IgnoreAdditionalValues { get; init; }
+        public bool ProvideHelpCommand { get; init; }
+        public bool ProvideVersionCommand { get; init; }
+        public bool ProvideHelpOptions { get; init; }
+        public bool ProvideVersionOptions { get; init; }
 
         public CliApplicationOptions()
         {

@@ -7,6 +7,7 @@ namespace MaSch.Console.Cli.ErrorHandling
         public CliErrorType Type { get; set; }
         public CliCommandInfo? AffectedCommand { get; set; }
         public CliCommandOptionInfo? AffectedOption { get; set; }
+        public CliCommandValueInfo? AffectedValue { get; set; }
 
         public string? OptionName { get; set; }
         public Exception? Exception { get; set; }
@@ -26,6 +27,12 @@ namespace MaSch.Console.Cli.ErrorHandling
             : this(type, affectedCommand)
         {
             AffectedOption = affectedOption;
+        }
+
+        public CliError(CliErrorType type, CliCommandInfo? affectedCommand, CliCommandValueInfo? affectedValue)
+            : this(type, affectedCommand)
+        {
+            AffectedValue = affectedValue;
         }
     }
 }

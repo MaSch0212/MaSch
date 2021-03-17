@@ -4,10 +4,12 @@
     {
         VersionRequested,
         HelpRequested,
-        MissingRequiredOption,
-        UnknownOption,
         UnknownCommand,
-        MissingOptionValue,
-        BadOptionValue,
+        UnknownOption,
+        UnknownValue,
+        MissingOption,
+        MissingValue,
+        WrongOptionFormat,
+        WrongValueFormat,
     }
 }

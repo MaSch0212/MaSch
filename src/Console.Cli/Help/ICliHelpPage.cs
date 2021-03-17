@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using MaSch.Console.Cli.ErrorHandling;
+using MaSch.Console.Cli.Runtime;
 
 namespace MaSch.Console.Cli.Help
 {
     public interface ICliHelpPage
     {
-        void WriteRootHelpPage(IEnumerable<CliCommandInfo> rootCommands);
-        void WriteHelpPage(CliCommandInfo command);
+        void WriteHelpPage(ICliApplicationBase application, CliError error);
     }
 }

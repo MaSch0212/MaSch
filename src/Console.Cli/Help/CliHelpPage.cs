@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MaSch.Console.Cli.ErrorHandling;
+using MaSch.Console.Cli.Runtime;
+using System;
 
 namespace MaSch.Console.Cli.Help
 {
     public class CliHelpPage : ICliHelpPage
     {
-        public void WriteHelpPage(CliCommandInfo command)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void WriteRootHelpPage(IEnumerable<CliCommandInfo> rootCommands)
+        public void WriteHelpPage(ICliApplicationBase application, CliError error)
         {
             throw new NotImplementedException();
         }

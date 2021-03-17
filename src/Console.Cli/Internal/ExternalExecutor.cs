@@ -10,7 +10,7 @@ namespace MaSch.Console.Cli.Internal
 {
     internal static class ExternalExecutor
     {
-        public static IExecutor GetExecutor(Type executorType, Type commandType)
+        public static IExecutor GetExecutor(Type executorType, Type commandType, object? executorInstance)
         {
             var types = (from i in executorType.GetInterfaces()
                          where i.IsGenericType
@@ -22,14 +22,15 @@ namespace MaSch.Console.Cli.Internal
                 : types.FirstOrDefault(x => x.IsAssignableFrom(commandType));
             if (type == null)
                 throw new ArgumentException($"The type {executorType.Name} needs to implement {typeof(ICliCommandExecutor<>).Name} and/or {typeof(ICliAsyncCommandExecutor<>).Name} for type {commandType.Name}.", nameof(executorType));
-            return (IExecutor)Activator.CreateInstance(typeof(ExternalExecutor<>).MakeGenericType(type), executorType) !;
+            return (IExecutor)Activator.CreateInstance(typeof(ExternalExecutor<>).MakeGenericType(type), executorType, executorInstance)!;
         }
 
-        public static (object Executor, T TObj) PreExecute<T>(Type executorType, object obj)
+        public static (object Executor, T TObj) PreExecute<T>(Type executorType, object? executorInstance, object obj)
         {
             if (obj is not T tObj)
                 throw new ArgumentException($"The object needs to be an instance of class {typeof(T).Name}. (Actual: {obj?.GetType().Name ?? "(null)"})", nameof(obj));
-            var executor = Activator.CreateInstance(executorType)
+            var executor = executorInstance
+                ?? Activator.CreateInstance(executorType)
                 ?? throw new ArgumentException($"And instance of type {executorType.Name} could not be created. Please make sure the class has an empty constructor.", nameof(executorType));
             return (executor, tObj);
         }
@@ -39,10 +40,12 @@ namespace MaSch.Console.Cli.Internal
     internal class ExternalExecutor<T> : IExecutor
     {
         private readonly Type _executorType;
+        private readonly object? _executorInstance;
 
-        public ExternalExecutor(Type executorType)
+        public ExternalExecutor(Type executorType, object? executorInstance)
         {
             _executorType = Guard.NotNull(executorType, nameof(executorType));
+            _executorInstance = Guard.OfType(executorInstance, nameof(executorInstance), executorType);
 
             if (!typeof(ICliCommandExecutor<T>).IsAssignableFrom(executorType) && !typeof(ICliAsyncCommandExecutor<T>).IsAssignableFrom(executorType))
                 throw new ArgumentException($"The type {executorType.Name} needs to implement {typeof(ICliCommandExecutor<T>).Name} and/or {typeof(ICliAsyncCommandExecutor<T>).Name} for type {typeof(T).Name}.", nameof(executorType));
@@ -50,7 +53,7 @@ namespace MaSch.Console.Cli.Internal
 
         public int Execute(object obj)
         {
-            var (ee, tObj) = ExternalExecutor.PreExecute<T>(_executorType, obj);
+            var (ee, tObj) = ExternalExecutor.PreExecute<T>(_executorType, _executorInstance, obj);
             if (ee is ICliCommandExecutor<T> executor)
                 return executor.ExecuteCommand(tObj);
             else if (ee is ICliAsyncCommandExecutor<T> asyncExecutor)
@@ -61,7 +64,7 @@ namespace MaSch.Console.Cli.Internal
 
         public async Task<int> ExecuteAsync(object obj)
         {
-            var (ee, tObj) = ExternalExecutor.PreExecute<T>(_executorType, obj);
+            var (ee, tObj) = ExternalExecutor.PreExecute<T>(_executorType, _executorInstance, obj);
             if (ee is ICliAsyncCommandExecutor<T> asyncExecutor)
                 return await asyncExecutor.ExecuteCommandAsync(tObj);
             else if (ee is ICliCommandExecutor<T> executor)
