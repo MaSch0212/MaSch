@@ -136,7 +136,7 @@ namespace MaSch.Presentation.Wpf.Commands
         private T? GetParameterValue(object? parameter)
         {
             if (ThrowExceptionOnWrongParamType)
-                return (T)parameter;
+                return (T?)parameter;
             return parameter?.GetType().IsCastableTo(typeof(T)) == true ? (T)parameter : default;
         }
 

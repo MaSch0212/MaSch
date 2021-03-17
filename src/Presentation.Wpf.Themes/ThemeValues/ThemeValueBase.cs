@@ -124,7 +124,7 @@ namespace MaSch.Presentation.Wpf.ThemeValues
         protected TValue? ParseValue<TValue>(object? value)
         {
             if (value is not ThemeValueReference reference)
-                return (TValue)value;
+                return (TValue?)value;
 
             if (string.IsNullOrEmpty(reference.Property))
             {
@@ -184,7 +184,7 @@ namespace MaSch.Presentation.Wpf.ThemeValues
                     {
                         _references.Where(x => x.Value != null && e.AddedValues.ContainsKey(x.Value.CustomKey)).ToArray().ForEach(x =>
                         {
-                            SubscribePropertyChange(x.Value, e.AddedValues[x.Value.CustomKey]);
+                            SubscribePropertyChange(x.Value, e.AddedValues[x.Value!.CustomKey]);
                             NotifyPropertyChanged(x.Key);
                         });
                     }
@@ -195,7 +195,7 @@ namespace MaSch.Presentation.Wpf.ThemeValues
                     {
                         _references.Where(x => x.Value != null && e.RemovedValues.ContainsKey(x.Value.CustomKey)).ToArray().ForEach(x =>
                         {
-                            UnsubscribePropertyChange(x.Value, e.RemovedValues[x.Value.CustomKey]);
+                            UnsubscribePropertyChange(x.Value, e.RemovedValues[x.Value!.CustomKey]);
                             NotifyPropertyChanged(x.Key);
                         });
                     }
@@ -204,9 +204,9 @@ namespace MaSch.Presentation.Wpf.ThemeValues
                 case ThemeValueChangeType.Change:
                     _references.Where(x => x.Value != null && e.HasChangeForKey(x.Value.CustomKey)).ToArray().ForEach(x =>
                     {
-                        if (e.RemovedValues != null && e.RemovedValues.TryGetValue(x.Value.CustomKey, out var removedValue))
+                        if (e.RemovedValues != null && e.RemovedValues.TryGetValue(x.Value!.CustomKey, out var removedValue))
                             UnsubscribePropertyChange(x.Value, removedValue);
-                        if (e.AddedValues != null && e.AddedValues.TryGetValue(x.Value.CustomKey, out var addedValue))
+                        if (e.AddedValues != null && e.AddedValues.TryGetValue(x.Value!.CustomKey, out var addedValue))
                             SubscribePropertyChange(x.Value, addedValue);
                         NotifyPropertyChanged(x.Key);
                     });
@@ -214,7 +214,7 @@ namespace MaSch.Presentation.Wpf.ThemeValues
                 case ThemeValueChangeType.Clear:
                     _references.Where(x => x.Value != null).ToArray().ForEach(x =>
                     {
-                        if (e.RemovedValues != null && e.RemovedValues.TryGetValue(x.Value.CustomKey, out var removedValue))
+                        if (e.RemovedValues != null && e.RemovedValues.TryGetValue(x.Value!.CustomKey, out var removedValue))
                             UnsubscribePropertyChange(x.Value, removedValue);
                         NotifyPropertyChanged(x.Key);
                     });
