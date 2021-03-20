@@ -59,8 +59,11 @@ namespace MaSch.Generators
                 {
                     if (interfaceType == InterfaceType.ObservableObject)
                     {
-                        builder.AppendLine("private readonly System.Collections.Generic.Dictionary<string, MaSch.Core.Attributes.NotifyPropertyChangedAttribute> _attributes;")
-                               .AppendLine("private readonly MaSch.Core.Observable.Modules.ObservableObjectModule _module;")
+                        builder.AppendLine("private System.Collections.Generic.Dictionary<string, MaSch.Core.Attributes.NotifyPropertyChangedAttribute> __attributes;")
+                               .AppendLine("private MaSch.Core.Observable.Modules.ObservableObjectModule __module;")
+                               .AppendLine()
+                               .AppendLine("private System.Collections.Generic.Dictionary<string, MaSch.Core.Attributes.NotifyPropertyChangedAttribute> _attributes => __attributes ??= MaSch.Core.Attributes.NotifyPropertyChangedAttribute.InitializeAll(this);")
+                               .AppendLine("private MaSch.Core.Observable.Modules.ObservableObjectModule _module => __module ??= new MaSch.Core.Observable.Modules.ObservableObjectModule(this);")
                                .AppendLine();
                     }
 
@@ -73,14 +76,6 @@ namespace MaSch.Generators
                         builder.AppendLine("/// <inheritdoc/>")
                                .AppendLine("public virtual bool IsNotifyEnabled { get; set; } = true;")
                                .AppendLine()
-                               .AppendLine($"/// <summary>Initializes a new instance of the <see cref=\"{typeSymbol.Name}\"/> class.</summary>");
-                        using (builder.AddBlock($"public {typeSymbol.Name}()"))
-                        {
-                            builder.AppendLine("_module = new MaSch.Core.Observable.Modules.ObservableObjectModule(this);")
-                                   .AppendLine("_attributes = MaSch.Core.Attributes.NotifyPropertyChangedAttribute.InitializeAll(this);");
-                        }
-
-                        builder.AppendLine()
                                .AppendLine("/// <inheritdoc/>");
                     }
                     else
