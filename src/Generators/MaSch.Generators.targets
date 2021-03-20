@@ -1,5 +1,11 @@
 ﻿<Project>
   <ItemGroup>
     <CompilerVisibleProperty Include="Nullable" />
+    <CompilerVisibleProperty Include="ProjectDir" />
+    <CompilerVisibleProperty Include="RootNamespace" />
+    
+    <CompilerVisibleProperty Include="GenerateSqlQueryAccessor" />
+    <CompilerVisibleProperty Include="SqlQueryAccessorRootDir" />
+    <CompilerVisibleProperty Include="SqlQueryAccessorName" />
   </ItemGroup>
 </Project>
