@@ -1560,6 +1560,20 @@ namespace MaSch.Core.Extensions
         }
 
         /// <summary>
+        /// Tries to get the element at a specific index of an <see cref="IEnumerable{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="enumerable" />.</typeparam>
+        /// <param name="enumerable">An <see cref="IEnumerable{T}"/> to return an element from.</param>
+        /// <param name="index">The index from which to retrieve the element.</param>
+        /// <param name="value">If an element exists at the speicifed index, contains the value at that index; otherwise, the default value for <typeparamref name="T"/>.</param>
+        /// <returns><c>true</c> if an element exists at the specified <paramref name="index"/> in the <paramref name="enumerable"/>.</returns>
+        public static bool TryElementAt<T>(this IEnumerable<T> enumerable, int index, [MaybeNullWhen(false)] out T value)
+        {
+            Guard.NotNull(enumerable, nameof(enumerable));
+            return TryFirst(enumerable.Skip(index), out value);
+        }
+
+        /// <summary>
         /// Adds the previous entry of each element to the resulting <see cref="IEnumerable{T}"/>.
         /// </summary>
         /// <typeparam name="T">The type of the elements of <paramref name="enumerable" />.</typeparam>
