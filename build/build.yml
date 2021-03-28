@@ -6,14 +6,15 @@ trigger:
     include:
     - build
     - src
-    - src/Test/Test.Components
-    exclude:
-    - src/Test
 
 pool:
   vmImage: 'windows-2019'
 
 steps:
+- checkout: self
+  clean: true
+  persistCredentials: true
+
 - script: dotnet nuget locals all --clear
   displayName: "\U0001F4A3 Cleanup NuGet"
 
@@ -45,6 +46,39 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+
+- powershell: |
+    $hasError = $false
+    foreach ($file in Get-ChildItem *.nupkg) {
+      Write-Output "Processing file $($file.name)..."
+
+      $match = [Text.RegularExpressions.Regex]::Match($file.name, "MaSch\.(?<Name>.+?)\.(?<Version>[\.0-9]+).*\.nupkg")
+      if ($match.Success) {
+        $tagName = "$($match.Groups["Name"])/$($match.Groups["Version"])"
+        git rev-parse "$tagName" 2>&1>$null
+
+        if ($LASTEXITCODE -eq 0) {
+          Write-Host "The tag `"$tagName`" already exists."
+        } else {
+          Write-Host "The tag `"$tagName`" does not exist."
+          Write-Host "Creating and pushing tag `"$tagName`"..."
+          git tag "$tagName"
+          git push origin "$tagName"
+        }
+      } else {
+        Write-Output "##vso[task.logissue type=warning]Could not parse filename $($file.name) correctly."
+        $hasError = $true
+      }
+    }
+    if ($hasError) {
+      $LASTEXITCODE = -1
+    } else {
+      $LASTEXITCODE = 0
+    }
+  displayName: "\U0001F516 Create tags"
+  workingDirectory: $(Build.ArtifactStagingDirectory)
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  continueOnError: true
 
 - powershell: |
     foreach ($file in Get-ChildItem *.nupkg) {

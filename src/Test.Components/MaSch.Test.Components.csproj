@@ -15,10 +15,10 @@
     <PackageTags>masch test mstest</PackageTags>
   </PropertyGroup>
 
-  <Import Project="../../../build/MaSch.props" />
+  <Import Project="../../build/MaSch.props" />
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\MaSch.Core.csproj" />
+    <ProjectReference Include="..\Core\MaSch.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
