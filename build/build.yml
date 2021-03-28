@@ -48,6 +48,7 @@ steps:
     publishLocation: 'Container'
 
 - powershell: |
+    $ErrorActionPreference = "Continue"
     $hasError = $false
     foreach ($file in Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Filter *.nupkg) {
       Write-Output "Processing file $($file.name)..."
