@@ -154,7 +154,7 @@ namespace MaSch.Console
                 !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WT_SESSION")); // Windows Terminal
 
             if (IsFancyConsole)
-                OutputEncoding = Encoding.Unicode;
+                OutputEncoding = Encoding.UTF8;
         }
 
         /// <inheritdoc />

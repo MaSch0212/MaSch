@@ -1,4 +1,5 @@
-﻿using MaSch.Core.Extensions;
+﻿using MaSch.Core;
+using MaSch.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -78,7 +79,7 @@ namespace MaSch.Console.Controls
         /// <param name="console">The console to use.</param>
         public SelectControl(IConsoleService console)
         {
-            _console = console;
+            _console = Guard.NotNull(console, nameof(console));
         }
 
         /// <summary>

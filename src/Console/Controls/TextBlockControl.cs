@@ -1,4 +1,5 @@
-﻿using MaSch.Core.Extensions;
+﻿using MaSch.Core;
+using MaSch.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,7 +76,7 @@ namespace MaSch.Console.Controls
         /// <param name="console">The console to use.</param>
         public TextBlockControl(IConsoleService console)
         {
-            _console = console;
+            _console = Guard.NotNull(console, nameof(console));
         }
 
         /// <summary>
@@ -129,7 +130,9 @@ namespace MaSch.Console.Controls
             var maxLength = ActualWidth;
 
             if (string.IsNullOrEmpty(Text))
-                return Array.Empty<string>();
+            {
+                return Enumerable.Repeat(new string(' ', maxLength), Height ?? 1).ToArray();
+            }
 
             if ((!Height.HasValue || Height > 1) && wrap != Controls.TextWrap.NoWrap)
                 return FormatAndTrimLines(WrapText(Text, maxLength, wrap), maxLength, Height ?? int.MaxValue, ellipsis, TextAlignment);
@@ -140,7 +143,7 @@ namespace MaSch.Console.Controls
         private static string[] WrapText(string text, int maxLineLength, TextWrap wrap)
         {
             var lines = text.Replace("\r", string.Empty).Split(new[] { '\n' }, StringSplitOptions.None);
-            for (int i = 0; i < lines.Length; i++)
+            for (int i = 1; i < lines.Length; i++)
                 lines[i] = "\n" + lines[i];
             return wrap switch
             {
