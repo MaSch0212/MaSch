@@ -49,7 +49,7 @@ steps:
 
 - powershell: |
     $hasError = $false
-    foreach ($file in Get-ChildItem *.nupkg) {
+    foreach ($file in Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Filter *.nupkg) {
       Write-Output "Processing file $($file.name)..."
 
       $match = [Text.RegularExpressions.Regex]::Match($file.name, "MaSch\.(?<Name>.+?)\.(?<Version>[\.0-9]+).*\.nupkg")
@@ -76,7 +76,6 @@ steps:
       $LASTEXITCODE = 0
     }
   displayName: "\U0001F516 Create tags"
-  workingDirectory: $(Build.ArtifactStagingDirectory)
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   continueOnError: true
 
