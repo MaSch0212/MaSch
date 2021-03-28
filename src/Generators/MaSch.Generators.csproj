@@ -1,7 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-
     <!-- General Project info -->
     <TargetFramework>netstandard2.0</TargetFramework>
 
@@ -9,6 +7,7 @@
     <SignAssembly>true</SignAssembly>
     <BuildOutputTargetFolder>analyzers</BuildOutputTargetFolder>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <AddReleaseNotes>true</AddReleaseNotes>
 
     <!-- Package Info -->
     <Description>Contains some useful Code Generators. Most of these generators requires a reference to the MaSch.Core NuGet package.</Description>
@@ -62,5 +61,4 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-
 </Project>

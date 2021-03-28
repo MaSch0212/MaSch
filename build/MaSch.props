@@ -56,6 +56,21 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
   </ItemGroup>
   
+  <!-- Release notes -->
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec" Condition=" $(AddReleaseNotes) == 'true' ">
+    <PropertyGroup>
+      <ReleaseNotesFile>Properties/release-notes/v$(Version).txt</ReleaseNotesFile>
+    </PropertyGroup>
+    
+    <Error Text="No release notes found for version $(Version). The file is expected at the path &quot;$(ReleaseNotesFile)&quot;" Condition="!Exists('$(ReleaseNotesFile)')" />
+    <ReadLinesFromFile File="$(ReleaseNotesFile)" >
+      <Output TaskParameter="Lines" ItemName="ReleaseNoteLines"/>
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+  
   <!-- Test Projects -->
   <PropertyGroup Condition=" $(IsTestProject) == 'true' ">
     <IsPackable>false</IsPackable>

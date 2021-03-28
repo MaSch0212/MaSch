@@ -1,0 +1,1 @@
+﻿- Remove generation of constructor in ObservableObjectGenerator.

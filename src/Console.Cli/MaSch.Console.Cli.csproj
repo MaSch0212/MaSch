@@ -1,17 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-
     <!-- General Project info -->
     <TargetFrameworks>net5.0;net48</TargetFrameworks>
     <ConfigureSourceLink>true</ConfigureSourceLink>
+    <AddReleaseNotes>true</AddReleaseNotes>
 
     <!-- Output info -->
     <SignAssembly>true</SignAssembly>
 
     <!-- Package Info -->
     <Description>Contains supporting code for console CLI applications.</Description>
-    <Version>0.1.2</Version>
+    <Version>0.1.0</Version>
     <PackageTags>masch console terminal cli commandline parser</PackageTags>
   </PropertyGroup>
 
@@ -31,5 +30,4 @@
   <ItemGroup>
     <Folder Include="Internal\Commands\" />
   </ItemGroup>
-
 </Project>

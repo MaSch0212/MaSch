@@ -1,0 +1,1 @@
+﻿- Added SqlQueryAccessor Generator which which sql files are generated into a static C# class.

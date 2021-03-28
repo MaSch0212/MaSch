@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-
     <!-- General Project info -->
     <TargetFrameworks>net5.0-windows;net48</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <ConfigureSourceLink>true</ConfigureSourceLink>
+    <AddReleaseNotes>true</AddReleaseNotes>
 
     <!-- Output info -->
     <SignAssembly>true</SignAssembly>

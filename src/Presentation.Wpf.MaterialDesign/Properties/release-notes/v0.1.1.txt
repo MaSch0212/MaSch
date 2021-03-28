@@ -1,0 +1,4 @@
+- Code cleanup.
+- Added SourceLink to the NuGet package.
+- Assemblies are now built deterministic.
+- Enabled Nullable Reference Types feature.

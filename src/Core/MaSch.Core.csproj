@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-
     <!-- General Project info -->
     <TargetFrameworks>net5.0;net48</TargetFrameworks>
     <ConfigureSourceLink>true</ConfigureSourceLink>
+    <AddReleaseNotes>true</AddReleaseNotes>
 
     <!-- Output info -->
     <SignAssembly>true</SignAssembly>

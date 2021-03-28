@@ -6,6 +6,7 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ConfigureSourceLink>true</ConfigureSourceLink>
+    <AddReleaseNotes>true</AddReleaseNotes>
 
     <!-- Output info -->
     <SignAssembly>true</SignAssembly>

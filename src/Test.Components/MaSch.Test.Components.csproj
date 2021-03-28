@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-
     <!-- General Project info -->
     <RootNamespace>MaSch.Test</RootNamespace>
     <TargetFrameworks>net5.0;net48</TargetFrameworks>
     <ConfigureSourceLink>true</ConfigureSourceLink>
+    <AddReleaseNotes>true</AddReleaseNotes>
 
     <!-- Output info -->
     <SignAssembly>true</SignAssembly>

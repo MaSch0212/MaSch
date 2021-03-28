@@ -1,0 +1,3 @@
+﻿- Added additional options for the ObservablePropertiesGenerator.
+  - Adjust access modifier per property.
+  - Adjust whether a property should be virtual or not.
