@@ -26,6 +26,7 @@ namespace MaSch.Console.Cli
         public bool IsDefault => Attribute.IsDefault;
         public string? HelpText => Attribute.HelpText;
         public int Order => Attribute.HelpOrder;
+        public bool IsExecutable => Attribute.Executable;
         public CliCommandInfo? ParentCommand { get; private set; }
         public IReadOnlyList<CliCommandInfo> ChildCommands => _cache.GetValue(() => _childCommands.AsReadOnly())!;
         public IReadOnlyList<CliCommandOptionInfo> Options => _cache.GetValue(() => _options.AsReadOnly())!;

@@ -5,6 +5,6 @@ namespace MaSch.Console.Cli.Help
 {
     public interface ICliHelpPage
     {
-        void WriteHelpPage(ICliApplicationBase application, CliError error);
+        void Write(ICliApplicationBase application, CliError error);
     }
 }

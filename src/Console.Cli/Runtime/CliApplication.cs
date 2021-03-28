@@ -102,7 +102,7 @@ namespace MaSch.Console.Cli.Runtime
             else
             {
                 options = command = null;
-                Options.HelpPage.WriteHelpPage(this, result.Error!);
+                Options.HelpPage.Write(this, result.Error!);
                 return false;
             }
         }

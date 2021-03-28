@@ -9,6 +9,7 @@ namespace MaSch.Console.Cli.ErrorHandling
         public CliCommandOptionInfo? AffectedOption { get; set; }
         public CliCommandValueInfo? AffectedValue { get; set; }
 
+        public string? CommandName { get; set; }
         public string? OptionName { get; set; }
         public Exception? Exception { get; set; }
 

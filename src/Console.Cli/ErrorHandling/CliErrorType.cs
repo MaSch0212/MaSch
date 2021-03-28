@@ -7,6 +7,7 @@
         UnknownCommand,
         UnknownOption,
         UnknownValue,
+        MissingCommand,
         MissingOption,
         MissingValue,
         WrongOptionFormat,

@@ -57,12 +57,15 @@
   </ItemGroup>
   
   <!-- Release notes -->
-  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec" Condition=" $(AddReleaseNotes) == 'true' ">
-    <PropertyGroup>
-      <ReleaseNotesFile>Properties/release-notes/v$(Version).txt</ReleaseNotesFile>
-    </PropertyGroup>
+  <PropertyGroup Condition=" $(AddReleaseNotes) == 'true' ">
+    <ReleaseNotesFile>Properties/release-notes/v$(Version).txt</ReleaseNotesFile>
+  </PropertyGroup>
     
-    <Error Text="No release notes found for version $(Version). The file is expected at the path &quot;$(ReleaseNotesFile)&quot;" Condition="!Exists('$(ReleaseNotesFile)')" />
+  <Target Name="WarnAboutMissingReleaseNotesFile" BeforeTargets="DispatchToInnerBuilds" Condition=" $(AddReleaseNotes) == 'true' ">
+    <Warning Text="No release notes found for version $(Version). The file is expected at the path &quot;$(ReleaseNotesFile)&quot;" Condition="!Exists('$(ReleaseNotesFile)')" />
+  </Target>
+    
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec" Condition=" $(AddReleaseNotes) == 'true' ">
     <ReadLinesFromFile File="$(ReleaseNotesFile)" >
       <Output TaskParameter="Lines" ItemName="ReleaseNoteLines"/>
     </ReadLinesFromFile>
@@ -70,7 +73,7 @@
       <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
     </PropertyGroup>
   </Target>
-  
+
   <!-- Test Projects -->
   <PropertyGroup Condition=" $(IsTestProject) == 'true' ">
     <IsPackable>false</IsPackable>

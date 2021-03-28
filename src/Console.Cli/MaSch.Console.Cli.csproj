@@ -23,6 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Console\MaSch.Console.csproj" />
     <ProjectReference Include="..\Core\MaSch.Core.csproj" />
     <ProjectReference Include="..\Generators\MaSch.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>

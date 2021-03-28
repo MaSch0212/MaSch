@@ -17,13 +17,13 @@ namespace MaSch.Console.Cli.Runtime
             if (args == null || args.Length == 0)
             {
                 if (availableCommands.DefaultCommand == null)
-                    return new(new CliError(CliErrorType.UnknownCommand));
+                    return new(new CliError(CliErrorType.MissingCommand));
                 else
                     return new(availableCommands.DefaultCommand, Activator.CreateInstance(availableCommands.DefaultCommand.CommandType)!);
             }
 
             if (!TryParseCommandInfo(args, availableCommands, out var command, out var commandArgIndex))
-                return new(new CliError(CliErrorType.UnknownCommand));
+                return new(new CliError(CliErrorType.UnknownCommand) { CommandName = args[commandArgIndex] });
 
             if (!TryParseOptionsAndValues(args.Skip(commandArgIndex), appOptions, command, out var ovpError, out var values, out var options))
                 return new(ovpError);

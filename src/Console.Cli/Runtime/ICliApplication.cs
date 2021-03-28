@@ -10,6 +10,7 @@ namespace MaSch.Console.Cli.Runtime
     public interface ICliApplicationBase
     {
         IReadOnlyCollection<CliCommandInfo> Commands { get; }
+        CliApplicationOptions Options { get; }
 
         void RegisterCommand(Type commandType);
         void RegisterCommand(Type commandType, Type? executorType);
