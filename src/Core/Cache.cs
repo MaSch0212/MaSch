@@ -98,7 +98,7 @@ namespace MaSch.Core
         /// <returns>
         ///   <c>true</c> if a value exists for the <paramref name="key" />; otherwise <c>false</c>.
         /// </returns>
-        public virtual bool TryGetValue<T>([NotNullWhen(true)] out T? value, [CallerMemberName] string? key = null)
+        public virtual bool TryGetValue<T>([NotNullWhen(true)] out T? value, [CallerMemberName] string key = "<Unknown>")
         {
             Guard.NotNull(key, nameof(key));
 
@@ -256,50 +256,51 @@ namespace MaSch.Core
                 lock (InstanceLock)
                     return _instance ??= new Cache();
             }
+            internal set
+            {
+                lock (InstanceLock)
+                    _instance = value;
+            }
         }
 
         /// <summary>
         /// Gets a value of a specified key.
         /// </summary>
-        /// <typeparam name="T">The type of the value to get.</typeparam>
         /// <param name="key">The key to get the value from.</param>
-        /// <returns>The value of the <paramref name="key"/> typed as <typeparamref name="T"/>.</returns>
+        /// <returns>The value of the <paramref name="key"/> typed as <typeparamref name="TTarget"/>.</returns>
         /// <exception cref="KeyNotFoundException">A value for the specified <paramref name="key"/> does not exist in the <see cref="ICache"/>.</exception>
-        /// <exception cref="InvalidCastException">The value in the <see cref="ICache"/> can not be cast to type <typeparamref name="T"/>.</exception>
-        public static T? GetValue<T>([CallerMemberName] string key = "<Unknown>")
-            => Instance.GetValue<T>(key);
+        /// <exception cref="InvalidCastException">The value in the <see cref="ICache"/> can not be cast to type <typeparamref name="TTarget"/>.</exception>
+        public static TTarget? GetValue([CallerMemberName] string key = "<Unknown>")
+            => Instance.GetValue<TTarget>(key);
 
         /// <summary>
         /// Gets a value of a specified key. If no value exists a specified getter is used to insert the value to the <see cref="ICache"/> and return it.
         /// </summary>
-        /// <typeparam name="T">The type of the value to get.</typeparam>
         /// <param name="valueGetter">The getter which is used if no value for the key exists in the <see cref="ICache"/>.</param>
         /// <param name="key">The key to get the value from.</param>
-        /// <returns>The value of the <paramref name="key"/> typed as <typeparamref name="T"/>.</returns>
-        /// <exception cref="InvalidCastException">The value in the <see cref="ICache"/> can not be cast to type <typeparamref name="T"/>.</exception>
-        public static T? GetValue<T>(Func<T> valueGetter, [CallerMemberName] string key = "<Unknown>")
+        /// <returns>The value of the <paramref name="key"/> typed as <typeparamref name="TTarget"/>.</returns>
+        /// <exception cref="InvalidCastException">The value in the <see cref="ICache"/> can not be cast to type <typeparamref name="TTarget"/>.</exception>
+        public static TTarget? GetValue(Func<TTarget> valueGetter, [CallerMemberName] string key = "<Unknown>")
             => Instance.GetValue(valueGetter, key);
 
         /// <summary>
         /// Gets a value of a specified key. If no value exists a specified getter is used to insert the value to the <see cref="ICache"/> and return it.
         /// </summary>
-        /// <typeparam name="T">The type of the value to get.</typeparam>
         /// <param name="valueGetter">The getter which is used if no value for the key exists in the <see cref="ICache"/>.</param>
         /// <param name="key">The key to get the value from.</param>
-        /// <returns>The value of the <paramref name="key"/> typed as <typeparamref name="T"/>.</returns>
-        /// <exception cref="InvalidCastException">The value in the <see cref="ICache"/> can not be cast to type <typeparamref name="T"/>.</exception>
-        public static async Task<T?> GetValueAsync<T>(Func<Task<T>> valueGetter, [CallerMemberName] string key = "<Unknown>")
+        /// <returns>The value of the <paramref name="key"/> typed as <typeparamref name="TTarget"/>.</returns>
+        /// <exception cref="InvalidCastException">The value in the <see cref="ICache"/> can not be cast to type <typeparamref name="TTarget"/>.</exception>
+        public static async Task<TTarget?> GetValueAsync(Func<Task<TTarget>> valueGetter, [CallerMemberName] string key = "<Unknown>")
             => await Instance.GetValueAsync(valueGetter, key);
 
         /// <summary>
         /// Tries to get the value of a specified key.
         /// </summary>
-        /// <typeparam name="T">The type of the value to get.</typeparam>
-        /// <param name="value">The value of the <paramref name="key"/> types as <typeparamref name="T"/> if it exists; otherwise <c>default(T)</c>.</param>
+        /// <param name="value">The value of the <paramref name="key"/> types as <typeparamref name="TTarget"/> if it exists; otherwise <c>default(T)</c>.</param>
         /// <param name="key">The key to get the value from.</param>
         /// <returns><c>true</c> if a value exists for the <paramref name="key"/>; otherwise <c>false</c>.</returns>
-        /// <exception cref="InvalidCastException">The value in the <see cref="ICache"/> can not be cast to type <typeparamref name="T"/>.</exception>
-        public static bool TryGetValue<T>([NotNullWhen(true)] out T? value, [CallerMemberName] string key = "<Unknown>")
+        /// <exception cref="InvalidCastException">The value in the <see cref="ICache"/> can not be cast to type <typeparamref name="TTarget"/>.</exception>
+        public static bool TryGetValue([NotNullWhen(true)] out TTarget? value, [CallerMemberName] string key = "<Unknown>")
             => Instance.TryGetValue(out value, key);
 
         /// <summary>
@@ -328,10 +329,9 @@ namespace MaSch.Core
         /// <summary>
         /// Sets the value for a specific key on this <see cref="ICache"/>.
         /// </summary>
-        /// <typeparam name="T">The type of the value to set.</typeparam>
         /// <param name="value">The value to set.</param>
         /// <param name="key">The key of the value to set.</param>
-        public static void SetValue<T>(T value, [CallerMemberName] string key = "<Unknown>")
+        public static void SetValue(TTarget value, [CallerMemberName] string key = "<Unknown>")
             => Instance.SetValue(value, key);
 
         /// <summary>
