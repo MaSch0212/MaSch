@@ -6,6 +6,8 @@
     <TargetFrameworks>net5.0;net48</TargetFrameworks>
     <IsTestProject>true</IsTestProject>
     <SignAssembly>true</SignAssembly>
+
+    <NoWarn>$(NoWarn);1685</NoWarn>
   </PropertyGroup>
 
   <Import Project="../../../build/MaSch.props" />
