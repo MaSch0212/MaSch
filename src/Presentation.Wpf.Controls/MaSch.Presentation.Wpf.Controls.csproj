@@ -20,10 +20,6 @@
   <Import Project="../../build/MaSch.props" />
 
   <ItemGroup>
-    <PackageReference Include="System.ComponentModel.Composition" Version="5.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Core\MaSch.Core.csproj" />
     <ProjectReference Include="..\Presentation.Wpf.Themes\MaSch.Presentation.Wpf.Themes.csproj" />
     <ProjectReference Include="..\Presentation.Wpf\MaSch.Presentation.Wpf.csproj" />

@@ -39,7 +39,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaSch.Presentation.Wpf.Win1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "T4", "T4", "{6BD2E163-C4E4-4071-979D-6E1162B69A73}"
 	ProjectSection(SolutionItems) = preProject
-		src\T4\IconFontCssToEnum.ttinclude = src\T4\IconFontCssToEnum.ttinclude
 		src\T4\T4Common.ttinclude = src\T4\T4Common.ttinclude
 	EndProjectSection
 EndProject
@@ -59,10 +58,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{703BC87F
 		build\MaSch.Tests.ruleset = build\MaSch.Tests.ruleset
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1D724401-1149-4BB0-8648-E3D77879CFEA}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaSch.Test.Components.Test", "src\Test\Test.Components.Test\MaSch.Test.Components.Test.csproj", "{6708D3FE-B9B7-4BF6-BB04-27BE4121E81B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaSch.Presentation.DataAnnotation", "src\Presentation.DataAnnotation\MaSch.Presentation.DataAnnotation.csproj", "{9677ED2A-2A91-43CD-8735-3760D915EA54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -290,6 +288,30 @@ Global
 		{B4973D14-1563-4BB4-9CE8-5EE8DE19F2B5}.Release|x64.Build.0 = Release|Any CPU
 		{B4973D14-1563-4BB4-9CE8-5EE8DE19F2B5}.Release|x86.ActiveCfg = Release|Any CPU
 		{B4973D14-1563-4BB4-9CE8-5EE8DE19F2B5}.Release|x86.Build.0 = Release|Any CPU
+		{6708D3FE-B9B7-4BF6-BB04-27BE4121E81B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6708D3FE-B9B7-4BF6-BB04-27BE4121E81B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6708D3FE-B9B7-4BF6-BB04-27BE4121E81B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6708D3FE-B9B7-4BF6-BB04-27BE4121E81B}.Debug|x64.Build.0 = Debug|Any CPU
+		{6708D3FE-B9B7-4BF6-BB04-27BE4121E81B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6708D3FE-B9B7-4BF6-BB04-27BE4121E81B}.Debug|x86.Build.0 = Debug|Any CPU
+		{6708D3FE-B9B7-4BF6-BB04-27BE4121E81B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6708D3FE-B9B7-4BF6-BB04-27BE4121E81B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6708D3FE-B9B7-4BF6-BB04-27BE4121E81B}.Release|x64.ActiveCfg = Release|Any CPU
+		{6708D3FE-B9B7-4BF6-BB04-27BE4121E81B}.Release|x64.Build.0 = Release|Any CPU
+		{6708D3FE-B9B7-4BF6-BB04-27BE4121E81B}.Release|x86.ActiveCfg = Release|Any CPU
+		{6708D3FE-B9B7-4BF6-BB04-27BE4121E81B}.Release|x86.Build.0 = Release|Any CPU
+		{9677ED2A-2A91-43CD-8735-3760D915EA54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9677ED2A-2A91-43CD-8735-3760D915EA54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9677ED2A-2A91-43CD-8735-3760D915EA54}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9677ED2A-2A91-43CD-8735-3760D915EA54}.Debug|x64.Build.0 = Debug|Any CPU
+		{9677ED2A-2A91-43CD-8735-3760D915EA54}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9677ED2A-2A91-43CD-8735-3760D915EA54}.Debug|x86.Build.0 = Debug|Any CPU
+		{9677ED2A-2A91-43CD-8735-3760D915EA54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9677ED2A-2A91-43CD-8735-3760D915EA54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9677ED2A-2A91-43CD-8735-3760D915EA54}.Release|x64.ActiveCfg = Release|Any CPU
+		{9677ED2A-2A91-43CD-8735-3760D915EA54}.Release|x64.Build.0 = Release|Any CPU
+		{9677ED2A-2A91-43CD-8735-3760D915EA54}.Release|x86.ActiveCfg = Release|Any CPU
+		{9677ED2A-2A91-43CD-8735-3760D915EA54}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -305,6 +327,8 @@ Global
 		{B4E79911-96B1-4165-B111-151C6691D59A} = {2BAF4FFD-22F1-4753-B033-5A5B4DE22D56}
 		{81A8C90A-F3BD-4613-AD39-381CB5723E7B} = {243E5404-2E6F-4FEA-86B7-96FC4338F505}
 		{B4973D14-1563-4BB4-9CE8-5EE8DE19F2B5} = {243E5404-2E6F-4FEA-86B7-96FC4338F505}
+		{6708D3FE-B9B7-4BF6-BB04-27BE4121E81B} = {243E5404-2E6F-4FEA-86B7-96FC4338F505}
+		{9677ED2A-2A91-43CD-8735-3760D915EA54} = {163194C2-04FF-4092-B1D1-A2055A374CAF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {65E29835-6B71-486D-82EF-456494F172D7}

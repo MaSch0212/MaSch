@@ -18,7 +18,7 @@
   <Import Project="../../build/MaSch.props" />
 
   <ItemGroup>
-    <PackageReference Include="System.Diagnostics.EventLog" Version="5.0.0" />
+    <PackageReference Include="System.Diagnostics.EventLog" Version="$(SystemDiagnosticsEventLogVersion)" />
   </ItemGroup>
 
   <ItemGroup>

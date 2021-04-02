@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using MaSch.Presentation.Services;
+﻿using MaSch.Presentation.Services;
 
 namespace MaSch.Presentation.Wpf.Services
 {
@@ -7,7 +6,6 @@ namespace MaSch.Presentation.Wpf.Services
     /// Default implementation of the <see cref="IMessageBoxService"/> interface displaying <see cref="MessageBox"/>es.
     /// </summary>
     /// <seealso cref="MaSch.Presentation.Services.IMessageBoxService" />
-    [Export(typeof(IMessageBoxService))]
     public class MessageBoxService : IMessageBoxService
     {
         /// <inheritdoc/>

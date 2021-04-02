@@ -2,7 +2,7 @@
   <PropertyGroup>
 
     <!-- General Project info -->
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFrameworks>net5.0-windows;net48</TargetFrameworks>
     <IsTestProject>true</IsTestProject>
     <UseWPF>true</UseWPF>
   </PropertyGroup>

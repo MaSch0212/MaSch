@@ -1,15 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
-
-    <!-- General Project info -->
     <TargetFrameworks>net5.0;net48</TargetFrameworks>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <Import Project="../../../build/MaSch.props" />
-
+  
   <ItemGroup>
     <ProjectReference Include="..\..\Core\MaSch.Core.csproj" />
     <ProjectReference Include="..\..\Test.Components\MaSch.Test.Components.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Moq" Version="$(MoqVersion)" />
+  </ItemGroup>
+
 </Project>
