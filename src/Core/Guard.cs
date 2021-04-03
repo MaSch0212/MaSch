@@ -34,6 +34,7 @@ namespace MaSch.Core
         /// <returns>The same instance as <paramref name="value"/>.</returns>
         public static string NotNullOrEmpty([NotNull] string? value, string name)
         {
+            NotNull(value, name);
             if (string.IsNullOrEmpty(value))
                 throw new ArgumentException("The parameter value cannot be empty.", name);
             return value;
@@ -49,10 +50,11 @@ namespace MaSch.Core
         /// <param name="max">The maximum accepted value.</param>
         /// <exception cref="ArgumentOutOfRangeException">The <paramref name="value"/> is out of the specified range.</exception>
         /// <returns>The same instance as <paramref name="value"/>.</returns>
-        public static T? NotOutOfRange<T>(T value, string name, T min, T max)
+        public static T? NotOutOfRange<T>(T? value, string name, T min, T max)
             where T : IComparable
         {
-            if (value != null && (value.CompareTo(min) < 0 || value.CompareTo(max) > 0))
+            NotNull(value, name);
+            if (value.CompareTo(min) < 0 || value.CompareTo(max) > 0)
                 throw new ArgumentOutOfRangeException(name, $"The parameter value cannot be outside of the range <{min}> to <{max}>.");
             return value;
         }
@@ -110,10 +112,16 @@ namespace MaSch.Core
         /// <returns>Returns the <paramref name="value"/>.</returns>
         public static object? OfType(object? value, string name, bool allowNull, params Type[] allowedTypes)
         {
+            NotNull(allowedTypes, nameof(allowedTypes));
+            if (allowedTypes.Length == 0)
+                throw new ArgumentException("At least one type needs to be provided.", nameof(allowedTypes));
+
             if (value is null)
             {
                 if (allowedTypes.Any(x => x.IsClass) && allowNull)
                     return null;
+                else if (!allowNull)
+                    throw new ArgumentNullException(name);
             }
             else if (allowedTypes.Any(x => x.IsInstanceOfType(value)))
             {

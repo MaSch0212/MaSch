@@ -68,7 +68,7 @@ namespace MaSch.Core.Logging
             }
 
             var path = Path.Combine(_directoryPath, $"{_fileName}.{_currentFileNumber:000}.log");
-            if (File.Exists(path) && new FileInfo(path).Length >= FileSizeThreshold)
+            while (File.Exists(path) && new FileInfo(path).Length >= FileSizeThreshold)
                 path = Path.Combine(_directoryPath, $"{_fileName}.{++_currentFileNumber:000}.log");
             return path;
         }
