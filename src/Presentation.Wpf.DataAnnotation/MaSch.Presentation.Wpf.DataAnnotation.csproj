@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="../../build/MaSch.Constants.props" />
 
@@ -14,15 +14,16 @@
     <SignAssembly>true</SignAssembly>
 
     <!-- Package Info -->
-    <Description>Contains supporting code for .NET WPF applications using the Prism framework from Microsoft.</Description>
-    <Version>0.1.2</Version>
-    <PackageTags>masch presentation ui frontend wpf prism</PackageTags>
+    <Description>Contains supporting code for .NET WPF applications.</Description>
+    <Version>0.1.0</Version>
+    <PackageTags>masch presentation ui frontend wpf dataannotation annotation</PackageTags>
   </PropertyGroup>
 
   <Import Project="$(GitBuildDir)MaSch.props" />
 
   <ItemGroup>
-    <PackageReference Include="Prism.Wpf" Version="$(PrismWpfVersion)" />
+    <ProjectReference Include="$(GitSourceDir)Core.DataAnnotation/MaSch.Core.DataAnnotation.csproj" />
+    <ProjectReference Include="$(GitSourceDir)Presentation.Wpf/MaSch.Presentation.Wpf.csproj" />
   </ItemGroup>
-  
+
 </Project>

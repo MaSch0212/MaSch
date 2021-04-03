@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace MaSch.Core
@@ -13,10 +14,10 @@ namespace MaSch.Core
     public class DelegateDisposableEnumerable<T> : IDisposableEnumerable<T>
     {
         /// <inheritdoc/>
-        public event EventHandler? Disposing;
+        public event EventHandler<DisposeEventArgs>? Disposing;
 
         /// <inheritdoc/>
-        public event EventHandler? Disposed;
+        public event EventHandler<DisposeEventArgs>? Disposed;
 
         private readonly IEnumerable<T> _enumerable;
         private readonly Action _actionOnDispose;
@@ -54,10 +55,10 @@ namespace MaSch.Core
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected void Dispose(bool disposing)
         {
-            Disposing?.Invoke(this, new EventArgs());
+            Disposing?.Invoke(this, new DisposeEventArgs(disposing));
             if (disposing)
                 _actionOnDispose();
-            Disposed?.Invoke(this, new EventArgs());
+            Disposed?.Invoke(this, new DisposeEventArgs(disposing));
         }
 
         /// <summary>
@@ -74,14 +75,14 @@ namespace MaSch.Core
     /// </summary>
     /// <typeparam name="T">The type of the elements in the <see cref="IOrderedDisposableEnumerable{T}"/>.</typeparam>
     /// <seealso cref="IOrderedDisposableEnumerable{T}" />
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Can be in same file.")]
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Can be in same file.")]
     public class DelegateOrderedDisposableEnumerable<T> : IOrderedDisposableEnumerable<T>
     {
         /// <inheritdoc/>
-        public event EventHandler? Disposing;
+        public event EventHandler<DisposeEventArgs>? Disposing;
 
         /// <inheritdoc/>
-        public event EventHandler? Disposed;
+        public event EventHandler<DisposeEventArgs>? Disposed;
 
         private readonly IOrderedEnumerable<T> _enumerable;
         private readonly Action _actionOnDispose;
@@ -122,10 +123,10 @@ namespace MaSch.Core
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected void Dispose(bool disposing)
         {
-            Disposing?.Invoke(this, new EventArgs());
+            Disposing?.Invoke(this, new DisposeEventArgs(disposing));
             if (disposing)
                 _actionOnDispose();
-            Disposed?.Invoke(this, new EventArgs());
+            Disposed?.Invoke(this, new DisposeEventArgs(disposing));
         }
 
         /// <summary>

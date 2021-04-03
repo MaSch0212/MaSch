@@ -15,12 +15,12 @@ namespace MaSch.Core
         /// <summary>
         /// Occurs when the <see cref="IDisposableEnumerable"/> is being disposed.
         /// </summary>
-        event EventHandler? Disposing;
+        event EventHandler<DisposeEventArgs>? Disposing;
 
         /// <summary>
         /// Occurs after the <see cref="IDisposableEnumerable"/> has been disposed.
         /// </summary>
-        event EventHandler? Disposed;
+        event EventHandler<DisposeEventArgs>? Disposed;
     }
 
     /// <summary>
@@ -43,5 +43,26 @@ namespace MaSch.Core
     public interface IOrderedDisposableEnumerable<T>
         : IDisposableEnumerable, IOrderedEnumerable<T>
     {
+    }
+
+    /// <summary>
+    /// Event arguments for events related to <see cref="IDisposable.Dispose"/>.
+    /// </summary>
+    /// <seealso cref="System.EventArgs" />
+    public class DisposeEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Gets a value indicating whether the object that sent this event is disposing.
+        /// </summary>
+        public bool IsDisposing { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DisposeEventArgs"/> class.
+        /// </summary>
+        /// <param name="isDisposing">If set to <c>true</c> the object that sent this event is disposing.</param>
+        public DisposeEventArgs(bool isDisposing)
+        {
+            IsDisposing = isDisposing;
+        }
     }
 }

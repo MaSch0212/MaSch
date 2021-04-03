@@ -1,24 +1,11 @@
 <Project>
-  <Import Project="$(MSBuildThisFileDirectory)../src/Generators/MaSch.Generators.targets" />
-
-  <PropertyGroup>
-    <!-- Test related packages -->
-    <MsTestVersion>2.2.3</MsTestVersion>
-    <MsTestSdkVersion>16.9.4</MsTestSdkVersion>
-    <MoqVersion>4.16.1</MoqVersion>
-    
-    <!-- Build related packages -->
-    <SourceLinkGitHubVersion>1.0.0</SourceLinkGitHubVersion>
-    <NetAnalyzersVersion>5.0.3</NetAnalyzersVersion>
-    <StyleCopVersion>1.2.0-beta.333</StyleCopVersion>
-    
-    <!-- Functionality related packages -->
-    <NewtonsoftJsonVersion>12.0.3</NewtonsoftJsonVersion>
-    <SystemDiagnosticsEventLogVersion>5.0.0</SystemDiagnosticsEventLogVersion>
-    <SystemComponentModelAnnotationsVersion>5.0.0</SystemComponentModelAnnotationsVersion>
-    <PrismWpf>[7.2.0.1367,8.0.0)</PrismWpf>
-  </PropertyGroup>
   
+  <!-- Imports -->
+  <Import Project="$(MSBuildThisFileDirectory)MaSch.Constants.props" Condition=" $(MaSchConstantsImported) != 'true' " />
+  <Import Project="$(MSBuildThisFileDirectory)../src/Generators/MaSch.Generators.targets" Condition=" $(UseMaSchGenerators) == 'true' " />
+  
+  
+  <!-- Common properties -->
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)MaSch.ruleset</CodeAnalysisRuleSet>
@@ -29,6 +16,7 @@
     <OutputPath>$(MSBuildThisFileDirectory)..\bin\$(Configuration)\</OutputPath>
     <DocumentationFile Condition=" $(NoDocumentation) != 'true' ">$(OutputPath)$(AssemblyName).xml</DocumentationFile>
     <SupportedOSPlatform Condition=" $(UseWpf) == 'true' or $(UseWindowsForms) == 'true' ">windows</SupportedOSPlatform>
+    <NoWarn Condition=" '$(TargetFramework)' == '$(TfmNetFramework)' or '$(TargetFramework)' == '$(TfmNetStandard)' ">$(NoWarn);8600;8601;8602;8603;8604;8777;8767</NoWarn>
 
     <Authors>Marc Schmidt</Authors>
     <Copyright>Copyright © Marc Schmidt 2021</Copyright>
@@ -36,10 +24,8 @@
     <PackageProjectUrl>https://github.com/MaSch0212/MaSch</PackageProjectUrl>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'netstandard2.0' ">
-    <NoWarn>$(NoWarn);8600;8601;8602;8603;8604;8777;8767</NoWarn>
-  </PropertyGroup>
-
+  
+  <!-- Analyzers -->
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="$(NetAnalyzersVersion)">
       <PrivateAssets>all</PrivateAssets>
@@ -51,6 +37,14 @@
     </PackageReference>
   </ItemGroup>
 
+  
+  <!-- Generators -->
+  <ItemGroup>
+    <ProjectReference Include="$(GitSourceDir)Generators/MaSch.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" Condition=" $(UseMaSchGenerators) == 'true' " />
+  </ItemGroup>
+  
+  
+  <!-- Wpf -->
   <ItemGroup Condition=" $(UseWpf) == 'true' and $(TargetFrameworkIdentifier) == '.NETFramework' ">
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -58,9 +52,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
 
+  
+  <!-- Windows Forms -->
   <ItemGroup Condition=" $(UseWindowsForms) == 'true' and $(TargetFrameworkIdentifier) == '.NETFramework' ">
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
+  
   
   <!-- Source Link -->
   <PropertyGroup Condition=" $(ConfigureSourceLink) == 'true' ">
@@ -69,20 +66,21 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
-
+  
   <ItemGroup Condition=" $(ConfigureSourceLink) == 'true' ">
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(SourceLinkGitHubVersion)" PrivateAssets="All"/>
   </ItemGroup>
+  
   
   <!-- Release notes -->
   <PropertyGroup Condition=" $(AddReleaseNotes) == 'true' ">
     <ReleaseNotesFile>Properties/release-notes/v$(Version).txt</ReleaseNotesFile>
   </PropertyGroup>
-    
+  
   <Target Name="WarnAboutMissingReleaseNotesFile" BeforeTargets="DispatchToInnerBuilds" Condition=" $(AddReleaseNotes) == 'true' ">
     <Warning Text="No release notes found for version $(Version). The file is expected at the path &quot;$(ReleaseNotesFile)&quot;" Condition="!Exists('$(ReleaseNotesFile)')" />
   </Target>
-    
+  
   <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec" Condition=" $(AddReleaseNotes) == 'true' ">
     <ReadLinesFromFile File="$(ReleaseNotesFile)" >
       <Output TaskParameter="Lines" ItemName="ReleaseNoteLines"/>
@@ -91,6 +89,7 @@
       <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
     </PropertyGroup>
   </Target>
+  
 
   <!-- Test Projects -->
   <PropertyGroup Condition=" $(IsTestProject) == 'true' ">
@@ -102,5 +101,8 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MsTestSdkVersion)" />
     <PackageReference Include="MSTest.TestAdapter" Version="$(MsTestVersion)" />
     <PackageReference Include="MSTest.TestFramework" Version="$(MsTestVersion)" />
+    <PackageReference Include="Moq" Version="$(MoqVersion)" />
+    <ProjectReference Include="$(GitSourceDir)Test.Components/MaSch.Test.Components.csproj" />
   </ItemGroup>
+  
 </Project>

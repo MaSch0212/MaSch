@@ -1,24 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
-  <PropertyGroup>
 
+  <Import Project="../../../build/MaSch.Constants.props" />
+
+  <PropertyGroup>
     <!-- General Project info -->
-    <TargetFrameworks>net5.0;net48</TargetFrameworks>
+    <TargetFrameworks>$(TfmNetCore);$(TfmNetFramework)</TargetFrameworks>
     <IsTestProject>true</IsTestProject>
+
+    <!-- Output info -->
     <SignAssembly>true</SignAssembly>
 
+    <!-- Disable warning about existing shim in MaSch.Core -->
     <NoWarn>$(NoWarn);1685</NoWarn>
   </PropertyGroup>
 
-  <Import Project="../../../build/MaSch.props" />
+  <Import Project="$(GitBuildDir)MaSch.props" />
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\MaSch.Core.csproj" />
-    <ProjectReference Include="..\..\Test.Components\MaSch.Test.Components.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Moq" Version="$(MoqVersion)" />
+    <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
   </ItemGroup>
   
 </Project>

@@ -11,7 +11,7 @@ namespace MaSch.Data.Extensions
     /// </summary>
     public static class DataReaderExtensions
     {
-        private static readonly Dictionary<Type, Func<IDataRecord, int, object>> GetFunctions = new Dictionary<Type, Func<IDataRecord, int, object>>
+        private static readonly Dictionary<Type, Func<IDataRecord, int, object>> GetFunctions = new()
         {
             [typeof(bool)] = (r, i) => r.GetBoolean(i),
             [typeof(byte)] = (r, i) => r.GetByte(i),
@@ -169,7 +169,7 @@ namespace MaSch.Data.Extensions
         public static T? Get<T>(this IDataRecord record, int columnId)
         {
             if (record.IsDBNull(columnId))
-                return typeof(T).IsClass ? default(T) : throw new InvalidCastException($"The DBNull value cannot be converted to \"{typeof(T).FullName}\".");
+                return typeof(T).IsClass ? default : throw new InvalidCastException($"The DBNull value cannot be converted to \"{typeof(T).FullName}\".");
 
             if (GetFunctions.TryGetValue(typeof(T), out var func))
                 return (T)func(record, columnId);
@@ -220,8 +220,8 @@ namespace MaSch.Data.Extensions
 
         private class DataReaderEnumerable<T> : IDisposableEnumerable<T>
         {
-            public event EventHandler? Disposing;
-            public event EventHandler? Disposed;
+            public event EventHandler<DisposeEventArgs>? Disposing;
+            public event EventHandler<DisposeEventArgs>? Disposed;
 
             private readonly DataReaderEnumerator<T> _enumerator;
 
@@ -235,9 +235,9 @@ namespace MaSch.Data.Extensions
 
             public void Dispose()
             {
-                Disposing?.Invoke(this, new EventArgs());
+                Disposing?.Invoke(this, new DisposeEventArgs(true));
                 _enumerator.Dispose();
-                Disposed?.Invoke(this, new EventArgs());
+                Disposed?.Invoke(this, new DisposeEventArgs(true));
             }
         }
 

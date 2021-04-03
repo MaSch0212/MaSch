@@ -1,0 +1,2 @@
+﻿- Fix Cache<TTarget> methods (use TTarget instead of defining own generic argument).
+- Added DisposableArgs to Disposing and Disposed events in IDisposableEnumerable<T>.

@@ -1,38 +1,39 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-  <PropertyGroup>
 
+  <Import Project="../../build/MaSch.Constants.props" />
+
+  <PropertyGroup>
     <!-- General Project info -->
+    <TargetFrameworks>$(TfmNetCore)-windows;$(TfmNetFramework)</TargetFrameworks>
     <RootNamespace>MaSch.Presentation.Wpf</RootNamespace>
-    <TargetFrameworks>net5.0-windows;net48</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <ConfigureSourceLink>true</ConfigureSourceLink>
     <AddReleaseNotes>true</AddReleaseNotes>
+    <UseMaSchGenerators>true</UseMaSchGenerators>
 
     <!-- Output info -->
     <SignAssembly>true</SignAssembly>
 
     <!-- Package Info -->
     <Description>Contains modern themes for .NET WPF application</Description>
-    <Version>0.1.4</Version>
+    <Version>0.1.5</Version>
     <PackageTags>masch presentation ui frontend wpf themes theming</PackageTags>
   </PropertyGroup>
 
-  <Import Project="../../build/MaSch.props" />
+  <Import Project="$(GitBuildDir)MaSch.props" />
   
   <ItemGroup>
     <None Remove="Themes\Base\Theme.json" />
-    <None Remove="Themes\Dark\Colors.json" />
     <None Remove="Themes\Dark\DefaultWindowIcon.ico" />
     <None Remove="Themes\Dark\Theme.json" />
-    <None Remove="Themes\Light.json" />
     <None Remove="Themes\Light\DefaultWindowIcon.ico" />
+    <None Remove="Themes\Light\Theme.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\MaSch.Core.csproj" />
-    <ProjectReference Include="..\Presentation.Wpf\MaSch.Presentation.Wpf.csproj" />
-    <ProjectReference Include="..\Presentation\MaSch.Presentation.csproj" />
-    <ProjectReference Include="..\Generators\MaSch.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
+    <ProjectReference Include="$(GitSourceDir)Presentation.Wpf/MaSch.Presentation.Wpf.csproj" />
+    <ProjectReference Include="$(GitSourceDir)Presentation/MaSch.Presentation.csproj" />
   </ItemGroup>
   
   <ItemGroup>
@@ -65,4 +66,5 @@
       <DependentUpon>ThemeKey.tt</DependentUpon>
     </Compile>
   </ItemGroup>
+  
 </Project>

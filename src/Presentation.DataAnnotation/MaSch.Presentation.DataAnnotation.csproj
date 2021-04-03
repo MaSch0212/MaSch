@@ -1,8 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="../../build/MaSch.Constants.props" />
+
   <PropertyGroup>
     <!-- General Project info -->
-    <TargetFrameworks>net5.0;net48</TargetFrameworks>
+    <TargetFrameworks>$(TfmNetCore);$(TfmNetFramework)</TargetFrameworks>
     <RootNamespace>MaSch.Presentation</RootNamespace>
     <ConfigureSourceLink>true</ConfigureSourceLink>
     <AddReleaseNotes>true</AddReleaseNotes>
@@ -16,15 +18,15 @@
     <PackageTags>masch presentation ui frontend translation localization validation dataannotation annotation</PackageTags>
   </PropertyGroup>
 
-  <Import Project="../../build/MaSch.props" />
+  <Import Project="$(GitBuildDir)MaSch.props" />
 
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations" Version="$(SystemComponentModelAnnotationsVersion)" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\MaSch.Core.csproj" />
-    <ProjectReference Include="..\Presentation\MaSch.Presentation.csproj" />
+    <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
+    <ProjectReference Include="$(GitSourceDir)Presentation/MaSch.Presentation.csproj" />
   </ItemGroup>
 
 </Project>

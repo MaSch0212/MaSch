@@ -1,18 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
 
+  <Import Project="../../../build/MaSch.Constants.props" />
+
+  <PropertyGroup>
     <!-- General Project info -->
-    <TargetFrameworks>net5.0-windows;net48</TargetFrameworks>
+    <TargetFrameworks>$(TfmNetCore)-windows;$(TfmNetFramework)</TargetFrameworks>
     <IsTestProject>true</IsTestProject>
     <UseWPF>true</UseWPF>
+
+    <!-- Output info -->
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 
-  <Import Project="../../../build/MaSch.props" />
+  <Import Project="$(GitBuildDir)MaSch.props" />
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\MaSch.Core.csproj" />
-    <ProjectReference Include="..\..\Presentation.Wpf.Themes\MaSch.Presentation.Wpf.Themes.csproj" />
-    <ProjectReference Include="..\..\Presentation.Wpf\MaSch.Presentation.Wpf.csproj" />
-    <ProjectReference Include="..\..\Presentation\MaSch.Presentation.csproj" />
+    <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
+    <ProjectReference Include="$(GitSourceDir)Presentation.Wpf.Themes/MaSch.Presentation.Wpf.Themes.csproj" />
+    <ProjectReference Include="$(GitSourceDir)Presentation.Wpf/MaSch.Presentation.Wpf.csproj" />
+    <ProjectReference Include="$(GitSourceDir)Presentation/MaSch.Presentation.csproj" />
   </ItemGroup>
+  
 </Project>

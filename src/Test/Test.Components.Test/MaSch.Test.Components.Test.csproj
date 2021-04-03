@@ -1,19 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   
+  <Import Project="../../../build/MaSch.Constants.props" />
+
   <PropertyGroup>
-    <TargetFrameworks>net5.0;net48</TargetFrameworks>
+    <!-- General Project info -->
+    <TargetFrameworks>$(TfmNetCore);$(TfmNetFramework)</TargetFrameworks>
     <IsTestProject>true</IsTestProject>
+    
+    <!-- Output info -->
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 
-  <Import Project="../../../build/MaSch.props" />
+  <Import Project="$(GitBuildDir)MaSch.props" />
   
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\MaSch.Core.csproj" />
-    <ProjectReference Include="..\..\Test.Components\MaSch.Test.Components.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Moq" Version="$(MoqVersion)" />
+    <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
+    <ProjectReference Include="$(GitSourceDir)Test.Components/MaSch.Test.Components.csproj" />
   </ItemGroup>
 
 </Project>

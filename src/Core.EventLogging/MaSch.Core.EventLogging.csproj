@@ -1,8 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <Import Project="../../build/MaSch.Constants.props" />
+
   <PropertyGroup>
     <!-- General Project info -->
     <RootNamespace>MaSch.Core</RootNamespace>
-    <TargetFrameworks>net5.0-windows;net48</TargetFrameworks>
+    <TargetFrameworks>$(TfmNetCore)-windows;$(TfmNetFramework)</TargetFrameworks>
     <ConfigureSourceLink>true</ConfigureSourceLink>
     <AddReleaseNotes>true</AddReleaseNotes>
 
@@ -15,13 +18,14 @@
     <PackageTags>masch generator sourcegenerator wrapper observable wpf</PackageTags>
   </PropertyGroup>
 
-  <Import Project="../../build/MaSch.props" />
+  <Import Project="$(GitBuildDir)MaSch.props" />
 
   <ItemGroup>
     <PackageReference Include="System.Diagnostics.EventLog" Version="$(SystemDiagnosticsEventLogVersion)" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\MaSch.Core.csproj" />
+    <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
   </ItemGroup>
+  
 </Project>

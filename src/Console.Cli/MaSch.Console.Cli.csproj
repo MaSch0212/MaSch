@@ -1,9 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <Import Project="../../build/MaSch.Constants.props" />
+
   <PropertyGroup>
     <!-- General Project info -->
-    <TargetFrameworks>net5.0;net48</TargetFrameworks>
+    <TargetFrameworks>$(TfmNetCore);$(TfmNetFramework)</TargetFrameworks>
     <ConfigureSourceLink>true</ConfigureSourceLink>
     <AddReleaseNotes>true</AddReleaseNotes>
+    <UseMaSchGenerators>true</UseMaSchGenerators>
 
     <!-- Output info -->
     <SignAssembly>true</SignAssembly>
@@ -14,7 +18,7 @@
     <PackageTags>masch console terminal cli commandline parser</PackageTags>
   </PropertyGroup>
 
-  <Import Project="../../build/MaSch.props" />
+  <Import Project="$(GitBuildDir)MaSch.props" />
 
   <!-- Remove this group when this project contains usable code. -->
   <PropertyGroup>
@@ -23,12 +27,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Console\MaSch.Console.csproj" />
-    <ProjectReference Include="..\Core\MaSch.Core.csproj" />
-    <ProjectReference Include="..\Generators\MaSch.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="$(GitSourceDir)Console/MaSch.Console.csproj" />
+    <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Internal\Commands\" />
   </ItemGroup>
+  
 </Project>

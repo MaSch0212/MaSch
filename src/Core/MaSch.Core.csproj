@@ -1,9 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <Import Project="../../build/MaSch.Constants.props" />
+
   <PropertyGroup>
     <!-- General Project info -->
-    <TargetFrameworks>net5.0;net48</TargetFrameworks>
+    <TargetFrameworks>$(TfmNetCore);$(TfmNetFramework)</TargetFrameworks>
     <ConfigureSourceLink>true</ConfigureSourceLink>
     <AddReleaseNotes>true</AddReleaseNotes>
+    <UseMaSchGenerators>true</UseMaSchGenerators>
 
     <!-- Output info -->
     <SignAssembly>true</SignAssembly>
@@ -14,9 +18,6 @@
     <PackageTags>masch core common observable logging extensions</PackageTags>
   </PropertyGroup>
 
-  <Import Project="../../build/MaSch.props" />
-
-  <ItemGroup>
-    <ProjectReference Include="..\Generators\MaSch.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-  </ItemGroup>
+  <Import Project="$(GitBuildDir)MaSch.props" />
+  
 </Project>
