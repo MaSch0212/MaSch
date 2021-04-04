@@ -148,7 +148,7 @@ namespace MaSch.Generators.Common
 
         private static string CreateHintName(string name, int hash)
         {
-            return $"{name}-{BitConverter.GetBytes(hash).ToHexString()}";
+            return $"{name}-{BitConverter.GetBytes(hash).ToHexString()}.g";
         }
 
         /// <summary>

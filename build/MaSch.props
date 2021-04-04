@@ -14,7 +14,7 @@
     <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
 
     <OutputPath>$(MSBuildThisFileDirectory)..\bin\$(Configuration)\</OutputPath>
-    <DocumentationFile Condition=" $(NoDocumentation) != 'true' ">$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+    <DocumentationFile Condition=" $(NoDocumentation) != 'true' ">$(OutputPath)$(TargetFramework)/$(AssemblyName).xml</DocumentationFile>
     <SupportedOSPlatform Condition=" $(UseWpf) == 'true' or $(UseWindowsForms) == 'true' ">windows</SupportedOSPlatform>
     <NoWarn Condition=" '$(TargetFramework)' == '$(TfmNetFramework)' or '$(TargetFramework)' == '$(TfmNetStandard)' ">$(NoWarn);8600;8601;8602;8603;8604;8777;8767</NoWarn>
 

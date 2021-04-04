@@ -1,0 +1,1 @@
+﻿- Add ".g" to the end of generated files, so it is detected as a generated file by coverlet.
