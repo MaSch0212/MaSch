@@ -5,279 +5,53 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using MaSch.Core.Extensions;
 
-#pragma warning disable SA1402 // File may only contain a single type
+/*
+ * Explanation why methods from IServiceContext and IServiceContext<T> are hidden:
+ *
+ * C# does not allow methods with same name and parameter list even if one is static and the other is not.
+ * To accomplish this there is a workaround though. We can implement the interface using hidden methods and add
+ * extension methods for each of the interface methods. After this everything works as expected.
+ */
 
 namespace MaSch.Core
 {
     /// <summary>
-    /// Represents a static wrapper for the <see cref="ServiceContextInstance"/> class.
+    /// Default implementation of the <see cref="IServiceContext"/> interface.
     /// </summary>
-    public static class ServiceContext
+    public sealed partial class ServiceContext : IServiceContext
     {
-        private static ServiceContextInstance? _instance;
+        private readonly Dictionary<(Type Type, string? Name), object> _services = new();
+        private readonly Dictionary<Type, IDisposable> _views = new();
 
-        /// <summary>
-        /// Gets the current instance of the <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        public static ServiceContextInstance Instance => _instance ??= new ServiceContextInstance();
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="ServiceContextInstance"/> class.
-        /// </summary>
-        /// <returns>A new instance of the <see cref="ServiceContextInstance"/> class.</returns>
-        public static ServiceContextInstance CreateContext() => new();
-
-        /// <summary>
-        /// Gets all services of the current <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        /// <returns>All services of the current <see cref="ServiceContextInstance"/>.</returns>
-        public static IReadOnlyDictionary<(Type Type, string? Name), object> GetAllServices()
-            => Instance.GetAllServices();
-
-        /// <summary>
-        /// Gets all services of the current <see cref="ServiceContextInstance"/> of a specified type.
-        /// </summary>
-        /// <typeparam name="T">The type of services to get.</typeparam>
-        /// <returns>All services of the current <see cref="ServiceContextInstance"/> of type <typeparamref name="T"/>.</returns>
-        public static IEnumerable<(string? Name, T Service)> GetAllServices<T>()
-            => Instance.GetAllServices<T>();
-
-        /// <summary>
-        /// Gets all services of the current <see cref="ServiceContextInstance"/> of a specified type.
-        /// </summary>
-        /// <param name="serviceType">The type of services to get.</param>
-        /// <returns>All services of the current <see cref="ServiceContextInstance"/> of type <paramref name="serviceType"/>.</returns>
-        public static IEnumerable<(string? Name, object Service)> GetAllServices(Type serviceType)
-            => Instance.GetAllServices(serviceType);
-
-        /// <summary>
-        /// Adds or replaces a specified service in the current <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the service to add.</typeparam>
-        /// <param name="serviceInstance">The service instance to add.</param>
-        /// <param name="name">The name of the service.</param>
-        public static void AddService<T>([DisallowNull] T serviceInstance, string? name = null)
-            => Instance.AddService(serviceInstance, name);
-
-        /// <summary>
-        /// Adds or replaces a specified service in the current <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        /// <param name="serviceType">The type of the service to add.</param>
-        /// <param name="serviceInstance">The service instance to add.</param>
-        /// <param name="name">The name of the service.</param>
-        /// <exception cref="ArgumentException"><paramref name="serviceInstance"/> is not an instance of type <paramref name="serviceType"/>.</exception>
-        public static void AddService(Type serviceType, object serviceInstance, string? name = null)
-            => Instance.AddService(serviceType, serviceInstance, name);
-
-        /// <summary>
-        /// Gets the service with the specified type and name from the current <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the service to retrieve.</typeparam>
-        /// <param name="result">The resultung service.</param>
-        /// <param name="name">The name of the service to retrieve.</param>
-        /// <exception cref="KeyNotFoundException">A service of type <typeparamref name="T"/> and name <paramref name="name"/> was not found in the current <see cref="ServiceContextInstance"/>.</exception>
-        public static void GetService<T>(out T result, string? name = null)
-            => Instance.GetService(out result, name);
-
-        /// <summary>
-        /// Gets the service with the specified type and name from the current <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the service to retrieve.</typeparam>
-        /// <param name="name">The name of the service to retrieve.</param>
-        /// <returns>The resultung service.</returns>
-        /// <exception cref="KeyNotFoundException">A service of type <typeparamref name="T"/> and name <paramref name="name"/> was not found in the current <see cref="ServiceContextInstance"/>.</exception>
-        public static T GetService<T>(string? name = null)
-            => Instance.GetService<T>(name);
-
-        /// <summary>
-        /// Gets the service with the specified type and name from the current <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        /// <param name="serviceType">The type of the service to retrieve.</param>
-        /// <param name="name">The name of the service to retrieve.</param>
-        /// <returns>The resultung service.</returns>
-        /// <exception cref="KeyNotFoundException">A service of type <paramref name="serviceType"/> and name <paramref name="name"/> was not found in the current <see cref="ServiceContextInstance"/>.</exception>
-        public static object GetService(Type serviceType, string? name = null)
-            => Instance.GetService(serviceType, name);
-
-        /// <summary>
-        /// Tries to get the service with the specified type and name from the current <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the service to retrieve.</typeparam>
-        /// <param name="result">The resultung service.</param>
-        /// <param name="name">The name of the service to retrieve.</param>
-        /// <returns><see langword="true"/> if a service of type <typeparamref name="T"/> and name <paramref name="name"/> was found in the current <see cref="ServiceContextInstance"/>; otherwise, <see langword="false"/>.</returns>
-        public static bool TryGetService<T>(out T? result, string? name = null)
-            => Instance.TryGetService(out result, name);
-
-        /// <summary>
-        /// Tries to get the service with the specified type and name from the current <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the service to retrieve.</typeparam>
-        /// <param name="name">The name of the service to retrieve.</param>
-        /// <returns>The service of type <typeparamref name="T"/> and name <paramref name="name"/> that was found in the current <see cref="ServiceContextInstance"/>. If no service was found <see langword="default"/> is returned.</returns>
-        [return: MaybeNull]
-        public static T TryGetService<T>(string? name = null)
-            => Instance.TryGetService<T>(name);
-
-        /// <summary>
-        /// Tries to get the service with the specified type and name from the current <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        /// <param name="serviceType">The type of the service to retrieve.</param>
-        /// <param name="name">The name of the service to retrieve.</param>
-        /// <returns>The service of type <paramref name="serviceType"/> and name <paramref name="name"/> that was found in the current <see cref="ServiceContextInstance"/>. If no service was found <see langword="default"/> is returned.</returns>
-        public static object? TryGetService(Type serviceType, string? name = null)
-            => Instance.TryGetService(serviceType, name);
-
-        /// <summary>
-        /// Removes the service with the specified type and name from the current <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the service to remove.</typeparam>
-        /// <param name="name">The name of the service to remove.</param>
-        /// <exception cref="KeyNotFoundException">A service of type <typeparamref name="T"/> and name <paramref name="name"/> was not found in the current <see cref="ServiceContextInstance"/>.</exception>
-        public static void RemoveService<T>(string? name = null)
-            => Instance.RemoveService<T>(name);
-
-        /// <summary>
-        /// Removes the service with the specified type and name from the current <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        /// <param name="serviceType">The type of the service to remove.</param>
-        /// <param name="name">The name of the service to remove.</param>
-        /// <exception cref="KeyNotFoundException">A service of type <paramref name="serviceType"/> and name <paramref name="name"/> was not found in the current <see cref="ServiceContextInstance"/>.</exception>
-        public static void RemoveService(Type serviceType, string? name = null)
-            => Instance.RemoveService(serviceType, name);
-
-        /// <summary>
-        /// Tries to remove the service with the specified type and name from the current <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the service to remove.</typeparam>
-        /// <param name="name">The name of the service to remove.</param>
-        public static void TryRemoveService<T>(string? name = null)
-            => Instance.TryRemoveService<T>(name);
-
-        /// <summary>
-        /// Tries to remove the service with the specified type and name from the current <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        /// <param name="serviceType">The type of the service to remove.</param>
-        /// <param name="name">The name of the service to remove.</param>
-        public static void TryRemoveService(Type serviceType, string? name = null)
-            => Instance.TryRemoveService(serviceType, name);
-
-        /// <summary>
-        /// Determines wether a service with the specified type and name exists in the current <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the service to search for.</typeparam>
-        /// <param name="name">The name of the service to search for.</param>
-        /// <returns><see langword="true"/> if a service of type <typeparamref name="T"/> and name <paramref name="name"/> was found in the current <see cref="ServiceContextInstance"/>; otherwise, <see langword="false"/>.</returns>
-        public static bool ContainsService<T>(string? name = null)
-            => Instance.ContainsService<T>(name);
-
-        /// <summary>
-        /// Determines wether a service with the specified type and name exists in the current <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        /// <param name="serviceType">The type of the service to search for.</param>
-        /// <param name="name">The name of the service to search for.</param>
-        /// <returns><see langword="true"/> if a service of type <paramref name="serviceType"/> and name <paramref name="name"/> was found in the current <see cref="ServiceContextInstance"/>; otherwise, <see langword="false"/>.</returns>
-        public static bool ContainsService(Type serviceType, string? name = null)
-            => Instance.ContainsService(serviceType, name);
-
-        /// <summary>
-        /// Subscribes to changes to a service with the specified type and name in the current <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the service to subscribe for changes on.</typeparam>
-        /// <param name="action">The action to execute when the service changes.</param>
-        /// <param name="name">The name of the service to subscribe for changes on.</param>
-        /// <returns>An <see cref="IDisposable"/> object that unsubscribes when disposed.</returns>
-        public static IDisposable Subscribe<T>(Action<T?> action, string? name = null)
-            => Instance.Subscribe(action, name);
-
-        /// <summary>
-        /// Removes all services from the current <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        public static void Reset()
-            => Instance.Reset();
-
-        /// <summary>
-        /// Removes all services with the specified type from the current <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of services to remove.</typeparam>
-        public static void Reset<T>()
-            => Instance.Reset<T>();
-
-        /// <summary>
-        /// Removes all services with the specified type from the current <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        /// <param name="type">The type of services to remove.</param>
-        public static void Reset(Type type)
-            => Instance.Reset(type);
-    }
-
-    /// <summary>
-    /// Represents a container containing instances of services.
-    /// </summary>
-    public class ServiceContextInstance
-    {
-        /// <summary>
-        /// Occurs before a service changes.
-        /// </summary>
+        /// <inheritdoc/>
         public event ServiceContextEventHandler? Changing;
 
-        /// <summary>
-        /// Occurs after a service changed.
-        /// </summary>
+        /// <inheritdoc/>
         public event ServiceContextEventHandler? Changed;
 
-        private readonly Dictionary<(Type Type, string? Name), object> _services = new();
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="ServiceContextInstance" /> class.
+        /// Initializes a new instance of the <see cref="ServiceContext" /> class.
         /// </summary>
-        internal ServiceContextInstance()
+        private ServiceContext()
         {
         }
 
-        /// <summary>
-        /// Gets all services.
-        /// </summary>
-        /// <returns>All services of this <see cref="ServiceContextInstance"/>.</returns>
-        public IReadOnlyDictionary<(Type Type, string? Name), object> GetAllServices()
+        /// <inheritdoc/>
+        IReadOnlyDictionary<(Type Type, string? Name), object> IServiceContext.GetAllServices()
             => new ReadOnlyDictionary<(Type Type, string? Name), object>(_services);
 
-        /// <summary>
-        /// Gets all services of a specified type.
-        /// </summary>
-        /// <typeparam name="T">The type of services to get.</typeparam>
-        /// <returns>All services of this <see cref="ServiceContextInstance"/> of type <typeparamref name="T"/>.</returns>
-        public IEnumerable<(string? Name, T Service)> GetAllServices<T>()
-            => _services.Where(x => x.Key.Type == typeof(T)).Select(x => ((string?)x.Key.Name, (T)x.Value));
-
-        /// <summary>
-        /// Gets all services of a specified type.
-        /// </summary>
-        /// <param name="serviceType">The type of services to get.</param>
-        /// <returns>All services of this <see cref="ServiceContextInstance"/> of type <paramref name="serviceType"/>.</returns>
-        public IEnumerable<(string? Name, object Service)> GetAllServices(Type serviceType)
+        /// <inheritdoc/>
+        IEnumerable<(string? Name, object Service)> IServiceContext.GetAllServices(Type serviceType)
             => _services.Where(x => x.Key.Type == serviceType).Select(x => ((string?)x.Key.Name, x.Value));
 
-        /// <summary>
-        /// Adds or replaces a specified service.
-        /// </summary>
-        /// <typeparam name="T">The type of the service to add.</typeparam>
-        /// <param name="serviceInstance">The service instance to add.</param>
-        /// <param name="name">The name of the service.</param>
-        public void AddService<T>([DisallowNull] T serviceInstance, string? name = null) => AddService(typeof(T), serviceInstance, name);
-
-        /// <summary>
-        /// Adds or replaces a specified service.
-        /// </summary>
-        /// <param name="serviceType">The type of the service to add.</param>
-        /// <param name="serviceInstance">The service instance to add.</param>
-        /// <param name="name">The name of the service.</param>
+        /// <inheritdoc/>
         /// <exception cref="ArgumentException"><paramref name="serviceInstance"/> is not an instance of type <paramref name="serviceType"/>.</exception>
-        public void AddService(Type serviceType, object serviceInstance, string? name = null)
+        void IServiceContext.AddService(Type serviceType, object serviceInstance, string? name)
         {
             Guard.NotNull(serviceInstance, nameof(serviceInstance));
             if (!serviceType.IsInstanceOfType(serviceInstance))
                 throw new ArgumentException($"The type \"{serviceInstance.GetType().FullName}\" is not assignable to \"{serviceType.FullName}\".");
+
             var key = (serviceType, name);
             var eventArgs = new ServiceContextEventArgs(name, serviceType, null, serviceInstance, ServiceAction.None);
             if (_services.ContainsKey(key))
@@ -297,34 +71,9 @@ namespace MaSch.Core
             Changed?.Invoke(this, eventArgs);
         }
 
-        /// <summary>
-        /// Gets the service with the specified type and name.
-        /// </summary>
-        /// <typeparam name="T">The type of the service to retrieve.</typeparam>
-        /// <param name="result">The resultung service.</param>
-        /// <param name="name">The name of the service to retrieve.</param>
-        /// <exception cref="KeyNotFoundException">A service of type <typeparamref name="T"/> and name <paramref name="name"/> was not found in this <see cref="ServiceContextInstance"/>.</exception>
-        public void GetService<T>(out T result, string? name = null)
-            => result = GetService<T>(name);
-
-        /// <summary>
-        /// Gets the service with the specified type and name.
-        /// </summary>
-        /// <typeparam name="T">The type of the service to retrieve.</typeparam>
-        /// <param name="name">The name of the service to retrieve.</param>
-        /// <returns>The resultung service.</returns>
-        /// <exception cref="KeyNotFoundException">A service of type <typeparamref name="T"/> and name <paramref name="name"/> was not found in this <see cref="ServiceContextInstance"/>.</exception>
-        public T GetService<T>(string? name = null)
-            => (T)GetService(typeof(T), name);
-
-        /// <summary>
-        /// Gets the service with the specified type and name.
-        /// </summary>
-        /// <param name="serviceType">The type of the service to retrieve.</param>
-        /// <param name="name">The name of the service to retrieve.</param>
-        /// <returns>The resultung service.</returns>
-        /// <exception cref="KeyNotFoundException">A service of type <paramref name="serviceType"/> and name <paramref name="name"/> was not found in this <see cref="ServiceContextInstance"/>.</exception>
-        public object GetService(Type serviceType, string? name = null)
+        /// <inheritdoc/>
+        /// <exception cref="KeyNotFoundException">A service of type <paramref name="serviceType"/> and name <paramref name="name"/> was not found in this <see cref="IServiceContext"/>.</exception>
+        object IServiceContext.GetService(Type serviceType, string? name)
         {
             var key = (serviceType, name);
             if (_services.ContainsKey(key))
@@ -333,56 +82,9 @@ namespace MaSch.Core
                 throw new KeyNotFoundException($"A service with the Type \"{key}\" could not be found! You need to add an instance of this class to this context.");
         }
 
-        /// <summary>
-        /// Tries to get the service with the specified type and name.
-        /// </summary>
-        /// <typeparam name="T">The type of the service to retrieve.</typeparam>
-        /// <param name="result">The resultung service.</param>
-        /// <param name="name">The name of the service to retrieve.</param>
-        /// <returns><see langword="true"/> if a service of type <typeparamref name="T"/> and name <paramref name="name"/> was found in this <see cref="ServiceContextInstance"/>; otherwise, <see langword="false"/>.</returns>
-        public bool TryGetService<T>(out T? result, string? name = null)
-        {
-            var key = (typeof(T), name);
-            var r = _services.TryGetValue(key, out var v);
-            result = r ? (T?)v : default;
-            return r;
-        }
-
-        /// <summary>
-        /// Tries to get the service with the specified type and name.
-        /// </summary>
-        /// <typeparam name="T">The type of the service to retrieve.</typeparam>
-        /// <param name="name">The name of the service to retrieve.</param>
-        /// <returns>The service of type <typeparamref name="T"/> and name <paramref name="name"/> that was found in this <see cref="ServiceContextInstance"/>. If no service was found <see langword="default"/> is returned.</returns>
-        public T? TryGetService<T>(string? name = null) => (T?)(TryGetService(typeof(T), name) ?? default(T));
-
-        /// <summary>
-        /// Tries to get the service with the specified type and name.
-        /// </summary>
-        /// <param name="serviceType">The type of the service to retrieve.</param>
-        /// <param name="name">The name of the service to retrieve.</param>
-        /// <returns>The service of type <paramref name="serviceType"/> and name <paramref name="name"/> that was found in this <see cref="ServiceContextInstance"/>. If no service was found <see langword="default"/> is returned.</returns>
-        public object? TryGetService(Type serviceType, string? name = null)
-        {
-            var key = (serviceType, name);
-            return _services.ContainsKey(key) ? _services[key] : null;
-        }
-
-        /// <summary>
-        /// Removes the service with the specified type and name.
-        /// </summary>
-        /// <typeparam name="T">The type of the service to remove.</typeparam>
-        /// <param name="name">The name of the service to remove.</param>
-        /// <exception cref="KeyNotFoundException">A service of type <typeparamref name="T"/> and name <paramref name="name"/> was not found in this <see cref="ServiceContextInstance"/>.</exception>
-        public void RemoveService<T>(string? name = null) => RemoveService(typeof(T), name);
-
-        /// <summary>
-        /// Removes the service with the specified type and name.
-        /// </summary>
-        /// <param name="serviceType">The type of the service to remove.</param>
-        /// <param name="name">The name of the service to remove.</param>
-        /// <exception cref="KeyNotFoundException">A service of type <paramref name="serviceType"/> and name <paramref name="name"/> was not found in this <see cref="ServiceContextInstance"/>.</exception>
-        public void RemoveService(Type serviceType, string? name = null)
+        /// <inheritdoc/>
+        /// <exception cref="KeyNotFoundException">A service of type <paramref name="serviceType"/> and name <paramref name="name"/> was not found in this <see cref="IServiceContext"/>.</exception>
+        void IServiceContext.RemoveService(Type serviceType, string? name)
         {
             var key = (serviceType, name);
             if (_services.ContainsKey(key))
@@ -398,487 +100,120 @@ namespace MaSch.Core
             }
         }
 
-        /// <summary>
-        /// Tries to remove the service with the specified type and name.
-        /// </summary>
-        /// <typeparam name="T">The type of the service to remove.</typeparam>
-        /// <param name="name">The name of the service to remove.</param>
-        public void TryRemoveService<T>(string? name = null) => TryRemoveService(typeof(T), name);
-
-        /// <summary>
-        /// Tries to remove the service with the specified type and name.
-        /// </summary>
-        /// <param name="serviceType">The type of the service to remove.</param>
-        /// <param name="name">The name of the service to remove.</param>
-        public void TryRemoveService(Type serviceType, string? name = null)
-        {
-            var key = (serviceType, name);
-            if (_services.ContainsKey(key))
-            {
-                var eventArgs = new ServiceContextEventArgs(name, serviceType, _services[key], null, ServiceAction.Removed);
-                Changing?.Invoke(this, eventArgs);
-                _services.Remove(key);
-                Changed?.Invoke(this, eventArgs);
-            }
-        }
-
-        /// <summary>
-        /// Determines wether a service with the specified type and name exists.
-        /// </summary>
-        /// <typeparam name="T">The type of the service to search for.</typeparam>
-        /// <param name="name">The name of the service to search for.</param>
-        /// <returns><see langword="true"/> if a service of type <typeparamref name="T"/> and name <paramref name="name"/> was found in this <see cref="ServiceContextInstance"/>; otherwise, <see langword="false"/>.</returns>
-        public bool ContainsService<T>(string? name = null) => ContainsService(typeof(T), name);
-
-        /// <summary>
-        /// Determines wether a service with the specified type and name exists.
-        /// </summary>
-        /// <param name="serviceType">The type of the service to search for.</param>
-        /// <param name="name">The name of the service to search for.</param>
-        /// <returns><see langword="true"/> if a service of type <paramref name="serviceType"/> and name <paramref name="name"/> was found in this <see cref="ServiceContextInstance"/>; otherwise, <see langword="false"/>.</returns>
-        public bool ContainsService(Type serviceType, string? name = null)
+        /// <inheritdoc/>
+        bool IServiceContext.ContainsService(Type serviceType, string? name)
         {
             var key = (serviceType, name);
             return _services.ContainsKey(key);
         }
 
-        /// <summary>
-        /// Subscribes to changes to a service with the specified type and name.
-        /// </summary>
-        /// <typeparam name="T">The type of the service to subscribe for changes on.</typeparam>
-        /// <param name="action">The action to execute when the service changes.</param>
-        /// <param name="name">The name of the service to subscribe for changes on.</param>
-        /// <returns>An <see cref="IDisposable"/> object that unsubscribes when disposed.</returns>
-        public IDisposable Subscribe<T>(Action<T?> action, string? name = null)
-            => ServiceContextInstance<T>.Create(this).Subscribe(action, name);
+        /// <inheritdoc/>
+        void IServiceContext.Clear(Type? type)
+        {
+            var servicesToRemove = type == null ? _services : _services.Where(x => x.Key.Type == type);
 
-        /// <summary>
-        /// Removes all services.
-        /// </summary>
-        public void Reset()
-            => _services.Select(x => x.Key).ToArray().ForEach(x => RemoveService(x.Type, x.Name));
+            servicesToRemove
+                .Select(x => x.Key)
+                .ToArray()
+                .ForEach(x => ((IServiceContext)this).RemoveService(x.Type, x.Name));
+        }
 
-        /// <summary>
-        /// Removes all services with the specified type.
-        /// </summary>
-        /// <typeparam name="T">The type of services to remove.</typeparam>
-        public void Reset<T>()
-            => Reset(typeof(T));
+        /// <inheritdoc/>
+        public IServiceContext<T> GetView<T>()
+        {
+            if (!_views.TryGetValue(typeof(T), out var view))
+            {
+                view = new ServiceContext<T>(this);
+                _views.Add(typeof(T), view);
+            }
 
-        /// <summary>
-        /// Removes all services with the specified type.
-        /// </summary>
-        /// <param name="type">The type of services to remove.</param>
-        public void Reset(Type type)
-            => _services.Where(x => x.Key.Type == type).Select(x => x.Key).ToArray().ForEach(x => RemoveService(x.Type, x.Name));
+            return (IServiceContext<T>)view;
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            _views.Values.ForEach(x => x.Dispose());
+            _views.Clear();
+            _services.Clear();
+        }
     }
 
     /// <summary>
-    /// Represents a static wrapper for the <see cref="ServiceContextInstance{T}"/> class.
+    /// Default implementation of the <see cref="IServiceContext{T}"/> interface.
     /// </summary>
     /// <typeparam name="T">The type of services to manage.</typeparam>
-    public static class ServiceContext<T>
+    public sealed partial class ServiceContext<T> : IServiceContext<T>
     {
-        private static ServiceContextInstance<T>? _instance;
-
-        /// <summary>
-        /// Gets the current instance of the <see cref="ServiceContextInstance{T}"/>.
-        /// </summary>
-        public static ServiceContextInstance<T> Instance => _instance ??= ServiceContextInstance<T>.Create(ServiceContext.Instance);
-
-        /// <summary>
-        /// Gets all services of the current <see cref="ServiceContextInstance{T}"/> of type <typeparamref name="T"/>.
-        /// </summary>
-        /// <returns>All services of the current <see cref="ServiceContextInstance{T}"/> of type <typeparamref name="T"/>.</returns>
-        public static IEnumerable<(string? Name, T Service)> GetAllServices()
-            => Instance.GetAllServices();
-
-        /// <summary>
-        /// Adds or replaces a specified service in the current <see cref="ServiceContextInstance{T}"/>.
-        /// </summary>
-        /// <param name="serviceInstance">The service instance to add.</param>
-        /// <param name="name">The name of the service.</param>
-        public static void AddService([DisallowNull] T serviceInstance, string? name = null)
-            => Instance.AddService(serviceInstance, name);
-
-        /// <summary>
-        /// Gets the service with the type <typeparamref name="T"/> and name from the current <see cref="ServiceContextInstance{T}"/>.
-        /// </summary>
-        /// <param name="result">The resultung service.</param>
-        /// <param name="name">The name of the service to retrieve.</param>
-        /// <exception cref="KeyNotFoundException">A service of type <typeparamref name="T"/> and name <paramref name="name"/> was not found in the current <see cref="ServiceContextInstance{T}"/>.</exception>
-        public static void GetService(out T result, string? name = null)
-            => Instance.GetService(out result, name);
-
-        /// <summary>
-        /// Gets the service with the type <typeparamref name="T"/> and name from the current <see cref="ServiceContextInstance{T}"/>.
-        /// </summary>
-        /// <param name="name">The name of the service to retrieve.</param>
-        /// <returns>The resultung service.</returns>
-        /// <exception cref="KeyNotFoundException">A service of type <typeparamref name="T"/> and name <paramref name="name"/> was not found in the current <see cref="ServiceContextInstance{T}"/>.</exception>
-        public static T GetService(string? name = null)
-            => Instance.GetService(name);
-
-        /// <summary>
-        /// Tries to get the service with the type <typeparamref name="T"/> and name from the current <see cref="ServiceContextInstance{T}"/>.
-        /// </summary>
-        /// <param name="result">The resultung service.</param>
-        /// <param name="name">The name of the service to retrieve.</param>
-        /// <returns><see langword="true"/> if a service of type <typeparamref name="T"/> and name <paramref name="name"/> was found in the current <see cref="ServiceContextInstance{T}"/>; otherwise, <see langword="false"/>.</returns>
-        public static bool TryGetService(out T? result, string? name = null)
-            => Instance.TryGetService(out result, name);
-
-        /// <summary>
-        /// Tries to get the service with the type <typeparamref name="T"/> and name from the current <see cref="ServiceContextInstance{T}"/>.
-        /// </summary>
-        /// <param name="name">The name of the service to retrieve.</param>
-        /// <returns>The service of type <typeparamref name="T"/> and name <paramref name="name"/> that was found in the current <see cref="ServiceContextInstance{T}"/>. If no service was found <see langword="default"/> is returned.</returns>
-        [return: MaybeNull]
-        public static T TryGetService(string? name = null)
-            => Instance.TryGetService(name);
-
-        /// <summary>
-        /// Removes the service with the type <typeparamref name="T"/> and name from the current <see cref="ServiceContextInstance{T}"/>.
-        /// </summary>
-        /// <param name="name">The name of the service to remove.</param>
-        /// <exception cref="KeyNotFoundException">A service of type <typeparamref name="T"/> and name <paramref name="name"/> was not found in the current <see cref="ServiceContextInstance{T}"/>.</exception>
-        public static void RemoveService(string? name = null)
-            => Instance.RemoveService(name);
-
-        /// <summary>
-        /// Tries to remove the service with the type <typeparamref name="T"/> and name from the current <see cref="ServiceContextInstance{T}"/>.
-        /// </summary>
-        /// <param name="name">The name of the service to remove.</param>
-        public static void TryRemoveService(string? name = null)
-            => Instance.TryRemoveService(name);
-
-        /// <summary>
-        /// Determines wether a service with the type <typeparamref name="T"/> and name exists in the current <see cref="ServiceContextInstance{T}"/>.
-        /// </summary>
-        /// <param name="name">The name of the service to search for.</param>
-        /// <returns><see langword="true"/> if a service of type <typeparamref name="T"/> and name <paramref name="name"/> was found in the current <see cref="ServiceContextInstance{T}"/>; otherwise, <see langword="false"/>.</returns>
-        public static bool ContainsService(string? name = null)
-            => Instance.ContainsService(name);
-
-        /// <summary>
-        /// Subscribes to changes to a service with the type <typeparamref name="T"/> and name in the current <see cref="ServiceContextInstance{T}"/>.
-        /// </summary>
-        /// <param name="action">The action to execute when the service changes.</param>
-        /// <param name="name">The name of the service to subscribe for changes on.</param>
-        /// <returns>An <see cref="IDisposable"/> object that unsubscribes when disposed.</returns>
-        public static IDisposable Subscribe(Action<T?> action, string? name = null)
-            => Instance.Subscribe(action, name);
-
-        /// <summary>
-        /// Removes all services with the type <typeparamref name="T"/> from the current <see cref="ServiceContextInstance{T}"/>.
-        /// </summary>
-        public static void Reset()
-            => Instance.Reset();
-
-        /// <summary>
-        /// Creates a <see cref="ServiceContextInstance{T}"/> from an already existing <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        /// <param name="context">The existing context to wrap.</param>
-        /// <returns>A new instance of the <see cref="ServiceContextInstance{T}"/> class which wraps <paramref name="context"/>.</returns>
-        public static ServiceContextInstance<T> CreateFromContext(ServiceContextInstance context) => ServiceContextInstance<T>.Create(context);
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="ServiceContextInstance{T}"/> class.
-        /// </summary>
-        /// <returns>A new instance of the <see cref="ServiceContextInstance{T}"/> class.</returns>
-        public static ServiceContextInstance<T> CreateContext() => ServiceContextInstance<T>.Create(ServiceContext.CreateContext());
-    }
-
-    /// <summary>
-    /// Represents a generic wrapper for the <see cref="ServiceContextInstance"/> class that handles only events with the speicified type.
-    /// </summary>
-    /// <typeparam name="T">The type of services to manage in this <see cref="ServiceContextInstance{T}"/>.</typeparam>
-    public class ServiceContextInstance<T>
-    {
-        private static readonly Dictionary<ServiceContextInstance, ServiceContextInstance<T>> ContextCache = new();
-
-        /// <summary>
-        /// Occurs before a service changes.
-        /// </summary>
+        /// <inheritdoc/>
         public event EventHandler<ServiceContextEventArgs<T>>? Changing;
 
-        /// <summary>
-        /// Occurs after a service changed.
-        /// </summary>
+        /// <inheritdoc/>
         public event EventHandler<ServiceContextEventArgs<T>>? Changed;
 
         /// <summary>
-        /// Gets the <see cref="ServiceContextInstance"/> that is wrapped by this <see cref="ServiceContextInstance{T}"/>.
+        /// Gets the <see cref="ServiceContext"/> that is wrapped by this <see cref="ServiceContext{T}"/>.
         /// </summary>
-        public ServiceContextInstance Context { get; }
+        public IServiceContext Context { get; }
 
-        private ServiceContextInstance(ServiceContextInstance context)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServiceContext{T}" /> class.
+        /// </summary>
+        /// <param name="context">The context to wrap.</param>
+        internal ServiceContext(ServiceContext context)
         {
             Context = context;
-            Context.Changing += (s, e) =>
-            {
-                if (typeof(T) == e.Type)
-                {
-                    var eventArgs = new ServiceContextEventArgs<T>(e.Name, (T?)e.OldInstance, (T?)e.NewInstance, e.Action);
-                    Changing?.Invoke(this, eventArgs);
-                }
-            };
-            Context.Changed += (s, e) =>
-            {
-                if (typeof(T) == e.Type)
-                {
-                    var eventArgs = new ServiceContextEventArgs<T>(e.Name, (T?)e.OldInstance, (T?)e.NewInstance, e.Action);
-                    Changed?.Invoke(this, eventArgs);
-                }
-            };
+            Context.Changing += OnContextChanging;
+            Context.Changed += OnContextChanged;
         }
 
-        /// <summary>
-        /// Gets all services of type <typeparamref name="T"/>.
-        /// </summary>
-        /// <returns>All services of this <see cref="ServiceContextInstance{T}"/> of type <typeparamref name="T"/>.</returns>
-        public IEnumerable<(string? Name, T Service)> GetAllServices()
+        /// <inheritdoc/>
+        IEnumerable<(string? Name, T Service)> IServiceContext<T>.GetAllServices()
             => Context.GetAllServices<T>();
 
-        /// <summary>
-        /// Adds or replaces a specified service.
-        /// </summary>
-        /// <param name="serviceInstance">The service instance to add.</param>
-        /// <param name="name">The name of the service.</param>
-        public void AddService([DisallowNull] T serviceInstance, string? name = null)
-            => Context.AddService(typeof(T), serviceInstance, name);
+        /// <inheritdoc/>
+        void IServiceContext<T>.AddService([DisallowNull] T serviceInstance, string? name)
+            => Context.AddService(serviceInstance, name);
 
-        /// <summary>
-        /// Gets the service with the type <typeparamref name="T"/> and name.
-        /// </summary>
-        /// <param name="result">The resultung service.</param>
-        /// <param name="name">The name of the service to retrieve.</param>
-        /// <exception cref="KeyNotFoundException">A service of type <typeparamref name="T"/> and name <paramref name="name"/> was not found in this <see cref="ServiceContextInstance{T}"/>.</exception>
-        public void GetService(out T result, string? name = null)
-            => Context.GetService(out result, name);
+        /// <inheritdoc/>
+        T IServiceContext<T>.GetService(string? name)
+            => Context.GetService<T>(name);
 
-        /// <summary>
-        /// Gets the service with the type <typeparamref name="T"/> and name.
-        /// </summary>
-        /// <param name="name">The name of the service to retrieve.</param>
-        /// <returns>The resultung service.</returns>
-        /// <exception cref="KeyNotFoundException">A service of type <typeparamref name="T"/> and name <paramref name="name"/> was not found in this <see cref="ServiceContextInstance{T}"/>.</exception>
-        public T GetService(string? name = null)
-            => (T)Context.GetService(typeof(T), name);
-
-        /// <summary>
-        /// Tries to get the service with the type <typeparamref name="T"/> and name.
-        /// </summary>
-        /// <param name="result">The resultung service.</param>
-        /// <param name="name">The name of the service to retrieve.</param>
-        /// <returns><see langword="true"/> if a service of type <typeparamref name="T"/> and name <paramref name="name"/> was found in this <see cref="ServiceContextInstance{T}"/>; otherwise, <see langword="false"/>.</returns>
-        public bool TryGetService(out T? result, string? name = null)
-            => Context.TryGetService(out result, name);
-
-        /// <summary>
-        /// Tries to get the service with the type <typeparamref name="T"/> and name.
-        /// </summary>
-        /// <param name="name">The name of the service to retrieve.</param>
-        /// <returns>The service of type <typeparamref name="T"/> and name <paramref name="name"/> that was found in this <see cref="ServiceContextInstance{T}"/>. If no service was found <see langword="default"/> is returned.</returns>
-        [return: MaybeNull]
-        public T TryGetService(string? name = null)
-            => (T?)(Context.TryGetService(typeof(T), name) ?? default(T));
-
-        /// <summary>
-        /// Removes the service with the type <typeparamref name="T"/> and name.
-        /// </summary>
-        /// <param name="name">The name of the service to remove.</param>
-        /// <exception cref="KeyNotFoundException">A service of type <typeparamref name="T"/> and name <paramref name="name"/> was not found in this <see cref="ServiceContextInstance{T}"/>.</exception>
-        public void RemoveService(string? name = null)
-            => Context.RemoveService(typeof(T), name);
-
-        /// <summary>
-        /// Tries to remove the service with the type <typeparamref name="T"/> and name.
-        /// </summary>
-        /// <param name="name">The name of the service to remove.</param>
-        public void TryRemoveService(string? name = null)
-            => Context.TryRemoveService(typeof(T), name);
-
-        /// <summary>
-        /// Determines wether a service with the type <typeparamref name="T"/> and name exists.
-        /// </summary>
-        /// <param name="name">The name of the service to search for.</param>
-        /// <returns><see langword="true"/> if a service of type <typeparamref name="T"/> and name <paramref name="name"/> was found in this <see cref="ServiceContextInstance{T}"/>; otherwise, <see langword="false"/>.</returns>
-        public bool ContainsService(string? name = null)
+        /// <inheritdoc/>
+        bool IServiceContext<T>.ContainsService(string? name)
             => Context.ContainsService<T>(name);
 
-        /// <summary>
-        /// Subscribes to changes to a service with the type <typeparamref name="T"/> and name.
-        /// </summary>
-        /// <param name="action">The action to execute when the service changes.</param>
-        /// <param name="name">The name of the service to subscribe for changes on.</param>
-        /// <returns>An <see cref="IDisposable"/> object that unsubscribes when disposed.</returns>
-        public IDisposable Subscribe(Action<T?> action, string? name = null)
-        {
-            void EventHandler(object? sender, ServiceContextEventArgs<T> e) => action(e.NewInstance);
+        /// <inheritdoc/>
+        void IServiceContext<T>.RemoveService(string? name)
+            => Context.RemoveService(typeof(T), name);
 
-            if (TryGetService(out T? service, name))
-                action(service);
-            Changed += EventHandler;
-            return new ActionOnDispose(() => Changed -= EventHandler);
+        /// <inheritdoc/>
+        void IServiceContext<T>.Clear()
+            => Context.Clear<T>();
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Context.Changing += OnContextChanging;
+            Context.Changed += OnContextChanged;
         }
 
-        /// <summary>
-        /// Removes all services with the type <typeparamref name="T"/>.
-        /// </summary>
-        public void Reset()
-            => Context.Reset<T>();
-
-        /// <summary>
-        /// Creates a <see cref="ServiceContextInstance{T}"/> from an already existing <see cref="ServiceContextInstance"/>.
-        /// </summary>
-        /// <param name="context">The existing context to wrap.</param>
-        /// <returns>A new instance of the <see cref="ServiceContextInstance{T}"/> class which wraps <paramref name="context"/>.</returns>
-        public static ServiceContextInstance<T> Create(ServiceContextInstance context)
+        private void OnContextChanging(object? sender, ServiceContextEventArgs e)
         {
-            if (!ContextCache.TryGetValue(context, out var result))
+            if (typeof(T) == e.Type)
             {
-                result = new ServiceContextInstance<T>(context);
-                ContextCache.Add(context, result);
+                var eventArgs = new ServiceContextEventArgs<T>(e.Name, (T?)e.OldInstance, (T?)e.NewInstance, e.Action);
+                Changing?.Invoke(this, eventArgs);
             }
-
-            return result;
         }
-    }
 
-    /// <summary>
-    /// Defines actions that can be taken on a service inside a <see cref="ServiceContextInstance"/>.
-    /// </summary>
-    public enum ServiceAction
-    {
-        /// <summary>
-        /// No action has been taken.
-        /// </summary>
-        None,
-
-        /// <summary>
-        /// The service has been added.
-        /// </summary>
-        Added,
-
-        /// <summary>
-        /// The service has been replaced/changed.
-        /// </summary>
-        Changed,
-
-        /// <summary>
-        /// The service has been removed.
-        /// </summary>
-        Removed,
-    }
-
-    /// <summary>
-    /// Event Handler for the <see cref="ServiceContextInstance.Changing"/> and <see cref="ServiceContextInstance.Changed"/> events.
-    /// </summary>
-    /// <param name="sender">The send of this event.</param>
-    /// <param name="e">The event argument of this event.</param>
-    public delegate void ServiceContextEventHandler(object sender, ServiceContextEventArgs e);
-
-    /// <summary>
-    /// The event argument for <see cref="ServiceContextEventHandler"/>.
-    /// </summary>
-    public class ServiceContextEventArgs
-    {
-        /// <summary>
-        /// Gets the name of the service on which an action has been taken on.
-        /// </summary>
-        public string? Name { get; internal set; }
-
-        /// <summary>
-        /// Gets the type of the service on which an action has been taken on.
-        /// </summary>
-        public Type Type { get; internal set; }
-
-        /// <summary>
-        /// Gets the old instance of the service on which an action has been taken on.
-        /// </summary>
-        public object? OldInstance { get; internal set; }
-
-        /// <summary>
-        /// Gets the new instance of the service on which an action has been taken on.
-        /// </summary>
-        public object? NewInstance { get; internal set; }
-
-        /// <summary>
-        /// Gets the type of action that has been taken.
-        /// </summary>
-        public ServiceAction Action { get; internal set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ServiceContextEventArgs"/> class.
-        /// </summary>
-        /// <param name="name">The name of the service on which an action has been taken on.</param>
-        /// <param name="type">The type of the service on which an action has been taken on.</param>
-        /// <param name="oldInstance">The old instance of the service on which an action has been taken on.</param>
-        /// <param name="newInstance">The new instance of the service on which an action has been taken on.</param>
-        /// <param name="action">The type of action that has been taken.</param>
-        public ServiceContextEventArgs(string? name, Type type, object? oldInstance, object? newInstance, ServiceAction action)
+        private void OnContextChanged(object? sender, ServiceContextEventArgs e)
         {
-            Name = name;
-            Type = type;
-            OldInstance = oldInstance;
-            NewInstance = newInstance;
-            Action = action;
-        }
-    }
-
-    /// <summary>
-    /// Event Handler for the <see cref="ServiceContextInstance{T}.Changing"/> and <see cref="ServiceContextInstance{T}.Changed"/> events.
-    /// </summary>
-    /// <typeparam name="T">The type of the instance that changed.</typeparam>
-    /// <param name="sender">The send of this event.</param>
-    /// <param name="e">The event argument of this event.</param>
-    public delegate void ServiceContextEventHandler<T>(object sender, ServiceContextEventArgs<T> e);
-
-    /// <summary>
-    /// The event argument for <see cref="ServiceContextEventHandler{T}"/>.
-    /// </summary>
-    /// <typeparam name="T">The type of the instance that changed.</typeparam>
-    public class ServiceContextEventArgs<T>
-    {
-        /// <summary>
-        /// Gets the name of the service on which an action has been taken on.
-        /// </summary>
-        public string? Name { get; internal set; }
-
-        /// <summary>
-        /// Gets the type of the service on which an action has been taken on.
-        /// </summary>
-        public Type Type => typeof(T);
-
-        /// <summary>
-        /// Gets the old instance of the service on which an action has been taken on.
-        /// </summary>
-        public T? OldInstance { get; internal set; }
-
-        /// <summary>
-        /// Gets the new instance of the service on which an action has been taken on.
-        /// </summary>
-        public T? NewInstance { get; internal set; }
-
-        /// <summary>
-        /// Gets the type of action that has been taken.
-        /// </summary>
-        public ServiceAction Action { get; internal set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ServiceContextEventArgs{T}"/> class.
-        /// </summary>
-        /// <param name="name">The name of the service on which an action has been taken on.</param>
-        /// <param name="oldInstance">The old instance of the service on which an action has been taken on.</param>
-        /// <param name="newInstance">The new instance of the service on which an action has been taken on.</param>
-        /// <param name="action">The type of action that has been taken.</param>
-        public ServiceContextEventArgs(string? name, T? oldInstance, T? newInstance, ServiceAction action)
-        {
-            Name = name;
-            OldInstance = oldInstance;
-            NewInstance = newInstance;
-            Action = action;
+            if (typeof(T) == e.Type)
+            {
+                var eventArgs = new ServiceContextEventArgs<T>(e.Name, (T?)e.OldInstance, (T?)e.NewInstance, e.Action);
+                Changed?.Invoke(this, eventArgs);
+            }
         }
     }
 }

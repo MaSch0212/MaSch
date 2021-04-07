@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable SA1600 // Elements should be documented
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 namespace MaSch.Core
 {
     [Obsolete("Use the switch statement from C# 8 instead.")]
+    [ExcludeFromCodeCoverage]
     public class Switch<TSource, TTarget>
         where TSource : notnull
     {

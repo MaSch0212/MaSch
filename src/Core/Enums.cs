@@ -22,4 +22,30 @@ namespace MaSch.Core
         /// </summary>
         IsNullOrWhitespace,
     }
+
+    /// <summary>
+    /// Defines actions that can be taken on a service inside an <see cref="IServiceContext"/>.
+    /// </summary>
+    public enum ServiceAction
+    {
+        /// <summary>
+        /// No action has been taken.
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// The service has been added.
+        /// </summary>
+        Added,
+
+        /// <summary>
+        /// The service has been replaced/changed.
+        /// </summary>
+        Changed,
+
+        /// <summary>
+        /// The service has been removed.
+        /// </summary>
+        Removed,
+    }
 }
