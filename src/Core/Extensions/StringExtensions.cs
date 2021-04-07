@@ -159,5 +159,19 @@ namespace MaSch.Core.Extensions
         /// <returns>The indented string.</returns>
         public static string Indent(this string s, int indentation, bool indentFirstLine)
             => (indentFirstLine ? new string(' ', indentation) : string.Empty) + s.Replace("\r", string.Empty).Replace("\n", $"{Environment.NewLine}{new string(' ', indentation)}");
+
+#if !NETCOREAPP2_1_OR_GREATER && !NETSTANDARD2_1_OR_GREATER
+        /// <summary>
+        /// Returns a value indicating whether a specified string occurs within this string, using the specified comparison rules.
+        /// </summary>
+        /// <param name="s">The string to check.</param>
+        /// <param name="value">The string to seek.</param>
+        /// <param name="comparisonType"> One of the enumeration values that specifies the rules to use in the comparison.</param>
+        /// <returns>
+        ///   <c>true</c> if the value parameter occurs within this string, or if value is the empty string (""); otherwise, <c>false</c>.
+        /// </returns>
+        public static bool Contains(this string s, string value, StringComparison comparisonType)
+            => s.IndexOf(value, comparisonType) >= 0;
+#endif
     }
 }

@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
 using MaSch.Core;
+using MaSch.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MaSch.Test.Extensions
@@ -366,7 +368,145 @@ namespace MaSch.Test.Extensions
                 ThrowAssertFail(0, message, ("ExpectedMin", expectedMin), ("ExpectedMax", expectedMax), ("Actual", actual));
         }
 
-        private static void RunAssertion<T>(T expected, T actual, string? message, Func<T, T, bool> assertFunction)
+        /// <summary>
+        /// Tests whether the specified actual value contains the expected value and throws an exception if the actual value does not contain the expected value.
+        /// </summary>
+        /// <param name="assert">The assert object.</param>
+        /// <param name="expected">The expected value.</param>
+        /// <param name="actual">The actual value.</param>
+        public static void Contains(this Assert assert, string expected, string? actual)
+            => Contains(assert, expected, actual, StringComparison.Ordinal, null);
+
+        /// <summary>
+        /// Tests whether the specified actual value contains the expected value and throws an exception if the actual value does not contain the expected value.
+        /// </summary>
+        /// <param name="assert">The assert object.</param>
+        /// <param name="expected">The expected value.</param>
+        /// <param name="actual">The actual value.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="actual"/> does not contain <paramref name="expected"/>. The message is shown in test results.</param>
+        public static void Contains(this Assert assert, string expected, string? actual, string? message)
+            => Contains(assert, expected, actual, StringComparison.Ordinal, message);
+
+        /// <summary>
+        /// Tests whether the specified actual value contains the expected value and throws an exception if the actual value does not contain the expected value.
+        /// </summary>
+        /// <param name="assert">The assert object.</param>
+        /// <param name="expected">The expected value.</param>
+        /// <param name="actual">The actual value.</param>
+        /// <param name="comparison">The type of comparison to use.</param>
+        public static void Contains(this Assert assert, string expected, string? actual, StringComparison comparison)
+            => Contains(assert, expected, actual, comparison, null);
+
+        /// <summary>
+        /// Tests whether the specified actual value contains the expected value and throws an exception if the actual value does not contain the expected value.
+        /// </summary>
+        /// <param name="assert">The assert object.</param>
+        /// <param name="expected">The expected value.</param>
+        /// <param name="actual">The actual value.</param>
+        /// <param name="comparison">The type of comparison to use.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="actual"/> does not contain <paramref name="expected"/>. The message is shown in test results.</param>
+        public static void Contains(this Assert assert, string expected, string? actual, StringComparison comparison, string? message)
+            => RunAssertion(expected, actual, message, (e, a) => a?.Contains(e!, comparison) == true);
+
+        /// <summary>
+        /// Tests whether the specified actual enumerable contains the expected value and throws an exception if the actual enumerable does not contain the expected value.
+        /// </summary>
+        /// <typeparam name="T">The type of the expected value and items in the actual enumerable.</typeparam>
+        /// <param name="assert">The assert object.</param>
+        /// <param name="expected">The expected value.</param>
+        /// <param name="actual">The actual enumerable.</param>
+        public static void Contains<T>(this Assert assert, T expected, IEnumerable<T>? actual)
+            => Contains(assert, expected, actual, (e, a) => Equals(a, e));
+
+        /// <summary>
+        /// Tests whether the specified actual enumerable contains the expected value and throws an exception if the actual enumerable does not contain the expected value.
+        /// </summary>
+        /// <typeparam name="T">The type of the expected value and items in the actual enumerable.</typeparam>
+        /// <param name="assert">The assert object.</param>
+        /// <param name="expected">The expected value.</param>
+        /// <param name="actual">The actual enumerable.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="actual"/> does not contain <paramref name="expected"/>. The message is shown in test results.</param>
+        public static void Contains<T>(this Assert assert, T expected, IEnumerable<T>? actual, string? message)
+            => Contains(assert, expected, actual, (e, a) => Equals(a, e), message);
+
+        /// <summary>
+        /// Tests whether the specified actual enumerable contains the expected value and throws an exception if the actual enumerable does not contain the expected value.
+        /// </summary>
+        /// <typeparam name="T">The type of the expected value and items in the actual enumerable.</typeparam>
+        /// <param name="assert">The assert object.</param>
+        /// <param name="expected">The expected value.</param>
+        /// <param name="actual">The actual enumerable.</param>
+        /// <param name="comparer">The comparer that is used to validate whether an item in <paramref name="actual"/> matches the <paramref name="expected"/> value.</param>
+        public static void Contains<T>(this Assert assert, T expected, IEnumerable<T>? actual, IEqualityComparer<T> comparer)
+            => Contains(assert, expected, actual, (e, a) => comparer.Equals(a, e));
+
+        /// <summary>
+        /// Tests whether the specified actual enumerable contains the expected value and throws an exception if the actual enumerable does not contain the expected value.
+        /// </summary>
+        /// <typeparam name="T">The type of the expected value and items in the actual enumerable.</typeparam>
+        /// <param name="assert">The assert object.</param>
+        /// <param name="expected">The expected value.</param>
+        /// <param name="actual">The actual enumerable.</param>
+        /// <param name="comparer">The comparer that is used to validate whether an item in <paramref name="actual"/> matches the <paramref name="expected"/> value.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="actual"/> does not contain <paramref name="expected"/>. The message is shown in test results.</param>
+        public static void Contains<T>(this Assert assert, T expected, IEnumerable<T>? actual, IEqualityComparer<T> comparer, string? message)
+            => Contains(assert, expected, actual, (e, a) => comparer.Equals(a, e), message);
+
+        /// <summary>
+        /// Tests whether the specified actual enumerable contains the expected value and throws an exception if the actual enumerable does not contain the expected value.
+        /// </summary>
+        /// <param name="assert">The assert object.</param>
+        /// <param name="expected">The expected value.</param>
+        /// <param name="actual">The actual enumerable.</param>
+        /// <param name="comparer">The comparer that is used to validate whether an item in <paramref name="actual"/> matches the <paramref name="expected"/> value.</param>
+        public static void Contains(this Assert assert, object? expected, IEnumerable? actual, IEqualityComparer comparer)
+            => Contains(assert, expected, actual?.OfType<object?>(), (e, a) => comparer.Equals(a, e));
+
+        /// <summary>
+        /// Tests whether the specified actual enumerable contains the expected value and throws an exception if the actual enumerable does not contain the expected value.
+        /// </summary>
+        /// <param name="assert">The assert object.</param>
+        /// <param name="expected">The expected value.</param>
+        /// <param name="actual">The actual enumerable.</param>
+        /// <param name="comparer">The comparer that is used to validate whether an item in <paramref name="actual"/> matches the <paramref name="expected"/> value.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="actual"/> does not contain <paramref name="expected"/>. The message is shown in test results.</param>
+        public static void Contains(this Assert assert, object? expected, IEnumerable? actual, IEqualityComparer comparer, string? message)
+            => Contains(assert, expected, actual?.OfType<object?>(), (e, a) => comparer.Equals(a, e), message);
+
+        /// <summary>
+        /// Tests whether the specified actual enumerable contains the expected value and throws an exception if the actual enumerable does not contain the expected value.
+        /// </summary>
+        /// <typeparam name="TExpected">The type of the expected value.</typeparam>
+        /// <typeparam name="TActual">The type of the items in the actual enumerable.</typeparam>
+        /// <param name="assert">The assert object.</param>
+        /// <param name="expected">The expected value.</param>
+        /// <param name="actual">The actual enumerable.</param>
+        /// <param name="predicate">The predicate to validate whether an item in <paramref name="actual"/> matches the <paramref name="expected"/> value.</param>
+        public static void Contains<TExpected, TActual>(this Assert assert, TExpected expected, IEnumerable<TActual>? actual, Func<TExpected, TActual, bool> predicate)
+            => Contains(assert, expected, actual, predicate, null);
+
+        /// <summary>
+        /// Tests whether the specified actual enumerable contains the expected value and throws an exception if the actual enumerable does not contain the expected value.
+        /// </summary>
+        /// <typeparam name="TExpected">The type of the expected value.</typeparam>
+        /// <typeparam name="TActual">The type of the items in the actual enumerable.</typeparam>
+        /// <param name="assert">The assert object.</param>
+        /// <param name="expected">The expected value.</param>
+        /// <param name="actual">The actual enumerable.</param>
+        /// <param name="predicate">The predicate to validate whether an item in <paramref name="actual"/> matches the <paramref name="expected"/> value.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="actual"/> does not contain <paramref name="expected"/>. The message is shown in test results.</param>
+        public static void Contains<TExpected, TActual>(this Assert assert, TExpected expected, IEnumerable<TActual>? actual, Func<TExpected, TActual, bool> predicate, string? message)
+        {
+            var array = actual?.ToArray();
+            if (array?.Any(x => predicate(expected, x)) != true)
+            {
+                var formattedArray = array == null ? null :
+                    array.Length == 0 ? "[]" : $"[{Environment.NewLine}\t{string.Join($",{Environment.NewLine}\t", array)}{Environment.NewLine}]";
+                ThrowAssertFail(0, message, ("Expected", expected), ("Actual", formattedArray));
+            }
+        }
+
+        private static void RunAssertion<TExpected, TActual>(TExpected expected, TActual actual, string? message, Func<TExpected, TActual, bool> assertFunction)
         {
             if (!assertFunction(expected, actual))
                 ThrowAssertFail(1, message, ("Expected", expected), ("Actual", actual));

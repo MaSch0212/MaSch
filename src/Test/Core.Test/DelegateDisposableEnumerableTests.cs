@@ -139,7 +139,6 @@ namespace MaSch.Core.Test
     }
 
     [TestClass]
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Can be in same file.")]
     public class DelegateOrderedDisposableEnumerableTests
     {
         [TestMethod]

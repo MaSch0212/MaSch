@@ -16,6 +16,11 @@ namespace MaSch.Core
         private readonly List<IObjectConverter> _objectConverters;
 
         /// <summary>
+        /// Gets the registered object converters.
+        /// </summary>
+        internal IReadOnlyCollection<IObjectConverter> ObjectConverters => _objectConverters.AsReadOnly();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ObjectConvertManager"/> class.
         /// </summary>
         public ObjectConvertManager()
@@ -48,20 +53,23 @@ namespace MaSch.Core
             }
 
             var converters = from c in _objectConverters
-                             where CanConvertWithConverter(c, sourceType, targetType) || (objectToConvert == null && sourceType != null && CanConvertWithConverter(c, null, targetType))
-                             orderby GetPriorityForConverter(c, sourceType, targetType) descending
-                             select c;
+                             let canConvertType = CanConvertWithConverter(c, sourceType, targetType)
+                             let canConvertNull = !canConvertType && objectToConvert == null && sourceType != null && CanConvertWithConverter(c, null, targetType)
+                             where canConvertType || canConvertNull
+                             let type = canConvertType ? sourceType : null
+                             orderby GetPriorityForConverter(c, type, targetType) descending
+                             select (Converter: c, Type: type);
 
             var errors = new List<string>();
-            foreach (var converter in converters)
+            foreach (var (converter, type) in converters)
             {
                 try
                 {
-                    return converter.Convert(objectToConvert, sourceType, targetType, this, formatProvider);
+                    return converter.Convert(objectToConvert, type, targetType, this, formatProvider);
                 }
                 catch (Exception ex)
                 {
-                    errors.Add(ex.Message);
+                    errors.Add($"{converter.GetType().Name}: {ex.Message}");
                 }
             }
 
@@ -98,7 +106,7 @@ namespace MaSch.Core
             }
             catch
             {
-                return -100;
+                return int.MinValue;
             }
         }
     }
@@ -111,6 +119,7 @@ namespace MaSch.Core
     ///     <see cref="NullableObjectConverter"/>,
     ///     <see cref="ConvertibleObjectConverter"/>,
     ///     <see cref="EnumConverter"/>,
+    ///     <see cref="EnumerableConverter"/>.
     ///     <see cref="ToStringObjectConverter"/>,
     ///     <see cref="NullObjectConverter"/>,
     ///     <see cref="IdentityObjectConverter"/>.

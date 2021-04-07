@@ -2,3 +2,4 @@
 - Added DisposableArgs to Disposing and Disposed events in IDisposableEnumerable<T>.
 - Fixed FileLoggingProvider logging to already full log file after reinitialization.
 - Improved thrown exceptions in Guard.
+- Added string.Contains extension method with StringComparison for net48.

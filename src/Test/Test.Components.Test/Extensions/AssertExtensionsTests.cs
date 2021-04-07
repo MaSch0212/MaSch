@@ -4,6 +4,7 @@ using MaSch.Test.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace MaSch.Test.Components.Test.Extensions
@@ -743,6 +744,364 @@ namespace MaSch.Test.Components.Test.Extensions
         }
         #endregion
 
+        #region Contains (string)
+        [TestMethod]
+        public void ContainsStr_Null()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("blub", (string?)null));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<blub>. Actual:<(null)>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsStr_Fail_DifferentContent()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("blub", "bbb"));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<blub>. Actual:<bbb>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsStr_Fail_DifferentCasing()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("blub", "BLUB"));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<blub>. Actual:<BLUB>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsStr_Success()
+        {
+            Assert.That.Contains("blub", "jhfkjhfdgblubkjfh");
+        }
+
+        [TestMethod]
+        public void ContainsStr_WithMessage_Null()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("blub", (string?)null, "This is my test"));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<blub>. Actual:<(null)>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsStr_WithMessage_Fail_DifferentContent()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("blub", "bbb", "This is my test"));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<blub>. Actual:<bbb>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsStr_WithMessage_Fail_DifferentCasing()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("blub", "BLUB", "This is my test"));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<blub>. Actual:<BLUB>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsStr_WithMessage_Success()
+        {
+            Assert.That.Contains("blub", "jhfkjhfdgblubkjfh", "This is my test");
+        }
+
+        [TestMethod]
+        public void ContainsStr_WithComparison_Null()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("blub", null, StringComparison.OrdinalIgnoreCase));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<blub>. Actual:<(null)>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsStr_WithComparison_Fail_DifferentContent()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("blub", "bbb", StringComparison.OrdinalIgnoreCase));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<blub>. Actual:<bbb>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsStr_WithComparison_Success_SameCasing()
+        {
+            Assert.That.Contains("blub", "jhfkjhfdgblubkjfh", StringComparison.OrdinalIgnoreCase);
+        }
+
+        [TestMethod]
+        public void ContainsStr_WithComparison_Success_DifferentCasing()
+        {
+            Assert.That.Contains("blub", "jhfkjhfdgBLUBkjfh", StringComparison.OrdinalIgnoreCase);
+        }
+
+        [TestMethod]
+        public void ContainsStr_WithComparison_WithMessage_Null()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("blub", null, StringComparison.OrdinalIgnoreCase, "This is my test"));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<blub>. Actual:<(null)>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsStr_WithComparison_WithMessage_Fail_DifferentContent()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("blub", "bbb", StringComparison.OrdinalIgnoreCase, "This is my test"));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<blub>. Actual:<bbb>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsStr_WithComparison_WithMessage_Success_SameCasing()
+        {
+            Assert.That.Contains("blub", "jhfkjhfdgblubkjfh", StringComparison.OrdinalIgnoreCase, "This is my test");
+        }
+
+        [TestMethod]
+        public void ContainsStr_WithComparison_WithMessage_Success_DifferentCasing()
+        {
+            Assert.That.Contains("blub", "jhfkjhfdgBLUBkjfh", StringComparison.OrdinalIgnoreCase, "This is my test");
+        }
+        #endregion
+
+        #region Contains (IEnumerable)
+        [TestMethod]
+        public void ContainsEnum_Null()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", (IEnumerable<string>?)null));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<(null)>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_Empty()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", Array.Empty<string>()));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<[]>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_NotContained()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", new[] { "abc", "def", "ghi" }));
+            Assert.AreEqual($"Assert.That.Contains failed. Expected:<Test>. Actual:<[{nl}\tabc,{nl}\tdef,{nl}\tghi{nl}]>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_Contained()
+        {
+            Assert.That.Contains("Test", new[] { "abc", "def", "Test", "ghi" });
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithMessage_Null()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", (IEnumerable<string>?)null, "This is my test"));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<(null)>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithMessage_Empty()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", Array.Empty<string>(), "This is my test"));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<[]>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithMessage_NotContained()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", new[] { "abc", "def", "ghi" }, "This is my test"));
+            Assert.AreEqual($"Assert.That.Contains failed. Expected:<Test>. Actual:<[{nl}\tabc,{nl}\tdef,{nl}\tghi{nl}]>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithMessage_Contained()
+        {
+            Assert.That.Contains("Test", new[] { "abc", "def", "Test", "ghi" }, "This is my test");
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithComparerT_Null()
+        {
+            using var comparer = CreateEqualityComparerT<string>();
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", null, comparer));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<(null)>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithComparerT_Empty()
+        {
+            using var comparer = CreateEqualityComparerT<string>();
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", Array.Empty<string>(), comparer));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<[]>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithComparerT_NotContained()
+        {
+            var nl = Environment.NewLine;
+            using var comparer = CreateEqualityComparerT(("abc", "Test"), ("def", "Test"), ("ghi", "Test"));
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", new[] { "abc", "def", "ghi" }, comparer));
+            Assert.AreEqual($"Assert.That.Contains failed. Expected:<Test>. Actual:<[{nl}\tabc,{nl}\tdef,{nl}\tghi{nl}]>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithComparerT_Contained()
+        {
+            using var comparer = CreateEqualityComparerT(("abc", "Test"), ("def", "Test"), ("Test", "Test"));
+            Assert.That.Contains("Test", new[] { "abc", "def", "Test", "ghi" }, comparer);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithComparerT_WithMessage_Null()
+        {
+            using var comparer = CreateEqualityComparerT<string>();
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", null, comparer, "This is my test"));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<(null)>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithComparerT_WithMessage_Empty()
+        {
+            using var comparer = CreateEqualityComparerT<string>();
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", Array.Empty<string>(), comparer, "This is my test"));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<[]>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithComparerT_WithMessage_NotContained()
+        {
+            var nl = Environment.NewLine;
+            using var comparer = CreateEqualityComparerT(("abc", "Test"), ("def", "Test"), ("ghi", "Test"));
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", new[] { "abc", "def", "ghi" }, comparer, "This is my test"));
+            Assert.AreEqual($"Assert.That.Contains failed. Expected:<Test>. Actual:<[{nl}\tabc,{nl}\tdef,{nl}\tghi{nl}]>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithComparerT_WithMessage_Contained()
+        {
+            using var comparer = CreateEqualityComparerT(("abc", "Test"), ("def", "Test"), ("Test", "Test"));
+            Assert.That.Contains("Test", new[] { "abc", "def", "Test", "ghi" }, comparer, "This is my test");
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithComparer_Null()
+        {
+            using var comparer = CreateEqualityComparer();
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", null, comparer));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<(null)>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithComparer_Empty()
+        {
+            using var comparer = CreateEqualityComparer();
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", Array.Empty<string>(), comparer));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<[]>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithComparer_NotContained()
+        {
+            var nl = Environment.NewLine;
+            using var comparer = CreateEqualityComparer(("abc", "Test"), ("def", "Test"), ("ghi", "Test"));
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", new[] { "abc", "def", "ghi" }, comparer));
+            Assert.AreEqual($"Assert.That.Contains failed. Expected:<Test>. Actual:<[{nl}\tabc,{nl}\tdef,{nl}\tghi{nl}]>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithComparer_Contained()
+        {
+            using var comparer = CreateEqualityComparer(("abc", "Test"), ("def", "Test"), ("Test", "Test"));
+            Assert.That.Contains("Test", new[] { "abc", "def", "Test", "ghi" }, comparer);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithComparer_WithMessage_Null()
+        {
+            using var comparer = CreateEqualityComparer();
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", null, comparer, "This is my test"));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<(null)>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithComparer_WithMessage_Empty()
+        {
+            using var comparer = CreateEqualityComparer();
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", Array.Empty<string>(), comparer, "This is my test"));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<[]>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithComparer_WithMessage_NotContained()
+        {
+            var nl = Environment.NewLine;
+            using var comparer = CreateEqualityComparer(("abc", "Test"), ("def", "Test"), ("ghi", "Test"));
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", new[] { "abc", "def", "ghi" }, comparer, "This is my test"));
+            Assert.AreEqual($"Assert.That.Contains failed. Expected:<Test>. Actual:<[{nl}\tabc,{nl}\tdef,{nl}\tghi{nl}]>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithComparer_WithMessage_Contained()
+        {
+            using var comparer = CreateEqualityComparer(("abc", "Test"), ("def", "Test"), ("Test", "Test"));
+            Assert.That.Contains("Test", new[] { "abc", "def", "Test", "ghi" }, comparer, "This is my test");
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithPredicate_Null()
+        {
+            using var predicate = CreatePredicate<string, int>();
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", null, predicate.Object));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<(null)>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithPredicate_Empty()
+        {
+            using var predicate = CreatePredicate<string, int>();
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", Array.Empty<int>(), predicate.Object));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<[]>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithPredicate_NotContained()
+        {
+            var nl = Environment.NewLine;
+            using var predicate = CreatePredicate(("Test", 1, false), ("Test", 2, false), ("Test", 3, false));
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", new[] { 1, 2, 3 }, predicate.Object));
+            Assert.AreEqual($"Assert.That.Contains failed. Expected:<Test>. Actual:<[{nl}\t1,{nl}\t2,{nl}\t3{nl}]>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithPredicate_Contained()
+        {
+            using var predicate = CreatePredicate(("Test", 1, false), ("Test", 2, false), ("Test", 3, true));
+            Assert.That.Contains("Test", new[] { 1, 2, 3, 4 }, predicate.Object);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithPredicate_WithMessage_Null()
+        {
+            using var predicate = CreatePredicate<string, int>();
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", null, predicate.Object, "This is my test"));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<(null)>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithPredicate_WithMessage_Empty()
+        {
+            using var predicate = CreatePredicate<string, int>();
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", Array.Empty<int>(), predicate.Object, "This is my test"));
+            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<[]>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithPredicate_WithMessage_NotContained()
+        {
+            var nl = Environment.NewLine;
+            using var predicate = CreatePredicate(("Test", 1, false), ("Test", 2, false), ("Test", 3, false));
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", new[] { 1, 2, 3 }, predicate.Object, "This is my test"));
+            Assert.AreEqual($"Assert.That.Contains failed. Expected:<Test>. Actual:<[{nl}\t1,{nl}\t2,{nl}\t3{nl}]>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsEnum_WithPredicate_WithMessage_Contained()
+        {
+            using var predicate = CreatePredicate(("Test", 1, false), ("Test", 2, false), ("Test", 3, true));
+            Assert.That.Contains("Test", new[] { 1, 2, 3, 4 }, predicate.Object, "This is my test");
+        }
+        #endregion
+
         private static DisposableComparer<int> CreateComparer(int x, int y, int result)
         {
             var comparerMock = new Mock<IComparer<int>>(MockBehavior.Strict);
@@ -764,6 +1123,54 @@ namespace MaSch.Test.Components.Test.Extensions
                 {
                     comparerMock.Verify(m => m.Compare(value, 1), Times.Once());
                     comparerMock.Verify(m => m.Compare(value, 3), Times.Once());
+                }));
+        }
+
+        private static DisposableEqualityComparer<T> CreateEqualityComparerT<T>(params (T X, T Y)[] expectedCalls)
+        {
+            var comparerMock = new Mock<IEqualityComparer<T>>(MockBehavior.Strict);
+            comparerMock.Setup(m => m.GetHashCode(It.IsAny<T>()!)).Returns<T>(x => x!.GetHashCode());
+            comparerMock.Setup(m => m.Equals(It.IsAny<T?>(), It.IsAny<T?>())).Returns<T?, T?>((x, y) => Equals(x, y));
+
+            return new DisposableEqualityComparer<T>(
+                comparerMock.Object,
+                new ActionOnDispose(() =>
+                {
+                    comparerMock.Verify(m => m.Equals(It.IsAny<T?>(), It.IsAny<T?>()), Times.Exactly(expectedCalls.Length));
+                    foreach (var (x, y) in expectedCalls)
+                        comparerMock.Verify(m => m.Equals(x, y), Times.Once());
+                }));
+        }
+
+        private static DisposableEqualityComparer CreateEqualityComparer(params (object? X, object? Y)[] expectedCalls)
+        {
+            var comparerMock = new Mock<IEqualityComparer>(MockBehavior.Strict);
+            comparerMock.Setup(m => m.GetHashCode(It.IsAny<object>()!)).Returns<object?>(x => x!.GetHashCode());
+            comparerMock.Setup(m => m.Equals(It.IsAny<object?>(), It.IsAny<object?>())).Returns<object?, object?>((x, y) => Equals(x, y));
+
+            return new DisposableEqualityComparer(
+                comparerMock.Object,
+                new ActionOnDispose(() =>
+                {
+                    comparerMock.Verify(m => m.Equals(It.IsAny<object?>(), It.IsAny<object?>()), Times.Exactly(expectedCalls.Length));
+                    foreach (var (x, y) in expectedCalls)
+                        comparerMock.Verify(m => m.Equals(x, y), Times.Once());
+                }));
+        }
+
+        private static DisposableWrapper<Func<T1, T2, bool>> CreatePredicate<T1, T2>(params (T1 X, T2 Y, bool Result)[] calls)
+        {
+            var funcMock = new Mock<Func<T1, T2, bool>>(MockBehavior.Strict);
+            foreach (var (x, y, result) in calls)
+                funcMock.Setup(m => m(x, y)).Returns(result);
+
+            return new DisposableWrapper<Func<T1, T2, bool>>(
+                funcMock.Object,
+                new ActionOnDispose(() =>
+                {
+                    funcMock.Verify(m => m(It.IsAny<T1>(), It.IsAny<T2>()), Times.Exactly(calls.Length));
+                    foreach (var (x, y, _) in calls)
+                        funcMock.Verify(m => m(x, y), Times.Once());
                 }));
         }
     }

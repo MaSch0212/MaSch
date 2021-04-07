@@ -1,0 +1,2 @@
+﻿- Added assert methods for checking if string contains specific string.
+- Added assert methods for checking if enumerable contains item.
