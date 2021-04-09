@@ -1,5 +1,6 @@
 ﻿using MaSch.Presentation.Wpf.Models;
 using MaSch.Presentation.Wpf.ThemeValues;
+using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System;
@@ -7,7 +8,7 @@ using System;
 namespace MaSch.Presentation.Wpf.Themes.Test.ThemeValues
 {
     [TestClass]
-    public class BooleanThemeValueTests
+    public class BooleanThemeValueTests : UnitTestBase
     {
         private const string TrueJson = "{\"Type\":\"Boolean\",\"Value\":true}";
         private const string FalseJson = "{\"Type\":\"Boolean\",\"Value\":false}";

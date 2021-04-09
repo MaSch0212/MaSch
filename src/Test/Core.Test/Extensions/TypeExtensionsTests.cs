@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using MaSch.Core.Extensions;
+using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MaSch.Core.Test.Extensions
 {
     [TestClass]
-    public class TypeExtensionsTests
+    public class TypeExtensionsTests : UnitTestBase
     {
         [TestMethod]
         public void IsCastableTo_ExplicitValueTypes_False()

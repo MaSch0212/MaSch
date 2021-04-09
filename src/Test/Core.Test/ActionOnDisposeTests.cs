@@ -1,4 +1,4 @@
-﻿using MaSch.Test.Extensions;
+﻿using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading;
@@ -6,7 +6,7 @@ using System.Threading;
 namespace MaSch.Core.Test
 {
     [TestClass]
-    public class ActionOnDisposeTests
+    public class ActionOnDisposeTests : UnitTestBase
     {
         [TestMethod]
         public void Constructor_NullChecks()
@@ -46,7 +46,7 @@ namespace MaSch.Core.Test
             Thread.Sleep(100);
             obj.Dispose();
             Assert.AreEqual(1, callCount);
-            Assert.That.IsBetween(TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(150), lastTimeSpan!.Value);
+            Assert.IsBetween(TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(150), lastTimeSpan!.Value);
         }
     }
 }

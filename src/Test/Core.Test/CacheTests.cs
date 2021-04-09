@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
+using Assert = MaSch.Test.Assertion.Assert;
 
 namespace MaSch.Core.Test
 {
@@ -16,6 +17,7 @@ namespace MaSch.Core.Test
         private Mock<Cache> _cacheMock;
 
         public TestContext TestContext { get; set; }
+        public Assert Assert => Assert.Instance;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         [TestInitialize]

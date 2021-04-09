@@ -1,5 +1,6 @@
 ﻿using MaSch.Presentation.Wpf.Models;
 using MaSch.Presentation.Wpf.ThemeValues;
+using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System;
@@ -8,7 +9,7 @@ using System.Windows.Media;
 namespace MaSch.Presentation.Wpf.Themes.Test.ThemeValues
 {
     [TestClass]
-    public class ColorThemeValueTests
+    public class ColorThemeValueTests : UnitTestBase
     {
         private const string ValueJson = "{\"Type\":\"Color\",\"Value\":\"#7C3ECD59\"}";
         private const string RefJson = "{\"Type\":\"Color\",\"Value\":\"{Bind MyTestKey}\"}";

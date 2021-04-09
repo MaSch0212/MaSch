@@ -8,6 +8,7 @@
     <RootNamespace>MaSch.Test</RootNamespace>
     <ConfigureSourceLink>true</ConfigureSourceLink>
     <AddReleaseNotes>true</AddReleaseNotes>
+    <UseMaSchGenerators>true</UseMaSchGenerators>
 
     <!-- Output info -->
     <SignAssembly>true</SignAssembly>
@@ -26,6 +27,7 @@
 
   <ItemGroup>
     <PackageReference Include="MSTest.TestFramework" Version="$(MsTestVersion)" />
+    <PackageReference Include="Moq" Version="$(MoqVersion)" />
   </ItemGroup>
   
 </Project>

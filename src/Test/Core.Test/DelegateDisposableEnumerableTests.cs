@@ -1,15 +1,15 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using MaSch.Test;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace MaSch.Core.Test
 {
     [TestClass]
-    public class DelegateDisposableEnumerableTests
+    public class DelegateDisposableEnumerableTests : UnitTestBase
     {
         [TestMethod]
         public void Constructor_ParameterChecks()

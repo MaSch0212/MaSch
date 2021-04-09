@@ -1,5 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using MaSch.Test;
+using MaSch.Test.Extensions;
+using MaSch.Test.Models;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Moq.Language.Flow;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +12,8 @@ using System.Reflection;
 namespace MaSch.Core.Test
 {
     [TestClass]
-    public class ServiceContextTests
+    public class ServiceContextTests : UnitTestBase
     {
-
         internal static IDictionary<(Type Type, string? Name), object> GetServicesDict(object? instance)
         {
             var servicesField = typeof(ServiceContext).GetField("_services", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -25,13 +28,13 @@ namespace MaSch.Core.Test
     }
 
     [TestClass]
-    public class ServiceContextStaticTests
+    public class ServiceContextStaticTests : UnitTestBase
     {
         private static readonly FieldInfo InstanceField = typeof(ServiceContext).GetField("_instance", BindingFlags.Static | BindingFlags.NonPublic)!;
 
-        [TestInitialize]
-        public void InitializeTest()
+        protected override void OnInitializeTest()
         {
+            base.OnInitializeTest();
             InstanceField.SetValue(null, null);
         }
 
@@ -144,6 +147,29 @@ namespace MaSch.Core.Test
             ServiceContext.AddService(typeof(string), "MyTest", "blub");
 
             mock.Verify(x => x.AddService(typeof(string), "MyTest", "blub"), Times.Once());
+        }
+
+        [TestMethod]
+        public void GetServiceTOut()
+        {
+            var mock = SetMockInstance();
+            mock.Setup(x => x.GetService(typeof(string), It.IsAny<string?>())).Returns("MyTest");
+
+            ServiceContext.GetService(out string result);
+
+            Assert.AreEqual("MyTest", result);
+            mock.Verify(x => x.GetService(typeof(string), null), Times.Once());
+        }
+
+        [TestMethod]
+        public void GetServiceTOut_WithName()
+        {
+            var mock = SetMockInstance();
+            using var v1 = mock.Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(Times.Once);
+
+            ServiceContext.GetService(out string result, "blub");
+
+            Assert.AreEqual("MyTest", result);
         }
 
         private static Mock<IServiceContext> SetMockInstance()

@@ -1,5 +1,6 @@
 ﻿using MaSch.Presentation.Wpf.Models;
 using MaSch.Presentation.Wpf.ThemeValues;
+using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System;
@@ -7,7 +8,7 @@ using System;
 namespace MaSch.Presentation.Wpf.Themes.Test.ThemeValues
 {
     [TestClass]
-    public class DoubleThemeValueTests
+    public class DoubleThemeValueTests : UnitTestBase
     {
         private const string ValueJson = "{\"Type\":\"Double\",\"Value\":5.42}";
         private const string RefJson = "{\"Type\":\"Double\",\"Value\":\"{Bind MyTestKey}\"}";

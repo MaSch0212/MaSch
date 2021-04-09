@@ -1,6 +1,5 @@
 ﻿using MaSch.Core;
 using MaSch.Test.Components.Test.TestHelper;
-using MaSch.Test.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -10,80 +9,80 @@ using System.Collections.Generic;
 namespace MaSch.Test.Components.Test.Extensions
 {
     [TestClass]
-    public class AssertExtensionsTests
+    public class AssertExtensionsTests : UnitTestBase
     {
         #region IsGreaterThan
         [TestMethod]
         public void IsGreaterThan_Success()
         {
-            Assert.That.IsGreaterThan(1, 2);
+            Assert.IsGreaterThan(1, 2);
         }
 
         [TestMethod]
         public void IsGreaterThan_Fail_Smaller()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsGreaterThan(2, 1));
-            Assert.AreEqual("Assert.That.IsGreaterThan failed. Expected:<2>. Actual:<1>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsGreaterThan(2, 1));
+            Assert.AreEqual("Assert.IsGreaterThan failed. Expected:<2>. Actual:<1>.", ex.Message);
         }
 
         [TestMethod]
         public void IsGreaterThan_Fail_Equal()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsGreaterThan(1, 1));
-            Assert.AreEqual("Assert.That.IsGreaterThan failed. Expected:<1>. Actual:<1>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsGreaterThan(1, 1));
+            Assert.AreEqual("Assert.IsGreaterThan failed. Expected:<1>. Actual:<1>.", ex.Message);
         }
 
         [TestMethod]
         public void IsGreaterThan_FailWithMessage_Smaller()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsGreaterThan(2, 1, "This is my test"));
-            Assert.AreEqual("Assert.That.IsGreaterThan failed. Expected:<2>. Actual:<1>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsGreaterThan(2, 1, "This is my test"));
+            Assert.AreEqual("Assert.IsGreaterThan failed. Expected:<2>. Actual:<1>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsGreaterThan_FailWithMessage_Equal()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsGreaterThan(1, 1, "This is my test"));
-            Assert.AreEqual("Assert.That.IsGreaterThan failed. Expected:<1>. Actual:<1>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsGreaterThan(1, 1, "This is my test"));
+            Assert.AreEqual("Assert.IsGreaterThan failed. Expected:<1>. Actual:<1>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsGreaterThan_WithComparer_Success()
         {
             using var comparer = CreateComparer(1, 2, 1);
-            Assert.That.IsGreaterThan(2, 1, comparer);
+            Assert.IsGreaterThan(2, 1, comparer);
         }
 
         [TestMethod]
         public void IsGreaterThan_WithComparer_Fail_Smaller()
         {
             using var comparer = CreateComparer(2, 1, -1);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsGreaterThan(1, 2, comparer));
-            Assert.AreEqual("Assert.That.IsGreaterThan failed. Expected:<1>. Actual:<2>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsGreaterThan(1, 2, comparer));
+            Assert.AreEqual("Assert.IsGreaterThan failed. Expected:<1>. Actual:<2>.", ex.Message);
         }
 
         [TestMethod]
         public void IsGreaterThan_WithComparer_Fail_Equal()
         {
             using var comparer = CreateComparer(1, 1, 0);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsGreaterThan(1, 1, comparer));
-            Assert.AreEqual("Assert.That.IsGreaterThan failed. Expected:<1>. Actual:<1>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsGreaterThan(1, 1, comparer));
+            Assert.AreEqual("Assert.IsGreaterThan failed. Expected:<1>. Actual:<1>.", ex.Message);
         }
 
         [TestMethod]
         public void IsGreaterThan_WithComparer_FailWithMessage_Smaller()
         {
             using var comparer = CreateComparer(2, 1, -1);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsGreaterThan(1, 2, comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.IsGreaterThan failed. Expected:<1>. Actual:<2>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsGreaterThan(1, 2, comparer, "This is my test"));
+            Assert.AreEqual("Assert.IsGreaterThan failed. Expected:<1>. Actual:<2>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsGreaterThan_WithComparer_FailWithMessage_Equal()
         {
             using var comparer = CreateComparer(1, 1, 0);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsGreaterThan(1, 1, comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.IsGreaterThan failed. Expected:<1>. Actual:<1>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsGreaterThan(1, 1, comparer, "This is my test"));
+            Assert.AreEqual("Assert.IsGreaterThan failed. Expected:<1>. Actual:<1>. This is my test", ex.Message);
         }
         #endregion
 
@@ -91,57 +90,57 @@ namespace MaSch.Test.Components.Test.Extensions
         [TestMethod]
         public void IsGreaterThanOrEqualTo_Success_Equal()
         {
-            Assert.That.IsGreaterThanOrEqualTo(1, 1);
+            Assert.IsGreaterThanOrEqualTo(1, 1);
         }
 
         [TestMethod]
         public void IsGreaterThanOrEqualTo_Success_Greater()
         {
-            Assert.That.IsGreaterThanOrEqualTo(1, 2);
+            Assert.IsGreaterThanOrEqualTo(1, 2);
         }
 
         [TestMethod]
         public void IsGreaterThanOrEqualTo_Fail()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsGreaterThanOrEqualTo(2, 1));
-            Assert.AreEqual("Assert.That.IsGreaterThanOrEqualTo failed. Expected:<2>. Actual:<1>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsGreaterThanOrEqualTo(2, 1));
+            Assert.AreEqual("Assert.IsGreaterThanOrEqualTo failed. Expected:<2>. Actual:<1>.", ex.Message);
         }
 
         [TestMethod]
         public void IsGreaterThanOrEqualTo_FailWithMessage()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsGreaterThanOrEqualTo(2, 1, "This is my test"));
-            Assert.AreEqual("Assert.That.IsGreaterThanOrEqualTo failed. Expected:<2>. Actual:<1>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsGreaterThanOrEqualTo(2, 1, "This is my test"));
+            Assert.AreEqual("Assert.IsGreaterThanOrEqualTo failed. Expected:<2>. Actual:<1>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsGreaterThanOrEqualTo_WithComparer_Success_Equal()
         {
             using var comparer = CreateComparer(1, 2, 0);
-            Assert.That.IsGreaterThanOrEqualTo(2, 1, comparer);
+            Assert.IsGreaterThanOrEqualTo(2, 1, comparer);
         }
 
         [TestMethod]
         public void IsGreaterThanOrEqualTo_WithComparer_Success_Greater()
         {
             using var comparer = CreateComparer(1, 2, 1);
-            Assert.That.IsGreaterThanOrEqualTo(2, 1, comparer);
+            Assert.IsGreaterThanOrEqualTo(2, 1, comparer);
         }
 
         [TestMethod]
         public void IsGreaterThanOrEqualTo_WithComparer_Fail()
         {
             using var comparer = CreateComparer(2, 1, -1);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsGreaterThanOrEqualTo(1, 2, comparer));
-            Assert.AreEqual("Assert.That.IsGreaterThanOrEqualTo failed. Expected:<1>. Actual:<2>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsGreaterThanOrEqualTo(1, 2, comparer));
+            Assert.AreEqual("Assert.IsGreaterThanOrEqualTo failed. Expected:<1>. Actual:<2>.", ex.Message);
         }
 
         [TestMethod]
         public void IsGreaterThanOrEqualTo_WithComparer_FailWithMessage()
         {
             using var comparer = CreateComparer(2, 1, -1);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsGreaterThanOrEqualTo(1, 2, comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.IsGreaterThanOrEqualTo failed. Expected:<1>. Actual:<2>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsGreaterThanOrEqualTo(1, 2, comparer, "This is my test"));
+            Assert.AreEqual("Assert.IsGreaterThanOrEqualTo failed. Expected:<1>. Actual:<2>. This is my test", ex.Message);
         }
         #endregion
 
@@ -149,74 +148,74 @@ namespace MaSch.Test.Components.Test.Extensions
         [TestMethod]
         public void IsSmallerThan_Success()
         {
-            Assert.That.IsSmallerThan(2, 1);
+            Assert.IsSmallerThan(2, 1);
         }
 
         [TestMethod]
         public void IsSmallerThan_Fail_Greater()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsSmallerThan(1, 2));
-            Assert.AreEqual("Assert.That.IsSmallerThan failed. Expected:<1>. Actual:<2>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsSmallerThan(1, 2));
+            Assert.AreEqual("Assert.IsSmallerThan failed. Expected:<1>. Actual:<2>.", ex.Message);
         }
 
         [TestMethod]
         public void IsSmallerThan_Fail_Equal()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsSmallerThan(1, 1));
-            Assert.AreEqual("Assert.That.IsSmallerThan failed. Expected:<1>. Actual:<1>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsSmallerThan(1, 1));
+            Assert.AreEqual("Assert.IsSmallerThan failed. Expected:<1>. Actual:<1>.", ex.Message);
         }
 
         [TestMethod]
         public void IsSmallerThan_FailWithMessage_Greater()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsSmallerThan(1, 2, "This is my test"));
-            Assert.AreEqual("Assert.That.IsSmallerThan failed. Expected:<1>. Actual:<2>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsSmallerThan(1, 2, "This is my test"));
+            Assert.AreEqual("Assert.IsSmallerThan failed. Expected:<1>. Actual:<2>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsSmallerThan_FailWithMessage_Equal()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsSmallerThan(1, 1, "This is my test"));
-            Assert.AreEqual("Assert.That.IsSmallerThan failed. Expected:<1>. Actual:<1>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsSmallerThan(1, 1, "This is my test"));
+            Assert.AreEqual("Assert.IsSmallerThan failed. Expected:<1>. Actual:<1>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsSmallerThan_WithComparer_Success()
         {
             using var comparer = CreateComparer(2, 1, -1);
-            Assert.That.IsSmallerThan(1, 2, comparer);
+            Assert.IsSmallerThan(1, 2, comparer);
         }
 
         [TestMethod]
         public void IsSmallerThan_WithComparer_Fail_Greater()
         {
             using var comparer = CreateComparer(1, 2, 1);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsSmallerThan(2, 1, comparer));
-            Assert.AreEqual("Assert.That.IsSmallerThan failed. Expected:<2>. Actual:<1>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsSmallerThan(2, 1, comparer));
+            Assert.AreEqual("Assert.IsSmallerThan failed. Expected:<2>. Actual:<1>.", ex.Message);
         }
 
         [TestMethod]
         public void IsSmallerThan_WithComparer_Fail_Equal()
         {
             using var comparer = CreateComparer(1, 1, 0);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsSmallerThan(1, 1, comparer));
-            Assert.AreEqual("Assert.That.IsSmallerThan failed. Expected:<1>. Actual:<1>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsSmallerThan(1, 1, comparer));
+            Assert.AreEqual("Assert.IsSmallerThan failed. Expected:<1>. Actual:<1>.", ex.Message);
         }
 
         [TestMethod]
         public void IsSmallerThan_WithComparer_FailWithMessage_Greater()
         {
             using var comparer = CreateComparer(1, 2, 1);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsSmallerThan(2, 1, comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.IsSmallerThan failed. Expected:<2>. Actual:<1>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsSmallerThan(2, 1, comparer, "This is my test"));
+            Assert.AreEqual("Assert.IsSmallerThan failed. Expected:<2>. Actual:<1>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsSmallerThan_WithComparer_FailWithMessage_Equal()
         {
             using var comparer = CreateComparer(1, 1, 0);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsSmallerThan(1, 1, comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.IsSmallerThan failed. Expected:<1>. Actual:<1>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsSmallerThan(1, 1, comparer, "This is my test"));
+            Assert.AreEqual("Assert.IsSmallerThan failed. Expected:<1>. Actual:<1>. This is my test", ex.Message);
         }
         #endregion
 
@@ -224,57 +223,57 @@ namespace MaSch.Test.Components.Test.Extensions
         [TestMethod]
         public void IsSmallerThanOrEqualTo_Success_Equal()
         {
-            Assert.That.IsSmallerThanOrEqualTo(1, 1);
+            Assert.IsSmallerThanOrEqualTo(1, 1);
         }
 
         [TestMethod]
         public void IsSmallerThanOrEqualTo_Success_Smaller()
         {
-            Assert.That.IsSmallerThanOrEqualTo(2, 1);
+            Assert.IsSmallerThanOrEqualTo(2, 1);
         }
 
         [TestMethod]
         public void IsSmallerThanOrEqualTo_Fail()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsSmallerThanOrEqualTo(1, 2));
-            Assert.AreEqual("Assert.That.IsSmallerThanOrEqualTo failed. Expected:<1>. Actual:<2>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsSmallerThanOrEqualTo(1, 2));
+            Assert.AreEqual("Assert.IsSmallerThanOrEqualTo failed. Expected:<1>. Actual:<2>.", ex.Message);
         }
 
         [TestMethod]
         public void IsSmallerThanOrEqualTo_FailWithMessage()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsSmallerThanOrEqualTo(1, 2, "This is my test"));
-            Assert.AreEqual("Assert.That.IsSmallerThanOrEqualTo failed. Expected:<1>. Actual:<2>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsSmallerThanOrEqualTo(1, 2, "This is my test"));
+            Assert.AreEqual("Assert.IsSmallerThanOrEqualTo failed. Expected:<1>. Actual:<2>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsSmallerThanOrEqualTo_WithComparer_Success_Equal()
         {
             using var comparer = CreateComparer(2, 1, 0);
-            Assert.That.IsSmallerThanOrEqualTo(1, 2, comparer);
+            Assert.IsSmallerThanOrEqualTo(1, 2, comparer);
         }
 
         [TestMethod]
         public void IsSmallerThanOrEqualTo_WithComparer_Success_Smaller()
         {
             using var comparer = CreateComparer(2, 1, -1);
-            Assert.That.IsSmallerThanOrEqualTo(1, 2, comparer);
+            Assert.IsSmallerThanOrEqualTo(1, 2, comparer);
         }
 
         [TestMethod]
         public void IsSmallerThanOrEqualTo_WithComparer_Fail()
         {
             using var comparer = CreateComparer(1, 2, 1);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsSmallerThanOrEqualTo(2, 1, comparer));
-            Assert.AreEqual("Assert.That.IsSmallerThanOrEqualTo failed. Expected:<2>. Actual:<1>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsSmallerThanOrEqualTo(2, 1, comparer));
+            Assert.AreEqual("Assert.IsSmallerThanOrEqualTo failed. Expected:<2>. Actual:<1>.", ex.Message);
         }
 
         [TestMethod]
         public void IsSmallerThanOrEqualTo_WithComparer_FailWithMessage()
         {
             using var comparer = CreateComparer(1, 2, 1);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsSmallerThanOrEqualTo(2, 1, comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.IsSmallerThanOrEqualTo failed. Expected:<2>. Actual:<1>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsSmallerThanOrEqualTo(2, 1, comparer, "This is my test"));
+            Assert.AreEqual("Assert.IsSmallerThanOrEqualTo failed. Expected:<2>. Actual:<1>. This is my test", ex.Message);
         }
         #endregion
 
@@ -282,465 +281,465 @@ namespace MaSch.Test.Components.Test.Extensions
         [TestMethod]
         public void IsBetween_Success()
         {
-            Assert.That.IsBetween(1, 3, 2);
+            Assert.IsBetween(1, 3, 2);
         }
 
         [TestMethod]
         public void IsBetween_Fail_EqualMin()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 1));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<1>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 1));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<1>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_Fail_SmallerMin()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 0));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 0));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_Fail_EqualMax()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 3));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<3>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 3));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<3>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_Fail_GreaterMax()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 4));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 4));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_FailWithMessage_EqualMin()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 1, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<1>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 1, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<1>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_FailWithMessage_SmallerMin()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 0, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 0, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_FailWithMessage_EqualMax()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 3, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<3>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 3, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<3>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_FailWithMessage_GreaterMax()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 4, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 4, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_Success()
         {
             using var comparer = CreateBetweenComparer(2);
-            Assert.That.IsBetween(1, 3, 2, comparer);
+            Assert.IsBetween(1, 3, 2, comparer);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_Fail_EqualMin()
         {
             using var comparer = CreateBetweenComparer(1);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 1, comparer));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<1>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 1, comparer));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<1>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_Fail_SmallerMin()
         {
             using var comparer = CreateBetweenComparer(0);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 0, comparer));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 0, comparer));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_Fail_EqualMax()
         {
             using var comparer = CreateBetweenComparer(3);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 3, comparer));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<3>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 3, comparer));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<3>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_Fail_GreaterMax()
         {
             using var comparer = CreateBetweenComparer(4);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 4, comparer));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 4, comparer));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_FailWithMessage_EqualMin()
         {
             using var comparer = CreateBetweenComparer(1);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 1, comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<1>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 1, comparer, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<1>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_FailWithMessage_SmallerMin()
         {
             using var comparer = CreateBetweenComparer(0);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 0, comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 0, comparer, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_FailWithMessage_EqualMax()
         {
             using var comparer = CreateBetweenComparer(3);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 3, comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<3>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 3, comparer, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<3>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_FailWithMessage_GreaterMax()
         {
             using var comparer = CreateBetweenComparer(4);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 4, comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 4, comparer, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMin_Success_GreaterMin()
         {
-            Assert.That.IsBetween(1, 3, 2, true, false);
+            Assert.IsBetween(1, 3, 2, true, false);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMin_Success_EqualMin()
         {
-            Assert.That.IsBetween(1, 3, 1, true, false);
+            Assert.IsBetween(1, 3, 1, true, false);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMin_Fail_SmallerMin()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 0, true, false));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 0, true, false));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMin_Fail_EqualMax()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 3, true, false));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<3>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 3, true, false));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<3>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMin_Fail_GreaterMax()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 4, true, false));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 4, true, false));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMin_FailWithMessage_SmallerMin()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 0, true, false, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 0, true, false, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMin_FailWithMessage_EqualMax()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 3, true, false, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<3>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 3, true, false, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<3>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMin_FailWithMessage_GreaterMax()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 4, true, false, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 4, true, false, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMin_Success_GreaterMin()
         {
             using var comparer = CreateBetweenComparer(2);
-            Assert.That.IsBetween(1, 3, 2, true, false, comparer);
+            Assert.IsBetween(1, 3, 2, true, false, comparer);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMin_Success_EqualMin()
         {
             using var comparer = CreateBetweenComparer(1);
-            Assert.That.IsBetween(1, 3, 1, true, false, comparer);
+            Assert.IsBetween(1, 3, 1, true, false, comparer);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMin_Fail_SmallerMin()
         {
             using var comparer = CreateBetweenComparer(0);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 0, true, false, comparer));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 0, true, false, comparer));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMin_Fail_EqualMax()
         {
             using var comparer = CreateBetweenComparer(3);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 3, true, false, comparer));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<3>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 3, true, false, comparer));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<3>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMin_Fail_GreaterMax()
         {
             using var comparer = CreateBetweenComparer(4);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 4, true, false, comparer));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 4, true, false, comparer));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMin_FailWithMessage_SmallerMin()
         {
             using var comparer = CreateBetweenComparer(0);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 0, true, false, comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 0, true, false, comparer, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMin_FailWithMessage_EqualMax()
         {
             using var comparer = CreateBetweenComparer(3);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 3, true, false, comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<3>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 3, true, false, comparer, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<3>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMin_FailWithMessage_GreaterMax()
         {
             using var comparer = CreateBetweenComparer(4);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 4, true, false, comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 4, true, false, comparer, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMax_Success_SmallerMax()
         {
-            Assert.That.IsBetween(1, 3, 2, false, true);
+            Assert.IsBetween(1, 3, 2, false, true);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMax_Success_EqualMax()
         {
-            Assert.That.IsBetween(1, 3, 3, false, true);
+            Assert.IsBetween(1, 3, 3, false, true);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMin_Fail_EqualMin()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 1, false, true));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<1>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 1, false, true));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<1>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMax_Fail_SmallerMin()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 0, false, true));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 0, false, true));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMax_Fail_GreaterMax()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 4, false, true));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 4, false, true));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMax_FailWithMessage_EqualMin()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 1, false, true, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<1>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 1, false, true, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<1>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMax_FailWithMessage_SmallerMin()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 0, false, true, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 0, false, true, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMax_FailWithMessage_GreaterMax()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 4, false, true, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 4, false, true, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMax_Success_SmallerMax()
         {
             using var comparer = CreateBetweenComparer(2);
-            Assert.That.IsBetween(1, 3, 2, false, true, comparer);
+            Assert.IsBetween(1, 3, 2, false, true, comparer);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMax_Success_EqualMax()
         {
             using var comparer = CreateBetweenComparer(3);
-            Assert.That.IsBetween(1, 3, 3, false, true, comparer);
+            Assert.IsBetween(1, 3, 3, false, true, comparer);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMax_Fail_EqualMin()
         {
             using var comparer = CreateBetweenComparer(1);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 1, false, true, comparer));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<1>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 1, false, true, comparer));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<1>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMax_Fail_SmallerMin()
         {
             using var comparer = CreateBetweenComparer(0);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 0, false, true, comparer));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 0, false, true, comparer));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMax_Fail_GreaterMax()
         {
             using var comparer = CreateBetweenComparer(4);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 4, false, true, comparer));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 4, false, true, comparer));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMax_FailWithMessage_EqualMin()
         {
             using var comparer = CreateBetweenComparer(1);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 1, false, true, comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<1>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 1, false, true, comparer, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<1>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMax_FailWithMessage_SmallerMin()
         {
             using var comparer = CreateBetweenComparer(0);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 0, false, true, comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 0, false, true, comparer, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMax_FailWithMessage_GreaterMax()
         {
             using var comparer = CreateBetweenComparer(4);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 4, false, true, comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 4, false, true, comparer, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMinAndMax_Success_SmallerMax_GreaterMin()
         {
-            Assert.That.IsBetween(1, 3, 2, true, true);
+            Assert.IsBetween(1, 3, 2, true, true);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMinAndMax_Success_EqualMin()
         {
-            Assert.That.IsBetween(1, 3, 1, true, true);
+            Assert.IsBetween(1, 3, 1, true, true);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMinAndMax_Success_EqualMax()
         {
-            Assert.That.IsBetween(1, 3, 3, true, true);
+            Assert.IsBetween(1, 3, 3, true, true);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMaxAndMax_Fail_SmallerMin()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 0, true, true));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 0, true, true));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMaxAndMax_Fail_GreaterMax()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 4, true, true));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 4, true, true));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMaxAndMax_FailWithMessage_SmallerMin()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 0, true, true, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 0, true, true, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_IncludeMaxAndMax_FailWithMessage_GreaterMax()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 4, true, true, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 4, true, true, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMinAndMax_Success_SmallerMax_GreaterMin()
         {
             using var comparer = CreateBetweenComparer(2);
-            Assert.That.IsBetween(1, 3, 2, true, true, comparer);
+            Assert.IsBetween(1, 3, 2, true, true, comparer);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMinAndMax_Success_EqualMin()
         {
             using var comparer = CreateBetweenComparer(1);
-            Assert.That.IsBetween(1, 3, 1, true, true, comparer);
+            Assert.IsBetween(1, 3, 1, true, true, comparer);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMinAndMax_Success_EqualMax()
         {
             using var comparer = CreateBetweenComparer(3);
-            Assert.That.IsBetween(1, 3, 3, true, true, comparer);
+            Assert.IsBetween(1, 3, 3, true, true, comparer);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMaxAndMax_Fail_SmallerMin()
         {
             using var comparer = CreateBetweenComparer(0);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 0, true, true, comparer));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 0, true, true, comparer));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMaxAndMax_Fail_GreaterMax()
         {
             using var comparer = CreateBetweenComparer(4);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 4, true, true, comparer));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 4, true, true, comparer));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>.", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMaxAndMax_FailWithMessage_SmallerMin()
         {
             using var comparer = CreateBetweenComparer(0);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 0, true, true, comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 0, true, true, comparer, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<0>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void IsBetween_WithComparer_IncludeMaxAndMax_FailWithMessage_GreaterMax()
         {
             using var comparer = CreateBetweenComparer(4);
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.IsBetween(1, 3, 4, true, true, comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.IsBetween(1, 3, 4, true, true, comparer, "This is my test"));
+            Assert.AreEqual("Assert.IsBetween failed. ExpectedMin:<1>. ExpectedMax:<3>. Actual:<4>. This is my test", ex.Message);
         }
         #endregion
 
@@ -748,107 +747,107 @@ namespace MaSch.Test.Components.Test.Extensions
         [TestMethod]
         public void ContainsStr_Null()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("blub", (string?)null));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<blub>. Actual:<(null)>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("blub", (string?)null));
+            Assert.AreEqual("Assert.Contains failed. Expected:<blub>. Actual:<(null)>.", ex.Message);
         }
 
         [TestMethod]
         public void ContainsStr_Fail_DifferentContent()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("blub", "bbb"));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<blub>. Actual:<bbb>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("blub", "bbb"));
+            Assert.AreEqual("Assert.Contains failed. Expected:<blub>. Actual:<bbb>.", ex.Message);
         }
 
         [TestMethod]
         public void ContainsStr_Fail_DifferentCasing()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("blub", "BLUB"));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<blub>. Actual:<BLUB>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("blub", "BLUB"));
+            Assert.AreEqual("Assert.Contains failed. Expected:<blub>. Actual:<BLUB>.", ex.Message);
         }
 
         [TestMethod]
         public void ContainsStr_Success()
         {
-            Assert.That.Contains("blub", "jhfkjhfdgblubkjfh");
+            Assert.Contains("blub", "jhfkjhfdgblubkjfh");
         }
 
         [TestMethod]
         public void ContainsStr_WithMessage_Null()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("blub", (string?)null, "This is my test"));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<blub>. Actual:<(null)>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("blub", (string?)null, "This is my test"));
+            Assert.AreEqual("Assert.Contains failed. Expected:<blub>. Actual:<(null)>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void ContainsStr_WithMessage_Fail_DifferentContent()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("blub", "bbb", "This is my test"));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<blub>. Actual:<bbb>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("blub", "bbb", "This is my test"));
+            Assert.AreEqual("Assert.Contains failed. Expected:<blub>. Actual:<bbb>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void ContainsStr_WithMessage_Fail_DifferentCasing()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("blub", "BLUB", "This is my test"));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<blub>. Actual:<BLUB>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("blub", "BLUB", "This is my test"));
+            Assert.AreEqual("Assert.Contains failed. Expected:<blub>. Actual:<BLUB>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void ContainsStr_WithMessage_Success()
         {
-            Assert.That.Contains("blub", "jhfkjhfdgblubkjfh", "This is my test");
+            Assert.Contains("blub", "jhfkjhfdgblubkjfh", "This is my test");
         }
 
         [TestMethod]
         public void ContainsStr_WithComparison_Null()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("blub", null, StringComparison.OrdinalIgnoreCase));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<blub>. Actual:<(null)>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("blub", null, StringComparison.OrdinalIgnoreCase));
+            Assert.AreEqual("Assert.Contains failed. Expected:<blub>. Actual:<(null)>.", ex.Message);
         }
 
         [TestMethod]
         public void ContainsStr_WithComparison_Fail_DifferentContent()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("blub", "bbb", StringComparison.OrdinalIgnoreCase));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<blub>. Actual:<bbb>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("blub", "bbb", StringComparison.OrdinalIgnoreCase));
+            Assert.AreEqual("Assert.Contains failed. Expected:<blub>. Actual:<bbb>.", ex.Message);
         }
 
         [TestMethod]
         public void ContainsStr_WithComparison_Success_SameCasing()
         {
-            Assert.That.Contains("blub", "jhfkjhfdgblubkjfh", StringComparison.OrdinalIgnoreCase);
+            Assert.Contains("blub", "jhfkjhfdgblubkjfh", StringComparison.OrdinalIgnoreCase);
         }
 
         [TestMethod]
         public void ContainsStr_WithComparison_Success_DifferentCasing()
         {
-            Assert.That.Contains("blub", "jhfkjhfdgBLUBkjfh", StringComparison.OrdinalIgnoreCase);
+            Assert.Contains("blub", "jhfkjhfdgBLUBkjfh", StringComparison.OrdinalIgnoreCase);
         }
 
         [TestMethod]
         public void ContainsStr_WithComparison_WithMessage_Null()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("blub", null, StringComparison.OrdinalIgnoreCase, "This is my test"));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<blub>. Actual:<(null)>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("blub", null, StringComparison.OrdinalIgnoreCase, "This is my test"));
+            Assert.AreEqual("Assert.Contains failed. Expected:<blub>. Actual:<(null)>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void ContainsStr_WithComparison_WithMessage_Fail_DifferentContent()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("blub", "bbb", StringComparison.OrdinalIgnoreCase, "This is my test"));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<blub>. Actual:<bbb>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("blub", "bbb", StringComparison.OrdinalIgnoreCase, "This is my test"));
+            Assert.AreEqual("Assert.Contains failed. Expected:<blub>. Actual:<bbb>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void ContainsStr_WithComparison_WithMessage_Success_SameCasing()
         {
-            Assert.That.Contains("blub", "jhfkjhfdgblubkjfh", StringComparison.OrdinalIgnoreCase, "This is my test");
+            Assert.Contains("blub", "jhfkjhfdgblubkjfh", StringComparison.OrdinalIgnoreCase, "This is my test");
         }
 
         [TestMethod]
         public void ContainsStr_WithComparison_WithMessage_Success_DifferentCasing()
         {
-            Assert.That.Contains("blub", "jhfkjhfdgBLUBkjfh", StringComparison.OrdinalIgnoreCase, "This is my test");
+            Assert.Contains("blub", "jhfkjhfdgBLUBkjfh", StringComparison.OrdinalIgnoreCase, "This is my test");
         }
         #endregion
 
@@ -856,73 +855,73 @@ namespace MaSch.Test.Components.Test.Extensions
         [TestMethod]
         public void ContainsEnum_Null()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", (IEnumerable<string>?)null));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<(null)>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", (IEnumerable<string>?)null));
+            Assert.AreEqual("Assert.Contains failed. Expected:<Test>. Actual:<(null)>.", ex.Message);
         }
 
         [TestMethod]
         public void ContainsEnum_Empty()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", Array.Empty<string>()));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<[]>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", Array.Empty<string>()));
+            Assert.AreEqual("Assert.Contains failed. Expected:<Test>. Actual:<[]>.", ex.Message);
         }
 
         [TestMethod]
         public void ContainsEnum_NotContained()
         {
             var nl = Environment.NewLine;
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", new[] { "abc", "def", "ghi" }));
-            Assert.AreEqual($"Assert.That.Contains failed. Expected:<Test>. Actual:<[{nl}\tabc,{nl}\tdef,{nl}\tghi{nl}]>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", new[] { "abc", "def", "ghi" }));
+            Assert.AreEqual($"Assert.Contains failed. Expected:<Test>. Actual:<[{nl}\tabc,{nl}\tdef,{nl}\tghi{nl}]>.", ex.Message);
         }
 
         [TestMethod]
         public void ContainsEnum_Contained()
         {
-            Assert.That.Contains("Test", new[] { "abc", "def", "Test", "ghi" });
+            Assert.Contains("Test", new[] { "abc", "def", "Test", "ghi" });
         }
 
         [TestMethod]
         public void ContainsEnum_WithMessage_Null()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", (IEnumerable<string>?)null, "This is my test"));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<(null)>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", (IEnumerable<string>?)null, "This is my test"));
+            Assert.AreEqual("Assert.Contains failed. Expected:<Test>. Actual:<(null)>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void ContainsEnum_WithMessage_Empty()
         {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", Array.Empty<string>(), "This is my test"));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<[]>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", Array.Empty<string>(), "This is my test"));
+            Assert.AreEqual("Assert.Contains failed. Expected:<Test>. Actual:<[]>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void ContainsEnum_WithMessage_NotContained()
         {
             var nl = Environment.NewLine;
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", new[] { "abc", "def", "ghi" }, "This is my test"));
-            Assert.AreEqual($"Assert.That.Contains failed. Expected:<Test>. Actual:<[{nl}\tabc,{nl}\tdef,{nl}\tghi{nl}]>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", new[] { "abc", "def", "ghi" }, "This is my test"));
+            Assert.AreEqual($"Assert.Contains failed. Expected:<Test>. Actual:<[{nl}\tabc,{nl}\tdef,{nl}\tghi{nl}]>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void ContainsEnum_WithMessage_Contained()
         {
-            Assert.That.Contains("Test", new[] { "abc", "def", "Test", "ghi" }, "This is my test");
+            Assert.Contains("Test", new[] { "abc", "def", "Test", "ghi" }, "This is my test");
         }
 
         [TestMethod]
         public void ContainsEnum_WithComparerT_Null()
         {
             using var comparer = CreateEqualityComparerT<string>();
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", null, comparer));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<(null)>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", null, comparer));
+            Assert.AreEqual("Assert.Contains failed. Expected:<Test>. Actual:<(null)>.", ex.Message);
         }
 
         [TestMethod]
         public void ContainsEnum_WithComparerT_Empty()
         {
             using var comparer = CreateEqualityComparerT<string>();
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", Array.Empty<string>(), comparer));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<[]>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", Array.Empty<string>(), comparer));
+            Assert.AreEqual("Assert.Contains failed. Expected:<Test>. Actual:<[]>.", ex.Message);
         }
 
         [TestMethod]
@@ -930,31 +929,31 @@ namespace MaSch.Test.Components.Test.Extensions
         {
             var nl = Environment.NewLine;
             using var comparer = CreateEqualityComparerT(("abc", "Test"), ("def", "Test"), ("ghi", "Test"));
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", new[] { "abc", "def", "ghi" }, comparer));
-            Assert.AreEqual($"Assert.That.Contains failed. Expected:<Test>. Actual:<[{nl}\tabc,{nl}\tdef,{nl}\tghi{nl}]>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", new[] { "abc", "def", "ghi" }, comparer));
+            Assert.AreEqual($"Assert.Contains failed. Expected:<Test>. Actual:<[{nl}\tabc,{nl}\tdef,{nl}\tghi{nl}]>.", ex.Message);
         }
 
         [TestMethod]
         public void ContainsEnum_WithComparerT_Contained()
         {
             using var comparer = CreateEqualityComparerT(("abc", "Test"), ("def", "Test"), ("Test", "Test"));
-            Assert.That.Contains("Test", new[] { "abc", "def", "Test", "ghi" }, comparer);
+            Assert.Contains("Test", new[] { "abc", "def", "Test", "ghi" }, comparer);
         }
 
         [TestMethod]
         public void ContainsEnum_WithComparerT_WithMessage_Null()
         {
             using var comparer = CreateEqualityComparerT<string>();
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", null, comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<(null)>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", null, comparer, "This is my test"));
+            Assert.AreEqual("Assert.Contains failed. Expected:<Test>. Actual:<(null)>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void ContainsEnum_WithComparerT_WithMessage_Empty()
         {
             using var comparer = CreateEqualityComparerT<string>();
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", Array.Empty<string>(), comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<[]>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", Array.Empty<string>(), comparer, "This is my test"));
+            Assert.AreEqual("Assert.Contains failed. Expected:<Test>. Actual:<[]>. This is my test", ex.Message);
         }
 
         [TestMethod]
@@ -962,31 +961,31 @@ namespace MaSch.Test.Components.Test.Extensions
         {
             var nl = Environment.NewLine;
             using var comparer = CreateEqualityComparerT(("abc", "Test"), ("def", "Test"), ("ghi", "Test"));
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", new[] { "abc", "def", "ghi" }, comparer, "This is my test"));
-            Assert.AreEqual($"Assert.That.Contains failed. Expected:<Test>. Actual:<[{nl}\tabc,{nl}\tdef,{nl}\tghi{nl}]>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", new[] { "abc", "def", "ghi" }, comparer, "This is my test"));
+            Assert.AreEqual($"Assert.Contains failed. Expected:<Test>. Actual:<[{nl}\tabc,{nl}\tdef,{nl}\tghi{nl}]>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void ContainsEnum_WithComparerT_WithMessage_Contained()
         {
             using var comparer = CreateEqualityComparerT(("abc", "Test"), ("def", "Test"), ("Test", "Test"));
-            Assert.That.Contains("Test", new[] { "abc", "def", "Test", "ghi" }, comparer, "This is my test");
+            Assert.Contains("Test", new[] { "abc", "def", "Test", "ghi" }, comparer, "This is my test");
         }
 
         [TestMethod]
         public void ContainsEnum_WithComparer_Null()
         {
             using var comparer = CreateEqualityComparer();
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", null, comparer));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<(null)>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", null, comparer));
+            Assert.AreEqual("Assert.Contains failed. Expected:<Test>. Actual:<(null)>.", ex.Message);
         }
 
         [TestMethod]
         public void ContainsEnum_WithComparer_Empty()
         {
             using var comparer = CreateEqualityComparer();
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", Array.Empty<string>(), comparer));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<[]>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", Array.Empty<string>(), comparer));
+            Assert.AreEqual("Assert.Contains failed. Expected:<Test>. Actual:<[]>.", ex.Message);
         }
 
         [TestMethod]
@@ -994,31 +993,31 @@ namespace MaSch.Test.Components.Test.Extensions
         {
             var nl = Environment.NewLine;
             using var comparer = CreateEqualityComparer(("abc", "Test"), ("def", "Test"), ("ghi", "Test"));
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", new[] { "abc", "def", "ghi" }, comparer));
-            Assert.AreEqual($"Assert.That.Contains failed. Expected:<Test>. Actual:<[{nl}\tabc,{nl}\tdef,{nl}\tghi{nl}]>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", new[] { "abc", "def", "ghi" }, comparer));
+            Assert.AreEqual($"Assert.Contains failed. Expected:<Test>. Actual:<[{nl}\tabc,{nl}\tdef,{nl}\tghi{nl}]>.", ex.Message);
         }
 
         [TestMethod]
         public void ContainsEnum_WithComparer_Contained()
         {
             using var comparer = CreateEqualityComparer(("abc", "Test"), ("def", "Test"), ("Test", "Test"));
-            Assert.That.Contains("Test", new[] { "abc", "def", "Test", "ghi" }, comparer);
+            Assert.Contains("Test", new[] { "abc", "def", "Test", "ghi" }, comparer);
         }
 
         [TestMethod]
         public void ContainsEnum_WithComparer_WithMessage_Null()
         {
             using var comparer = CreateEqualityComparer();
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", null, comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<(null)>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", null, comparer, "This is my test"));
+            Assert.AreEqual("Assert.Contains failed. Expected:<Test>. Actual:<(null)>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void ContainsEnum_WithComparer_WithMessage_Empty()
         {
             using var comparer = CreateEqualityComparer();
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", Array.Empty<string>(), comparer, "This is my test"));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<[]>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", Array.Empty<string>(), comparer, "This is my test"));
+            Assert.AreEqual("Assert.Contains failed. Expected:<Test>. Actual:<[]>. This is my test", ex.Message);
         }
 
         [TestMethod]
@@ -1026,31 +1025,31 @@ namespace MaSch.Test.Components.Test.Extensions
         {
             var nl = Environment.NewLine;
             using var comparer = CreateEqualityComparer(("abc", "Test"), ("def", "Test"), ("ghi", "Test"));
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", new[] { "abc", "def", "ghi" }, comparer, "This is my test"));
-            Assert.AreEqual($"Assert.That.Contains failed. Expected:<Test>. Actual:<[{nl}\tabc,{nl}\tdef,{nl}\tghi{nl}]>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", new[] { "abc", "def", "ghi" }, comparer, "This is my test"));
+            Assert.AreEqual($"Assert.Contains failed. Expected:<Test>. Actual:<[{nl}\tabc,{nl}\tdef,{nl}\tghi{nl}]>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void ContainsEnum_WithComparer_WithMessage_Contained()
         {
             using var comparer = CreateEqualityComparer(("abc", "Test"), ("def", "Test"), ("Test", "Test"));
-            Assert.That.Contains("Test", new[] { "abc", "def", "Test", "ghi" }, comparer, "This is my test");
+            Assert.Contains("Test", new[] { "abc", "def", "Test", "ghi" }, comparer, "This is my test");
         }
 
         [TestMethod]
         public void ContainsEnum_WithPredicate_Null()
         {
             using var predicate = CreatePredicate<string, int>();
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", null, predicate.Object));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<(null)>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", null, predicate.Object));
+            Assert.AreEqual("Assert.Contains failed. Expected:<Test>. Actual:<(null)>.", ex.Message);
         }
 
         [TestMethod]
         public void ContainsEnum_WithPredicate_Empty()
         {
             using var predicate = CreatePredicate<string, int>();
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", Array.Empty<int>(), predicate.Object));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<[]>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", Array.Empty<int>(), predicate.Object));
+            Assert.AreEqual("Assert.Contains failed. Expected:<Test>. Actual:<[]>.", ex.Message);
         }
 
         [TestMethod]
@@ -1058,31 +1057,31 @@ namespace MaSch.Test.Components.Test.Extensions
         {
             var nl = Environment.NewLine;
             using var predicate = CreatePredicate(("Test", 1, false), ("Test", 2, false), ("Test", 3, false));
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", new[] { 1, 2, 3 }, predicate.Object));
-            Assert.AreEqual($"Assert.That.Contains failed. Expected:<Test>. Actual:<[{nl}\t1,{nl}\t2,{nl}\t3{nl}]>.", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", new[] { 1, 2, 3 }, predicate.Object));
+            Assert.AreEqual($"Assert.Contains failed. Expected:<Test>. Actual:<[{nl}\t1,{nl}\t2,{nl}\t3{nl}]>.", ex.Message);
         }
 
         [TestMethod]
         public void ContainsEnum_WithPredicate_Contained()
         {
             using var predicate = CreatePredicate(("Test", 1, false), ("Test", 2, false), ("Test", 3, true));
-            Assert.That.Contains("Test", new[] { 1, 2, 3, 4 }, predicate.Object);
+            Assert.Contains("Test", new[] { 1, 2, 3, 4 }, predicate.Object);
         }
 
         [TestMethod]
         public void ContainsEnum_WithPredicate_WithMessage_Null()
         {
             using var predicate = CreatePredicate<string, int>();
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", null, predicate.Object, "This is my test"));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<(null)>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", null, predicate.Object, "This is my test"));
+            Assert.AreEqual("Assert.Contains failed. Expected:<Test>. Actual:<(null)>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void ContainsEnum_WithPredicate_WithMessage_Empty()
         {
             using var predicate = CreatePredicate<string, int>();
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", Array.Empty<int>(), predicate.Object, "This is my test"));
-            Assert.AreEqual("Assert.That.Contains failed. Expected:<Test>. Actual:<[]>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", Array.Empty<int>(), predicate.Object, "This is my test"));
+            Assert.AreEqual("Assert.Contains failed. Expected:<Test>. Actual:<[]>. This is my test", ex.Message);
         }
 
         [TestMethod]
@@ -1090,15 +1089,15 @@ namespace MaSch.Test.Components.Test.Extensions
         {
             var nl = Environment.NewLine;
             using var predicate = CreatePredicate(("Test", 1, false), ("Test", 2, false), ("Test", 3, false));
-            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.That.Contains("Test", new[] { 1, 2, 3 }, predicate.Object, "This is my test"));
-            Assert.AreEqual($"Assert.That.Contains failed. Expected:<Test>. Actual:<[{nl}\t1,{nl}\t2,{nl}\t3{nl}]>. This is my test", ex.Message);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => Assert.Contains("Test", new[] { 1, 2, 3 }, predicate.Object, "This is my test"));
+            Assert.AreEqual($"Assert.Contains failed. Expected:<Test>. Actual:<[{nl}\t1,{nl}\t2,{nl}\t3{nl}]>. This is my test", ex.Message);
         }
 
         [TestMethod]
         public void ContainsEnum_WithPredicate_WithMessage_Contained()
         {
             using var predicate = CreatePredicate(("Test", 1, false), ("Test", 2, false), ("Test", 3, true));
-            Assert.That.Contains("Test", new[] { 1, 2, 3, 4 }, predicate.Object, "This is my test");
+            Assert.Contains("Test", new[] { 1, 2, 3, 4 }, predicate.Object, "This is my test");
         }
         #endregion
 

@@ -1,5 +1,6 @@
 ﻿using MaSch.Presentation.Wpf.Models;
 using MaSch.Presentation.Wpf.ThemeValues;
+using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System;
@@ -8,7 +9,7 @@ using System.Windows;
 namespace MaSch.Presentation.Wpf.Themes.Test.ThemeValues
 {
     [TestClass]
-    public class FontStyleThemeValueTests
+    public class FontStyleThemeValueTests : UnitTestBase
     {
         private const string ValueJson = "{\"Type\":\"FontStyle\",\"Value\":\"Italic\"}";
         private const string RefJson = "{\"Type\":\"FontStyle\",\"Value\":\"{Bind MyTestKey}\"}";

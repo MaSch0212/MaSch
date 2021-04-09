@@ -1,11 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using MaSch.Test;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 
 namespace MaSch.Core.Test
 {
     [TestClass]
-    public class DelegateEqualityComparerTests
+    public class DelegateEqualityComparerTests : UnitTestBase
     {
         [TestMethod]
         public void Constructor_ParameterChecks()

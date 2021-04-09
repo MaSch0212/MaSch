@@ -1,31 +1,19 @@
 ﻿using MaSch.Core.Converters;
 using MaSch.Core.Extensions;
-using MaSch.Test.Extensions;
+using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
 namespace MaSch.Core.Test
 {
     [TestClass]
-    public class ObjectConvertManagerTests
+    public class ObjectConvertManagerTests : UnitTestBase
     {
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        private ObjectConvertManager _manager;
-
-        public TestContext TestContext { get; set; }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-
-        [TestInitialize]
-        public void InitializeTest()
-        {
-            if (!TestContext.TestName.StartsWith("Constructor"))
-                _manager = new ObjectConvertManager();
-        }
+        private ObjectConvertManager Manager => GetValue(() => new ObjectConvertManager())!;
 
         [TestMethod]
         public void Constructor()
@@ -42,10 +30,10 @@ namespace MaSch.Core.Test
             var converter1Mock = CreateConverterCanConvertMock<string, int>(true);
             GetManagerConverterList().Add(converter1Mock.Object);
 
-            var result = _manager.CanConvert(typeof(string), typeof(int));
+            var result = Manager.CanConvert(typeof(string), typeof(int));
 
             Assert.IsTrue(result);
-            converter1Mock.Verify(x => x.CanConvert(typeof(string), typeof(int), _manager), Times.Once());
+            converter1Mock.Verify(x => x.CanConvert(typeof(string), typeof(int), Manager), Times.Once());
         }
 
         [TestMethod]
@@ -56,12 +44,12 @@ namespace MaSch.Core.Test
             var converter3Mock = CreateConverterCanConvertMock<string, int>(false);
             GetManagerConverterList().Add(converter1Mock.Object, converter2Mock.Object, converter3Mock.Object);
 
-            var result = _manager.CanConvert(typeof(string), typeof(int));
+            var result = Manager.CanConvert(typeof(string), typeof(int));
 
             Assert.IsTrue(result);
-            converter1Mock.Verify(x => x.CanConvert(typeof(string), typeof(int), _manager), Times.Once());
-            converter2Mock.Verify(x => x.CanConvert(typeof(string), typeof(int), _manager), Times.Once());
-            converter3Mock.Verify(x => x.CanConvert(typeof(string), typeof(int), _manager), Times.Never());
+            converter1Mock.Verify(x => x.CanConvert(typeof(string), typeof(int), Manager), Times.Once());
+            converter2Mock.Verify(x => x.CanConvert(typeof(string), typeof(int), Manager), Times.Once());
+            converter3Mock.Verify(x => x.CanConvert(typeof(string), typeof(int), Manager), Times.Never());
         }
 
         [TestMethod]
@@ -71,11 +59,11 @@ namespace MaSch.Core.Test
             var converter2Mock = CreateConverterCanConvertMock<string, int>(true);
             GetManagerConverterList().Add(converter1Mock.Object, converter2Mock.Object);
 
-            var result = _manager.CanConvert(typeof(string), typeof(int));
+            var result = Manager.CanConvert(typeof(string), typeof(int));
 
             Assert.IsTrue(result);
-            converter1Mock.Verify(x => x.CanConvert(typeof(string), typeof(int), _manager), Times.Once());
-            converter2Mock.Verify(x => x.CanConvert(typeof(string), typeof(int), _manager), Times.Never());
+            converter1Mock.Verify(x => x.CanConvert(typeof(string), typeof(int), Manager), Times.Once());
+            converter2Mock.Verify(x => x.CanConvert(typeof(string), typeof(int), Manager), Times.Never());
         }
 
         [TestMethod]
@@ -84,10 +72,10 @@ namespace MaSch.Core.Test
             var converter1Mock = CreateConverterCanConvertMock<string, int>(false);
             GetManagerConverterList().Add(converter1Mock.Object);
 
-            var result = _manager.CanConvert(typeof(string), typeof(int));
+            var result = Manager.CanConvert(typeof(string), typeof(int));
 
             Assert.IsFalse(result);
-            converter1Mock.Verify(x => x.CanConvert(typeof(string), typeof(int), _manager), Times.Once());
+            converter1Mock.Verify(x => x.CanConvert(typeof(string), typeof(int), Manager), Times.Once());
         }
 
         [TestMethod]
@@ -97,11 +85,11 @@ namespace MaSch.Core.Test
             var converter2Mock = CreateConverterCanConvertMock<string, int>(false);
             GetManagerConverterList().Add(converter1Mock.Object, converter2Mock.Object);
 
-            var result = _manager.CanConvert(typeof(string), typeof(int));
+            var result = Manager.CanConvert(typeof(string), typeof(int));
 
             Assert.IsFalse(result);
-            converter1Mock.Verify(x => x.CanConvert(typeof(string), typeof(int), _manager), Times.Once());
-            converter2Mock.Verify(x => x.CanConvert(typeof(string), typeof(int), _manager), Times.Once());
+            converter1Mock.Verify(x => x.CanConvert(typeof(string), typeof(int), Manager), Times.Once());
+            converter2Mock.Verify(x => x.CanConvert(typeof(string), typeof(int), Manager), Times.Once());
         }
 
         [TestMethod]
@@ -109,8 +97,8 @@ namespace MaSch.Core.Test
         {
             var formatProvider = new Mock<IFormatProvider>(MockBehavior.Strict);
 
-            Assert.ThrowsException<ArgumentNullException>(() => _manager.Convert(new object(), typeof(object), null!, formatProvider.Object));
-            Assert.ThrowsException<ArgumentNullException>(() => _manager.Convert(new object(), typeof(object), typeof(int), null!));
+            Assert.ThrowsException<ArgumentNullException>(() => Manager.Convert(new object(), typeof(object), null!, formatProvider.Object));
+            Assert.ThrowsException<ArgumentNullException>(() => Manager.Convert(new object(), typeof(object), typeof(int), null!));
         }
 
         [TestMethod]
@@ -118,7 +106,7 @@ namespace MaSch.Core.Test
         {
             var formatProvider = new Mock<IFormatProvider>(MockBehavior.Strict);
 
-            Assert.ThrowsException<ArgumentException>(() => _manager.Convert(null, typeof(bool), typeof(int), formatProvider.Object));
+            Assert.ThrowsException<ArgumentException>(() => Manager.Convert(null, typeof(bool), typeof(int), formatProvider.Object));
         }
 
         [TestMethod]
@@ -126,7 +114,7 @@ namespace MaSch.Core.Test
         {
             var formatProvider = new Mock<IFormatProvider>(MockBehavior.Strict);
 
-            Assert.ThrowsException<ArgumentException>(() => _manager.Convert(new object(), typeof(string), typeof(int), formatProvider.Object));
+            Assert.ThrowsException<ArgumentException>(() => Manager.Convert(new object(), typeof(string), typeof(int), formatProvider.Object));
         }
 
         [TestMethod]
@@ -136,9 +124,9 @@ namespace MaSch.Core.Test
             var converter = CreateConverterMock(null, typeof(int), false, 0, null);
             GetManagerConverterList().Add(converter.Object);
 
-            Assert.ThrowsException<InvalidCastException>(() => _manager.Convert(null, null, typeof(int), formatProvider.Object));
+            Assert.ThrowsException<InvalidCastException>(() => Manager.Convert(null, null, typeof(int), formatProvider.Object));
 
-            converter.Verify(x => x.CanConvert(null, typeof(int), _manager), Times.Once());
+            converter.Verify(x => x.CanConvert(null, typeof(int), Manager), Times.Once());
         }
 
         [TestMethod]
@@ -148,9 +136,9 @@ namespace MaSch.Core.Test
             var converter = CreateConverterMock(typeof(string), typeof(int), false, 0, null);
             GetManagerConverterList().Add(converter.Object);
 
-            Assert.ThrowsException<InvalidCastException>(() => _manager.Convert("Test", null, typeof(int), formatProvider.Object));
+            Assert.ThrowsException<InvalidCastException>(() => Manager.Convert("Test", null, typeof(int), formatProvider.Object));
 
-            converter.Verify(x => x.CanConvert(typeof(string), typeof(int), _manager), Times.Once());
+            converter.Verify(x => x.CanConvert(typeof(string), typeof(int), Manager), Times.Once());
         }
 
         [TestMethod]
@@ -161,12 +149,12 @@ namespace MaSch.Core.Test
             converter.Setup(x => x.CanConvert(typeof(string), typeof(int), It.IsAny<IObjectConvertManager>())).Returns(false);
             GetManagerConverterList().Add(converter.Object);
 
-            var result = _manager.Convert(null, typeof(string), typeof(int), formatProvider.Object);
+            var result = Manager.Convert(null, typeof(string), typeof(int), formatProvider.Object);
 
             Assert.AreEqual(4711, result);
-            converter.Verify(x => x.CanConvert(typeof(string), typeof(int), _manager), Times.Once());
-            converter.Verify(x => x.CanConvert(null, typeof(int), _manager), Times.Once());
-            converter.Verify(x => x.Convert(null, null, typeof(int), _manager, formatProvider.Object), Times.Once());
+            converter.Verify(x => x.CanConvert(typeof(string), typeof(int), Manager), Times.Once());
+            converter.Verify(x => x.CanConvert(null, typeof(int), Manager), Times.Once());
+            converter.Verify(x => x.Convert(null, null, typeof(int), Manager, formatProvider.Object), Times.Once());
         }
 
         [TestMethod]
@@ -176,11 +164,11 @@ namespace MaSch.Core.Test
             var converter = CreateConverterMock(typeof(string), typeof(int), true, 0, 4711);
             GetManagerConverterList().Add(converter.Object);
 
-            var result = _manager.Convert(null, typeof(string), typeof(int), formatProvider.Object);
+            var result = Manager.Convert(null, typeof(string), typeof(int), formatProvider.Object);
 
             Assert.AreEqual(4711, result);
-            converter.Verify(x => x.CanConvert(typeof(string), typeof(int), _manager), Times.Once());
-            converter.Verify(x => x.Convert(null, typeof(string), typeof(int), _manager, formatProvider.Object), Times.Once());
+            converter.Verify(x => x.CanConvert(typeof(string), typeof(int), Manager), Times.Once());
+            converter.Verify(x => x.Convert(null, typeof(string), typeof(int), Manager, formatProvider.Object), Times.Once());
         }
 
         [TestMethod]
@@ -194,10 +182,10 @@ namespace MaSch.Core.Test
                 .Returns<object?, Type, Type, IObjectConvertManager, IFormatProvider>((a, b, c, d, e) => throw new Exception(guid));
             GetManagerConverterList().Add(converter.Object);
 
-            var ex = Assert.ThrowsException<InvalidCastException>(() => _manager.Convert("Test", typeof(string), typeof(int), formatProvider.Object));
+            var ex = Assert.ThrowsException<InvalidCastException>(() => Manager.Convert("Test", typeof(string), typeof(int), formatProvider.Object));
 
-            Assert.That.Contains("IObjectConverterProxy", ex.Message);
-            Assert.That.Contains(guid, ex.Message);
+            Assert.Contains("IObjectConverterProxy", ex.Message);
+            Assert.Contains(guid, ex.Message);
         }
 
         [TestMethod]
@@ -208,11 +196,11 @@ namespace MaSch.Core.Test
             var converter2 = CreateConverterMock(typeof(string), typeof(int), true, 0, 4711);
             GetManagerConverterList().Add(converter1.Object, converter2.Object);
 
-            var result = _manager.Convert("Test", typeof(string), typeof(int), formatProvider.Object);
+            var result = Manager.Convert("Test", typeof(string), typeof(int), formatProvider.Object);
 
             Assert.AreEqual(1337, result);
-            converter1.Verify(x => x.Convert("Test", typeof(string), typeof(int), _manager, formatProvider.Object), Times.Once());
-            converter2.Verify(x => x.Convert("Test", typeof(string), typeof(int), _manager, formatProvider.Object), Times.Never());
+            converter1.Verify(x => x.Convert("Test", typeof(string), typeof(int), Manager, formatProvider.Object), Times.Once());
+            converter2.Verify(x => x.Convert("Test", typeof(string), typeof(int), Manager, formatProvider.Object), Times.Never());
         }
 
         [TestMethod]
@@ -223,11 +211,11 @@ namespace MaSch.Core.Test
             var converter2 = CreateConverterMock(typeof(string), typeof(int), true, 10, 4711);
             GetManagerConverterList().Add(converter1.Object, converter2.Object);
 
-            var result = _manager.Convert("Test", typeof(string), typeof(int), formatProvider.Object);
+            var result = Manager.Convert("Test", typeof(string), typeof(int), formatProvider.Object);
 
             Assert.AreEqual(4711, result);
-            converter2.Verify(x => x.Convert("Test", typeof(string), typeof(int), _manager, formatProvider.Object), Times.Once());
-            converter1.Verify(x => x.Convert("Test", typeof(string), typeof(int), _manager, formatProvider.Object), Times.Never());
+            converter2.Verify(x => x.Convert("Test", typeof(string), typeof(int), Manager, formatProvider.Object), Times.Once());
+            converter1.Verify(x => x.Convert("Test", typeof(string), typeof(int), Manager, formatProvider.Object), Times.Never());
         }
 
         [TestMethod]
@@ -239,12 +227,12 @@ namespace MaSch.Core.Test
             var converter3 = CreateConverterMock(typeof(string), typeof(int), false, 0, 2468);
             GetManagerConverterList().Add(converter1.Object, converter2.Object);
 
-            var result = _manager.Convert("Test", typeof(string), typeof(int), formatProvider.Object);
+            var result = Manager.Convert("Test", typeof(string), typeof(int), formatProvider.Object);
 
             Assert.AreEqual(4711, result);
-            converter2.Verify(x => x.Convert("Test", typeof(string), typeof(int), _manager, formatProvider.Object), Times.Once());
-            converter1.Verify(x => x.Convert("Test", typeof(string), typeof(int), _manager, formatProvider.Object), Times.Never());
-            converter3.Verify(x => x.Convert("Test", typeof(string), typeof(int), _manager, formatProvider.Object), Times.Never());
+            converter2.Verify(x => x.Convert("Test", typeof(string), typeof(int), Manager, formatProvider.Object), Times.Once());
+            converter1.Verify(x => x.Convert("Test", typeof(string), typeof(int), Manager, formatProvider.Object), Times.Never());
+            converter3.Verify(x => x.Convert("Test", typeof(string), typeof(int), Manager, formatProvider.Object), Times.Never());
         }
 
         [TestMethod]
@@ -256,11 +244,11 @@ namespace MaSch.Core.Test
             converter1.Setup(x => x.CanConvert(typeof(string), typeof(int), It.IsAny<IObjectConvertManager>())).Throws(new Exception());
             GetManagerConverterList().Add(converter1.Object, converter2.Object);
 
-            var result = _manager.Convert("Test", typeof(string), typeof(int), formatProvider.Object);
+            var result = Manager.Convert("Test", typeof(string), typeof(int), formatProvider.Object);
 
             Assert.AreEqual(4711, result);
-            converter2.Verify(x => x.Convert("Test", typeof(string), typeof(int), _manager, formatProvider.Object), Times.Once());
-            converter1.Verify(x => x.Convert("Test", typeof(string), typeof(int), _manager, formatProvider.Object), Times.Never());
+            converter2.Verify(x => x.Convert("Test", typeof(string), typeof(int), Manager, formatProvider.Object), Times.Once());
+            converter1.Verify(x => x.Convert("Test", typeof(string), typeof(int), Manager, formatProvider.Object), Times.Never());
         }
 
         [TestMethod]
@@ -272,17 +260,17 @@ namespace MaSch.Core.Test
             converter1.Setup(x => x.GetPriority(typeof(string), typeof(int))).Throws(new Exception());
             GetManagerConverterList().Add(converter1.Object, converter2.Object);
 
-            var result = _manager.Convert("Test", typeof(string), typeof(int), formatProvider.Object);
+            var result = Manager.Convert("Test", typeof(string), typeof(int), formatProvider.Object);
 
             Assert.AreEqual(4711, result);
-            converter2.Verify(x => x.Convert("Test", typeof(string), typeof(int), _manager, formatProvider.Object), Times.Once());
-            converter1.Verify(x => x.Convert("Test", typeof(string), typeof(int), _manager, formatProvider.Object), Times.Never());
+            converter2.Verify(x => x.Convert("Test", typeof(string), typeof(int), Manager, formatProvider.Object), Times.Once());
+            converter1.Verify(x => x.Convert("Test", typeof(string), typeof(int), Manager, formatProvider.Object), Times.Never());
         }
 
         [TestMethod]
         public void RegisterConverter_ParameterChecks()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => _manager.RegisterConverter(null!));
+            Assert.ThrowsException<ArgumentNullException>(() => Manager.RegisterConverter(null!));
         }
 
         [TestMethod]
@@ -290,16 +278,16 @@ namespace MaSch.Core.Test
         {
             var converterMock = new Mock<IObjectConverter>(MockBehavior.Strict);
 
-            _manager.RegisterConverter(converterMock.Object);
+            Manager.RegisterConverter(converterMock.Object);
 
-            Assert.AreEqual(1, _manager.ObjectConverters.Count);
-            Assert.AreSame(converterMock.Object, _manager.ObjectConverters.ElementAt(0));
+            Assert.AreEqual(1, Manager.ObjectConverters.Count);
+            Assert.AreSame(converterMock.Object, Manager.ObjectConverters.ElementAt(0));
         }
 
         private List<IObjectConverter> GetManagerConverterList()
         {
             var field = typeof(ObjectConvertManager).GetField("_objectConverters", BindingFlags.Instance | BindingFlags.NonPublic);
-            return (List<IObjectConverter>)field!.GetValue(_manager)!;
+            return (List<IObjectConverter>)field!.GetValue(Manager)!;
         }
 
         private static Mock<IObjectConverter> CreateConverterCanConvertMock<TSource, TTarget>(bool result)

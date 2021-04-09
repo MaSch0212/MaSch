@@ -1,10 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using MaSch.Test;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace MaSch.Core.Test
 {
     [TestClass]
-    public class GuardTests
+    public class GuardTests : UnitTestBase
     {
         [TestMethod]
         public void NotNull_Null()
