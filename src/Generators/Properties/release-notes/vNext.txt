@@ -1,0 +1,1 @@
+﻿- WrapperClassGenerator: Added support for indexer properties.

@@ -88,6 +88,21 @@ namespace MaSch.Generators.Common
         }
 
         /// <summary>
+        /// Determines all base types of a given symbol.
+        /// </summary>
+        /// <param name="symbol">The symbol to search in.</param>
+        /// <returns>Returns an enumerable that enumerates through all base types of the defined type symbol.</returns>
+        public static IEnumerable<INamedTypeSymbol> GetAllBaseTypes(this INamedTypeSymbol symbol)
+        {
+            var current = symbol.BaseType;
+            while (current != null)
+            {
+                yield return current;
+                current = current.BaseType;
+            }
+        }
+
+        /// <summary>
         /// Creates a name out of a <see cref="ISymbol"/> that can be used for the generated file.
         /// </summary>
         /// <param name="symbol">The type symbol to use.</param>

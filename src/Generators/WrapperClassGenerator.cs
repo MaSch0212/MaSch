@@ -96,10 +96,11 @@ namespace MaSch.Generators
                     builder.AppendLine();
                     using (builder.AddBlock($"public virtual {p.ToDisplayString(DefinitionFormat)}"))
                     {
+                        var usage = p.IsIndexer ? $"{wName}{p.ToDisplayString(UsageFormat)[4..]}" : $"{wName}.{p.ToDisplayString(UsageFormat)}";
                         if (p.GetMethod != null)
-                            builder.AppendLine($"get => {wName}.{p.Name};");
+                            builder.AppendLine($"get => {usage};");
                         if (p.SetMethod != null)
-                            builder.AppendLine($"set => {wName}.{p.Name} = value;");
+                            builder.AppendLine($"set => {usage} = value;");
                     }
                 }
 
