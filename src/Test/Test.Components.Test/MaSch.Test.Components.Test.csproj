@@ -21,9 +21,5 @@
     <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
     <ProjectReference Include="$(GitSourceDir)Test.Components/MaSch.Test.Components.csproj" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Assertion\" />
-  </ItemGroup>
 
 </Project>

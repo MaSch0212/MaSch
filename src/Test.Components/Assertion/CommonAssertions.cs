@@ -367,6 +367,7 @@ namespace MaSch.Test
         /// <param name="actual">The second string to compare. This is the string produced by the code under test.</param>
         /// <param name="ignoreCase">A Boolean indicating a case-sensitive or insensitive comparison. (true indicates a case-insensitive comparison.)</param>
         /// <param name="culture">A CultureInfo object that supplies culture-specific comparison information.</param>
+        [ExcludeFromCodeCoverage]
         public static void AreEqual(this AssertBase assert, string? expected, string? actual, bool ignoreCase, CultureInfo culture)
             => AreEqual(assert, expected, actual, ignoreCase, culture, null);
 
@@ -380,7 +381,7 @@ namespace MaSch.Test
         /// <param name="culture">A CultureInfo object that supplies culture-specific comparison information.</param>
         /// <param name="message">The message to include in the exception when <paramref name="actual" /> is not equal to <paramref name="expected" />. The message is shown in test results.</param>
         public static void AreEqual(this AssertBase assert, string? expected, string? actual, bool ignoreCase, CultureInfo culture, string? message)
-            => assert.RunAssertion(expected, actual, message, (e, a) => culture.CompareInfo.Compare(a, e, ignoreCase ? CompareOptions.IgnoreCase : CompareOptions.None) != 0);
+            => assert.RunAssertion(expected, actual, message, (e, a) => culture.CompareInfo.Compare(a, e, ignoreCase ? CompareOptions.IgnoreCase : CompareOptions.None) == 0);
 
         /// <summary>
         /// Tests whether the specified strings are unequal and throws an exception if they are equal. The invariant culture is used for the comparison.
@@ -411,6 +412,7 @@ namespace MaSch.Test
         /// <param name="actual">The second string to compare. This is the string produced by the code under test.</param>
         /// <param name="ignoreCase">A Boolean indicating a case-sensitive or insensitive comparison. (true indicates a case-insensitive comparison.)</param>
         /// <param name="culture">A CultureInfo object that supplies culture-specific comparison information.</param>
+        [ExcludeFromCodeCoverage]
         public static void AreNotEqual(this AssertBase assert, string? notExpected, string? actual, bool ignoreCase, CultureInfo culture)
             => AreNotEqual(assert, notExpected, actual, ignoreCase, culture, null);
 
@@ -424,7 +426,7 @@ namespace MaSch.Test
         /// <param name="culture">A CultureInfo object that supplies culture-specific comparison information.</param>
         /// <param name="message">The message to include in the exception when <paramref name="actual" /> is equal to <paramref name="notExpected" />. The message is shown in test results.</param>
         public static void AreNotEqual(this AssertBase assert, string? notExpected, string? actual, bool ignoreCase, CultureInfo culture, string? message)
-            => assert.RunNegatedAssertion(notExpected, actual, message, (e, a) => culture.CompareInfo.Compare(a, e, ignoreCase ? CompareOptions.IgnoreCase : CompareOptions.None) != 0);
+            => assert.RunNegatedAssertion(notExpected, actual, message, (e, a) => culture.CompareInfo.Compare(a, e, ignoreCase ? CompareOptions.IgnoreCase : CompareOptions.None) == 0);
 
         /// <summary>
         /// Tests whether the specified object is an instance of the expected type and throws an exception if the expected type is not in the

@@ -190,5 +190,16 @@ namespace MaSch.Core.Extensions
             clone = default;
             return false;
         }
+
+        /// <summary>
+        /// Returns a string that represents the current object formatted using the invariant culture.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <returns>A string that represents the current object formatted using the invariant culture.</returns>
+        public static string ToInvariantString(this object obj)
+        {
+            Guard.NotNull(obj, nameof(obj));
+            return FormattableString.Invariant($"{obj}");
+        }
     }
 }

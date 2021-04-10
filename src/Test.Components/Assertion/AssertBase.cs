@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using MaSch.Core;
+using MaSch.Core.Extensions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Diagnostics;
 using System.Text;
@@ -22,20 +24,22 @@ namespace MaSch.Test.Assertion
         /// <param name="skipStackFrames">The stack frames to skip when determining the assertion name.</param>
         /// <param name="message">The message.</param>
         /// <param name="values">The values.</param>
-        public void ThrowAssertError(int skipStackFrames, string? message, params (string Name, object? Value)[] values)
+        public virtual void ThrowAssertError(int skipStackFrames, string? message, params (string Name, object? Value)[]? values)
         {
+            Guard.NotOutOfRange(skipStackFrames, nameof(skipStackFrames), 0, int.MaxValue);
+
             var builder = new StringBuilder();
             builder.Append(AssertNamePrefix)
                    .Append(AssertNamePrefix == null ? string.Empty : ".")
-                   .Append(new StackFrame(skipStackFrames + 1).GetMethod()?.Name)
+                   .Append(new StackFrame(skipStackFrames + 1).GetMethod()?.Name ?? "<unknown>")
                    .Append(" failed.");
 
-            foreach (var (name, value) in values)
+            foreach (var (name, value) in values ?? Array.Empty<(string, object?)>())
             {
                 builder.Append(' ')
                        .Append(name)
                        .Append(":<")
-                       .Append(value ?? "(null)")
+                       .Append(value?.ToInvariantString() ?? "(null)")
                        .Append(">.");
             }
 
@@ -50,7 +54,7 @@ namespace MaSch.Test.Assertion
         /// </summary>
         /// <param name="message">The message to include in the exception when condition is not met. The message is shown in test results.</param>
         /// <param name="assertFunction">The assert condition function.</param>
-        public void RunAssertion(string? message, Func<bool> assertFunction)
+        public virtual void RunAssertion(string? message, Func<bool> assertFunction)
         {
             if (!assertFunction())
                 ThrowAssertError(1, message);
@@ -65,7 +69,7 @@ namespace MaSch.Test.Assertion
         /// <param name="actual">The actual value.</param>
         /// <param name="message">The message to include in the exception when condition is not met. The message is shown in test results.</param>
         /// <param name="assertFunction">The assert condition function.</param>
-        public void RunAssertion<TExpected, TActual>(TExpected expected, TActual actual, string? message, Func<TExpected, TActual, bool> assertFunction)
+        public virtual void RunAssertion<TExpected, TActual>(TExpected expected, TActual actual, string? message, Func<TExpected, TActual, bool> assertFunction)
         {
             if (!assertFunction(expected, actual))
                 ThrowAssertError(1, message, ("Expected", expected), ("Actual", actual));
@@ -80,7 +84,7 @@ namespace MaSch.Test.Assertion
         /// <param name="actual">The actual value.</param>
         /// <param name="message">The message to include in the exception when condition is not met. The message is shown in test results.</param>
         /// <param name="assertFunction">The assert condition function.</param>
-        public void RunNegatedAssertion<TNotExpected, TActual>(TNotExpected notExpected, TActual actual, string? message, Func<TNotExpected, TActual, bool> assertFunction)
+        public virtual void RunNegatedAssertion<TNotExpected, TActual>(TNotExpected notExpected, TActual actual, string? message, Func<TNotExpected, TActual, bool> assertFunction)
         {
             if (assertFunction(notExpected, actual))
                 ThrowAssertError(1, message, ("NotExpected", notExpected), ("Actual", actual));
@@ -92,7 +96,7 @@ namespace MaSch.Test.Assertion
         /// <typeparam name="T">The type of the result of the action.</typeparam>
         /// <param name="action">The action.</param>
         /// <returns>The result of the action.</returns>
-        public T CatchAssertException<T>(Func<T> action)
+        public virtual T CatchAssertException<T>(Func<T> action)
         {
             try
             {
@@ -111,7 +115,7 @@ namespace MaSch.Test.Assertion
         /// <typeparam name="T">The type of the result of the action.</typeparam>
         /// <param name="action">The action.</param>
         /// <returns>The result of the action.</returns>
-        public async Task<T> CatchAssertException<T>(Func<Task<T>> action)
+        public virtual async Task<T> CatchAssertException<T>(Func<Task<T>> action)
         {
             try
             {
@@ -128,7 +132,7 @@ namespace MaSch.Test.Assertion
         /// Catches <see cref="AssertFailedException"/>s that are potentially thrown by an action and handeled using the <see cref="HandleFailedAssertion(string)"/> method.
         /// </summary>
         /// <param name="action">The action.</param>
-        public void CatchAssertException(Action action)
+        public virtual void CatchAssertException(Action action)
         {
             try
             {
@@ -145,7 +149,7 @@ namespace MaSch.Test.Assertion
         /// </summary>
         /// <param name="action">The action.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task CatchAssertException(Func<Task> action)
+        public virtual async Task CatchAssertException(Func<Task> action)
         {
             try
             {
