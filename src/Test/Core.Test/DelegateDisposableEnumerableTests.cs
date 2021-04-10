@@ -53,7 +53,7 @@ namespace MaSch.Core.Test
         }
 
         [TestMethod]
-        public void Dispose()
+        public void Dispose_()
         {
             var disposingMock = new Mock<EventHandler<DisposeEventArgs>>();
             var disposedMock = new Mock<EventHandler<DisposeEventArgs>>();

@@ -9,7 +9,7 @@ using System.Linq;
 namespace MaSch.Test
 {
     /// <summary>
-    /// Provides assertion methods for collections for the <see cref="AssertBase"/> class.
+    /// Provides assertion methods for collections to the <see cref="AssertBase"/> class.
     /// </summary>
     public static class CollectionAssertions
     {

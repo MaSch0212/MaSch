@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace MaSch.Test
 {
     /// <summary>
-    /// Provides assertion methods for <see cref="IComparable"/> and <see cref="IComparable{T}"/> objects for the <see cref="AssertBase"/> class.
+    /// Provides assertion methods for <see cref="IComparable"/> and <see cref="IComparable{T}"/> objects to the <see cref="AssertBase"/> class.
     /// </summary>
     public static class ComparableAssertions
     {

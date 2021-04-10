@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace MaSch.Test
 {
     /// <summary>
-    /// Provides assertion methods for <see cref="string"/> for the <see cref="AssertBase"/> class.
+    /// Provides assertion methods for <see cref="string"/> to the <see cref="AssertBase"/> class.
     /// </summary>
     public static class StringAssertions
     {
