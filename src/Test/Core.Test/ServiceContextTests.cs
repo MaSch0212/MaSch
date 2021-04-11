@@ -1,5 +1,4 @@
 ﻿using MaSch.Test;
-using MaSch.Test.Extensions;
 using MaSch.Test.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
