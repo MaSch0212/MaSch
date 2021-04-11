@@ -1,5 +1,5 @@
-﻿- Added assert methods for checking if string contains specific string.
-- Added assert methods for checking if enumerable contains item.
+﻿- Added assert methods for checking strings.
+- Added assert methods for checking IEnumerables.
 - Reorganized assert methods - now using own Assert class.
 - Added base class for unit test classes, to easily access Asserts and handle caching.
 - Added way to set up Mock verification during Mock setup.

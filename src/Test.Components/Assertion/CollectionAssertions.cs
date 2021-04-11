@@ -100,13 +100,9 @@ namespace MaSch.Test
         /// <param name="message">The message to include in the exception when <paramref name="actual"/> does not contain <paramref name="expected"/>. The message is shown in test results.</param>
         public static void Contains<TExpected, TActual>(this AssertBase assert, TExpected expected, IEnumerable<TActual>? actual, Func<TExpected, TActual, bool> predicate, string? message)
         {
-            var array = actual?.ToArray();
-            if (array?.Any(x => predicate(expected, x)) != true)
-            {
-                var formattedArray = array == null ? null :
-                    array.Length == 0 ? "[]" : $"[{Environment.NewLine}\t{string.Join($",{Environment.NewLine}\t", array)}{Environment.NewLine}]";
-                assert.ThrowAssertError(message, ("Expected", expected), ("Actual", formattedArray));
-            }
+            var collection = actual is ICollection<TActual> c ? c : actual?.ToArray();
+            if (collection?.Any(x => predicate(expected, x)) != true)
+                assert.ThrowAssertError(message, ("Expected", expected), ("Actual", FormatCollection(collection)));
         }
 
         /// <summary>
@@ -198,62 +194,84 @@ namespace MaSch.Test
         /// <param name="message">The message to include in the exception when <paramref name="actual"/> does not contain <paramref name="notExpected"/>. The message is shown in test results.</param>
         public static void DoesNotContain<TNotExpected, TActual>(this AssertBase assert, TNotExpected notExpected, IEnumerable<TActual>? actual, Func<TNotExpected, TActual, bool> predicate, string? message)
         {
-            var array = actual?.ToArray();
-            if (array?.All(x => !predicate(notExpected, x)) != true)
-            {
-                var formattedArray = array == null ? null :
-                    array.Length == 0 ? "[]" : $"[{Environment.NewLine}\t{string.Join($",{Environment.NewLine}\t", array)}{Environment.NewLine}]";
-                assert.ThrowAssertError(message, ("NotExpected", notExpected), ("Actual", formattedArray));
-            }
+            var collection = actual is ICollection<TActual> c ? c : actual?.ToArray();
+            if (collection?.All(x => !predicate(notExpected, x)) != true)
+                assert.ThrowAssertError(message, ("NotExpected", notExpected), ("Actual", FormatCollection(collection)));
         }
 
 #pragma warning disable SA1005 // Single line comments should begin with single space
-        ///// <summary>
-        ///// Tests whether all items in the specified collection are non-null and throws
-        ///// an exception if any element is null.
-        ///// </summary><param name="assert">The assert object to test with.
-        ///// </param><param name="collection">
-        ///// The collection in which to search for null elements.
-        ///// </param>
-        //public static void AllItemsAreNotNull(this AssertBase assert, ICollection collection)
-        //    => assert.CatchAssertException(() => CollectionAssert.AllItemsAreNotNull(collection));
+        /// <summary>
+        /// Tests whether all items in the specified collection are non-null and throws an exception if any element is null.
+        /// </summary>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="collection">The collection in which to search for null elements.</param>
+        public static void AllItemsAreNotNull(this AssertBase assert, IEnumerable collection)
+            => AllItemsAreNotNull(assert, collection, null);
 
-        ///// <summary>
-        ///// Tests whether all items in the specified collection are non-null and throws
-        ///// an exception if any element is null.
-        ///// </summary><param name="assert">The assert object to test with.
-        ///// </param><param name="collection">
-        ///// The collection in which to search for null elements.
-        ///// </param><param name="message">
-        ///// The message to include in the exception when <paramref name="collection" />
-        ///// contains a null element. The message is shown in test results.
-        ///// </param>
-        //public static void AllItemsAreNotNull(this AssertBase assert, ICollection collection, string? message)
-        //    => assert.CatchAssertException(() => CollectionAssert.AllItemsAreNotNull(collection, message));
+        /// <summary>
+        /// Tests whether all items in the specified collection are non-null and throws an exception if any element is null.
+        /// </summary>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="collection">The collection in which to search for null elements.</param>
+        /// <param name="message"> The message to include in the exception when <paramref name="collection" /> contains a null element. The message is shown in test results.</param>
+        public static void AllItemsAreNotNull(this AssertBase assert, IEnumerable collection, string? message)
+        {
+            var faultyIdx = new List<int>();
+            int idx = 0;
+            foreach (var item in collection)
+            {
+                if (item == null)
+                    faultyIdx.Add(idx);
+                idx++;
+            }
 
-        ///// <summary>
-        ///// Tests whether all items in the specified collection are unique or not and
-        ///// throws if any two elements in the collection are equal.
-        ///// </summary><param name="assert">The assert object to test with.
-        ///// </param><param name="collection">
-        ///// The collection in which to search for duplicate elements.
-        ///// </param>
-        //public static void AllItemsAreUnique(this AssertBase assert, ICollection collection)
-        //    => assert.CatchAssertException(() => CollectionAssert.AllItemsAreUnique(collection));
+            if (faultyIdx.Count > 0)
+                assert.ThrowAssertError(message, (faultyIdx.Count > 1 ? "Indices" : "Index", string.Join(", ", faultyIdx)));
+        }
 
-        ///// <summary>
-        ///// Tests whether all items in the specified collection are unique or not and
-        ///// throws if any two elements in the collection are equal.
-        ///// </summary><param name="assert">The assert object to test with.
-        ///// </param><param name="collection">
-        ///// The collection in which to search for duplicate elements.
-        ///// </param><param name="message">
-        ///// The message to include in the exception when <paramref name="collection" />
-        ///// contains at least one duplicate element. The message is shown in
-        ///// test results.
-        ///// </param>
-        //public static void AllItemsAreUnique(this AssertBase assert, ICollection collection, string? message)
-        //    => assert.CatchAssertException(() => CollectionAssert.AllItemsAreUnique(collection, message));
+        /// <summary>
+        /// Tests whether all items in the specified collection are unique or not and throws if any two elements in the collection are equal.
+        /// </summary>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="collection">The collection in which to search for duplicate elements.</param>
+        public static void AllItemsAreUnique(this AssertBase assert, IEnumerable collection)
+            => AllItemsAreUnique(assert, collection, null);
+
+        /// <summary>
+        /// Tests whether all items in the specified collection are unique or not and throws if any two elements in the collection are equal.
+        /// </summary>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="collection">The collection in which to search for duplicate elements.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="collection" /> contains at least one duplicate element. The message is shown in test results.</param>
+        public static void AllItemsAreUnique(this AssertBase assert, IEnumerable collection, string? message)
+        {
+            int? nullIdx = null;
+            var checkedItems = new Dictionary<object, int>();
+            var faultyIdx = new List<(int, int)>();
+            int idx = 0;
+            foreach (var item in collection)
+            {
+                if (item == null)
+                {
+                    if (nullIdx.HasValue)
+                        faultyIdx.Add((nullIdx.Value, idx));
+                    else
+                        nullIdx = idx;
+                }
+                else
+                {
+                    if (checkedItems.TryGetValue(item, out int i))
+                        faultyIdx.Add((i, idx));
+                    else
+                        checkedItems.Add(item, idx);
+                }
+
+                idx++;
+            }
+
+            if (faultyIdx.Count > 0)
+                assert.ThrowAssertError(message, (faultyIdx.Count > 1 ? "Indices" : "Index", string.Join(", ", faultyIdx.Select(x => $"{x.Item1}={x.Item2}"))));
+        }
 
         ///// <summary>
         ///// Tests whether one collection is a subset of another collection and
@@ -562,5 +580,11 @@ namespace MaSch.Test
         ///// </param>
         //public static void AreNotEqual(this AssertBase assert, ICollection notExpected, ICollection actual, IComparer comparer, string? message)
         //    => assert.CatchAssertException(() => CollectionAssert.AreNotEqual(notExpected, actual, comparer, message));
+
+        private static string? FormatCollection<T>(ICollection<T>? collection)
+        {
+            return collection == null ? null :
+                   collection.Count == 0 ? "[]" : $"[{Environment.NewLine}\t{string.Join($",{Environment.NewLine}\t", collection)}{Environment.NewLine}]";
+        }
     }
 }
