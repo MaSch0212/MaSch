@@ -177,9 +177,9 @@ namespace MaSch.Test
             if (!Equals(actual, expected))
             {
                 if (actual != null && expected != null && !actual.GetType().Equals(expected.GetType()))
-                    assert.ThrowAssertError(0, message, ("Expected", expected), ("ExpectedType", expected.GetType().FullName), ("Actual", actual), ("ActualType", actual.GetType().FullName));
+                    assert.ThrowAssertError(message, ("Expected", expected), ("ExpectedType", expected.GetType().FullName), ("Actual", actual), ("ActualType", actual.GetType().FullName));
                 else
-                    assert.ThrowAssertError(0, message, ("Expected", expected), ("Actual", actual));
+                    assert.ThrowAssertError(message, ("Expected", expected), ("Actual", actual));
             }
         }
 
@@ -263,7 +263,7 @@ namespace MaSch.Test
         public static void AreEqual(this AssertBase assert, float expected, float actual, float delta, string? message)
         {
             if (float.IsNaN(expected) || float.IsNaN(actual) || float.IsNaN(delta) || Math.Abs(expected - actual) > delta)
-                assert.ThrowAssertError(0, message, ("Expected", expected), ("Actual", actual), ("Delta", delta));
+                assert.ThrowAssertError(message, ("Expected", expected), ("Actual", actual), ("Delta", delta));
         }
 
         /// <summary>
@@ -287,7 +287,7 @@ namespace MaSch.Test
         public static void AreNotEqual(this AssertBase assert, float notExpected, float actual, float delta, string? message)
         {
             if (Math.Abs(notExpected - actual) <= delta)
-                assert.ThrowAssertError(0, message, ("NotExpected", notExpected), ("Actual", actual), ("Delta", delta));
+                assert.ThrowAssertError(message, ("NotExpected", notExpected), ("Actual", actual), ("Delta", delta));
         }
 
         /// <summary>
@@ -311,7 +311,7 @@ namespace MaSch.Test
         public static void AreEqual(this AssertBase assert, double expected, double actual, double delta, string? message)
         {
             if (double.IsNaN(expected) || double.IsNaN(actual) || double.IsNaN(delta) || Math.Abs(expected - actual) > delta)
-                assert.ThrowAssertError(0, message, ("Expected", expected), ("Actual", actual), ("Delta", delta));
+                assert.ThrowAssertError(message, ("Expected", expected), ("Actual", actual), ("Delta", delta));
         }
 
         /// <summary>
@@ -335,7 +335,7 @@ namespace MaSch.Test
         public static void AreNotEqual(this AssertBase assert, double notExpected, double actual, double delta, string? message)
         {
             if (Math.Abs(notExpected - actual) <= delta)
-                assert.ThrowAssertError(0, message, ("NotExpected", notExpected), ("Actual", actual), ("Delta", delta));
+                assert.ThrowAssertError(message, ("NotExpected", notExpected), ("Actual", actual), ("Delta", delta));
         }
 
         /// <summary>
@@ -438,6 +438,17 @@ namespace MaSch.Test
         public static void IsInstanceOfType(this AssertBase assert, [NotNull] object? value, Type expectedType)
             => IsInstanceOfType(assert, value, expectedType, null);
 
+        /// <summary>
+        /// Tests whether the specified object is an instance of the expected type and throws an exception if the expected type is not in the
+        /// inheritance hierarchy of the object.
+        /// </summary>
+        /// <typeparam name="T">The expected type of <paramref name="value" />.</typeparam>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="value">The object the test expects to be of the specified type.</param>
+        /// <returns><paramref name="value"/> cast to <typeparamref name="T"/>.</returns>
+        public static T IsInstanceOfType<T>(this AssertBase assert, [NotNull] object? value)
+            => IsInstanceOfType<T>(assert, value, null);
+
 #pragma warning disable CS8777 // Parameter must have a non-null value when exiting.
         /// <summary>
         /// Tests whether the specified object is an instance of the expected type and throws an exception if the expected type is not in the
@@ -448,7 +459,29 @@ namespace MaSch.Test
         /// <param name="expectedType">The expected type of <paramref name="value" />.</param>
         /// <param name="message">The message to include in the exception when <paramref name="value" /> is not an instance of <paramref name="expectedType" />. The message is shown in test results.</param>
         public static void IsInstanceOfType(this AssertBase assert, [NotNull] object? value, Type expectedType, string? message)
-            => assert.RunAssertion(expectedType, value?.GetType(), message, (e, a) => e.IsAssignableFrom(a));
+            => assert.RunAssertion(Guard.NotNull(expectedType, nameof(expectedType)), value?.GetType(), message, (e, a) => e.IsAssignableFrom(a));
+
+        /// <summary>
+        /// Tests whether the specified object is an instance of the expected type and throws an exception if the expected type is not in the
+        /// inheritance hierarchy of the object.
+        /// </summary>
+        /// <typeparam name="T">The expected type of <paramref name="value" />.</typeparam>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="value">The object the test expects to be of the specified type.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="value" /> is not an instance of <typeparamref name="T"/>. The message is shown in test results.</param>
+        /// <returns><paramref name="value"/> cast to <typeparamref name="T"/>.</returns>
+        public static T IsInstanceOfType<T>(this AssertBase assert, [NotNull] object? value, string? message)
+        {
+            if (value is not T result)
+            {
+                assert.ThrowAssertError(message, ("Expected", typeof(T)), ("Actual", value?.GetType()));
+                return default!;
+            }
+            else
+            {
+                return result;
+            }
+        }
 #pragma warning restore CS8777 // Parameter must have a non-null value when exiting.
 
         /// <summary>
@@ -465,19 +498,40 @@ namespace MaSch.Test
         /// Tests whether the specified object is not an instance of the wrong type and throws an exception if the specified type is in the
         /// inheritance hierarchy of the object.
         /// </summary>
+        /// <typeparam name="T">The type that <paramref name="value" /> should not be.</typeparam>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="value">The object the test expects not to be of the specified type.</param>
+        public static void IsNotInstanceOfType<T>(this AssertBase assert, object? value)
+            => IsNotInstanceOfType(assert, value, typeof(T), null);
+
+        /// <summary>
+        /// Tests whether the specified object is not an instance of the wrong type and throws an exception if the specified type is in the
+        /// inheritance hierarchy of the object.
+        /// </summary>
         /// <param name="assert">The assert object to test with.</param>
         /// <param name="value">The object the test expects not to be of the specified type.</param>
         /// <param name="wrongType">The type that <paramref name="value" /> should not be.</param>
         /// <param name="message">The message to include in the exception when <paramref name="value" /> is an instance of <paramref name="wrongType" />. The message is shown in test results.</param>
         public static void IsNotInstanceOfType(this AssertBase assert, object? value, Type wrongType, string? message)
-            => assert.RunNegatedAssertion(wrongType, value?.GetType(), message, (e, a) => e.IsAssignableFrom(a));
+            => assert.RunNegatedAssertion(Guard.NotNull(wrongType, nameof(wrongType)), value?.GetType(), message, (e, a) => e.IsAssignableFrom(a));
+
+        /// <summary>
+        /// Tests whether the specified object is not an instance of the wrong type and throws an exception if the specified type is in the
+        /// inheritance hierarchy of the object.
+        /// </summary>
+        /// <typeparam name="T">The type that <paramref name="value" /> should not be.</typeparam>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="value">The object the test expects not to be of the specified type.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="value" /> is an instance of <typeparamref name="T"/>. The message is shown in test results.</param>
+        public static void IsNotInstanceOfType<T>(this AssertBase assert, object? value, string? message)
+            => IsNotInstanceOfType(assert, value, typeof(T), message);
 
         /// <summary>
         /// Throws an AssertFailedException.
         /// </summary>
         /// <param name="assert">The assert object to test with.</param>
         public static void Fail(this AssertBase assert)
-            => assert.ThrowAssertError(0, null);
+            => assert.ThrowAssertError(null);
 
         /// <summary>
         /// Throws an AssertFailedException.
@@ -485,7 +539,7 @@ namespace MaSch.Test
         /// <param name="assert">The assert object to test with.</param>
         /// <param name="message">The message to include in the exception. The message is shown in test results.</param>
         public static void Fail(this AssertBase assert, string? message)
-            => assert.ThrowAssertError(0, message);
+            => assert.ThrowAssertError(message);
 
         /// <summary>
         /// Tests whether the code specified by delegate <paramref name="action" /> throws exact given exception of type <typeparamref name="T" /> (and not of derived type)
@@ -524,7 +578,7 @@ namespace MaSch.Test
             }
 
             if (exception == null || !typeof(T).Equals(exception.GetType()))
-                assert.ThrowAssertError(0, message, ("ExpectedException", typeof(T).Name), ("ActualException", exception?.GetType().Name));
+                assert.ThrowAssertError(message, ("ExpectedException", typeof(T).Name), ("ActualException", exception?.GetType().Name));
 
             return (exception as T)!;
         }
@@ -591,7 +645,7 @@ namespace MaSch.Test
             }
 
             if (exception == null || !typeof(T).Equals(exception.GetType()))
-                assert.ThrowAssertError(0, message, ("ExpectedException", typeof(T).Name), ("ActualException", exception?.GetType().Name));
+                assert.ThrowAssertError(nameof(ThrowsExceptionAsync), message, ("ExpectedException", typeof(T).Name), ("ActualException", exception?.GetType().Name));
 
             return (exception as T)!;
         }

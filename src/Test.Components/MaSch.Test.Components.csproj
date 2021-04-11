@@ -17,6 +17,8 @@
     <Description>Contains some supporting code for MSTest Unit Tests.</Description>
     <Version>0.2.0</Version>
     <PackageTags>masch test mstest</PackageTags>
+
+    <DoesNotReturnAttribute>DoesNotReturnAttribute</DoesNotReturnAttribute>
   </PropertyGroup>
 
   <Import Project="$(GitBuildDir)MaSch.props" />

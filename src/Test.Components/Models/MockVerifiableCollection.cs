@@ -34,6 +34,7 @@ namespace MaSch.Test.Models
             => Items.ForEach(x => x.Verify(times, failMessage));
 
         /// <inheritdoc/>
-        void IDisposable.Dispose() => Verify(null, null);
+        void IDisposable.Dispose()
+            => Items.ForEach(x => x.Dispose());
     }
 }

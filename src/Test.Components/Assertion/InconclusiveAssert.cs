@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using MSAssert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
@@ -65,6 +66,7 @@ namespace MaSch.Test.Assertion
             => await CatchAssertException(() => assertAction(MSAssert.That));
 
         /// <inheritdoc/>
+        [DoesNotReturn]
         protected override void HandleFailedAssertion(string message)
         {
             throw new AssertInconclusiveException("[Inconclusive] " + message);

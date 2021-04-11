@@ -38,7 +38,7 @@ namespace MaSch.Test.Models
         public MockVerifiable(MockVerification verifyAction, Func<Times> defaultTimes)
         {
             _verifyAction = Guard.NotNull(verifyAction, nameof(verifyAction));
-            _defaultTimes = defaultTimes;
+            _defaultTimes = Guard.NotNull(defaultTimes, nameof(defaultTimes));
         }
 
         /// <summary>

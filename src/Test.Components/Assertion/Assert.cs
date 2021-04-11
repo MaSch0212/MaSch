@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Diagnostics.CodeAnalysis;
 using MSAssert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace MaSch.Test.Assertion
@@ -33,6 +34,7 @@ namespace MaSch.Test.Assertion
         }
 
         /// <inheritdoc/>
+        [DoesNotReturn]
         protected override void HandleFailedAssertion(string message)
         {
             throw new AssertFailedException(message);

@@ -312,7 +312,7 @@ namespace MaSch.Test
             var cmin = comparer.Compare(actual, expectedMin);
             var cmax = comparer.Compare(actual, expectedMax);
             if (cmin < 0 || (!isMinInclusive && cmin == 0) || cmax > 0 || (!isMaxInclusive && cmax == 0))
-                assert.ThrowAssertError(0, message, ("ExpectedMin", expectedMin), ("ExpectedMax", expectedMax), ("Actual", actual));
+                assert.ThrowAssertError(message, ("ExpectedMin", expectedMin), ("ExpectedMax", expectedMax), ("Actual", actual));
         }
 
         /// <summary>
@@ -428,8 +428,8 @@ namespace MaSch.Test
         {
             var cmin = comparer.Compare(actual, notExpectedMin);
             var cmax = comparer.Compare(actual, notExpectedMax);
-            if ((cmin > 0 || (!isMinInclusive && cmin == 0)) && (cmax < 0 || (!isMaxInclusive && cmax == 0)))
-                assert.ThrowAssertError(0, message, ("NotExpectedMin", notExpectedMin), ("NotExpectedMax", notExpectedMax), ("Actual", actual));
+            if ((cmin > 0 || (isMinInclusive && cmin == 0)) && (cmax < 0 || (isMaxInclusive && cmax == 0)))
+                assert.ThrowAssertError(message, ("NotExpectedMin", notExpectedMin), ("NotExpectedMax", notExpectedMax), ("Actual", actual));
         }
     }
 }

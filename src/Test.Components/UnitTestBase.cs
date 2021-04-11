@@ -14,7 +14,7 @@ namespace MaSch.Test
         /// <summary>
         /// Gets an object to execute assertions.
         /// </summary>
-        protected Assertion.Assert Assert => Assertion.Assert.Instance;
+        protected static Assertion.Assert Assert => Assertion.Assert.Instance;
 
         /// <summary>
         /// Gets or sets a value indicating whether the cache of this instance should be cleared after each test.

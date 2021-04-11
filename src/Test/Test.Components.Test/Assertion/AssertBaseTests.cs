@@ -15,6 +15,7 @@ namespace MaSch.Test.Components.Test.Assertion
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
             mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
             mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns((string?)null);
             mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
@@ -28,6 +29,7 @@ namespace MaSch.Test.Components.Test.Assertion
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
             mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
             mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
             mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
@@ -41,6 +43,7 @@ namespace MaSch.Test.Components.Test.Assertion
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
             mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
             mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
             mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
@@ -54,6 +57,7 @@ namespace MaSch.Test.Components.Test.Assertion
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
             mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
             mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
             mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
@@ -81,6 +85,7 @@ namespace MaSch.Test.Components.Test.Assertion
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
             mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
             mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
             mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
@@ -94,6 +99,7 @@ namespace MaSch.Test.Components.Test.Assertion
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
             mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
             mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
             mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
@@ -107,6 +113,7 @@ namespace MaSch.Test.Components.Test.Assertion
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
             mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
             mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
             mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 

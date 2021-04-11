@@ -3,6 +3,7 @@ using MaSch.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,17 +22,38 @@ namespace MaSch.Test.Assertion
         /// <summary>
         /// Throws an error that an assertion failed.
         /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="values">The values.</param>
+        [DoesNotReturn]
+        public virtual void ThrowAssertError(string? message, params (string Name, object? Value)[]? values)
+            => ThrowAssertError(1, message, values);
+
+        /// <summary>
+        /// Throws an error that an assertion failed.
+        /// </summary>
         /// <param name="skipStackFrames">The stack frames to skip when determining the assertion name.</param>
         /// <param name="message">The message.</param>
         /// <param name="values">The values.</param>
+        [DoesNotReturn]
         public virtual void ThrowAssertError(int skipStackFrames, string? message, params (string Name, object? Value)[]? values)
         {
             Guard.NotOutOfRange(skipStackFrames, nameof(skipStackFrames), 0, int.MaxValue);
+            ThrowAssertError(new StackFrame(skipStackFrames + 1).GetMethod()?.Name, message, values);
+        }
 
+        /// <summary>
+        /// Throws an error that an assertion failed.
+        /// </summary>
+        /// <param name="assertMethodName">The name of the assert method.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="values">The values.</param>
+        [DoesNotReturn]
+        public virtual void ThrowAssertError(string? assertMethodName, string? message, params (string Name, object? Value)[]? values)
+        {
             var builder = new StringBuilder();
             builder.Append(AssertNamePrefix)
                    .Append(AssertNamePrefix == null ? string.Empty : ".")
-                   .Append(new StackFrame(skipStackFrames + 1).GetMethod()?.Name ?? "<unknown>")
+                   .Append(assertMethodName ?? "<unknown>")
                    .Append(" failed.");
 
             foreach (var (name, value) in values ?? Array.Empty<(string, object?)>())
@@ -165,6 +187,7 @@ namespace MaSch.Test.Assertion
         /// Handles a failed assertion.
         /// </summary>
         /// <param name="message">The message to show in the error log.</param>
+        [DoesNotReturn]
         protected abstract void HandleFailedAssertion(string message);
     }
 }

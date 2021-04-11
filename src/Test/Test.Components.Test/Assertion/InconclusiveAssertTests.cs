@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -93,6 +94,7 @@ namespace MaSch.Test.Components.Test.Assertion
             Assert.AreEqual("[Inconclusive] My test error message", ex.InnerException!.Message);
         }
 
+        [ExcludeFromCodeCoverage]
         private static bool ValidateThatException(Action action, string methodName)
         {
             try

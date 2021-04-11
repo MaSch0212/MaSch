@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System.Globalization;
+using System;
+using System.Threading.Tasks;
 
 namespace MaSch.Test.Components.Test.Assertion
 {
@@ -8,6 +9,8 @@ namespace MaSch.Test.Components.Test.Assertion
     public class CommonAssertionsTests
     {
         private static MaSch.Test.Assertion.Assert AssertUnderTest => MaSch.Test.Assertion.Assert.Instance;
+
+        #region IsTrue
 
         [TestMethod]
         public void IsTrue_True()
@@ -56,6 +59,10 @@ namespace MaSch.Test.Components.Test.Assertion
             Assert.AreEqual("Assert.IsTrue failed. My test message", ex.Message);
         }
 
+        #endregion
+
+        #region IsFalse
+
         [TestMethod]
         public void IsFalse_False()
         {
@@ -103,6 +110,10 @@ namespace MaSch.Test.Components.Test.Assertion
             Assert.AreEqual("Assert.IsFalse failed. My test message", ex.Message);
         }
 
+        #endregion
+
+        #region IsNull
+
         [TestMethod]
         public void IsNull_Null()
         {
@@ -123,6 +134,10 @@ namespace MaSch.Test.Components.Test.Assertion
             Assert.AreEqual("Assert.IsNull failed. My test message", ex.Message);
         }
 
+        #endregion
+
+        #region IsNotNull
+
         [TestMethod]
         public void IsNotNull_NotNull()
         {
@@ -142,6 +157,10 @@ namespace MaSch.Test.Components.Test.Assertion
             var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotNull(null, "My test message"));
             Assert.AreEqual("Assert.IsNotNull failed. My test message", ex.Message);
         }
+
+        #endregion
+
+        #region AreSame
 
         [TestMethod]
         public void AreSame_Success()
@@ -164,6 +183,10 @@ namespace MaSch.Test.Components.Test.Assertion
             Assert.AreEqual("Assert.AreSame failed. Expected:<Test>. Actual:<Test>. My test message", ex.Message);
         }
 
+        #endregion
+
+        #region AreNotSame
+
         [TestMethod]
         public void AreNotSame_Success()
         {
@@ -185,6 +208,10 @@ namespace MaSch.Test.Components.Test.Assertion
             var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreNotSame(obj, obj, "My test message"));
             Assert.AreEqual("Assert.AreNotSame failed. NotExpected:<Test>. Actual:<Test>. My test message", ex.Message);
         }
+
+        #endregion
+
+        #region AreEqual
 
         [TestMethod]
         public void AreEqual_Success()
@@ -255,46 +282,6 @@ namespace MaSch.Test.Components.Test.Assertion
         }
 
         [TestMethod]
-        public void AreNotEqual_Success_SameType()
-        {
-            AssertUnderTest.AreNotEqual("Test", "test");
-        }
-
-        [TestMethod]
-        public void AreNotEqual_Success_DifferentType()
-        {
-            AssertUnderTest.AreNotEqual("5", 5);
-        }
-
-        [TestMethod]
-        public void AreNotEqual_Fail()
-        {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreNotEqual(new string("Test".ToCharArray()), new string("Test".ToCharArray())));
-            Assert.AreEqual("Assert.AreNotEqual failed. NotExpected:<Test>. Actual:<Test>.", ex.Message);
-        }
-
-        [TestMethod]
-        public void AreNotEqual_Fail_WithMessage()
-        {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreNotEqual(new string("Test".ToCharArray()), new string("Test".ToCharArray()), "My test message"));
-            Assert.AreEqual("Assert.AreNotEqual failed. NotExpected:<Test>. Actual:<Test>. My test message", ex.Message);
-        }
-
-        [TestMethod]
-        public void AreNotEqual_Fail_Object()
-        {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreNotEqual((object)new string("Test".ToCharArray()), new string("Test".ToCharArray())));
-            Assert.AreEqual("Assert.AreNotEqual failed. NotExpected:<Test>. Actual:<Test>.", ex.Message);
-        }
-
-        [TestMethod]
-        public void AreNotEqual_Fail_Object_WithMessage()
-        {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreNotEqual((object)new string("Test".ToCharArray()), new string("Test".ToCharArray()), "My test message"));
-            Assert.AreEqual("Assert.AreNotEqual failed. NotExpected:<Test>. Actual:<Test>. My test message", ex.Message);
-        }
-
-        [TestMethod]
         public void AreEqual_Float_Success()
         {
             AssertUnderTest.AreEqual(5f, 5.05f, 0.1f);
@@ -336,26 +323,6 @@ namespace MaSch.Test.Components.Test.Assertion
         }
 
         [TestMethod]
-        public void AreNotEqual_Float_Success()
-        {
-            AssertUnderTest.AreNotEqual(5f, 5.15f, 0.1f);
-        }
-
-        [TestMethod]
-        public void AreNotEqual_Float_Fail()
-        {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreNotEqual(5f, 5.05f, 0.1f));
-            Assert.AreEqual("Assert.AreNotEqual failed. NotExpected:<5>. Actual:<5.05>. Delta:<0.1>.", ex.Message);
-        }
-
-        [TestMethod]
-        public void AreNotEqual_Float_Fail_WithMessage()
-        {
-            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreNotEqual(5f, 5.05f, 0.1f, "My test message"));
-            Assert.AreEqual("Assert.AreNotEqual failed. NotExpected:<5>. Actual:<5.05>. Delta:<0.1>. My test message", ex.Message);
-        }
-
-        [TestMethod]
         public void AreEqual_Double_Success()
         {
             AssertUnderTest.AreEqual(5d, 5.05d, 0.1d);
@@ -394,6 +361,70 @@ namespace MaSch.Test.Components.Test.Assertion
         {
             var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreEqual(5d, 5.15d, 0.1d, "My test message"));
             Assert.AreEqual("Assert.AreEqual failed. Expected:<5>. Actual:<5.15>. Delta:<0.1>. My test message", ex.Message);
+        }
+
+        #endregion
+
+        #region AreNotEqual
+
+        [TestMethod]
+        public void AreNotEqual_Success_SameType()
+        {
+            AssertUnderTest.AreNotEqual("Test", "test");
+        }
+
+        [TestMethod]
+        public void AreNotEqual_Success_DifferentType()
+        {
+            AssertUnderTest.AreNotEqual("5", 5);
+        }
+
+        [TestMethod]
+        public void AreNotEqual_Fail()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreNotEqual(new string("Test".ToCharArray()), new string("Test".ToCharArray())));
+            Assert.AreEqual("Assert.AreNotEqual failed. NotExpected:<Test>. Actual:<Test>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void AreNotEqual_Fail_WithMessage()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreNotEqual(new string("Test".ToCharArray()), new string("Test".ToCharArray()), "My test message"));
+            Assert.AreEqual("Assert.AreNotEqual failed. NotExpected:<Test>. Actual:<Test>. My test message", ex.Message);
+        }
+
+        [TestMethod]
+        public void AreNotEqual_Fail_Object()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreNotEqual((object)new string("Test".ToCharArray()), new string("Test".ToCharArray())));
+            Assert.AreEqual("Assert.AreNotEqual failed. NotExpected:<Test>. Actual:<Test>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void AreNotEqual_Fail_Object_WithMessage()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreNotEqual((object)new string("Test".ToCharArray()), new string("Test".ToCharArray()), "My test message"));
+            Assert.AreEqual("Assert.AreNotEqual failed. NotExpected:<Test>. Actual:<Test>. My test message", ex.Message);
+        }
+
+        [TestMethod]
+        public void AreNotEqual_Float_Success()
+        {
+            AssertUnderTest.AreNotEqual(5f, 5.15f, 0.1f);
+        }
+
+        [TestMethod]
+        public void AreNotEqual_Float_Fail()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreNotEqual(5f, 5.05f, 0.1f));
+            Assert.AreEqual("Assert.AreNotEqual failed. NotExpected:<5>. Actual:<5.05>. Delta:<0.1>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void AreNotEqual_Float_Fail_WithMessage()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreNotEqual(5f, 5.05f, 0.1f, "My test message"));
+            Assert.AreEqual("Assert.AreNotEqual failed. NotExpected:<5>. Actual:<5.05>. Delta:<0.1>. My test message", ex.Message);
         }
 
         [TestMethod]
@@ -495,5 +526,475 @@ namespace MaSch.Test.Components.Test.Assertion
             var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreNotEqual("TEST", "test", true, "My test message"));
             Assert.AreEqual("Assert.AreNotEqual failed. NotExpected:<TEST>. Actual:<test>. My test message", ex.Message);
         }
+
+        #endregion
+
+        #region IsInstanceOfType
+
+        [TestMethod]
+        public void IsInstanceOfType_Success_SameType()
+        {
+            AssertUnderTest.IsInstanceOfType("Test", typeof(string));
+        }
+
+        [TestMethod]
+        public void IsInstanceOfType_Success_DerivedType()
+        {
+            AssertUnderTest.IsInstanceOfType(AssertUnderTest, typeof(MaSch.Test.Assertion.AssertBase));
+        }
+
+        [TestMethod]
+        public void IsInstanceOfType_Fail_NullType()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsInstanceOfType("Test", null!));
+        }
+
+        [TestMethod]
+        public void IsInstanceOfType_Fail_Null()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsInstanceOfType(null, typeof(string)));
+            Assert.AreEqual("Assert.IsInstanceOfType failed. Expected:<System.String>. Actual:<(null)>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsInstanceOfType_Fail_WrongType()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsInstanceOfType(5, typeof(string)));
+            Assert.AreEqual("Assert.IsInstanceOfType failed. Expected:<System.String>. Actual:<System.Int32>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsInstanceOfType_Fail_Null_WithMessage()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsInstanceOfType(null, typeof(string), "My test message"));
+            Assert.AreEqual("Assert.IsInstanceOfType failed. Expected:<System.String>. Actual:<(null)>. My test message", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsInstanceOfType_Fail_WrongType_WithMessage()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsInstanceOfType(5, typeof(string), "My test message"));
+            Assert.AreEqual("Assert.IsInstanceOfType failed. Expected:<System.String>. Actual:<System.Int32>. My test message", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsInstanceOfTypeT_Success_SameType()
+        {
+            object? obj = "Test";
+
+            var result = AssertUnderTest.IsInstanceOfType<string>(obj);
+
+            Assert.AreSame(obj, result);
+        }
+
+        [TestMethod]
+        public void IsInstanceOfTypeT_Success_DerivedType()
+        {
+            object? obj = AssertUnderTest;
+
+            var result = AssertUnderTest.IsInstanceOfType<MaSch.Test.Assertion.AssertBase>(obj);
+
+            Assert.AreSame(obj, result);
+        }
+
+        [TestMethod]
+        public void IsInstanceOfTypeT_Fail_Null()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsInstanceOfType<string>(null));
+            Assert.AreEqual("Assert.IsInstanceOfType failed. Expected:<System.String>. Actual:<(null)>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsInstanceOfTypeT_Fail_WrongType()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsInstanceOfType<string>(5));
+            Assert.AreEqual("Assert.IsInstanceOfType failed. Expected:<System.String>. Actual:<System.Int32>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsInstanceOfTypeT_Fail_Null_WithMessage()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsInstanceOfType<string>(null, "My test message"));
+            Assert.AreEqual("Assert.IsInstanceOfType failed. Expected:<System.String>. Actual:<(null)>. My test message", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsInstanceOfTypeT_Fail_WrongType_WithMessage()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsInstanceOfType<string>(5, "My test message"));
+            Assert.AreEqual("Assert.IsInstanceOfType failed. Expected:<System.String>. Actual:<System.Int32>. My test message", ex.Message);
+        }
+
+        #endregion
+
+        #region IsNotInstanceOfType
+
+        [TestMethod]
+        public void IsNotInstanceOfType_Success_Null()
+        {
+            AssertUnderTest.IsNotInstanceOfType(null, typeof(string));
+        }
+
+        [TestMethod]
+        public void IsNotInstanceOfType_Success_WrongType()
+        {
+            AssertUnderTest.IsNotInstanceOfType(5, typeof(string));
+        }
+
+        [TestMethod]
+        public void IsNotInstanceOfType_Fail_NullType()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsNotInstanceOfType("Test", null!));
+        }
+
+        [TestMethod]
+        public void IsNotInstanceOfType_Fail_SameType()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotInstanceOfType("Test", typeof(string)));
+            Assert.AreEqual("Assert.IsNotInstanceOfType failed. NotExpected:<System.String>. Actual:<System.String>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotInstanceOfType_Fail_DerivedType()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotInstanceOfType(AssertUnderTest, typeof(MaSch.Test.Assertion.AssertBase)));
+            Assert.AreEqual("Assert.IsNotInstanceOfType failed. NotExpected:<MaSch.Test.Assertion.AssertBase>. Actual:<MaSch.Test.Assertion.Assert>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotInstanceOfType_Fail_SameType_WithMessage()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotInstanceOfType("Test", typeof(string), "My test message"));
+            Assert.AreEqual("Assert.IsNotInstanceOfType failed. NotExpected:<System.String>. Actual:<System.String>. My test message", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotInstanceOfType_Fail_DerivedType_WithMessage()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotInstanceOfType(AssertUnderTest, typeof(MaSch.Test.Assertion.AssertBase), "My test message"));
+            Assert.AreEqual("Assert.IsNotInstanceOfType failed. NotExpected:<MaSch.Test.Assertion.AssertBase>. Actual:<MaSch.Test.Assertion.Assert>. My test message", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotInstanceOfTypeT_Success_Null()
+        {
+            AssertUnderTest.IsNotInstanceOfType<string>(null);
+        }
+
+        [TestMethod]
+        public void IsNotInstanceOfTypeT_Success_WrongType()
+        {
+            AssertUnderTest.IsNotInstanceOfType<string>(5);
+        }
+
+        [TestMethod]
+        public void IsNotInstanceOfTypeT_Fail_SameType()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotInstanceOfType<string>("Test"));
+            Assert.AreEqual("Assert.IsNotInstanceOfType failed. NotExpected:<System.String>. Actual:<System.String>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotInstanceOfTypeT_Fail_DerivedType()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotInstanceOfType<MaSch.Test.Assertion.AssertBase>(AssertUnderTest));
+            Assert.AreEqual("Assert.IsNotInstanceOfType failed. NotExpected:<MaSch.Test.Assertion.AssertBase>. Actual:<MaSch.Test.Assertion.Assert>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotInstanceOfTypeT_Fail_SameType_WithMessage()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotInstanceOfType<string>("Test", "My test message"));
+            Assert.AreEqual("Assert.IsNotInstanceOfType failed. NotExpected:<System.String>. Actual:<System.String>. My test message", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotInstanceOfTypeT_Fail_DerivedType_WithMessage()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotInstanceOfType<MaSch.Test.Assertion.AssertBase>(AssertUnderTest, "My test message"));
+            Assert.AreEqual("Assert.IsNotInstanceOfType failed. NotExpected:<MaSch.Test.Assertion.AssertBase>. Actual:<MaSch.Test.Assertion.Assert>. My test message", ex.Message);
+        }
+
+        #endregion
+
+        #region Fail
+
+        [TestMethod]
+        public void Fail()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.Fail());
+            Assert.AreEqual("Assert.Fail failed.", ex.Message);
+        }
+
+        [TestMethod]
+        public void Fail_WithMessage()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.Fail("My test message"));
+            Assert.AreEqual("Assert.Fail failed. My test message", ex.Message);
+        }
+
+        #endregion
+
+        #region ThrowsException
+
+        [TestMethod]
+        public void ThrowsException_Action_Success()
+        {
+            var mockEx = new InvalidOperationException("My test exception");
+            var mock = new Mock<Action>();
+            mock.Setup(x => x()).Throws(mockEx);
+            var ex = AssertUnderTest.ThrowsException<InvalidOperationException>(() => mock.Object());
+            Assert.AreSame(mockEx, ex);
+        }
+
+        [TestMethod]
+        public void ThrowsException_Action_Fail_NoException()
+        {
+            var mock = new Mock<Action>();
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<InvalidOperationException>(() => mock.Object()));
+            Assert.AreEqual("Assert.ThrowsException failed. ExpectedException:<InvalidOperationException>. ActualException:<(null)>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ThrowsException_Action_Fail_DifferentException()
+        {
+            var mock = new Mock<Action>();
+            mock.Setup(x => x()).Throws(new ArgumentException());
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<InvalidOperationException>(() => mock.Object()));
+            Assert.AreEqual("Assert.ThrowsException failed. ExpectedException:<InvalidOperationException>. ActualException:<ArgumentException>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ThrowsException_Action_Fail_DerivedException()
+        {
+            var mock = new Mock<Action>();
+            mock.Setup(x => x()).Throws(new ArgumentException());
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<Exception>(() => mock.Object()));
+            Assert.AreEqual("Assert.ThrowsException failed. ExpectedException:<Exception>. ActualException:<ArgumentException>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ThrowsException_Action_Fail_NoException_WithMessage()
+        {
+            var mock = new Mock<Action>();
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<InvalidOperationException>(() => mock.Object(), "My test message"));
+            Assert.AreEqual("Assert.ThrowsException failed. ExpectedException:<InvalidOperationException>. ActualException:<(null)>. My test message", ex.Message);
+        }
+
+        [TestMethod]
+        public void ThrowsException_Action_Fail_DifferentException_WithMessage()
+        {
+            var mock = new Mock<Action>();
+            mock.Setup(x => x()).Throws(new ArgumentException());
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<InvalidOperationException>(() => mock.Object(), "My test message"));
+            Assert.AreEqual("Assert.ThrowsException failed. ExpectedException:<InvalidOperationException>. ActualException:<ArgumentException>. My test message", ex.Message);
+        }
+
+        [TestMethod]
+        public void ThrowsException_Action_Fail_DerivedException_WithMessage()
+        {
+            var mock = new Mock<Action>();
+            mock.Setup(x => x()).Throws(new ArgumentException());
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<Exception>(() => mock.Object(), "My test message"));
+            Assert.AreEqual("Assert.ThrowsException failed. ExpectedException:<Exception>. ActualException:<ArgumentException>. My test message", ex.Message);
+        }
+
+        [TestMethod]
+        public void ThrowsException_Func_Success()
+        {
+            var mockEx = new InvalidOperationException("My test exception");
+            var mock = new Mock<Func<object?>>();
+            mock.Setup(x => x()).Throws(mockEx);
+            var ex = AssertUnderTest.ThrowsException<InvalidOperationException>(() => mock.Object());
+            Assert.AreSame(mockEx, ex);
+        }
+
+        [TestMethod]
+        public void ThrowsException_Func_Fail_NoException()
+        {
+            var mock = new Mock<Func<object?>>();
+            mock.Setup(x => x()).Returns(null);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<InvalidOperationException>(() => mock.Object()));
+            Assert.AreEqual("Assert.ThrowsException failed. ExpectedException:<InvalidOperationException>. ActualException:<(null)>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ThrowsException_Func_Fail_DifferentException()
+        {
+            var mock = new Mock<Func<object?>>();
+            mock.Setup(x => x()).Throws(new ArgumentException());
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<InvalidOperationException>(() => mock.Object()));
+            Assert.AreEqual("Assert.ThrowsException failed. ExpectedException:<InvalidOperationException>. ActualException:<ArgumentException>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ThrowsException_Func_Fail_DerivedException()
+        {
+            var mock = new Mock<Func<object?>>();
+            mock.Setup(x => x()).Throws(new ArgumentException());
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<Exception>(() => mock.Object()));
+            Assert.AreEqual("Assert.ThrowsException failed. ExpectedException:<Exception>. ActualException:<ArgumentException>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ThrowsException_Func_Fail_NoException_WithMessage()
+        {
+            var mock = new Mock<Func<object?>>();
+            mock.Setup(x => x()).Returns(null);
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<InvalidOperationException>(() => mock.Object(), "My test message"));
+            Assert.AreEqual("Assert.ThrowsException failed. ExpectedException:<InvalidOperationException>. ActualException:<(null)>. My test message", ex.Message);
+        }
+
+        [TestMethod]
+        public void ThrowsException_Func_Fail_DifferentException_WithMessage()
+        {
+            var mock = new Mock<Func<object?>>();
+            mock.Setup(x => x()).Throws(new ArgumentException());
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<InvalidOperationException>(() => mock.Object(), "My test message"));
+            Assert.AreEqual("Assert.ThrowsException failed. ExpectedException:<InvalidOperationException>. ActualException:<ArgumentException>. My test message", ex.Message);
+        }
+
+        [TestMethod]
+        public void ThrowsException_Func_Fail_DerivedException_WithMessage()
+        {
+            var mock = new Mock<Func<object?>>();
+            mock.Setup(x => x()).Throws(new ArgumentException());
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<Exception>(() => mock.Object(), "My test message"));
+            Assert.AreEqual("Assert.ThrowsException failed. ExpectedException:<Exception>. ActualException:<ArgumentException>. My test message", ex.Message);
+        }
+
+        #endregion
+
+        #region ThrowsExceptionAsync
+
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_Action_Success()
+        {
+            var mockEx = new InvalidOperationException("My test exception");
+            var mock = new Mock<Func<Task>>();
+            mock.Setup(x => x()).Throws(mockEx);
+            var ex = await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object());
+            Assert.AreSame(mockEx, ex);
+        }
+
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_Action_Fail_NoException()
+        {
+            var mock = new Mock<Func<Task>>();
+            mock.Setup(x => x()).Returns(Task.CompletedTask);
+            var ex = await Assert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object()));
+            Assert.AreEqual("Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<(null)>.", ex.Message);
+        }
+
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_Action_Fail_DifferentException()
+        {
+            var mock = new Mock<Func<Task>>();
+            mock.Setup(x => x()).Throws(new ArgumentException());
+            var ex = await Assert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object()));
+            Assert.AreEqual("Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<ArgumentException>.", ex.Message);
+        }
+
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_Action_Fail_DerivedException()
+        {
+            var mock = new Mock<Func<Task>>();
+            mock.Setup(x => x()).Throws(new ArgumentException());
+            var ex = await Assert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<Exception>(() => mock.Object()));
+            Assert.AreEqual("Assert.ThrowsExceptionAsync failed. ExpectedException:<Exception>. ActualException:<ArgumentException>.", ex.Message);
+        }
+
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_Action_Fail_NoException_WithMessage()
+        {
+            var mock = new Mock<Func<Task>>();
+            mock.Setup(x => x()).Returns(Task.CompletedTask);
+            var ex = await Assert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object(), "My test message"));
+            Assert.AreEqual("Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<(null)>. My test message", ex.Message);
+        }
+
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_Action_Fail_DifferentException_WithMessage()
+        {
+            var mock = new Mock<Func<Task>>();
+            mock.Setup(x => x()).Throws(new ArgumentException());
+            var ex = await Assert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object(), "My test message"));
+            Assert.AreEqual("Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<ArgumentException>. My test message", ex.Message);
+        }
+
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_Action_Fail_DerivedException_WithMessage()
+        {
+            var mock = new Mock<Func<Task>>();
+            mock.Setup(x => x()).Throws(new ArgumentException());
+            var ex = await Assert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<Exception>(() => mock.Object(), "My test message"));
+            Assert.AreEqual("Assert.ThrowsExceptionAsync failed. ExpectedException:<Exception>. ActualException:<ArgumentException>. My test message", ex.Message);
+        }
+
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_Func_Success()
+        {
+            var mockEx = new InvalidOperationException("My test exception");
+            var mock = new Mock<Func<Task<object?>>>();
+            mock.Setup(x => x()).Throws(mockEx);
+            var ex = await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object());
+            Assert.AreSame(mockEx, ex);
+        }
+
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_Func_Fail_NoException()
+        {
+            var mock = new Mock<Func<Task<object?>>>();
+            mock.Setup(x => x()).Returns(Task.FromResult<object?>(null));
+            var ex = await Assert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object()));
+            Assert.AreEqual("Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<(null)>.", ex.Message);
+        }
+
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_Func_Fail_DifferentException()
+        {
+            var mock = new Mock<Func<Task<object?>>>();
+            mock.Setup(x => x()).Throws(new ArgumentException());
+            var ex = await Assert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object()));
+            Assert.AreEqual("Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<ArgumentException>.", ex.Message);
+        }
+
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_Func_Fail_DerivedException()
+        {
+            var mock = new Mock<Func<Task<object?>>>();
+            mock.Setup(x => x()).Throws(new ArgumentException());
+            var ex = await Assert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<Exception>(() => mock.Object()));
+            Assert.AreEqual("Assert.ThrowsExceptionAsync failed. ExpectedException:<Exception>. ActualException:<ArgumentException>.", ex.Message);
+        }
+
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_Func_Fail_NoException_WithMessage()
+        {
+            var mock = new Mock<Func<Task<object?>>>();
+            mock.Setup(x => x()).Returns(Task.FromResult<object?>(null));
+            var ex = await Assert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object(), "My test message"));
+            Assert.AreEqual("Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<(null)>. My test message", ex.Message);
+        }
+
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_Func_Fail_DifferentException_WithMessage()
+        {
+            var mock = new Mock<Func<Task<object?>>>();
+            mock.Setup(x => x()).Throws(new ArgumentException());
+            var ex = await Assert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object(), "My test message"));
+            Assert.AreEqual("Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<ArgumentException>. My test message", ex.Message);
+        }
+
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_Func_Fail_DerivedException_WithMessage()
+        {
+            var mock = new Mock<Func<Task<object?>>>();
+            mock.Setup(x => x()).Throws(new ArgumentException());
+            var ex = await Assert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<Exception>(() => mock.Object(), "My test message"));
+            Assert.AreEqual("Assert.ThrowsExceptionAsync failed. ExpectedException:<Exception>. ActualException:<ArgumentException>. My test message", ex.Message);
+        }
+
+        #endregion
     }
 }

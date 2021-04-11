@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace MaSch.Test.Extensions
+namespace MaSch.Test
 {
     /// <summary>
     /// Provides extensions for classes/interfacs of the Moq library.
@@ -147,7 +147,15 @@ namespace MaSch.Test.Extensions
             {
                 if (GeneralVerifyMethod == null)
                     throw new Exception("Could not retrieve verify method from mock object.");
-                GeneralVerifyMethod.Invoke(null, new object?[] { innerMock, expression, times(), msg });
+
+                try
+                {
+                    GeneralVerifyMethod.Invoke(null, new object?[] { innerMock, expression, times(), msg });
+                }
+                catch (TargetInvocationException ex)
+                {
+                    throw ex.InnerException ?? ex;
+                }
             }
 
             return new MockVerifiable(Verification, defaultTimes, defaultFailMessage);

@@ -32,7 +32,10 @@ namespace MaSch.Test.Components.Test.TestHelper
         }
 
         public bool Equals(T? x, T? y) => _comparer.Equals(x, y);
+
+        [ExcludeFromCodeCoverage]
         public int GetHashCode([DisallowNull] T obj) => _comparer.GetHashCode(obj);
+
         public void Dispose() => _disposable.Dispose();
     }
 
@@ -48,7 +51,10 @@ namespace MaSch.Test.Components.Test.TestHelper
         }
 
         public new bool Equals(object? x, object? y) => _comparer.Equals(x, y);
+
+        [ExcludeFromCodeCoverage]
         public int GetHashCode(object obj) => _comparer.GetHashCode(obj);
+
         public void Dispose() => _disposable.Dispose();
     }
 }

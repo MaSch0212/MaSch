@@ -4,8 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-#pragma warning disable SA1005 // Single line comments should begin with single space
-
 namespace MaSch.Test
 {
     /// <summary>
@@ -107,7 +105,7 @@ namespace MaSch.Test
             {
                 var formattedArray = array == null ? null :
                     array.Length == 0 ? "[]" : $"[{Environment.NewLine}\t{string.Join($",{Environment.NewLine}\t", array)}{Environment.NewLine}]";
-                assert.ThrowAssertError(0, message, ("Expected", expected), ("Actual", formattedArray));
+                assert.ThrowAssertError(message, ("Expected", expected), ("Actual", formattedArray));
             }
         }
 
@@ -205,38 +203,11 @@ namespace MaSch.Test
             {
                 var formattedArray = array == null ? null :
                     array.Length == 0 ? "[]" : $"[{Environment.NewLine}\t{string.Join($",{Environment.NewLine}\t", array)}{Environment.NewLine}]";
-                assert.ThrowAssertError(0, message, ("NotExpected", notExpected), ("Actual", formattedArray));
+                assert.ThrowAssertError(message, ("NotExpected", notExpected), ("Actual", formattedArray));
             }
         }
 
-        ///// <summary>
-        ///// Tests whether the specified collection does not contain the specified
-        ///// element and throws an exception if the element is in the collection.
-        ///// </summary><param name="assert">The assert object to test with.
-        ///// </param><param name="collection">
-        ///// The collection in which to search for the element.
-        ///// </param><param name="element">
-        ///// The element that is expected not to be in the collection.
-        ///// </param>
-        //public static void DoesNotContain(this AssertBase assert, ICollection collection, object? element)
-        //    => assert.CatchAssertException(() => CollectionAssert.DoesNotContain(collection, element));
-
-        ///// <summary>
-        ///// Tests whether the specified collection does not contain the specified
-        ///// element and throws an exception if the element is in the collection.
-        ///// </summary><param name="assert">The assert object to test with.
-        ///// </param><param name="collection">
-        ///// The collection in which to search for the element.
-        ///// </param><param name="element">
-        ///// The element that is expected not to be in the collection.
-        ///// </param><param name="message">
-        ///// The message to include in the exception when <paramref name="element" />
-        ///// is in <paramref name="collection" />. The message is shown in test
-        ///// results.
-        ///// </param>
-        //public static void DoesNotContain(this AssertBase assert, ICollection collection, object? element, string? message)
-        //    => assert.CatchAssertException(() => CollectionAssert.DoesNotContain(collection, element, message));
-
+#pragma warning disable SA1005 // Single line comments should begin with single space
         ///// <summary>
         ///// Tests whether all items in the specified collection are non-null and throws
         ///// an exception if any element is null.
