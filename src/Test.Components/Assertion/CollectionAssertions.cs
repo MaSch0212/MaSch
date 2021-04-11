@@ -199,7 +199,6 @@ namespace MaSch.Test
                 assert.ThrowAssertError(message, ("NotExpected", notExpected), ("Actual", FormatCollection(collection)));
         }
 
-#pragma warning disable SA1005 // Single line comments should begin with single space
         /// <summary>
         /// Tests whether all items in the specified collection are non-null and throws an exception if any element is null.
         /// </summary>
@@ -273,6 +272,8 @@ namespace MaSch.Test
                 assert.ThrowAssertError(message, (faultyIdx.Count > 1 ? "Indices" : "Index", string.Join(", ", faultyIdx.Select(x => $"{x.Item1}={x.Item2}"))));
         }
 
+#pragma warning disable SA1005 // Single line comments should begin with single space
+#pragma warning disable SA1512 // Single-line comments should not be followed by blank line
         ///// <summary>
         ///// Tests whether one collection is a subset of another collection and
         ///// throws an exception if any element in the subset is not also in the
