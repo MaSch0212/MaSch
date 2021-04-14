@@ -5,6 +5,7 @@ using Moq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MaSch.Test.Components.Test.Assertion
 {
@@ -509,6 +510,199 @@ namespace MaSch.Test.Components.Test.Assertion
 
         #endregion
 
+        #region AllItemsAreNotNull
+
+        [TestMethod]
+        public void AllItemsAreNotNull_NullCollection()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AllItemsAreNotNull(null!));
+        }
+
+        [TestMethod]
+        public void AllItemsAreNotNull_Success()
+        {
+            AssertUnderTest.AllItemsAreNotNull(new[] { "Test", "Blub" });
+        }
+
+        [TestMethod]
+        public void AllItemsAreNotNull_Fail_OneNull()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AllItemsAreNotNull(new[] { "Test", null }));
+            Assert.AreEqual("Assert.AllItemsAreNotNull failed. Index:<1>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void AllItemsAreNotNull_Fail_MultipleNull()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AllItemsAreNotNull(new[] { "Test", null, "Blub", null }));
+            Assert.AreEqual("Assert.AllItemsAreNotNull failed. Indices:<1, 3>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void AllItemsAreNotNull_Fail_OneNull_WithMessage()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AllItemsAreNotNull(new[] { "Test", null }, "This is my test"));
+            Assert.AreEqual("Assert.AllItemsAreNotNull failed. Index:<1>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void AllItemsAreNotNull_Fail_MultipleNull_WithMessage()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AllItemsAreNotNull(new[] { "Test", null, "Blub", null }, "This is my test"));
+            Assert.AreEqual("Assert.AllItemsAreNotNull failed. Indices:<1, 3>. This is my test", ex.Message);
+        }
+
+        #endregion
+
+        #region AllItemsAreUnique
+
+        [TestMethod]
+        public void AllItemsAreUnique_NullCollection()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AllItemsAreUnique<string>(null!));
+        }
+
+        [TestMethod]
+        public void AllItemsAreUnique_NullComparer()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AllItemsAreUnique(Array.Empty<string>(), (IEqualityComparer<string>)null!));
+        }
+
+        [TestMethod]
+        public void AllItemsAreUnique_Success()
+        {
+            AssertUnderTest.AllItemsAreUnique(new[] { "Test", "Blub", "Hello" });
+        }
+
+        [TestMethod]
+        public void AllItemsAreUnique_Fail_OneDuplicate()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AllItemsAreUnique(new[] { "Test", "Blub", "Test", "Hello" }));
+            Assert.AreEqual("Assert.AllItemsAreUnique failed. Index:<0=2>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void AllItemsAreUnique_Fail_OneDuplicate_Nulls()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AllItemsAreUnique(new[] { null, "Blub", null, "Hello" }));
+            Assert.AreEqual("Assert.AllItemsAreUnique failed. Index:<0=2>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void AllItemsAreUnique_Fail_MultipleDuplicate()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AllItemsAreUnique(new[] { "Test", "Blub", "Test", "Blub" }));
+            Assert.AreEqual("Assert.AllItemsAreUnique failed. Indices:<0=2, 1=3>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void AllItemsAreUnique_Fail_MultipleSameDuplicate()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AllItemsAreUnique(new[] { "Test", "Blub", "Test", "Test" }));
+            Assert.AreEqual("Assert.AllItemsAreUnique failed. Indices:<0=2, 0=3>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void AllItemsAreUnique_Fail_OneDuplicate_WithMessage()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AllItemsAreUnique(new[] { "Test", "Blub", "Test", "Hello" }, "This is my test"));
+            Assert.AreEqual("Assert.AllItemsAreUnique failed. Index:<0=2>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void AllItemsAreUnique_Fail_OneDuplicate_Nulls_WithMessage()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AllItemsAreUnique(new[] { null, "Blub", null, "Hello" }, "This is my test"));
+            Assert.AreEqual("Assert.AllItemsAreUnique failed. Index:<0=2>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void AllItemsAreUnique_Fail_MultipleDuplicate_WithMessage()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AllItemsAreUnique(new[] { "Test", "Blub", "Test", "Blub" }, "This is my test"));
+            Assert.AreEqual("Assert.AllItemsAreUnique failed. Indices:<0=2, 1=3>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void AllItemsAreUnique_Fail_MultipleSameDuplicate_WithMessage()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AllItemsAreUnique(new[] { "Test", "Blub", "Test", "Test" }, "This is my test"));
+            Assert.AreEqual("Assert.AllItemsAreUnique failed. Indices:<0=2, 0=3>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void AllItemsAreUnique_WithComparer_Success()
+        {
+            using var comparer = CreateEqualityComparerTForHash("Test", "Blub", "Hello");
+            AssertUnderTest.AllItemsAreUnique(new[] { "Test", "Blub", "Hello" }, comparer);
+        }
+
+        [TestMethod]
+        public void AllItemsAreUnique_WithComparer_Fail_OneDuplicate()
+        {
+            using var comparer = CreateEqualityComparerTForHash("Test", "Blub", "Test", "Hello");
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AllItemsAreUnique(new[] { "Test", "Blub", "Test", "Hello" }, comparer));
+            Assert.AreEqual("Assert.AllItemsAreUnique failed. Index:<0=2>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void AllItemsAreUnique_WithComparer_Fail_OneDuplicate_Nulls()
+        {
+            using var comparer = CreateEqualityComparerTForHash<string?>("Blub", "Hello");
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AllItemsAreUnique(new[] { null, "Blub", null, "Hello" }, comparer));
+            Assert.AreEqual("Assert.AllItemsAreUnique failed. Index:<0=2>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void AllItemsAreUnique_WithComparer_Fail_MultipleDuplicate()
+        {
+            using var comparer = CreateEqualityComparerTForHash("Test", "Blub", "Test", "Blub");
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AllItemsAreUnique(new[] { "Test", "Blub", "Test", "Blub" }, comparer));
+            Assert.AreEqual("Assert.AllItemsAreUnique failed. Indices:<0=2, 1=3>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void AllItemsAreUnique_WithComparer_Fail_MultipleSameDuplicate()
+        {
+            using var comparer = CreateEqualityComparerTForHash("Test", "Blub", "Test", "Test");
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AllItemsAreUnique(new[] { "Test", "Blub", "Test", "Test" }, comparer));
+            Assert.AreEqual("Assert.AllItemsAreUnique failed. Indices:<0=2, 0=3>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void AllItemsAreUnique_WithComparer_Fail_OneDuplicate_WithMessage()
+        {
+            using var comparer = CreateEqualityComparerTForHash("Test", "Blub", "Test", "Hello");
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AllItemsAreUnique(new[] { "Test", "Blub", "Test", "Hello" }, comparer, "This is my test"));
+            Assert.AreEqual("Assert.AllItemsAreUnique failed. Index:<0=2>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void AllItemsAreUnique_WithComparer_Fail_OneDuplicate_Nulls_WithMessage()
+        {
+            using var comparer = CreateEqualityComparerTForHash<string?>("Blub", "Hello");
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AllItemsAreUnique(new[] { null, "Blub", null, "Hello" }, comparer, "This is my test"));
+            Assert.AreEqual("Assert.AllItemsAreUnique failed. Index:<0=2>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void AllItemsAreUnique_WithComparer_Fail_MultipleDuplicate_WithMessage()
+        {
+            using var comparer = CreateEqualityComparerTForHash("Test", "Blub", "Test", "Blub");
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AllItemsAreUnique(new[] { "Test", "Blub", "Test", "Blub" }, comparer, "This is my test"));
+            Assert.AreEqual("Assert.AllItemsAreUnique failed. Indices:<0=2, 1=3>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void AllItemsAreUnique_WithComparer_Fail_MultipleSameDuplicate_WithMessage()
+        {
+            using var comparer = CreateEqualityComparerTForHash("Test", "Blub", "Test", "Test");
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AllItemsAreUnique(new[] { "Test", "Blub", "Test", "Test" }, comparer, "This is my test"));
+            Assert.AreEqual("Assert.AllItemsAreUnique failed. Indices:<0=2, 0=3>. This is my test", ex.Message);
+        }
+
+        #endregion
+
         private static DisposableEqualityComparer<T> CreateEqualityComparerT<T>(params (T X, T Y)[] expectedCalls)
         {
             var comparerMock = new Mock<IEqualityComparer<T>>(MockBehavior.Strict);
@@ -522,6 +716,22 @@ namespace MaSch.Test.Components.Test.Assertion
                     comparerMock.Verify(m => m.Equals(It.IsAny<T?>(), It.IsAny<T?>()), Times.Exactly(expectedCalls.Length));
                     foreach (var (x, y) in expectedCalls)
                         comparerMock.Verify(m => m.Equals(x, y), Times.Once());
+                }));
+        }
+
+        private static DisposableEqualityComparer<T> CreateEqualityComparerTForHash<T>(params T[] expectedHashCalls)
+        {
+            var comparerMock = new Mock<IEqualityComparer<T>>(MockBehavior.Strict);
+            comparerMock.Setup(m => m.GetHashCode(It.IsAny<T>()!)).Returns<T>(x => x!.GetHashCode());
+            comparerMock.Setup(m => m.Equals(It.IsAny<T?>(), It.IsAny<T?>())).Returns<T?, T?>((x, y) => Equals(x, y));
+
+            return new DisposableEqualityComparer<T>(
+                comparerMock.Object,
+                new ActionOnDispose(() =>
+                {
+                    comparerMock.Verify(m => m.GetHashCode(It.IsAny<T>()!), Times.Exactly(expectedHashCalls.Length));
+                    foreach (var x in expectedHashCalls.GroupBy(x => x))
+                        comparerMock.Verify(m => m.GetHashCode(x.Key!), Times.Exactly(x.Count()));
                 }));
         }
 
