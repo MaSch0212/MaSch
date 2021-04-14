@@ -9,7 +9,7 @@ using System.Windows.Media;
 namespace MaSch.Presentation.Wpf.Themes.Test.ThemeValues
 {
     [TestClass]
-    public class FontFamilyThemeValueTests : UnitTestBase
+    public class FontFamilyThemeValueTests : TestClassBase
     {
         private const string ValueJson = "{\"Type\":\"FontFamily\",\"Value\":\"Arial\"}";
         private const string RefJson = "{\"Type\":\"FontFamily\",\"Value\":\"{Bind MyTestKey}\"}";

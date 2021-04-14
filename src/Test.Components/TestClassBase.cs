@@ -9,7 +9,7 @@ namespace MaSch.Test
     /// </summary>
     /// <seealso cref="MaSch.Core.Cache" />
     [ExcludeFromCodeCoverage]
-    public abstract class UnitTestBase : Cache
+    public abstract class TestClassBase : Cache
     {
         /// <summary>
         /// Gets an object to execute assertions.

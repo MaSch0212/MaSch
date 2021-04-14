@@ -5,7 +5,7 @@ using System;
 namespace MaSch.Core.Test
 {
     [TestClass]
-    public class GuardTests : UnitTestBase
+    public class GuardTests : TestClassBase
     {
         [TestMethod]
         public void NotNull_Null()

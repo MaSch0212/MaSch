@@ -6,7 +6,7 @@ using System;
 namespace MaSch.Core.Test
 {
     [TestClass]
-    public class DelegateEqualityComparerTests : UnitTestBase
+    public class DelegateEqualityComparerTests : TestClassBase
     {
         [TestMethod]
         public void Constructor_ParameterChecks()

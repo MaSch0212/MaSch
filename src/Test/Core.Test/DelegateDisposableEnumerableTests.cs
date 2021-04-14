@@ -9,7 +9,7 @@ using System.Linq;
 namespace MaSch.Core.Test
 {
     [TestClass]
-    public class DelegateDisposableEnumerableTests : UnitTestBase
+    public class DelegateDisposableEnumerableTests : TestClassBase
     {
         [TestMethod]
         public void Constructor_ParameterChecks()

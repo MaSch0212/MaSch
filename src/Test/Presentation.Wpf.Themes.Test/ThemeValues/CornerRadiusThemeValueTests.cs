@@ -9,7 +9,7 @@ using System.Windows;
 namespace MaSch.Presentation.Wpf.Themes.Test.ThemeValues
 {
     [TestClass]
-    public class CornerRadiusThemeValueTests : UnitTestBase
+    public class CornerRadiusThemeValueTests : TestClassBase
     {
         private const string ValueJson = "{\"Type\":\"CornerRadius\",\"Value\":\"1,2,3,4\"}";
         private const string RefJson = "{\"Type\":\"CornerRadius\",\"Value\":\"{Bind MyTestKey}\"}";

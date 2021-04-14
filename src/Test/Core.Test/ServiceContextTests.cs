@@ -11,7 +11,7 @@ using System.Reflection;
 namespace MaSch.Core.Test
 {
     [TestClass]
-    public class ServiceContextTests : UnitTestBase
+    public class ServiceContextTests : TestClassBase
     {
         internal static IDictionary<(Type Type, string? Name), object> GetServicesDict(object? instance)
         {
@@ -27,7 +27,7 @@ namespace MaSch.Core.Test
     }
 
     [TestClass]
-    public class ServiceContextStaticTests : UnitTestBase
+    public class ServiceContextStaticTests : TestClassBase
     {
         private static readonly FieldInfo InstanceField = typeof(ServiceContext).GetField("_instance", BindingFlags.Static | BindingFlags.NonPublic)!;
 

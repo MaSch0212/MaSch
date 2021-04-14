@@ -6,7 +6,7 @@ using System;
 namespace MaSch.Test.Components.Test.Models
 {
     [TestClass]
-    public class MockVerifiableCollectionTests : UnitTestBase
+    public class MockVerifiableCollectionTests : TestClassBase
     {
         [TestMethod]
         public void Ctor()

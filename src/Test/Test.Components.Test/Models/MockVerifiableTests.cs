@@ -7,7 +7,7 @@ using System.Reflection;
 namespace MaSch.Test.Components.Test.Models
 {
     [TestClass]
-    public class MockVerifiableTests : UnitTestBase
+    public class MockVerifiableTests : TestClassBase
     {
         private static readonly FieldInfo? _verifyActionField = typeof(MockVerifiable).GetField("_verifyAction", BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly FieldInfo? _defaultTimesField = typeof(MockVerifiable).GetField("_defaultTimes", BindingFlags.NonPublic | BindingFlags.Instance);

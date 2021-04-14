@@ -11,7 +11,7 @@ using System.Windows.Media;
 namespace MaSch.Presentation.Wpf.Themes.Test.ThemeValues
 {
     [TestClass]
-    public class IconThemeValueTests : UnitTestBase
+    public class IconThemeValueTests : TestClassBase
     {
         private const string ValueJson = "{\"Type\":\"Icon\",\"IconType\":\"Geometry\",\"Character\":\"A\",\"Font\":\"Arial\",\"FontSize\":4.74,\"Geometry\":\"M0,0L1,0 1,1 0,1z\",\"IsGeometryFilled\":false,\"GeometryStrokeThickness\":2.4,\"Stretch\":\"Fill\"}";
         private const string RefJson = "{\"Type\":\"Icon\",\"IconType\":\"{Bind R1}\",\"Character\":\"{Bind R2}\",\"Font\":\"{Bind R3}\",\"FontSize\":\"{Bind R4}\",\"Geometry\":\"{Bind R5}\",\"IsGeometryFilled\":\"{Bind R6}\",\"GeometryStrokeThickness\":\"{Bind R7}\",\"Stretch\":\"{Bind R8}\"}";

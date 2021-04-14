@@ -6,7 +6,7 @@ using System.Threading;
 namespace MaSch.Core.Test
 {
     [TestClass]
-    public class ActionOnDisposeTests : UnitTestBase
+    public class ActionOnDisposeTests : TestClassBase
     {
         [TestMethod]
         public void Constructor_NullChecks()

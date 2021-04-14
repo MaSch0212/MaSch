@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace MaSch.Core.Test.Extensions
 {
     [TestClass]
-    public class TypeExtensionsTests : UnitTestBase
+    public class TypeExtensionsTests : TestClassBase
     {
         [TestMethod]
         public void IsCastableTo_ExplicitValueTypes_False()

@@ -11,7 +11,7 @@ using System.Reflection;
 namespace MaSch.Core.Test
 {
     [TestClass]
-    public class ObjectConvertManagerTests : UnitTestBase
+    public class ObjectConvertManagerTests : TestClassBase
     {
         private ObjectConvertManager Manager => GetValue(() => new ObjectConvertManager())!;
 

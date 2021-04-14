@@ -6,7 +6,7 @@ using System;
 namespace MaSch.Test.Components.Test.Extensions
 {
     [TestClass]
-    public class MoqExtensionsTests : UnitTestBase
+    public class MoqExtensionsTests : TestClassBase
     {
         [TestMethod]
         public void SetupPhraseType()

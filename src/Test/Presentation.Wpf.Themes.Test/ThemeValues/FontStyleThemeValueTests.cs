@@ -9,7 +9,7 @@ using System.Windows;
 namespace MaSch.Presentation.Wpf.Themes.Test.ThemeValues
 {
     [TestClass]
-    public class FontStyleThemeValueTests : UnitTestBase
+    public class FontStyleThemeValueTests : TestClassBase
     {
         private const string ValueJson = "{\"Type\":\"FontStyle\",\"Value\":\"Italic\"}";
         private const string RefJson = "{\"Type\":\"FontStyle\",\"Value\":\"{Bind MyTestKey}\"}";

@@ -8,7 +8,7 @@ using System;
 namespace MaSch.Presentation.Wpf.Themes.Test.ThemeValues
 {
     [TestClass]
-    public class DoubleThemeValueTests : UnitTestBase
+    public class DoubleThemeValueTests : TestClassBase
     {
         private const string ValueJson = "{\"Type\":\"Double\",\"Value\":5.42}";
         private const string RefJson = "{\"Type\":\"Double\",\"Value\":\"{Bind MyTestKey}\"}";

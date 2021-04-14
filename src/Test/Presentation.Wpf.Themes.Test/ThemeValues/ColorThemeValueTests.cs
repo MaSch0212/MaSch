@@ -9,7 +9,7 @@ using System.Windows.Media;
 namespace MaSch.Presentation.Wpf.Themes.Test.ThemeValues
 {
     [TestClass]
-    public class ColorThemeValueTests : UnitTestBase
+    public class ColorThemeValueTests : TestClassBase
     {
         private const string ValueJson = "{\"Type\":\"Color\",\"Value\":\"#7C3ECD59\"}";
         private const string RefJson = "{\"Type\":\"Color\",\"Value\":\"{Bind MyTestKey}\"}";

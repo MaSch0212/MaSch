@@ -8,7 +8,7 @@ using System;
 namespace MaSch.Presentation.Wpf.Themes.Test.ThemeValues
 {
     [TestClass]
-    public class BooleanThemeValueTests : UnitTestBase
+    public class BooleanThemeValueTests : TestClassBase
     {
         private const string TrueJson = "{\"Type\":\"Boolean\",\"Value\":true}";
         private const string FalseJson = "{\"Type\":\"Boolean\",\"Value\":false}";
