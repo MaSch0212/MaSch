@@ -703,6 +703,174 @@ namespace MaSch.Test.Components.Test.Assertion
 
         #endregion
 
+        #region IsSubsetOf
+
+        [TestMethod]
+        public void IsSubsetOf_NullSubset()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsSubsetOf(null!, Array.Empty<string>()));
+        }
+
+        [TestMethod]
+        public void IsSubsetOf_NullSuperset()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsSubsetOf(Array.Empty<string>(), null!));
+        }
+
+        [TestMethod]
+        public void IsSubsetOf_NullComparer()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsSubsetOf(Array.Empty<string>(), Array.Empty<string>(), (IEqualityComparer<string>)null!));
+        }
+
+        [TestMethod]
+        public void IsSubsetOf_Success()
+        {
+            AssertUnderTest.IsSubsetOf(new string[] { "Test", "blub" }, new string[] { "Hello", "blub", "bbbb", "Test" });
+        }
+
+        [TestMethod]
+        public void IsSubsetOf_Fail_OneMissingItem()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsSubsetOf(new[] { "Test", "blub" }, new[] { "Hello", "blub", "bbb" }));
+            Assert.AreEqual($"Assert.IsSubsetOf failed. MissingItems:<[{nl}\tTest{nl}]>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsSubsetOf_Fail_MultipleMissingItem()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsSubsetOf(new[] { "Test", "blub" }, new[] { "Hello", "bbb" }));
+            Assert.AreEqual($"Assert.IsSubsetOf failed. MissingItems:<[{nl}\tTest,{nl}\tblub{nl}]>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsSubsetOf_Fail_WithMessage_OneMissingItem()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsSubsetOf(new[] { "Test", "blub" }, new[] { "Hello", "blub", "bbb" }, "This is my test"));
+            Assert.AreEqual($"Assert.IsSubsetOf failed. MissingItems:<[{nl}\tTest{nl}]>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsSubsetOf_Fail_WithMessage_MultipleMissingItem()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsSubsetOf(new[] { "Test", "blub" }, new[] { "Hello", "bbb" }, "This is my test"));
+            Assert.AreEqual($"Assert.IsSubsetOf failed. MissingItems:<[{nl}\tTest,{nl}\tblub{nl}]>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsSubsetOf_WithComparer_Success()
+        {
+            using var comparer = CreateEqualityComparerTForHash("Hello", "blub", "bbbb", "Test", "Test", "blub");
+            AssertUnderTest.IsSubsetOf(new string[] { "Test", "blub" }, new string[] { "Hello", "blub", "bbbb", "Test" }, comparer);
+        }
+
+        [TestMethod]
+        public void IsSubsetOf_WithComparer_Fail_OneMissingItem()
+        {
+            var nl = Environment.NewLine;
+            using var comparer = CreateEqualityComparerTForHash("Hello", "blub", "bbb", "Test", "blub");
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsSubsetOf(new[] { "Test", "blub" }, new[] { "Hello", "blub", "bbb" }, comparer));
+            Assert.AreEqual($"Assert.IsSubsetOf failed. MissingItems:<[{nl}\tTest{nl}]>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsSubsetOf_WithComparer_Fail_MultipleMissingItem()
+        {
+            var nl = Environment.NewLine;
+            using var comparer = CreateEqualityComparerTForHash("Hello", "bbb", "Test", "blub");
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsSubsetOf(new[] { "Test", "blub" }, new[] { "Hello", "bbb" }, comparer));
+            Assert.AreEqual($"Assert.IsSubsetOf failed. MissingItems:<[{nl}\tTest,{nl}\tblub{nl}]>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsSubsetOf_WithComparer_Fail_WithMessage_OneMissingItem()
+        {
+            var nl = Environment.NewLine;
+            using var comparer = CreateEqualityComparerTForHash("Hello", "blub", "bbb", "Test", "blub");
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsSubsetOf(new[] { "Test", "blub" }, new[] { "Hello", "blub", "bbb" }, comparer, "This is my test"));
+            Assert.AreEqual($"Assert.IsSubsetOf failed. MissingItems:<[{nl}\tTest{nl}]>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsSubsetOf_WithComparer_Fail_WithMessage_MultipleMissingItem()
+        {
+            var nl = Environment.NewLine;
+            using var comparer = CreateEqualityComparerTForHash("Hello", "bbb", "Test", "blub");
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsSubsetOf(new[] { "Test", "blub" }, new[] { "Hello", "bbb" }, comparer, "This is my test"));
+            Assert.AreEqual($"Assert.IsSubsetOf failed. MissingItems:<[{nl}\tTest,{nl}\tblub{nl}]>. This is my test", ex.Message);
+        }
+
+        #endregion
+
+        #region IsNotSubsetOf
+
+        [TestMethod]
+        public void IsNotSubsetOf_NullSubset()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsNotSubsetOf(null!, Array.Empty<string>()));
+        }
+
+        [TestMethod]
+        public void IsNotSubsetOf_NullSuperset()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsNotSubsetOf(Array.Empty<string>(), null!));
+        }
+
+        [TestMethod]
+        public void IsNotSubsetOf_NullComparer()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsNotSubsetOf(Array.Empty<string>(), Array.Empty<string>(), (IEqualityComparer<string>)null!));
+        }
+
+        [TestMethod]
+        public void IsNotSubsetOf_Success()
+        {
+            AssertUnderTest.IsNotSubsetOf(new[] { "Test", "blub" }, new[] { "Hello", "blub", "bbb" });
+        }
+
+        [TestMethod]
+        public void IsNotSubsetOf_Fail()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotSubsetOf(new[] { "Test", "blub" }, new[] { "Hello", "blub", "bbb", "Test" }));
+            Assert.AreEqual($"Assert.IsNotSubsetOf failed.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotSubsetOf_Fail_WithMessage()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotSubsetOf(new[] { "Test", "blub" }, new[] { "Hello", "blub", "bbb", "Test" }, "This is my test"));
+            Assert.AreEqual($"Assert.IsNotSubsetOf failed. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotSubsetOf_WithComparer_Success()
+        {
+            using var comparer = CreateEqualityComparerTForHash("Hello", "blub", "bbb", "Test", "blub");
+            AssertUnderTest.IsNotSubsetOf(new[] { "Test", "blub" }, new[] { "Hello", "blub", "bbb" }, comparer);
+        }
+
+        [TestMethod]
+        public void IsNotSubsetOf_WithComparer_Fail()
+        {
+            using var comparer = CreateEqualityComparerTForHash("Hello", "blub", "bbb", "Test", "Test", "blub");
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotSubsetOf(new[] { "Test", "blub" }, new[] { "Hello", "blub", "bbb", "Test" }, comparer));
+            Assert.AreEqual($"Assert.IsNotSubsetOf failed.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotSubsetOf_WithComparer_Fail_WithMessage()
+        {
+            using var comparer = CreateEqualityComparerTForHash("Hello", "blub", "bbb", "Test", "Test", "blub");
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotSubsetOf(new[] { "Test", "blub" }, new[] { "Hello", "blub", "bbb", "Test" }, comparer, "This is my test"));
+            Assert.AreEqual($"Assert.IsNotSubsetOf failed. This is my test", ex.Message);
+        }
+
+        #endregion
+
         private static DisposableEqualityComparer<T> CreateEqualityComparerT<T>(params (T X, T Y)[] expectedCalls)
         {
             var comparerMock = new Mock<IEqualityComparer<T>>(MockBehavior.Strict);
