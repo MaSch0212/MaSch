@@ -413,8 +413,8 @@ namespace MaSch.Test
         /// <param name="assert">The assert object to test with.</param>
         /// <param name="expected">The first collection to compare. This contains the elements the test expects.</param>
         /// <param name="actual">The second collection to compare. This is the collection produced by the code under test.</param>
-        public static void AreEquivalent<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual)
-            => AreEquivalent(assert, expected, actual, EqualityComparer<T>.Default, null);
+        public static void AreCollectionsEquivalent<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual)
+            => AreCollectionsEquivalent(assert, expected, actual, EqualityComparer<T>.Default, null);
 
         /// <summary>
         /// Tests whether two collections contain the same elements and throws an exception if either collection contains an element not in the other collection.
@@ -424,8 +424,8 @@ namespace MaSch.Test
         /// <param name="expected">The first collection to compare. This contains the elements the test expects.</param>
         /// <param name="actual">The second collection to compare. This is the collection produced by the code under test.</param>
         /// <param name="message">The message to include in the exception when an element was found in one of the collections but not the other. The message is shown in test results.</param>
-        public static void AreEquivalent<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual, string? message)
-            => AreEquivalent(assert, expected, actual, EqualityComparer<T>.Default, message);
+        public static void AreCollectionsEquivalent<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual, string? message)
+            => AreCollectionsEquivalent(assert, expected, actual, EqualityComparer<T>.Default, message);
 
         /// <summary>
         /// Tests whether two collections contain the same elements and throws an exception if either collection contains an element not in the other collection.
@@ -435,8 +435,8 @@ namespace MaSch.Test
         /// <param name="expected">The first collection to compare. This contains the elements the test expects.</param>
         /// <param name="actual">The second collection to compare. This is the collection produced by the code under test.</param>
         /// <param name="comparer">The comparer used to determine if an elements from <paramref name="actual"/> is equal to an element in <paramref name="expected"/>.</param>
-        public static void AreEquivalent<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual, IEqualityComparer<T> comparer)
-            => AreEquivalent(assert, expected, actual, comparer, null);
+        public static void AreCollectionsEquivalent<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual, IEqualityComparer<T> comparer)
+            => AreCollectionsEquivalent(assert, expected, actual, comparer, null);
 
         /// <summary>
         /// Tests whether two collections contain the same elements and throws an exception if either collection contains an element not in the other collection.
@@ -447,16 +447,24 @@ namespace MaSch.Test
         /// <param name="actual">The second collection to compare. This is the collection produced by the code under test.</param>
         /// <param name="comparer">The comparer used to determine if an elements from <paramref name="actual"/> is equal to an element in <paramref name="expected"/>.</param>
         /// <param name="message">The message to include in the exception when an element was found in one of the collections but not the other. The message is shown in test results.</param>
-        public static void AreEquivalent<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual, IEqualityComparer<T> comparer, string? message)
+        public static void AreCollectionsEquivalent<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual, IEqualityComparer<T> comparer, string? message)
         {
             Guard.NotNull(expected, nameof(expected));
             Guard.NotNull(actual, nameof(actual));
             Guard.NotNull(comparer, nameof(comparer));
 
-            var diff = new HashSet<T>(expected, comparer);
-            diff.SymmetricExceptWith(actual);
-            if (diff.Count > 0)
-                assert.ThrowAssertError(message, ("Difference", FormatCollection(diff)));
+            var expectedArray = expected.ToArray();
+            var actualArray = actual.ToArray();
+            var missingItems = expectedArray.Except(actualArray, comparer).ToArray();
+            var unexpectedItems = actualArray.Except(expectedArray, comparer).ToArray();
+
+            var badValues = new (string, object?)?[]
+            {
+                missingItems.Length > 0 ? ("MissingItems", FormatCollection(missingItems)) : null,
+                unexpectedItems.Length > 0 ? ("UnexpectedItems", FormatCollection(unexpectedItems)) : null,
+            };
+            if (missingItems.Length > 0 || unexpectedItems.Length > 0)
+                assert.ThrowAssertError(message, badValues);
         }
 
         /// <summary>
@@ -466,8 +474,8 @@ namespace MaSch.Test
         /// <param name="assert">The assert object to test with.</param>
         /// <param name="expected">The first collection to compare. This contains the elements the test expects to be different than the actual collection.</param>
         /// <param name="actual">The second collection to compare. This is the collection produced by the code under test.</param>
-        public static void AreNotEquivalent<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual)
-            => AreNotEquivalent(assert, expected, actual, EqualityComparer<T>.Default, null);
+        public static void AreCollectionsNotEquivalent<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual)
+            => AreCollectionsNotEquivalent(assert, expected, actual, EqualityComparer<T>.Default, null);
 
         /// <summary>
         /// Tests whether two collections contain the different elements and throws an exception if the two collections contain identical elements without regard to order.
@@ -477,8 +485,8 @@ namespace MaSch.Test
         /// <param name="expected">The first collection to compare. This contains the elements the test expects to be different than the actual collection.</param>
         /// <param name="actual">The second collection to compare. This is the collection produced by the code under test.</param>
         /// <param name="message">The message to include in the exception when <paramref name="actual" /> contains the same elements as <paramref name="expected" />. The message is shown in test results.</param>
-        public static void AreNotEquivalent<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual, string? message)
-            => AreNotEquivalent(assert, expected, actual, EqualityComparer<T>.Default, message);
+        public static void AreCollectionsNotEquivalent<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual, string? message)
+            => AreCollectionsNotEquivalent(assert, expected, actual, EqualityComparer<T>.Default, message);
 
         /// <summary>
         /// Tests whether two collections contain the different elements and throws an exception if the two collections contain identical elements without regard to order.
@@ -488,8 +496,8 @@ namespace MaSch.Test
         /// <param name="expected">The first collection to compare. This contains the elements the test expects to be different than the actual collection.</param>
         /// <param name="actual">The second collection to compare. This is the collection produced by the code under test.</param>
         /// <param name="comparer">The comparer used to determine if an elements from <paramref name="actual"/> is equal to an element in <paramref name="expected"/>.</param>
-        public static void AreNotEquivalent<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual, IEqualityComparer<T> comparer)
-            => AreNotEquivalent(assert, expected, actual, comparer, null);
+        public static void AreCollectionsNotEquivalent<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual, IEqualityComparer<T> comparer)
+            => AreCollectionsNotEquivalent(assert, expected, actual, comparer, null);
 
         /// <summary>
         /// Tests whether two collections contain the different elements and throws an exception if the two collections contain identical elements without regard to order.
@@ -500,7 +508,7 @@ namespace MaSch.Test
         /// <param name="actual">The second collection to compare. This is the collection produced by the code under test.</param>
         /// <param name="comparer">The comparer used to determine if an elements from <paramref name="actual"/> is equal to an element in <paramref name="expected"/>.</param>
         /// <param name="message">The message to include in the exception when <paramref name="actual" /> contains the same elements as <paramref name="expected" />. The message is shown in test results.</param>
-        public static void AreNotEquivalent<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual, IEqualityComparer<T> comparer, string? message)
+        public static void AreCollectionsNotEquivalent<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual, IEqualityComparer<T> comparer, string? message)
         {
             Guard.NotNull(expected, nameof(expected));
             Guard.NotNull(actual, nameof(actual));
@@ -544,8 +552,13 @@ namespace MaSch.Test
                 idx++;
             }
 
+            var badValues = new (string, object?)?[]
+            {
+                ("ExpectedType", expectedType),
+                ("WrongItems", FormatCollection(wrong.Select(x => $"[{x.Item1}] {x.Item3 ?? "(null)"} (Type: {x.Item2?.FullName ?? "(null)"})").ToArray())),
+            };
             if (wrong.Count > 0)
-                assert.ThrowAssertError(message, ("ExpectedType", expectedType), ("WrongItems", FormatCollection(wrong)));
+                assert.ThrowAssertError(message, badValues);
         }
 
         /// <summary>
@@ -556,8 +569,8 @@ namespace MaSch.Test
         /// <param name="assert">The assert object to test with.</param>
         /// <param name="expected">The first collection to compare. This is the collection the tests expects.</param>
         /// <param name="actual">The second collection to compare. This is the collection produced by the code under test.</param>
-        public static void AreEqual<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual)
-            => AreEqual(assert, expected, actual, EqualityComparer<T>.Default, null);
+        public static void AreCollectionsEqual<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual)
+            => AreCollectionsEqual(assert, expected, actual, EqualityComparer<T>.Default, null);
 
         /// <summary>
         /// Tests whether the specified collections are equal and throws an exception if the two collections are not equal. Equality is defined as having the same
@@ -568,8 +581,8 @@ namespace MaSch.Test
         /// <param name="expected">The first collection to compare. This is the collection the tests expects.</param>
         /// <param name="actual">The second collection to compare. This is the collection produced by the code under test.</param>
         /// <param name="message">The message to include in the exception when <paramref name="actual" /> is not equal to <paramref name="expected" />. The message is shown in test results.</param>
-        public static void AreEqual<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual, string? message)
-            => AreEqual(assert, expected, actual, EqualityComparer<T>.Default, message);
+        public static void AreCollectionsEqual<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual, string? message)
+            => AreCollectionsEqual(assert, expected, actual, EqualityComparer<T>.Default, message);
 
         /// <summary>
         /// Tests whether the specified collections are equal and throws an exception if the two collections are not equal. Equality is defined as having the same
@@ -580,8 +593,8 @@ namespace MaSch.Test
         /// <param name="expected">The first collection to compare. This is the collection the tests expects.</param>
         /// <param name="actual">The second collection to compare. This is the collection produced by the code under test.</param>
         /// <param name="comparer">The comparer used to determine if an elements from <paramref name="actual"/> is equal to an element in <paramref name="expected"/>.</param>
-        public static void AreEqual<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual, IEqualityComparer<T> comparer)
-            => AreEqual(assert, expected, actual, comparer, null);
+        public static void AreCollectionsEqual<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual, IEqualityComparer<T> comparer)
+            => AreCollectionsEqual(assert, expected, actual, comparer, null);
 
         /// <summary>
         /// Tests whether the specified collections are equal and throws an exception if the two collections are not equal. Equality is defined as having the same
@@ -593,7 +606,7 @@ namespace MaSch.Test
         /// <param name="actual">The second collection to compare. This is the collection produced by the code under test.</param>
         /// <param name="comparer">The comparer used to determine if an elements from <paramref name="actual"/> is equal to an element in <paramref name="expected"/>.</param>
         /// <param name="message">The message to include in the exception when <paramref name="actual" /> is not equal to <paramref name="expected" />. The message is shown in test results.</param>
-        public static void AreEqual<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual, IEqualityComparer<T> comparer, string? message)
+        public static void AreCollectionsEqual<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual, IEqualityComparer<T> comparer, string? message)
         {
             Guard.NotNull(expected, nameof(expected));
             Guard.NotNull(actual, nameof(actual));
@@ -603,18 +616,20 @@ namespace MaSch.Test
             using var eenum = expected.GetEnumerator();
             using var aenum = actual.GetEnumerator();
             var idx = 0;
-            bool emore = true;
-            bool amore = true;
-            while ((amore = aenum.MoveNext()) && (emore = eenum.MoveNext()))
+            bool emore = eenum.MoveNext();
+            bool amore = aenum.MoveNext();
+            while (amore && emore)
             {
                 if (!comparer.Equals(aenum.Current, eenum.Current))
                     wrong.Add((idx, aenum.Current, eenum.Current));
                 idx++;
+                emore = eenum.MoveNext();
+                amore = aenum.MoveNext();
             }
 
             string? p2name = null;
             var p2items = new List<T?>();
-            IEnumerator<T>? p2enum;
+            IEnumerator<T>? p2enum = null;
             if (amore)
             {
                 p2name = "UnexpectedItems";
@@ -625,21 +640,21 @@ namespace MaSch.Test
                 p2name = "MissingItems";
                 p2enum = eenum;
             }
-            else
-            {
-                p2enum = null;
-            }
 
-            if (p2enum != null && p2name != null)
+            if (p2enum != null)
             {
+                p2items.Add(p2enum.Current);
                 while (p2enum.MoveNext())
                     p2items.Add(p2enum.Current);
-                assert.ThrowAssertError(message, ("WrongItems", FormatCollection(wrong)), (p2name, FormatCollection(p2items)));
             }
-            else
+
+            var badValues = new (string, object?)?[]
             {
-                assert.ThrowAssertError(message, ("WrongItems", FormatCollection(wrong)));
-            }
+                wrong.Count > 0 ? ("WrongItems", FormatCollection(wrong.Select(x => $"[{x.Item1}] Expected:<{x.Item3}> Actual:<{x.Item2}>").ToArray())) : null,
+                p2items.Count > 0 ? (p2name!, FormatCollection(p2items)) : null,
+            };
+            if (p2items.Count > 0 || wrong.Count > 0)
+                assert.ThrowAssertError(message, badValues);
         }
 
         /// <summary>
@@ -650,8 +665,8 @@ namespace MaSch.Test
         /// <param name="assert">The assert object to test with.</param>
         /// <param name="notExpected">The first collection to compare. This is the collection the tests expects not to match <paramref name="actual" />.</param>
         /// <param name="actual">The second collection to compare. This is the collection produced by the code under test.</param>
-        public static void AreNotEqual<T>(this AssertBase assert, IEnumerable<T> notExpected, IEnumerable<T> actual)
-            => AreNotEqual(assert, notExpected, actual, EqualityComparer<T>.Default, null);
+        public static void AreCollectionsNotEqual<T>(this AssertBase assert, IEnumerable<T> notExpected, IEnumerable<T> actual)
+            => AreCollectionsNotEqual(assert, notExpected, actual, EqualityComparer<T>.Default, null);
 
         /// <summary>
         /// Tests whether the specified collections are unequal and throws an exception if the two collections are equal. Equality is defined as having the same
@@ -662,8 +677,8 @@ namespace MaSch.Test
         /// <param name="notExpected">The first collection to compare. This is the collection the tests expects not to match <paramref name="actual" />.</param>
         /// <param name="actual">The second collection to compare. This is the collection produced by the code under test.</param>
         /// <param name="message">The message to include in the exception when <paramref name="actual" /> is equal to <paramref name="notExpected" />. The message is shown in test results.</param>
-        public static void AreNotEqual<T>(this AssertBase assert, IEnumerable<T> notExpected, IEnumerable<T> actual, string? message)
-            => AreNotEqual(assert, notExpected, actual, EqualityComparer<T>.Default, message);
+        public static void AreCollectionsNotEqual<T>(this AssertBase assert, IEnumerable<T> notExpected, IEnumerable<T> actual, string? message)
+            => AreCollectionsNotEqual(assert, notExpected, actual, EqualityComparer<T>.Default, message);
 
         /// <summary>
         /// Tests whether the specified collections are unequal and throws an exception if the two collections are equal. Equality is defined as having the same
@@ -674,8 +689,8 @@ namespace MaSch.Test
         /// <param name="notExpected">The first collection to compare. This is the collection the tests expects not to match <paramref name="actual" />.</param>
         /// <param name="actual">The second collection to compare. This is the collection produced by the code under test.</param>
         /// <param name="comparer">The comparer used to determine if an elements from <paramref name="actual"/> is equal to an element in <paramref name="notExpected"/>.</param>
-        public static void AreNotEqual<T>(this AssertBase assert, IEnumerable<T> notExpected, IEnumerable<T> actual, IEqualityComparer<T> comparer)
-            => AreNotEqual(assert, notExpected, actual, comparer, null);
+        public static void AreCollectionsNotEqual<T>(this AssertBase assert, IEnumerable<T> notExpected, IEnumerable<T> actual, IEqualityComparer<T> comparer)
+            => AreCollectionsNotEqual(assert, notExpected, actual, comparer, null);
 
         /// <summary>
         /// Tests whether the specified collections are unequal and throws an exception if the two collections are equal. Equality is defined as having the same
@@ -687,7 +702,7 @@ namespace MaSch.Test
         /// <param name="actual">The second collection to compare. This is the collection produced by the code under test.</param>
         /// <param name="comparer">The comparer used to determine if an elements from <paramref name="actual"/> is equal to an element in <paramref name="notExpected"/>.</param>
         /// <param name="message">The message to include in the exception when <paramref name="actual" /> is equal to <paramref name="notExpected" />. The message is shown in test results.</param>
-        public static void AreNotEqual<T>(this AssertBase assert, IEnumerable<T> notExpected, IEnumerable<T> actual, IEqualityComparer<T> comparer, string? message)
+        public static void AreCollectionsNotEqual<T>(this AssertBase assert, IEnumerable<T> notExpected, IEnumerable<T> actual, IEqualityComparer<T> comparer, string? message)
         {
             Guard.NotNull(notExpected, nameof(notExpected));
             Guard.NotNull(actual, nameof(actual));

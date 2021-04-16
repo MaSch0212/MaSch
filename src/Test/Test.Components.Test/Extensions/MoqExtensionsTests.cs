@@ -2,20 +2,52 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using System.Reflection;
 
 namespace MaSch.Test.Components.Test.Extensions
 {
     [TestClass]
     public class MoqExtensionsTests : TestClassBase
     {
+        private static readonly FieldInfo SetupPhraseTypeField = typeof(MoqExtensions).GetField("_setupPhraseType", BindingFlags.NonPublic | BindingFlags.Static)!;
+        private static readonly FieldInfo SetupPropertyField = typeof(MoqExtensions).GetField("_setupProperty", BindingFlags.NonPublic | BindingFlags.Static)!;
+        private static readonly FieldInfo ExpressionPropertyField = typeof(MoqExtensions).GetField("_expressionProperty", BindingFlags.NonPublic | BindingFlags.Static)!;
+        private static readonly FieldInfo MockPropertyField = typeof(MoqExtensions).GetField("_mockProperty", BindingFlags.NonPublic | BindingFlags.Static)!;
+        private static readonly FieldInfo GeneralVerifyMethodField = typeof(MoqExtensions).GetField("_generalVerifyMethod", BindingFlags.NonPublic | BindingFlags.Static)!;
+
+        protected override void OnInitializeTest()
+        {
+            base.OnInitializeTest();
+            if (TestContext.TestName.StartsWith("Verifiable_Null"))
+            {
+                SetValue(SetupPropertyField.GetValue(null), "_setupProperty");
+                SetValue(ExpressionPropertyField.GetValue(null), "_expressionProperty");
+                SetValue(MockPropertyField.GetValue(null), "_mockProperty");
+                SetValue(GeneralVerifyMethodField.GetValue(null), "_generalVerifyMethod");
+            }
+        }
+
+        protected override void OnCleanupTest()
+        {
+            base.OnCleanupTest();
+            if (TestContext.TestName.StartsWith("Verifiable_Null"))
+            {
+                SetupPropertyField.SetValue(null, GetValue<object?>("_setupProperty"));
+                ExpressionPropertyField.SetValue(null, GetValue<object?>("_expressionProperty"));
+                MockPropertyField.SetValue(null, GetValue<object?>("_mockProperty"));
+                GeneralVerifyMethodField.SetValue(null, GetValue<object?>("_generalVerifyMethod"));
+            }
+        }
+
         [TestMethod]
         public void SetupPhraseType()
         {
             var mock = new Mock<Action>();
             var setup = mock.Setup(x => x());
 
-            Assert.IsNotNull(MoqExtensions.SetupPhraseType);
-            Assert.IsInstanceOfType(setup, MoqExtensions.SetupPhraseType);
+            var setupPhraseType = (Type?)SetupPhraseTypeField.GetValue(null);
+            Assert.IsNotNull(setupPhraseType);
+            Assert.IsInstanceOfType(setup, setupPhraseType);
         }
 
         [TestMethod]
@@ -24,9 +56,10 @@ namespace MaSch.Test.Components.Test.Extensions
             var mock = new Mock<Action>();
             var setup = mock.Setup(x => x());
 
-            Assert.IsNotNull(MoqExtensions.SetupProperty);
+            var setupProperty = (PropertyInfo?)SetupPropertyField.GetValue(null);
+            Assert.IsNotNull(setupProperty);
 
-            var value = MoqExtensions.SetupProperty.GetValue(setup);
+            var value = setupProperty.GetValue(setup);
             Assert.IsNotNull(value);
         }
 
@@ -36,13 +69,15 @@ namespace MaSch.Test.Components.Test.Extensions
             var mock = new Mock<Action>();
             var setup = mock.Setup(x => x());
 
-            Assert.Inc.IsNotNull(MoqExtensions.SetupProperty);
-            Assert.IsNotNull(MoqExtensions.ExpressionProperty);
+            var setupProperty = (PropertyInfo?)SetupPropertyField.GetValue(null);
+            var expressionProperty = (PropertyInfo?)ExpressionPropertyField.GetValue(null);
+            Assert.Inc.IsNotNull(setupProperty);
+            Assert.IsNotNull(expressionProperty);
 
-            var sp = MoqExtensions.SetupProperty.GetValue(setup);
+            var sp = setupProperty.GetValue(setup);
             Assert.Inc.IsNotNull(sp);
 
-            var expression = MoqExtensions.ExpressionProperty.GetValue(sp);
+            var expression = expressionProperty.GetValue(sp);
             Assert.IsNotNull(expression);
         }
 
@@ -52,13 +87,15 @@ namespace MaSch.Test.Components.Test.Extensions
             var mock = new Mock<Action>();
             var setup = mock.Setup(x => x());
 
-            Assert.Inc.IsNotNull(MoqExtensions.SetupProperty);
-            Assert.IsNotNull(MoqExtensions.MockProperty);
+            var setupProperty = (PropertyInfo?)SetupPropertyField.GetValue(null);
+            var mockProperty = (PropertyInfo?)MockPropertyField.GetValue(null);
+            Assert.Inc.IsNotNull(setupProperty);
+            Assert.IsNotNull(mockProperty);
 
-            var sp = MoqExtensions.SetupProperty.GetValue(setup);
+            var sp = setupProperty.GetValue(setup);
             Assert.Inc.IsNotNull(sp);
 
-            var mock2 = MoqExtensions.MockProperty.GetValue(sp);
+            var mock2 = mockProperty.GetValue(sp);
             Assert.IsNotNull(mock2);
             Assert.AreSame(mock, mock2);
         }
@@ -66,7 +103,56 @@ namespace MaSch.Test.Components.Test.Extensions
         [TestMethod]
         public void GeneralVerifyMethod()
         {
-            Assert.IsNotNull(MoqExtensions.GeneralVerifyMethod);
+            Assert.IsNotNull(GeneralVerifyMethodField.GetValue(null));
+        }
+
+        [TestMethod]
+        public void Verifiable_NullSetupProperty()
+        {
+            SetupPropertyField.SetValue(null, null);
+            var mock = new Mock<Action>();
+
+            Assert.ThrowsException<Exception>(() => MoqExtensions.Verifiable(mock.Setup(x => x()), Times.Once));
+        }
+
+        [TestMethod]
+        public void Verifiable_NullExpressionProperty()
+        {
+            ExpressionPropertyField.SetValue(null, null);
+            var mock = new Mock<Action>();
+
+            Assert.ThrowsException<Exception>(() => MoqExtensions.Verifiable(mock.Setup(x => x()), Times.Once));
+        }
+
+        [TestMethod]
+        public void Verifiable_NullMockProperty()
+        {
+            MockPropertyField.SetValue(null, null);
+            var mock = new Mock<Action>();
+
+            Assert.ThrowsException<Exception>(() => MoqExtensions.Verifiable(mock.Setup(x => x()), Times.Once));
+        }
+
+        [TestMethod]
+        public void Verifiable_NullGeneralVerifyMethod()
+        {
+            GeneralVerifyMethodField.SetValue(null, null);
+            var mock = new Mock<Action>();
+
+            var verifiable = MoqExtensions.Verifiable(mock.Setup(x => x()), Times.Once);
+
+            Assert.ThrowsException<Exception>(() => verifiable.Verify(null, null));
+        }
+
+        [TestMethod]
+        public void Verifiable_Success()
+        {
+            var mock = new Mock<Action>();
+
+            var verifiable = MoqExtensions.Verifiable(mock.Setup(x => x()), Times.Once);
+            mock.Object();
+
+            verifiable.Verify(null, null);
         }
 
         [TestMethod]

@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,7 +26,7 @@ namespace MaSch.Test.Assertion
         /// <param name="message">The message.</param>
         /// <param name="values">The values.</param>
         [DoesNotReturn]
-        public virtual void ThrowAssertError(string? message, params (string Name, object? Value)[]? values)
+        public virtual void ThrowAssertError(string? message, params (string Name, object? Value)?[]? values)
             => ThrowAssertError(1, message, values);
 
         /// <summary>
@@ -35,7 +36,7 @@ namespace MaSch.Test.Assertion
         /// <param name="message">The message.</param>
         /// <param name="values">The values.</param>
         [DoesNotReturn]
-        public virtual void ThrowAssertError(int skipStackFrames, string? message, params (string Name, object? Value)[]? values)
+        public virtual void ThrowAssertError(int skipStackFrames, string? message, params (string Name, object? Value)?[]? values)
         {
             Guard.NotOutOfRange(skipStackFrames, nameof(skipStackFrames), 0, int.MaxValue);
             ThrowAssertError(new StackFrame(skipStackFrames + 1).GetMethod()?.Name, message, values);
@@ -48,7 +49,7 @@ namespace MaSch.Test.Assertion
         /// <param name="message">The message.</param>
         /// <param name="values">The values.</param>
         [DoesNotReturn]
-        public virtual void ThrowAssertError(string? assertMethodName, string? message, params (string Name, object? Value)[]? values)
+        public virtual void ThrowAssertError(string? assertMethodName, string? message, params (string Name, object? Value)?[]? values)
         {
             var builder = new StringBuilder();
             builder.Append(AssertNamePrefix)
@@ -56,7 +57,7 @@ namespace MaSch.Test.Assertion
                    .Append(assertMethodName ?? "<unknown>")
                    .Append(" failed.");
 
-            foreach (var (name, value) in values ?? Array.Empty<(string, object?)>())
+            foreach (var (name, value) in values?.Where(x => x.HasValue).Select(x => x!.Value) ?? Array.Empty<(string, object?)>())
             {
                 builder.Append(' ')
                        .Append(name)

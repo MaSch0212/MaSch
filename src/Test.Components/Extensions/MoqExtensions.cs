@@ -13,13 +13,11 @@ namespace MaSch.Test
     /// </summary>
     public static class MoqExtensions
     {
-#pragma warning disable SA1600 // Elements should be documented
-        internal static readonly Type? SetupPhraseType = Assembly.Load("Moq").GetType("Moq.Language.Flow.SetupPhrase", true);
-        internal static readonly PropertyInfo? SetupProperty = SetupPhraseType?.GetProperty("Setup");
-        internal static readonly PropertyInfo? ExpressionProperty = SetupProperty?.PropertyType.GetProperty("Expression");
-        internal static readonly PropertyInfo? MockProperty = SetupProperty?.PropertyType.GetProperty("Mock");
-        internal static readonly MethodInfo? GeneralVerifyMethod = typeof(Mock).GetMethod("Verify", BindingFlags.NonPublic | BindingFlags.Static, null, new[] { typeof(Mock), typeof(LambdaExpression), typeof(Times), typeof(string) }, null);
-#pragma warning restore SA1600 // Elements should be documented
+        private static Type? _setupPhraseType = Assembly.Load("Moq").GetType("Moq.Language.Flow.SetupPhrase", true);
+        private static PropertyInfo? _setupProperty = _setupPhraseType?.GetProperty("Setup");
+        private static PropertyInfo? _expressionProperty = _setupProperty?.PropertyType.GetProperty("Expression");
+        private static PropertyInfo? _mockProperty = _setupProperty?.PropertyType.GetProperty("Mock");
+        private static MethodInfo? _generalVerifyMethod = typeof(Mock).GetMethod("Verify", BindingFlags.NonPublic | BindingFlags.Static, null, new[] { typeof(Mock), typeof(LambdaExpression), typeof(Times), typeof(string) }, null);
 
         /// <summary>
         /// Creates a verifiable object for this setup.
@@ -139,18 +137,18 @@ namespace MaSch.Test
         [ExcludeFromCodeCoverage]
         private static IMockVerifiable CreateVerifiable(object setupObj, Func<Times> defaultTimes, string? defaultFailMessage)
         {
-            var setup = SetupProperty?.GetValue(setupObj) ?? throw new Exception("Could not retrieve setup property.");
-            var expression = (LambdaExpression)(ExpressionProperty?.GetValue(setup) ?? throw new Exception("Could not retrieve expression property."));
-            var innerMock = (Mock)(MockProperty?.GetValue(setup) ?? throw new Exception("Could not retrieve mock property."));
+            var setup = _setupProperty?.GetValue(setupObj) ?? throw new Exception("Could not retrieve setup property.");
+            var expression = (LambdaExpression)(_expressionProperty?.GetValue(setup) ?? throw new Exception("Could not retrieve expression property."));
+            var innerMock = (Mock)(_mockProperty?.GetValue(setup) ?? throw new Exception("Could not retrieve mock property."));
 
             void Verification(Func<Times> times, string? msg)
             {
-                if (GeneralVerifyMethod == null)
+                if (_generalVerifyMethod == null)
                     throw new Exception("Could not retrieve verify method from mock object.");
 
                 try
                 {
-                    GeneralVerifyMethod.Invoke(null, new object?[] { innerMock, expression, times(), msg });
+                    _generalVerifyMethod.Invoke(null, new object?[] { innerMock, expression, times(), msg });
                 }
                 catch (TargetInvocationException ex)
                 {

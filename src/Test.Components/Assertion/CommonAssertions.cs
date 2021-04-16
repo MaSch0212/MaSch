@@ -174,13 +174,17 @@ namespace MaSch.Test
         /// <param name="message">The message to include in the exception when <paramref name="actual" /> is not equal to <paramref name="expected" />. The message is shown in test results.</param>
         public static void AreEqual<T>(this AssertBase assert, T? expected, T? actual, string? message)
         {
-            if (!Equals(actual, expected))
-            {
-                if (actual != null && expected != null && !actual.GetType().Equals(expected.GetType()))
-                    assert.ThrowAssertError(message, ("Expected", expected), ("ExpectedType", expected.GetType().FullName), ("Actual", actual), ("ActualType", actual.GetType().FullName));
-                else
-                    assert.ThrowAssertError(message, ("Expected", expected), ("Actual", actual));
-            }
+            if (Equals(actual, expected))
+                return;
+
+            var areDifferentTypes = actual != null && expected != null && !actual.GetType().Equals(expected.GetType());
+
+            assert.ThrowAssertError(
+                message,
+                ("Expected", expected),
+                areDifferentTypes ? ("ExpectedType", expected!.GetType().FullName) : null,
+                ("Actual", actual),
+                areDifferentTypes ? ("ActualType", actual!.GetType().FullName) : null);
         }
 
         /// <summary>
@@ -472,15 +476,13 @@ namespace MaSch.Test
         /// <returns><paramref name="value"/> cast to <typeparamref name="T"/>.</returns>
         public static T IsInstanceOfType<T>(this AssertBase assert, [NotNull] object? value, string? message)
         {
-            if (value is not T result)
-            {
-                assert.ThrowAssertError(message, ("Expected", typeof(T)), ("Actual", value?.GetType()));
-                return default!;
-            }
+            T result = default!;
+            if (value is T tValue)
+                result = tValue;
             else
-            {
-                return result;
-            }
+                assert.ThrowAssertError(message, ("Expected", typeof(T)), ("Actual", value?.GetType()));
+
+            return result;
         }
 #pragma warning restore CS8777 // Parameter must have a non-null value when exiting.
 

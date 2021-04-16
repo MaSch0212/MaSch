@@ -14,8 +14,8 @@ namespace MaSch.Test.Components.Test.Assertion
         public void ThrowAssertError_NullNamePrefix()
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
             mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns((string?)null);
             mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
@@ -28,8 +28,8 @@ namespace MaSch.Test.Components.Test.Assertion
         public void ThrowAssertError_NullMessage()
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
             mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
             mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
@@ -42,8 +42,8 @@ namespace MaSch.Test.Components.Test.Assertion
         public void ThrowAssertError_WithMessage()
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
             mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
             mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
@@ -56,8 +56,8 @@ namespace MaSch.Test.Components.Test.Assertion
         public void ThrowAssertError_GreaterStackFrames()
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
             mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
             mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
@@ -75,7 +75,7 @@ namespace MaSch.Test.Components.Test.Assertion
         public void ThrowAssertError_NegativeStackFrames()
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
 
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => mock.Object.ThrowAssertError(-1, null));
         }
@@ -84,8 +84,8 @@ namespace MaSch.Test.Components.Test.Assertion
         public void ThrowAssertError_TooLargeStackFrame()
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
             mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
             mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
@@ -95,25 +95,39 @@ namespace MaSch.Test.Components.Test.Assertion
         }
 
         [TestMethod]
-        public void ThrowAssertError_NullValues()
+        public void ThrowAssertError_NullValuesArray()
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
             mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
             mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
             mock.Object.ThrowAssertError(12, "My error message.", null);
 
-            mock.Protected().Verify("HandleFailedAssertion", Times.Once(), $"AssertBaseTests.{nameof(ThrowAssertError_NullValues)} failed. My error message.");
+            mock.Protected().Verify("HandleFailedAssertion", Times.Once(), $"AssertBaseTests.{nameof(ThrowAssertError_NullValuesArray)} failed. My error message.");
+        }
+
+        [TestMethod]
+        public void ThrowAssertError_NullValues()
+        {
+            var mock = new Mock<AssertBase>(MockBehavior.Strict);
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
+            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+
+            mock.Object.ThrowAssertError(12, "My error message.", null, ("Test", 1), null);
+
+            mock.Protected().Verify("HandleFailedAssertion", Times.Once(), $"AssertBaseTests.{nameof(ThrowAssertError_NullValues)} failed. Test:<1>. My error message.");
         }
 
         [TestMethod]
         public void ThrowAssertError_WithValues()
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
             mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
             mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
@@ -129,12 +143,12 @@ namespace MaSch.Test.Components.Test.Assertion
             funcMock.Setup(x => x()).Returns(true);
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
             mock.Setup(x => x.RunAssertion(It.IsAny<string?>(), It.IsAny<Func<bool>>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)>()));
+            mock.Setup(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)?>()));
 
             mock.Object.RunAssertion("My error message", funcMock.Object);
 
             funcMock.Verify(x => x(), Times.Once());
-            mock.Verify(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)>()), Times.Never());
+            mock.Verify(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)?>()), Times.Never());
         }
 
         [TestMethod]
@@ -144,12 +158,12 @@ namespace MaSch.Test.Components.Test.Assertion
             funcMock.Setup(x => x()).Returns(false);
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
             mock.Setup(x => x.RunAssertion(It.IsAny<string?>(), It.IsAny<Func<bool>>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)>()));
+            mock.Setup(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)?>()));
 
             mock.Object.RunAssertion("My error message", funcMock.Object);
 
             funcMock.Verify(x => x(), Times.Once());
-            mock.Verify(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)>()), Times.Once());
+            mock.Verify(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)?>()), Times.Once());
         }
 
         [TestMethod]
@@ -159,12 +173,12 @@ namespace MaSch.Test.Components.Test.Assertion
             funcMock.Setup(x => x("Str", 4711)).Returns(true);
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
             mock.Setup(x => x.RunAssertion(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<Func<string, int, bool>>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)[]?>()));
+            mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
 
             mock.Object.RunAssertion("Str", 4711, "My error message", funcMock.Object);
 
             funcMock.Verify(x => x("Str", 4711), Times.Once());
-            mock.Verify(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)[]?>()), Times.Never());
+            mock.Verify(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()), Times.Never());
         }
 
         [TestMethod]
@@ -174,12 +188,12 @@ namespace MaSch.Test.Components.Test.Assertion
             funcMock.Setup(x => x("Str", 4711)).Returns(false);
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
             mock.Setup(x => x.RunAssertion(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<Func<string, int, bool>>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)[]?>()));
+            mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
 
             mock.Object.RunAssertion("Str", 4711, "My error message", funcMock.Object);
 
             funcMock.Verify(x => x("Str", 4711), Times.Once());
-            mock.Verify(x => x.ThrowAssertError(1, "My error message", It.Is<(string, object?)[]?>(y => y != null && y.Length == 2 && y[0].Item1 == "Expected" && Equals(y[0].Item2, "Str") && y[1].Item1 == "Actual" && Equals(y[1].Item2, 4711))), Times.Once());
+            mock.Verify(x => x.ThrowAssertError(1, "My error message", It.Is<(string, object?)?[]?>(y => y != null && y.Length == 2 && y[0]!.Value.Item1 == "Expected" && Equals(y[0]!.Value.Item2, "Str") && y[1]!.Value.Item1 == "Actual" && Equals(y[1]!.Value.Item2, 4711))), Times.Once());
         }
 
         [TestMethod]
@@ -189,12 +203,12 @@ namespace MaSch.Test.Components.Test.Assertion
             funcMock.Setup(x => x("Str", 4711)).Returns(false);
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
             mock.Setup(x => x.RunNegatedAssertion(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<Func<string, int, bool>>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)[]?>()));
+            mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
 
             mock.Object.RunNegatedAssertion("Str", 4711, "My error message", funcMock.Object);
 
             funcMock.Verify(x => x("Str", 4711), Times.Once());
-            mock.Verify(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)[]?>()), Times.Never());
+            mock.Verify(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()), Times.Never());
         }
 
         [TestMethod]
@@ -204,12 +218,12 @@ namespace MaSch.Test.Components.Test.Assertion
             funcMock.Setup(x => x("Str", 4711)).Returns(true);
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
             mock.Setup(x => x.RunNegatedAssertion(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<Func<string, int, bool>>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)[]?>()));
+            mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
 
             mock.Object.RunNegatedAssertion("Str", 4711, "My error message", funcMock.Object);
 
             funcMock.Verify(x => x("Str", 4711), Times.Once());
-            mock.Verify(x => x.ThrowAssertError(1, "My error message", It.Is<(string, object?)[]?>(y => y != null && y.Length == 2 && y[0].Item1 == "NotExpected" && Equals(y[0].Item2, "Str") && y[1].Item1 == "Actual" && Equals(y[1].Item2, 4711))), Times.Once());
+            mock.Verify(x => x.ThrowAssertError(1, "My error message", It.Is<(string, object?)?[]?>(y => y != null && y.Length == 2 && y[0]!.Value.Item1 == "NotExpected" && Equals(y[0]!.Value.Item2, "Str") && y[1]!.Value.Item1 == "Actual" && Equals(y[1]!.Value.Item2, 4711))), Times.Once());
         }
 
         [TestMethod]
