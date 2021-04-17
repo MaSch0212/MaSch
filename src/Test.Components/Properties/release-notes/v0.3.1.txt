@@ -1,1 +1,3 @@
 ﻿- Changed all overloads for MockVerifiable from Func<Times> to Times.
+- TestClassBase now does not derive from Cache anymore. Instead there is now a "Cache" property.
+- Added MockVerifiableCollection property to TestClassBase that verifies everything in test cleanup.

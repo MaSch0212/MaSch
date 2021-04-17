@@ -13,7 +13,7 @@ namespace MaSch.Core.Test
     [TestClass]
     public class ObjectConvertManagerTests : TestClassBase
     {
-        private ObjectConvertManager Manager => GetValue(() => new ObjectConvertManager())!;
+        private ObjectConvertManager Manager => Cache.GetValue(() => new ObjectConvertManager())!;
 
         [TestMethod]
         public void Constructor()
