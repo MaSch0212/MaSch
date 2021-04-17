@@ -13,6 +13,51 @@ namespace MaSch.Test
     public static class CollectionAssertions
     {
         /// <summary>
+        /// Tests whether the specified collection is empty and throws an exception if the collection is not empty.
+        /// </summary>
+        /// <param name="assert">The assert object.</param>
+        /// <param name="collection">The collection to test.</param>
+        public static void IsEmpty(this AssertBase assert, IEnumerable collection)
+            => IsEmpty(assert, collection, null);
+
+        /// <summary>
+        /// Tests whether the specified collection is empty and throws an exception if the collection is not empty.
+        /// </summary>
+        /// <param name="assert">The assert object.</param>
+        /// <param name="collection">The collection to test.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="collection"/> is not empty. The message is shown in test results.</param>
+        public static void IsEmpty(this AssertBase assert, IEnumerable collection, string? message)
+        {
+            Guard.NotNull(collection, nameof(collection));
+
+            foreach (var item in collection)
+                assert.ThrowAssertError(message);
+        }
+
+        /// <summary>
+        /// Tests whether the specified collection is not empty and throws an exception if the collection is empty.
+        /// </summary>
+        /// <param name="assert">The assert object.</param>
+        /// <param name="collection">The collection to test.</param>
+        public static void IsNotEmpty(this AssertBase assert, IEnumerable collection)
+            => IsNotEmpty(assert, collection, null);
+
+        /// <summary>
+        /// Tests whether the specified collection is not empty and throws an exception if the collection is empty.
+        /// </summary>
+        /// <param name="assert">The assert object.</param>
+        /// <param name="collection">The collection to test.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="collection"/> is empty. The message is shown in test results.</param>
+        public static void IsNotEmpty(this AssertBase assert, IEnumerable collection, string? message)
+        {
+            Guard.NotNull(collection, nameof(collection));
+
+            foreach (var item in collection)
+                return;
+            assert.ThrowAssertError(message);
+        }
+
+        /// <summary>
         /// Tests whether the specified actual enumerable contains the expected value and throws an exception if the actual enumerable does not contain the expected value.
         /// </summary>
         /// <typeparam name="T">The type of the expected value and items in the actual enumerable.</typeparam>

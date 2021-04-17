@@ -14,6 +14,52 @@ namespace MaSch.Test.Components.Test.Assertion
     {
         private static MaSch.Test.Assertion.Assert AssertUnderTest => MaSch.Test.Assertion.Assert.Instance;
 
+        #region IsEmpty
+
+        [TestMethod]
+        public void IsEmpty_NullCollection()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsEmpty(null!));
+        }
+
+        [TestMethod]
+        public void IsEmpty_Success()
+        {
+            AssertUnderTest.IsEmpty(Array.Empty<object>());
+        }
+
+        [TestMethod]
+        public void IsEmpty_Fail()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsEmpty(new[] { "Test" }));
+            Assert.AreEqual("Assert.IsEmpty failed.", ex.Message);
+        }
+
+        #endregion
+
+        #region IsNotEmpty
+
+        [TestMethod]
+        public void IsNotEmpty_NullCollection()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsNotEmpty(null!));
+        }
+
+        [TestMethod]
+        public void IsNotEmpty_Success()
+        {
+            AssertUnderTest.IsNotEmpty(new[] { "Test" });
+        }
+
+        [TestMethod]
+        public void IsNotEmpty_Fail()
+        {
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotEmpty(Array.Empty<object>()));
+            Assert.AreEqual("Assert.IsNotEmpty failed.", ex.Message);
+        }
+
+        #endregion
+
         #region Contains
 
         [TestMethod]
