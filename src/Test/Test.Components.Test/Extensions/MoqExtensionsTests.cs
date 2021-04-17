@@ -258,6 +258,42 @@ namespace MaSch.Test.Components.Test.Extensions
         }
 
         [TestMethod]
+        public void Verifiable_TestClass_NoParams()
+        {
+            var mock = new Mock<Action>();
+            var testClass = new Mock<TestClassBase>(MockBehavior.Loose) { CallBase = true };
+
+            MoqExtensions.Verifiable(mock.Setup(x => x()), testClass.Object);
+
+            var ex = Assert.ThrowsException<MockException>(() => testClass.Object.Verifiables.Verify(null, null));
+            Assert.StartsWith($"{Environment.NewLine}Expected invocation on the mock at least once", ex.Message);
+        }
+
+        [TestMethod]
+        public void Verifiable_TestClass_Times()
+        {
+            var mock = new Mock<Action>();
+            var testClass = new Mock<TestClassBase>(MockBehavior.Loose) { CallBase = true };
+
+            MoqExtensions.Verifiable(mock.Setup(x => x()), testClass.Object, Times.Once());
+
+            var ex = Assert.ThrowsException<MockException>(() => testClass.Object.Verifiables.Verify(null, null));
+            Assert.StartsWith($"{Environment.NewLine}Expected invocation on the mock once", ex.Message);
+        }
+
+        [TestMethod]
+        public void Verifiable_TestClass_Times_FailMessage()
+        {
+            var mock = new Mock<Action>();
+            var testClass = new Mock<TestClassBase>(MockBehavior.Loose) { CallBase = true };
+
+            MoqExtensions.Verifiable(mock.Setup(x => x()), testClass.Object, Times.Once(), "My fail message");
+
+            var ex = Assert.ThrowsException<MockException>(() => testClass.Object.Verifiables.Verify(null, null));
+            Assert.StartsWith($"My fail message{Environment.NewLine}Expected invocation on the mock once", ex.Message);
+        }
+
+        [TestMethod]
         public void Verify()
         {
             var mock = new Mock<IMockVerifiable>(MockBehavior.Strict);

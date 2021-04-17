@@ -107,6 +107,36 @@ namespace MaSch.Test
             => VerifiableImpl(setup, verifiableCollection, times, failMessage);
 
         /// <summary>
+        /// Creates a verifiable object for this setup.
+        /// </summary>
+        /// <param name="setup">The setup to verify.</param>
+        /// <param name="testClass">The test class to which the created verifiable object is added to.</param>
+        /// <returns>The same instance as this method is called on.</returns>
+        public static IVerifies Verifiable(this IVerifies setup, TestClassBase testClass)
+            => VerifiableImpl(setup, testClass.Verifiables, Times.AtLeastOnce(), null);
+
+        /// <summary>
+        /// Creates a verifiable object for this setup.
+        /// </summary>
+        /// <param name="setup">The setup to verify.</param>
+        /// <param name="testClass">The test class to which the created verifiable object is added to.</param>
+        /// <param name="times">The number of times a method is expected to be called.</param>
+        /// <returns>The same instance as this method is called on.</returns>
+        public static IVerifies Verifiable(this IVerifies setup, TestClassBase testClass, Times times)
+            => VerifiableImpl(setup, testClass.Verifiables, times, null);
+
+        /// <summary>
+        /// Creates a verifiable object for this setup.
+        /// </summary>
+        /// <param name="setup">The setup to verify.</param>
+        /// <param name="testClass">The test class to which the created verifiable object is added to.</param>
+        /// <param name="times">The number of times a method is expected to be called.</param>
+        /// <param name="failMessage">Message to show if verification fails.</param>
+        /// <returns>The same instance as this method is called on.</returns>
+        public static IVerifies Verifiable(this IVerifies setup, TestClassBase testClass, Times times, string? failMessage)
+            => VerifiableImpl(setup, testClass.Verifiables, times, failMessage);
+
+        /// <summary>
         /// Verifies this <see cref="IMockVerifiable"/>.
         /// </summary>
         /// <param name="verifiable">The object to verify.</param>

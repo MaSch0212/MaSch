@@ -29,7 +29,7 @@ namespace MaSch.Test
         /// <summary>
         /// Gets the verifiables of the current test.
         /// </summary>
-        protected MockVerifiableCollection Verifiables { get; } = new MockVerifiableCollection();
+        protected internal MockVerifiableCollection Verifiables { get; } = new MockVerifiableCollection();
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         /// <summary>
