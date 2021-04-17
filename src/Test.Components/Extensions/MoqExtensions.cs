@@ -49,91 +49,109 @@ namespace MaSch.Test
         /// <summary>
         /// Creates a verifiable object for this setup.
         /// </summary>
+        /// <typeparam name="T">The type of setup.</typeparam>
         /// <param name="setup">The setup to verify.</param>
         /// <param name="verifiable">The created verifiable object.</param>
         /// <returns>The same instance as this method is called on.</returns>
-        public static IVerifies Verifiable(this IVerifies setup, out IMockVerifiable verifiable)
+        public static T Verifiable<T>(this T setup, out IMockVerifiable verifiable)
+            where T : class, IVerifies
             => VerifiableImpl(setup, out verifiable, Times.AtLeastOnce(), null);
 
         /// <summary>
         /// Creates a verifiable object for this setup.
         /// </summary>
+        /// <typeparam name="T">The type of setup.</typeparam>
         /// <param name="setup">The setup to verify.</param>
         /// <param name="verifiable">The created verifiable object.</param>
         /// <param name="times">The number of times a method is expected to be called.</param>
         /// <returns>The same instance as this method is called on.</returns>
-        public static IVerifies Verifiable(this IVerifies setup, out IMockVerifiable verifiable, Times times)
+        public static T Verifiable<T>(this T setup, out IMockVerifiable verifiable, Times times)
+            where T : class, IVerifies
             => VerifiableImpl(setup, out verifiable, times, null);
 
         /// <summary>
         /// Creates a verifiable object for this setup.
         /// </summary>
+        /// <typeparam name="T">The type of setup.</typeparam>
         /// <param name="setup">The setup to verify.</param>
         /// <param name="verifiable">The created verifiable object.</param>
         /// <param name="times">The number of times a method is expected to be called.</param>
         /// <param name="failMessage">Message to show if verification fails.</param>
         /// <returns>The same instance as this method is called on.</returns>
-        public static IVerifies Verifiable(this IVerifies setup, out IMockVerifiable verifiable, Times times, string? failMessage)
+        public static T Verifiable<T>(this T setup, out IMockVerifiable verifiable, Times times, string? failMessage)
+            where T : class, IVerifies
             => VerifiableImpl(setup, out verifiable, times, failMessage);
 
         /// <summary>
         /// Creates a verifiable object for this setup.
         /// </summary>
+        /// <typeparam name="T">The type of setup.</typeparam>
         /// <param name="setup">The setup to verify.</param>
         /// <param name="verifiableCollection">The verifiable collection to which the created verifiable object is added to.</param>
         /// <returns>The same instance as this method is called on.</returns>
-        public static IVerifies Verifiable(this IVerifies setup, MockVerifiableCollection verifiableCollection)
+        public static T Verifiable<T>(this T setup, MockVerifiableCollection verifiableCollection)
+            where T : class, IVerifies
             => VerifiableImpl(setup, verifiableCollection, Times.AtLeastOnce(), null);
 
         /// <summary>
         /// Creates a verifiable object for this setup.
         /// </summary>
+        /// <typeparam name="T">The type of setup.</typeparam>
         /// <param name="setup">The setup to verify.</param>
         /// <param name="verifiableCollection">The verifiable collection to which the created verifiable object is added to.</param>
         /// <param name="times">The number of times a method is expected to be called.</param>
         /// <returns>The same instance as this method is called on.</returns>
-        public static IVerifies Verifiable(this IVerifies setup, MockVerifiableCollection verifiableCollection, Times times)
+        public static T Verifiable<T>(this T setup, MockVerifiableCollection verifiableCollection, Times times)
+            where T : class, IVerifies
             => VerifiableImpl(setup, verifiableCollection, times, null);
 
         /// <summary>
         /// Creates a verifiable object for this setup.
         /// </summary>
+        /// <typeparam name="T">The type of setup.</typeparam>
         /// <param name="setup">The setup to verify.</param>
         /// <param name="verifiableCollection">The verifiable collection to which the created verifiable object is added to.</param>
         /// <param name="times">The number of times a method is expected to be called.</param>
         /// <param name="failMessage">Message to show if verification fails.</param>
         /// <returns>The same instance as this method is called on.</returns>
-        public static IVerifies Verifiable(this IVerifies setup, MockVerifiableCollection verifiableCollection, Times times, string? failMessage)
+        public static T Verifiable<T>(this T setup, MockVerifiableCollection verifiableCollection, Times times, string? failMessage)
+            where T : class, IVerifies
             => VerifiableImpl(setup, verifiableCollection, times, failMessage);
 
         /// <summary>
         /// Creates a verifiable object for this setup.
         /// </summary>
+        /// <typeparam name="T">The type of setup.</typeparam>
         /// <param name="setup">The setup to verify.</param>
         /// <param name="testClass">The test class to which the created verifiable object is added to.</param>
         /// <returns>The same instance as this method is called on.</returns>
-        public static IVerifies Verifiable(this IVerifies setup, TestClassBase testClass)
+        public static T Verifiable<T>(this T setup, TestClassBase testClass)
+            where T : class, IVerifies
             => VerifiableImpl(setup, testClass.Verifiables, Times.AtLeastOnce(), null);
 
         /// <summary>
         /// Creates a verifiable object for this setup.
         /// </summary>
+        /// <typeparam name="T">The type of setup.</typeparam>
         /// <param name="setup">The setup to verify.</param>
         /// <param name="testClass">The test class to which the created verifiable object is added to.</param>
         /// <param name="times">The number of times a method is expected to be called.</param>
         /// <returns>The same instance as this method is called on.</returns>
-        public static IVerifies Verifiable(this IVerifies setup, TestClassBase testClass, Times times)
+        public static T Verifiable<T>(this T setup, TestClassBase testClass, Times times)
+            where T : class, IVerifies
             => VerifiableImpl(setup, testClass.Verifiables, times, null);
 
         /// <summary>
         /// Creates a verifiable object for this setup.
         /// </summary>
+        /// <typeparam name="T">The type of setup.</typeparam>
         /// <param name="setup">The setup to verify.</param>
         /// <param name="testClass">The test class to which the created verifiable object is added to.</param>
         /// <param name="times">The number of times a method is expected to be called.</param>
         /// <param name="failMessage">Message to show if verification fails.</param>
         /// <returns>The same instance as this method is called on.</returns>
-        public static IVerifies Verifiable(this IVerifies setup, TestClassBase testClass, Times times, string? failMessage)
+        public static T Verifiable<T>(this T setup, TestClassBase testClass, Times times, string? failMessage)
+            where T : class, IVerifies
             => VerifiableImpl(setup, testClass.Verifiables, times, failMessage);
 
         /// <summary>
