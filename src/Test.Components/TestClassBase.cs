@@ -1,4 +1,5 @@
 ﻿using MaSch.Core;
+using MaSch.Test.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics.CodeAnalysis;
 
@@ -7,9 +8,8 @@ namespace MaSch.Test
     /// <summary>
     /// Represents a base class for unit test classes.
     /// </summary>
-    /// <seealso cref="MaSch.Core.Cache" />
     [ExcludeFromCodeCoverage]
-    public abstract class TestClassBase : Cache
+    public abstract class TestClassBase
     {
         /// <summary>
         /// Gets an object to execute assertions.
@@ -20,6 +20,16 @@ namespace MaSch.Test
         /// Gets or sets a value indicating whether the cache of this instance should be cleared after each test.
         /// </summary>
         protected bool CleanupCacheAfterTest { get; set; } = true;
+
+        /// <summary>
+        /// Gets the cache of the current test class.
+        /// </summary>
+        protected Cache Cache { get; } = new Cache();
+
+        /// <summary>
+        /// Gets the verifiables of the current test.
+        /// </summary>
+        protected MockVerifiableCollection Verifiables { get; } = new MockVerifiableCollection();
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         /// <summary>
@@ -45,8 +55,11 @@ namespace MaSch.Test
         {
             OnCleanupTest();
 
-            if (CleanupCacheAfterTest && Objects.Count > 0)
-                Clear();
+            if (CleanupCacheAfterTest)
+                Cache.Clear();
+
+            Verifiables.Verify();
+            Verifiables.Clear();
         }
 
         /// <summary>

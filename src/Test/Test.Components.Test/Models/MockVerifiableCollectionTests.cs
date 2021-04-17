@@ -33,15 +33,15 @@ namespace MaSch.Test.Components.Test.Models
         public void Verify()
         {
             var mock1 = new Mock<IMockVerifiable>(MockBehavior.Strict);
-            mock1.Setup(x => x.Verify(Times.Once, "My message"));
+            mock1.Setup(x => x.Verify(Times.Once(), "My message"));
             var mock2 = new Mock<IMockVerifiable>(MockBehavior.Strict);
-            mock2.Setup(x => x.Verify(Times.Once, "My message"));
+            mock2.Setup(x => x.Verify(Times.Once(), "My message"));
 
             var collection = new MockVerifiableCollection(new[] { mock1.Object, mock2.Object });
-            collection.Verify(Times.Once, "My message");
+            collection.Verify(Times.Once(), "My message");
 
-            mock1.Verify(x => x.Verify(Times.Once, "My message"), Times.Once);
-            mock2.Verify(x => x.Verify(Times.Once, "My message"), Times.Once);
+            mock1.Verify(x => x.Verify(Times.Once(), "My message"), Times.Once());
+            mock2.Verify(x => x.Verify(Times.Once(), "My message"), Times.Once());
         }
 
         [TestMethod]
@@ -55,8 +55,8 @@ namespace MaSch.Test.Components.Test.Models
             var collection = new MockVerifiableCollection(new[] { mock1.Object, mock2.Object });
             ((IDisposable)collection).Dispose();
 
-            mock1.Verify(x => x.Dispose(), Times.Once);
-            mock2.Verify(x => x.Dispose(), Times.Once);
+            mock1.Verify(x => x.Dispose(), Times.Once());
+            mock2.Verify(x => x.Dispose(), Times.Once());
         }
     }
 }

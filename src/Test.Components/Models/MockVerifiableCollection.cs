@@ -30,7 +30,7 @@ namespace MaSch.Test.Models
         }
 
         /// <inheritdoc/>
-        public void Verify(Func<Times>? times, string? failMessage)
+        public void Verify(Times? times, string? failMessage)
             => Items.ForEach(x => x.Verify(times, failMessage));
 
         /// <inheritdoc/>

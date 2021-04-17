@@ -1,0 +1,1 @@
+﻿- Changed all overloads for MockVerifiable from Func<Times> to Times.

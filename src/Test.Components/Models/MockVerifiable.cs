@@ -9,7 +9,7 @@ namespace MaSch.Test.Models
     /// </summary>
     /// <param name="times">The number of times a method is expected to be called.</param>
     /// <param name="failMessage">Message to show if verification fails.</param>
-    public delegate void MockVerification(Func<Times> times, string? failMessage);
+    public delegate void MockVerification(Times times, string? failMessage);
 
     /// <summary>
     /// Object that can be verified using a delegate.
@@ -18,7 +18,7 @@ namespace MaSch.Test.Models
     public class MockVerifiable : IMockVerifiable
     {
         private readonly MockVerification _verifyAction;
-        private readonly Func<Times> _defaultTimes;
+        private readonly Times _defaultTimes;
         private readonly string? _defaultFailMessage;
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace MaSch.Test.Models
         /// </summary>
         /// <param name="verifyAction">The action to execute when this <see cref="IMockVerifiable"/> is verified.</param>
         public MockVerifiable(MockVerification verifyAction)
-            : this (verifyAction, Times.AtLeastOnce)
+            : this (verifyAction, Times.AtLeastOnce())
         {
         }
 
@@ -35,10 +35,10 @@ namespace MaSch.Test.Models
         /// </summary>
         /// <param name="verifyAction">The action to execute when this <see cref="IMockVerifiable"/> is verified.</param>
         /// <param name="defaultTimes">The default number of times a method is expected to be called.</param>
-        public MockVerifiable(MockVerification verifyAction, Func<Times> defaultTimes)
+        public MockVerifiable(MockVerification verifyAction, Times defaultTimes)
         {
             _verifyAction = Guard.NotNull(verifyAction, nameof(verifyAction));
-            _defaultTimes = Guard.NotNull(defaultTimes, nameof(defaultTimes));
+            _defaultTimes = defaultTimes;
         }
 
         /// <summary>
@@ -47,14 +47,14 @@ namespace MaSch.Test.Models
         /// <param name="verifyAction">The action to execute when this <see cref="IMockVerifiable"/> is verified.</param>
         /// <param name="defaultTimes">The default number of times a method is expected to be called.</param>
         /// <param name="defaultFailMessage">Default message to show if verification fails.</param>
-        public MockVerifiable(MockVerification verifyAction, Func<Times> defaultTimes, string? defaultFailMessage)
+        public MockVerifiable(MockVerification verifyAction, Times defaultTimes, string? defaultFailMessage)
             : this(verifyAction, defaultTimes)
         {
             _defaultFailMessage = defaultFailMessage;
         }
 
         /// <inheritdoc/>
-        public void Verify(Func<Times>? times, string? failMessage)
+        public void Verify(Times? times, string? failMessage)
         {
             _verifyAction.Invoke(times ?? _defaultTimes, failMessage ?? _defaultFailMessage);
         }
@@ -74,6 +74,6 @@ namespace MaSch.Test.Models
         /// </summary>
         /// <param name="times">The number of times a method is expected to be called.</param>
         /// <param name="failMessage">Message to show if verification fails.</param>
-        void Verify(Func<Times>? times, string? failMessage);
+        void Verify(Times? times, string? failMessage);
     }
 }

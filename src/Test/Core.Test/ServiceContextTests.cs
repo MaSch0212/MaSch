@@ -164,7 +164,7 @@ namespace MaSch.Core.Test
         public void GetServiceTOut_WithName()
         {
             var mock = SetMockInstance();
-            using var v1 = mock.Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(Times.Once);
+            using var v1 = mock.Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(Times.Once());
 
             ServiceContext.GetService(out string result, "blub");
 

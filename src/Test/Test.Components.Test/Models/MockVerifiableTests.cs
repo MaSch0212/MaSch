@@ -20,7 +20,7 @@ namespace MaSch.Test.Components.Test.Models
 
             var verifiable = new MockVerifiable(actionMock.Object);
 
-            AssertCtor(verifiable, actionMock.Object, Times.AtLeastOnce, null);
+            AssertCtor(verifiable, actionMock.Object, Times.AtLeastOnce(), null);
         }
 
         [TestMethod]
@@ -34,23 +34,15 @@ namespace MaSch.Test.Components.Test.Models
         {
             var actionMock = new Mock<MockVerification>(MockBehavior.Strict);
 
-            var verifiable = new MockVerifiable(actionMock.Object, Times.Once);
+            var verifiable = new MockVerifiable(actionMock.Object, Times.Once());
 
-            AssertCtor(verifiable, actionMock.Object, Times.Once, null);
+            AssertCtor(verifiable, actionMock.Object, Times.Once(), null);
         }
 
         [TestMethod]
         public void Ctor_ActionNull_Times()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new MockVerifiable(null!, Times.Once));
-        }
-
-        [TestMethod]
-        public void Ctor_Action_TimesNull()
-        {
-            var actionMock = new Mock<MockVerification>(MockBehavior.Strict);
-
-            Assert.ThrowsException<ArgumentNullException>(() => new MockVerifiable(actionMock.Object, null!));
+            Assert.ThrowsException<ArgumentNullException>(() => new MockVerifiable(null!, Times.Once()));
         }
 
         [TestMethod]
@@ -58,23 +50,15 @@ namespace MaSch.Test.Components.Test.Models
         {
             var actionMock = new Mock<MockVerification>(MockBehavior.Strict);
 
-            var verifiable = new MockVerifiable(actionMock.Object, Times.Once, "My message");
+            var verifiable = new MockVerifiable(actionMock.Object, Times.Once(), "My message");
 
-            AssertCtor(verifiable, actionMock.Object, Times.Once, "My message");
+            AssertCtor(verifiable, actionMock.Object, Times.Once(), "My message");
         }
 
         [TestMethod]
         public void Ctor_ActionNull_Times_Message()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new MockVerifiable(null!, Times.Once, "My message"));
-        }
-
-        [TestMethod]
-        public void Ctor_Action_TimesNull_Message()
-        {
-            var actionMock = new Mock<MockVerification>(MockBehavior.Strict);
-
-            Assert.ThrowsException<ArgumentNullException>(() => new MockVerifiable(actionMock.Object, null!, "My message"));
+            Assert.ThrowsException<ArgumentNullException>(() => new MockVerifiable(null!, Times.Once(), "My message"));
         }
 
         [TestMethod]
@@ -82,60 +66,60 @@ namespace MaSch.Test.Components.Test.Models
         {
             var actionMock = new Mock<MockVerification>(MockBehavior.Strict);
 
-            var verifiable = new MockVerifiable(actionMock.Object, Times.Once, null);
+            var verifiable = new MockVerifiable(actionMock.Object, Times.Once(), null);
 
-            AssertCtor(verifiable, actionMock.Object, Times.Once, null);
+            AssertCtor(verifiable, actionMock.Object, Times.Once(), null);
         }
 
         [TestMethod]
         public void Verify()
         {
             var actionMock = new Mock<MockVerification>(MockBehavior.Strict);
-            actionMock.Setup(x => x(Times.Once, "My message"));
-            var verifiable = new MockVerifiable(actionMock.Object, Times.Once, "My message");
+            actionMock.Setup(x => x(Times.Once(), "My message"));
+            var verifiable = new MockVerifiable(actionMock.Object, Times.Once(), "My message");
 
             verifiable.Verify(null, null);
 
-            actionMock.Verify(x => x(Times.Once, "My message"), Times.Once);
+            actionMock.Verify(x => x(Times.Once(), "My message"), Times.Once);
         }
 
         [TestMethod]
         public void Verify_WithTimes()
         {
             var actionMock = new Mock<MockVerification>(MockBehavior.Strict);
-            actionMock.Setup(x => x(Times.Never, "My message"));
-            var verifiable = new MockVerifiable(actionMock.Object, Times.Once, "My message");
+            actionMock.Setup(x => x(Times.Never(), "My message"));
+            var verifiable = new MockVerifiable(actionMock.Object, Times.Once(), "My message");
 
-            verifiable.Verify(Times.Never, null);
+            verifiable.Verify(Times.Never(), null);
 
-            actionMock.Verify(x => x(Times.Never, "My message"), Times.Once);
+            actionMock.Verify(x => x(Times.Never(), "My message"), Times.Once);
         }
 
         [TestMethod]
         public void Verify_WithMessage()
         {
             var actionMock = new Mock<MockVerification>(MockBehavior.Strict);
-            actionMock.Setup(x => x(Times.Once, "blub"));
-            var verifiable = new MockVerifiable(actionMock.Object, Times.Once, "My message");
+            actionMock.Setup(x => x(Times.Once(), "blub"));
+            var verifiable = new MockVerifiable(actionMock.Object, Times.Once(), "My message");
 
             verifiable.Verify(null, "blub");
 
-            actionMock.Verify(x => x(Times.Once, "blub"), Times.Once);
+            actionMock.Verify(x => x(Times.Once(), "blub"), Times.Once);
         }
 
         [TestMethod]
         public void Dispose_()
         {
             var actionMock = new Mock<MockVerification>(MockBehavior.Strict);
-            actionMock.Setup(x => x(Times.Once, "My message"));
-            var verifiable = new MockVerifiable(actionMock.Object, Times.Once, "My message");
+            actionMock.Setup(x => x(Times.Once(), "My message"));
+            var verifiable = new MockVerifiable(actionMock.Object, Times.Once(), "My message");
 
             ((IDisposable)verifiable).Dispose();
 
-            actionMock.Verify(x => x(Times.Once, "My message"), Times.Once);
+            actionMock.Verify(x => x(Times.Once(), "My message"), Times.Once);
         }
 
-        private static void AssertCtor(MockVerifiable verifiable, MockVerification expectedVerifyAction, Func<Times> expectedDefaultTimes, string? expectedDefaultFailMessage)
+        private static void AssertCtor(MockVerifiable verifiable, MockVerification expectedVerifyAction, Times expectedDefaultTimes, string? expectedDefaultFailMessage)
         {
             Assert.Inc.IsNotNull(_verifyActionField);
             Assert.Inc.IsNotNull(_defaultTimesField);
