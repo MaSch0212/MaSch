@@ -58,11 +58,11 @@ namespace MaSch.Test
         {
             OnCleanupTest();
 
-            if (CleanupCacheAfterTest)
-                Cache.Clear();
-
             Verifiables.Verify();
             Verifiables.Clear();
+
+            if (CleanupCacheAfterTest)
+                Cache.Clear();
         }
 
         /// <summary>
