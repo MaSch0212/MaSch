@@ -48,22 +48,19 @@ namespace MaSch.Core
         /// <exception cref="ArgumentException"><paramref name="serviceInstance"/> is not an instance of type <paramref name="serviceType"/>.</exception>
         void IServiceContext.AddService(Type serviceType, object serviceInstance, string? name)
         {
-            Guard.NotNull(serviceInstance, nameof(serviceInstance));
-            if (!serviceType.IsInstanceOfType(serviceInstance))
-                throw new ArgumentException($"The type \"{serviceInstance.GetType().FullName}\" is not assignable to \"{serviceType.FullName}\".");
+            Guard.OfType(serviceInstance, nameof(serviceInstance), serviceType);
 
             var key = (serviceType, name);
-            var eventArgs = new ServiceContextEventArgs(name, serviceType, null, serviceInstance, ServiceAction.None);
+            ServiceContextEventArgs eventArgs;
             if (_services.ContainsKey(key))
             {
-                eventArgs.OldInstance = _services[key];
-                eventArgs.Action = ServiceAction.Changed;
+                eventArgs = new ServiceContextEventArgs(name, serviceType, _services[key], serviceInstance, ServiceAction.Changed);
                 Changing?.Invoke(this, eventArgs);
                 _services[key] = serviceInstance;
             }
             else
             {
-                eventArgs.Action = ServiceAction.Added;
+                eventArgs = new ServiceContextEventArgs(name, serviceType, null, serviceInstance, ServiceAction.Added);
                 Changing?.Invoke(this, eventArgs);
                 _services.Add(key, serviceInstance);
             }
@@ -146,10 +143,10 @@ namespace MaSch.Core
     public sealed partial class ServiceContext<T> : IServiceContext<T>
     {
         /// <inheritdoc/>
-        public event EventHandler<ServiceContextEventArgs<T>>? Changing;
+        public event ServiceContextEventHandler<T>? Changing;
 
         /// <inheritdoc/>
-        public event EventHandler<ServiceContextEventArgs<T>>? Changed;
+        public event ServiceContextEventHandler<T>? Changed;
 
         /// <summary>
         /// Gets the <see cref="ServiceContext"/> that is wrapped by this <see cref="ServiceContext{T}"/>.
@@ -160,7 +157,7 @@ namespace MaSch.Core
         /// Initializes a new instance of the <see cref="ServiceContext{T}" /> class.
         /// </summary>
         /// <param name="context">The context to wrap.</param>
-        internal ServiceContext(ServiceContext context)
+        internal ServiceContext(IServiceContext context)
         {
             Context = context;
             Context.Changing += OnContextChanging;
@@ -176,6 +173,7 @@ namespace MaSch.Core
             => Context.AddService(serviceInstance, name);
 
         /// <inheritdoc/>
+        [return: NotNull]
         T IServiceContext<T>.GetService(string? name)
             => Context.GetService<T>(name);
 
@@ -194,8 +192,8 @@ namespace MaSch.Core
         /// <inheritdoc/>
         public void Dispose()
         {
-            Context.Changing += OnContextChanging;
-            Context.Changed += OnContextChanged;
+            Context.Changing -= OnContextChanging;
+            Context.Changed -= OnContextChanged;
         }
 
         private void OnContextChanging(object? sender, ServiceContextEventArgs e)

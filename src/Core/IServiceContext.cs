@@ -89,12 +89,12 @@ namespace MaSch.Core
         /// <summary>
         /// Occurs before a service changes.
         /// </summary>
-        event EventHandler<ServiceContextEventArgs<T>>? Changing;
+        event ServiceContextEventHandler<T>? Changing;
 
         /// <summary>
         /// Occurs after a service changed.
         /// </summary>
-        event EventHandler<ServiceContextEventArgs<T>>? Changed;
+        event ServiceContextEventHandler<T>? Changed;
 
         /// <summary>
         /// Gets all services of type <typeparamref name="T"/>.
@@ -114,6 +114,7 @@ namespace MaSch.Core
         /// </summary>
         /// <param name="name">The name of the service to retrieve.</param>
         /// <returns>The resultung service.</returns>
+        [return: NotNull]
         T GetService(string? name);
 
         /// <summary>
@@ -145,49 +146,37 @@ namespace MaSch.Core
     /// <summary>
     /// The event argument for <see cref="ServiceContextEventHandler"/>.
     /// </summary>
-    public class ServiceContextEventArgs
+    /// <param name="Name">The name of the service on which an action has been taken on.</param>
+    /// <param name="Type">The type of the service on which an action has been taken on.</param>
+    /// <param name="OldInstance">The old instance of the service on which an action has been taken on.</param>
+    /// <param name="NewInstance">The new instance of the service on which an action has been taken on.</param>
+    /// <param name="Action">The type of action that has been taken.</param>
+    public sealed record ServiceContextEventArgs(string? Name, Type Type, object? OldInstance, object? NewInstance, ServiceAction Action)
     {
         /// <summary>
         /// Gets the name of the service on which an action has been taken on.
         /// </summary>
-        public string? Name { get; internal set; }
+        public string? Name { get; init; } = Name;
 
         /// <summary>
         /// Gets the type of the service on which an action has been taken on.
         /// </summary>
-        public Type Type { get; internal set; }
+        public Type Type { get; init; } = Type;
 
         /// <summary>
         /// Gets the old instance of the service on which an action has been taken on.
         /// </summary>
-        public object? OldInstance { get; internal set; }
+        public object? OldInstance { get; init; } = OldInstance;
 
         /// <summary>
         /// Gets the new instance of the service on which an action has been taken on.
         /// </summary>
-        public object? NewInstance { get; internal set; }
+        public object? NewInstance { get; init; } = NewInstance;
 
         /// <summary>
         /// Gets the type of action that has been taken.
         /// </summary>
-        public ServiceAction Action { get; internal set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ServiceContextEventArgs"/> class.
-        /// </summary>
-        /// <param name="name">The name of the service on which an action has been taken on.</param>
-        /// <param name="type">The type of the service on which an action has been taken on.</param>
-        /// <param name="oldInstance">The old instance of the service on which an action has been taken on.</param>
-        /// <param name="newInstance">The new instance of the service on which an action has been taken on.</param>
-        /// <param name="action">The type of action that has been taken.</param>
-        public ServiceContextEventArgs(string? name, Type type, object? oldInstance, object? newInstance, ServiceAction action)
-        {
-            Name = name;
-            Type = type;
-            OldInstance = oldInstance;
-            NewInstance = newInstance;
-            Action = action;
-        }
+        public ServiceAction Action { get; init; } = Action;
     }
 
     /// <summary>
@@ -202,12 +191,16 @@ namespace MaSch.Core
     /// The event argument for <see cref="ServiceContextEventHandler{T}"/>.
     /// </summary>
     /// <typeparam name="T">The type of the instance that changed.</typeparam>
-    public class ServiceContextEventArgs<T>
+    /// <param name="Name">The name of the service on which an action has been taken on.</param>
+    /// <param name="OldInstance">The old instance of the service on which an action has been taken on.</param>
+    /// <param name="NewInstance">The new instance of the service on which an action has been taken on.</param>
+    /// <param name="Action">The type of action that has been taken.</param>
+    public sealed record ServiceContextEventArgs<T>(string? Name, T? OldInstance, T? NewInstance, ServiceAction Action)
     {
         /// <summary>
         /// Gets the name of the service on which an action has been taken on.
         /// </summary>
-        public string? Name { get; internal set; }
+        public string? Name { get; init; } = Name;
 
         /// <summary>
         /// Gets the type of the service on which an action has been taken on.
@@ -217,31 +210,16 @@ namespace MaSch.Core
         /// <summary>
         /// Gets the old instance of the service on which an action has been taken on.
         /// </summary>
-        public T? OldInstance { get; internal set; }
+        public T? OldInstance { get; init; } = OldInstance;
 
         /// <summary>
         /// Gets the new instance of the service on which an action has been taken on.
         /// </summary>
-        public T? NewInstance { get; internal set; }
+        public T? NewInstance { get; init; } = NewInstance;
 
         /// <summary>
         /// Gets the type of action that has been taken.
         /// </summary>
-        public ServiceAction Action { get; internal set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ServiceContextEventArgs{T}"/> class.
-        /// </summary>
-        /// <param name="name">The name of the service on which an action has been taken on.</param>
-        /// <param name="oldInstance">The old instance of the service on which an action has been taken on.</param>
-        /// <param name="newInstance">The new instance of the service on which an action has been taken on.</param>
-        /// <param name="action">The type of action that has been taken.</param>
-        public ServiceContextEventArgs(string? name, T? oldInstance, T? newInstance, ServiceAction action)
-        {
-            Name = name;
-            OldInstance = oldInstance;
-            NewInstance = newInstance;
-            Action = action;
-        }
+        public ServiceAction Action { get; init; } = Action;
     }
 }

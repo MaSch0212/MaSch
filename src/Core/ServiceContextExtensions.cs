@@ -17,6 +17,7 @@ namespace MaSch.Core
         /// </summary>
         /// <param name="context">The <see cref="IServiceContext"/> to get the services from.</param>
         /// <returns>All services of this <see cref="IServiceContext"/>.</returns>
+        [ExcludeFromCodeCoverage]
         public static IReadOnlyDictionary<(Type Type, string? Name), object> GetAllServices(this ServiceContext context)
             => ((IServiceContext)context).GetAllServices();
 
@@ -26,6 +27,7 @@ namespace MaSch.Core
         /// <param name="context">The <see cref="IServiceContext"/> to get the services from.</param>
         /// <param name="serviceType">The type of services to get.</param>
         /// <returns>All services of this <see cref="IServiceContext"/> of type <paramref name="serviceType"/>.</returns>
+        [ExcludeFromCodeCoverage]
         public static IEnumerable<(string? Name, object Service)> GetAllServices(this ServiceContext context, Type serviceType)
             => ((IServiceContext)context).GetAllServices(serviceType);
 
@@ -36,6 +38,7 @@ namespace MaSch.Core
         /// <param name="serviceType">The type of the service to add.</param>
         /// <param name="serviceInstance">The service instance to add.</param>
         /// <param name="name">The name of the service.</param>
+        [ExcludeFromCodeCoverage]
         public static void AddService(this ServiceContext context, Type serviceType, object serviceInstance, string? name)
             => ((IServiceContext)context).AddService(serviceType, serviceInstance, name);
 
@@ -46,6 +49,7 @@ namespace MaSch.Core
         /// <param name="serviceType">The type of the service to retrieve.</param>
         /// <param name="name">The name of the service to retrieve.</param>
         /// <returns>The resultung service.</returns>
+        [ExcludeFromCodeCoverage]
         public static object GetService(this ServiceContext context, Type serviceType, string? name)
             => ((IServiceContext)context).GetService(serviceType, name);
 
@@ -56,6 +60,7 @@ namespace MaSch.Core
         /// <param name="serviceType">The type of the service to search for.</param>
         /// <param name="name">The name of the service to search for.</param>
         /// <returns><c>true</c> if a service of type <paramref name="serviceType"/> and name <paramref name="name"/> was found in this <see cref="IServiceContext"/>; otherwise, <c>false</c>.</returns>
+        [ExcludeFromCodeCoverage]
         public static bool ContainsService(this ServiceContext context, Type serviceType, string? name)
             => ((IServiceContext)context).ContainsService(serviceType, name);
 
@@ -65,6 +70,7 @@ namespace MaSch.Core
         /// <param name="context">The <see cref="IServiceContext"/> from which to remove the service.</param>
         /// <param name="serviceType">The type of the service to remove.</param>
         /// <param name="name">The name of the service to remove.</param>
+        [ExcludeFromCodeCoverage]
         public static void RemoveService(this ServiceContext context, Type serviceType, string? name)
             => ((IServiceContext)context).RemoveService(serviceType, name);
 
@@ -73,6 +79,7 @@ namespace MaSch.Core
         /// </summary>
         /// <param name="context">The <see cref="IServiceContext"/> to clear.</param>
         /// <param name="type">The type of services to remove or <c>null</c> to remove all services.</param>
+        [ExcludeFromCodeCoverage]
         public static void Clear(this ServiceContext context, Type? type)
             => ((IServiceContext)context).Clear(type);
 
@@ -133,7 +140,7 @@ namespace MaSch.Core
         /// <typeparam name="T">The type of the service to retrieve.</typeparam>
         /// <param name="context">The <see cref="IServiceContext"/> to get the service from.</param>
         /// <param name="result">The resultung service.</param>
-        public static void GetService<T>(this IServiceContext context, out T result)
+        public static void GetService<T>(this IServiceContext context, [NotNull] out T result)
             => result = (T)context.GetService(typeof(T), null);
 
         /// <summary>
@@ -143,7 +150,7 @@ namespace MaSch.Core
         /// <param name="context">The <see cref="IServiceContext"/> to get the service from.</param>
         /// <param name="result">The resultung service.</param>
         /// <param name="name">The name of the service to retrieve.</param>
-        public static void GetService<T>(this IServiceContext context, out T result, string? name)
+        public static void GetService<T>(this IServiceContext context, [NotNull] out T result, string? name)
             => result = (T)context.GetService(typeof(T), name);
 
         /// <summary>
@@ -152,6 +159,7 @@ namespace MaSch.Core
         /// <typeparam name="T">The type of the service to retrieve.</typeparam>
         /// <param name="context">The <see cref="IServiceContext"/> to get the service from.</param>
         /// <returns>The resultung service.</returns>
+        [return: NotNull]
         public static T GetService<T>(this IServiceContext context)
             => (T)context.GetService(typeof(T), null);
 
@@ -162,6 +170,7 @@ namespace MaSch.Core
         /// <param name="context">The <see cref="IServiceContext"/> to get the service from.</param>
         /// <param name="name">The name of the service to retrieve.</param>
         /// <returns>The resultung service.</returns>
+        [return: NotNull]
         public static T GetService<T>(this IServiceContext context, string? name)
             => (T)context.GetService(typeof(T), name);
 
@@ -172,7 +181,7 @@ namespace MaSch.Core
         /// <param name="context">The <see cref="IServiceContext"/> to get the service from.</param>
         /// <param name="result">The resultung service.</param>
         /// <returns><c>true</c> if a service of type <typeparamref name="T"/> was found in this <see cref="IServiceContext"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryGetService<T>(this IServiceContext context, [MaybeNullWhen(false)] out T result)
+        public static bool TryGetService<T>(this IServiceContext context, [NotNullWhen(true)] out T? result)
             => TryGetService(context, out result, null);
 
         /// <summary>
@@ -183,7 +192,7 @@ namespace MaSch.Core
         /// <param name="result">The resultung service.</param>
         /// <param name="name">The name of the service to retrieve.</param>
         /// <returns><c>true</c> if a service of type <typeparamref name="T"/> and name <paramref name="name"/> was found in this <see cref="IServiceContext"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryGetService<T>(this IServiceContext context, [MaybeNullWhen(false)] out T result, string? name)
+        public static bool TryGetService<T>(this IServiceContext context, [NotNullWhen(true)] out T? result, string? name)
         {
             var exists = context.ContainsService(typeof(T), name);
             result = exists ? (T)context.GetService(typeof(T), name) : default;
@@ -355,6 +364,7 @@ namespace MaSch.Core
         /// <typeparam name="T">The type of <see cref="IServiceContext{T}"/>.</typeparam>
         /// <param name="context">The <see cref="IServiceContext"/> to get the services from.</param>
         /// <returns>All services of this <see cref="IServiceContext{T}"/>.</returns>
+        [ExcludeFromCodeCoverage]
         public static IEnumerable<(string? Name, T Service)> GetAllServices<T>(this ServiceContext<T> context)
             => ((IServiceContext<T>)context).GetAllServices();
 
@@ -365,6 +375,7 @@ namespace MaSch.Core
         /// <param name="context">The <see cref="IServiceContext"/> to add the service to.</param>
         /// <param name="serviceInstance">The service instance to add.</param>
         /// <param name="name">The name of the service.</param>
+        [ExcludeFromCodeCoverage]
         public static void AddService<T>(this ServiceContext<T> context, [DisallowNull] T serviceInstance, string? name)
             => ((IServiceContext<T>)context).AddService(serviceInstance, name);
 
@@ -375,6 +386,8 @@ namespace MaSch.Core
         /// <param name="context">The <see cref="IServiceContext"/> to get the service from.</param>
         /// <param name="name">The name of the service to retrieve.</param>
         /// <returns>The resultung service.</returns>
+        [ExcludeFromCodeCoverage]
+        [return: NotNull]
         public static T GetService<T>(this ServiceContext<T> context, string? name)
             => ((IServiceContext<T>)context).GetService(name);
 
@@ -385,6 +398,7 @@ namespace MaSch.Core
         /// <param name="context">The <see cref="IServiceContext"/> to check.</param>
         /// <param name="name">The name of the service to search for.</param>
         /// <returns><c>true</c> if a service of type <typeparamref name="T"/> and name <paramref name="name"/> was found in this <see cref="IServiceContext{T}"/>; otherwise, <c>false</c>.</returns>
+        [ExcludeFromCodeCoverage]
         public static bool ContainsService<T>(this ServiceContext<T> context, string? name)
             => ((IServiceContext<T>)context).ContainsService(name);
 
@@ -394,6 +408,7 @@ namespace MaSch.Core
         /// <typeparam name="T">The type of <see cref="IServiceContext{T}"/>.</typeparam>
         /// <param name="context">The <see cref="IServiceContext"/> from which to remove the service.</param>
         /// <param name="name">The name of the service to remove.</param>
+        [ExcludeFromCodeCoverage]
         public static void RemoveService<T>(this ServiceContext<T> context, string? name)
             => ((IServiceContext<T>)context).RemoveService(name);
 
@@ -405,7 +420,7 @@ namespace MaSch.Core
         /// Adds or replaces a specified service.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="IServiceContext{T}"/>.</typeparam>
-        /// <param name="context">The <see cref="IServiceContext"/> to add the service to.</param>
+        /// <param name="context">The <see cref="IServiceContext{T}"/> to add the service to.</param>
         /// <param name="serviceInstance">The service instance to add.</param>
         public static void AddService<T>(this IServiceContext<T> context, [DisallowNull] T serviceInstance)
             => context.AddService(serviceInstance, null);
@@ -414,8 +429,9 @@ namespace MaSch.Core
         /// Gets the service with the type <typeparamref name="T"/> and name.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="IServiceContext{T}"/>.</typeparam>
-        /// <param name="context">The <see cref="IServiceContext"/> to get the service from.</param>
+        /// <param name="context">The <see cref="IServiceContext{T}"/> to get the service from.</param>
         /// <returns>The resultung service.</returns>
+        [return: NotNull]
         public static T GetService<T>(this IServiceContext<T> context)
             => context.GetService(null);
 
@@ -423,42 +439,42 @@ namespace MaSch.Core
         /// Gets the service with the type <typeparamref name="T"/> and name.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="IServiceContext{T}"/>.</typeparam>
-        /// <param name="context">The <see cref="IServiceContext"/> to get the service from.</param>
+        /// <param name="context">The <see cref="IServiceContext{T}"/> to get the service from.</param>
         /// <param name="result">The resultung service.</param>
         /// <exception cref="KeyNotFoundException">A service of type <typeparamref name="T"/> was not found in this <see cref="IServiceContext{T}"/>.</exception>
-        public static void GetService<T>(this IServiceContext<T> context, out T result)
+        public static void GetService<T>(this IServiceContext<T> context, [NotNull] out T result)
             => result = context.GetService(null);
 
         /// <summary>
         /// Gets the service with the type <typeparamref name="T"/> and name.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="IServiceContext{T}"/>.</typeparam>
-        /// <param name="context">The <see cref="IServiceContext"/> to get the service from.</param>
+        /// <param name="context">The <see cref="IServiceContext{T}"/> to get the service from.</param>
         /// <param name="result">The resultung service.</param>
         /// <param name="name">The name of the service to retrieve.</param>
         /// <exception cref="KeyNotFoundException">A service of type <typeparamref name="T"/> and name <paramref name="name"/> was not found in this <see cref="IServiceContext{T}"/>.</exception>
-        public static void GetService<T>(this IServiceContext<T> context, out T result, string? name)
+        public static void GetService<T>(this IServiceContext<T> context, [NotNull] out T result, string? name)
             => result = context.GetService(name);
 
         /// <summary>
         /// Tries to get the service with the type <typeparamref name="T"/> and name.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="IServiceContext{T}"/>.</typeparam>
-        /// <param name="context">The <see cref="IServiceContext"/> to get the service from.</param>
+        /// <param name="context">The <see cref="IServiceContext{T}"/> to get the service from.</param>
         /// <param name="result">The resultung service.</param>
         /// <returns><c>true</c> if a service of type <typeparamref name="T"/> was found in this <see cref="IServiceContext{T}"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryGetService<T>(this IServiceContext<T> context, [MaybeNullWhen(false)] out T result)
+        public static bool TryGetService<T>(this IServiceContext<T> context, [NotNullWhen(true)] out T? result)
             => TryGetService(context, out result, null);
 
         /// <summary>
         /// Tries to get the service with the type <typeparamref name="T"/> and name.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="IServiceContext{T}"/>.</typeparam>
-        /// <param name="context">The <see cref="IServiceContext"/> to get the service from.</param>
+        /// <param name="context">The <see cref="IServiceContext{T}"/> to get the service from.</param>
         /// <param name="result">The resultung service.</param>
         /// <param name="name">The name of the service to retrieve.</param>
         /// <returns><c>true</c> if a service of type <typeparamref name="T"/> and name <paramref name="name"/> was found in this <see cref="IServiceContext{T}"/>; otherwise, <c>false</c>.</returns>
-        public static bool TryGetService<T>(this IServiceContext<T> context, [MaybeNullWhen(false)] out T result, string? name)
+        public static bool TryGetService<T>(this IServiceContext<T> context, [NotNullWhen(true)] out T? result, string? name)
         {
             var exists = context.ContainsService(name);
             result = exists ? context.GetService(name) : default;
@@ -469,7 +485,7 @@ namespace MaSch.Core
         /// Tries to get the service with the type <typeparamref name="T"/> and name.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="IServiceContext{T}"/>.</typeparam>
-        /// <param name="context">The <see cref="IServiceContext"/> to get the service from.</param>
+        /// <param name="context">The <see cref="IServiceContext{T}"/> to get the service from.</param>
         /// <returns>The service of type <typeparamref name="T"/> that was found in this <see cref="IServiceContext{T}"/>. If no service was found the default value of <typeparamref name="T"/> is returned.</returns>
         public static T? TryGetService<T>(this IServiceContext<T> context)
             => context.ContainsService(null) ? context.GetService(null) : default;
@@ -478,7 +494,7 @@ namespace MaSch.Core
         /// Tries to get the service with the type <typeparamref name="T"/> and name.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="IServiceContext{T}"/>.</typeparam>
-        /// <param name="context">The <see cref="IServiceContext"/> to get the service from.</param>
+        /// <param name="context">The <see cref="IServiceContext{T}"/> to get the service from.</param>
         /// <param name="name">The name of the service to retrieve.</param>
         /// <returns>The service of type <typeparamref name="T"/> and name <paramref name="name"/> that was found in this <see cref="IServiceContext{T}"/>. If no service was found the default value of <typeparamref name="T"/> is returned.</returns>
         public static T? TryGetService<T>(this IServiceContext<T> context, string? name)
@@ -488,7 +504,7 @@ namespace MaSch.Core
         /// Removes the service with the type <typeparamref name="T"/> and name.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="IServiceContext{T}"/>.</typeparam>
-        /// <param name="context">The <see cref="IServiceContext"/> from which to remove the service.</param>
+        /// <param name="context">The <see cref="IServiceContext{T}"/> from which to remove the service.</param>
         public static void RemoveService<T>(this IServiceContext<T> context)
             => context.RemoveService(null);
 
@@ -496,7 +512,7 @@ namespace MaSch.Core
         /// Tries to remove the service with the type <typeparamref name="T"/> and name.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="IServiceContext{T}"/>.</typeparam>
-        /// <param name="context">The <see cref="IServiceContext"/> from which to remove the service.</param>
+        /// <param name="context">The <see cref="IServiceContext{T}"/> from which to remove the service.</param>
         public static void TryRemoveService<T>(this IServiceContext<T> context)
             => TryRemoveService(context, null);
 
@@ -504,13 +520,22 @@ namespace MaSch.Core
         /// Tries to remove the service with the type <typeparamref name="T"/> and name.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="IServiceContext{T}"/>.</typeparam>
-        /// <param name="context">The <see cref="IServiceContext"/> from which to remove the service.</param>
+        /// <param name="context">The <see cref="IServiceContext{T}"/> from which to remove the service.</param>
         /// <param name="name">The name of the service to remove.</param>
         public static void TryRemoveService<T>(this IServiceContext<T> context, string? name)
         {
             if (context.ContainsService(name))
                 context.RemoveService(name);
         }
+
+        /// <summary>
+        /// Determines wether a service with the type <typeparamref name="T"/> and name exists.
+        /// </summary>
+        /// <typeparam name="T">The type of <see cref="IServiceContext{T}"/>.</typeparam>
+        /// <param name="context">The <see cref="IServiceContext{T}"/> from which to remove the service.</param>
+        /// <returns><c>true</c> if a service of type <typeparamref name="T"/> was found in this <see cref="IServiceContext{T}"/>; otherwise, <c>false</c>.</returns>
+        public static bool ContainsService<T>(this IServiceContext<T> context)
+            => context.ContainsService(null);
 
         #endregion
     }
