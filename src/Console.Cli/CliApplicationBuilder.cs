@@ -1,9 +1,9 @@
-﻿using MaSch.Console.Cli.Configuration;
+﻿using MaSch.Console.Cli.Runtime;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
-namespace MaSch.Console.Cli.Runtime
+namespace MaSch.Console.Cli
 {
     public class CliApplicationBuilder
     {

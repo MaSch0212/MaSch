@@ -1,5 +1,7 @@
-﻿using System;
+﻿using MaSch.Core.Converters;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace MaSch.Core
@@ -105,6 +107,46 @@ namespace MaSch.Core
             {
                 return int.MinValue;
             }
+        }
+    }
+
+    /// <summary>
+    /// Represents a <see cref="IObjectConvertManager"/> that already contains common <see cref="IObjectConverter"/>s.
+    /// </summary>
+    /// <remarks>
+    ///     Contains the following <see cref="IObjectConverter"/>s:
+    ///     <see cref="NullableObjectConverter"/>,
+    ///     <see cref="ConvertibleObjectConverter"/>,
+    ///     <see cref="EnumConverter"/>,
+    ///     <see cref="EnumerableConverter"/>.
+    ///     <see cref="ToStringObjectConverter"/>,
+    ///     <see cref="NullObjectConverter"/>,
+    ///     <see cref="IdentityObjectConverter"/>.
+    /// </remarks>
+    /// <seealso cref="ObjectConvertManager" />
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "This class is related to ObjectConvertManager.")]
+    public class DefaultObjectConvertManager : ObjectConvertManager
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultObjectConvertManager"/> class.
+        /// </summary>
+        public DefaultObjectConvertManager()
+        {
+            RegisterInitialConverters();
+        }
+
+        /// <summary>
+        /// Registers the initial converters.
+        /// </summary>
+        protected virtual void RegisterInitialConverters()
+        {
+            RegisterConverter(new NullableObjectConverter());
+            RegisterConverter(new ConvertibleObjectConverter());
+            RegisterConverter(new EnumConverter());
+            RegisterConverter(new EnumerableConverter());
+            RegisterConverter(new ToStringObjectConverter(-98_000));
+            RegisterConverter(new NullObjectConverter(-99_000));
+            RegisterConverter(new IdentityObjectConverter(-100_000));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections;
 
 namespace MaSch.Core.Test
 {
@@ -26,7 +27,7 @@ namespace MaSch.Core.Test
         }
 
         [TestMethod]
-        public void NotNullOrEmpty_Null()
+        public void NotNullOrEmpty_String_Null()
         {
             var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.NotNullOrEmpty(null, "MyParamName"));
 
@@ -34,7 +35,7 @@ namespace MaSch.Core.Test
         }
 
         [TestMethod]
-        public void NotNullOrEmpty_Empty()
+        public void NotNullOrEmpty_String_Empty()
         {
             var ex = Assert.ThrowsException<ArgumentException>(() => Guard.NotNullOrEmpty(string.Empty, "MyParamName"));
 
@@ -42,9 +43,35 @@ namespace MaSch.Core.Test
         }
 
         [TestMethod]
-        public void NotNullOrEmpty_Success()
+        public void NotNullOrEmpty_String_Success()
         {
             var obj = "Test";
+
+            var result = Guard.NotNullOrEmpty(obj, nameof(obj));
+
+            Assert.AreSame(obj, result);
+        }
+
+        [TestMethod]
+        public void NotNullOrEmpty_Collection_Null()
+        {
+            var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.NotNullOrEmpty<ICollection>(null, "MyParamName"));
+
+            Assert.AreEqual("MyParamName", ex.ParamName);
+        }
+
+        [TestMethod]
+        public void NotNullOrEmpty_Collection_Empty()
+        {
+            var ex = Assert.ThrowsException<ArgumentException>(() => Guard.NotNullOrEmpty(Array.Empty<object>(), "MyParamName"));
+
+            Assert.AreEqual("MyParamName", ex.ParamName);
+        }
+
+        [TestMethod]
+        public void NotNullOrEmpty_Collection_Success()
+        {
+            var obj = new[] { "Test" };
 
             var result = Guard.NotNullOrEmpty(obj, nameof(obj));
 

@@ -1,6 +1,7 @@
 ﻿using MaSch.Core.Observable;
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 #pragma warning disable SA1649 // File name should match first type name
 #pragma warning disable SA1402 // File may only contain a single type
@@ -13,6 +14,7 @@ namespace MaSch.Core.Attributes
     /// </summary>
     /// <seealso cref="Attribute" />
     [AttributeUsage(AttributeTargets.Property)]
+    [ExcludeFromCodeCoverage]
     public class DependsOnAttribute : Attribute
     {
         /// <summary>
@@ -66,6 +68,7 @@ namespace MaSch.Core.Attributes
     /// </summary>
     /// <seealso cref="System.Attribute" />
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
+    [ExcludeFromCodeCoverage]
     public class ObservablePropertyAccessModifierAttribute : Attribute
     {
         /// <summary>

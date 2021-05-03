@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using MaSch.Console.Cli.Runtime;
+using System.Threading.Tasks;
 
 namespace MaSch.Console.Cli.Internal
 {
-    internal interface IExecutor
+    internal interface IExecutor : ICliValidator<object>
     {
         int Execute(object obj);
         Task<int> ExecuteAsync(object obj);

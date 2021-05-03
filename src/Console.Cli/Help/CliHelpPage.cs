@@ -58,20 +58,7 @@ namespace MaSch.Console.Cli.Help
             WriteCopyright(application, error);
 
             _console.WriteLine();
-            _console.WriteLineWithColor(
-                error.Type switch
-                {
-                    CliErrorType.UnknownCommand => $"The command \"{error.CommandName}\" is unknwon.",
-                    CliErrorType.UnknownOption => $"The options \"{error.OptionName}\" is unknown.",
-                    CliErrorType.UnknownValue => $"To many values given.",
-                    CliErrorType.MissingCommand => $"No command has been provided.",
-                    CliErrorType.MissingOption => $"The option {GetOptionName(error.AffectedOption!)} is required.",
-                    CliErrorType.MissingValue => $"One or more values for this command are missing.",
-                    CliErrorType.WrongOptionFormat => $"The value for option {GetOptionName(error.AffectedOption!)} has the wrong format.",
-                    CliErrorType.WrongValueFormat => $"The value {error.AffectedValue!.DisplayName} has the wrong format.",
-                    _ => "Unknown error.",
-                },
-                ConsoleColor.Red);
+            WriteErrorMessage(application, error);
 
             _console.WriteLine();
             WriteCommandUsage(application, error);
@@ -84,6 +71,25 @@ namespace MaSch.Console.Cli.Help
 
         protected virtual void WriteCopyright(ICliApplicationBase application, CliError error)
             => _console.WriteLine($"Copyright {(_console.IsFancyConsole ? "©" : "(C)")} {application.Options.Year} {application.Options.Author}");
+
+        protected virtual void WriteErrorMessage(ICliApplicationBase application, CliError error)
+        {
+            _console.WriteLineWithColor(
+                error.Type switch
+                {
+                    CliErrorType.UnknownCommand => $"The command \"{error.CommandName}\" is unknown.",
+                    CliErrorType.UnknownOption => $"The option \"{error.OptionName}\" is unknown.",
+                    CliErrorType.UnknownValue => $"Too many values given.",
+                    CliErrorType.MissingCommand => $"No command has been provided.",
+                    CliErrorType.MissingOption => $"The option {GetOptionName(error.AffectedOption!)} is required.",
+                    CliErrorType.MissingValue => $"One or more values for this command are missing.",
+                    CliErrorType.WrongOptionFormat => $"The value for option {GetOptionName(error.AffectedOption!)} has the wrong format.",
+                    CliErrorType.WrongValueFormat => $"The value {error.AffectedValue!.DisplayName} has the wrong format.",
+                    CliErrorType.Custom => error.CustomErrorMessage,
+                    _ => "Unknown error.",
+                },
+                ConsoleColor.Red);
+        }
 
         protected virtual void WriteCommandUsage(ICliApplicationBase application, CliError error)
         {
@@ -121,14 +127,14 @@ namespace MaSch.Console.Cli.Help
                 isFirst = false;
             }
 
-            void AppendCommandName(CliCommandInfo cmd)
+            void AppendCommandName(ICliCommandInfo cmd)
             {
                 if (cmd.ParentCommand != null)
                     AppendCommandName(cmd.ParentCommand);
                 if (cmd.Aliases.Count == 1)
                     sb.Append($" {cmd.Name}");
                 else
-                    sb.Append($" ({string.Join(" | ", cmd.Aliases)})");
+                    sb.Append($" ({string.Join("|", cmd.Aliases)})");
             }
         }
 
@@ -243,7 +249,7 @@ namespace MaSch.Console.Cli.Help
             table.Render();
         }
 
-        private static string GetOptionName(CliCommandOptionInfo option)
+        private static string GetOptionName(ICliCommandOptionInfo option)
             => string.Join(", ", option.ShortAliases.Select(y => $"-{y}").Concat(option.Aliases.Select(y => $"--{y}")));
     }
 }

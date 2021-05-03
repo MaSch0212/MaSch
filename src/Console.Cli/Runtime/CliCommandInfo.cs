@@ -1,24 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using MaSch.Console.Cli.Configuration;
+using MaSch.Console.Cli.ErrorHandling;
 using MaSch.Console.Cli.Internal;
 using MaSch.Core;
 
-namespace MaSch.Console.Cli
+namespace MaSch.Console.Cli.Runtime
 {
-    public class CliCommandInfo
+    public class CliCommandInfo : ICliCommandInfo
     {
         private static readonly Regex IllegalNameCharactersRegex = new(@"[\p{Cc}\s]", RegexOptions.Compiled);
 
-        private readonly List<CliCommandInfo> _childCommands = new();
-        private readonly List<CliCommandOptionInfo> _options = new();
-        private readonly List<CliCommandValueInfo> _values = new();
+        private readonly List<ICliCommandInfo> _childCommands = new();
+        private readonly List<ICliCommandOptionInfo> _options = new();
+        private readonly List<ICliCommandValueInfo> _values = new();
         private readonly IExecutor? _executor;
         private readonly Cache _cache = new();
 
+        public CliCommandAttribute Attribute { get; }
         public Type CommandType { get; }
         public object? OptionsInstance { get; }
         public string Name => Attribute.Name;
@@ -27,17 +30,15 @@ namespace MaSch.Console.Cli
         public string? HelpText => Attribute.HelpText;
         public int Order => Attribute.HelpOrder;
         public bool IsExecutable => Attribute.Executable;
-        public CliCommandInfo? ParentCommand { get; private set; }
-        public IReadOnlyList<CliCommandInfo> ChildCommands => _cache.GetValue(() => _childCommands.AsReadOnly())!;
-        public IReadOnlyList<CliCommandOptionInfo> Options => _cache.GetValue(() => _options.AsReadOnly())!;
-        public IReadOnlyList<CliCommandValueInfo> Values => _cache.GetValue(() => _values.AsReadOnly())!;
-
-        internal CliCommandAttribute Attribute { get; }
+        public ICliCommandInfo? ParentCommand { get; private set; }
+        public IReadOnlyList<ICliCommandInfo> ChildCommands => _cache.GetValue(() => _childCommands.AsReadOnly())!;
+        public IReadOnlyList<ICliCommandOptionInfo> Options => _cache.GetValue(() => _options.AsReadOnly())!;
+        public IReadOnlyList<ICliCommandValueInfo> Values => _cache.GetValue(() => _values.AsReadOnly())!;
 
         private CliCommandInfo(Type commandType, Type? executorType, object? optionsInstance, object? executorFunc, object? executorInstance)
         {
             CommandType = Guard.NotNull(commandType, nameof(commandType));
-            OptionsInstance = Guard.OfType(optionsInstance, nameof(optionsInstance), commandType);
+            OptionsInstance = Guard.OfType(optionsInstance, nameof(optionsInstance), true, commandType);
 
             Attribute = commandType.GetCustomAttribute<CliCommandAttribute>(true) ?? throw new ArgumentException($"The type \"{commandType.Name}\" does not have a {nameof(CliCommandAttribute)}.", nameof(commandType));
             if (string.IsNullOrWhiteSpace(Attribute.Name))
@@ -68,22 +69,36 @@ namespace MaSch.Console.Cli
             }
         }
 
+        public bool ValidateOptions(object parameters, [MaybeNullWhen(true)] out CliError error)
+        {
+            if (_executor == null)
+            {
+                error = null;
+                return true;
+            }
+            else
+            {
+                return _executor.ValidateOptions(parameters, out error);
+            }
+        }
+
         public int Execute(object obj)
             => _executor?.Execute(obj) ?? throw new InvalidOperationException($"The command {Name} is not executable.");
         public async Task<int> ExecuteAsync(object obj)
             => _executor != null ? await _executor.ExecuteAsync(obj) : throw new InvalidOperationException($"The command {Name} is not executable.");
 
-        internal void AddChildCommand(CliCommandInfo childCommand)
+        public void AddChildCommand(ICliCommandInfo childCommand)
         {
             _childCommands.Add(childCommand);
-            childCommand.ParentCommand = this;
+            if (childCommand is CliCommandInfo cc)
+                cc.ParentCommand = this;
         }
 
-        internal void RemoveChildCommand(CliCommandInfo childCommand)
+        public void RemoveChildCommand(ICliCommandInfo childCommand)
         {
             _childCommands.Remove(childCommand);
-            if (childCommand.ParentCommand == this)
-                childCommand.ParentCommand = null;
+            if (childCommand.ParentCommand == this && childCommand is CliCommandInfo cc)
+                cc.ParentCommand = null;
         }
 
         public static CliCommandInfo From<TCommand>() => new(typeof(TCommand), null, null, null, null);

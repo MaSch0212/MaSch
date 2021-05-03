@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MaSch.Core.Attributes
 {
@@ -7,6 +8,7 @@ namespace MaSch.Core.Attributes
     /// </summary>
     /// <seealso cref="System.Attribute" />
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+    [ExcludeFromCodeCoverage]
     public class WrappingAttribute : Attribute
     {
         /// <summary>

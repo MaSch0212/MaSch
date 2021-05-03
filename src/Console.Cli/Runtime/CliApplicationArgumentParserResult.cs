@@ -6,7 +6,7 @@ namespace MaSch.Console.Cli.Runtime
     {
         public bool Success { get; }
         public CliError? Error { get; }
-        public CliCommandInfo? Command { get; }
+        public ICliCommandInfo? Command { get; }
         public object? Options { get; }
 
         internal CliApplicationArgumentParserResult(CliError error)
@@ -15,7 +15,7 @@ namespace MaSch.Console.Cli.Runtime
             Error = error;
         }
 
-        internal CliApplicationArgumentParserResult(CliCommandInfo command, object options)
+        internal CliApplicationArgumentParserResult(ICliCommandInfo command, object options)
         {
             Success = true;
             Command = command;

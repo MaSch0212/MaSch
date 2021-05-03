@@ -1,3 +1,4 @@
 ﻿- Added Verifiable overloads to pass in the test class to which the verifiables should be added to.
 - Make Verifiable methods that do not return a IMockVerifiable generic so that the setup can be configured further afterwards.
 - Add Assert.IsEmpty and Assert.IsNotEmpty for IEnumerable.
+- Added PrivateType and PrivateObject from old MSTest libraries.

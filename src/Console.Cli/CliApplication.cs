@@ -2,22 +2,22 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using MaSch.Console.Cli.Configuration;
+using MaSch.Console.Cli.Runtime;
 using MaSch.Core;
 
-namespace MaSch.Console.Cli.Runtime
+namespace MaSch.Console.Cli
 {
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Base class")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Base class")]
     public abstract class CliApplicationBase : ICliApplicationBase
     {
-        private IReadOnlyCollection<CliCommandInfo>? _readOnlyCommands;
+        private IReadOnlyCollection<ICliCommandInfo>? _readOnlyCommands;
 
         protected CliCommandInfoCollection CommandsCollection { get; }
         protected abstract Type ExecutorType { get; }
         protected abstract Type GenericExecutorType { get; }
 
-        public IReadOnlyCollection<CliCommandInfo> Commands => _readOnlyCommands ??= CommandsCollection.AsReadOnly();
+        public IReadOnlyCollection<ICliCommandInfo> Commands => _readOnlyCommands ??= CommandsCollection.AsReadOnly();
         public CliApplicationOptions Options { get; }
 
         public CliApplicationBase()
@@ -90,7 +90,7 @@ namespace MaSch.Console.Cli.Runtime
             CommandsCollection.Add(CliCommandInfo.From(commandType, optionsInstance, executorType, executorInstance));
         }
 
-        protected bool TryParseArguments(string[] args, [NotNullWhen(true)] out CliCommandInfo? command, [NotNullWhen(true)] out object? options)
+        protected bool TryParseArguments(string[] args, [NotNullWhen(true)] out ICliCommandInfo? command, [NotNullWhen(true)] out object? options)
         {
             var result = CliApplicationArgumentParser.Parse(args, Options, CommandsCollection);
             if (result.Success)

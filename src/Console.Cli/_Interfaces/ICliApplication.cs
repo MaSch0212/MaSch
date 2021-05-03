@@ -9,7 +9,7 @@ namespace MaSch.Console.Cli.Runtime
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Base interface")]
     public interface ICliApplicationBase
     {
-        IReadOnlyCollection<CliCommandInfo> Commands { get; }
+        IReadOnlyCollection<ICliCommandInfo> Commands { get; }
         CliApplicationOptions Options { get; }
 
         void RegisterCommand(Type commandType);

@@ -1,4 +1,5 @@
-﻿using MaSch.Core.Extensions;
+﻿using MaSch.Core;
+using MaSch.Core.Extensions;
 using System;
 using System.Linq;
 
@@ -17,12 +18,17 @@ namespace MaSch.Console.Cli.Configuration
 
         public CliCommandAttribute(string name)
         {
+            Guard.NotNullOrEmpty(name, nameof(name));
+
             Aliases = new[] { name };
         }
 
         public CliCommandAttribute(string name, params string[] aliases)
         {
-            Aliases = aliases.Prepend(name).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
+            Guard.NotNullOrEmpty(name, nameof(name));
+            Guard.NotNull(aliases, nameof(aliases));
+
+            Aliases = aliases.Where(x => !string.IsNullOrEmpty(x)).Prepend(name).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
         }
     }
 }

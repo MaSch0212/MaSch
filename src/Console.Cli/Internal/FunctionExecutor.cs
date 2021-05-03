@@ -1,4 +1,5 @@
-﻿using MaSch.Core;
+﻿using MaSch.Console.Cli.ErrorHandling;
+using MaSch.Core;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
@@ -65,6 +66,13 @@ namespace MaSch.Console.Cli.Internal
                 return _executorFunc(tObj);
             else
                 throw new ArgumentException("At least one function needs to be provided.");
+        }
+
+        public bool ValidateOptions(object parameters, [MaybeNullWhen(true)] out CliError error)
+        {
+            // Nothing to validate here. The options are already validated in the CliApplicationArgumentParser.
+            error = null;
+            return true;
         }
     }
 }

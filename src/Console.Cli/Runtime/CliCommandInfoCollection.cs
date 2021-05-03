@@ -4,14 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MaSch.Console.Cli
+namespace MaSch.Console.Cli.Runtime
 {
-    public class CliCommandInfoCollection : ICollection<CliCommandInfo>
+    public class CliCommandInfoCollection : ICollection<ICliCommandInfo>
     {
-        private readonly IDictionary<Type, CliCommandInfo> _allCommands = new Dictionary<Type, CliCommandInfo>();
-        private readonly List<CliCommandInfo> _rootCommands = new List<CliCommandInfo>();
+        private readonly IDictionary<Type, ICliCommandInfo> _allCommands = new Dictionary<Type, ICliCommandInfo>();
+        private readonly List<ICliCommandInfo> _rootCommands = new List<ICliCommandInfo>();
 
-        public CliCommandInfo? DefaultCommand { get; private set; }
+        public ICliCommandInfo? DefaultCommand { get; private set; }
         public int Count => _allCommands.Count;
         public bool IsReadOnly => false;
 
@@ -19,13 +19,13 @@ namespace MaSch.Console.Cli
         {
         }
 
-        public CliCommandInfoCollection(IEnumerable<CliCommandInfo> collection)
+        public CliCommandInfoCollection(IEnumerable<ICliCommandInfo> collection)
         {
             if (collection != null)
                 this.Add(collection);
         }
 
-        public void Add(CliCommandInfo item)
+        public void Add(ICliCommandInfo item)
         {
             if (item.CommandType == null || item.Attribute == null)
                 throw new ArgumentException("The given command has to have a CommandType.");
@@ -47,7 +47,7 @@ namespace MaSch.Console.Cli
                 DefaultCommand = item;
         }
 
-        public bool Remove(CliCommandInfo item)
+        public bool Remove(ICliCommandInfo item)
         {
             if (item.CommandType == null || !_allCommands.TryGetValue(item.CommandType, out var ei) || ei != item)
                 return false;
@@ -70,20 +70,20 @@ namespace MaSch.Console.Cli
                 Remove(item);
         }
 
-        public bool Contains(CliCommandInfo item)
+        public bool Contains(ICliCommandInfo item)
             => item.CommandType != null && _allCommands.TryGetValue(item.CommandType, out var ei) && ei == item;
 
-        public void CopyTo(CliCommandInfo[] array, int arrayIndex) => _allCommands.Values.CopyTo(array, arrayIndex);
+        public void CopyTo(ICliCommandInfo[] array, int arrayIndex) => _allCommands.Values.CopyTo(array, arrayIndex);
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-        public IEnumerator<CliCommandInfo> GetEnumerator() => _allCommands.Values.GetEnumerator();
+        public IEnumerator<ICliCommandInfo> GetEnumerator() => _allCommands.Values.GetEnumerator();
 
-        public IEnumerable<CliCommandInfo> GetRootCommands()
+        public IEnumerable<ICliCommandInfo> GetRootCommands()
             => _rootCommands.AsEnumerable();
 
-        public IReadOnlyCollection<CliCommandInfo> AsReadOnly() => new ReadOnly(this);
+        public IReadOnlyCollection<ICliCommandInfo> AsReadOnly() => new ReadOnly(this);
 
-        private void ValidateCommand(CliCommandInfo command)
+        private void ValidateCommand(ICliCommandInfo command)
         {
             if (this.TryFirst(x => x.CommandType == command.CommandType, out var existing))
                 throw new ArgumentException($"A command for command type \"{command.CommandType.FullName}\" is already registered.");
@@ -98,17 +98,17 @@ namespace MaSch.Console.Cli
                 throw new ArgumentException($"The command {command.Name} cannot be added because another default command is already added: {DefaultCommand.CommandType.FullName}.");
         }
 
-        private class ReadOnly : IReadOnlyCollection<CliCommandInfo>
+        private class ReadOnly : IReadOnlyCollection<ICliCommandInfo>
         {
-            private readonly ICollection<CliCommandInfo> _collection;
+            private readonly ICollection<ICliCommandInfo> _collection;
 
-            public ReadOnly(ICollection<CliCommandInfo> collection)
+            public ReadOnly(ICollection<ICliCommandInfo> collection)
             {
                 _collection = collection;
             }
 
             public int Count => _collection.Count;
-            public IEnumerator<CliCommandInfo> GetEnumerator() => _collection.GetEnumerator();
+            public IEnumerator<ICliCommandInfo> GetEnumerator() => _collection.GetEnumerator();
             IEnumerator IEnumerable.GetEnumerator() => _collection.GetEnumerator();
         }
     }

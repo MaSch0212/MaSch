@@ -1,4 +1,5 @@
 ﻿using MaSch.Console.Cli.Configuration;
+using MaSch.Core;
 using MaSch.Core.Extensions;
 using System;
 using System.Collections;
@@ -6,15 +7,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace MaSch.Console.Cli
+namespace MaSch.Console.Cli.Runtime
 {
-    public class CliCommandOptionInfo
+    public class CliCommandOptionInfo : ICliCommandOptionInfo
     {
         private readonly PropertyInfo _property;
 
-        public CliCommandInfo Command { get; }
+        public ICliCommandInfo Command { get; }
         public string PropertyName => _property.Name;
         public Type PropertyType => _property.PropertyType;
+        public CliCommandOptionAttribute Attribute { get; }
 
         public IReadOnlyList<char> ShortAliases => Attribute.ShortAliases;
         public IReadOnlyList<string> Aliases => Attribute.Aliases;
@@ -23,13 +25,11 @@ namespace MaSch.Console.Cli
         public int HelpOrder => Attribute.HelpOrder;
         public string? HelpText => Attribute.HelpText;
 
-        internal CliCommandOptionAttribute Attribute { get; }
-
-        public CliCommandOptionInfo(CliCommandInfo command, PropertyInfo property, CliCommandOptionAttribute attribute)
+        public CliCommandOptionInfo(ICliCommandInfo command, PropertyInfo property, CliCommandOptionAttribute attribute)
         {
-            Command = command;
-            _property = property;
-            Attribute = attribute;
+            Command = Guard.NotNull(command, nameof(command));
+            _property = Guard.NotNull(property, nameof(property));
+            Attribute = Guard.NotNull(attribute, nameof(attribute));
         }
 
         public void SetValue(object options, object? value)

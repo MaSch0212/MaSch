@@ -2,6 +2,7 @@
 {
     public enum CliErrorType
     {
+        Custom,
         VersionRequested,
         HelpRequested,
         UnknownCommand,

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaSch.Core;
+using System;
 
 namespace MaSch.Console.Cli.Configuration
 {
@@ -13,6 +14,8 @@ namespace MaSch.Console.Cli.Configuration
 
         public CliCommandValueAttribute(int order, string displayName)
         {
+            Guard.NotNullOrEmpty(displayName, nameof(displayName));
+
             Order = order;
             DisplayName = displayName;
         }

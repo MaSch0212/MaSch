@@ -31,10 +31,16 @@ namespace MaSch.Console.Cli.Runtime
             if (!TryCreateOptions(command, values, options, out var optError, out var optionsObj))
                 return new(optError);
 
+            if (optionsObj is ICliValidatable validatable && !validatable.ValidateOptions(out var vError))
+                return new(vError);
+
+            if (!command.ValidateOptions(optionsObj, out vError))
+                return new(vError);
+
             return new(command, optionsObj);
         }
 
-        private static bool TryParseCommandInfo(string[] args, CliCommandInfoCollection availableCommands, [NotNullWhen(true)] out CliCommandInfo? command, out int commandArgIndex)
+        private static bool TryParseCommandInfo(string[] args, CliCommandInfoCollection availableCommands, [NotNullWhen(true)] out ICliCommandInfo? command, out int commandArgIndex)
         {
             command = availableCommands.FirstOrDefault(x => x.Aliases.Contains(args[0], StringComparer.OrdinalIgnoreCase));
             if (command != null)
@@ -61,7 +67,7 @@ namespace MaSch.Console.Cli.Runtime
         private static bool TryParseOptionsAndValues(
             IEnumerable<string> args,
             CliApplicationOptions appOptions,
-            CliCommandInfo command,
+            ICliCommandInfo command,
             [NotNullWhen(false)] out CliError? error,
             out IList<ValueValue> values,
             out IList<OptionValue> options)
@@ -182,7 +188,7 @@ namespace MaSch.Console.Cli.Runtime
             return true;
         }
 
-        private static bool TryCreateOptions(CliCommandInfo command, IList<ValueValue> values, IList<OptionValue> options, [NotNullWhen(false)] out CliError? error, out object optionsObj)
+        private static bool TryCreateOptions(ICliCommandInfo command, IList<ValueValue> values, IList<OptionValue> options, [NotNullWhen(false)] out CliError? error, out object optionsObj)
         {
             optionsObj = command.OptionsInstance ?? Activator.CreateInstance(command.CommandType)!;
             foreach (var value in command.Values.Except(values.Select(x => x.ValueInfo)))
@@ -251,10 +257,10 @@ namespace MaSch.Console.Cli.Runtime
 
         private class OptionValue
         {
-            public CliCommandOptionInfo Option { get; set; }
+            public ICliCommandOptionInfo Option { get; set; }
             public object? Value { get; set; } = UnsetValue;
 
-            public OptionValue(CliCommandOptionInfo option)
+            public OptionValue(ICliCommandOptionInfo option)
             {
                 Option = option;
             }
@@ -262,10 +268,10 @@ namespace MaSch.Console.Cli.Runtime
 
         private class ValueValue
         {
-            public CliCommandValueInfo ValueInfo { get; set; }
+            public ICliCommandValueInfo ValueInfo { get; set; }
             public object? Value { get; set; }
 
-            public ValueValue(CliCommandValueInfo valueInfo, object? value)
+            public ValueValue(ICliCommandValueInfo valueInfo, object? value)
             {
                 ValueInfo = valueInfo;
                 Value = value;

@@ -30,9 +30,5 @@
     <ProjectReference Include="$(GitSourceDir)Console/MaSch.Console.csproj" />
     <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Internal\Commands\" />
-  </ItemGroup>
   
 </Project>

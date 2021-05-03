@@ -22,7 +22,7 @@
   </PropertyGroup>
 
   <Import Project="$(GitBuildDir)MaSch.props" />
-
+  
   <ItemGroup>
     <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
   </ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MaSch.Core.Attributes
 {
@@ -7,6 +8,7 @@ namespace MaSch.Core.Attributes
     /// </summary>
     /// <seealso cref="System.Attribute" />
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
+    [ExcludeFromCodeCoverage]
     public class ShimsAttribute : Attribute
     {
         /// <summary>

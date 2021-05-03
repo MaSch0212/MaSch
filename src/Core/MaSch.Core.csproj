@@ -19,26 +19,5 @@
   </PropertyGroup>
 
   <Import Project="$(GitBuildDir)MaSch.props" />
-
-  <ItemGroup>
-    <Compile Update="ICache.cs" DependentUpon="Cache.cs" />
-    
-    <Compile Update="DelegateDisposableEnumerable.cs" DependentUpon="IDisposableEnumerable.cs" />
-    
-    <Compile Update="IObjectConverter.cs" DependentUpon="ObjectConvertManager.cs" />
-    <Compile Update="IObjectConvertManager.cs" DependentUpon="ObjectConvertManager.cs" />
-    <Compile Update="ObjectConvertManagerExtensions.cs" DependentUpon="ObjectConvertManager.cs" />
-    <Compile Update="DefaultObjectConvertManager.cs" DependentUpon="ObjectConvertManager.cs" />
-    
-    <Compile Update="ServiceContextExtensions.cs" DependentUpon="ServiceContext.cs" />
-    <Compile Update="ServiceContext.Static.cs" DependentUpon="ServiceContext.cs" />
-    <Compile Update="IServiceContext.cs" DependentUpon="ServiceContext.cs" />
-
-    <Compile Update="Observable/IObservableObject.cs" DependentUpon="Observable/ObservableObject.cs" />
-    <Compile Update="Observable/Modules/IChangeTracker.cs" DependentUpon="Observable/Modules/ChangeTracker.cs" />
-    <Compile Update="Observable/Modules/IObservableObjectModule.cs" DependentUpon="Observable/Modules/ObservableObjectModule.cs" />
-    
-    <Compile Update="Logging/ILoggingService.cs" DependentUpon="Logging/LoggingService.cs" />
-  </ItemGroup>
   
 </Project>

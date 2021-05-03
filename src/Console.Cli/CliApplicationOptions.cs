@@ -3,7 +3,7 @@ using System;
 using System.Globalization;
 using System.Reflection;
 
-namespace MaSch.Console.Cli.Runtime
+namespace MaSch.Console.Cli
 {
     public sealed class CliApplicationOptions
     {

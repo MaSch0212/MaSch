@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -30,7 +31,8 @@ namespace MaSch.Core
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="name">The name of the parameter to verify.</param>
-        /// <exception cref="ArgumentException">The value is null or empty.</exception>
+        /// <exception cref="ArgumentException">The parameter value cannot be empty.</exception>
+        /// <exception cref="ArgumentNullException">The value is null.</exception>
         /// <returns>The same instance as <paramref name="value"/>.</returns>
         public static string NotNullOrEmpty([NotNull] string? value, string name)
         {
@@ -38,6 +40,24 @@ namespace MaSch.Core
             if (string.IsNullOrEmpty(value))
                 throw new ArgumentException("The parameter value cannot be empty.", name);
             return value;
+        }
+
+        /// <summary>
+        /// Verifies that the collection is not null or empty.
+        /// </summary>
+        /// <typeparam name="T">The type of collection to verify.</typeparam>
+        /// <param name="collection">The collection.</param>
+        /// <param name="name">The name of the parameter to verify.</param>
+        /// <exception cref="ArgumentException">The parameter value cannot be empty.</exception>
+        /// <exception cref="ArgumentNullException">The value is null.</exception>
+        /// <returns>The same instance as <paramref name="collection"/>.</returns>
+        public static T NotNullOrEmpty<T>([NotNull] T? collection, string name)
+            where T : ICollection
+        {
+            NotNull(collection, name);
+            if (collection.Count == 0)
+                throw new ArgumentException("The parameter value cannot be empty.", name);
+            return collection;
         }
 
         /// <summary>

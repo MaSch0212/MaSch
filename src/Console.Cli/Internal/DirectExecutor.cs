@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using MaSch.Console.Cli.Configuration;
+using MaSch.Console.Cli.ErrorHandling;
+using MaSch.Console.Cli.Runtime;
 using MaSch.Core;
 
 namespace MaSch.Console.Cli.Internal
@@ -33,6 +35,13 @@ namespace MaSch.Console.Cli.Internal
                 return executor.ExecuteCommand();
             else
                 throw new InvalidOperationException($"The type {obj.GetType().Name} needs to implement {typeof(ICliCommandExecutor).Name} and/or {typeof(ICliAsyncCommandExecutor).Name}. If this command should not be executable, set the Executable Property on the CliCommandAttribute to false.");
+        }
+
+        public bool ValidateOptions(object parameters, [MaybeNullWhen(true)] out CliError error)
+        {
+            // Nothing to validate here. The options are already validated in the CliApplicationArgumentParser.
+            error = null;
+            return true;
         }
     }
 }

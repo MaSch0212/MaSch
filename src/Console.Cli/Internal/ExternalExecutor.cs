@@ -3,6 +3,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using MaSch.Console.Cli.Configuration;
+using MaSch.Console.Cli.ErrorHandling;
+using MaSch.Console.Cli.Runtime;
 using MaSch.Core;
 using MaSch.Core.Extensions;
 
@@ -29,10 +31,16 @@ namespace MaSch.Console.Cli.Internal
         {
             if (obj is not T tObj)
                 throw new ArgumentException($"The object needs to be an instance of class {typeof(T).Name}. (Actual: {obj?.GetType().Name ?? "(null)"})", nameof(obj));
+            var executor = PreValidate(executorType, executorInstance);
+            return (executor, tObj);
+        }
+
+        public static object PreValidate(Type executorType, object? executorInstance)
+        {
             var executor = executorInstance
                 ?? Activator.CreateInstance(executorType)
                 ?? throw new ArgumentException($"And instance of type {executorType.Name} could not be created. Please make sure the class has an empty constructor.", nameof(executorType));
-            return (executor, tObj);
+            return executor;
         }
     }
 
@@ -41,6 +49,7 @@ namespace MaSch.Console.Cli.Internal
     {
         private readonly Type _executorType;
         private readonly object? _executorInstance;
+        private object? _cachedExecutor;
 
         public ExternalExecutor(Type executorType, object? executorInstance)
         {
@@ -53,7 +62,8 @@ namespace MaSch.Console.Cli.Internal
 
         public int Execute(object obj)
         {
-            var (ee, tObj) = ExternalExecutor.PreExecute<T>(_executorType, _executorInstance, obj);
+            var (ee, tObj) = ExternalExecutor.PreExecute<T>(_executorType, _executorInstance ?? _cachedExecutor, obj);
+            _cachedExecutor = ee;
             if (ee is ICliCommandExecutor<T> executor)
                 return executor.ExecuteCommand(tObj);
             else if (ee is ICliAsyncCommandExecutor<T> asyncExecutor)
@@ -64,13 +74,40 @@ namespace MaSch.Console.Cli.Internal
 
         public async Task<int> ExecuteAsync(object obj)
         {
-            var (ee, tObj) = ExternalExecutor.PreExecute<T>(_executorType, _executorInstance, obj);
+            var (ee, tObj) = ExternalExecutor.PreExecute<T>(_executorType, _executorInstance ?? _cachedExecutor, obj);
+            _cachedExecutor = ee;
             if (ee is ICliAsyncCommandExecutor<T> asyncExecutor)
                 return await asyncExecutor.ExecuteCommandAsync(tObj);
             else if (ee is ICliCommandExecutor<T> executor)
                 return executor.ExecuteCommand(tObj);
             else
                 throw new InvalidOperationException($"The type {_executorType.Name} needs to implement {typeof(ICliCommandExecutor<T>).Name} and/or {typeof(ICliAsyncCommandExecutor<T>).Name} for type {typeof(T).Name}.");
+        }
+
+        public bool ValidateOptions(object parameters, [MaybeNullWhen(true)] out CliError error)
+        {
+            var ee = ExternalExecutor.PreValidate(_executorType, _executorInstance ?? _cachedExecutor);
+
+            var types = (from i in ee.GetType().GetInterfaces()
+                         where i.IsGenericType
+                         let baseType = i.GetGenericTypeDefinition()
+                         where baseType == typeof(ICliValidator<>)
+                         select i.GetGenericArguments()[0]).ToArray();
+            var pType = parameters.GetType();
+            var type = types.Contains(pType)
+                ? pType
+                : types.FirstOrDefault(x => x.IsAssignableFrom(pType));
+            if (type != null)
+            {
+                var validateMethod = typeof(ICliValidator<>).MakeGenericType(type).GetMethod(nameof(ICliValidator<object>.ValidateOptions))!;
+                var p = new object?[] { parameters, null };
+                var r = (bool)validateMethod.Invoke(ee, p)!;
+                error = p[1] as CliError;
+                return r;
+            }
+
+            error = null;
+            return true;
         }
     }
 }
