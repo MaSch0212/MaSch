@@ -32,4 +32,40 @@ namespace MaSch.Presentation.Wpf
         /// </summary>
         Bottom = 4,
     }
+
+    /// <summary>
+    /// Specifies the type of status to display.
+    /// </summary>
+    public enum StatusType
+    {
+        /// <summary>
+        /// Displays no messsage.
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// Displays loading messsage.
+        /// </summary>
+        Loading,
+
+        /// <summary>
+        /// Displays an informational messsage.
+        /// </summary>
+        Information,
+
+        /// <summary>
+        /// Displays a successful message.
+        /// </summary>
+        Success,
+
+        /// <summary>
+        /// Displays a warning message.
+        /// </summary>
+        Warning,
+
+        /// <summary>
+        /// Displays an error message.
+        /// </summary>
+        Error,
+    }
 }

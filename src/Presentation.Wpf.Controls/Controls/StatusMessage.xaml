@@ -1,0 +1,80 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MaSch.Presentation.Wpf.Controls"
+                    xmlns:m="http://schemas.masch212.de/MaSch/Wpf"
+                    xmlns:mct="http://schemas.masch212.de/MaSch/Wpf/Controls">
+
+    <Style TargetType="controls:StatusMessage">
+        <Setter Property="Height" Value="40" />
+        <Setter Property="SuccessMessageIcon" Value="{m:ThemeValue Key=StatusMessageSuccessIcon}" />
+        <Setter Property="FailureMessageIcon" Value="{m:ThemeValue Key=StatusMessageFailureIcon}" />
+        <Setter Property="InformationMessageIcon" Value="{m:ThemeValue Key=StatusMessageInformationIcon}" />
+        <Setter Property="WarningMessageIcon" Value="{m:ThemeValue Key=StatusMessageWarningIcon}" />
+        <Setter Property="SuccessMessageBrush" Value="{m:ThemeValue Key=StatusMessageSuccessBrush}" />
+        <Setter Property="FailureMessageBrush" Value="{m:ThemeValue Key=StatusMessageFailureBrush}" />
+        <Setter Property="InformationMessageBrush" Value="{m:ThemeValue Key=StatusMessageInformationBrush}" />
+        <Setter Property="WarningMessageBrush" Value="{m:ThemeValue Key=StatusMessageWarningBrush}" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontWeight" Value="Light" />
+        <Setter Property="StatusIconPadding" Value="8" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:StatusMessage">
+                    <Border x:Name="PART_Root"
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <Border.Resources>
+                            <Storyboard x:Key="ShowMessageStoryboard" Duration="0:0:5.2">
+                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_MessagePanel"
+                                                               Storyboard.TargetProperty="Opacity"
+                                                               Duration="0:0:5.2">
+                                    <LinearDoubleKeyFrame KeyTime="0" Value="0" />
+                                    <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1">
+                                        <EasingDoubleKeyFrame.EasingFunction>
+                                            <ExponentialEase EasingMode="EaseIn" />
+                                        </EasingDoubleKeyFrame.EasingFunction>
+                                    </EasingDoubleKeyFrame>
+                                    <EasingDoubleKeyFrame KeyTime="0:0:3.2" Value="1" />
+                                    <EasingDoubleKeyFrame KeyTime="0:0:5.2" Value="0" />
+                                </DoubleAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </Border.Resources>
+                        <Grid HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <DockPanel>
+                                <controls:BusyIndicator Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ActualHeight}"
+                                                        Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ActualHeight}"
+                                                        DockPanel.Dock="Left"
+                                                        IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsLoading}" />
+                                <TextBlock Margin="10,0,0,0"
+                                           VerticalAlignment="Center"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           FontWeight="{TemplateBinding FontWeight}"
+                                           Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=LoadingText}"
+                                           TextTrimming="CharacterEllipsis" />
+                            </DockPanel>
+                            <DockPanel x:Name="PART_MessagePanel" Opacity="0">
+                                <Border Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ActualHeight}"
+                                        Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ActualHeight}"
+                                        Padding="{TemplateBinding StatusIconPadding}"
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Left">
+                                    <mct:IconPresenter Foreground="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=StatusBrush}" Icon="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=StatusIcon}" />
+                                </Border>
+                                <TextBlock Margin="10,0,0,0"
+                                           VerticalAlignment="Center"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           FontWeight="{TemplateBinding FontWeight}"
+                                           Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=StatusText}"
+                                           TextTrimming="CharacterEllipsis" />
+                            </DockPanel>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

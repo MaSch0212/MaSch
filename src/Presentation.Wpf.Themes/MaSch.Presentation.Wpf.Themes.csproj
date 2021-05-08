@@ -16,7 +16,7 @@
 
     <!-- Package Info -->
     <Description>Contains modern themes for .NET WPF application</Description>
-    <Version>0.1.5</Version>
+    <Version>0.1.6</Version>
     <PackageTags>masch presentation ui frontend wpf themes theming</PackageTags>
   </PropertyGroup>
 

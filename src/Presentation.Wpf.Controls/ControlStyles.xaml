@@ -11,6 +11,7 @@
         <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/IconButton.xaml" />
         <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/IconToggleButton.xaml" />
         <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/ProgressBar.xaml" />
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/StatusMessage.xaml" />
         <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/Switch.xaml" />
         <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/TabControl.xaml" />
         <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/TextBox.xaml" />
