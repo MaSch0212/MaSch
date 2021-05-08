@@ -126,7 +126,6 @@ namespace MaSch.Presentation.Wpf.Controls
 
         private Color _color = Colors.White;
         private Point? _colorPosition = new Point(0, 0);
-        private bool _shouldSetPoint = true;
         private bool _update = true;
 
         /// <summary>
@@ -251,7 +250,6 @@ namespace MaSch.Presentation.Wpf.Controls
             if (_colorPosition.HasValue)
             {
                 ColorSlider.SelectedColor = ColorUtilities.ConvertHsvToRgb(360 - ColorSlider.Value, 1, 1);
-                _shouldSetPoint = false;
                 DetermineColor(_colorPosition.Value);
             }
         }
@@ -310,28 +308,20 @@ namespace MaSch.Presentation.Wpf.Controls
             p.X /= maxWidth;
             p.Y /= maxHeight;
             _colorPosition = p;
-            _shouldSetPoint = false;
             DetermineColor(p);
         }
 
         private void UpdateMarkerPosition(Color theColor)
         {
-            if (_shouldSetPoint)
-            {
-                var hsv = ColorUtilities.ConvertRgbToHsv(theColor.R, theColor.G, theColor.B);
-                if (hsv.S > 0)
-                    ColorSlider.Value = hsv.H;
-                var p = new Point(hsv.S, 1 - hsv.V);
-                _colorPosition = p;
-                p.X *= ColorDetail.ActualWidth;
-                p.Y *= ColorDetail.ActualHeight;
-                MarkTransform.X = p.X;
-                MarkTransform.Y = p.Y;
-            }
-            else
-            {
-                _shouldSetPoint = true;
-            }
+            var hsv = ColorUtilities.ConvertRgbToHsv(theColor.R, theColor.G, theColor.B);
+            if (hsv.S > 0)
+                ColorSlider.Value = hsv.H;
+            var p = new Point(hsv.S, 1 - hsv.V);
+            _colorPosition = p;
+            p.X *= ColorDetail.ActualWidth;
+            p.Y *= ColorDetail.ActualHeight;
+            MarkTransform.X = p.X;
+            MarkTransform.Y = p.Y;
         }
 
         private void DetermineColor(Point p)

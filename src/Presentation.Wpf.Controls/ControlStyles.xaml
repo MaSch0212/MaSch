@@ -3,6 +3,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/MaSch.Presentation.Wpf.Themes;component/ControlStyles.xaml" />
 
+        <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/ColorPicker/Resources.xaml" />
         <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/ControlData/DetailPopupContent.xaml" />
         <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/BusyIndicator.xaml" />
         <ResourceDictionary Source="/MaSch.Presentation.Wpf.Controls;component/Controls/DefaultTileContent.xaml" />
