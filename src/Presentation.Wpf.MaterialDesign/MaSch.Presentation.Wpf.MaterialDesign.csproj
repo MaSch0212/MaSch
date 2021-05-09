@@ -15,7 +15,7 @@
     
     <!-- Package Info -->
     <Description>Contains an icon set for Material Design provided by https://materialdesignicons.com/ for use in .NET WPF applications.</Description>
-    <Version>0.1.4</Version>
+    <Version>0.1.5</Version>
     <PackageTags>masch presentation ui frontend wpf icons materialdesign</PackageTags>
 
     <NpmTempDir>$(ProjectDir)../.npm</NpmTempDir>

@@ -1,0 +1,2 @@
+﻿- Updated dependencies.
+- Fixed issie with ColorPicker.

@@ -13,7 +13,7 @@
 
     <!-- Package Info -->
     <Description>Contains supporting code for data access in .NET applications.</Description>
-    <Version>0.1.2</Version>
+    <Version>0.1.3</Version>
     <PackageTags>masch data database</PackageTags>
   </PropertyGroup>
 

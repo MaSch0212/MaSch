@@ -15,7 +15,7 @@
 
     <!-- Package Info -->
     <Description>Contains some supporting code for MSTest Unit Tests.</Description>
-    <Version>0.3.1</Version>
+    <Version>0.3.2</Version>
     <PackageTags>masch test mstest</PackageTags>
 
     <DoesNotReturnAttribute>DoesNotReturnAttribute</DoesNotReturnAttribute>

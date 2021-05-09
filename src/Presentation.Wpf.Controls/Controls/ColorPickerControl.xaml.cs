@@ -333,7 +333,8 @@ namespace MaSch.Presentation.Wpf.Controls
             };
             _color = ColorUtilities.ConvertHsvToRgb(hsv.H, hsv.S, hsv.V);
             _color.ScA = ScA;
-            SelectedColor = _color;
+            if (_update)
+                SelectedColor = _color;
         }
 
         private void ModernUITextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
