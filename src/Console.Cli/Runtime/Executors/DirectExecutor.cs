@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using MaSch.Console.Cli.ErrorHandling;
-using MaSch.Console.Cli.Runtime;
+using MaSch.Console.Cli.Internal;
 using MaSch.Core;
 
-namespace MaSch.Console.Cli.Internal
+namespace MaSch.Console.Cli.Runtime.Executors
 {
-    internal class DirectExecutor : IExecutor
+    internal class DirectExecutor : ICliExecutor
     {
         public DirectExecutor(Type commandType)
         {
@@ -37,10 +38,10 @@ namespace MaSch.Console.Cli.Internal
                 throw new InvalidOperationException($"The type {obj.GetType().Name} needs to implement {typeof(ICliCommandExecutor).Name} and/or {typeof(ICliAsyncCommandExecutor).Name}. If this command should not be executable, set the Executable Property on the CliCommandAttribute to false.");
         }
 
-        public bool ValidateOptions(object parameters, [MaybeNullWhen(true)] out CliError error)
+        public bool ValidateOptions(ICliCommandInfo command, object parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors)
         {
             // Nothing to validate here. The options are already validated in the CliApplicationArgumentParser.
-            error = null;
+            errors = null;
             return true;
         }
     }

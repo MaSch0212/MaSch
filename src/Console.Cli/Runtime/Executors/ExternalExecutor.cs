@@ -1,18 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using MaSch.Console.Cli.Configuration;
 using MaSch.Console.Cli.ErrorHandling;
-using MaSch.Console.Cli.Runtime;
+using MaSch.Console.Cli.Internal;
 using MaSch.Core;
 using MaSch.Core.Extensions;
 
-namespace MaSch.Console.Cli.Internal
+namespace MaSch.Console.Cli.Runtime.Executors
 {
     internal static class ExternalExecutor
     {
-        public static IExecutor GetExecutor(Type executorType, Type commandType, object? executorInstance)
+        public static ICliExecutor GetExecutor(Type executorType, Type commandType, object? executorInstance)
         {
             var types = (from i in executorType.GetInterfaces()
                          where i.IsGenericType
@@ -24,7 +24,7 @@ namespace MaSch.Console.Cli.Internal
                 : types.FirstOrDefault(x => x.IsAssignableFrom(commandType));
             if (type == null)
                 throw new ArgumentException($"The type {executorType.Name} needs to implement {typeof(ICliCommandExecutor<>).Name} and/or {typeof(ICliAsyncCommandExecutor<>).Name} for type {commandType.Name}.", nameof(executorType));
-            return (IExecutor)Activator.CreateInstance(typeof(ExternalExecutor<>).MakeGenericType(type), executorType, executorInstance)!;
+            return (ICliExecutor)Activator.CreateInstance(typeof(ExternalExecutor<>).MakeGenericType(type), executorType, executorInstance)!;
         }
 
         public static (object Executor, T TObj) PreExecute<T>(Type executorType, object? executorInstance, object obj)
@@ -45,7 +45,7 @@ namespace MaSch.Console.Cli.Internal
     }
 
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic counterpart to ExternalExecutor.")]
-    internal class ExternalExecutor<T> : IExecutor
+    internal class ExternalExecutor<T> : ICliExecutor
     {
         private readonly Type _executorType;
         private readonly object? _executorInstance;
@@ -84,7 +84,7 @@ namespace MaSch.Console.Cli.Internal
                 throw new InvalidOperationException($"The type {_executorType.Name} needs to implement {typeof(ICliCommandExecutor<T>).Name} and/or {typeof(ICliAsyncCommandExecutor<T>).Name} for type {typeof(T).Name}.");
         }
 
-        public bool ValidateOptions(object parameters, [MaybeNullWhen(true)] out CliError error)
+        public bool ValidateOptions(ICliCommandInfo command, object parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors)
         {
             var ee = ExternalExecutor.PreValidate(_executorType, _executorInstance ?? _cachedExecutor);
 
@@ -100,13 +100,13 @@ namespace MaSch.Console.Cli.Internal
             if (type != null)
             {
                 var validateMethod = typeof(ICliValidator<>).MakeGenericType(type).GetMethod(nameof(ICliValidator<object>.ValidateOptions))!;
-                var p = new object?[] { parameters, null };
+                var p = new object?[] { command, parameters, null };
                 var r = (bool)validateMethod.Invoke(ee, p)!;
-                error = p[1] as CliError;
+                errors = p[2] as IEnumerable<CliError>;
                 return r;
             }
 
-            error = null;
+            errors = null;
             return true;
         }
     }

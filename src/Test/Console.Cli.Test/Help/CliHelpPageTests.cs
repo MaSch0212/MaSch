@@ -95,7 +95,7 @@ namespace MaSch.Console.Cli.Test.Help
 
             HelpPage.WriteErrorMessage(AppMock.Object, new CliError((CliErrorType)4711));
 
-            Assert.AreEqual($"Unknown error.{NL}", sb.ToString());
+            Assert.AreEqual($"An unknown error occured.{NL}", sb.ToString());
         }
 
         [TestMethod]

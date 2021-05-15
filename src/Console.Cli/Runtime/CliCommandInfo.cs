@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MaSch.Console.Cli.Configuration;
 using MaSch.Console.Cli.ErrorHandling;
 using MaSch.Console.Cli.Internal;
+using MaSch.Console.Cli.Runtime.Executors;
 using MaSch.Core;
 
 namespace MaSch.Console.Cli.Runtime
@@ -18,7 +19,7 @@ namespace MaSch.Console.Cli.Runtime
         private readonly List<ICliCommandInfo> _childCommands = new();
         private readonly List<ICliCommandOptionInfo> _options = new();
         private readonly List<ICliCommandValueInfo> _values = new();
-        private readonly IExecutor? _executor;
+        private readonly ICliExecutor? _executor;
         private readonly Cache _cache = new();
 
         public CliCommandAttribute Attribute { get; }
@@ -69,16 +70,16 @@ namespace MaSch.Console.Cli.Runtime
             }
         }
 
-        public bool ValidateOptions(object parameters, [MaybeNullWhen(true)] out CliError error)
+        public bool ValidateOptions(ICliCommandInfo command, object parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors)
         {
             if (_executor == null)
             {
-                error = null;
+                errors = null;
                 return true;
             }
             else
             {
-                return _executor.ValidateOptions(parameters, out error);
+                return _executor.ValidateOptions(command, parameters, out errors);
             }
         }
 

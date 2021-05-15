@@ -62,4 +62,21 @@ namespace MaSch.Console.Cli.ErrorHandling
             AffectedValue = affectedValue;
         }
     }
+
+    public enum CliErrorType
+    {
+        Unknown,
+        Custom,
+        VersionRequested,
+        HelpRequested,
+        UnknownCommand,
+        UnknownOption,
+        UnknownValue,
+        MissingCommand,
+        MissingOption,
+        MissingOptionValue,
+        MissingValue,
+        WrongOptionFormat,
+        WrongValueFormat,
+    }
 }

@@ -92,7 +92,7 @@ namespace MaSch.Console.Cli
 
         protected bool TryParseArguments(string[] args, [NotNullWhen(true)] out ICliCommandInfo? command, [NotNullWhen(true)] out object? options)
         {
-            var result = CliApplicationArgumentParser.Parse(args, Options, CommandsCollection);
+            var result = CliArgumentParser.Parse(args, Options, CommandsCollection);
             if (result.Success)
             {
                 command = result.Command!;
@@ -102,7 +102,7 @@ namespace MaSch.Console.Cli
             else
             {
                 options = command = null;
-                Options.HelpPage.Write(this, result.Error!);
+                Options.HelpPage.Write(this, result.Errors);
                 return false;
             }
         }

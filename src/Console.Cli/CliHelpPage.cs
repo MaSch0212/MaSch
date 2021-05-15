@@ -5,6 +5,7 @@ using MaSch.Console.Controls.Table;
 using MaSch.Core;
 using MaSch.Core.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -19,20 +20,18 @@ namespace MaSch.Console.Cli.Help
             _console = Guard.NotNull(console, nameof(console));
         }
 
-        public virtual void Write(ICliApplicationBase application, CliError error)
+        public virtual void Write(ICliApplicationBase application, IEnumerable<CliError>? errors)
         {
-            switch (error.Type)
-            {
-                case CliErrorType.VersionRequested:
-                    WriteVersionPage(application, error);
-                    break;
-                case CliErrorType.HelpRequested:
-                    WriteHelpPage(application, error);
-                    break;
-                default:
-                    WriteErrorPage(application, error);
-                    break;
-            }
+            IList<CliError> errorList = errors?.ToList() ?? new List<CliError>();
+            if (errorList.Count == 0)
+                errorList.Add(new CliError(CliErrorType.Unknown));
+
+            if (errorList.TryFirst(x => x.Type == CliErrorType.VersionRequested, out var vError))
+                WriteVersionPage(application, vError);
+            else if (errorList.TryFirst(x => x.Type == CliErrorType.HelpRequested, out var hError))
+                WriteHelpPage(application, hError);
+            else
+                WriteErrorPage(application, errorList);
         }
 
         protected virtual void WriteVersionPage(ICliApplicationBase application, CliError error)
@@ -52,18 +51,19 @@ namespace MaSch.Console.Cli.Help
             WriteCommands(application, error);
         }
 
-        protected virtual void WriteErrorPage(ICliApplicationBase application, CliError error)
+        protected virtual void WriteErrorPage(ICliApplicationBase application, IList<CliError> errors)
         {
-            WriteCommandNameAndVersion(application, error);
-            WriteCopyright(application, error);
+            WriteCommandNameAndVersion(application, errors[0]);
+            WriteCopyright(application, errors[0]);
 
             _console.WriteLine();
-            WriteErrorMessage(application, error);
+            foreach (var error in errors)
+                WriteErrorMessage(application, error);
 
             _console.WriteLine();
-            WriteCommandUsage(application, error);
-            WriteCommandParameters(application, error);
-            WriteCommands(application, error);
+            WriteCommandUsage(application, errors[0]);
+            WriteCommandParameters(application, errors[0]);
+            WriteCommands(application, errors[0]);
         }
 
         protected virtual void WriteCommandNameAndVersion(ICliApplicationBase application, CliError error)
@@ -82,11 +82,12 @@ namespace MaSch.Console.Cli.Help
                     CliErrorType.UnknownValue => $"Too many values given.",
                     CliErrorType.MissingCommand => $"No command has been provided.",
                     CliErrorType.MissingOption => $"The option {GetOptionName(error.AffectedOption!)} is required.",
+                    CliErrorType.MissingOptionValue => $"A value needs to be provided for option {GetOptionName(error.AffectedOption!)}.",
                     CliErrorType.MissingValue => $"One or more values for this command are missing.",
                     CliErrorType.WrongOptionFormat => $"The value for option {GetOptionName(error.AffectedOption!)} has the wrong format.",
                     CliErrorType.WrongValueFormat => $"The value {error.AffectedValue!.DisplayName} has the wrong format.",
                     CliErrorType.Custom => error.CustomErrorMessage,
-                    _ => "Unknown error.",
+                    _ => "An unknown error occured.",
                 },
                 ConsoleColor.Red);
         }

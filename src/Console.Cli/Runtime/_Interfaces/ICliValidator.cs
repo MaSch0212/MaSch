@@ -1,10 +1,11 @@
 ﻿using MaSch.Console.Cli.ErrorHandling;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace MaSch.Console.Cli.Runtime
 {
     public interface ICliValidator<TCommand>
     {
-        bool ValidateOptions(TCommand parameters, [MaybeNullWhen(true)] out CliError error);
+        bool ValidateOptions(ICliCommandInfo command, TCommand parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors);
     }
 }

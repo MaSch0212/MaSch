@@ -43,5 +43,8 @@ namespace MaSch.Console.Cli.Runtime
 
             _property.SetValue(options, value.ConvertTo(_property.PropertyType));
         }
+
+        public object? GetValue(object options)
+            => _property.GetValue(options);
     }
 }

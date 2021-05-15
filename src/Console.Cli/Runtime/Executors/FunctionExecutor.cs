@@ -1,14 +1,16 @@
 ﻿using MaSch.Console.Cli.ErrorHandling;
+using MaSch.Console.Cli.Internal;
 using MaSch.Core;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
-namespace MaSch.Console.Cli.Internal
+namespace MaSch.Console.Cli.Runtime.Executors
 {
     internal static class FunctionExecutor
     {
-        public static IExecutor GetExecutor(object executorFunction)
+        public static ICliExecutor GetExecutor(object executorFunction)
         {
             Guard.NotNull(executorFunction, nameof(executorFunction));
             var type = executorFunction.GetType();
@@ -18,8 +20,8 @@ namespace MaSch.Console.Cli.Internal
             var eType = typeof(FunctionExecutor).MakeGenericType(genArgs[0]);
             return genArgs[1] switch
             {
-                Type x when x == typeof(int) => (IExecutor)Activator.CreateInstance(eType, executorFunction, null)!,
-                Type x when x == typeof(Task<int>) => (IExecutor)Activator.CreateInstance(eType, null, executorFunction)!,
+                Type x when x == typeof(int) => (ICliExecutor)Activator.CreateInstance(eType, executorFunction, null)!,
+                Type x when x == typeof(Task<int>) => (ICliExecutor)Activator.CreateInstance(eType, null, executorFunction)!,
                 _ => throw new ArgumentException($"The executor function needs to either return int or Task<int>."),
             };
         }
@@ -33,7 +35,7 @@ namespace MaSch.Console.Cli.Internal
     }
 
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic counterpart to FunctionExecutor")]
-    internal class FunctionExecutor<T> : IExecutor
+    internal class FunctionExecutor<T> : ICliExecutor
     {
         private readonly Func<T, int>? _executorFunc;
         private readonly Func<T, Task<int>>? _asyncExecutorFunc;
@@ -68,10 +70,10 @@ namespace MaSch.Console.Cli.Internal
                 throw new ArgumentException("At least one function needs to be provided.");
         }
 
-        public bool ValidateOptions(object parameters, [MaybeNullWhen(true)] out CliError error)
+        public bool ValidateOptions(ICliCommandInfo command, object parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors)
         {
             // Nothing to validate here. The options are already validated in the CliApplicationArgumentParser.
-            error = null;
+            errors = null;
             return true;
         }
     }

@@ -14,11 +14,11 @@ namespace MaSch.Console.Cli
         public string? Author { get; init; } = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company;
         public string? CliName { get; init; } = Assembly.GetEntryAssembly()?.GetName().Name;
 
-        public bool IgnoreUnknownOptions { get; init; }
-        public bool IgnoreAdditionalValues { get; init; }
-        public bool ProvideHelpCommand { get; init; }
-        public bool ProvideVersionCommand { get; init; }
-        public bool ProvideHelpOptions { get; init; }
-        public bool ProvideVersionOptions { get; init; }
+        public bool IgnoreUnknownOptions { get; init; } = false;
+        public bool IgnoreAdditionalValues { get; init; } = false;
+        public bool ProvideHelpCommand { get; init; } = true;
+        public bool ProvideVersionCommand { get; init; } = true;
+        public bool ProvideHelpOptions { get; init; } = true;
+        public bool ProvideVersionOptions { get; init; } = true;
     }
 }
