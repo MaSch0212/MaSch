@@ -1,0 +1,1 @@
+﻿- Added MockRepository to TestClassBase, so default MockBehavior can be overridden.

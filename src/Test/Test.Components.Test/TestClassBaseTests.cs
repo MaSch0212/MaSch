@@ -3,6 +3,7 @@ using MaSch.Test.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Moq.Protected;
+using System;
 
 namespace MaSch.Test.Components.Test
 {
@@ -90,6 +91,52 @@ namespace MaSch.Test.Components.Test
             mock.Object.CleanupTest();
 
             Assert.AreEqual(0, verifiables.Count);
+        }
+
+        [TestMethod]
+        public void DefaultMockBehavior()
+        {
+            var prevBehavior = TestClassBase.DefaultMockBehavior;
+            try
+            {
+                var mock = new Mock<TestClassBase>(MockBehavior.Loose) { CallBase = true };
+                var po = new PrivateObject(mock.Object);
+
+                TestClassBase.DefaultMockBehavior = MockBehavior.Strict;
+                var m = po.GetProperty<MockRepository>("Mocks").Create<IDisposable>();
+                Assert.AreEqual(MockBehavior.Strict, m.Behavior);
+
+                TestClassBase.DefaultMockBehavior = MockBehavior.Loose;
+                m = po.GetProperty<MockRepository>("Mocks").Create<IDisposable>();
+                Assert.AreEqual(MockBehavior.Strict, m.Behavior);
+
+                mock.Object.CleanupTest();
+                m = po.GetProperty<MockRepository>("Mocks").Create<IDisposable>();
+                Assert.AreEqual(MockBehavior.Loose, m.Behavior);
+            }
+            finally
+            {
+                TestClassBase.DefaultMockBehavior = prevBehavior;
+            }
+        }
+
+        [TestMethod]
+        public void MockBehavior_()
+        {
+            var mock = new Mock<TestClassBase>(MockBehavior.Loose) { CallBase = true };
+            var po = new PrivateObject(mock.Object);
+
+            mock.Protected().SetupGet<MockBehavior>("MockBehavior").Returns(MockBehavior.Strict);
+            var m = po.GetProperty<MockRepository>("Mocks").Create<IDisposable>();
+            Assert.AreEqual(MockBehavior.Strict, m.Behavior);
+
+            mock.Protected().SetupGet<MockBehavior>("MockBehavior").Returns(MockBehavior.Loose);
+            m = po.GetProperty<MockRepository>("Mocks").Create<IDisposable>();
+            Assert.AreEqual(MockBehavior.Strict, m.Behavior);
+
+            mock.Object.CleanupTest();
+            m = po.GetProperty<MockRepository>("Mocks").Create<IDisposable>();
+            Assert.AreEqual(MockBehavior.Loose, m.Behavior);
         }
     }
 }

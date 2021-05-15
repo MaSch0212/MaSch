@@ -1,6 +1,7 @@
 ﻿using MaSch.Core;
 using MaSch.Test.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System.Diagnostics.CodeAnalysis;
 
 namespace MaSch.Test
@@ -8,25 +9,38 @@ namespace MaSch.Test
     /// <summary>
     /// Represents a base class for unit test classes.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public abstract class TestClassBase
     {
         /// <summary>
+        /// Gets or sets the default mock behavior.
+        /// </summary>
+        public static MockBehavior DefaultMockBehavior { get; set; } = MockBehavior.Default;
+
+        /// <summary>
         /// Gets an object to execute assertions.
         /// </summary>
-        [ExcludeFromCodeCoverage]
         protected static Assertion.Assert Assert => Assertion.Assert.Instance;
 
         /// <summary>
         /// Gets or sets a value indicating whether the cache of this instance should be cleared after each test.
         /// </summary>
-        [ExcludeFromCodeCoverage]
         protected virtual bool CleanupCacheAfterTest { get; set; } = true;
 
         /// <summary>
         /// Gets the cache of the current test class.
         /// </summary>
-        [ExcludeFromCodeCoverage]
         protected virtual Cache Cache { get; } = new Cache();
+
+        /// <summary>
+        /// Gets the mock behavior that is used to initialize the <see cref="Mocks"/> property..
+        /// </summary>
+        protected virtual MockBehavior MockBehavior => DefaultMockBehavior;
+
+        /// <summary>
+        /// Gets the <see cref="MockRepository"/> with which mocks should be created in this <see cref="TestClassBase"/>.
+        /// </summary>
+        protected virtual MockRepository Mocks => Cache.GetValue(() => new MockRepository(MockBehavior))!;
 
         /// <summary>
         /// Gets the verifiables of the current test.
@@ -37,7 +51,6 @@ namespace MaSch.Test
         /// <summary>
         /// Gets or sets the test context.
         /// </summary>
-        [ExcludeFromCodeCoverage]
         public TestContext TestContext { get; set; }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -68,7 +81,6 @@ namespace MaSch.Test
         /// <summary>
         /// Called when the test has been initialized.
         /// </summary>
-        [ExcludeFromCodeCoverage]
         protected virtual void OnInitializeTest()
         {
         }
@@ -76,7 +88,6 @@ namespace MaSch.Test
         /// <summary>
         /// Called before the test is cleaned up.
         /// </summary>
-        [ExcludeFromCodeCoverage]
         protected virtual void OnCleanupTest()
         {
         }
