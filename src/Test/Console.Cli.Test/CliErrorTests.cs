@@ -1,5 +1,4 @@
 ﻿using MaSch.Console.Cli.Configuration;
-using MaSch.Console.Cli.ErrorHandling;
 using MaSch.Console.Cli.Runtime;
 using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

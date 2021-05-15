@@ -6,6 +6,7 @@
     <!-- General Project info -->
     <TargetFrameworks>$(TfmNetCore);$(TfmNetFramework)</TargetFrameworks>
     <IsTestProject>true</IsTestProject>
+    <UseMaSchGenerators>true</UseMaSchGenerators>
 
     <!-- Output info -->
     <SignAssembly>true</SignAssembly>

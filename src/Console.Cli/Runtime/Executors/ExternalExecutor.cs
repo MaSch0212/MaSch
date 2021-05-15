@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using MaSch.Console.Cli.ErrorHandling;
 using MaSch.Console.Cli.Internal;
 using MaSch.Core;
 using MaSch.Core.Extensions;

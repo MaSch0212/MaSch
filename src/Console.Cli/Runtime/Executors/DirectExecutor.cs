@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using MaSch.Console.Cli.ErrorHandling;
 using MaSch.Console.Cli.Internal;
 using MaSch.Core;
 

@@ -1,5 +1,4 @@
-﻿using MaSch.Console.Cli.ErrorHandling;
-using MaSch.Console.Cli.Internal;
+﻿using MaSch.Console.Cli.Internal;
 using MaSch.Core;
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,4 @@
-﻿using MaSch.Console.Cli.ErrorHandling;
-using MaSch.Console.Cli.Runtime.Validators;
+﻿using MaSch.Console.Cli.Runtime.Validators;
 using MaSch.Core.Extensions;
 using System;
 using System.Collections;
@@ -11,7 +10,7 @@ namespace MaSch.Console.Cli.Runtime
 {
     public static class CliArgumentParser
     {
-        private static List<ICliValidator<object>> _commonValidators = new()
+        private static readonly List<ICliValidator<object>> _commonValidators = new()
         {
             new RequiredValidator(),
         };
@@ -21,7 +20,7 @@ namespace MaSch.Console.Cli.Runtime
             _commonValidators.Add(validator);
         }
 
-        public static CliArgumentParserResult Parse(string[] args, CliApplicationOptions appOptions, CliCommandInfoCollection availableCommands)
+        public static CliArgumentParserResult Parse(string[] args, CliApplicationOptions appOptions, ICliCommandInfoCollection availableCommands)
         {
             try
             {
@@ -51,8 +50,9 @@ namespace MaSch.Console.Cli.Runtime
             }
         }
 
-        private static bool TryParseCommandInfo(string[] args, CliCommandInfoCollection availableCommands, [NotNullWhen(true)] out ICliCommandInfo? command, out int commandArgIndex)
+        private static bool TryParseCommandInfo(string[] args, ICliCommandInfoCollection availableCommands, [NotNullWhen(true)] out ICliCommandInfo? command, out int commandArgIndex)
         {
+            commandArgIndex = 0;
             command = availableCommands.FirstOrDefault(x => x.Aliases.Contains(args[0], StringComparer.OrdinalIgnoreCase));
             if (command != null)
             {
@@ -66,16 +66,15 @@ namespace MaSch.Console.Cli.Runtime
                         break;
                 }
             }
-            else
+            else if (availableCommands.DefaultCommand?.Values.IsNullOrEmpty() == false)
             {
-                commandArgIndex = 0;
                 command = availableCommands.DefaultCommand;
             }
 
             return command != null;
         }
 
-        private static void HandleSpecialCommands(string[] args, CliApplicationOptions appOptions, CliCommandInfoCollection availableCommands)
+        private static void HandleSpecialCommands(string[] args, CliApplicationOptions appOptions, ICliCommandInfoCollection availableCommands)
         {
             if (appOptions.ProvideVersionCommand)
             {
@@ -84,7 +83,8 @@ namespace MaSch.Console.Cli.Runtime
                 else if (IsOption("version"))
                     Throw(CliErrorType.VersionRequested, null);
             }
-            else if (appOptions.ProvideHelpCommand)
+
+            if (appOptions.ProvideHelpCommand)
             {
                 if (IsCommand("help"))
                     DetermineCommandAndThrow(CliErrorType.HelpRequested);

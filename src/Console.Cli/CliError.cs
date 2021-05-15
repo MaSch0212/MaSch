@@ -1,7 +1,7 @@
 ﻿using MaSch.Console.Cli.Runtime;
 using System;
 
-namespace MaSch.Console.Cli.ErrorHandling
+namespace MaSch.Console.Cli
 {
     public class CliError
     {

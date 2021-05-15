@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace MaSch.Console.Cli.Runtime
 {
-    public class CliCommandInfoCollection : ICollection<ICliCommandInfo>
+    public class CliCommandInfoCollection : ICliCommandInfoCollection
     {
         private readonly IDictionary<Type, ICliCommandInfo> _allCommands = new Dictionary<Type, ICliCommandInfo>();
         private readonly List<ICliCommandInfo> _rootCommands = new List<ICliCommandInfo>();

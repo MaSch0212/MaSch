@@ -1,4 +1,4 @@
-﻿using MaSch.Console.Cli.ErrorHandling;
+﻿using MaSch.Console.Cli.Help;
 using MaSch.Console.Cli.Runtime;
 using MaSch.Console.Controls;
 using MaSch.Console.Controls.Table;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MaSch.Console.Cli.Help
+namespace MaSch.Console.Cli
 {
     public class CliHelpPage : ICliHelpPage
     {
@@ -74,22 +74,26 @@ namespace MaSch.Console.Cli.Help
 
         protected virtual void WriteErrorMessage(ICliApplicationBase application, CliError error)
         {
+            var message = error.Type switch
+            {
+                CliErrorType.UnknownCommand => $"The command \"{error.CommandName}\" is unknown.",
+                CliErrorType.UnknownOption => $"The option \"{error.OptionName}\" is unknown.",
+                CliErrorType.UnknownValue => $"Too many values given.",
+                CliErrorType.MissingCommand => $"No command has been provided.",
+                CliErrorType.MissingOption => $"The option {GetOptionName(error.AffectedOption!)} is required.",
+                CliErrorType.MissingOptionValue => $"A value needs to be provided for option {GetOptionName(error.AffectedOption!)}.",
+                CliErrorType.MissingValue => $"One or more values for this command are missing.",
+                CliErrorType.WrongOptionFormat => $"The value for option {GetOptionName(error.AffectedOption!)} has the wrong format.",
+                CliErrorType.WrongValueFormat => $"The value {error.AffectedValue!.DisplayName} has the wrong format.",
+                CliErrorType.Custom => error.CustomErrorMessage,
+                _ => "An unknown error occured.",
+            };
             _console.WriteLineWithColor(
-                error.Type switch
-                {
-                    CliErrorType.UnknownCommand => $"The command \"{error.CommandName}\" is unknown.",
-                    CliErrorType.UnknownOption => $"The option \"{error.OptionName}\" is unknown.",
-                    CliErrorType.UnknownValue => $"Too many values given.",
-                    CliErrorType.MissingCommand => $"No command has been provided.",
-                    CliErrorType.MissingOption => $"The option {GetOptionName(error.AffectedOption!)} is required.",
-                    CliErrorType.MissingOptionValue => $"A value needs to be provided for option {GetOptionName(error.AffectedOption!)}.",
-                    CliErrorType.MissingValue => $"One or more values for this command are missing.",
-                    CliErrorType.WrongOptionFormat => $"The value for option {GetOptionName(error.AffectedOption!)} has the wrong format.",
-                    CliErrorType.WrongValueFormat => $"The value {error.AffectedValue!.DisplayName} has the wrong format.",
-                    CliErrorType.Custom => error.CustomErrorMessage,
-                    _ => "An unknown error occured.",
-                },
+                message + (error.Exception != null ? $" {error.Exception.Message}" : string.Empty),
                 ConsoleColor.Red);
+
+            if (error.Exception != null)
+                _console.WriteLineWithColor(error.Exception.Message, ConsoleColor.Red);
         }
 
         protected virtual void WriteCommandUsage(ICliApplicationBase application, CliError error)

@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using MaSch.Console.Cli.Configuration;
-using MaSch.Console.Cli.ErrorHandling;
 using MaSch.Console.Cli.Internal;
 using MaSch.Console.Cli.Runtime.Executors;
 using MaSch.Core;
