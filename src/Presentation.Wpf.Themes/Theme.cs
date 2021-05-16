@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
-using System.IO.Packaging;
-using System.Linq;
-using MaSch.Core;
+﻿using MaSch.Core;
 using MaSch.Core.Extensions;
 using MaSch.Core.Observable;
 using MaSch.Core.Observable.Collections;
 using MaSch.Presentation.Wpf.JsonConverters;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.IO;
+using System.IO.Packaging;
+using System.Linq;
 
 namespace MaSch.Presentation.Wpf
 {

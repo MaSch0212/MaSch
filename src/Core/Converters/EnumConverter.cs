@@ -1,5 +1,5 @@
-﻿using System;
-using MaSch.Core.Extensions;
+﻿using MaSch.Core.Extensions;
+using System;
 
 namespace MaSch.Core.Converters
 {

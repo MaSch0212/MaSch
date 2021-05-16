@@ -1,10 +1,10 @@
-﻿using System;
+﻿using MaSch.Core;
+using MaSch.Presentation.Wpf.Extensions;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using MaSch.Core;
-using MaSch.Presentation.Wpf.Extensions;
 using Win = System.Windows.Controls;
 
 namespace MaSch.Presentation.Wpf.DependencyProperties

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using MaSch.Core.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using MaSch.Core.Helper;
 
 #pragma warning disable SA1402 // File may only contain a single type
 

@@ -1,4 +1,8 @@
-﻿using System;
+﻿using MaSch.Core;
+using MaSch.Core.Attributes;
+using MaSch.Core.Observable;
+using MaSch.Presentation.Wpf.Commands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Printing;
@@ -9,10 +13,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using MaSch.Core;
-using MaSch.Core.Attributes;
-using MaSch.Core.Observable;
-using MaSch.Presentation.Wpf.Commands;
 using ThreadState = System.Threading.ThreadState;
 
 namespace MaSch.Presentation.Wpf.Printing

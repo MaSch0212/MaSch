@@ -1,6 +1,6 @@
-﻿using System;
+﻿using MaSch.Native.Windows.Explorer.Taskbar;
+using System;
 using System.Runtime.InteropServices;
-using MaSch.Native.Windows.Explorer.Taskbar;
 
 namespace MaSch.Native.Windows
 {

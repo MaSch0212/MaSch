@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using MaSch.Core.Extensions;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows.Input;
-using MaSch.Core.Extensions;
 
 namespace MaSch.Presentation.Wpf.Commands
 {

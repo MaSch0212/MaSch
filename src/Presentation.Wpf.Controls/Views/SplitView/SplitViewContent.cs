@@ -1,11 +1,11 @@
-﻿using System;
+﻿using MaSch.Presentation.Wpf.Commands;
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using MaSch.Presentation.Wpf.Commands;
 
 namespace MaSch.Presentation.Wpf.Views.SplitView
 {

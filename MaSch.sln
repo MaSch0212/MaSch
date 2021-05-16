@@ -57,6 +57,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{703BC87F
 		build\MaSch.props = build\MaSch.props
 		build\MaSch.ruleset = build\MaSch.ruleset
 		build\MaSch.Tests.ruleset = build\MaSch.Tests.ruleset
+		build\stylecop.json = build\stylecop.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaSch.Test.Components.Test", "src\Test\Test.Components.Test\MaSch.Test.Components.Test.csproj", "{6708D3FE-B9B7-4BF6-BB04-27BE4121E81B}"

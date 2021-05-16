@@ -1,7 +1,7 @@
-﻿using System;
+﻿using MaSch.Presentation.Wpf.Markup;
+using System;
 using System.Linq;
 using System.Windows;
-using MaSch.Presentation.Wpf.Markup;
 
 namespace MaSch.Presentation.Wpf
 {

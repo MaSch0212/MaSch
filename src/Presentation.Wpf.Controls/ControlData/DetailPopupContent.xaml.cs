@@ -1,12 +1,12 @@
-﻿using System;
+﻿using MaSch.Presentation.Wpf.Controls;
+using MaSch.Presentation.Wpf.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using MaSch.Presentation.Wpf.Controls;
-using MaSch.Presentation.Wpf.Extensions;
 
 namespace MaSch.Presentation.Wpf.ControlData
 {

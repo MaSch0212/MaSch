@@ -1,9 +1,9 @@
-﻿using System;
+﻿using MaSch.Core.Extensions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using MaSch.Core.Extensions;
 
 namespace MaSch.Core.Attributes
 {
@@ -13,16 +13,15 @@ namespace MaSch.Core.Attributes
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class NotifyPropertyChangedAttribute : Attribute
     {
-        private readonly Dictionary<object, EventCacheItem> _eventCache = new Dictionary<object, EventCacheItem>();
+        private readonly Dictionary<object, EventCacheItem> _eventCache = new();
+        private readonly string _callbackMethodName;
+        private PropertyInfo? _propertyInfo;
+        private MethodInfo? _callbackMethod;
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="NotifyPropertyChangedAttribute"/> is initialized.
         /// </summary>
         public bool IsInitialized => _propertyInfo != null && _callbackMethod != null;
-
-        private readonly string _callbackMethodName;
-        private PropertyInfo? _propertyInfo;
-        private MethodInfo? _callbackMethod;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotifyPropertyChangedAttribute"/> class.

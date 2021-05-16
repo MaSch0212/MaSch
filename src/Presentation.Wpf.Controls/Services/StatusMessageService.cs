@@ -1,12 +1,5 @@
-﻿using MaSch.Core.Attributes;
-using MaSch.Core.Observable;
-using MaSch.Presentation.Wpf.Controls;
+﻿using MaSch.Presentation.Wpf.Controls;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 #pragma warning disable SA1649 // File name should match first type name
 #pragma warning disable SA1402 // File may only contain a single type

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Globalization;
-using MaSch.Core;
+﻿using MaSch.Core;
 using MaSch.Core.Helper;
 using MaSch.Presentation.Translation;
+using System;
+using System.Globalization;
 
 namespace MaSch.Presentation.Wpf.Markup
 {

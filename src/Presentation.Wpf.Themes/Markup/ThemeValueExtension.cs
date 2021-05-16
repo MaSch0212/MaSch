@@ -1,11 +1,11 @@
-﻿using System;
+﻿using MaSch.Core.Extensions;
+using MaSch.Presentation.Wpf.DependencyProperties;
+using MaSch.Presentation.Wpf.Themes;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
-using MaSch.Core.Extensions;
-using MaSch.Presentation.Wpf.DependencyProperties;
-using MaSch.Presentation.Wpf.Themes;
 
 namespace MaSch.Presentation.Wpf.Markup
 {

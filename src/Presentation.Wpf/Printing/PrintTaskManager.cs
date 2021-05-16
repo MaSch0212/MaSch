@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using MaSch.Core;
+﻿using MaSch.Core;
 using MaSch.Core.Observable;
 using MaSch.Core.Observable.Collections;
+using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace MaSch.Presentation.Wpf.Printing
 {

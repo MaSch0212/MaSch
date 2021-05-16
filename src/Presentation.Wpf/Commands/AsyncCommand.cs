@@ -1,9 +1,9 @@
-﻿using System;
+﻿using MaSch.Core.Extensions;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using MaSch.Core.Extensions;
 
 namespace MaSch.Presentation.Wpf.Commands
 {

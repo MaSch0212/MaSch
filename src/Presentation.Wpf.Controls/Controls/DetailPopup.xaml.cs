@@ -1,7 +1,7 @@
-﻿using System;
+﻿using MaSch.Presentation.Wpf.ControlData;
+using System;
 using System.Windows;
 using System.Windows.Controls.Primitives;
-using MaSch.Presentation.Wpf.ControlData;
 
 namespace MaSch.Presentation.Wpf.Controls
 {

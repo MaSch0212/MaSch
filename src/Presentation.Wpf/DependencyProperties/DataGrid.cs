@@ -1,10 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using MaSch.Core;
+using MaSch.Core.Extensions;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using MaSch.Core;
-using MaSch.Core.Extensions;
 
 namespace MaSch.Presentation.Wpf.DependencyProperties
 {

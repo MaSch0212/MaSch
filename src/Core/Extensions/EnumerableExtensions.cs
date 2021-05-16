@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MaSch.Core.Collections;
+using MaSch.Core.Observable.Collections;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,8 +9,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MaSch.Core.Collections;
-using MaSch.Core.Observable.Collections;
 
 #pragma warning disable SA1402 // File may only contain a single type
 

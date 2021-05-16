@@ -1,9 +1,9 @@
-﻿using System;
+﻿using MaSch.Core.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using MaSch.Core.Extensions;
 
 /*
  * Explanation why methods from IServiceContext and IServiceContext<T> are hidden:

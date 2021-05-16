@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaSch.Core.Extensions;
+using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -6,7 +7,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Markup;
-using MaSch.Core.Extensions;
 
 namespace MaSch.Presentation.Wpf.Commands
 {

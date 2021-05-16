@@ -1,10 +1,10 @@
-﻿using System;
+﻿using MaSch.Core;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
-using MaSch.Core;
 
 namespace MaSch.Presentation.Wpf.Extensions
 {

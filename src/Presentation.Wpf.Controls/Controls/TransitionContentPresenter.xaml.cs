@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaSch.Presentation.Wpf.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -6,7 +7,6 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Effects;
-using MaSch.Presentation.Wpf.Extensions;
 
 namespace MaSch.Presentation.Wpf.Controls
 {

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using MaSch.Core.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Input;
-using MaSch.Core.Attributes;
 
 namespace MaSch.Core.Observable.Modules
 {

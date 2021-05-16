@@ -1,8 +1,8 @@
-﻿using System;
+﻿using MaSch.Presentation.Wpf.Extensions;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using MaSch.Presentation.Wpf.Extensions;
 using Win = System.Windows.Controls;
 
 namespace MaSch.Presentation.Wpf.Controls

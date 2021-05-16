@@ -1,5 +1,5 @@
-﻿using System;
-using MaSch.Core;
+﻿using MaSch.Core;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace MaSch.Presentation.Translation.Validation

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using MaSch.Presentation.Wpf.ViewModels;
+using System;
 using System.Media;
 using System.Windows;
-using MaSch.Presentation.Wpf.ViewModels;
 
 namespace MaSch.Presentation.Wpf.Views
 {

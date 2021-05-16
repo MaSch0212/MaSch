@@ -1,14 +1,14 @@
-﻿using System;
+﻿using MaSch.Core.Attributes;
+using MaSch.Core.Observable;
+using MaSch.Presentation.Services;
+using MaSch.Presentation.Wpf.Services;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
-using MaSch.Core.Attributes;
-using MaSch.Core.Observable;
-using MaSch.Presentation.Services;
-using MaSch.Presentation.Wpf.Services;
 
 namespace MaSch.Presentation.Wpf.Views.SplitView
 {

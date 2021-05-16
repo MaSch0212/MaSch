@@ -1,6 +1,6 @@
-﻿using System;
+﻿using MaSch.Core.Converters;
+using System;
 using System.Globalization;
-using MaSch.Core.Converters;
 
 namespace MaSch.Core
 {

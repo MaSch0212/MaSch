@@ -1,9 +1,9 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Text.RegularExpressions;
-using MaSch.Presentation.Wpf.Models;
+﻿using MaSch.Presentation.Wpf.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 
 namespace MaSch.Presentation.Wpf.JsonConverters
 {

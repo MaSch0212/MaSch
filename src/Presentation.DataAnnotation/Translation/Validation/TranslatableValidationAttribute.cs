@@ -1,6 +1,6 @@
-﻿using System;
+﻿using MaSch.Core.Helper;
+using System;
 using System.ComponentModel.DataAnnotations;
-using MaSch.Core.Helper;
 
 namespace MaSch.Presentation.Translation.Validation
 {

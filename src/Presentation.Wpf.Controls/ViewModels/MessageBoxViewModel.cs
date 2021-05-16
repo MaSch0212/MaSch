@@ -58,7 +58,7 @@ namespace MaSch.Presentation.Wpf.ViewModels
             [32] = () => new BrushGeometry
             {
                 Icon = CurrentThemeManager.GetValue<Icon>(ThemeKey.MessageBoxQuestionIcon) as Icon,
-                FillBrush = new SolidColorBrush(Color.FromArgb(255, 25, 88, 185 )),
+                FillBrush = new SolidColorBrush(Color.FromArgb(255, 25, 88, 185)),
             },
             [48] = () => new BrushGeometry
             {
@@ -68,7 +68,7 @@ namespace MaSch.Presentation.Wpf.ViewModels
             [64] = () => new BrushGeometry
             {
                 Icon = CurrentThemeManager.GetValue<Icon>(ThemeKey.MessageBoxInfoIcon) as Icon,
-                FillBrush = new SolidColorBrush(Color.FromArgb(255, 25, 88, 185 )),
+                FillBrush = new SolidColorBrush(Color.FromArgb(255, 25, 88, 185)),
             },
         };
 

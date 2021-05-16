@@ -1,11 +1,11 @@
-﻿using System;
+﻿using MaSch.Core.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
-using MaSch.Core.Extensions;
 
 namespace MaSch.Presentation.Translation
 {

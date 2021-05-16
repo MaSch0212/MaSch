@@ -1,8 +1,7 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using MaSch.Presentation.Wpf.ThemeValues;
+﻿using MaSch.Presentation.Wpf.ThemeValues;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 
 namespace MaSch.Presentation.Wpf.JsonConverters
 {
@@ -25,7 +24,7 @@ namespace MaSch.Presentation.Wpf.JsonConverters
         /// Initializes a new instance of the <see cref="ThemeValueJsonConverter"/> class.
         /// </summary>
         public ThemeValueJsonConverter()
-            : this (true)
+            : this(true)
         {
         }
 

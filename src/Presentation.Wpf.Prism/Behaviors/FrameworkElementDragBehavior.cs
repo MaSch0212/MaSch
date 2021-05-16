@@ -1,6 +1,6 @@
-﻿using System.Windows;
+﻿using MaSch.Presentation.Wpf.Common;
+using System.Windows;
 using System.Windows.Interactivity;
-using MaSch.Presentation.Wpf.Common;
 
 namespace MaSch.Presentation.Wpf.Behaviors
 {

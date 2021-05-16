@@ -1,7 +1,7 @@
-﻿using System;
+﻿using MaSch.Core.Extensions;
+using System;
 using System.Globalization;
 using System.Windows.Data;
-using MaSch.Core.Extensions;
 
 namespace MaSch.Presentation.Wpf.Converter
 {

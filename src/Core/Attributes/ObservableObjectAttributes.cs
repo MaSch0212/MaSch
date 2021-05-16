@@ -95,7 +95,7 @@ namespace MaSch.Core.Attributes
         /// Initializes a new instance of the <see cref="ObservablePropertyAccessModifierAttribute"/> class.
         /// </summary>
         public ObservablePropertyAccessModifierAttribute()
-            : this (AccessModifier.Public)
+            : this(AccessModifier.Public)
         {
         }
 

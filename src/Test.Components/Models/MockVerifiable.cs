@@ -26,7 +26,7 @@ namespace MaSch.Test.Models
         /// </summary>
         /// <param name="verifyAction">The action to execute when this <see cref="IMockVerifiable"/> is verified.</param>
         public MockVerifiable(MockVerification verifyAction)
-            : this (verifyAction, Times.AtLeastOnce())
+            : this(verifyAction, Times.AtLeastOnce())
         {
         }
 

@@ -1,7 +1,7 @@
-﻿using System;
-using System.ComponentModel;
-using MaSch.Presentation.Wpf.JsonConverters;
+﻿using MaSch.Presentation.Wpf.JsonConverters;
 using Newtonsoft.Json;
+using System;
+using System.ComponentModel;
 
 namespace MaSch.Presentation.Wpf
 {

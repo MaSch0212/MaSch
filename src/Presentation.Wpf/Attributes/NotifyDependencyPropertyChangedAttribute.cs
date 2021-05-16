@@ -33,7 +33,7 @@ namespace MaSch.Presentation.Wpf.Attributes
         /// </summary>
         /// <param name="propertyName">Name of the dependency property.</param>
         public NotifyDependencyPropertyChangedAttribute(string propertyName)
-            : this (propertyName, null)
+            : this(propertyName, null)
         {
         }
 

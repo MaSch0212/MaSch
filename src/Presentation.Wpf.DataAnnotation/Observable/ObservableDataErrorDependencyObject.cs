@@ -1,10 +1,10 @@
-﻿using System;
+﻿using MaSch.Core.Observable.Modules;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
-using MaSch.Core.Observable.Modules;
 
 namespace MaSch.Presentation.Wpf.Observable
 {

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using MaSch.Core;
+using MaSch.Core.Extensions;
+using System;
 using System.Data;
 using System.Threading.Tasks;
-using MaSch.Core;
-using MaSch.Core.Extensions;
 
 namespace MaSch.Data.Extensions
 {

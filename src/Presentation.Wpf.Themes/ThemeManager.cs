@@ -1,14 +1,14 @@
-﻿using System;
+﻿using MaSch.Core;
+using MaSch.Core.Extensions;
+using MaSch.Core.Observable.Collections;
+using MaSch.Presentation.Wpf.Models;
+using MaSch.Presentation.Wpf.ThemeValues;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using MaSch.Core;
-using MaSch.Core.Extensions;
-using MaSch.Core.Observable.Collections;
-using MaSch.Presentation.Wpf.Models;
-using MaSch.Presentation.Wpf.ThemeValues;
 
 namespace MaSch.Presentation.Wpf
 {

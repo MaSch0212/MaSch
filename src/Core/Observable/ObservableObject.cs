@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using MaSch.Core.Attributes;
+using MaSch.Core.Observable.Modules;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
-using MaSch.Core.Attributes;
-using MaSch.Core.Observable.Modules;
 
 namespace MaSch.Core.Observable
 {

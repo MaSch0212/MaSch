@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using MaSch.Core.Extensions;
+﻿using MaSch.Core.Extensions;
 using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
 
 namespace MaSch.Core.Test.Extensions
 {

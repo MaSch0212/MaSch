@@ -1,9 +1,9 @@
-﻿using System;
+﻿using MaSch.Presentation.Wpf.ColorPicker;
+using System;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using MaSch.Presentation.Wpf.ColorPicker;
 
 namespace MaSch.Presentation.Wpf.Controls
 {
