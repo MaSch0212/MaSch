@@ -97,7 +97,8 @@ namespace MaSch.Core.Lazy
             if (UseCaching)
             {
                 bField = true;
-                callback(vField = value);
+                vField = value;
+                callback(vField);
             }
             else
             {

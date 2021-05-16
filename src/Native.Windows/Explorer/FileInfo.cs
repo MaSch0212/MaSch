@@ -35,7 +35,7 @@ namespace MaSch.Native.Windows.Explorer
         private static IntPtr GetIcon(int iImage, IconSize size)
         {
             IImageList? spiml = null;
-            Guid guil = new Guid(Shell32.IidIImageList);
+            Guid guil = new(Shell32.IidIImageList);
 
             Shell32.SHGetImageList((int)size, ref guil, ref spiml);
             IntPtr hIcon = IntPtr.Zero;
@@ -73,7 +73,7 @@ namespace MaSch.Native.Windows.Explorer
         public static IList<Process> WhoIsLocking(string path)
         {
             string key = Guid.NewGuid().ToString();
-            List<Process> processes = new List<Process>();
+            List<Process> processes = new();
 
             int res = Rstrtmgr.RmStartSession(out uint handle, 0, key);
 
@@ -119,10 +119,9 @@ namespace MaSch.Native.Windows.Explorer
                             {
                                 processes.Add(Process.GetProcessById(processInfo[i].Process.dwProcessId));
                             }
-
-                            // catch the error -- in case the process is no longer running
                             catch (ArgumentException)
                             {
+                                // catch the error -- in case the process is no longer running
                             }
                         }
                     }

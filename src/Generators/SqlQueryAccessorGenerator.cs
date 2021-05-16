@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -58,6 +59,7 @@ namespace MaSch.Generators
             context.AddSource(CreateHintName(className, nameof(SqlQueryAccessorGenerator)), source);
         }
 
+        [SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed", Justification = "False positive.")]
         private static string GenerateSqlQueryAccessor(string rootNamespace, string className, string rootDir, IEnumerable<AdditionalText> files)
         {
             var rootNode = new Node();
@@ -96,7 +98,11 @@ namespace MaSch.Generators
                 {
                     var subNode = SubNodes.SingleOrDefault(x => x.Name == pathParts[0]);
                     if (subNode == null)
-                        SubNodes.Add(subNode = new Node(pathParts[0]));
+                    {
+                        subNode = new Node(pathParts[0]);
+                        SubNodes.Add(subNode);
+                    }
+
                     subNode.Add(pathParts[1..], file);
                 }
             }

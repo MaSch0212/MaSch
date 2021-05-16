@@ -12,7 +12,6 @@ namespace MaSch.Presentation.Wpf.Animation
     /// </remarks>
     public class GridLengthAnimation : AnimationTimeline
     {
-        private bool _isCompleted;
         private AnimationClock? _clock;
 
         /// <summary>
@@ -78,11 +77,7 @@ namespace MaSch.Presentation.Wpf.Animation
         /// <summary>
         /// Gets or sets a value indicating whether the animation is completed.
         /// </summary>
-        public bool IsCompleted
-        {
-            get => _isCompleted;
-            set => _isCompleted = value;
-        }
+        public bool IsCompleted { get; set; }
 
         /// <summary>
         /// Gets the type of object to animate.
@@ -107,7 +102,7 @@ namespace MaSch.Presentation.Wpf.Animation
             if (_clock == null)
             {
                 _clock = clock;
-                _clock.Completed += (sender, e) => { _isCompleted = true; };
+                _clock.Completed += (sender, e) => { IsCompleted = true; };
             }
         }
 
@@ -124,7 +119,7 @@ namespace MaSch.Presentation.Wpf.Animation
             VerifyAnimationCompletedStatus(animationClock);
 
             // check if the animation was completed
-            if (_isCompleted)
+            if (IsCompleted)
                 return (GridLength)defaultDestinationValue;
 
             // if not then create the value to animate

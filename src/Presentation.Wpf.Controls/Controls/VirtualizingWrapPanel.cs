@@ -38,22 +38,19 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(VirtualizingWrapPanel),
                 new FrameworkPropertyMetadata(Orientation.Horizontal));
 
-        private readonly Dictionary<UIElement, Rect> _realizedChildLayout = new Dictionary<UIElement, Rect>();
+        private readonly Dictionary<UIElement, Rect> _realizedChildLayout = new();
         private UIElementCollection _children;
         private ItemsControl _itemsControl;
         private IItemContainerGenerator _generator;
-        private Point _offset = new Point(0, 0);
-        private Size _extent = new Size(0, 0);
-        private Size _viewport = new Size(0, 0);
+        private Point _offset = new(0, 0);
+        private Size _extent = new(0, 0);
+        private Size _viewport = new(0, 0);
         private int _firstIndex = 0;
         private Size _childSize;
-        private Size _pixelMeasuredViewport = new Size(0, 0);
+        private Size _pixelMeasuredViewport = new(0, 0);
         private WrapPanelAbstraction _abstractPanel;
-        private bool _canHScroll = false;
-        private bool _canVScroll = false;
-        private WinControls.ScrollViewer _owner;
 
-        private Size ChildSlotSize => new Size(ItemWidth, ItemHeight);
+        private Size ChildSlotSize => new(ItemWidth, ItemHeight);
 
         [TypeConverter(typeof(LengthConverter))]
         public double ItemHeight
@@ -75,17 +72,9 @@ namespace MaSch.Presentation.Wpf.Controls
             set => SetValue(OrientationProperty, value);
         }
 
-        public bool CanHorizontallyScroll
-        {
-            get => _canHScroll;
-            set => _canHScroll = value;
-        }
+        public bool CanHorizontallyScroll { get; set; }
 
-        public bool CanVerticallyScroll
-        {
-            get => _canVScroll;
-            set => _canVScroll = value;
-        }
+        public bool CanVerticallyScroll { get; set; }
 
         public double ExtentHeight => _extent.Height;
 
@@ -99,11 +88,7 @@ namespace MaSch.Presentation.Wpf.Controls
 
         public double ViewportWidth => _viewport.Width;
 
-        public WinControls.ScrollViewer ScrollOwner
-        {
-            get => _owner;
-            set => _owner = value;
-        }
+        public WinControls.ScrollViewer ScrollOwner { get; set; }
 
         public void SetFirstRowViewItemIndex(int index)
         {
@@ -172,7 +157,7 @@ namespace MaSch.Presentation.Wpf.Controls
 
         public Rect MakeVisible(Visual visual, Rect rectangle)
         {
-            var gen = (ItemContainerGenerator)_generator.GetItemContainerGeneratorForPanel(this);
+            var gen = _generator.GetItemContainerGeneratorForPanel(this);
             var element = (UIElement)visual;
             int itemIndex = gen.IndexFromContainer(element);
             while (itemIndex == -1)
@@ -259,8 +244,8 @@ namespace MaSch.Presentation.Wpf.Controls
 
             _offset.X = offset;
 
-            if (_owner != null)
-                _owner.InvalidateScrollInfo();
+            if (ScrollOwner != null)
+                ScrollOwner.InvalidateScrollInfo();
 
             InvalidateMeasure();
             _firstIndex = GetFirstVisibleIndex();
@@ -282,10 +267,9 @@ namespace MaSch.Presentation.Wpf.Controls
 
             _offset.Y = offset;
 
-            if (_owner != null)
-                _owner.InvalidateScrollInfo();
+            if (ScrollOwner != null)
+                ScrollOwner.InvalidateScrollInfo();
 
-            // _trans.Y = -offset;
             InvalidateMeasure();
             _firstIndex = GetFirstVisibleIndex();
         }
@@ -391,7 +375,7 @@ namespace MaSch.Presentation.Wpf.Controls
                     }
 
                     _childSize = child.DesiredSize;
-                    Rect childRect = new Rect(new Point(currentX, currentY), _childSize);
+                    Rect childRect = new(new Point(currentX, currentY), _childSize);
                     if (isHorizontal)
                     {
                         maxItemSize = Math.Max(maxItemSize, childRect.Height);
@@ -482,7 +466,7 @@ namespace MaSch.Presentation.Wpf.Controls
         {
             for (int i = _children.Count - 1; i >= 0; i--)
             {
-                GeneratorPosition childGeneratorPos = new GeneratorPosition(i, 0);
+                GeneratorPosition childGeneratorPos = new(i, 0);
                 int itemIndex = _generator.IndexFromGeneratorPosition(childGeneratorPos);
                 if (itemIndex < minDesiredGenerated || itemIndex > maxDesiredGenerated)
                 {
@@ -514,7 +498,7 @@ namespace MaSch.Presentation.Wpf.Controls
                 _extent.Width = _abstractPanel.SectionCount + ViewportWidth - 1;
             }
 
-            _owner.InvalidateScrollInfo();
+            ScrollOwner.InvalidateScrollInfo();
         }
 
         private void ResetScrollInfo()
@@ -799,7 +783,7 @@ namespace MaSch.Presentation.Wpf.Controls
 
         private class WrapPanelAbstraction : IEnumerable<ItemAbstraction>
         {
-            private readonly object _syncRoot = new object();
+            private readonly object _syncRoot = new();
             private int _currentSetSection = -1;
             private int _currentSetItemIndex = -1;
             private int _itemsInCurrentSecction = 0;
@@ -825,10 +809,10 @@ namespace MaSch.Presentation.Wpf.Controls
 
             public WrapPanelAbstraction(int itemCount)
             {
-                List<ItemAbstraction> items = new List<ItemAbstraction>(itemCount);
+                List<ItemAbstraction> items = new(itemCount);
                 for (int i = 0; i < itemCount; i++)
                 {
-                    ItemAbstraction item = new ItemAbstraction(this, i);
+                    ItemAbstraction item = new(this, i);
                     items.Add(item);
                 }
 

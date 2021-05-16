@@ -45,7 +45,6 @@ namespace MaSch.Core.Converters
             if (targetType.IsArray)
                 return true;
 
-            var interfaces = targetType.GetInterfaces().Select(x => x.IsGenericType ? x.GetGenericTypeDefinition() : x).ToArray();
             var ctors = targetType.GetConstructors(BindingFlags.Public | BindingFlags.Instance).Select(x => x.GetParameters().Select(y => y.ParameterType).ToArray()).ToArray();
             if (ctors.Any(x => x.Length == 1 && InterfaceToClassMap.ContainsKey(x[0].IsGenericType ? x[0].GetGenericTypeDefinition() : x[0])))
                 return true;
@@ -64,14 +63,14 @@ namespace MaSch.Core.Converters
         }
 
         /// <inheritdoc />
-        public object? Convert(object? o, Type? sourceType, Type targetType, IObjectConvertManager convertManager, IFormatProvider formatProvider)
+        public object? Convert(object? obj, Type? sourceType, Type targetType, IObjectConvertManager convertManager, IFormatProvider formatProvider)
         {
             var originalSourceType = sourceType;
 
             var exceptions = new List<Exception>();
             try
             {
-                if (o is IEnumerable e && ConvertImpl(e, out var res))
+                if (obj is IEnumerable e && ConvertImpl(e, out var res))
                     return res;
             }
             catch (Exception ex)
@@ -81,17 +80,17 @@ namespace MaSch.Core.Converters
 
             try
             {
-                sourceType = (o?.GetType() ?? sourceType)?.MakeArrayType();
+                sourceType = (obj?.GetType() ?? sourceType)?.MakeArrayType();
                 IEnumerable e;
                 if (sourceType != null)
                 {
                     Array arr = (Array)Activator.CreateInstance(sourceType, new object[] { 1 })!;
-                    arr.SetValue(o, 0);
+                    arr.SetValue(obj, 0);
                     e = arr;
                 }
                 else
                 {
-                    e = new[] { o };
+                    e = new[] { obj };
                 }
 
                 if (ConvertImpl(e, out var res))
@@ -121,7 +120,6 @@ namespace MaSch.Core.Converters
                         actualTargetType = actualTargetType.MakeGenericType(targetType.GenericTypeArguments);
                 }
 
-                var interfaces = actualTargetType.GetInterfaces().Select(x => x.IsGenericType ? x.GetGenericTypeDefinition() : x).ToArray();
                 var ctors = actualTargetType.GetConstructors(BindingFlags.Public | BindingFlags.Instance).Select(x => (Ctor: x, Params: x.GetParameters().Select(y => y.ParameterType).ToArray())).ToArray();
 
                 var (ctor, paramTypes) = ctors.FirstOrDefault(x => x.Params.Length == 1 && x.Params[0].In(typeof(short), typeof(int), typeof(long)));

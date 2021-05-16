@@ -31,7 +31,7 @@ namespace MaSch.Native.Windows.Input
             _listener = Task.Run(new Action(DoListenerAction));
         }
 
-        public async void StartListenerAsync()
+        public async Task StartListenerAsync()
         {
             await Task.Run(() => StartListener());
         }

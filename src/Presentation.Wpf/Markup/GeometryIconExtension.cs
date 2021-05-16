@@ -16,7 +16,7 @@ namespace MaSch.Presentation.Wpf.Markup
         /// <summary>
         /// Gets or sets the geometry to use.
         /// </summary>
-        [ConstructorArgument("gemetry")]
+        [ConstructorArgument("geometry")]
         public Geometry? Geometry { get; set; }
 
         /// <summary>

@@ -247,7 +247,7 @@ namespace MaSch.Console
         /// <param name="foregroundColor">The foreground color that should be used inside this scope.</param>
         /// <returns>An instance of the <see cref="ConsoleColorScope"/> class.</returns>
         public static ConsoleColorScope SetColors(this IConsoleService service, ConsoleColor foregroundColor)
-            => new ConsoleColorScope(service, foregroundColor);
+            => new(service, foregroundColor);
 
         /// <summary>
         /// Creates a <see cref="ConsoleColorScope"/> for this <see cref="IConsoleService"/>.
@@ -257,6 +257,6 @@ namespace MaSch.Console
         /// <param name="backgroundColor">The background color that should be used inside this scope.</param>
         /// <returns>An instance of the <see cref="ConsoleColorScope"/> class.</returns>
         public static ConsoleColorScope SetColors(this IConsoleService service, ConsoleColor foregroundColor, ConsoleColor backgroundColor)
-            => new ConsoleColorScope(service, foregroundColor, backgroundColor);
+            => new(service, foregroundColor, backgroundColor);
     }
 }

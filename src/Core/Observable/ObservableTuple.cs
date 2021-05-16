@@ -19,7 +19,7 @@ namespace MaSch.Core.Observable
         /// <param name="item1">The first value.</param>
         /// <returns>An <see cref="ObservableTuple{T1}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1> Create<T1>(T1 item1)
-            => new ObservableTuple<T1>(item1);
+            => new(item1);
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2}"/> of the specified values.
@@ -30,7 +30,7 @@ namespace MaSch.Core.Observable
         /// <param name="item2">The second value.</param>
         /// <returns>An <see cref="ObservableTuple{T1,T2}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2> Create<T1, T2>(T1 item1, T2 item2)
-            => new ObservableTuple<T1, T2>(item1, item2);
+            => new(item1, item2);
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2,T3}"/> of the specified values.
@@ -43,7 +43,7 @@ namespace MaSch.Core.Observable
         /// <param name="item3">The thrid value.</param>
         /// <returns>An <see cref="ObservableTuple{T1,T2,T3}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2, T3> Create<T1, T2, T3>(T1 item1, T2 item2, T3 item3)
-            => new ObservableTuple<T1, T2, T3>(item1, item2, item3);
+            => new(item1, item2, item3);
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2,T3,T4}"/> of the specified values.
@@ -58,7 +58,7 @@ namespace MaSch.Core.Observable
         /// <param name="item4">The fourth value.</param>
         /// <returns>An <see cref="ObservableTuple{T1,T2,T3,T4}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2, T3, T4> Create<T1, T2, T3, T4>(T1 item1, T2 item2, T3 item3, T4 item4)
-            => new ObservableTuple<T1, T2, T3, T4>(item1, item2, item3, item4);
+            => new(item1, item2, item3, item4);
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2,T3,T4,T5}"/> of the specified values.
@@ -75,7 +75,7 @@ namespace MaSch.Core.Observable
         /// <param name="item5">The fifth value.</param>
         /// <returns>An <see cref="ObservableTuple{T1,T2,T3,T4,T5}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2, T3, T4, T5> Create<T1, T2, T3, T4, T5>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5)
-            => new ObservableTuple<T1, T2, T3, T4, T5>(item1, item2, item3, item4, item5);
+            => new(item1, item2, item3, item4, item5);
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2,T3,T4,T5,T6}"/> of the specified values.
@@ -94,7 +94,7 @@ namespace MaSch.Core.Observable
         /// <param name="item6">The sixth value.</param>
         /// <returns>An <see cref="ObservableTuple{T1,T2,T3,T4,T5,T6}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2, T3, T4, T5, T6> Create<T1, T2, T3, T4, T5, T6>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6)
-            => new ObservableTuple<T1, T2, T3, T4, T5, T6>(item1, item2, item3, item4, item5, item6);
+            => new(item1, item2, item3, item4, item5, item6);
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2,T3,T4,T5,T6,T7}"/> of the specified values.
@@ -115,7 +115,7 @@ namespace MaSch.Core.Observable
         /// <param name="item7">The seventh value.</param>
         /// <returns>An <see cref="ObservableTuple{T1,T2,T3,T4,T5,T6,T7}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2, T3, T4, T5, T6, T7> Create<T1, T2, T3, T4, T5, T6, T7>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7)
-            => new ObservableTuple<T1, T2, T3, T4, T5, T6, T7>(item1, item2, item3, item4, item5, item6, item7);
+            => new(item1, item2, item3, item4, item5, item6, item7);
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2,T3,T4,T5,T6,T7,TRest}"/> of the specified values.
@@ -139,7 +139,7 @@ namespace MaSch.Core.Observable
         /// <returns>An <see cref="ObservableTuple{T1,T2,T3,T4,T5,T6,T7,TRest}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2, T3, T4, T5, T6, T7, TRest> Create<T1, T2, T3, T4, T5, T6, T7, TRest>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7, TRest rest)
             where TRest : ObservableTupleBase
-            => new ObservableTuple<T1, T2, T3, T4, T5, T6, T7, TRest>(item1, item2, item3, item4, item5, item6, item7, rest);
+            => new(item1, item2, item3, item4, item5, item6, item7, rest);
     }
 
     /// <summary>
@@ -172,7 +172,7 @@ namespace MaSch.Core.Observable
         /// <inheritdoc/>
         public int CompareTo(ObservableTupleBase? other)
         {
-            if (other == null)
+            if (other is null)
                 return Comparer<object>.Default.Compare(this, other);
 
             var myItems = GetItems();
@@ -211,6 +211,24 @@ namespace MaSch.Core.Observable
         /// <returns>A string representation of this instance.</returns>
         internal virtual string ToStringInternal()
             => string.Join(", ", GetItems());
+
+        public static bool operator ==(ObservableTupleBase a, ObservableTupleBase b)
+            => a?.Equals(b) == true;
+
+        public static bool operator !=(ObservableTupleBase a, ObservableTupleBase b)
+            => a?.Equals(b) != true;
+
+        public static bool operator <(ObservableTupleBase a, ObservableTupleBase b)
+            => (a is null ? Comparer<object>.Default.Compare(a, b) : a.CompareTo(b)) < 0;
+
+        public static bool operator <=(ObservableTupleBase a, ObservableTupleBase b)
+            => (a is null ? Comparer<object>.Default.Compare(a, b) : a.CompareTo(b)) <= 0;
+
+        public static bool operator >(ObservableTupleBase a, ObservableTupleBase b)
+            => (a is null ? Comparer<object>.Default.Compare(a, b) : a.CompareTo(b)) > 0;
+
+        public static bool operator >=(ObservableTupleBase a, ObservableTupleBase b)
+            => (a is null ? Comparer<object>.Default.Compare(a, b) : a.CompareTo(b)) >= 0;
     }
 
     /// <summary>
@@ -967,6 +985,6 @@ namespace MaSch.Core.Observable
 
         /// <inheritdoc />
         internal override string ToStringInternal()
-            => string.Join(", ", GetItems().Take(7)) + (Rest != null ? ", " + Rest.ToStringInternal() : string.Empty);
+            => string.Join(", ", GetItems().Take(7)) + (Rest is not null ? ", " + Rest.ToStringInternal() : string.Empty);
     }
 }

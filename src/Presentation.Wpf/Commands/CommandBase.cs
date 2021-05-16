@@ -24,6 +24,12 @@ namespace MaSch.Presentation.Wpf.Commands
         public bool CanExecute(object? parameter) => CanExecute();
 
         /// <summary>
+        /// Checks if the Execute method can be executed.
+        /// </summary>
+        /// <returns><c>true</c>.</returns>
+        public virtual bool CanExecute() => true;
+
+        /// <summary>
         /// Executes the command.
         /// </summary>
         /// <param name="parameter">The parameter for the command. Is not used in this command, so it should be null.</param>
@@ -32,6 +38,11 @@ namespace MaSch.Presentation.Wpf.Commands
             if (IgnoreCanExecuteOnExecute || CanExecute())
                 Execute();
         }
+
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        public abstract void Execute();
 
         /// <summary>
         /// Raises the CanExecuteChanged Event. So the UI gets notified that the CanExecute method could changed its return value.
@@ -47,17 +58,6 @@ namespace MaSch.Presentation.Wpf.Commands
         /// Gets a value indicating whether to ignore the result of the <see cref="CanExecute(object)"/> method.
         /// </summary>
         protected virtual bool IgnoreCanExecuteOnExecute => false;
-
-        /// <summary>
-        /// Checks if the Execute method can be executed.
-        /// </summary>
-        /// <returns><c>true</c>.</returns>
-        public virtual bool CanExecute() => true;
-
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
-        public abstract void Execute();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandBase"/> class.
@@ -90,6 +90,13 @@ namespace MaSch.Presentation.Wpf.Commands
         public bool CanExecute(object? parameter) => CanExecute(GetParameterValue(parameter));
 
         /// <summary>
+        /// Checks if the Execute method can be executed.
+        /// </summary>
+        /// <param name="parameter">The parameter for the command.</param>
+        /// <returns>true if the Execute method can be executed otherwise false.</returns>
+        public virtual bool CanExecute(T? parameter) => true;
+
+        /// <summary>
         /// Executes the command.
         /// </summary>
         /// <param name="parameter">The parameter for the command.</param>
@@ -99,6 +106,12 @@ namespace MaSch.Presentation.Wpf.Commands
             if (IgnoreCanExecuteOnExecute || CanExecute(tParam))
                 Execute(tParam);
         }
+
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="parameter">The parameter for the command.</param>
+        public abstract void Execute(T? parameter);
 
         /// <summary>
         /// Raises the CanExecuteChanged Event. So the UI gets notified that the CanExecute method could changed its return value.
@@ -119,19 +132,6 @@ namespace MaSch.Presentation.Wpf.Commands
         /// Gets a value indicating whether to throw an exception when the wrong parameter type is given.
         /// </summary>
         protected virtual bool ThrowExceptionOnWrongParamType => true;
-
-        /// <summary>
-        /// Checks if the Execute method can be executed.
-        /// </summary>
-        /// <param name="parameter">The parameter for the command.</param>
-        /// <returns>true if the Execute method can be executed otherwise false.</returns>
-        public virtual bool CanExecute(T? parameter) => true;
-
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
-        /// <param name="parameter">The parameter for the command.</param>
-        public abstract void Execute(T? parameter);
 
         private T? GetParameterValue(object? parameter)
         {

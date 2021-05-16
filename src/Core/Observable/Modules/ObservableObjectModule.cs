@@ -11,8 +11,8 @@ namespace MaSch.Core.Observable.Modules
     /// </summary>
     public class ObservableObjectModule
     {
-        private static readonly Dictionary<Type, Dictionary<string, List<string>>> PropertyDependencyCache = new Dictionary<Type, Dictionary<string, List<string>>>();
-        private static readonly object FillCacheLock = new object();
+        private static readonly Dictionary<Type, Dictionary<string, List<string>>> PropertyDependencyCache = new();
+        private static readonly object FillCacheLock = new();
 
         private readonly Type _objectType;
         private readonly IObservableObject _observableObject;

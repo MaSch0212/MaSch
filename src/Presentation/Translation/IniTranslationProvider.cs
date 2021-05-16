@@ -19,7 +19,7 @@ namespace MaSch.Presentation.Translation
         #region Private Fields
 
         private static readonly Regex IniRegex =
-            new Regex(@"^(?<Key>[^\[;=\s]*)\s*=\s*((?<Quote>[""'])(?<Value>(?:\k<Quote>{2}|(?!\k<Quote>).)*)(?:\k<Quote>)|(?<Value>[^\n]*))", RegexOptions.Multiline | RegexOptions.Singleline);
+            new(@"^(?<Key>[^\[;=\s]*)\s*=\s*((?<Quote>[""'])(?<Value>(?:\k<Quote>{2}|(?!\k<Quote>).)*)(?:\k<Quote>)|(?<Value>[^\n]*))", RegexOptions.Multiline | RegexOptions.Singleline);
 
         private readonly string _translationFilesPath;
         private readonly string _fileName;

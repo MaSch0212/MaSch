@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -9,9 +10,10 @@ namespace MaSch.Core.Extensions
     /// <summary>
     /// This class contains extension methods for the Type-type.
     /// </summary>
+    [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "Accessing non-public members in this extension class is necessary.")]
     public static class TypeExtensions
     {
-        private static readonly Dictionary<Type, string> _specialTypeCSharpRepresentations = new Dictionary<Type, string>
+        private static readonly Dictionary<Type, string> _specialTypeCSharpRepresentations = new()
         {
             [typeof(short)] = "short",
             [typeof(int)] = "int",
@@ -110,6 +112,34 @@ namespace MaSch.Core.Extensions
         }
 
         /// <summary>
+        /// Determines whether this property is overriding some property from a base class.
+        /// </summary>
+        /// <param name="propertyInfo">The property to check.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified property is overriding a property from a base class; otherwise, <c>false</c>.
+        /// </returns>
+        /// <exception cref="ArgumentException">The property does not have a setter nor a getter. - <paramref name="propertyInfo"/>.</exception>
+        public static bool IsOverriding(this PropertyInfo propertyInfo)
+        {
+            Guard.NotNull(propertyInfo, nameof(propertyInfo));
+            return IsOverriding(propertyInfo.GetMethod ?? propertyInfo.SetMethod ?? throw new ArgumentException($"The property does not have a setter nor a getter.", nameof(propertyInfo)));
+        }
+
+        /// <summary>
+        /// Determines whether this event is overriding some event from a base class.
+        /// </summary>
+        /// <param name="eventInfo">The event to check.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified event is overriding an event from a base class; otherwise, <c>false</c>.
+        /// </returns>
+        /// <exception cref="ArgumentException">The event does not have an add method nor a remove method. - <paramref name="eventInfo"/>.</exception>
+        public static bool IsOverriding(this EventInfo eventInfo)
+        {
+            Guard.NotNull(eventInfo, nameof(eventInfo));
+            return IsOverriding(eventInfo.AddMethod ?? eventInfo.RemoveMethod ?? throw new ArgumentException($"The event does not have an add method nor a remove method.", nameof(eventInfo)));
+        }
+
+        /// <summary>
         /// Determines whether this method is hiding some method from a base class.
         /// </summary>
         /// <param name="methodInfo">The method to check.</param>
@@ -159,20 +189,6 @@ namespace MaSch.Core.Extensions
         }
 
         /// <summary>
-        /// Determines whether this property is overriding some property from a base class.
-        /// </summary>
-        /// <param name="propertyInfo">The property to check.</param>
-        /// <returns>
-        ///   <c>true</c> if the specified property is overriding a property from a base class; otherwise, <c>false</c>.
-        /// </returns>
-        /// <exception cref="ArgumentException">The property does not have a setter nor a getter. - <paramref name="propertyInfo"/>.</exception>
-        public static bool IsOverriding(this PropertyInfo propertyInfo)
-        {
-            Guard.NotNull(propertyInfo, nameof(propertyInfo));
-            return IsOverriding(propertyInfo.GetMethod ?? propertyInfo.SetMethod ?? throw new ArgumentException($"The property does not have a setter nor a getter.", nameof(propertyInfo)));
-        }
-
-        /// <summary>
         /// Determines whether this property is hiding some property from a base class.
         /// </summary>
         /// <param name="propertyInfo">The property to check.</param>
@@ -184,20 +200,6 @@ namespace MaSch.Core.Extensions
         {
             Guard.NotNull(propertyInfo, nameof(propertyInfo));
             return IsHiding(propertyInfo.GetMethod ?? propertyInfo.SetMethod ?? throw new ArgumentException($"The property does not have a setter nor a getter.", nameof(propertyInfo)));
-        }
-
-        /// <summary>
-        /// Determines whether this event is overriding some event from a base class.
-        /// </summary>
-        /// <param name="eventInfo">The event to check.</param>
-        /// <returns>
-        ///   <c>true</c> if the specified event is overriding an event from a base class; otherwise, <c>false</c>.
-        /// </returns>
-        /// <exception cref="ArgumentException">The event does not have an add method nor a remove method. - <paramref name="eventInfo"/>.</exception>
-        public static bool IsOverriding(this EventInfo eventInfo)
-        {
-            Guard.NotNull(eventInfo, nameof(eventInfo));
-            return IsOverriding(eventInfo.AddMethod ?? eventInfo.RemoveMethod ?? throw new ArgumentException($"The event does not have an add method nor a remove method.", nameof(eventInfo)));
         }
 
         /// <summary>

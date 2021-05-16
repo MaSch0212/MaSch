@@ -23,7 +23,7 @@ namespace MaSch.Core.Observable.Collections
     /// <seealso cref="IReadOnlyDictionary{TKey, TValue}" />
     /// <seealso cref="ISerializable" />
     /// <seealso cref="IDeserializationCallback" />
-    public class ObservableDictionary<TKey, TValue> : INotifyCollectionChanged, INotifyPropertyChanged, IDictionary<TKey, TValue>, IDictionary, IReadOnlyDictionary<TKey, TValue>, ISerializable, IDeserializationCallback
+    public class ObservableDictionary<TKey, TValue> : INotifyCollectionChanged, INotifyPropertyChanged, IDictionary<TKey, TValue>, IDictionary, IReadOnlyDictionary<TKey, TValue>
         where TKey : notnull
     {
         /// <summary>
@@ -177,12 +177,6 @@ namespace MaSch.Core.Observable.Collections
 
         /// <inheritdoc/>
         public virtual bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value) => _dictionary.TryGetValue(key, out value);
-
-        /// <inheritdoc/>
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context) => _dictionary.GetObjectData(info, context);
-
-        /// <inheritdoc/>
-        public virtual void OnDeserialization(object? sender) => _dictionary.OnDeserialization(sender);
 
         private void CountChanged()
         {

@@ -141,7 +141,7 @@ namespace MaSch.Presentation.Wpf.ThemeValues
         [DependsOn(nameof(IconType), nameof(Character), nameof(Font), nameof(FontSize), nameof(Geometry), nameof(IsGeometryFilled), nameof(GeometryStrokeThickness), nameof(Stretch))]
         public override Icon Value
         {
-            get => new Icon
+            get => new()
             {
                 Type = IconType,
                 Character = Character,

@@ -15,7 +15,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
     [ObservablePropertyDefinition]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:Elements should be documented", Justification = "Internal interface.")]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Property definition.")]
-    internal interface ISplitViewContentViewModel_Props
+    internal interface ISplitViewContentViewModelProps
     {
         /// <summary>
         /// Gets or sets a value indicating whether the view this model is attached to is loading.
@@ -37,7 +37,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
     /// Abstract class that is used for view models of a <see cref="SplitViewContent"/>.
     /// </summary>
     /// <seealso cref="MaSch.Core.Observable.ObservableObject" />
-    public abstract partial class SplitViewContentViewModel : ObservableObject, ISplitViewContentViewModel_Props
+    public abstract partial class SplitViewContentViewModel : ObservableObject, ISplitViewContentViewModelProps
     {
         /// <summary>
         /// Occurs when a new message has been posted.

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
@@ -13,6 +14,8 @@ namespace MaSch.Core.Attributes
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class NotifyPropertyChangedAttribute : Attribute
     {
+        private static readonly Dictionary<Type, Dictionary<PropertyInfo, NotifyPropertyChangedAttribute>> AttributeCache = new();
+
         private readonly Dictionary<object, EventCacheItem> _eventCache = new();
         private readonly string _callbackMethodName;
         private PropertyInfo? _propertyInfo;
@@ -44,6 +47,7 @@ namespace MaSch.Core.Attributes
         /// or
         /// The method could not be found in the class.
         /// </exception>
+        [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "Member name is given into this attribute.")]
         public void Initialize(PropertyInfo property, bool reinitialize = false)
         {
             Guard.NotNull(property, nameof(property));
@@ -121,7 +125,7 @@ namespace MaSch.Core.Attributes
             return (s, e) => _callbackMethod?.Invoke(classObject, new[] { s, e });
         }
 
-        private static readonly Dictionary<Type, Dictionary<PropertyInfo, NotifyPropertyChangedAttribute>> AttributeCache = new Dictionary<Type, Dictionary<PropertyInfo, NotifyPropertyChangedAttribute>>();
+        [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "Just scanning for all properties that use this attribute.")]
         private static Dictionary<PropertyInfo, NotifyPropertyChangedAttribute> GetAttributes(Type classType)
         {
             Dictionary<PropertyInfo, NotifyPropertyChangedAttribute> result;

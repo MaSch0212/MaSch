@@ -104,7 +104,7 @@ namespace MaSch.Presentation.Wpf.Controls
                     VerticalOffset = Margin.Top - Margin.Bottom;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException($"The arrow position \"{ArrowPosition}\" is unknown.");
             }
         }
     }

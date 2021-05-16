@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 #pragma warning disable SA1402 // File may only contain a single type
 
@@ -481,6 +482,7 @@ namespace MaSch.Core
     /// An exception thown by the <see cref="Waiter"/> if a waiting operation runs into a timeout or retry action runs out of retries.
     /// </summary>
     /// <seealso cref="ApplicationException" />
+    [SuppressMessage("Major Code Smell", "S3925:\"ISerializable\" should be implemented correctly", Justification = "Serialization not intended here.")]
     public class WaiterException : ApplicationException
     {
         /// <summary>

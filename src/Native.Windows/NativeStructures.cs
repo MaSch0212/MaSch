@@ -22,6 +22,7 @@ namespace MaSch.Native.Windows
     }
 
     [Flags]
+    [SuppressMessage("Critical Code Smell", "S2346:Flags enumerations zero-value members should be named \"None\"", Justification = "Won't fix.")]
     public enum Shgfi : uint
     {
         /// <summary>get icon.</summary>

@@ -7,6 +7,13 @@
   <Rules AnalyzerId="Microsoft.CodeAnalysis.NetAnalyzers" RuleNamespace="Microsoft.CodeAnalysis.NetAnalyzers">
     <Rule Id="CA1401" Action="None" />
   </Rules>
+  <Rules AnalyzerId="SonarAnalyzer.CSharp" RuleNamespace="SonarAnalyzer.CSharp">
+    <Rule Id="S1104" Action="None" />
+    <Rule Id="S112" Action="None" />
+    <Rule Id="S3011" Action="None" />
+    <Rule Id="S4200" Action="None" />
+    <Rule Id="S4214" Action="None" />
+  </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA1133" Action="None" />
     <Rule Id="SA1405" Action="None" />

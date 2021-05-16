@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Windows;
 
@@ -9,6 +10,7 @@ namespace MaSch.Presentation.Wpf.Extensions
     /// </summary>
     public static class FrameworkElementExtension
     {
+        [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "Should be safe.")]
         private static readonly EventInfo? ResourcesChangedEvent = typeof(FrameworkElement).GetEvent("ResourcesChanged", BindingFlags.Instance | BindingFlags.NonPublic);
 
         /// <summary>

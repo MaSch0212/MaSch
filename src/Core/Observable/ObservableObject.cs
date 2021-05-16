@@ -26,7 +26,7 @@ namespace MaSch.Core.Observable
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableObject"/> class.
         /// </summary>
-        public ObservableObject()
+        protected ObservableObject()
         {
             _module = new ObservableObjectModule(this);
             _attributes = NotifyPropertyChangedAttribute.InitializeAll(this);
@@ -35,10 +35,9 @@ namespace MaSch.Core.Observable
         /// <inheritdoc/>
         public virtual void SetProperty<T>(ref T property, T value, [CallerMemberName] string propertyName = "")
         {
-            if (IsNotifyEnabled)
+            if (IsNotifyEnabled && _attributes.ContainsKey(propertyName))
             {
-                if (_attributes.ContainsKey(propertyName))
-                    _attributes[propertyName].UnsubscribeEvent(this);
+                _attributes[propertyName].UnsubscribeEvent(this);
             }
 
             property = value;

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace MaSch.Console.Cli.Runtime
 {
+    [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "False positive.")]
     public class CliCommandInfo : ICliCommandInfo
     {
         private static readonly Regex IllegalNameCharactersRegex = new(@"[\p{Cc}\s]", RegexOptions.Compiled);
@@ -35,6 +36,7 @@ namespace MaSch.Console.Cli.Runtime
         public IReadOnlyList<ICliCommandOptionInfo> Options => _cache.GetValue(() => _options.AsReadOnly())!;
         public IReadOnlyList<ICliCommandValueInfo> Values => _cache.GetValue(() => _values.AsReadOnly())!;
 
+        [SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "False positive.")]
         private CliCommandInfo(Type commandType, Type? executorType, object? optionsInstance, object? executorFunc, object? executorInstance)
         {
             CommandType = Guard.NotNull(commandType, nameof(commandType));

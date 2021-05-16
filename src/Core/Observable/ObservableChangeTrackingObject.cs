@@ -35,7 +35,7 @@ namespace MaSch.Core.Observable
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableChangeTrackingObject"/> class with the default <see cref="IChangeTracker"/>.
         /// </summary>
-        public ObservableChangeTrackingObject()
+        protected ObservableChangeTrackingObject()
         {
             ChangeTracker = new ChangeTracker(GetType(), ImplicitlyRecurse);
         }

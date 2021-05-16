@@ -14,7 +14,7 @@ namespace MaSch.Presentation.Wpf.Converter
     /// <seealso cref="IValueConverter" />
     public class ThicknessConverter : IValueConverter, IMultiValueConverter
     {
-        private readonly MathConverter _mathConverter = new MathConverter();
+        private readonly MathConverter _mathConverter = new();
 
         /// <summary>
         /// Gets or sets the formula to calculate the top value of the thickness.

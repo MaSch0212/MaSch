@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
@@ -12,11 +13,12 @@ namespace MaSch.Presentation.Wpf.Attributes
     /// the <see cref="INotifyPropertyChanged.PropertyChanged"/> event is raised for the property when the dependency property with a given name is changed.
     /// </summary>
     /// <seealso cref="Attribute" />
+    [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "Needed to access members that use this attribute.")]
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class NotifyDependencyPropertyChangedAttribute : Attribute
     {
         private static readonly Dictionary<Type, List<(string PropertyName, NotifyDependencyPropertyChangedAttribute Attribute)>> AttributeCache =
-            new Dictionary<Type, List<(string PropertyName, NotifyDependencyPropertyChangedAttribute Attribute)>>();
+            new();
 
         /// <summary>
         /// Gets the name of the dependency property.

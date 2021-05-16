@@ -166,10 +166,10 @@ namespace MaSch.Presentation.Wpf.Controls
                 return FlipDirection.Center;
 
             var edgeBoxSize = EdgeBox * size;
-            Rect edgeTl = new Rect(0, 0, edgeBoxSize, edgeBoxSize),
-                 edgeTr = new Rect(size - edgeBoxSize, 0, edgeBoxSize, edgeBoxSize),
-                 edgeBl = new Rect(0, size - edgeBoxSize, edgeBoxSize, edgeBoxSize),
-                 edgeBr = new Rect(size - edgeBoxSize, size - edgeBoxSize, edgeBoxSize, edgeBoxSize);
+            Rect edgeTl = new(0, 0, edgeBoxSize, edgeBoxSize),
+                 edgeTr = new(size - edgeBoxSize, 0, edgeBoxSize, edgeBoxSize),
+                 edgeBl = new(0, size - edgeBoxSize, edgeBoxSize, edgeBoxSize),
+                 edgeBr = new(size - edgeBoxSize, size - edgeBoxSize, edgeBoxSize, edgeBoxSize);
             if (edgeTl.Contains(pwb))
                 return FlipDirection.TopLeft;
             if (edgeTr.Contains(pwb))

@@ -175,10 +175,6 @@ namespace MaSch.Presentation.Wpf.Controls
         {
             if (GetTemplateChild("MaSch_ContentBorder") is Border contentBorder)
             {
-                // StateChanged += (s, e) =>
-                // {
-                //     contentBorder.Margin = WindowState == WindowState.Maximized ? new Thickness(0, 30, 0, 0) : new Thickness(5, 35, 5, 5);
-                // };
                 contentBorder.MouseLeftButtonDown += (s, e) =>
                 {
                     if (DragMoveOnContentBorder)

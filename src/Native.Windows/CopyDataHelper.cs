@@ -61,16 +61,14 @@ namespace MaSch.Native.Windows
         /// <returns></returns>
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            if (msg == User32.WmCopyData)
+            if (msg == User32.WmCopyData &&
+                Marshal.PtrToStructure(lParam, typeof(PostStruct)) is PostStruct ps &&
+                ps.cbData == Marshal.SizeOf(typeof(T)) &&
+                Marshal.PtrToStructure(ps.lpData, typeof(T)) is T data)
             {
-                if (Marshal.PtrToStructure(lParam, typeof(PostStruct)) is PostStruct ps &&
-                    ps.cbData == Marshal.SizeOf(typeof(T)) &&
-                    Marshal.PtrToStructure(ps.lpData, typeof(T)) is T data)
-                {
-                    var e = new CopyDataMessageReceivedEventArgs<T> { Data = data, WParam = wParam };
-                    MessageReceived?.Invoke(this, e);
-                    handled = e.Handled;
-                }
+                var e = new CopyDataMessageReceivedEventArgs<T> { Data = data, WParam = wParam };
+                MessageReceived?.Invoke(this, e);
+                handled = e.Handled;
             }
 
             return IntPtr.Zero;

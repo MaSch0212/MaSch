@@ -83,7 +83,7 @@ namespace MaSch.Presentation.Wpf.Controls
                 "StepSize",
                 typeof(double),
                 typeof(TextBox),
-                new PropertyMetadata(1D, OnStepSizeChanged, CoerceStepSize));
+                new PropertyMetadata(1D) { CoerceValueCallback = CoerceStepSize });
 
         /// <summary>
         /// Dependency property. Gets or sets a value indicating whether only numeric values are allowed for this <see cref="TextBox"/>.
@@ -369,7 +369,7 @@ namespace MaSch.Presentation.Wpf.Controls
         /// </summary>
         public object EndContent
         {
-            get => (object)GetValue(EndContentProperty);
+            get => GetValue(EndContentProperty);
             set => SetValue(EndContentProperty, value);
         }
 
@@ -378,7 +378,7 @@ namespace MaSch.Presentation.Wpf.Controls
         /// </summary>
         public object StartContent
         {
-            get => (object)GetValue(StartContentProperty);
+            get => GetValue(StartContentProperty);
             set => SetValue(StartContentProperty, value);
         }
 
@@ -461,7 +461,6 @@ namespace MaSch.Presentation.Wpf.Controls
         {
             base.OnRender(drawingContext);
 
-            // drawingContext.DrawRectangle(Background, new Pen(), new Rect(0, 0, ActualWidth, ActualHeight));
             if (Text != string.Empty)
             {
                 var leftMargin = BorderThickness.Left + Padding.Left;
@@ -659,13 +658,6 @@ namespace MaSch.Presentation.Wpf.Controls
                     tbx.NumericValue = (double)e.NewValue;
                 tbx.MinimumChanged?.Invoke(tbx, e.NewValue as double?);
                 tbx.NumericValue = tbx._actualValue;
-            }
-        }
-
-        private static void OnStepSizeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
-        {
-            if (obj is TextBox && e.NewValue != e.OldValue)
-            {
             }
         }
 

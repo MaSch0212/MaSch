@@ -11,7 +11,7 @@ namespace MaSch.Presentation.Wpf.Converter
     /// <seealso cref="System.Windows.Data.IValueConverter" />
     public class CornerRadiusConverter : IValueConverter
     {
-        private readonly MathConverter _mathConverter = new MathConverter();
+        private readonly MathConverter _mathConverter = new();
 
         /// <summary>
         /// Gets or sets the formula to calculate the top left value of the corner radius.

@@ -91,6 +91,7 @@ namespace MaSch.Presentation.Wpf.Markup
                 }
                 catch (NullReferenceException)
                 {
+                    // Ignore this exception.
                 }
 
                 if (_translationManager != null)

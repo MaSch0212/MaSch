@@ -231,7 +231,7 @@ namespace MaSch.Presentation.Wpf
         /// <param name="addedValues">The added values.</param>
         /// <returns>The created <see cref="ThemeValueChangedEventArgs"/>.</returns>
         public static ThemeValueChangedEventArgs ForAdd(IEnumerable<IThemeValue>? addedValues)
-            => new ThemeValueChangedEventArgs(ThemeValueChangeType.Add, addedValues, null, null);
+            => new(ThemeValueChangeType.Add, addedValues, null, null);
 
         /// <summary>
         /// Create a new <see cref="ThemeValueChangedEventArgs"/> object for when keys are removed from an <see cref="IThemeManager"/>.
@@ -239,7 +239,7 @@ namespace MaSch.Presentation.Wpf
         /// <param name="removedValues">The removed values.</param>
         /// <returns>The created <see cref="ThemeValueChangedEventArgs"/>.</returns>
         public static ThemeValueChangedEventArgs ForRemove(IEnumerable<IThemeValue>? removedValues)
-            => new ThemeValueChangedEventArgs(ThemeValueChangeType.Remove, null, removedValues, null);
+            => new(ThemeValueChangeType.Remove, null, removedValues, null);
 
         /// <summary>
         /// Create a new <see cref="ThemeValueChangedEventArgs"/> object for when keys are changed on an <see cref="IThemeManager"/>.
@@ -249,7 +249,7 @@ namespace MaSch.Presentation.Wpf
         /// <param name="changedValues">The changed values.</param>
         /// <returns>The created <see cref="ThemeValueChangedEventArgs"/>.</returns>
         public static ThemeValueChangedEventArgs ForChange(IEnumerable<IThemeValue>? addedValues, IEnumerable<IThemeValue>? removedValues, IEnumerable<IThemeValue>? changedValues)
-            => new ThemeValueChangedEventArgs(ThemeValueChangeType.Change, addedValues, removedValues, changedValues);
+            => new(ThemeValueChangeType.Change, addedValues, removedValues, changedValues);
 
         /// <summary>
         /// Create a new <see cref="ThemeValueChangedEventArgs"/> object for when keys are cleared from an <see cref="IThemeManager"/>.
@@ -257,6 +257,6 @@ namespace MaSch.Presentation.Wpf
         /// <param name="removedValues">The removed values.</param>
         /// <returns>The created <see cref="ThemeValueChangedEventArgs"/>.</returns>
         public static ThemeValueChangedEventArgs ForClear(IEnumerable<IThemeValue>? removedValues)
-            => new ThemeValueChangedEventArgs(ThemeValueChangeType.Clear, null, removedValues, null);
+            => new(ThemeValueChangeType.Clear, null, removedValues, null);
     }
 }

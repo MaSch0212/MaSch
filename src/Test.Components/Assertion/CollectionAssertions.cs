@@ -3,6 +3,7 @@ using MaSch.Test.Assertion;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace MaSch.Test
@@ -48,6 +49,7 @@ namespace MaSch.Test
         /// <param name="assert">The assert object.</param>
         /// <param name="collection">The collection to test.</param>
         /// <param name="message">The message to include in the exception when <paramref name="collection"/> is empty. The message is shown in test results.</param>
+        [SuppressMessage("Major Bug", "S1751:Loops with at most one iteration should be refactored", Justification = "Won't fix.")]
         public static void IsNotEmpty(this AssertBase assert, IEnumerable collection, string? message)
         {
             Guard.NotNull(collection, nameof(collection));

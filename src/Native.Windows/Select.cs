@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace MaSch.Native.Windows
 {
-    public class Select : ISelect
+    public sealed class Select : ISelect
     {
         /// <summary>
         /// Gets or sets folder in which dialog will be open.
@@ -70,21 +70,19 @@ namespace MaSch.Native.Windows
                 }
             }
 
-            if (frm.Show(owner.Handle) == NativeMethods.S_OK)
+            if (frm.Show(owner.Handle) == NativeMethods.S_OK &&
+                frm.GetResult(out var shellItem) == NativeMethods.S_OK &&
+                shellItem.GetDisplayName(NativeMethods.SIGDN_FILESYSPATH, out var pszString) == NativeMethods.S_OK &&
+                pszString != IntPtr.Zero)
             {
-                if (frm.GetResult(out var shellItem) == NativeMethods.S_OK &&
-                    shellItem.GetDisplayName(NativeMethods.SIGDN_FILESYSPATH, out var pszString) == NativeMethods.S_OK &&
-                    pszString != IntPtr.Zero)
+                try
                 {
-                    try
-                    {
-                        Folder = Marshal.PtrToStringAuto(pszString);
-                        return DialogResult.OK;
-                    }
-                    finally
-                    {
-                        Marshal.FreeCoTaskMem(pszString);
-                    }
+                    Folder = Marshal.PtrToStringAuto(pszString);
+                    return DialogResult.OK;
+                }
+                finally
+                {
+                    Marshal.FreeCoTaskMem(pszString);
                 }
             }
 
@@ -117,8 +115,9 @@ namespace MaSch.Native.Windows
             }
         }
 
-        public void Dispose() // just to have possibility of Using statement.
+        public void Dispose()
         {
+            // just to have possibility of Using statement.
         }
     }
 

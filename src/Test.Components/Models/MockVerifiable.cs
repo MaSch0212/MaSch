@@ -15,7 +15,7 @@ namespace MaSch.Test.Models
     /// Object that can be verified using a delegate.
     /// </summary>
     /// <seealso cref="MaSch.Test.Models.IMockVerifiable" />
-    public class MockVerifiable : IMockVerifiable
+    public sealed class MockVerifiable : IMockVerifiable
     {
         private readonly MockVerification _verifyAction;
         private readonly Times _defaultTimes;

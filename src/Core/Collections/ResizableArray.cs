@@ -56,14 +56,14 @@ namespace MaSch.Core.Collections
         #region IList<T> Members
 
         /// <inheritdoc />
-        public void Add(T element)
+        public void Add(T item)
         {
             if (Count == _array.Length)
             {
                 Array.Resize(ref _array, _array.Length * 2);
             }
 
-            _array[Count++] = element;
+            _array[Count++] = item;
         }
 
         /// <inheritdoc />

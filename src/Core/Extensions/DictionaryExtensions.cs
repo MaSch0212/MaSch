@@ -11,8 +11,6 @@ namespace MaSch.Core.Extensions
     /// </summary>
     public static class DictionaryExtensions
     {
-        #region IDictionary<TKey, TValue> extensions
-
         /// <summary>
         /// Tries to get the value for a given key from the <see cref="IDictionary{TKey,TValue}"/>.
         /// </summary>
@@ -27,6 +25,19 @@ namespace MaSch.Core.Extensions
             Guard.NotNull(dict, nameof(dict));
 
             return dict.ContainsKey(key) ? dict[key] : default;
+        }
+
+        /// <summary>
+        /// Tries to get the value for a given key from the <see cref="IDictionary"/>.
+        /// </summary>
+        /// <param name="dict">The <see cref="IDictionary"/> to optain the value.</param>
+        /// <param name="key">The key.</param>
+        /// <returns>Return the value for the key if the key exists in the <see cref="IDictionary"/>; otherwise <see langword="null"/>.</returns>
+        public static object? TryGetValue(this IDictionary dict, object key)
+        {
+            Guard.NotNull(dict, nameof(dict));
+
+            return dict.Contains(key) ? dict[key] : null;
         }
 
         /// <summary>
@@ -71,6 +82,30 @@ namespace MaSch.Core.Extensions
             for (int i = 0; i < keysToRemove.Length; i++)
             {
                 if (dict.ContainsKey(keysToRemove[i]))
+                {
+                    dict.Remove(keysToRemove[i]);
+                    result[i] = true;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Removes keys from the <see cref="IDictionary"/> if they exists.
+        /// </summary>
+        /// <param name="dict">The <see cref="IDictionary"/> from which the keys should be removed.</param>
+        /// <param name="keysToRemove">The keys to remove from the <see cref="IDictionary"/>.</param>
+        /// <returns>Returns bool values determining which elements were removed successfully.</returns>
+        public static bool[] TryRemove(this IDictionary dict, params object[] keysToRemove)
+        {
+            Guard.NotNull(dict, nameof(dict));
+            Guard.NotNull(keysToRemove, nameof(keysToRemove));
+
+            var result = new bool[keysToRemove.Length];
+            for (int i = 0; i < keysToRemove.Length; i++)
+            {
+                if (dict.Contains(keysToRemove[i]))
                 {
                     dict.Remove(keysToRemove[i]);
                     result[i] = true;
@@ -212,48 +247,6 @@ namespace MaSch.Core.Extensions
         /// <returns>The converted <see cref="ObservableDictionary{TKey, TValue}"/>.</returns>
         public static ObservableDictionary<TKey, TValue> ToObservableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> dict)
             where TKey : notnull
-            => new ObservableDictionary<TKey, TValue>(dict);
-
-        #endregion
-
-        #region IDictionary extensions
-
-        /// <summary>
-        /// Tries to get the value for a given key from the <see cref="IDictionary"/>.
-        /// </summary>
-        /// <param name="dict">The <see cref="IDictionary"/> to optain the value.</param>
-        /// <param name="key">The key.</param>
-        /// <returns>Return the value for the key if the key exists in the <see cref="IDictionary"/>; otherwise <see langword="null"/>.</returns>
-        public static object? TryGetValue(this IDictionary dict, object key)
-        {
-            Guard.NotNull(dict, nameof(dict));
-
-            return dict.Contains(key) ? dict[key] : null;
-        }
-
-        /// <summary>
-        /// Removes keys from the <see cref="IDictionary"/> if they exists.
-        /// </summary>
-        /// <param name="dict">The <see cref="IDictionary"/> from which the keys should be removed.</param>
-        /// <param name="keysToRemove">The keys to remove from the <see cref="IDictionary"/>.</param>
-        /// <returns>Returns bool values determining which elements were removed successfully.</returns>
-        public static bool[] TryRemove(this IDictionary dict, params object[] keysToRemove)
-        {
-            Guard.NotNull(dict, nameof(dict));
-            Guard.NotNull(keysToRemove, nameof(keysToRemove));
-
-            var result = new bool[keysToRemove.Length];
-            for (int i = 0; i < keysToRemove.Length; i++)
-            {
-                if (dict.Contains(keysToRemove[i]))
-                {
-                    dict.Remove(keysToRemove[i]);
-                    result[i] = true;
-                }
-            }
-
-            return result;
-        }
-        #endregion
+            => new(dict);
     }
 }

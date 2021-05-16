@@ -9,7 +9,7 @@ namespace MaSch.Console.Cli.Runtime
     public class CliCommandInfoCollection : ICliCommandInfoCollection
     {
         private readonly IDictionary<Type, ICliCommandInfo> _allCommands = new Dictionary<Type, ICliCommandInfo>();
-        private readonly List<ICliCommandInfo> _rootCommands = new List<ICliCommandInfo>();
+        private readonly List<ICliCommandInfo> _rootCommands = new();
 
         public ICliCommandInfo? DefaultCommand { get; private set; }
         public int Count => _allCommands.Count;

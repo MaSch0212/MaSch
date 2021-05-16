@@ -9,7 +9,7 @@ namespace MaSch.Presentation.Wpf
     /// </summary>
     [ObservablePropertyDefinition]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Property definition interface should be first in file.")]
-    internal interface IIcon_Props : IIcon
+    internal interface IIconProps : IIcon
     {
     }
 
@@ -17,7 +17,7 @@ namespace MaSch.Presentation.Wpf
     /// Represents an icon that can be rendered by a WPF application.
     /// </summary>
     [GenerateNotifyPropertyChanged]
-    public partial class Icon : IIcon_Props
+    public partial class Icon : IIconProps
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Icon"/> class.

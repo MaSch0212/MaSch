@@ -8,15 +8,10 @@ namespace MaSch.Core.Collections
     /// A base class for a list.
     /// </summary>
     /// <typeparam name="T">The type of elements in the list.</typeparam>
-    /// <seealso cref="ICollection{T}" />
-    /// <seealso cref="IEnumerable{T}" />
-    /// <seealso cref="IEnumerable" />
     /// <seealso cref="IList{T}" />
-    /// <seealso cref="IReadOnlyCollection{T}" />
     /// <seealso cref="IReadOnlyList{T}" />
-    /// <seealso cref="ICollection" />
     /// <seealso cref="IList" />
-    public abstract class ListBase<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IList<T>, IReadOnlyCollection<T>, IReadOnlyList<T>, ICollection, IList
+    public abstract class ListBase<T> : IList<T>, IReadOnlyList<T>, IList
     {
         /// <summary>
         /// Gets the default value for the <see cref="SyncRoot"/> property.

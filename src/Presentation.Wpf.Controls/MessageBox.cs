@@ -31,34 +31,6 @@ namespace MaSch.Presentation.Wpf
         }
 
         /// <summary>
-        /// Shows the specified alert.
-        /// </summary>
-        /// <param name="messageBoxText">The alert text.</param>
-        /// <param name="caption">The caption.</param>
-        /// <param name="button">The buttons to show.</param>
-        /// <param name="icon">The icon to show.</param>
-        /// <param name="defaultResult">The default result.</param>
-        /// <param name="options">The options.</param>
-        /// <returns>The result of the alert.</returns>
-        internal static AlertResult ShowAlert(
-            string messageBoxText,
-            string? caption = null,
-            AlertButton button = AlertButton.Ok,
-            AlertImage icon = AlertImage.None,
-            AlertResult defaultResult = AlertResult.None,
-            AlertOptions options = AlertOptions.None)
-        {
-            var msgButton = Convert(button);
-            var msgIcon = Convert(icon);
-            var msgDefaultResult = Convert(defaultResult);
-            var msgOptions = Convert(options);
-
-            var result = Show(null, messageBoxText, caption, msgButton, msgIcon, msgDefaultResult, msgOptions);
-
-            return Convert(result);
-        }
-
-        /// <summary>
         /// Shows the specified message box.
         /// </summary>
         /// <param name="owner">The owner of the message box.</param>
@@ -96,6 +68,34 @@ namespace MaSch.Presentation.Wpf
                 dialog.ShowDialog();
                 return dialog.MessageBoxResult;
             });
+        }
+
+        /// <summary>
+        /// Shows the specified alert.
+        /// </summary>
+        /// <param name="messageBoxText">The alert text.</param>
+        /// <param name="caption">The caption.</param>
+        /// <param name="button">The buttons to show.</param>
+        /// <param name="icon">The icon to show.</param>
+        /// <param name="defaultResult">The default result.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The result of the alert.</returns>
+        internal static AlertResult ShowAlert(
+            string messageBoxText,
+            string? caption = null,
+            AlertButton button = AlertButton.Ok,
+            AlertImage icon = AlertImage.None,
+            AlertResult defaultResult = AlertResult.None,
+            AlertOptions options = AlertOptions.None)
+        {
+            var msgButton = Convert(button);
+            var msgIcon = Convert(icon);
+            var msgDefaultResult = Convert(defaultResult);
+            var msgOptions = Convert(options);
+
+            var result = Show(null, messageBoxText, caption, msgButton, msgIcon, msgDefaultResult, msgOptions);
+
+            return Convert(result);
         }
 
         private static MessageBoxButton Convert(AlertButton button)

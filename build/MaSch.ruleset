@@ -4,6 +4,13 @@
     <Rule Id="CS1591" Action="None" />
     <Rule Id="CS8019" Action="Warning" />
   </Rules>
+  <Rules AnalyzerId="SonarAnalyzer.CSharp" RuleNamespace="SonarAnalyzer.CSharp">
+    <Rule Id="S1135" Action="Info" />
+    <Rule Id="S1699" Action="None" />
+    <Rule Id="S3358" Action="None" />
+    <Rule Id="S3963" Action="None" />
+    <Rule Id="S5542" Action="None" />
+  </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA1101" Action="None" />
     <Rule Id="SA1124" Action="None" />

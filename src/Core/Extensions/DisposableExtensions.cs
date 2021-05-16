@@ -26,24 +26,6 @@ namespace MaSch.Core.Extensions
         }
 
         /// <summary>
-        /// Executes an async action on the <see cref="IDisposable"/> as disposes it afterwards.
-        /// </summary>
-        /// <typeparam name="TDisposable">The type of the disposable.</typeparam>
-        /// <param name="disposable">The <see cref="IDisposable"/> to execute the action on.</param>
-        /// <param name="action">The action to execute.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task DoAndDisposeAsync<TDisposable>(this TDisposable disposable, Func<TDisposable, Task> action)
-            where TDisposable : IDisposable
-        {
-            Guard.NotNull(disposable, nameof(disposable));
-            using (disposable)
-            {
-                Guard.NotNull(action, nameof(action));
-                await action(disposable);
-            }
-        }
-
-        /// <summary>
         /// Executes a function on the <see cref="IDisposable"/> as disposes it afterwards.
         /// </summary>
         /// <typeparam name="TDisposable">The type of the disposable.</typeparam>
@@ -173,6 +155,24 @@ namespace MaSch.Core.Extensions
             {
                 Guard.NotNull(function, nameof(function));
                 return function(disposable);
+            }
+        }
+
+        /// <summary>
+        /// Executes an async action on the <see cref="IDisposable"/> as disposes it afterwards.
+        /// </summary>
+        /// <typeparam name="TDisposable">The type of the disposable.</typeparam>
+        /// <param name="disposable">The <see cref="IDisposable"/> to execute the action on.</param>
+        /// <param name="action">The action to execute.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task DoAndDisposeAsync<TDisposable>(this TDisposable disposable, Func<TDisposable, Task> action)
+            where TDisposable : IDisposable
+        {
+            Guard.NotNull(disposable, nameof(disposable));
+            using (disposable)
+            {
+                Guard.NotNull(action, nameof(action));
+                await action(disposable);
             }
         }
 

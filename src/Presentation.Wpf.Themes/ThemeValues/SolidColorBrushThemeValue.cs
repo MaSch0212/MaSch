@@ -56,7 +56,7 @@ namespace MaSch.Presentation.Wpf.ThemeValues
         [DependsOn(nameof(Opacity), nameof(Color))]
         public override SolidColorBrush Value
         {
-            get => new SolidColorBrush(Color) { Opacity = Opacity };
+            get => new(Color) { Opacity = Opacity };
             set
             {
                 Color = value.Color;

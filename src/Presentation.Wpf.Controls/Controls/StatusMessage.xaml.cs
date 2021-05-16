@@ -15,7 +15,7 @@ namespace MaSch.Presentation.Wpf.Controls
     /// Property Definition for <see cref="StatusMessage"/>.
     /// </summary>
     [ObservablePropertyDefinition]
-    internal interface IStatusMessage_Props
+    internal interface IStatusMessageProps
     {
         /// <summary>
         /// Gets a value indicating whether this control is showing a loading indicator.
@@ -53,7 +53,7 @@ namespace MaSch.Presentation.Wpf.Controls
     /// </summary>
     /// <seealso cref="System.Windows.Controls.Control" />
     [GenerateObservableObject]
-    public partial class StatusMessage : Control, IStatusMessage_Props
+    public partial class StatusMessage : Control, IStatusMessageProps
     {
         /// <summary>
         /// Dependency property. Gets or sets the success message icon.
@@ -302,7 +302,7 @@ namespace MaSch.Presentation.Wpf.Controls
                     _showMessageStoryboard.Begin();
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(e.Status));
+                    throw new ArgumentOutOfRangeException($"The status \"{e.Status}\" is unknown.");
             }
         }
 

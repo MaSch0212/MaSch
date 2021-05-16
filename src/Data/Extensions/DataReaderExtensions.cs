@@ -218,7 +218,7 @@ namespace MaSch.Data.Extensions
             return result;
         }
 
-        private class DataReaderEnumerable<T> : IDisposableEnumerable<T>
+        private sealed class DataReaderEnumerable<T> : IDisposableEnumerable<T>
         {
             public event EventHandler<DisposeEventArgs>? Disposing;
             public event EventHandler<DisposeEventArgs>? Disposed;
@@ -241,7 +241,7 @@ namespace MaSch.Data.Extensions
             }
         }
 
-        private class DataReaderEnumerator<T> : IEnumerator<T>
+        private sealed class DataReaderEnumerator<T> : IEnumerator<T>
         {
             private readonly Func<IDataReader, T> _itemFunction;
             private readonly IDataReader _reader;

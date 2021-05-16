@@ -16,7 +16,7 @@ namespace MaSch.Presentation.Wpf.Converter
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             double val = value.ConvertTo<double>();
-            GridLength gridLength = new GridLength(val);
+            GridLength gridLength = new(val);
 
             return gridLength;
         }

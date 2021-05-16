@@ -49,7 +49,7 @@ namespace MaSch.Core.Converters
         }
 
         /// <inheritdoc />
-        public object? Convert(object? obj, Type? sourceType, Type targetType, IObjectConvertManager manager, IFormatProvider formatProvider)
+        public object? Convert(object? obj, Type? sourceType, Type targetType, IObjectConvertManager convertManager, IFormatProvider formatProvider)
         {
             return _converterFunctionWithFormatProvider != null
                 ? _converterFunctionWithFormatProvider((TSource?)obj, formatProvider)

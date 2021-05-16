@@ -275,7 +275,7 @@ namespace MaSch.Presentation.Wpf
                     throw new InvalidOperationException("The actions replace and move were not expected.");
 
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException($"The action \"{e.Action}\" is unknown.");
             }
 
             IEnumerable<IThemeValue> Convert(IList? list)
@@ -337,7 +337,7 @@ namespace MaSch.Presentation.Wpf
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(e.ChangeType));
+                    throw new ArgumentOutOfRangeException($"The change type \"{e.ChangeType}\" is unknown.");
             }
         }
 

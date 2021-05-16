@@ -240,12 +240,12 @@ namespace MaSch.Presentation.Wpf.Controls
                 };
                 control.Effect = blur;
                 targetStoryboard.Children.Add(
-                    CreateDoubleAnimation(32, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath("Effect.Radius")));
+                    CreateDoubleAnimation(32, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath("Effect.Radius", Array.Empty<object>())));
             }
             else if (blur != null)
             {
                 targetStoryboard.Children.Add(
-                    CreateDoubleAnimation(0, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath("Effect.Radius")));
+                    CreateDoubleAnimation(0, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath("Effect.Radius", Array.Empty<object>())));
             }
 
             var scale = transform.Children.OfType<ScaleTransform>().FirstOrDefault();
@@ -263,13 +263,13 @@ namespace MaSch.Presentation.Wpf.Controls
                     transform.Children.Add(scale);
                 }
 
-                targetStoryboard.Children.Add(CreateDoubleAnimation(x, 1, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(scale)}].ScaleX")));
-                targetStoryboard.Children.Add(CreateDoubleAnimation(y, 1, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(scale)}].ScaleY")));
+                targetStoryboard.Children.Add(CreateDoubleAnimation(x, 1, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(scale)}].ScaleX", Array.Empty<object>())));
+                targetStoryboard.Children.Add(CreateDoubleAnimation(y, 1, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(scale)}].ScaleY", Array.Empty<object>())));
             }
             else if (scale != null)
             {
-                targetStoryboard.Children.Add(CreateDoubleAnimation(1, 1, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(scale)}].ScaleX")));
-                targetStoryboard.Children.Add(CreateDoubleAnimation(1, 1, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(scale)}].ScaleY")));
+                targetStoryboard.Children.Add(CreateDoubleAnimation(1, 1, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(scale)}].ScaleX", Array.Empty<object>())));
+                targetStoryboard.Children.Add(CreateDoubleAnimation(1, 1, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(scale)}].ScaleY", Array.Empty<object>())));
             }
 
             var translate = transform.Children.OfType<TranslateTransform>().FirstOrDefault();
@@ -291,13 +291,13 @@ namespace MaSch.Presentation.Wpf.Controls
                     transform.Children.Add(translate);
                 }
 
-                targetStoryboard.Children.Add(CreateDoubleAnimation(x, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].X")));
-                targetStoryboard.Children.Add(CreateDoubleAnimation(y, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].Y")));
+                targetStoryboard.Children.Add(CreateDoubleAnimation(x, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].X", Array.Empty<object>())));
+                targetStoryboard.Children.Add(CreateDoubleAnimation(y, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].Y", Array.Empty<object>())));
             }
             else if (translate != null)
             {
-                targetStoryboard.Children.Add(CreateDoubleAnimation(0, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].X")));
-                targetStoryboard.Children.Add(CreateDoubleAnimation(0, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].Y")));
+                targetStoryboard.Children.Add(CreateDoubleAnimation(0, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].X", Array.Empty<object>())));
+                targetStoryboard.Children.Add(CreateDoubleAnimation(0, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].Y", Array.Empty<object>())));
             }
         }
 
@@ -332,12 +332,12 @@ namespace MaSch.Presentation.Wpf.Controls
                 };
                 control.Effect = blur;
                 targetStoryboard.Children.Add(
-                    CreateDoubleAnimation(0, 32, beginTime, duration, easing).SetTarget(control, new PropertyPath("Effect.Radius")));
+                    CreateDoubleAnimation(0, 32, beginTime, duration, easing).SetTarget(control, new PropertyPath("Effect.Radius", Array.Empty<object>())));
             }
             else if (blur != null)
             {
                 targetStoryboard.Children.Add(
-                    CreateDoubleAnimation(0, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath("Effect.Radius")));
+                    CreateDoubleAnimation(0, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath("Effect.Radius", Array.Empty<object>())));
             }
 
             var scale = transform.Children.OfType<ScaleTransform>().FirstOrDefault();
@@ -355,13 +355,13 @@ namespace MaSch.Presentation.Wpf.Controls
                     transform.Children.Add(scale);
                 }
 
-                targetStoryboard.Children.Add(CreateDoubleAnimation(1, x, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(scale)}].ScaleX")));
-                targetStoryboard.Children.Add(CreateDoubleAnimation(1, y, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(scale)}].ScaleY")));
+                targetStoryboard.Children.Add(CreateDoubleAnimation(1, x, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(scale)}].ScaleX", Array.Empty<object>())));
+                targetStoryboard.Children.Add(CreateDoubleAnimation(1, y, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(scale)}].ScaleY", Array.Empty<object>())));
             }
             else if (scale != null)
             {
-                targetStoryboard.Children.Add(CreateDoubleAnimation(1, 1, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(scale)}].ScaleX")));
-                targetStoryboard.Children.Add(CreateDoubleAnimation(1, 1, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(scale)}].ScaleY")));
+                targetStoryboard.Children.Add(CreateDoubleAnimation(1, 1, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(scale)}].ScaleX", Array.Empty<object>())));
+                targetStoryboard.Children.Add(CreateDoubleAnimation(1, 1, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(scale)}].ScaleY", Array.Empty<object>())));
             }
 
             var translate = transform.Children.OfType<TranslateTransform>().FirstOrDefault();
@@ -383,13 +383,13 @@ namespace MaSch.Presentation.Wpf.Controls
                     transform.Children.Add(translate);
                 }
 
-                targetStoryboard.Children.Add(CreateDoubleAnimation(0, x, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].X")));
-                targetStoryboard.Children.Add(CreateDoubleAnimation(0, y, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].Y")));
+                targetStoryboard.Children.Add(CreateDoubleAnimation(0, x, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].X", Array.Empty<object>())));
+                targetStoryboard.Children.Add(CreateDoubleAnimation(0, y, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].Y", Array.Empty<object>())));
             }
             else if (translate != null)
             {
-                targetStoryboard.Children.Add(CreateDoubleAnimation(0, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].X")));
-                targetStoryboard.Children.Add(CreateDoubleAnimation(0, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].Y")));
+                targetStoryboard.Children.Add(CreateDoubleAnimation(0, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].X", Array.Empty<object>())));
+                targetStoryboard.Children.Add(CreateDoubleAnimation(0, 0, beginTime, duration, easing).SetTarget(control, new PropertyPath($"RenderTransform.Children[{transform.Children.IndexOf(translate)}].Y", Array.Empty<object>())));
             }
         }
 

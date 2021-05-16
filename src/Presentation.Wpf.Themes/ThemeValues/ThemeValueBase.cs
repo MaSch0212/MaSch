@@ -19,6 +19,7 @@ namespace MaSch.Presentation.Wpf.ThemeValues
     /// </summary>
     /// <seealso cref="MaSch.Core.Observable.ObservableObject" />
     /// <seealso cref="MaSch.Presentation.Wpf.IThemeValue" />
+    [SuppressMessage("Major Code Smell", "S2971:\"IEnumerable\" LINQs should be simplified", Justification = "ToArray is needed so no error is raised when a collection changes.")]
     [JsonConverter(typeof(ThemeValueJsonConverter), false)]
     public abstract class ThemeValueBase : ObservableObject, IThemeValue
     {
@@ -220,7 +221,7 @@ namespace MaSch.Presentation.Wpf.ThemeValues
                     });
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException($"The change type \"{e.ChangeType}\" is unknown.");
             }
         }
 

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MaSch.Core.Observable.Collections
 {
@@ -14,6 +15,7 @@ namespace MaSch.Core.Observable.Collections
     /// <seealso cref="IReadOnlyCollection{T}" />
     /// <seealso cref="INotifyPropertyChanged" />
     /// <seealso cref="INotifyCollectionChanged" />
+    [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "This ordering does not make sense here.")]
     public class ObservableQueue<T> : ICollection, IReadOnlyCollection<T>, INotifyPropertyChanged, INotifyCollectionChanged
     {
         private readonly Queue<T> _queue;

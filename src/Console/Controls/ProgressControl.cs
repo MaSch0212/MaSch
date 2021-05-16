@@ -83,7 +83,7 @@ namespace MaSch.Console.Controls
             get => _showStatusText;
             set
             {
-                if (IsVisible && _showStatusText == true && !value)
+                if (IsVisible && _showStatusText && !value)
                 {
                     using (ConsoleSynchronizer.Scope())
                     using (new ConsoleScope(_console, false, true, false))
@@ -154,12 +154,12 @@ namespace MaSch.Console.Controls
                 ? new[] { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
                 : new[] { "\\", "|", "/", "-" };
 
-            // new[] { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" };
-            // new[] { "▀", "■", "▄", "■", "▀", "■", "▄", "■", "▀", "■", "▄", "■" };
-            // new[] { "\\", "|", "/", "-", "\\", "|", "/", "-", "\\", "|", "/", "-" };
-            /*_console.IsFancyConsole
-                ? new[] { "🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗", "🕘", "🕙", "🕚", "🕛" }
-                : */
+            /* Other formats:
+             "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"
+             "▀", "■", "▄", "■", "▀", "■", "▄", "■", "▀", "■", "▄", "■"
+             "\\", "|", "/", "-", "\\", "|", "/", "-", "\\", "|", "/", "-"
+             "🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗", "🕘", "🕙", "🕚", "🕛"
+             */
         }
 
         /// <summary>
@@ -318,7 +318,8 @@ namespace MaSch.Console.Controls
                 switch (Status)
                 {
                     case ProgressControlStatus.Loading:
-                        _console.WriteWithColor(indicatorChars[_lastIndicatorIndex = (_lastIndicatorIndex + 1) % indicatorChars.Length], IndicatorColor);
+                        _lastIndicatorIndex = (_lastIndicatorIndex + 1) % indicatorChars.Length;
+                        _console.WriteWithColor(indicatorChars[_lastIndicatorIndex], IndicatorColor);
                         break;
                     case ProgressControlStatus.Succeeeded:
                         _console.WriteWithColor(" ", ConsoleColor.White, ConsoleColor.Green);

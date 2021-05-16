@@ -143,6 +143,7 @@ namespace MaSch.Presentation.Wpf
         /// <param name="packUrl">The pack URL.</param>
         /// <returns>The created <see cref="ITheme"/>.</returns>
         /// <exception cref="InvalidOperationException">Please provide a pack url (relative or absolute). Scheme was {uri.Scheme}.</exception>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "Pack Uris always start with the \"pack://application:,,,\" prefix.")]
         public static ITheme FromPackUrl(string packUrl)
         {
             var uri = new Uri(packUrl, UriKind.RelativeOrAbsolute);

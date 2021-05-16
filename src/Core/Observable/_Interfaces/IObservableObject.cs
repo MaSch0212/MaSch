@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace MaSch.Core.Observable
@@ -31,6 +32,7 @@ namespace MaSch.Core.Observable
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="notifyDependencies">If set to <c>true</c> also properties that are dependent on <paramref name="propertyName"/> are notified.</param>
+        [SuppressMessage("Major Bug", "S3343:Caller information parameters should come at the end of the parameter list", Justification = "Will not fix due to a lot of breaking changes.")]
         void NotifyPropertyChanged([CallerMemberName] string propertyName = "", bool notifyDependencies = true);
 
         /// <summary>

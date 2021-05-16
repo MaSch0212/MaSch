@@ -20,12 +20,12 @@ namespace MaSch.Console.Cli
         public IReadOnlyCollection<ICliCommandInfo> Commands => _readOnlyCommands ??= CommandsCollection.AsReadOnly();
         public CliApplicationOptions Options { get; }
 
-        public CliApplicationBase()
+        protected CliApplicationBase()
             : this(null)
         {
         }
 
-        public CliApplicationBase(CliApplicationOptions? options)
+        protected CliApplicationBase(CliApplicationOptions? options)
         {
             VerifyTypes();
             Options = options ?? new CliApplicationOptions();
@@ -113,7 +113,7 @@ namespace MaSch.Console.Cli
             Guard.NotNull(GenericExecutorType, nameof(GenericExecutorType));
 
             if (!GenericExecutorType.IsGenericType || GenericExecutorType.GetGenericArguments().Length != 1)
-                throw new ArgumentException($"The generic executor type needs to be a generic type with exactly one gneric argument.", nameof(GenericExecutorType));
+                throw new ArgumentException($"The generic executor type needs to be a generic type with exactly one gneric argument.");
         }
     }
 
@@ -166,9 +166,9 @@ namespace MaSch.Console.Cli
             where TCommand : ICliCommandExecutor
             => CommandsCollection.Add(CliCommandInfo.From<TCommand>());
 
-        public void RegisterCommand<TCommand>(TCommand optionsInstance)
+        public void RegisterCommand<TCommand>(TCommand commandInstance)
             where TCommand : ICliCommandExecutor
-            => CommandsCollection.Add(CliCommandInfo.From(optionsInstance));
+            => CommandsCollection.Add(CliCommandInfo.From(commandInstance));
 
         public void RegisterCommand<TCommand, TExecutor>()
             where TExecutor : ICliCommandExecutor<TCommand>
@@ -178,13 +178,13 @@ namespace MaSch.Console.Cli
             where TExecutor : ICliCommandExecutor<TCommand>
             => CommandsCollection.Add(CliCommandInfo.From<TCommand, TExecutor>(executorInstance));
 
-        public void RegisterCommand<TCommand, TExecutor>(TCommand optionsInstance)
+        public void RegisterCommand<TCommand, TExecutor>(TCommand commandInstance)
             where TExecutor : ICliCommandExecutor<TCommand>
-            => CommandsCollection.Add(CliCommandInfo.From<TCommand, TExecutor>(optionsInstance));
+            => CommandsCollection.Add(CliCommandInfo.From<TCommand, TExecutor>(commandInstance));
 
-        public void RegisterCommand<TCommand, TExecutor>(TCommand optionsInstance, TExecutor executorInstance)
+        public void RegisterCommand<TCommand, TExecutor>(TCommand commandInstance, TExecutor executorInstance)
             where TExecutor : ICliCommandExecutor<TCommand>
-            => CommandsCollection.Add(CliCommandInfo.From(optionsInstance, executorInstance));
+            => CommandsCollection.Add(CliCommandInfo.From(commandInstance, executorInstance));
 
         public int Run(string[] args)
         {
@@ -244,9 +244,9 @@ namespace MaSch.Console.Cli
             where TCommand : ICliAsyncCommandExecutor
             => CommandsCollection.Add(CliCommandInfo.From<TCommand>());
 
-        public void RegisterCommand<TCommand>(TCommand optionsInstance)
+        public void RegisterCommand<TCommand>(TCommand commandInstance)
             where TCommand : ICliAsyncCommandExecutor
-            => CommandsCollection.Add(CliCommandInfo.From(optionsInstance));
+            => CommandsCollection.Add(CliCommandInfo.From(commandInstance));
 
         public void RegisterCommand<TCommand, TExecutor>()
             where TExecutor : ICliAsyncCommandExecutor<TCommand>
@@ -256,13 +256,13 @@ namespace MaSch.Console.Cli
             where TExecutor : ICliAsyncCommandExecutor<TCommand>
             => CommandsCollection.Add(CliCommandInfo.From<TCommand, TExecutor>(executorInstance));
 
-        public void RegisterCommand<TCommand, TExecutor>(TCommand optionsInstance)
+        public void RegisterCommand<TCommand, TExecutor>(TCommand commandInstance)
             where TExecutor : ICliAsyncCommandExecutor<TCommand>
-            => CommandsCollection.Add(CliCommandInfo.From<TCommand, TExecutor>(optionsInstance));
+            => CommandsCollection.Add(CliCommandInfo.From<TCommand, TExecutor>(commandInstance));
 
-        public void RegisterCommand<TCommand, TExecutor>(TCommand optionsInstance, TExecutor executorInstance)
+        public void RegisterCommand<TCommand, TExecutor>(TCommand commandInstance, TExecutor executorInstance)
             where TExecutor : ICliAsyncCommandExecutor<TCommand>
-            => CommandsCollection.Add(CliCommandInfo.From(optionsInstance, executorInstance));
+            => CommandsCollection.Add(CliCommandInfo.From(commandInstance, executorInstance));
 
         public async Task<int> RunAsync(string[] args)
         {

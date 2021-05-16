@@ -178,7 +178,6 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         private Storyboard? _showMessageStoryboard;
         private IconPresenter? _messageIcon;
         private TextBlock? _messageText;
-        private FrameworkElement? _rootElement;
 
         /// <summary>
         /// Gets or sets the success message icon.
@@ -345,12 +344,12 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             base.OnApplyTemplate();
             _messageIcon = GetTemplateChild("PART_MessageIcon") as IconPresenter;
             _messageText = GetTemplateChild("PART_MessageText") as TextBlock;
-            _rootElement = GetTemplateChild("PART_Root") as FrameworkElement;
+            var rootElement = GetTemplateChild("PART_Root") as FrameworkElement;
             Guard.NotNull(_messageIcon, nameof(_messageIcon));
             Guard.NotNull(_messageText, nameof(_messageText));
-            Guard.NotNull(_rootElement, nameof(_rootElement));
+            Guard.NotNull(rootElement, nameof(rootElement));
 
-            _showMessageStoryboard = _rootElement.Resources["ShowMessageStoryboard"] as Storyboard;
+            _showMessageStoryboard = rootElement.Resources["ShowMessageStoryboard"] as Storyboard;
             Guard.NotNull(_showMessageStoryboard, nameof(_showMessageStoryboard));
         }
 

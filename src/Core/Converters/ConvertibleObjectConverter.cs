@@ -10,7 +10,7 @@ namespace MaSch.Core.Converters
     /// </summary>
     public class ConvertibleObjectConverter : IObjectConverter
     {
-        private static readonly Dictionary<Type, List<Func<Type, bool>>> CanConvertFunctions = new Dictionary<Type, List<Func<Type, bool>>>();
+        private static readonly Dictionary<Type, List<Func<Type, bool>>> CanConvertFunctions = new();
         private readonly int _priority;
 
         static ConvertibleObjectConverter()

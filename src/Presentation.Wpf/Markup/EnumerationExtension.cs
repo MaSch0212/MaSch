@@ -77,7 +77,7 @@ namespace MaSch.Presentation.Wpf.Markup
         {
             var enumType = Nullable.GetUnderlyingType(value) ?? value;
 
-            if (enumType.IsEnum == false)
+            if (!enumType.IsEnum)
                 throw new ArgumentException("Type must be an Enum.");
 
             return enumType;

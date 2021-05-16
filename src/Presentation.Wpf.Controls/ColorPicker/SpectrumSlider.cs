@@ -83,7 +83,7 @@ namespace MaSch.Presentation.Wpf.ColorPicker
 
         private void CreateSpectrum()
         {
-            _pickerBrush = new LinearGradientBrush
+            var pickerBrush = new LinearGradientBrush
             {
                 StartPoint = new Point(0.5, 0),
                 EndPoint = new Point(0.5, 1),
@@ -96,15 +96,14 @@ namespace MaSch.Presentation.Wpf.ColorPicker
             int i;
             for (i = 0; i < colorsList.Count; i++)
             {
-                _pickerBrush.GradientStops.Add(new GradientStop(colorsList[i], i * stopIncrement));
+                pickerBrush.GradientStops.Add(new GradientStop(colorsList[i], i * stopIncrement));
             }
 
-            _pickerBrush.GradientStops[i - 1].Offset = 1.0;
-            _spectrumDisplay!.Fill = _pickerBrush;
+            pickerBrush.GradientStops[i - 1].Offset = 1.0;
+            _spectrumDisplay!.Fill = pickerBrush;
         }
 
         private const string SpectrumDisplayName = "PART_SpectrumDisplay";
         private Rectangle? _spectrumDisplay;
-        private LinearGradientBrush? _pickerBrush;
     }
 }

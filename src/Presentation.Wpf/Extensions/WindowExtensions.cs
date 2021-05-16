@@ -42,62 +42,64 @@ namespace MaSch.Presentation.Wpf.Extensions
                 window.Top = SystemParameters.VirtualScreenHeight + SystemParameters.VirtualScreenTop - window.Height;
             }
 
-            // Shift window away from taskbar.
+            ShiftAwayFromTaskbar(window);
+        }
+
+        private static void ShiftAwayFromTaskbar(Window window)
+        {
+            var taskBarLocation = GetTaskBarLocationPerScreen();
+
+            // If taskbar is set to "auto-hide", then this list will be empty, and we will do nothing.
+            foreach (var taskBar in taskBarLocation)
             {
-                var taskBarLocation = GetTaskBarLocationPerScreen();
+                Rectangle windowRect = new((int)window.Left, (int)window.Top, (int)window.Width, (int)window.Height);
 
-                // If taskbar is set to "auto-hide", then this list will be empty, and we will do nothing.
-                foreach (var taskBar in taskBarLocation)
+                // Keep on shifting the window out of the way.
+                int avoidInfiniteLoopCounter = 25;
+                while (windowRect.IntersectsWith(taskBar))
                 {
-                    Rectangle windowRect = new Rectangle((int)window.Left, (int)window.Top, (int)window.Width, (int)window.Height);
-
-                    // Keep on shifting the window out of the way.
-                    int avoidInfiniteLoopCounter = 25;
-                    while (windowRect.IntersectsWith(taskBar))
+                    avoidInfiniteLoopCounter--;
+                    if (avoidInfiniteLoopCounter == 0)
                     {
-                        avoidInfiniteLoopCounter--;
-                        if (avoidInfiniteLoopCounter == 0)
-                        {
-                            break;
-                        }
-
-                        // Our window is covering the task bar. Shift it away.
-                        var intersection = Rectangle.Intersect(taskBar, windowRect);
-
-                        // The second condition is a rare corner case. Handles situation where taskbar is big enough to
-                        // completely contain the status window.
-                        if (intersection.Width < window.Width || taskBar.Contains(windowRect))
-                        {
-                            if (taskBar.Left == 0)
-                            {
-                                // Task bar is on the left. Push away to the right.
-                                window.Left += intersection.Width;
-                            }
-                            else
-                            {
-                                // Task bar is on the right. Push away to the left.
-                                window.Left -= intersection.Width;
-                            }
-                        }
-
-                        // The second condition is a rare corner case. Handles situation where taskbar is big enough to
-                        // completely contain the status window.
-                        if (intersection.Height < window.Height || taskBar.Contains(windowRect))
-                        {
-                            if (taskBar.Top == 0)
-                            {
-                                // Task bar is on the top. Push down.
-                                window.Top += intersection.Height;
-                            }
-                            else
-                            {
-                                // Task bar is on the bottom. Push up.
-                                window.Top -= intersection.Height;
-                            }
-                        }
-
-                        windowRect = new Rectangle((int)window.Left, (int)window.Top, (int)window.Width, (int)window.Height);
+                        break;
                     }
+
+                    // Our window is covering the task bar. Shift it away.
+                    var intersection = Rectangle.Intersect(taskBar, windowRect);
+
+                    // The second condition is a rare corner case. Handles situation where taskbar is big enough to
+                    // completely contain the status window.
+                    if (intersection.Width < window.Width || taskBar.Contains(windowRect))
+                    {
+                        if (taskBar.Left == 0)
+                        {
+                            // Task bar is on the left. Push away to the right.
+                            window.Left += intersection.Width;
+                        }
+                        else
+                        {
+                            // Task bar is on the right. Push away to the left.
+                            window.Left -= intersection.Width;
+                        }
+                    }
+
+                    // The second condition is a rare corner case. Handles situation where taskbar is big enough to
+                    // completely contain the status window.
+                    if (intersection.Height < window.Height || taskBar.Contains(windowRect))
+                    {
+                        if (taskBar.Top == 0)
+                        {
+                            // Task bar is on the top. Push down.
+                            window.Top += intersection.Height;
+                        }
+                        else
+                        {
+                            // Task bar is on the bottom. Push up.
+                            window.Top -= intersection.Height;
+                        }
+                    }
+
+                    windowRect = new Rectangle((int)window.Left, (int)window.Top, (int)window.Width, (int)window.Height);
                 }
             }
         }

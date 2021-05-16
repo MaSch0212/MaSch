@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace MaSch.Native.Windows
@@ -59,6 +60,7 @@ namespace MaSch.Native.Windows
         }
 
         [Flags]
+        [SuppressMessage("Minor Code Smell", "S2344:Enumeration type names should not have \"Flags\" or \"Enum\" suffixes", Justification = "Won't fix. Would introduce breaking change.")]
         public enum CopyFileFlags : uint
         {
             CopyFileFailIfExists = 1,

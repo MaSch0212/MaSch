@@ -1,6 +1,7 @@
 ﻿using MaSch.Presentation.Wpf.Commands;
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -91,6 +92,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <summary>
         /// Asynchronous event that occurs when the view opened.
         /// </summary>
+        [SuppressMessage("Major Code Smell", "S3264:Events should be invoked", Justification = "False positive.")]
         public event AsyncCancelEventHandler? ViewOpenedAsync;
 
         /// <summary>
@@ -101,6 +103,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <summary>
         /// Asynchronous event that occurs when the view closed.
         /// </summary>
+        [SuppressMessage("Major Code Smell", "S3264:Events should be invoked", Justification = "False positive.")]
         public event AsyncCancelEventHandler? ViewClosedAsync;
 
         /// <summary>

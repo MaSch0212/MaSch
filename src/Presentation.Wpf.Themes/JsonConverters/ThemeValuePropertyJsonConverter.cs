@@ -16,7 +16,7 @@ namespace MaSch.Presentation.Wpf.JsonConverters
         /// <summary>
         /// The regex that is used to get references to other values in the theme.
         /// </summary>
-        protected static readonly Regex ReferenceRegex = new Regex(@"^\{Bind (?<key>[a-zA-Z_\-][a-zA-Z0-9_\-]*)(\.(?<property>[a-zA-Z_\-][a-zA-Z0-9_\-]*))?\}$", RegexOptions.Compiled);
+        protected static readonly Regex ReferenceRegex = new(@"^\{Bind (?<key>[a-zA-Z_\-][a-zA-Z0-9_\-]*)(\.(?<property>[a-zA-Z_\-][a-zA-Z0-9_\-]*))?\}$", RegexOptions.Compiled);
     }
 
     /// <summary>

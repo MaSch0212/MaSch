@@ -630,7 +630,7 @@ namespace MaSch.Core.Test
         {
             _cacheMock.Protected().Setup("Dispose", true, true);
 
-            Cache<string>.Dispose();
+            Cache<string>.DisposeInstance();
 
             Assert.AreNotSame(_cacheMock.Object, Cache<string>.Instance);
             _cacheMock.Protected().Verify("Dispose", Times.Once(), true, true);

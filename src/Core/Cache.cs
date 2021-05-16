@@ -240,6 +240,7 @@ namespace MaSch.Core
     /// </summary>
     /// <typeparam name="TTarget">The type of the cache entries.</typeparam>
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic representation can be in same file.")]
+    [SuppressMessage("Major Code Smell", "S2743:Static fields should not be used in generic types", Justification = "This behavior is intentional here.")]
     public static class Cache<TTarget>
     {
         private static readonly object InstanceLock = new();
@@ -349,7 +350,7 @@ namespace MaSch.Core
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// Resets the <see cref="Instance"/>, so next time the <see cref="Instance"/> is retrieved a new Cache is created.
         /// </summary>
-        public static void Dispose()
+        public static void DisposeInstance()
         {
             lock (InstanceLock)
             {

@@ -1,6 +1,7 @@
 ﻿using MaSch.Core.Extensions;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace MaSch.Presentation.Validation
@@ -9,6 +10,7 @@ namespace MaSch.Presentation.Validation
     /// If applied to a property its value is validated by using a delegate function.
     /// </summary>
     /// <seealso cref="ValidationAttribute" />
+    [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "Needed to access members that use this attribute.")]
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class DelegateValidationAttribute : ValidationAttribute
     {

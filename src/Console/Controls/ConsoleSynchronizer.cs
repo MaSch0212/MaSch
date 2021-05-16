@@ -9,7 +9,7 @@ namespace MaSch.Console.Controls
     /// </summary>
     public static class ConsoleSynchronizer
     {
-        private static readonly object Lock = new object();
+        private static readonly object Lock = new();
 
         /// <summary>
         /// Creates a scope to synchronize console actions.

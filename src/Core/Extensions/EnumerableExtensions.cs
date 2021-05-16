@@ -384,6 +384,70 @@ namespace MaSch.Core.Extensions
         }
 
         /// <summary>
+        /// Executes an async action for each item in the <see cref="IEnumerable{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of objects in the specified enumerable.</typeparam>
+        /// <param name="enumerable">The enumerable.</param>
+        /// <param name="action">The action to execute.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task ForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, AsyncLoopState, Task> action)
+            => await ForEachAsync(enumerable, action, CancellationToken.None);
+
+        /// <summary>
+        /// Executes an async action for each item in the <see cref="IEnumerable{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of objects in the specified enumerable.</typeparam>
+        /// <param name="enumerable">The enumerable.</param>
+        /// <param name="action">The action to execute.</param>
+        /// <param name="token">A cancellation token to observe while executing the asynchronous actions.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task ForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, AsyncLoopState, Task> action, CancellationToken token)
+        {
+            Guard.NotNull(enumerable, nameof(enumerable));
+            Guard.NotNull(action, nameof(action));
+            var state = new AsyncLoopState(token);
+            foreach (var item in enumerable)
+            {
+                await action(item, state);
+                if (!state.Next())
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Executes an async action for each item in the <see cref="IEnumerable{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of objects in the specified enumerable.</typeparam>
+        /// <param name="enumerable">The enumerable.</param>
+        /// <param name="action">The action to execute. The first parameter is the last element of the loop - for the first item, this parameter is <c>default</c>.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task ForEachAsync<T>(this IEnumerable<T> enumerable, Func<T?, T, AsyncLoopState, Task> action)
+            => await ForEachAsync(enumerable, action, CancellationToken.None);
+
+        /// <summary>
+        /// Executes an async action for each item in the <see cref="IEnumerable{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of objects in the specified enumerable.</typeparam>
+        /// <param name="enumerable">The enumerable.</param>
+        /// <param name="action">The action to execute. The first parameter is the last element of the loop - for the first item, this parameter is <c>default</c>.</param>
+        /// <param name="token">A cancellation token to observe while executing the asynchronous actions.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task ForEachAsync<T>(this IEnumerable<T> enumerable, Func<T?, T, AsyncLoopState, Task> action, CancellationToken token)
+        {
+            Guard.NotNull(enumerable, nameof(enumerable));
+            Guard.NotNull(action, nameof(action));
+            T? last = default;
+            var state = new AsyncLoopState(token);
+            foreach (var item in enumerable)
+            {
+                await action(last, item, state);
+                if (!state.Next())
+                    break;
+                last = item;
+            }
+        }
+
+        /// <summary>
         /// Executes an async action for each item in the <see cref="IEnumerable{T}"/> in parallel.
         /// </summary>
         /// <typeparam name="T">The type of objects in the specified enumerable.</typeparam>
@@ -447,37 +511,6 @@ namespace MaSch.Core.Extensions
                     if (token.IsCancellationRequested)
                         break;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Executes an async action for each item in the <see cref="IEnumerable{T}"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of objects in the specified enumerable.</typeparam>
-        /// <param name="enumerable">The enumerable.</param>
-        /// <param name="action">The action to execute.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task ForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, AsyncLoopState, Task> action)
-            => await ForEachAsync(enumerable, action, CancellationToken.None);
-
-        /// <summary>
-        /// Executes an async action for each item in the <see cref="IEnumerable{T}"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of objects in the specified enumerable.</typeparam>
-        /// <param name="enumerable">The enumerable.</param>
-        /// <param name="action">The action to execute.</param>
-        /// <param name="token">A cancellation token to observe while executing the asynchronous actions.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task ForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, AsyncLoopState, Task> action, CancellationToken token)
-        {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
-            var state = new AsyncLoopState(token);
-            foreach (var item in enumerable)
-            {
-                await action(item, state);
-                if (!state.Next())
-                    break;
             }
         }
 
@@ -552,39 +585,6 @@ namespace MaSch.Core.Extensions
                     if (!state.Next())
                         break;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Executes an async action for each item in the <see cref="IEnumerable{T}"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of objects in the specified enumerable.</typeparam>
-        /// <param name="enumerable">The enumerable.</param>
-        /// <param name="action">The action to execute. The first parameter is the last element of the loop - for the first item, this parameter is <c>default</c>.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task ForEachAsync<T>(this IEnumerable<T> enumerable, Func<T?, T, AsyncLoopState, Task> action)
-            => await ForEachAsync(enumerable, action, CancellationToken.None);
-
-        /// <summary>
-        /// Executes an async action for each item in the <see cref="IEnumerable{T}"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of objects in the specified enumerable.</typeparam>
-        /// <param name="enumerable">The enumerable.</param>
-        /// <param name="action">The action to execute. The first parameter is the last element of the loop - for the first item, this parameter is <c>default</c>.</param>
-        /// <param name="token">A cancellation token to observe while executing the asynchronous actions.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task ForEachAsync<T>(this IEnumerable<T> enumerable, Func<T?, T, AsyncLoopState, Task> action, CancellationToken token)
-        {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
-            T? last = default;
-            var state = new AsyncLoopState(token);
-            foreach (var item in enumerable)
-            {
-                await action(last, item, state);
-                if (!state.Next())
-                    break;
-                last = item;
             }
         }
 

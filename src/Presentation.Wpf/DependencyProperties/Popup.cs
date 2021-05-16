@@ -47,7 +47,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                     Win.PlacementMode.Bottom or Win.PlacementMode.Top => (ptPos.X / scaleX) + p.HorizontalOffset,
                     Win.PlacementMode.Right => (ptPos.X / scaleX) + pt.ActualWidth + p.HorizontalOffset,
                     Win.PlacementMode.Left => (ptPos.X / scaleX) - ((p.Child as FrameworkElement)?.ActualWidth ?? 0D) + p.HorizontalOffset,
-                    _ => throw new ArgumentOutOfRangeException(),
+                    _ => throw new ArgumentOutOfRangeException($"The placement \"{p.Placement}\" is unknown."),
                 };
                 p.HorizontalOffset = Math.Abs((pPos.X / scaleX) - expectedXPos) < 1 ? GetRelativeHorizontalOffset(p) : -GetRelativeHorizontalOffset(p);
             }
@@ -82,7 +82,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                     Win.PlacementMode.Right or Win.PlacementMode.Left => (ptPos.Y / scaleY) + p.VerticalOffset,
                     Win.PlacementMode.Bottom => (ptPos.Y / scaleY) + pt.ActualHeight + p.VerticalOffset,
                     Win.PlacementMode.Top => (ptPos.Y / scaleY) - p.ActualWidth + p.VerticalOffset,
-                    _ => throw new ArgumentOutOfRangeException(),
+                    _ => throw new ArgumentOutOfRangeException($"The placement \"{p.Placement}\" is unknown."),
                 };
                 p.VerticalOffset = Math.Abs((pPos.Y / scaleY) - expectedYPos) < 1 ? GetRelativeVerticalOffset(p) : -GetRelativeVerticalOffset(p);
             }

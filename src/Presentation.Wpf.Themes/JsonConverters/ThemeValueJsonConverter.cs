@@ -12,7 +12,7 @@ namespace MaSch.Presentation.Wpf.JsonConverters
     public class ThemeValueJsonConverter : JsonConverter<IThemeValue>
     {
         private bool _canWrite = true;
-        private bool _canRead = true;
+        private bool _canRead;
 
         /// <inheritdoc/>
         public override bool CanWrite => _canWrite;

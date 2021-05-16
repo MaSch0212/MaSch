@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -71,6 +72,7 @@ namespace MaSch.Core.Extensions
         /// Forgets the task, so it runs in the background. Use this function if you do not want to await a task.
         /// </summary>
         /// <param name="task">The task to forget.</param>
+        [SuppressMessage("Major Bug", "S3168:\"async\" methods should not return \"void\"", Justification = "The purpose of this method is to not return a Task.")]
         public static async void Forget(this Task task)
         {
             await Guard.NotNull(task, nameof(task));
@@ -81,6 +83,7 @@ namespace MaSch.Core.Extensions
         /// </summary>
         /// <typeparam name="T">The type of the return value of the task.</typeparam>
         /// <param name="task">The task to forget.</param>
+        [SuppressMessage("Major Bug", "S3168:\"async\" methods should not return \"void\"", Justification = "The purpose of this method is to not return a Task.")]
         public static async void Forget<T>(this Task<T> task)
         {
             await Guard.NotNull(task, nameof(task));

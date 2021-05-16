@@ -5,7 +5,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
     /// <summary>
     /// Provides dependency properties for the <see cref="System.Windows.Controls.MenuItem"/> control.
     /// </summary>
-    public class MenuItem
+    public static class MenuItem
     {
         /// <summary>
         /// Dependency property. Gets or sets a value indicating whether the <see cref="System.Windows.Controls.MenuItem.IsChecked"/> property is <c>null</c> to display an indeterminate symbol.

@@ -6,6 +6,7 @@ using System.Windows.Media;
 
 #pragma warning disable SA1649 // File name should match first type name
 #pragma warning disable SA1402 // File may only contain a single type
+#pragma warning disable S4136 // Method overloads should be grouped together
 
 namespace MaSch.Presentation.Wpf.Extensions
 {

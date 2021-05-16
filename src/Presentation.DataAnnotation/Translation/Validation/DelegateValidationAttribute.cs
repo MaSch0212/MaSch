@@ -1,6 +1,7 @@
 ﻿using MaSch.Core.Extensions;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace MaSch.Presentation.Translation.Validation
@@ -9,13 +10,14 @@ namespace MaSch.Presentation.Translation.Validation
     /// Validates the property with a given method.
     /// </summary>
     /// <seealso cref="TranslatableValidationAttribute" />
+    [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "Needed to access members that use this attribute.")]
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class DelegateValidationAttribute : TranslatableValidationAttribute
     {
         /// <summary>
         /// The failed result.
         /// </summary>
-        public static readonly ValidationResult FailedResult = new ValidationResult(string.Empty);
+        public static readonly ValidationResult FailedResult = new(string.Empty);
 
         /// <summary>
         /// Gets the name of the validation method.

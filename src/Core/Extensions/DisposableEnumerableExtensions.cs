@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace MaSch.Core.Extensions
@@ -8,6 +9,7 @@ namespace MaSch.Core.Extensions
     /// <summary>
     /// Provides extension methods for <see cref="IDisposableEnumerable{T}"/> and <see cref="IDisposableEnumerable"/>.
     /// </summary>
+    [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "This ordering does not make sense here.")]
     public static class DisposableEnumerableExtensions
     {
         #region IDisposableEnumerable<T>

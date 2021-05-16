@@ -40,17 +40,36 @@ namespace MaSch.Presentation.Wpf.Commands
         public bool CanExecute(object? parameter) => CanExecute();
 
         /// <summary>
+        /// Checks if the Execute method can be executed.
+        /// </summary>
+        /// <returns><c>true</c>.</returns>
+        public virtual bool CanExecute() => true;
+
+        /// <summary>
         /// Executes the command asynchronously.
         /// </summary>
         /// <param name="parameter">The parameter for the command. Is not used in this command, so it should be null.</param>
         public async void Execute(object? parameter) => await ExecuteAsync(parameter);
 
         /// <summary>
+        /// Executes the command asynchronously.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public abstract Task Execute();
+
+        /// <summary>
+        /// Executes the command asynchronously (awaitable).
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task ExecuteAsync()
+            => await ExecuteAsync(null);
+
+        /// <summary>
         /// Executes the command asynchronously (awaitable).
         /// </summary>
         /// <param name="parameter">The parameter for the command. Is not used in this command, so it should be null.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task ExecuteAsync(object? parameter = null)
+        public async Task ExecuteAsync(object? parameter)
         {
             if (IgnoreCanExecuteOnExecute || CanExecute())
                 await Execute();
@@ -70,18 +89,6 @@ namespace MaSch.Presentation.Wpf.Commands
         /// Gets a value indicating whether to ignore the result of the <see cref="CanExecute(object)"/> method.
         /// </summary>
         protected virtual bool IgnoreCanExecuteOnExecute => false;
-
-        /// <summary>
-        /// Checks if the Execute method can be executed.
-        /// </summary>
-        /// <returns><c>true</c>.</returns>
-        public virtual bool CanExecute() => true;
-
-        /// <summary>
-        /// Executes the command asynchronously.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public abstract Task Execute();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncCommandBase"/> class.
@@ -114,10 +121,24 @@ namespace MaSch.Presentation.Wpf.Commands
         public bool CanExecute(object? parameter) => CanExecute(GetParameterValue(parameter));
 
         /// <summary>
+        /// Checks if the Execute method can be executed.
+        /// </summary>
+        /// <param name="parameter">The parameter for the command.</param>
+        /// <returns>true if the Execute method can be executed otherwise false.</returns>
+        public virtual bool CanExecute(T? parameter) => true;
+
+        /// <summary>
         /// Executes the command asynchronously.
         /// </summary>
         /// <param name="parameter">The parameter for the command.</param>
         public async void Execute(object? parameter) => await ExecuteAsync(parameter);
+
+        /// <summary>
+        /// Executes the command asynchronously.
+        /// </summary>
+        /// <param name="parameter">The parameter for the command.</param>
+        /// <returns>a task that does the execution.</returns>
+        public abstract Task Execute(T? parameter);
 
         /// <summary>
         /// Executes the command asynchronously (awaitable).
@@ -150,20 +171,6 @@ namespace MaSch.Presentation.Wpf.Commands
         /// Gets a value indicating whether to throw an exception when the wrong parameter type is given.
         /// </summary>
         protected virtual bool ThrowExceptionOnWrongParamType => true;
-
-        /// <summary>
-        /// Checks if the Execute method can be executed.
-        /// </summary>
-        /// <param name="parameter">The parameter for the command.</param>
-        /// <returns>true if the Execute method can be executed otherwise false.</returns>
-        public virtual bool CanExecute(T? parameter) => true;
-
-        /// <summary>
-        /// Executes the command asynchronously.
-        /// </summary>
-        /// <param name="parameter">The parameter for the command.</param>
-        /// <returns>a task that does the execution.</returns>
-        public abstract Task Execute(T? parameter);
 
         private T? GetParameterValue(object? parameter)
         {

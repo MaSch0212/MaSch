@@ -16,13 +16,13 @@ namespace MaSch.Presentation.Wpf.JsonConverters
     public class ThemeJsonConverter : JsonConverter<ITheme>
     {
         private static readonly IWebRequestCreate PackRequestFactory = new PackWebRequestFactory();
-        private static readonly WebClient WebClient = new WebClient();
+        private static readonly WebClient WebClient = new();
 
         /// <inheritdoc/>
         public override bool CanWrite => false;
 
         /// <inheritdoc/>
-        public override ITheme ReadJson(JsonReader reader, Type objectType, ITheme? existingValue, bool hasExtistingValue, JsonSerializer serializer)
+        public override ITheme ReadJson(JsonReader reader, Type objectType, ITheme? existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             var jToken = JToken.ReadFrom(reader);
             var result = serializer.Deserialize<Theme>(jToken.CreateReader()) ?? new Theme();

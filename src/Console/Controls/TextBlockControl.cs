@@ -161,6 +161,7 @@ namespace MaSch.Console.Controls
                     {
                         for (; text[i + extra] == ' ' && (i + extra) < text.Length; extra++)
                         {
+                            // Just counting
                         }
 
                         if ((i + extra) >= text.Length)
@@ -328,9 +329,11 @@ namespace MaSch.Console.Controls
             };
             return result.Length > maxLength ? result[..maxLength] : result;
 
+#pragma warning disable S1172 // Unused method parameters should be removed
             static string TrimEndCharacter(string text, int maxLength) => text[..(maxLength - 3)] + "...";
             static string TrimStartCharacter(string text, int maxLength) => "..." + text[^(maxLength - 3)..];
             static string TrimCenterCharacter(string text, int maxLength) => text[..((int)Math.Ceiling(maxLength / 2D) - 2)] + "..." + text[^((int)Math.Floor(maxLength / 2D) - 1)..];
+#pragma warning restore S1172 // Unused method parameters should be removed
 
             static string TrimEndWords(string text, int maxLength)
             {

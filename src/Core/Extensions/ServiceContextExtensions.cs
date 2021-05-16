@@ -8,6 +8,7 @@ namespace MaSch.Core
     /// <summary>
     /// Provides extension methods for the <see cref="IServiceContext"/> and <see cref="IServiceContext{T}"/> interfaces.
     /// </summary>
+    [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "This ordering does not make sense here.")]
     public static class ServiceContextExtensions
     {
         #region ServiceContext

@@ -17,7 +17,7 @@ namespace MaSch.Presentation.Wpf.ViewModels
     /// </summary>
     [ObservablePropertyDefinition]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Property definition interface should be first in file.")]
-    internal interface IMessageBoxViewModel_Props
+    internal interface IMessageBoxViewModelProps
     {
         /// <summary>
         /// Gets or sets the message box text.
@@ -44,10 +44,10 @@ namespace MaSch.Presentation.Wpf.ViewModels
     /// View model for the <see cref="Views.MessageBox"/>.
     /// </summary>
     /// <seealso cref="MaSch.Core.Observable.ObservableObject" />
-    /// <seealso cref="MaSch.Presentation.Wpf.ViewModels.IMessageBoxViewModel_Props" />
-    public partial class MessageBoxViewModel : ObservableObject, IMessageBoxViewModel_Props
+    /// <seealso cref="MaSch.Presentation.Wpf.ViewModels.IMessageBoxViewModelProps" />
+    public partial class MessageBoxViewModel : ObservableObject, IMessageBoxViewModelProps
     {
-        private static readonly Dictionary<int, Func<BrushGeometry>> IconDict = new Dictionary<int, Func<BrushGeometry>>
+        private static readonly Dictionary<int, Func<BrushGeometry>> IconDict = new()
         {
             [0] = () => new BrushGeometry(),
             [16] = () => new BrushGeometry

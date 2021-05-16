@@ -47,7 +47,7 @@ namespace MaSch.Presentation.Wpf.ControlData
                 typeof(DetailPopupContent),
                 new PropertyMetadata(null));
 
-        private static readonly Dictionary<AnchorStyle, Geometry?> ArrowDataDict = new Dictionary<AnchorStyle, Geometry?>
+        private static readonly Dictionary<AnchorStyle, Geometry?> ArrowDataDict = new()
         {
             { AnchorStyle.None, null },
             { AnchorStyle.Left, Geometry.Parse("M 1,0 0,1 1,2") },
@@ -143,7 +143,7 @@ namespace MaSch.Presentation.Wpf.ControlData
                     _border.SetMinSize(0, 0);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException($"The arrow position \"{ArrowPosition}\" is unknown.");
             }
         }
 

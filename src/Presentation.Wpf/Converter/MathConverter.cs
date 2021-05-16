@@ -24,7 +24,7 @@ namespace MaSch.Presentation.Wpf.Converter
     /// </remarks>
     public class MathConverter : MarkupExtension, IMultiValueConverter, IValueConverter
     {
-        private readonly Dictionary<string, IExpression> _storedExpressions = new Dictionary<string, IExpression>();
+        private readonly Dictionary<string, IExpression> _storedExpressions = new();
 
         /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

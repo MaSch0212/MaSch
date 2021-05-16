@@ -5,7 +5,7 @@
         int ExecuteCommand();
     }
 
-    public interface ICliCommandExecutor<TCommand>
+    public interface ICliCommandExecutor<in TCommand>
     {
         int ExecuteCommand(TCommand parameters);
     }

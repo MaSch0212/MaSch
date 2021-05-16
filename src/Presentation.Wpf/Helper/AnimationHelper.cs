@@ -8,7 +8,7 @@ namespace MaSch.Presentation.Wpf.Helper
     /// <summary>
     /// Helper methods for animations.
     /// </summary>
-    public class AnimationHelper
+    public static class AnimationHelper
     {
         /// <summary>
         /// Adds a new DoubleAnimation to the given storyboard that animates the property FrameworkElement.OpacityProperty with the given informations.

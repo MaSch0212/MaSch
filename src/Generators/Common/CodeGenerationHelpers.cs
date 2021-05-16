@@ -21,7 +21,7 @@ namespace MaSch.Generators.Common
         /// <summary>
         /// Format that can be used to get the definition syntax of a Symbol.
         /// </summary>
-        public static readonly SymbolDisplayFormat DefinitionFormat = new SymbolDisplayFormat(
+        public static readonly SymbolDisplayFormat DefinitionFormat = new(
             SymbolDisplayGlobalNamespaceStyle.Omitted,
             SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
             SymbolDisplayGenericsOptions.IncludeTypeParameters | SymbolDisplayGenericsOptions.IncludeTypeConstraints | SymbolDisplayGenericsOptions.IncludeVariance,
@@ -37,7 +37,7 @@ namespace MaSch.Generators.Common
         /// <summary>
         /// Format that can be used to get the usage syntax of a Symbol.
         /// </summary>
-        public static readonly SymbolDisplayFormat UsageFormat = new SymbolDisplayFormat(
+        public static readonly SymbolDisplayFormat UsageFormat = new(
             SymbolDisplayGlobalNamespaceStyle.Omitted,
             SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
             SymbolDisplayGenericsOptions.IncludeTypeParameters,

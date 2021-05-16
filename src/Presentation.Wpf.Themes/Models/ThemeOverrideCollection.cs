@@ -13,7 +13,7 @@ namespace MaSch.Presentation.Wpf.Models
     /// <seealso cref="System.Collections.ObjectModel.ObservableCollection{T}" />
     public class ThemeOverrideCollection : ObservableCollection<ThemeOverride>
     {
-        private readonly List<IThemeManager> _themeManagers = new List<IThemeManager>();
+        private readonly List<IThemeManager> _themeManagers = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThemeOverrideCollection"/> class.

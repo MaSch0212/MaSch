@@ -69,7 +69,7 @@ namespace MaSch.Presentation.Wpf.Views
                     case MessageBoxImage.None:
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new ArgumentOutOfRangeException($"The message box image \"{vm.MessageBoxImage}\" is unknown.");
                 }
             }
         }

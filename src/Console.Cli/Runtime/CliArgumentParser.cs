@@ -287,7 +287,8 @@ namespace MaSch.Console.Cli.Runtime
                 errors.Add(vErrors);
         }
 
-        internal class CliErrorException : Exception
+        [SuppressMessage("Critical Code Smell", "S3871:Exception types should be \"public\"", Justification = "This exception is always catched, so no need to make it public.")]
+        private class CliErrorException : Exception
         {
             public IEnumerable<CliError> Errors { get; }
 

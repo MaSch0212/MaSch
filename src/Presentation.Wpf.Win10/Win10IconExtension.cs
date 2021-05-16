@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Media;
@@ -34,6 +35,7 @@ namespace MaSch.Presentation.Wpf.Win10
         /// </summary>
         public Stretch Stretch { get; set; } = Stretch.Uniform;
 
+        [SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "Hardcoded URI to internal resource should be fine.")]
         static Win10IconExtension()
         {
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))

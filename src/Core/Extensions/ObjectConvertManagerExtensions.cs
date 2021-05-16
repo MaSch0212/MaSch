@@ -201,21 +201,21 @@ namespace MaSch.Core
 
         private static bool TryConvert<T>(IObjectConvertManager manager, object? objectToConvert, Type? sourceType, Type targetType, IFormatProvider formatProvider, out T? convertedObject)
         {
-            bool result = false;
-            convertedObject = default;
             if (manager.CanConvert(sourceType, targetType))
             {
                 try
                 {
                     convertedObject = (T?)manager.Convert(objectToConvert, sourceType, targetType, formatProvider);
-                    result = true;
+                    return true;
                 }
                 catch (InvalidCastException)
                 {
+                    // Ignore this exception -> fall through to return false
                 }
             }
 
-            return result;
+            convertedObject = default;
+            return false;
         }
     }
 }

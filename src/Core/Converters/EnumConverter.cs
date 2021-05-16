@@ -8,7 +8,7 @@ namespace MaSch.Core.Converters
     /// </summary>
     public class EnumConverter : IObjectConverter
     {
-        private static readonly ConvertibleObjectConverter ConvertibleConverter = new ConvertibleObjectConverter();
+        private static readonly ConvertibleObjectConverter ConvertibleConverter = new();
         private readonly int _priority;
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace MaSch.Core.Converters
                 var resultType = Enum.GetUnderlyingType(targetType);
                 var result = ConvertibleConverter.Convert(obj, sourceType, resultType, convertManager, formatProvider);
                 if (result == null || !targetType.IsEnumDefined(result))
-                    throw new IndexOutOfRangeException($"A enum member with value \"{result ?? "(null)"}\" is not defined in the enum \"{targetType.FullName}\".");
+                    throw new ArgumentOutOfRangeException(nameof(obj), $"A enum member with value \"{result ?? "(null)"}\" is not defined in the enum \"{targetType.FullName}\".");
                 return result.CastTo(targetType);
             }
 

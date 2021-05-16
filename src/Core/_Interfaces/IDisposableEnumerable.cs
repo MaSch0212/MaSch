@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace MaSch.Core
@@ -40,6 +41,7 @@ namespace MaSch.Core
     /// <typeparam name="T">The type of the elements of the sequence.</typeparam>
     /// <seealso cref="IDisposableEnumerable" />
     /// <seealso cref="IOrderedEnumerable{T}" />
+    [SuppressMessage("Major Code Smell", "S3246:Generic type parameters should be co/contravariant when possible", Justification = "Can not fix. Will produce CS1961.")]
     public interface IOrderedDisposableEnumerable<T>
         : IDisposableEnumerable, IOrderedEnumerable<T>
     {

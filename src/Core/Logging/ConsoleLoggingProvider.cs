@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using static System.Environment;
 
 namespace MaSch.Core.Logging
@@ -57,17 +58,19 @@ namespace MaSch.Core.Logging
 
         private string? GetErrorText(string? message, Exception? exception)
         {
+            var sbMessage = new StringBuilder(message);
+
             if (exception is AggregateException aggregateException)
             {
                 foreach (var ex in aggregateException.InnerExceptions)
-                    message += GetExceptionText(ex, _logExceptionStackTrace);
+                    sbMessage.Append(GetExceptionText(ex, _logExceptionStackTrace));
             }
             else if (exception != null)
             {
-                message += GetExceptionText(exception, _logExceptionStackTrace);
+                sbMessage.Append(GetExceptionText(exception, _logExceptionStackTrace));
             }
 
-            return message;
+            return sbMessage.ToString();
 
             static string GetExceptionText(Exception ex, bool includeStackTrace)
                 => $"{NewLine}    - {(includeStackTrace ? ex.ToString() : ex.Message).Replace(NewLine, $"{NewLine}      ")}";

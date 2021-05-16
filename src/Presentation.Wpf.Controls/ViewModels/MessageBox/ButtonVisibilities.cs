@@ -12,7 +12,7 @@ namespace MaSch.Presentation.Wpf.ViewModels.MessageBox
     /// </summary>
     [ObservablePropertyDefinition]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Property definition interface should be first in file.")]
-    internal interface IButtonVisibilities_Props
+    internal interface IButtonVisibilitiesProps
     {
         /// <summary>
         /// Gets or sets the visibility of the OK button.
@@ -39,8 +39,8 @@ namespace MaSch.Presentation.Wpf.ViewModels.MessageBox
     /// Button state for a message box.
     /// </summary>
     /// <seealso cref="MaSch.Core.Observable.ObservableObject" />
-    /// <seealso cref="MaSch.Presentation.Wpf.ViewModels.MessageBox.IButtonVisibilities_Props" />
-    public partial class ButtonVisibilities : ObservableObject, IButtonVisibilities_Props
+    /// <seealso cref="MaSch.Presentation.Wpf.ViewModels.MessageBox.IButtonVisibilitiesProps" />
+    public partial class ButtonVisibilities : ObservableObject, IButtonVisibilitiesProps
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ButtonVisibilities"/> class.
@@ -84,7 +84,7 @@ namespace MaSch.Presentation.Wpf.ViewModels.MessageBox
         public MessageBoxButton? GetMessageBoxButton()
         {
             Visibility[] visibilities = { Ok, Cancel, Yes, No };
-            StringBuilder sb = new StringBuilder(4);
+            StringBuilder sb = new(4);
             foreach (var vis in visibilities)
                 sb.Append(vis == Visibility.Visible ? "1" : "0");
             string s = sb.ToString();

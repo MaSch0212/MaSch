@@ -11,7 +11,7 @@ namespace MaSch.Presentation.Wpf.Converter
     [ValueConversion(typeof(object), typeof(bool))]
     public class IsEqualConverter : IValueConverter
     {
-        private static readonly object UnsetValue = new object();
+        private static readonly object UnsetValue = new();
 
         /// <summary>
         /// Gets or sets the forced parameter that is always used regardless of which parameter is given to this <see cref="IsEqualConverter"/>.

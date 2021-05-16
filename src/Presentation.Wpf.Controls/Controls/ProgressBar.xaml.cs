@@ -446,35 +446,6 @@ namespace MaSch.Presentation.Wpf.Controls
                 _graphPath.Data = streamGeo;
             }
 
-            // var nonSmoothedPoints = _points.ToList();
-            // for (var i = 0; i < nonSmoothedPoints.Count; i++)
-            //     nonSmoothedPoints[i] = new Point(nonSmoothedPoints[i].X, nonSmoothedPoints[i].Y - minDispValue + upSpace);
-
-            // //draw graph
-            // if (_graphPathRaw != null)
-            // {
-            //     var streamGeo = new StreamGeometry();
-            //     var ctx = streamGeo.Open();
-            //     ctx.BeginFigure(new Point(0, allHeight + upSpace), true, false);
-            //     ctx.LineTo(new Point(0, 0), true, false);
-            //     ctx.LineTo(new Point(0, allHeight + upSpace), true, false);
-            //     if (nonSmoothedPoints.Count > 0)
-            //         ctx.LineTo(nonSmoothedPoints[0], true, false);
-            //     for (var i = 1; i < nonSmoothedPoints.Count - 1; i++)
-            //     {
-            //         Point p1 = GetPointBetween(nonSmoothedPoints[i - 1], nonSmoothedPoints[i]),
-            //             p2 = nonSmoothedPoints[i],
-            //             p3 = GetPointBetween(nonSmoothedPoints[i], nonSmoothedPoints[i + 1]);
-            //         ctx.BezierTo(p1, p2, p3, true, false);
-            //     }
-            //     if (nonSmoothedPoints.Count > 1)
-            //         ctx.LineTo(nonSmoothedPoints.Last(), true, false);
-            //     ctx.LineTo(new Point(Value, allHeight + upSpace), true, false);
-            //     ctx.LineTo(new Point(Maximum, allHeight + upSpace), true, false);
-            //     ctx.Close();
-            //     _graphPathRaw.Data = streamGeo;
-            // }
-
             // set line to right position
             if (Math.Abs(maxDispValue) > 0 && !double.IsNaN(maxDispValue) && _line != null)
                 _line.Margin = new Thickness(0, 0, 0, hd * ActualHeight * (((allHeight + upSpace) - smoothedPoints.Last().Y) / allHeight));

@@ -42,7 +42,7 @@ namespace MaSch.Core
 
         /// <inheritdoc/>
         IEnumerable<(string? Name, object Service)> IServiceContext.GetAllServices(Type serviceType)
-            => _services.Where(x => x.Key.Type == serviceType).Select(x => ((string?)x.Key.Name, x.Value));
+            => _services.Where(x => x.Key.Type == serviceType).Select(x => (x.Key.Name, x.Value));
 
         /// <inheritdoc/>
         /// <exception cref="ArgumentException"><paramref name="serviceInstance"/> is not an instance of type <paramref name="serviceType"/>.</exception>
@@ -105,6 +105,7 @@ namespace MaSch.Core
         }
 
         /// <inheritdoc/>
+        [SuppressMessage("Major Code Smell", "S2971:\"IEnumerable\" LINQs should be simplified", Justification = "ToArray is needed here because items are removed in the ForEach.")]
         void IServiceContext.Clear(Type? type)
         {
             var servicesToRemove = type == null ? _services : _services.Where(x => x.Key.Type == type);

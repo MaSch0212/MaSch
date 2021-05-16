@@ -16,6 +16,7 @@
     <SourceLinkGitHubVersion>1.0.0</SourceLinkGitHubVersion>
     <NetAnalyzersVersion>5.0.3</NetAnalyzersVersion>
     <StyleCopVersion>1.2.0-beta.333</StyleCopVersion>
+    <SonarAnalyzerVersion>8.22.0.31243</SonarAnalyzerVersion>
 
     <!-- Functionality related packages -->
     <NewtonsoftJsonVersion>12.0.3</NewtonsoftJsonVersion>

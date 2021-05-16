@@ -14,7 +14,7 @@ namespace MaSch.Core.Logging
     {
         private const long FileSizeThreshold = 10L * 1024 * 1024; // 10 MB
 
-        private readonly object _lock = new object();
+        private readonly object _lock = new();
         private readonly string _directoryPath;
         private readonly string _fileName;
         private int _currentFileNumber = -1;

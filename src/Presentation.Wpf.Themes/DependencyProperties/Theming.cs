@@ -10,7 +10,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
     /// <summary>
     /// Provides dependency properties used for theming.
     /// </summary>
-    public class Theming
+    public static class Theming
     {
         /// <summary>
         /// Dependency property. Gets or sets the theme manager for this control. This property is inherited by child elements.

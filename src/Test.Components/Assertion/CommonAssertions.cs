@@ -188,27 +188,6 @@ namespace MaSch.Test
         }
 
         /// <summary>
-        /// Tests whether the specified values are unequal and throws an exception if the two values are equal. Different numeric types are treated as unequal even if the logical values are equal. 42L is not equal to 42.
-        /// </summary>
-        /// <typeparam name="T">The type of values to compare.</typeparam>
-        /// <param name="assert">The assert object to test with.</param>
-        /// <param name="notExpected">The first value to compare. This is the value the test expects not to match <paramref name="actual" />.</param>
-        /// <param name="actual">The second value to compare. This is the value produced by the code under test.</param>
-        public static void AreNotEqual<T>(this AssertBase assert, T? notExpected, T? actual)
-            => AreNotEqual(assert, notExpected, actual, null);
-
-        /// <summary>
-        /// Tests whether the specified values are unequal and throws an exception if the two values are equal. Different numeric types are treated as unequal even if the logical values are equal. 42L is not equal to 42.
-        /// </summary>
-        /// <typeparam name="T">The type of values to compare.</typeparam>
-        /// <param name="assert">The assert object to test with.</param>
-        /// <param name="notExpected">The first value to compare. This is the value the test expects not to match <paramref name="actual" />.</param>
-        /// <param name="actual">The second value to compare. This is the value produced by the code under test.</param>
-        /// <param name="message">The message to include in the exception when <paramref name="actual" /> is equal to <paramref name="notExpected" />. The message is shown in test results.</param>
-        public static void AreNotEqual<T>(this AssertBase assert, T? notExpected, T? actual, string? message)
-            => assert.RunNegatedAssertion(notExpected, actual, message, (e, a) => Equals(a, e));
-
-        /// <summary>
         /// Tests whether the specified objects are equal and throws an exception if the two objects are not equal. Different numeric types are treated as unequal even if the logical values are equal. 42L is not equal to 42.
         /// </summary>
         /// <param name="assert">The assert object to test with.</param>
@@ -226,25 +205,6 @@ namespace MaSch.Test
         /// <param name="message">The message to include in the exception when <paramref name="actual" /> is not equal to <paramref name="expected" />. The message is shown in test results.</param>
         public static void AreEqual(this AssertBase assert, object? expected, object? actual, string? message)
             => AreEqual<object?>(assert, expected, actual, message);
-
-        /// <summary>
-        /// Tests whether the specified objects are unequal and throws an exception if the two objects are equal. Different numeric types are treated as unequal even if the logical values are equal. 42L is not equal to 42.
-        /// </summary>
-        /// <param name="assert">The assert object to test with.</param>
-        /// <param name="notExpected">The first object to compare. This is the value the test expects not to match <paramref name="actual" />.</param>
-        /// <param name="actual">The second object to compare. This is the object produced by the code under test.</param>
-        public static void AreNotEqual(this AssertBase assert, object? notExpected, object? actual)
-            => AreNotEqual<object?>(assert, notExpected, actual, null);
-
-        /// <summary>
-        /// Tests whether the specified objects are unequal and throws an exception if the two objects are equal. Different numeric types are treated as unequal even if the logical values are equal. 42L is not equal to 42.
-        /// </summary>
-        /// <param name="assert">The assert object to test with.</param>
-        /// <param name="notExpected">The first object to compare. This is the value the test expects not to match <paramref name="actual" />.</param>
-        /// <param name="actual">The second object to compare. This is the object produced by the code under test.</param>
-        /// <param name="message">The message to include in the exception when <paramref name="actual" /> is equal to <paramref name="notExpected" />. The message is shown in test results.</param>
-        public static void AreNotEqual(this AssertBase assert, object? notExpected, object? actual, string? message)
-            => AreNotEqual<object?>(assert, notExpected, actual, message);
 
         /// <summary>
         /// Tests whether the specified floats are equal and throws an exception if they are not equal.
@@ -271,30 +231,6 @@ namespace MaSch.Test
         }
 
         /// <summary>
-        /// Tests whether the specified floats are unequal and throws an exception if they are equal.
-        /// </summary>
-        /// <param name="assert">The assert object to test with.</param>
-        /// <param name="notExpected">The first float to compare. This is the float the test expects not to match <paramref name="actual" />.</param>
-        /// <param name="actual">The second float to compare. This is the float produced by the code under test.</param>
-        /// <param name="delta">The required accuracy. An exception will be thrown only if <paramref name="actual" /> is different than <paramref name="notExpected" /> by at most <paramref name="delta" />.</param>
-        public static void AreNotEqual(this AssertBase assert, float notExpected, float actual, float delta)
-            => AreNotEqual(assert, notExpected, actual, delta, null);
-
-        /// <summary>
-        /// Tests whether the specified floats are unequal and throws an exception if they are equal.
-        /// </summary>
-        /// <param name="assert">The assert object to test with.</param>
-        /// <param name="notExpected">The first float to compare. This is the float the test expects not to match <paramref name="actual" />.</param>
-        /// <param name="actual">The second float to compare. This is the float produced by the code under test.</param>
-        /// <param name="delta">The required accuracy. An exception will be thrown only if <paramref name="actual" /> is different than <paramref name="notExpected" /> by at most <paramref name="delta" />.</param>
-        /// <param name="message">The message to include in the exception when <paramref name="actual" /> is equal to <paramref name="notExpected" /> or different by less than <paramref name="delta" />. The message is shown in test results.</param>
-        public static void AreNotEqual(this AssertBase assert, float notExpected, float actual, float delta, string? message)
-        {
-            if (Math.Abs(notExpected - actual) <= delta)
-                assert.ThrowAssertError(message, ("NotExpected", notExpected), ("Actual", actual), ("Delta", delta));
-        }
-
-        /// <summary>
         /// Tests whether the specified doubles are equal and throws an exception if they are not equal.
         /// </summary>
         /// <param name="assert">The assert object to test with.</param>
@@ -316,30 +252,6 @@ namespace MaSch.Test
         {
             if (double.IsNaN(expected) || double.IsNaN(actual) || double.IsNaN(delta) || Math.Abs(expected - actual) > delta)
                 assert.ThrowAssertError(message, ("Expected", expected), ("Actual", actual), ("Delta", delta));
-        }
-
-        /// <summary>
-        /// Tests whether the specified doubles are unequal and throws an exception if they are equal.
-        /// </summary>
-        /// <param name="assert">The assert object to test with.</param>
-        /// <param name="notExpected">The first double to compare. This is the double the test expects not to match <paramref name="actual" />.</param>
-        /// <param name="actual">The second double to compare. This is the double produced by the code under test.</param>
-        /// <param name="delta">The required accuracy. An exception will be thrown only if <paramref name="actual" /> is different than <paramref name="notExpected" /> by at most <paramref name="delta" />.</param>
-        public static void AreNotEqual(this AssertBase assert, double notExpected, double actual, double delta)
-            => AreNotEqual(assert, notExpected, actual, delta, null);
-
-        /// <summary>
-        /// Tests whether the specified doubles are unequal and throws an exception if they are equal.
-        /// </summary>
-        /// <param name="assert">The assert object to test with.</param>
-        /// <param name="notExpected">The first double to compare. This is the double the test expects not to match <paramref name="actual" />.</param>
-        /// <param name="actual">The second double to compare. This is the double produced by the code under test.</param>
-        /// <param name="delta">The required accuracy. An exception will be thrown only if <paramref name="actual" /> is different than <paramref name="notExpected" /> by at most <paramref name="delta" />.</param>
-        /// <param name="message">The message to include in the exception when <paramref name="actual" /> is equal to <paramref name="notExpected" /> or different by less than <paramref name="delta" />. The message is shown in test results.</param>
-        public static void AreNotEqual(this AssertBase assert, double notExpected, double actual, double delta, string? message)
-        {
-            if (Math.Abs(notExpected - actual) <= delta)
-                assert.ThrowAssertError(message, ("NotExpected", notExpected), ("Actual", actual), ("Delta", delta));
         }
 
         /// <summary>
@@ -386,6 +298,94 @@ namespace MaSch.Test
         /// <param name="message">The message to include in the exception when <paramref name="actual" /> is not equal to <paramref name="expected" />. The message is shown in test results.</param>
         public static void AreEqual(this AssertBase assert, string? expected, string? actual, bool ignoreCase, CultureInfo culture, string? message)
             => assert.RunAssertion(expected, actual, message, (e, a) => culture.CompareInfo.Compare(a, e, ignoreCase ? CompareOptions.IgnoreCase : CompareOptions.None) == 0);
+
+        /// <summary>
+        /// Tests whether the specified values are unequal and throws an exception if the two values are equal. Different numeric types are treated as unequal even if the logical values are equal. 42L is not equal to 42.
+        /// </summary>
+        /// <typeparam name="T">The type of values to compare.</typeparam>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="notExpected">The first value to compare. This is the value the test expects not to match <paramref name="actual" />.</param>
+        /// <param name="actual">The second value to compare. This is the value produced by the code under test.</param>
+        public static void AreNotEqual<T>(this AssertBase assert, T? notExpected, T? actual)
+            => AreNotEqual(assert, notExpected, actual, null);
+
+        /// <summary>
+        /// Tests whether the specified values are unequal and throws an exception if the two values are equal. Different numeric types are treated as unequal even if the logical values are equal. 42L is not equal to 42.
+        /// </summary>
+        /// <typeparam name="T">The type of values to compare.</typeparam>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="notExpected">The first value to compare. This is the value the test expects not to match <paramref name="actual" />.</param>
+        /// <param name="actual">The second value to compare. This is the value produced by the code under test.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="actual" /> is equal to <paramref name="notExpected" />. The message is shown in test results.</param>
+        public static void AreNotEqual<T>(this AssertBase assert, T? notExpected, T? actual, string? message)
+            => assert.RunNegatedAssertion(notExpected, actual, message, (e, a) => Equals(a, e));
+
+        /// <summary>
+        /// Tests whether the specified objects are unequal and throws an exception if the two objects are equal. Different numeric types are treated as unequal even if the logical values are equal. 42L is not equal to 42.
+        /// </summary>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="notExpected">The first object to compare. This is the value the test expects not to match <paramref name="actual" />.</param>
+        /// <param name="actual">The second object to compare. This is the object produced by the code under test.</param>
+        public static void AreNotEqual(this AssertBase assert, object? notExpected, object? actual)
+            => AreNotEqual<object?>(assert, notExpected, actual, null);
+
+        /// <summary>
+        /// Tests whether the specified objects are unequal and throws an exception if the two objects are equal. Different numeric types are treated as unequal even if the logical values are equal. 42L is not equal to 42.
+        /// </summary>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="notExpected">The first object to compare. This is the value the test expects not to match <paramref name="actual" />.</param>
+        /// <param name="actual">The second object to compare. This is the object produced by the code under test.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="actual" /> is equal to <paramref name="notExpected" />. The message is shown in test results.</param>
+        public static void AreNotEqual(this AssertBase assert, object? notExpected, object? actual, string? message)
+            => AreNotEqual<object?>(assert, notExpected, actual, message);
+
+        /// <summary>
+        /// Tests whether the specified floats are unequal and throws an exception if they are equal.
+        /// </summary>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="notExpected">The first float to compare. This is the float the test expects not to match <paramref name="actual" />.</param>
+        /// <param name="actual">The second float to compare. This is the float produced by the code under test.</param>
+        /// <param name="delta">The required accuracy. An exception will be thrown only if <paramref name="actual" /> is different than <paramref name="notExpected" /> by at most <paramref name="delta" />.</param>
+        public static void AreNotEqual(this AssertBase assert, float notExpected, float actual, float delta)
+            => AreNotEqual(assert, notExpected, actual, delta, null);
+
+        /// <summary>
+        /// Tests whether the specified floats are unequal and throws an exception if they are equal.
+        /// </summary>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="notExpected">The first float to compare. This is the float the test expects not to match <paramref name="actual" />.</param>
+        /// <param name="actual">The second float to compare. This is the float produced by the code under test.</param>
+        /// <param name="delta">The required accuracy. An exception will be thrown only if <paramref name="actual" /> is different than <paramref name="notExpected" /> by at most <paramref name="delta" />.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="actual" /> is equal to <paramref name="notExpected" /> or different by less than <paramref name="delta" />. The message is shown in test results.</param>
+        public static void AreNotEqual(this AssertBase assert, float notExpected, float actual, float delta, string? message)
+        {
+            if (Math.Abs(notExpected - actual) <= delta)
+                assert.ThrowAssertError(message, ("NotExpected", notExpected), ("Actual", actual), ("Delta", delta));
+        }
+
+        /// <summary>
+        /// Tests whether the specified doubles are unequal and throws an exception if they are equal.
+        /// </summary>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="notExpected">The first double to compare. This is the double the test expects not to match <paramref name="actual" />.</param>
+        /// <param name="actual">The second double to compare. This is the double produced by the code under test.</param>
+        /// <param name="delta">The required accuracy. An exception will be thrown only if <paramref name="actual" /> is different than <paramref name="notExpected" /> by at most <paramref name="delta" />.</param>
+        public static void AreNotEqual(this AssertBase assert, double notExpected, double actual, double delta)
+            => AreNotEqual(assert, notExpected, actual, delta, null);
+
+        /// <summary>
+        /// Tests whether the specified doubles are unequal and throws an exception if they are equal.
+        /// </summary>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="notExpected">The first double to compare. This is the double the test expects not to match <paramref name="actual" />.</param>
+        /// <param name="actual">The second double to compare. This is the double produced by the code under test.</param>
+        /// <param name="delta">The required accuracy. An exception will be thrown only if <paramref name="actual" /> is different than <paramref name="notExpected" /> by at most <paramref name="delta" />.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="actual" /> is equal to <paramref name="notExpected" /> or different by less than <paramref name="delta" />. The message is shown in test results.</param>
+        public static void AreNotEqual(this AssertBase assert, double notExpected, double actual, double delta, string? message)
+        {
+            if (Math.Abs(notExpected - actual) <= delta)
+                assert.ThrowAssertError(message, ("NotExpected", notExpected), ("Actual", actual), ("Delta", delta));
+        }
 
         /// <summary>
         /// Tests whether the specified strings are unequal and throws an exception if they are equal. The invariant culture is used for the comparison.

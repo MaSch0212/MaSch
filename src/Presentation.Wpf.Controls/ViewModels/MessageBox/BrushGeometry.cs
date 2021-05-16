@@ -10,7 +10,7 @@ namespace MaSch.Presentation.Wpf.ViewModels.MessageBox
     /// </summary>
     [ObservablePropertyDefinition]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Property definition interface should be first in file.")]
-    internal interface IBrushGeometry_Props
+    internal interface IBrushGeometryProps
     {
         /// <summary>
         /// Gets or sets the brush that is used for filling the icon.
@@ -32,8 +32,8 @@ namespace MaSch.Presentation.Wpf.ViewModels.MessageBox
     /// Represents an icon with defined brushes.
     /// </summary>
     /// <seealso cref="MaSch.Core.Observable.ObservableObject" />
-    /// <seealso cref="MaSch.Presentation.Wpf.ViewModels.MessageBox.IBrushGeometry_Props" />
-    public partial class BrushGeometry : ObservableObject, IBrushGeometry_Props
+    /// <seealso cref="MaSch.Presentation.Wpf.ViewModels.MessageBox.IBrushGeometryProps" />
+    public partial class BrushGeometry : ObservableObject, IBrushGeometryProps
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BrushGeometry"/> class.

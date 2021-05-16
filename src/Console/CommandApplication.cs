@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using static System.Environment;
 
 namespace MaSch.Console
@@ -79,7 +80,7 @@ namespace MaSch.Console
                 _console.Write($"{NewLine}> ");
                 _console.ForegroundColor = prevClr;
                 var input = GetFormattedInput(_console.ReadLine());
-                if (input != null && input.Length > 0)
+                if (input.Length > 0)
                 {
                     var cmd = Commands.FirstOrDefault(x =>
                         x.Names.Any(y => y.ToUpper() == input[0].ToUpper()) &&
@@ -109,12 +110,12 @@ namespace MaSch.Console
             }
         }
 
-        private string[]? GetFormattedInput(string? input)
+        private string[] GetFormattedInput(string? input)
         {
             string[] splitted = input?.Split(new string[] { " " }, StringSplitOptions.None) ?? Array.Empty<string>();
-            List<string> formatted = new List<string>();
+            List<string> formatted = new();
             int qmCount = 0;
-            string current = string.Empty;
+            var current = new StringBuilder();
             foreach (var s in splitted)
             {
                 if (s.StartsWith("\"") && s.EndsWith("\"") && qmCount == 0)
@@ -126,16 +127,16 @@ namespace MaSch.Console
                 }
                 else if (s.EndsWith("\""))
                 {
-                    current += " " + s[0..^1];
+                    current.Append(" " + s[0..^1]);
                     if (qmCount == 0)
                     {
                         _console.WriteLine("The syntax is not valid!");
-                        return null;
+                        return Array.Empty<string>();
                     }
                     else if (qmCount == 1)
                     {
                         qmCount = 0;
-                        formatted.Add(current);
+                        formatted.Add(current.ToString());
                     }
                     else if (qmCount > 1)
                     {
@@ -144,12 +145,12 @@ namespace MaSch.Console
                 }
                 else if (s.StartsWith("\"") && qmCount == 0)
                 {
-                    current = s[1..];
+                    current.Clear().Append(s[1..]);
                     qmCount = 1;
                 }
                 else if (qmCount > 0)
                 {
-                    current += " " + s;
+                    current.Append(" " + s);
                 }
                 else
                 {

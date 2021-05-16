@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using static MaSch.Generators.Common.CodeGenerationHelpers;
 
@@ -254,7 +255,7 @@ namespace MaSch.Generators
 
         private static string GetName(string name)
         {
-            var result = string.Empty;
+            var result = new StringBuilder();
             var nextUpper = true;
             foreach (var c in name)
             {
@@ -264,16 +265,16 @@ namespace MaSch.Generators
                 }
                 else if (nextUpper)
                 {
-                    result += c.ToString().ToUpper();
+                    result.Append(c.ToString().ToUpper());
                     nextUpper = false;
                 }
                 else
                 {
-                    result += c.ToString().ToLower();
+                    result.Append(c.ToString().ToLower());
                 }
             }
 
-            return result;
+            return result.ToString();
         }
     }
 }

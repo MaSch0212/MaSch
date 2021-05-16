@@ -1,6 +1,7 @@
 ﻿using MaSch.Core.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace MaSch.Presentation.Translation
     /// Represents a translation provider for Resource-Files (*.resx).
     /// </summary>
     /// <seealso cref="ITranslationProvider" />
+    [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "Needed to properly access resource manager.")]
     public class ResxTranslationProvider : ITranslationProvider
     {
         private readonly Type _type;
@@ -101,6 +103,7 @@ namespace MaSch.Presentation.Translation
                 }
                 catch (CultureNotFoundException)
                 {
+                    // Ignore this exception
                 }
 
                 if (info != null && File.Exists(Path.Combine(dir, _type.Assembly.GetName().Name + ".resources.dll")))

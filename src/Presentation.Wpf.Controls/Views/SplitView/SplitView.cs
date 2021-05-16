@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,9 +34,8 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
     {
         #region Private Fields
 
-        private readonly Duration _animationDuration = new Duration(TimeSpan.FromSeconds(0.25));
+        private readonly Duration _animationDuration = new(TimeSpan.FromSeconds(0.25));
         private TreeView? _treeView;
-        private Button? _menuButton;
         private ColumnDefinition? _buttonsColumn;
         private ContentControl? _content;
         private Storyboard? _currentStoryboard;
@@ -168,10 +168,9 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
 
         private static void OnUseAnimationsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
-            if (obj is SplitView view)
+            if (obj is SplitView view && view.UseAnimations)
             {
-                if (!view.UseAnimations)
-                    view.StopAnimations();
+                view.StopAnimations();
             }
         }
 
@@ -370,7 +369,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         {
             base.OnApplyTemplate();
             _treeView = GetTemplateChild("PART_TreeView") as TreeView;
-            _menuButton = GetTemplateChild("PART_MenuButton") as Button;
+            var menuButton = GetTemplateChild("PART_MenuButton") as Button;
             _buttonsColumn = GetTemplateChild("PART_ButtonsColumn") as ColumnDefinition;
             _content = GetTemplateChild("PART_Content") as ContentControl;
             _infoAreaCollapsedTop = GetTemplateChild("PART_InfoAreaCollapsedTop") as ContentPresenter;
@@ -382,7 +381,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             _indicatorTop = GetTemplateChild("PART_IndicatorTop") as UIElement;
 
             Guard.NotNull(_treeView, nameof(_treeView));
-            Guard.NotNull(_menuButton, nameof(_menuButton));
+            Guard.NotNull(menuButton, nameof(menuButton));
             Guard.NotNull(_buttonsColumn, nameof(_buttonsColumn));
             Guard.NotNull(_content, nameof(_content));
             Guard.NotNull(_infoAreaCollapsedTop, nameof(_infoAreaCollapsedTop));
@@ -394,7 +393,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             Guard.NotNull(_indicatorTop, nameof(_indicatorTop));
 
             _treeView.SelectedItemChanged += TreeView_SelectedItemChanged;
-            _menuButton.Click += MenuButton_Click;
+            menuButton.Click += MenuButton_Click;
             _treeViewScroll.ScrollChanged += TreeViewScroll_ScrollChanged;
             TreeViewScroll_ScrollChanged(_treeViewScroll, null);
 
@@ -538,13 +537,10 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             var o = e.OldValue as SplitViewItem;
             var n = e.NewValue as SplitViewItem;
 
-            if (!_ignoreNextSwitch)
+            if (!_ignoreNextSwitch && IsLoadingPage)
             {
-                if (IsLoadingPage)
-                {
-                    CancelTreeViewSelection(o, n);
-                    return;
-                }
+                CancelTreeViewSelection(o, n);
+                return;
             }
 
             if (!_ignoreNextSwitch)
@@ -811,6 +807,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="pageGroups">The page groups.</param>
         /// <param name="pages">The pages.</param>
         /// <param name="translationManager">The translation manager to use to translate the items.</param>
+        [SuppressMessage("Minor Code Smell", "S1905:Redundant casts should not be used", Justification = "False positive.")]
         public void SetItems(IEnumerable<IPageGroup> pageGroups, IEnumerable<IPage> pages, ITranslationManager? translationManager)
         {
             var items = new List<SplitViewItemBase>();

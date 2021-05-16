@@ -123,7 +123,7 @@ namespace MaSch.Generators.Common
         /// <returns>A string whose value is the same as this instance.</returns>
         public override string ToString() => _builder.ToString();
 
-        private class CodeBlock : IDisposable
+        private sealed class CodeBlock : IDisposable
         {
             private readonly SourceBuilder _builder;
             private readonly string _endContent;

@@ -44,7 +44,7 @@ namespace MaSch.Presentation.Wpf.Common
         /// <summary>
         /// Gets a <see cref="WpfScreen"/> that represents the primary monitor.
         /// </summary>
-        public static WpfScreen Primary => new WpfScreen(Screen.PrimaryScreen);
+        public static WpfScreen Primary => new(Screen.PrimaryScreen);
 
         /// <summary>
         /// Gets instances of the <see cref="WpfScreen"/> class representing all available screens.

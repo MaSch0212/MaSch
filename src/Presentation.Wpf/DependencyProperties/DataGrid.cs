@@ -11,7 +11,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
     /// <summary>
     /// Provides dependency properties for the <see cref="System.Windows.Controls.DataGrid"/> control.
     /// </summary>
-    public class DataGrid
+    public static class DataGrid
     {
         /// <summary>
         /// Dependency property. Gets or sets <see cref="DataGridColumn"/>s that can be bound using data bindings.
