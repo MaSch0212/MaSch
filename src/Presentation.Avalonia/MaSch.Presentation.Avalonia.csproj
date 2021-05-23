@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../build/MaSch.Constants.props" />
+
+  <PropertyGroup>
+    <!-- General Project info -->
+    <TargetFrameworks>$(TfmNetCore);$(TfmNetFramework)</TargetFrameworks>
+    <ConfigureSourceLink>true</ConfigureSourceLink>
+    <AddReleaseNotes>true</AddReleaseNotes>
+    <UseMaSchGenerators>true</UseMaSchGenerators>
+
+    <!-- Output info -->
+    <SignAssembly>true</SignAssembly>
+
+    <!-- Package Info -->
+    <Description>Contains supporting code for .NET Avalonia applications.</Description>
+    <Version>0.1.0</Version>
+    <PackageTags>masch presentation ui frontend avalonia</PackageTags>
+  </PropertyGroup>
+
+  <Import Project="$(GitBuildDir)MaSch.props" />
+
+  <!-- Remove this group when this project contains usable code. -->
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
+    <ProjectReference Include="$(GitSourceDir)Presentation/MaSch.Presentation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
+  </ItemGroup>
+  
+</Project>

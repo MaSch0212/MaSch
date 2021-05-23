@@ -23,6 +23,7 @@
     <SystemDiagnosticsEventLogVersion>5.0.0</SystemDiagnosticsEventLogVersion>
     <SystemComponentModelAnnotationsVersion>5.0.0</SystemComponentModelAnnotationsVersion>
     <PrismWpfVersion>[7.2.0.1367,8.0.0)</PrismWpfVersion>
+    <AvaloniaVersion>0.10.3</AvaloniaVersion>
 
     <!-- TargetFrameworks -->
     <TfmNetFramework>net48</TfmNetFramework>

@@ -22,7 +22,7 @@ namespace MaSch.Generators.Common
         /// Format that can be used to get the definition syntax of a Symbol.
         /// </summary>
         public static readonly SymbolDisplayFormat DefinitionFormat = new(
-            SymbolDisplayGlobalNamespaceStyle.Omitted,
+            SymbolDisplayGlobalNamespaceStyle.Included,
             SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
             SymbolDisplayGenericsOptions.IncludeTypeParameters | SymbolDisplayGenericsOptions.IncludeTypeConstraints | SymbolDisplayGenericsOptions.IncludeVariance,
             SymbolDisplayMemberOptions.IncludeType | SymbolDisplayMemberOptions.IncludeParameters | SymbolDisplayMemberOptions.IncludeRef,
@@ -32,13 +32,13 @@ namespace MaSch.Generators.Common
             SymbolDisplayPropertyStyle.NameOnly,
             SymbolDisplayLocalOptions.None,
             SymbolDisplayKindOptions.IncludeMemberKeyword,
-            SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
+            SymbolDisplayMiscellaneousOptions.UseSpecialTypes | SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier | SymbolDisplayMiscellaneousOptions.IncludeNotNullableReferenceTypeModifier);
 
         /// <summary>
         /// Format that can be used to get the usage syntax of a Symbol.
         /// </summary>
         public static readonly SymbolDisplayFormat UsageFormat = new(
-            SymbolDisplayGlobalNamespaceStyle.Omitted,
+            SymbolDisplayGlobalNamespaceStyle.Included,
             SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
             SymbolDisplayGenericsOptions.IncludeTypeParameters,
             SymbolDisplayMemberOptions.IncludeParameters,
@@ -48,7 +48,7 @@ namespace MaSch.Generators.Common
             SymbolDisplayPropertyStyle.NameOnly,
             SymbolDisplayLocalOptions.None,
             SymbolDisplayKindOptions.None,
-            SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
+            SymbolDisplayMiscellaneousOptions.UseSpecialTypes | SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier | SymbolDisplayMiscellaneousOptions.IncludeNotNullableReferenceTypeModifier);
 
         /// <summary>
         /// Determines all types that are defined inside a given namespace (includes descendant namespaces).

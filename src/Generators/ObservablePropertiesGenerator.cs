@@ -73,7 +73,7 @@ namespace MaSch.Generators
                             builder.AppendLine();
                         isFirst = false;
 
-                        builder.AppendLine($"private {propInfo.Type} {fieldName};");
+                        builder.AppendLine($"private {propInfo.Type.ToDisplayString(UsageFormat)} {fieldName};");
 
                         var xmlDoc = propInfo.GetFormattedDocumentationCommentXml();
                         if (xmlDoc != null)
@@ -102,7 +102,7 @@ namespace MaSch.Generators
                                 getterModifier = GetAccessModifier((AccessModifier)iGetterModifier) + " ";
                         }
 
-                        using (builder.AddBlock($"{accessModifier} {propInfo.Type} {propertyName}"))
+                        using (builder.AddBlock($"{accessModifier} {propInfo.Type.ToDisplayString(UsageFormat)} {propertyName}"))
                         {
                             using (builder.AddBlock($"{getterModifier}get"))
                             {
@@ -121,11 +121,11 @@ namespace MaSch.Generators
                         }
 
                         builder.AppendLine($"[SuppressMessage(\"Style\", \"IDE0060:Remove unused parameter\", Justification = \"Partial Method!\")]")
-                               .AppendLine($"partial void OnGet{propertyName}(ref {propInfo.Type} value);")
+                               .AppendLine($"partial void OnGet{propertyName}(ref {propInfo.Type.ToDisplayString(UsageFormat)} value);")
                                .AppendLine($"[SuppressMessage(\"Style\", \"IDE0060:Remove unused parameter\", Justification = \"Partial Method!\")]")
-                               .AppendLine($"partial void On{propertyName}Changing({propInfo.Type} previous, ref {propInfo.Type} value);")
+                               .AppendLine($"partial void On{propertyName}Changing({propInfo.Type.ToDisplayString(UsageFormat)} previous, ref {propInfo.Type.ToDisplayString(UsageFormat)} value);")
                                .AppendLine($"[SuppressMessage(\"Style\", \"IDE0060:Remove unused parameter\", Justification = \"Partial Method!\")]")
-                               .AppendLine($"partial void On{propertyName}Changed({propInfo.Type} previous, {propInfo.Type} value);");
+                               .AppendLine($"partial void On{propertyName}Changed({propInfo.Type.ToDisplayString(UsageFormat)} previous, {propInfo.Type.ToDisplayString(UsageFormat)} value);");
                     }
                 }
 
