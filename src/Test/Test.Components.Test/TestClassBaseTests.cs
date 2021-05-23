@@ -13,7 +13,7 @@ namespace MaSch.Test.Components.Test
         [TestMethod]
         public void InitializeTest_()
         {
-            var mock = new Mock<TestClassBase>(MockBehavior.Strict);
+            var mock = CreateTestClassMock(false);
             using var v1 = mock.Protected().Setup("OnInitializeTest").Verifiable(Times.Once());
 
             mock.Object.InitializeTest();
@@ -22,7 +22,7 @@ namespace MaSch.Test.Components.Test
         [TestMethod]
         public void CleanupTest_()
         {
-            var mock = new Mock<TestClassBase>(MockBehavior.Strict);
+            var mock = CreateTestClassMock(false);
             mock.Protected().SetupGet<bool>("CleanupCacheAfterTest").Returns(false);
             mock.SetupGet(x => x.Verifiables).Returns(new MockVerifiableCollection());
             using var v1 = mock.Protected().Setup("OnCleanupTest").Verifiable(Times.Once());
@@ -35,7 +35,7 @@ namespace MaSch.Test.Components.Test
         {
             var cache = new Cache();
             cache.SetValue("blub", "test");
-            var mock = new Mock<TestClassBase>(MockBehavior.Strict);
+            var mock = CreateTestClassMock(false);
             mock.Protected().SetupGet<bool>("CleanupCacheAfterTest").Returns(true);
             mock.Protected().SetupGet<Cache>("Cache").Returns(cache);
             mock.SetupGet(x => x.Verifiables).Returns(new MockVerifiableCollection());
@@ -58,7 +58,7 @@ namespace MaSch.Test.Components.Test
         {
             var cache = new Cache();
             cache.SetValue("blub", "test");
-            var mock = new Mock<TestClassBase>(MockBehavior.Strict);
+            var mock = CreateTestClassMock(false);
             mock.Protected().SetupGet<bool>("CleanupCacheAfterTest").Returns(false);
             mock.Protected().SetupGet<Cache>("Cache").Returns(cache);
             mock.SetupGet(x => x.Verifiables).Returns(new MockVerifiableCollection());
@@ -78,12 +78,29 @@ namespace MaSch.Test.Components.Test
         }
 
         [TestMethod]
-        public void CleanupTest_VerifyVerifiables()
+        public void CleanupTest_VerifyVerifiables_TestPassed()
         {
             var verifiableMock = new Mock<IMockVerifiable>(MockBehavior.Strict);
             using var v2 = verifiableMock.Setup(x => x.Verify(null, null)).Verifiable(Times.Once());
             var verifiables = new MockVerifiableCollection { verifiableMock.Object };
-            var mock = new Mock<TestClassBase>(MockBehavior.Strict);
+            var mock = CreateTestClassMock(false);
+            mock.Protected().SetupGet<bool>("CleanupCacheAfterTest").Returns(false);
+            mock.SetupGet(x => x.Verifiables).Returns(verifiables);
+            using var v1 = mock.Protected().Setup("OnCleanupTest").Callback(() => Assert.AreEqual(1, verifiables.Count)).Verifiable(Times.Once());
+
+            mock.Object.CleanupTest();
+
+            Assert.AreEqual(0, verifiables.Count);
+        }
+
+        [TestMethod]
+        public void CleanupTest_VerifyVerifiables_TestFailed()
+        {
+            var verifiableMock = new Mock<IMockVerifiable>(MockBehavior.Strict);
+            using var v2 = verifiableMock.Setup(x => x.Verify(null, null)).Verifiable(Times.Never());
+            var verifiables = new MockVerifiableCollection { verifiableMock.Object };
+            var mock = CreateTestClassMock(false, out var testContextMock);
+            testContextMock.Setup(x => x.CurrentTestOutcome).Returns(UnitTestOutcome.Failed);
             mock.Protected().SetupGet<bool>("CleanupCacheAfterTest").Returns(false);
             mock.SetupGet(x => x.Verifiables).Returns(verifiables);
             using var v1 = mock.Protected().Setup("OnCleanupTest").Callback(() => Assert.AreEqual(1, verifiables.Count)).Verifiable(Times.Once());
@@ -99,7 +116,7 @@ namespace MaSch.Test.Components.Test
             var prevBehavior = TestClassBase.DefaultMockBehavior;
             try
             {
-                var mock = new Mock<TestClassBase>(MockBehavior.Loose) { CallBase = true };
+                var mock = CreateTestClassMock(true);
                 var po = new PrivateObject(mock.Object);
 
                 TestClassBase.DefaultMockBehavior = MockBehavior.Strict;
@@ -123,7 +140,7 @@ namespace MaSch.Test.Components.Test
         [TestMethod]
         public void MockBehavior_()
         {
-            var mock = new Mock<TestClassBase>(MockBehavior.Loose) { CallBase = true };
+            var mock = CreateTestClassMock(true);
             var po = new PrivateObject(mock.Object);
 
             mock.Protected().SetupGet<MockBehavior>("MockBehavior").Returns(MockBehavior.Strict);
@@ -137,6 +154,18 @@ namespace MaSch.Test.Components.Test
             mock.Object.CleanupTest();
             m = po.GetProperty<MockRepository>("Mocks").Create<IDisposable>();
             Assert.AreEqual(MockBehavior.Loose, m.Behavior);
+        }
+
+        private Mock<TestClassBase> CreateTestClassMock(bool callBase)
+            => CreateTestClassMock(callBase, out _);
+
+        private Mock<TestClassBase> CreateTestClassMock(bool callBase, out Mock<TestContext> testContextMock)
+        {
+            var mock = new Mock<TestClassBase>(callBase ? MockBehavior.Loose : MockBehavior.Strict) { CallBase = callBase };
+            testContextMock = new Mock<TestContext>(MockBehavior.Strict);
+            testContextMock.Setup(x => x.CurrentTestOutcome).Returns(UnitTestOutcome.Passed);
+            mock.Object.TestContext = testContextMock.Object;
+            return mock;
         }
     }
 }
