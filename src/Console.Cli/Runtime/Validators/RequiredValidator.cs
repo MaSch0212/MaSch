@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using MaSch.Core.Extensions;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -14,26 +13,18 @@ namespace MaSch.Console.Cli.Runtime.Validators
 
             foreach (var optionInfo in command.Options.Where(x => x.IsRequired))
             {
-                var value = optionInfo.GetValue(parameters);
-                if (!ValidateValue(optionInfo.PropertyType, value))
+                if (!optionInfo.HasValue(parameters))
                     errorList.Add(new(CliErrorType.MissingOption, command, optionInfo));
             }
 
             foreach (var valueInfo in command.Values.Where(x => x.IsRequired))
             {
-                var value = valueInfo.GetValue(parameters);
-                if (!ValidateValue(valueInfo.PropertyType, value))
+                if (!valueInfo.HasValue(parameters))
                     errorList.Add(new(CliErrorType.MissingValue, command, valueInfo));
             }
 
             errors = errorList;
             return errorList.Count == 0;
-        }
-
-        private static bool ValidateValue(Type type, object? value)
-        {
-            return value is not null &&
-                   !(typeof(IEnumerable).IsAssignableFrom(type) && type != typeof(string) && value is IEnumerable e && !e.OfType<object>().Any());
         }
     }
 }

@@ -38,11 +38,11 @@ namespace MaSch.Console.Cli.Runtime
                     return new(new[] { new CliError(CliErrorType.UnknownCommand) { CommandName = args[commandArgIndex] } });
                 }
 
-                var errors = new List<CliError>();
-                ParseOptions(args.Skip(commandArgIndex + 1).ToArray(), appOptions, command, errors, out var optionsObj);
-                ValidateOptions(command, optionsObj, errors);
+                var ctx = new CommandParserContext(args.Skip(commandArgIndex + 1).ToArray(), appOptions, command, new List<CliError>());
+                ParseOptions(ctx);
+                ValidateOptions(ctx);
 
-                return errors.Count > 0 ? new(errors, command, optionsObj) : new(command, optionsObj);
+                return ctx.Errors.Count > 0 ? new(ctx.Errors, command, ctx.OptionsObj) : new(command, ctx.OptionsObj);
             }
             catch (CliErrorException ex)
             {
@@ -60,15 +60,19 @@ namespace MaSch.Console.Cli.Runtime
                 {
                     var index = commandArgIndex;
                     var next = command.ChildCommands.FirstOrDefault(x => x.Aliases.Contains(args[index], StringComparer.OrdinalIgnoreCase));
-                    if (next != null)
-                        command = next;
-                    else
+                    if (next == null)
+                    {
+                        commandArgIndex--;
                         break;
+                    }
+
+                    command = next;
                 }
             }
             else if (availableCommands.DefaultCommand?.Values.IsNullOrEmpty() == false)
             {
                 command = availableCommands.DefaultCommand;
+                commandArgIndex = -1;
             }
 
             return command != null;
@@ -81,7 +85,7 @@ namespace MaSch.Console.Cli.Runtime
                 if (IsCommand("version"))
                     DetermineCommandAndThrow(CliErrorType.VersionRequested);
                 else if (IsOption("version"))
-                    Throw(CliErrorType.VersionRequested, null);
+                    throw GetException(CliErrorType.VersionRequested, null);
             }
 
             if (appOptions.ProvideHelpCommand)
@@ -89,7 +93,7 @@ namespace MaSch.Console.Cli.Runtime
                 if (IsCommand("help"))
                     DetermineCommandAndThrow(CliErrorType.HelpRequested);
                 else if (IsOption("help"))
-                    Throw(CliErrorType.HelpRequested, null);
+                    throw GetException(CliErrorType.HelpRequested, null);
             }
 
             bool IsCommand(string expectedCommand) => string.Equals(args[0], expectedCommand, StringComparison.OrdinalIgnoreCase);
@@ -100,57 +104,40 @@ namespace MaSch.Console.Cli.Runtime
                 ICliCommandInfo? command = null;
                 if (args.Length > 1)
                     TryParseCommandInfo(args.Skip(1).ToArray(), availableCommands, out command, out _);
-                Throw(errorType, command);
+                throw GetException(errorType, command);
             }
 
-            void Throw(CliErrorType errorType, ICliCommandInfo? command) => throw new CliErrorException(new[] { new CliError(errorType, command) });
+            CliErrorException GetException(CliErrorType errorType, ICliCommandInfo? command) => new CliErrorException(new[] { new CliError(errorType, command) });
         }
 
-        private static void ParseOptions(IList<string> args, CliApplicationOptions appOptions, ICliCommandInfo command, IList<CliError> errors, out object optionsObj)
+        private static void ParseOptions(CommandParserContext ctx)
         {
-            optionsObj = CreateOptionsWithDefaultValues(command);
-
-            bool areOptionsEscaped = false;
-            int currentValueIndex = 0;
-            for (int i = 0; i < args.Count; i++)
+            for (; ctx.ArgIndex < ctx.Args.Count; ctx.ArgIndex++)
             {
-                var a = args[i];
-                if (!areOptionsEscaped && a == "--")
+                var a = ctx.Args[ctx.ArgIndex];
+                if (!ctx.AreOptionsEscaped && a == "--")
                 {
-                    areOptionsEscaped = true;
+                    ctx.AreOptionsEscaped = true;
                 }
-                else if (!areOptionsEscaped && a.StartsWith("-") && a.Length > 1)
+                else if (!ctx.AreOptionsEscaped && a.StartsWith("-") && a.Length > 1)
                 {
-                    ParseOption(args, ref i, appOptions, command, optionsObj, errors);
+                    ParseOption(ctx);
                 }
-                else if (currentValueIndex < command.Values.Count)
+                else if (!ctx.IgnoreNextValues)
                 {
-                    ParseValue(args, ref i, command.Values[currentValueIndex], optionsObj, areOptionsEscaped, errors, out var continueToNextValue);
-                    if (continueToNextValue)
-                        currentValueIndex++;
-                }
-                else if (!appOptions.IgnoreAdditionalValues && !errors.Any(x => x.Type == CliErrorType.UnknownValue))
-                {
-                    errors.Add(new CliError(CliErrorType.UnknownValue, command));
+                    if (ctx.CurrentValueIndex < ctx.Command.Values.Count)
+                    {
+                        ParseValue(ctx, ctx.Command.Values[ctx.CurrentValueIndex]);
+                    }
+                    else if (!ctx.AppOptions.IgnoreAdditionalValues && !ctx.Errors.Any(x => x.Type == CliErrorType.UnknownValue))
+                    {
+                        ctx.Errors.Add(new CliError(CliErrorType.UnknownValue, ctx.Command));
+                    }
                 }
             }
         }
 
-        private static object CreateOptionsWithDefaultValues(ICliCommandInfo command)
-        {
-            object result = command.OptionsInstance ?? Activator.CreateInstance(command.CommandType)!;
-            foreach (var m in command.Values.Cast<ICliCommandMemberInfo>().Concat(command.Options))
-            {
-                if (typeof(IEnumerable).IsAssignableFrom(m.PropertyType) && m.PropertyType != typeof(string))
-                    m.SetValue(result, Array.Empty<object?>());
-                else
-                    m.SetValue(result, m.DefaultValue ?? m.PropertyType.GetDefault());
-            }
-
-            return result;
-        }
-
-        private static void ParseValue(IList<string> args, ref int i, ICliCommandValueInfo value, object optionsObj, bool areOptionsEscaped, IList<CliError> errors, out bool continueToNextValue)
+        private static void ParseValue(CommandParserContext ctx, ICliCommandValueInfo value)
         {
             var valueType = value.PropertyType;
             object v;
@@ -158,74 +145,73 @@ namespace MaSch.Console.Cli.Runtime
             if (typeof(IEnumerable).IsAssignableFrom(valueType) && valueType != typeof(string))
             {
                 var values = new List<object>();
-                for (; i < args.Count && (areOptionsEscaped || !(args[i].StartsWith("-") && args[i].Length > 1)); i++)
-                    values.Add(args[i]);
-                i--;
+                for (; ctx.ArgIndex < ctx.Args.Count && (ctx.AreOptionsEscaped || !(ctx.Args[ctx.ArgIndex].StartsWith("-") && ctx.Args[ctx.ArgIndex].Length > 1)); ctx.ArgIndex++)
+                    values.Add(ctx.Args[ctx.ArgIndex]);
+                ctx.ArgIndex--;
                 v = values;
-                continueToNextValue = false;
             }
             else
             {
-                v = args[i];
-                continueToNextValue = true;
+                v = ctx.Args[ctx.ArgIndex];
+                ctx.CurrentValueIndex++;
             }
 
             try
             {
-                var cv = value.GetValue(optionsObj);
+                var cv = value.GetValue(ctx.OptionsObj);
                 if (cv is IEnumerable cve && cv is not string && v is IEnumerable ve && v is not string)
-                    v = cve.OfType<object>().Concat(ve);
+                    v = cve.OfType<object>().Concat(ve.OfType<object>());
 
-                value.SetValue(optionsObj, v);
+                value.SetValue(ctx.OptionsObj, v);
             }
             catch (Exception ex)
             {
-                errors.Add(new CliError(CliErrorType.WrongValueFormat, value.Command, value) { Exception = ex });
+                ctx.Errors.Add(new CliError(CliErrorType.WrongValueFormat, ctx.Command, value) { Exception = ex });
             }
         }
 
-        private static void ParseOption(IList<string> args, ref int i, CliApplicationOptions appOptions, ICliCommandInfo command, object optionsObj, IList<CliError> errors)
+        private static void ParseOption(CommandParserContext ctx)
         {
-            var a = args[i];
+            var a = ctx.Args[ctx.ArgIndex];
 
             // -abc -> ignore any other args; only valid for bool options
             if (!a.StartsWith("--") && a.Length > 2)
             {
                 foreach (var s in a.Skip(1))
                 {
-                    var option = command.Options.FirstOrDefault(x => x.ShortAliases.Contains(s));
+                    var option = ctx.Command.Options.FirstOrDefault(x => x.ShortAliases.Contains(s));
                     if (option != null)
                         SetBoolOption(option);
-                    else if (!appOptions.IgnoreUnknownOptions)
-                        errors.Add(new CliError(CliErrorType.UnknownOption, command) { OptionName = $"-{s}" });
+                    else if (!ctx.AppOptions.IgnoreUnknownOptions)
+                        ctx.Errors.Add(new CliError(CliErrorType.UnknownOption, ctx.Command) { OptionName = $"-{s}" });
                 }
             }
             else
             {
                 var option = a.StartsWith("--")
-                    ? command.Options.FirstOrDefault(x => x.Aliases.Contains(a[2..], StringComparer.OrdinalIgnoreCase))
-                    : command.Options.FirstOrDefault(x => x.ShortAliases.Contains(a[1]));
+                    ? ctx.Command.Options.FirstOrDefault(x => x.Aliases.Contains(a[2..], StringComparer.OrdinalIgnoreCase))
+                    : ctx.Command.Options.FirstOrDefault(x => x.ShortAliases.Contains(a[1]));
 
                 if (option != null)
                 {
                     object? v = null;
 
                     var isList = typeof(IEnumerable).IsAssignableFrom(option.PropertyType) && option.PropertyType != typeof(string);
-                    for (i++; i < args.Count && !(args[i].StartsWith("-") && args[i].Length > 1); i++)
+                    for (ctx.ArgIndex++; ctx.ArgIndex < ctx.Args.Count && !(ctx.Args[ctx.ArgIndex].StartsWith("-") && ctx.Args[ctx.ArgIndex].Length > 1); ctx.ArgIndex++)
                     {
                         if (isList)
                         {
                             v ??= new List<object>();
-                            ((IList)v).Add(args[i]);
+                            ((IList)v).Add(ctx.Args[ctx.ArgIndex]);
                         }
                         else
                         {
-                            v = args[i++];
+                            v = ctx.Args[ctx.ArgIndex++];
                             break;
                         }
                     }
 
-                    i--;
+                    ctx.ArgIndex--;
                     if (v == null)
                     {
                         SetBoolOption(option);
@@ -234,29 +220,31 @@ namespace MaSch.Console.Cli.Runtime
                     {
                         try
                         {
-                            option.SetValue(optionsObj, v);
+                            option.SetValue(ctx.OptionsObj, v);
                         }
                         catch (Exception ex)
                         {
-                            errors.Add(new CliError(CliErrorType.WrongOptionFormat, command, option) { Exception = ex });
+                            ctx.Errors.Add(new CliError(CliErrorType.WrongOptionFormat, ctx.Command, option) { Exception = ex });
                         }
                     }
                 }
                 else
                 {
                     if (a.StartsWith("--"))
-                        HandleSpecialOptions(appOptions, a[2..], command);
-                    if (!appOptions.IgnoreUnknownOptions)
-                        errors.Add(new CliError(CliErrorType.UnknownOption, command) { OptionName = a });
+                        HandleSpecialOptions(ctx.AppOptions, a[2..], ctx.Command);
+                    if (!ctx.AppOptions.IgnoreUnknownOptions)
+                        ctx.Errors.Add(new CliError(CliErrorType.UnknownOption, ctx.Command) { OptionName = a });
                 }
+
+                ctx.IgnoreNextValues = option == null;
             }
 
             void SetBoolOption(ICliCommandOptionInfo option)
             {
                 if (option.PropertyType == typeof(bool) || option.PropertyType == typeof(bool?))
-                    option.SetValue(optionsObj, true);
+                    option.SetValue(ctx.OptionsObj, true);
                 else
-                    errors.Add(new CliError(CliErrorType.MissingOptionValue, command, option));
+                    ctx.Errors.Add(new CliError(CliErrorType.MissingOptionValue, ctx.Command, option));
             }
         }
 
@@ -271,20 +259,20 @@ namespace MaSch.Console.Cli.Runtime
             void Throw(CliErrorType errorType) => throw new CliErrorException(new[] { new CliError(errorType, command) });
         }
 
-        private static void ValidateOptions(ICliCommandInfo command, object optionsObj, IList<CliError> errors)
+        private static void ValidateOptions(CommandParserContext ctx)
         {
             IEnumerable<CliError>? vErrors;
             foreach (var validator in _commonValidators)
             {
-                if (!validator.ValidateOptions(command, optionsObj, out vErrors))
-                    errors.Add(vErrors);
+                if (!validator.ValidateOptions(ctx.Command, ctx.OptionsObj, out vErrors))
+                    ctx.Errors.Add(vErrors);
             }
 
-            if (optionsObj is ICliValidatable validatable && !validatable.ValidateOptions(out vErrors))
-                errors.Add(vErrors);
+            if (ctx.OptionsObj is ICliValidatable validatable && !validatable.ValidateOptions(out vErrors))
+                ctx.Errors.Add(vErrors);
 
-            if (!command.ValidateOptions(command, optionsObj, out vErrors))
-                errors.Add(vErrors);
+            if (!ctx.Command.ValidateOptions(ctx.Command, ctx.OptionsObj, out vErrors))
+                ctx.Errors.Add(vErrors);
         }
 
         [SuppressMessage("Critical Code Smell", "S3871:Exception types should be \"public\"", Justification = "This exception is always catched, so no need to make it public.")]
@@ -295,6 +283,38 @@ namespace MaSch.Console.Cli.Runtime
             public CliErrorException(IEnumerable<CliError> errors)
             {
                 Errors = errors;
+            }
+        }
+
+        private class CommandParserContext
+        {
+            public IList<string> Args { get; }
+            public ICliCommandInfo Command { get; }
+            public object OptionsObj { get; }
+            public IList<CliError> Errors { get; }
+            public CliApplicationOptions AppOptions { get; }
+
+            public int ArgIndex { get; set; }
+            public bool IgnoreNextValues { get; set; }
+            public int CurrentValueIndex { get; set; }
+            public bool AreOptionsEscaped { get; set; }
+
+            public CommandParserContext(IList<string> args, CliApplicationOptions appOptions, ICliCommandInfo command, IList<CliError> errors)
+            {
+                Args = args;
+                AppOptions = appOptions;
+                Command = command;
+                OptionsObj = CreateOptionsWithDefaultValues(command);
+                Errors = errors;
+            }
+
+            private static object CreateOptionsWithDefaultValues(ICliCommandInfo command)
+            {
+                object result = command.OptionsInstance ?? Activator.CreateInstance(command.CommandType)!;
+                foreach (var m in command.Values.Cast<ICliCommandMemberInfo>().Concat(command.Options))
+                    m.SetDefaultValue(result);
+
+                return result;
             }
         }
     }

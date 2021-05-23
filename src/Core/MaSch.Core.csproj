@@ -8,7 +8,7 @@
     <ConfigureSourceLink>true</ConfigureSourceLink>
     <AddReleaseNotes>true</AddReleaseNotes>
     <UseMaSchGenerators>true</UseMaSchGenerators>
-
+    
     <!-- Output info -->
     <SignAssembly>true</SignAssembly>
 

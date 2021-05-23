@@ -71,7 +71,8 @@ namespace MaSch.Test
         {
             OnCleanupTest();
 
-            Verifiables.Verify();
+            if (TestContext.CurrentTestOutcome == UnitTestOutcome.Passed || TestContext.CurrentTestOutcome == UnitTestOutcome.Inconclusive)
+                Verifiables.Verify();
             Verifiables.Clear();
 
             if (CleanupCacheAfterTest)

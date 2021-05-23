@@ -1,2 +1,3 @@
 ﻿- Added MockRepository to TestClassBase, so default MockBehavior can be overridden.
 - Added generic extension methods for PrivateObject and PrivateType.
+- Only execute Mock validations in test cleanup when the test succeeded until that point.

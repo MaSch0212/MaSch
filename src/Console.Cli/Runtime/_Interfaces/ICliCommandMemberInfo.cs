@@ -12,7 +12,9 @@ namespace MaSch.Console.Cli.Runtime
         object? DefaultValue { get; }
         string? HelpText { get; }
 
+        void SetDefaultValue(object options);
         void SetValue(object options, object? value);
         object? GetValue(object options);
+        bool HasValue(object options);
     }
 }

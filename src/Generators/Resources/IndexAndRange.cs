@@ -244,6 +244,7 @@ namespace System
     }
 }
 
+#if !MASCH_SHIMS_SKIPRUNTIMEHELPERS
 namespace System.Runtime.CompilerServices
 {
     internal static class RuntimeHelpers
@@ -283,5 +284,5 @@ namespace System.Runtime.CompilerServices
         }
     }
 }
-
+#endif
 #endif
