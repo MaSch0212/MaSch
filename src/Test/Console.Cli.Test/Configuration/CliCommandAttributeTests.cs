@@ -9,41 +9,11 @@ namespace MaSch.Console.Cli.Test.Configuration
     public class CliCommandAttributeTests : TestClassBase
     {
         [TestMethod]
-        public void Ctor_Name_Null()
-        {
-            Assert.ThrowsException<ArgumentNullException>(() => new CliCommandAttribute(null!));
-        }
-
-        [TestMethod]
-        public void Ctor_Name_Empty()
-        {
-            Assert.ThrowsException<ArgumentException>(() => new CliCommandAttribute(string.Empty));
-        }
-
-        [TestMethod]
         public void Ctor_Name_Success()
         {
             var attr = new CliCommandAttribute("blub");
 
             Assert.AreCollectionsEqual(new[] { "blub" }, attr.Aliases);
-        }
-
-        [TestMethod]
-        public void Ctor_Name_Null_Aliases_Empty()
-        {
-            Assert.ThrowsException<ArgumentNullException>(() => new CliCommandAttribute(null!, Array.Empty<string>()));
-        }
-
-        [TestMethod]
-        public void Ctor_Name_Empty_Aliases_Empty()
-        {
-            Assert.ThrowsException<ArgumentException>(() => new CliCommandAttribute(string.Empty, Array.Empty<string>()));
-        }
-
-        [TestMethod]
-        public void Ctor_Name_Valid_Aliases_Null()
-        {
-            Assert.ThrowsException<ArgumentNullException>(() => new CliCommandAttribute("blub", null!));
         }
 
         [TestMethod]
