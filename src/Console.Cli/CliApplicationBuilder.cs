@@ -30,11 +30,14 @@ namespace MaSch.Console.Cli
         public CliApplicationBuilder WithCommand(Type commandType, Func<object, int> executorFunction)
             => Exec(x => x.RegisterCommand(commandType, executorFunction));
 
+        public CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Func<object, int> executorFunction)
+            => Exec(x => x.RegisterCommand(commandType, optionsInstance, executorFunction));
+
         public CliApplicationBuilder WithCommand<TCommand>(Func<TCommand, int> executorFunction)
             => Exec(x => x.RegisterCommand(executorFunction));
 
-        public CliApplicationBuilder WithCommand<TCommand>(Func<TCommand, int> executorFunction, TCommand optionsInstance)
-            => Exec(x => x.RegisterCommand(executorFunction, optionsInstance));
+        public CliApplicationBuilder WithCommand<TCommand>(TCommand optionsInstance, Func<TCommand, int> executorFunction)
+            => Exec(x => x.RegisterCommand(optionsInstance, executorFunction));
 
         public CliApplicationBuilder WithCommand<TCommand>()
             where TCommand : ICliCommandExecutor
@@ -99,11 +102,14 @@ namespace MaSch.Console.Cli
         public CliAsyncApplicatioBuilder WithCommand(Type commandType, Func<object, Task<int>> executorFunction)
             => Exec(x => x.RegisterCommand(commandType, executorFunction));
 
+        public CliAsyncApplicatioBuilder WithCommand(Type commandType, object? optionsInstance, Func<object, Task<int>> executorFunction)
+            => Exec(x => x.RegisterCommand(commandType, optionsInstance, executorFunction));
+
         public CliAsyncApplicatioBuilder WithCommand<TCommand>(Func<TCommand, Task<int>> executorFunction)
             => Exec(x => x.RegisterCommand(executorFunction));
 
-        public CliAsyncApplicatioBuilder WithCommand<TCommand>(Func<TCommand, Task<int>> executorFunction, TCommand optionsInstance)
-            => Exec(x => x.RegisterCommand(executorFunction, optionsInstance));
+        public CliAsyncApplicatioBuilder WithCommand<TCommand>(TCommand optionsInstance, Func<TCommand, Task<int>> executorFunction)
+            => Exec(x => x.RegisterCommand(optionsInstance, executorFunction));
 
         public CliAsyncApplicatioBuilder WithCommand<TCommand>()
             where TCommand : ICliAsyncCommandExecutor

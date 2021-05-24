@@ -16,7 +16,7 @@ namespace MaSch.Console.Cli.Runtime.Executors
             if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(Func<,>))
                 throw new ArgumentException($"The executor function needs to be of type Func<,>.", nameof(executorFunction));
             var genArgs = type.GetGenericArguments();
-            var eType = typeof(FunctionExecutor).MakeGenericType(genArgs[0]);
+            var eType = typeof(FunctionExecutor<>).MakeGenericType(genArgs[0]);
             return genArgs[1] switch
             {
                 Type x when x == typeof(int) => (ICliExecutor)Activator.CreateInstance(eType, executorFunction, null)!,

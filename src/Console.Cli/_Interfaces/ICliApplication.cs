@@ -23,11 +23,11 @@ namespace MaSch.Console.Cli.Runtime
         int Run(string[] args);
 
         void RegisterCommand(Type commandType, Func<object, int> executorFunction);
+        void RegisterCommand(Type commandType, object? commandInstance, Func<object, int> executorFunction);
         void RegisterCommand<TCommand>(Func<TCommand, int> executorFunction);
-        void RegisterCommand<TCommand>()
-            where TCommand : ICliCommandExecutor;
-        void RegisterCommand<TCommand>(TCommand commandInstance)
-            where TCommand : ICliCommandExecutor;
+        void RegisterCommand<TCommand>(TCommand commandInstance, Func<TCommand, int> executorFunction);
+        void RegisterCommand<TCommand>();
+        void RegisterCommand<TCommand>(TCommand commandInstance);
         void RegisterCommand<TCommand, TExecutor>()
             where TExecutor : ICliCommandExecutor<TCommand>;
         void RegisterCommand<TCommand, TExecutor>(TCommand commandInstance)
@@ -43,11 +43,11 @@ namespace MaSch.Console.Cli.Runtime
         Task<int> RunAsync(string[] args);
 
         void RegisterCommand(Type commandType, Func<object, Task<int>> executorFunction);
+        void RegisterCommand(Type commandType, object? commandInstance, Func<object, Task<int>> executorFunction);
         void RegisterCommand<TCommand>(Func<TCommand, Task<int>> executorFunction);
-        void RegisterCommand<TCommand>()
-            where TCommand : ICliAsyncCommandExecutor;
-        void RegisterCommand<TCommand>(TCommand commandInstance)
-            where TCommand : ICliAsyncCommandExecutor;
+        void RegisterCommand<TCommand>(TCommand commandInstance, Func<TCommand, Task<int>> executorFunction);
+        void RegisterCommand<TCommand>();
+        void RegisterCommand<TCommand>(TCommand commandInstance);
         void RegisterCommand<TCommand, TExecutor>()
             where TExecutor : ICliAsyncCommandExecutor<TCommand>;
         void RegisterCommand<TCommand, TExecutor>(TCommand commandInstance)

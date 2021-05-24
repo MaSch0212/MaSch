@@ -53,7 +53,7 @@ namespace MaSch.Console.Cli.Runtime.Executors
         public ExternalExecutor(Type executorType, object? executorInstance)
         {
             _executorType = Guard.NotNull(executorType, nameof(executorType));
-            _executorInstance = Guard.OfType(executorInstance, nameof(executorInstance), executorType);
+            _executorInstance = Guard.OfType(executorInstance, nameof(executorInstance), true, executorType);
 
             if (!typeof(ICliCommandExecutor<T>).IsAssignableFrom(executorType) && !typeof(ICliAsyncCommandExecutor<T>).IsAssignableFrom(executorType))
                 throw new ArgumentException($"The type {executorType.Name} needs to implement {typeof(ICliCommandExecutor<T>).Name} and/or {typeof(ICliAsyncCommandExecutor<T>).Name} for type {typeof(T).Name}.", nameof(executorType));

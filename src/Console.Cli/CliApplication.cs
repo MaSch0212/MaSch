@@ -153,21 +153,19 @@ namespace MaSch.Console.Cli
         public void RegisterCommand(Type commandType, Func<object, int> executorFunction)
             => CommandsCollection.Add(CliCommandInfo.From(commandType, executorFunction));
 
-        public void RegisterCommand(Type commandType, Func<object, int> executorFunction, object? optionsInstance)
-            => CommandsCollection.Add(CliCommandInfo.From(commandType, executorFunction, optionsInstance));
+        public void RegisterCommand(Type commandType, object? commandInstance, Func<object, int> executorFunction)
+            => CommandsCollection.Add(CliCommandInfo.From(commandType, commandInstance, executorFunction));
 
         public void RegisterCommand<TCommand>(Func<TCommand, int> executorFunction)
             => CommandsCollection.Add(CliCommandInfo.From(executorFunction));
 
-        public void RegisterCommand<TCommand>(Func<TCommand, int> executorFunction, TCommand optionsInstance)
-            => CommandsCollection.Add(CliCommandInfo.From(executorFunction, optionsInstance));
+        public void RegisterCommand<TCommand>(TCommand commandInstance, Func<TCommand, int> executorFunction)
+            => CommandsCollection.Add(CliCommandInfo.From(commandInstance, executorFunction));
 
         public void RegisterCommand<TCommand>()
-            where TCommand : ICliCommandExecutor
             => CommandsCollection.Add(CliCommandInfo.From<TCommand>());
 
         public void RegisterCommand<TCommand>(TCommand commandInstance)
-            where TCommand : ICliCommandExecutor
             => CommandsCollection.Add(CliCommandInfo.From(commandInstance));
 
         public void RegisterCommand<TCommand, TExecutor>()
@@ -231,21 +229,19 @@ namespace MaSch.Console.Cli
         public void RegisterCommand(Type commandType, Func<object, Task<int>> executorFunction)
             => CommandsCollection.Add(CliCommandInfo.From(commandType, executorFunction));
 
-        public void RegisterCommand(Type commandType, Func<object, Task<int>> executorFunction, object? optionsInstance)
-            => CommandsCollection.Add(CliCommandInfo.From(commandType, executorFunction, optionsInstance));
+        public void RegisterCommand(Type commandType, object? commandInstance, Func<object, Task<int>> executorFunction)
+            => CommandsCollection.Add(CliCommandInfo.From(commandType, commandInstance, executorFunction));
 
         public void RegisterCommand<TCommand>(Func<TCommand, Task<int>> executorFunction)
             => CommandsCollection.Add(CliCommandInfo.From(executorFunction));
 
-        public void RegisterCommand<TCommand>(Func<TCommand, Task<int>> executorFunction, TCommand optionsInstance)
-            => CommandsCollection.Add(CliCommandInfo.From(executorFunction, optionsInstance));
+        public void RegisterCommand<TCommand>(TCommand commandInstance, Func<TCommand, Task<int>> executorFunction)
+            => CommandsCollection.Add(CliCommandInfo.From(commandInstance, executorFunction));
 
         public void RegisterCommand<TCommand>()
-            where TCommand : ICliAsyncCommandExecutor
             => CommandsCollection.Add(CliCommandInfo.From<TCommand>());
 
         public void RegisterCommand<TCommand>(TCommand commandInstance)
-            where TCommand : ICliAsyncCommandExecutor
             => CommandsCollection.Add(CliCommandInfo.From(commandInstance));
 
         public void RegisterCommand<TCommand, TExecutor>()

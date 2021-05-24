@@ -103,25 +103,68 @@ namespace MaSch.Console.Cli.Runtime
                 cc.ParentCommand = null;
         }
 
-        public static CliCommandInfo From<TCommand>() => new(typeof(TCommand), null, null, null, null);
-        public static CliCommandInfo From<TCommand>(TCommand optionsInstance) => new(typeof(TCommand), null, optionsInstance, null, null);
-        public static CliCommandInfo From(Type commandType) => new(commandType, null, null, null, null);
-        public static CliCommandInfo From(Type commandType, object? optionsInstance) => new(commandType, null, optionsInstance, null, null);
-        public static CliCommandInfo From<TCommand, TExecutor>() => new(typeof(TCommand), typeof(TExecutor), null, null, null);
-        public static CliCommandInfo From<TCommand, TExecutor>(TExecutor executorInstance) => new(typeof(TCommand), typeof(TExecutor), null, null, executorInstance);
-        public static CliCommandInfo From<TCommand, TExecutor>(TCommand optionsInstance) => new(typeof(TCommand), typeof(TExecutor), optionsInstance, null, null);
-        public static CliCommandInfo From<TCommand, TExecutor>(TCommand optionsInstance, TExecutor executorInstance) => new(typeof(TCommand), typeof(TExecutor), optionsInstance, null, executorInstance);
-        public static CliCommandInfo From(Type commandType, Type? executorType) => new(commandType, executorType, null, null, null);
-        public static CliCommandInfo From(Type commandType, Type? executorType, object? executorInstance) => new(commandType, executorType, null, null, executorInstance);
-        public static CliCommandInfo From(Type commandType, object? optionsInstance, Type? executorType) => new(commandType, executorType, optionsInstance, null, null);
-        public static CliCommandInfo From(Type commandType, object? optionsInstance, Type? executorType, object? executorInstance) => new(commandType, executorType, optionsInstance, null, executorInstance);
-        public static CliCommandInfo From<TCommand>(Func<TCommand, int> executorFunction) => new(typeof(TCommand), null, null, executorFunction, null);
-        public static CliCommandInfo From<TCommand>(Func<TCommand, int> executorFunction, TCommand optionsInstance) => new(typeof(TCommand), null, optionsInstance, executorFunction, null);
-        public static CliCommandInfo From<TCommand>(Func<TCommand, Task<int>> executorFunction) => new(typeof(TCommand), null, null, executorFunction, null);
-        public static CliCommandInfo From<TCommand>(Func<TCommand, Task<int>> executorFunction, TCommand optionsInstance) => new(typeof(TCommand), null, optionsInstance, executorFunction, null);
-        public static CliCommandInfo From(Type commandType, Func<object, int> executorFunction) => new(commandType, null, null, executorFunction, null);
-        public static CliCommandInfo From(Type commandType, Func<object, int> executorFunction, object? optionsInstance) => new(commandType, null, optionsInstance, executorFunction, null);
-        public static CliCommandInfo From(Type commandType, Func<object, Task<int>> executorFunction) => new(commandType, null, null, executorFunction, null);
-        public static CliCommandInfo From(Type commandType, Func<object, Task<int>> executorFunction, object? optionsInstance) => new(commandType, null, optionsInstance, executorFunction, null);
+        public static CliCommandInfo From<TCommand>()
+            => new(typeof(TCommand), null, null, null, null);
+
+        public static CliCommandInfo From<TCommand>(TCommand optionsInstance)
+            => new(typeof(TCommand), null, optionsInstance, null, null);
+
+        public static CliCommandInfo From(Type commandType)
+            => new(commandType, null, null, null, null);
+
+        public static CliCommandInfo From(Type commandType, object? optionsInstance)
+            => new(commandType, null, optionsInstance, null, null);
+
+        public static CliCommandInfo From<TCommand, TExecutor>()
+            where TExecutor : ICliCommandExecutorBase<TCommand>
+            => new(typeof(TCommand), typeof(TExecutor), null, null, null);
+
+        public static CliCommandInfo From<TCommand, TExecutor>(TExecutor executorInstance)
+            where TExecutor : ICliCommandExecutorBase<TCommand>
+            => new(typeof(TCommand), typeof(TExecutor), null, null, executorInstance);
+
+        public static CliCommandInfo From<TCommand, TExecutor>(TCommand optionsInstance)
+            where TExecutor : ICliCommandExecutorBase<TCommand>
+            => new(typeof(TCommand), typeof(TExecutor), optionsInstance, null, null);
+
+        public static CliCommandInfo From<TCommand, TExecutor>(TCommand optionsInstance, TExecutor executorInstance)
+            where TExecutor : ICliCommandExecutorBase<TCommand>
+            => new(typeof(TCommand), typeof(TExecutor), optionsInstance, null, executorInstance);
+
+        public static CliCommandInfo From(Type commandType, Type? executorType)
+            => new(commandType, executorType, null, null, null);
+
+        public static CliCommandInfo From(Type commandType, Type? executorType, object? executorInstance)
+            => new(commandType, executorType, null, null, executorInstance);
+
+        public static CliCommandInfo From(Type commandType, object? optionsInstance, Type? executorType)
+            => new(commandType, executorType, optionsInstance, null, null);
+
+        public static CliCommandInfo From(Type commandType, object? optionsInstance, Type? executorType, object? executorInstance)
+            => new(commandType, executorType, optionsInstance, null, executorInstance);
+
+        public static CliCommandInfo From<TCommand>(Func<TCommand, int> executorFunction)
+            => new(typeof(TCommand), null, null, executorFunction, null);
+
+        public static CliCommandInfo From<TCommand>(TCommand optionsInstance, Func<TCommand, int> executorFunction)
+            => new(typeof(TCommand), null, optionsInstance, executorFunction, null);
+
+        public static CliCommandInfo From<TCommand>(Func<TCommand, Task<int>> executorFunction)
+            => new(typeof(TCommand), null, null, executorFunction, null);
+
+        public static CliCommandInfo From<TCommand>(TCommand optionsInstance, Func<TCommand, Task<int>> executorFunction)
+            => new(typeof(TCommand), null, optionsInstance, executorFunction, null);
+
+        public static CliCommandInfo From(Type commandType, Func<object, int> executorFunction)
+            => new(commandType, null, null, executorFunction, null);
+
+        public static CliCommandInfo From(Type commandType, object? optionsInstance, Func<object, int> executorFunction)
+            => new(commandType, null, optionsInstance, executorFunction, null);
+
+        public static CliCommandInfo From(Type commandType, Func<object, Task<int>> executorFunction)
+            => new(commandType, null, null, executorFunction, null);
+
+        public static CliCommandInfo From(Type commandType, object? optionsInstance, Func<object, Task<int>> executorFunction)
+            => new(commandType, null, optionsInstance, executorFunction, null);
     }
 }

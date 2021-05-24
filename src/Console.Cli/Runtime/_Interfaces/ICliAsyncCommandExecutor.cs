@@ -2,12 +2,12 @@
 
 namespace MaSch.Console.Cli.Runtime
 {
-    public interface ICliAsyncCommandExecutor
+    public interface ICliAsyncCommandExecutor : ICliCommandExecutorBase
     {
         Task<int> ExecuteCommandAsync();
     }
 
-    public interface ICliAsyncCommandExecutor<TCommand>
+    public interface ICliAsyncCommandExecutor<TCommand> : ICliCommandExecutorBase<TCommand>
     {
         Task<int> ExecuteCommandAsync(TCommand parameters);
     }
