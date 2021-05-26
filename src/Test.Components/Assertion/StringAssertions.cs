@@ -1,7 +1,12 @@
-﻿using MaSch.Core.Extensions;
-using MaSch.Test.Assertion;
+﻿using MaSch.Test.Assertion;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
+
+#if !NETCOREAPP2_1_OR_GREATER && !NETSTANDARD2_1_OR_GREATER
+using MaSch.Core.Extensions;
+#endif
 
 namespace MaSch.Test
 {
@@ -57,6 +62,106 @@ namespace MaSch.Test
         /// <param name="message">The message to include in the exception when <paramref name="expected" /> is not in <paramref name="actual" />. The message is shown in test results.</param>
         public static void Contains(this AssertBase assert, string expected, string? actual, StringComparison comparisonType, string? message)
             => assert.RunAssertion(expected, actual, message, (e, a) => a?.Contains(e, comparisonType) == true);
+
+        /// <summary>
+        /// Tests whether the specified string contains any of the specified substrings
+        /// and throws an exception if none of the substrings do occur within the
+        /// test string.
+        /// </summary>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="expected">The strings of which at least one is expected to occur within <paramref name="actual" />.</param>
+        /// <param name="actual">The string that is expected to contain <paramref name="expected" />.</param>
+        public static void ContainsAny(this AssertBase assert, IEnumerable<string> expected, string? actual)
+            => ContainsAny(assert, expected, actual, StringComparison.Ordinal, null);
+
+        /// <summary>
+        /// Tests whether the specified string contains any of the specified substrings
+        /// and throws an exception if none of the substrings do occur within the
+        /// test string.
+        /// </summary>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="expected">The strings of which at least one is expected to occur within <paramref name="actual" />.</param>
+        /// <param name="actual">The string that is expected to contain <paramref name="expected" />.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="expected" /> is not in <paramref name="actual" />. The message is shown in test results.</param>
+        public static void ContainsAny(this AssertBase assert, IEnumerable<string> expected, string? actual, string? message)
+            => ContainsAny(assert, expected, actual, StringComparison.Ordinal, message);
+
+        /// <summary>
+        /// Tests whether the specified string contains any of the specified substrings
+        /// and throws an exception if none of the substrings do occur within the
+        /// test string.
+        /// </summary>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="expected">The strings of which at least one is expected to occur within <paramref name="actual" />.</param>
+        /// <param name="actual">The string that is expected to contain <paramref name="expected" />.</param>
+        /// <param name="comparisonType">The comparison method to compare strings <paramref name="comparisonType" />.</param>
+        public static void ContainsAny(this AssertBase assert, IEnumerable<string> expected, string? actual, StringComparison comparisonType)
+            => ContainsAny(assert, expected, actual, comparisonType, null);
+
+        /// <summary>
+        /// Tests whether the specified string contains any of the specified substrings
+        /// and throws an exception if none of the substrings do occur within the
+        /// test string.
+        /// </summary>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="expected">The strings of which at least one is expected to occur within <paramref name="actual" />.</param>
+        /// <param name="actual">The string that is expected to contain <paramref name="expected" />.</param>
+        /// <param name="comparisonType"> The comparison method to compare strings <paramref name="comparisonType" />.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="expected" /> is not in <paramref name="actual" />. The message is shown in test results.</param>
+        public static void ContainsAny(this AssertBase assert, IEnumerable<string> expected, string? actual, StringComparison comparisonType, string? message)
+            => assert.RunAssertion(expected, actual, message, (e, a) => e.Any(x => a?.Contains(x, comparisonType) == true));
+
+        /// <summary>
+        /// Tests whether the specified string contains all of the specified substrings
+        /// and throws an exception if one of the substrings does not occur within the
+        /// test string.
+        /// </summary>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="expected">The strings expected to occur within <paramref name="actual" />.</param>
+        /// <param name="actual">The string that is expected to contain <paramref name="expected" />.</param>
+        public static void ContainsAll(this AssertBase assert, IEnumerable<string> expected, string? actual)
+            => ContainsAll(assert, expected, actual, StringComparison.Ordinal, null);
+
+        /// <summary>
+        /// Tests whether the specified string contains all of the specified substrings
+        /// and throws an exception if one of the substrings does not occur within the
+        /// test string.
+        /// </summary>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="expected">The strings expected to occur within <paramref name="actual" />.</param>
+        /// <param name="actual">The string that is expected to contain <paramref name="expected" />.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="expected" /> is not in <paramref name="actual" />. The message is shown in test results.</param>
+        public static void ContainsAll(this AssertBase assert, IEnumerable<string> expected, string? actual, string? message)
+            => ContainsAll(assert, expected, actual, StringComparison.Ordinal, message);
+
+        /// <summary>
+        /// Tests whether the specified string contains all of the specified substrings
+        /// and throws an exception if one of the substrings does not occur within the
+        /// test string.
+        /// </summary>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="expected">The strings expected to occur within <paramref name="actual" />.</param>
+        /// <param name="actual">The string that is expected to contain <paramref name="expected" />.</param>
+        /// <param name="comparisonType">The comparison method to compare strings <paramref name="comparisonType" />.</param>
+        public static void ContainsAll(this AssertBase assert, IEnumerable<string> expected, string? actual, StringComparison comparisonType)
+            => ContainsAll(assert, expected, actual, comparisonType, null);
+
+        /// <summary>
+        /// Tests whether the specified string contains all of the specified substrings
+        /// and throws an exception if one of the substrings does not occur within the
+        /// test string.
+        /// </summary>
+        /// <param name="assert">The assert object to test with.</param>
+        /// <param name="expected">The strings expected to occur within <paramref name="actual" />.</param>
+        /// <param name="actual">The string that is expected to contain <paramref name="expected" />.</param>
+        /// <param name="comparisonType"> The comparison method to compare strings <paramref name="comparisonType" />.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="expected" /> is not in <paramref name="actual" />. The message is shown in test results.</param>
+        public static void ContainsAll(this AssertBase assert, IEnumerable<string> expected, string? actual, StringComparison comparisonType, string? message)
+        {
+            var missingStrings = expected.Where(x => actual?.Contains(x, comparisonType) != true).ToArray();
+            if (missingStrings.Length > 0)
+                assert.ThrowAssertError(message, ("Expected", expected), ("Actual", actual), ("MissingStrings", missingStrings));
+        }
 
         /// <summary>
         /// Tests whether the specified string does not contain the specified substring

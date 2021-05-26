@@ -2,8 +2,10 @@
 using MaSch.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -62,7 +64,7 @@ namespace MaSch.Test.Assertion
                 builder.Append(' ')
                        .Append(name)
                        .Append(":<")
-                       .Append(value?.ToInvariantString() ?? "(null)")
+                       .Append(FormatObject(value, 0))
                        .Append(">.");
             }
 
@@ -190,5 +192,39 @@ namespace MaSch.Test.Assertion
         /// <param name="message">The message to show in the error log.</param>
         [DoesNotReturn]
         protected abstract void HandleFailedAssertion(string message);
+
+        private static string FormatObject(object? obj, int indentation)
+        {
+            return obj switch
+            {
+                null => "(null)",
+                string str => str,
+                IEnumerable enumerable => FormatEnumerable(enumerable, indentation + 1),
+                IFormattable formattable => formattable.ToString(null, CultureInfo.InvariantCulture),
+                _ => obj.ToString() ?? "(null)",
+            };
+        }
+
+        private static string FormatEnumerable(IEnumerable enumerable, int indentation)
+        {
+            var result = new StringBuilder("[");
+
+            bool isFirst = true;
+            foreach (object item in enumerable)
+            {
+                if (!isFirst)
+                {
+                    result.Append(',');
+                }
+
+                result.AppendLine().Append('\t', indentation).Append(FormatObject(item, indentation));
+                isFirst = false;
+            }
+
+            if (!isFirst)
+                result.AppendLine();
+            result.Append('\t', indentation - 1).Append(']');
+            return result.ToString();
+        }
     }
 }

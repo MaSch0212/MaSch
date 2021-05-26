@@ -101,6 +101,242 @@ namespace MaSch.Test.Components.Test.Assertion
 
         #endregion
 
+        #region ContainsAny
+
+        [TestMethod]
+        public void ContainsAny_Success()
+        {
+            AssertUnderTest.ContainsAny(new[] { "blub", "blib" }, "jhfkjhfdgblubkjfh");
+        }
+
+        [TestMethod]
+        public void ContainsAny_Null()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAny(new[] { "blub", "blib" }, (string?)null));
+            Assert.AreEqual($"Assert.ContainsAny failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<(null)>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAny_NoneMatch()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAny(new[] { "blub", "blib" }, "kjhgfdkghggfd"));
+            Assert.AreEqual($"Assert.ContainsAny failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<kjhgfdkghggfd>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAny_Match_DifferentCasing()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAny(new[] { "blub", "blib" }, "kjhgfdBLUBkghggfd"));
+            Assert.AreEqual($"Assert.ContainsAny failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<kjhgfdBLUBkghggfd>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAny_WithMessage_Null()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAny(new[] { "blub", "blib" }, (string?)null, "This is my test"));
+            Assert.AreEqual($"Assert.ContainsAny failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<(null)>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAny_WithMessage_NoneMatch()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAny(new[] { "blub", "blib" }, "kjhgfdkghggfd", "This is my test"));
+            Assert.AreEqual($"Assert.ContainsAny failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<kjhgfdkghggfd>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAny_WithMessage_Match_DifferentCasing()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAny(new[] { "blub", "blib" }, "kjhgfdBLUBkghggfd", "This is my test"));
+            Assert.AreEqual($"Assert.ContainsAny failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<kjhgfdBLUBkghggfd>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAny_WithComparison_Success_SameCasing()
+        {
+            AssertUnderTest.ContainsAny(new[] { "blub", "blib" }, "jhfkjhfdgblubkjfh", StringComparison.OrdinalIgnoreCase);
+        }
+
+        [TestMethod]
+        public void ContainsAny_WithComparison_Success_DifferentCasing()
+        {
+            AssertUnderTest.ContainsAny(new[] { "blub", "blib" }, "jhfkjhfdgBLUBkjfh", StringComparison.OrdinalIgnoreCase);
+        }
+
+        [TestMethod]
+        public void ContainsAny_WithComparison_Null()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAny(new[] { "blub", "blib" }, (string?)null, StringComparison.OrdinalIgnoreCase));
+            Assert.AreEqual($"Assert.ContainsAny failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<(null)>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAny_WithComparison_NoneMatch()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAny(new[] { "blub", "blib" }, "kjhgfdkghggfd", StringComparison.OrdinalIgnoreCase));
+            Assert.AreEqual($"Assert.ContainsAny failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<kjhgfdkghggfd>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAny_WithComparison_WithMessage_Null()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAny(new[] { "blub", "blib" }, (string?)null, StringComparison.OrdinalIgnoreCase, "This is my test"));
+            Assert.AreEqual($"Assert.ContainsAny failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<(null)>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAny_WithComparison_WithMessage_NoneMatch()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAny(new[] { "blub", "blib" }, "kjhgfdkghggfd", StringComparison.OrdinalIgnoreCase, "This is my test"));
+            Assert.AreEqual($"Assert.ContainsAny failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<kjhgfdkghggfd>. This is my test", ex.Message);
+        }
+
+        #endregion
+
+        #region ContainsAll
+
+        [TestMethod]
+        public void ContainsAll_Success()
+        {
+            AssertUnderTest.ContainsAll(new[] { "blub", "blib" }, "jhfkblibjhfdgblubkjfh");
+        }
+
+        [TestMethod]
+        public void ContainsAll_Null()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAll(new[] { "blub", "blib" }, (string?)null));
+            Assert.AreEqual($"Assert.ContainsAll failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<(null)>. MissingStrings:<[{nl}\tblub,{nl}\tblib{nl}]>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAll_NoneMatch()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAll(new[] { "blub", "blib" }, "kjhgfdkghggfd"));
+            Assert.AreEqual($"Assert.ContainsAll failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<kjhgfdkghggfd>. MissingStrings:<[{nl}\tblub,{nl}\tblib{nl}]>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAll_OneMatch()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAll(new[] { "blub", "blib" }, "kjhgfdkblubghggfd"));
+            Assert.AreEqual($"Assert.ContainsAll failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<kjhgfdkblubghggfd>. MissingStrings:<[{nl}\tblib{nl}]>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAll_Match_DifferentCasing()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAll(new[] { "blub", "blib" }, "kjhgfdBLUBkghgBLIBgfd"));
+            Assert.AreEqual($"Assert.ContainsAll failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<kjhgfdBLUBkghgBLIBgfd>. MissingStrings:<[{nl}\tblub,{nl}\tblib{nl}]>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAll_WithMessage_Null()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAll(new[] { "blub", "blib" }, (string?)null, "This is my test"));
+            Assert.AreEqual($"Assert.ContainsAll failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<(null)>. MissingStrings:<[{nl}\tblub,{nl}\tblib{nl}]>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAll_WithMessage_NoneMatch()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAll(new[] { "blub", "blib" }, "kjhgfdkghggfd", "This is my test"));
+            Assert.AreEqual($"Assert.ContainsAll failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<kjhgfdkghggfd>. MissingStrings:<[{nl}\tblub,{nl}\tblib{nl}]>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAll_WithMessage_OneMatch()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAll(new[] { "blub", "blib" }, "kjhgfdkblubghggfd", "This is my test"));
+            Assert.AreEqual($"Assert.ContainsAll failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<kjhgfdkblubghggfd>. MissingStrings:<[{nl}\tblib{nl}]>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAll_WithMessage_Match_DifferentCasing()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAll(new[] { "blub", "blib" }, "kjhgfdBLUBkghggBLIBfd", "This is my test"));
+            Assert.AreEqual($"Assert.ContainsAll failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<kjhgfdBLUBkghggBLIBfd>. MissingStrings:<[{nl}\tblub,{nl}\tblib{nl}]>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAll_WithComparison_Success_SameCasing()
+        {
+            AssertUnderTest.ContainsAll(new[] { "blub", "blib" }, "jhfblibkjhfdgblubkjfh", StringComparison.OrdinalIgnoreCase);
+        }
+
+        [TestMethod]
+        public void ContainsAll_WithComparison_Success_DifferentCasing()
+        {
+            AssertUnderTest.ContainsAll(new[] { "blub", "blib" }, "jhfkBLIBjhfdgBLUBkjfh", StringComparison.OrdinalIgnoreCase);
+        }
+
+        [TestMethod]
+        public void ContainsAll_WithComparison_Null()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAll(new[] { "blub", "blib" }, (string?)null, StringComparison.OrdinalIgnoreCase));
+            Assert.AreEqual($"Assert.ContainsAll failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<(null)>. MissingStrings:<[{nl}\tblub,{nl}\tblib{nl}]>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAll_WithComparison_NoneMatch()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAll(new[] { "blub", "blib" }, "kjhgfdkghggfd", StringComparison.OrdinalIgnoreCase));
+            Assert.AreEqual($"Assert.ContainsAll failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<kjhgfdkghggfd>. MissingStrings:<[{nl}\tblub,{nl}\tblib{nl}]>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAll_WithComparison_OneMatch()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAll(new[] { "blub", "blib" }, "kjhgfdkblubghggfd", StringComparison.OrdinalIgnoreCase));
+            Assert.AreEqual($"Assert.ContainsAll failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<kjhgfdkblubghggfd>. MissingStrings:<[{nl}\tblib{nl}]>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAll_WithComparison_WithMessage_Null()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAll(new[] { "blub", "blib" }, (string?)null, StringComparison.OrdinalIgnoreCase, "This is my test"));
+            Assert.AreEqual($"Assert.ContainsAll failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<(null)>. MissingStrings:<[{nl}\tblub,{nl}\tblib{nl}]>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAll_WithComparison_WithMessage_NoneMatch()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAll(new[] { "blub", "blib" }, "kjhgfdkghggfd", StringComparison.OrdinalIgnoreCase, "This is my test"));
+            Assert.AreEqual($"Assert.ContainsAll failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<kjhgfdkghggfd>. MissingStrings:<[{nl}\tblub,{nl}\tblib{nl}]>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void ContainsAll_WithComparison_WithMessage_OneMatch()
+        {
+            var nl = Environment.NewLine;
+            var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ContainsAll(new[] { "blub", "blib" }, "kjhgfdkblubghggfd", StringComparison.OrdinalIgnoreCase, "This is my test"));
+            Assert.AreEqual($"Assert.ContainsAll failed. Expected:<[{nl}\tblub,{nl}\tblib{nl}]>. Actual:<kjhgfdkblubghggfd>. MissingStrings:<[{nl}\tblib{nl}]>. This is my test", ex.Message);
+        }
+
+        #endregion
+
         #region DoesNotContain
 
         [TestMethod]

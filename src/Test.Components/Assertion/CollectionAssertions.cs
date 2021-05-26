@@ -150,7 +150,7 @@ namespace MaSch.Test
         {
             var collection = actual is ICollection<TActual> c ? c : actual?.ToArray();
             if (collection?.Any(x => predicate(expected, x)) != true)
-                assert.ThrowAssertError(message, ("Expected", expected), ("Actual", FormatCollection(collection)));
+                assert.ThrowAssertError(message, ("Expected", expected), ("Actual", collection));
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace MaSch.Test
         {
             var collection = actual is ICollection<TActual> c ? c : actual?.ToArray();
             if (collection?.All(x => !predicate(notExpected, x)) != true)
-                assert.ThrowAssertError(message, ("NotExpected", notExpected), ("Actual", FormatCollection(collection)));
+                assert.ThrowAssertError(message, ("NotExpected", notExpected), ("Actual", collection));
         }
 
         /// <summary>
@@ -398,7 +398,7 @@ namespace MaSch.Test
 
             var missingItems = subset.Except(superset, comparer).ToArray();
             if (missingItems.Length > 0)
-                assert.ThrowAssertError(message, ("MissingItems", FormatCollection(missingItems)));
+                assert.ThrowAssertError(message, ("MissingItems", missingItems));
         }
 
         /// <summary>
@@ -507,8 +507,8 @@ namespace MaSch.Test
 
             var badValues = new (string, object?)?[]
             {
-                missingItems.Length > 0 ? ("MissingItems", FormatCollection(missingItems)) : null,
-                unexpectedItems.Length > 0 ? ("UnexpectedItems", FormatCollection(unexpectedItems)) : null,
+                missingItems.Length > 0 ? ("MissingItems", missingItems) : null,
+                unexpectedItems.Length > 0 ? ("UnexpectedItems", unexpectedItems) : null,
             };
             if (missingItems.Length > 0 || unexpectedItems.Length > 0)
                 assert.ThrowAssertError(message, badValues);
@@ -602,7 +602,7 @@ namespace MaSch.Test
             var badValues = new (string, object?)?[]
             {
                 ("ExpectedType", expectedType),
-                ("WrongItems", FormatCollection(wrong.Select(x => $"[{x.Item1}] {x.Item3 ?? "(null)"} (Type: {x.Item2?.FullName ?? "(null)"})").ToArray())),
+                ("WrongItems", wrong.Select(x => $"[{x.Item1}] {x.Item3 ?? "(null)"} (Type: {x.Item2?.FullName ?? "(null)"})")),
             };
             if (wrong.Count > 0)
                 assert.ThrowAssertError(message, badValues);
@@ -697,8 +697,8 @@ namespace MaSch.Test
 
             var badValues = new (string, object?)?[]
             {
-                wrong.Count > 0 ? ("WrongItems", FormatCollection(wrong.Select(x => $"[{x.Item1}] Expected:<{x.Item3}> Actual:<{x.Item2}>").ToArray())) : null,
-                p2items.Count > 0 ? (p2name!, FormatCollection(p2items)) : null,
+                wrong.Count > 0 ? ("WrongItems", wrong.Select(x => $"[{x.Item1}] Expected:<{x.Item3}> Actual:<{x.Item2}>")) : null,
+                p2items.Count > 0 ? (p2name!, p2items) : null,
             };
             if (p2items.Count > 0 || wrong.Count > 0)
                 assert.ThrowAssertError(message, badValues);
@@ -757,12 +757,6 @@ namespace MaSch.Test
 
             if (notExpected.SequenceEqual(actual, comparer))
                 assert.ThrowAssertError(message);
-        }
-
-        private static string? FormatCollection<T>(ICollection<T>? collection)
-        {
-            return collection == null ? null :
-                   collection.Count == 0 ? "[]" : $"[{Environment.NewLine}\t{string.Join($",{Environment.NewLine}\t", collection)}{Environment.NewLine}]";
         }
     }
 }
