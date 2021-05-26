@@ -57,9 +57,9 @@ namespace MaSch.Console.Cli.Runtime
             Property.SetValue(options, value.ConvertTo(Property.PropertyType));
 
             if (_optionsToHasValue.ContainsKey(options))
-                _optionsToHasValue[options] = isDefault;
+                _optionsToHasValue[options] = !isDefault;
             else
-                _optionsToHasValue.Add(new EquatableWeakReference(options), isDefault);
+                _optionsToHasValue.Add(new EquatableWeakReference(options), !isDefault);
         }
     }
 }

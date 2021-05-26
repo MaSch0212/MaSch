@@ -1,18 +1,22 @@
-﻿using MaSch.Core.Extensions;
+﻿using MaSch.Core;
+using MaSch.Core.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace MaSch.Console.Cli.Runtime
 {
     public class CliCommandInfoCollection : ICliCommandInfoCollection
     {
-        private readonly IDictionary<Type, ICliCommandInfo> _allCommands = new Dictionary<Type, ICliCommandInfo>();
+        private readonly Dictionary<Type, ICliCommandInfo> _allCommands = new();
         private readonly List<ICliCommandInfo> _rootCommands = new();
 
         public ICliCommandInfo? DefaultCommand { get; private set; }
         public int Count => _allCommands.Count;
+
+        [ExcludeFromCodeCoverage]
         public bool IsReadOnly => false;
 
         public CliCommandInfoCollection()
@@ -27,18 +31,21 @@ namespace MaSch.Console.Cli.Runtime
 
         public void Add(ICliCommandInfo item)
         {
+            Guard.NotNull(item, nameof(item));
+
             if (item.CommandType == null || item.Attribute == null)
                 throw new ArgumentException("The given command has to have a CommandType.");
 
-            ValidateCommand(item);
             if (item.Attribute.ParentCommand != null)
             {
                 if (!_allCommands.TryGetValue(item.Attribute.ParentCommand, out var parent))
                     throw new ArgumentException($"The command type \"{item.Attribute.ParentCommand.FullName}\" has not been registered yet. Please register all parent commands before the child commands.");
+                ValidateCommand(item, parent);
                 parent.AddChildCommand(item);
             }
             else
             {
+                ValidateCommand(item, null);
                 _rootCommands.Add(item);
             }
 
@@ -49,14 +56,19 @@ namespace MaSch.Console.Cli.Runtime
 
         public bool Remove(ICliCommandInfo item)
         {
+            Guard.NotNull(item, nameof(item));
+
             if (item.CommandType == null || !_allCommands.TryGetValue(item.CommandType, out var ei) || ei != item)
                 return false;
 
             foreach (var child in item.ChildCommands.ToArray())
             {
-                item.RemoveChildCommand(child);
                 Remove(child);
             }
+
+            var parent = item.ParentCommand ?? (item.Attribute.ParentCommand != null && _allCommands.TryGetValue(item.Attribute.ParentCommand, out var p) ? p : null);
+            if (parent != null)
+                parent.RemoveChildCommand(item);
 
             if (_rootCommands.Contains(item))
                 _rootCommands.Remove(item);
@@ -71,7 +83,7 @@ namespace MaSch.Console.Cli.Runtime
         }
 
         public bool Contains(ICliCommandInfo item)
-            => item.CommandType != null && _allCommands.TryGetValue(item.CommandType, out var ei) && ei == item;
+            => item?.CommandType != null && _allCommands.TryGetValue(item.CommandType, out var ei) && ei == item;
 
         public void CopyTo(ICliCommandInfo[] array, int arrayIndex) => _allCommands.Values.CopyTo(array, arrayIndex);
 
@@ -83,11 +95,13 @@ namespace MaSch.Console.Cli.Runtime
 
         public IReadOnlyCollection<ICliCommandInfo> AsReadOnly() => new ReadOnly(this);
 
-        private void ValidateCommand(ICliCommandInfo command)
+        private void ValidateCommand(ICliCommandInfo command, ICliCommandInfo? parentCommand)
         {
             if (this.TryFirst(x => x.CommandType == command.CommandType, out var existing))
                 throw new ArgumentException($"A command for command type \"{command.CommandType.FullName}\" is already registered.");
-            foreach (var c in this)
+
+            var collection = parentCommand == null ? _rootCommands : parentCommand.ChildCommands;
+            foreach (var c in collection)
             {
                 var existingNames = command.Aliases.Intersect(c.Aliases, StringComparer.OrdinalIgnoreCase).ToArray();
                 if (existingNames.Length > 0)

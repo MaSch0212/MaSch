@@ -49,6 +49,14 @@ namespace MaSch.Console.Cli.Test.Configuration
         }
 
         [TestMethod]
+        public void Ctor_Name_Aliases_Null()
+        {
+            var attr = new CliCommandAttribute("blub", (string[]?)null!);
+
+            Assert.AreCollectionsEqual(new[] { "blub" }, attr.Aliases);
+        }
+
+        [TestMethod]
         public void Name()
         {
             var attr = new CliCommandAttribute("blub", new[] { "blub2", "blub3" });
