@@ -1,1 +1,2 @@
 ﻿- Added EquatableWeakReference.
+- Added Extension method "GetInitialHashCode" for object. (Calls RuntimeHelpers.GetHashCode() which is not executable when IndexAndRange Shims from MaSch.Generators are used)

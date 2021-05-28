@@ -7,16 +7,16 @@ namespace MaSch.Console.Cli
 {
     public class CliApplicationBuilder
     {
-        private readonly CliApplication _application = new();
+        private readonly ICliApplication _application = new CliApplication();
 
         public CliApplicationBuilder WithCommand(Type commandType)
             => Exec(x => x.RegisterCommand(commandType));
 
         public CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance)
-            => Exec(x => x.RegisterCommand(commandType, optionsInstance));
+            => Exec(x => ((ICliApplicationBase)x).RegisterCommand(commandType, optionsInstance));
 
         public CliApplicationBuilder WithCommand(Type commandType, Type? executorType)
-            => Exec(x => x.RegisterCommand(commandType, executorType));
+            => Exec(x => ((ICliApplicationBase)x).RegisterCommand(commandType, executorType));
 
         public CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType)
             => Exec(x => x.RegisterCommand(commandType, optionsInstance, executorType));
@@ -66,10 +66,10 @@ namespace MaSch.Console.Cli
         public CliApplicationBuilder Configure(Action<CliApplicationOptions> action)
             => Exec(x => action(x.Options));
 
-        public CliApplication Build()
+        public ICliApplication Build()
             => _application;
 
-        private CliApplicationBuilder Exec(Action<CliApplication> action)
+        private CliApplicationBuilder Exec(Action<ICliApplication> action)
         {
             action(_application);
             return this;
@@ -79,16 +79,16 @@ namespace MaSch.Console.Cli
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Async counterpart to CliApplicationBuilder.")]
     public class CliAsyncApplicatioBuilder
     {
-        private readonly CliAsyncApplication _application = new();
+        private readonly ICliAsyncApplication _application = new CliAsyncApplication();
 
         public CliAsyncApplicatioBuilder WithCommand(Type commandType)
             => Exec(x => x.RegisterCommand(commandType));
 
         public CliAsyncApplicatioBuilder WithCommand(Type commandType, object? optionsInstance)
-            => Exec(x => x.RegisterCommand(commandType, optionsInstance));
+            => Exec(x => ((ICliApplicationBase)x).RegisterCommand(commandType, optionsInstance));
 
         public CliAsyncApplicatioBuilder WithCommand(Type commandType, Type? executorType)
-            => Exec(x => x.RegisterCommand(commandType, executorType));
+            => Exec(x => ((ICliApplicationBase)x).RegisterCommand(commandType, executorType));
 
         public CliAsyncApplicatioBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType)
             => Exec(x => x.RegisterCommand(commandType, optionsInstance, executorType));
@@ -138,10 +138,10 @@ namespace MaSch.Console.Cli
         public CliAsyncApplicatioBuilder Configure(Action<CliApplicationOptions> action)
             => Exec(x => action(x.Options));
 
-        public CliAsyncApplication Build()
+        public ICliAsyncApplication Build()
             => _application;
 
-        private CliAsyncApplicatioBuilder Exec(Action<CliAsyncApplication> action)
+        private CliAsyncApplicatioBuilder Exec(Action<ICliAsyncApplication> action)
         {
             action(_application);
             return this;

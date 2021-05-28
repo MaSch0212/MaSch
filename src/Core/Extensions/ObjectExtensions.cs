@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace MaSch.Core.Extensions
 {
@@ -201,5 +202,13 @@ namespace MaSch.Core.Extensions
             Guard.NotNull(obj, nameof(obj));
             return FormattableString.Invariant($"{obj}");
         }
+
+        /// <summary>
+        /// Gets the initial hash code of the given object (reference hash).
+        /// </summary>
+        /// <param name="obj">The object to get the hash from.</param>
+        /// <returns>The initial hash code of <paramref name="obj"/> (reference hash).</returns>
+        public static int GetInitialHashCode(this object obj)
+            => RuntimeHelpers.GetHashCode(obj);
     }
 }

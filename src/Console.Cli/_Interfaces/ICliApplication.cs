@@ -12,6 +12,7 @@ namespace MaSch.Console.Cli.Runtime
         CliApplicationOptions Options { get; }
 
         void RegisterCommand(Type commandType);
+        void RegisterCommand(Type commandType, object? optionsInstance);
         void RegisterCommand(Type commandType, Type? executorType);
         void RegisterCommand(Type commandType, object? optionsInstance, Type? executorType);
         void RegisterCommand(Type commandType, Type? executorType, object? executorInstance);

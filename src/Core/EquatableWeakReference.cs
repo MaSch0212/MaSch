@@ -75,7 +75,7 @@ namespace MaSch.Core
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
-            return _targetHashCode == RuntimeHelpers.GetHashCode(obj);
+            return _targetHashCode == (obj is EquatableWeakReference r ? r._targetHashCode : RuntimeHelpers.GetHashCode(obj));
         }
 
         [SuppressMessage("Blocker Code Smell", "S3875:\"operator==\" should not be overloaded on reference types", Justification = "The caller would expect to compare the references to the target object.")]
