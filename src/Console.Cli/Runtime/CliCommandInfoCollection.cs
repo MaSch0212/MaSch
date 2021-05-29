@@ -93,7 +93,7 @@ namespace MaSch.Console.Cli.Runtime
         public IEnumerable<ICliCommandInfo> GetRootCommands()
             => _rootCommands.AsEnumerable();
 
-        public IReadOnlyCollection<ICliCommandInfo> AsReadOnly() => new ReadOnly(this);
+        public IReadOnlyCliCommandInfoCollection AsReadOnly() => new ReadOnly(this);
 
         private void ValidateCommand(ICliCommandInfo command, ICliCommandInfo? parentCommand)
         {
@@ -112,18 +112,20 @@ namespace MaSch.Console.Cli.Runtime
                 throw new ArgumentException($"The command {command.Name} cannot be added because another default command is already added: {DefaultCommand.CommandType.FullName}.");
         }
 
-        private class ReadOnly : IReadOnlyCollection<ICliCommandInfo>
+        public class ReadOnly : IReadOnlyCliCommandInfoCollection
         {
-            private readonly ICollection<ICliCommandInfo> _collection;
+            private readonly ICliCommandInfoCollection _collection;
 
-            public ReadOnly(ICollection<ICliCommandInfo> collection)
+            public ReadOnly(ICliCommandInfoCollection collection)
             {
                 _collection = collection;
             }
 
+            public ICliCommandInfo? DefaultCommand => _collection.DefaultCommand;
             public int Count => _collection.Count;
             public IEnumerator<ICliCommandInfo> GetEnumerator() => _collection.GetEnumerator();
             IEnumerator IEnumerable.GetEnumerator() => _collection.GetEnumerator();
+            public IEnumerable<ICliCommandInfo> GetRootCommands() => _collection.GetRootCommands();
         }
     }
 }

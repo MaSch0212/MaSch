@@ -24,23 +24,11 @@ namespace MaSch.Console.Cli.Test.Runtime
             set => Cache.SetValue(value);
         }
 
-        private PrivateType ParserPrivateType => Cache.GetValue(() => new PrivateType(typeof(CliArgumentParser)))!;
-        private CliApplicationOptions AppOptions => Cache.GetValue(() => new CliApplicationOptions())!;
+        private CliArgumentParser Parser => Cache.GetValue(() => new CliArgumentParser())!;
         private List<ICliCommandInfo> Commands => Cache.GetValue(() => new List<ICliCommandInfo>())!;
         private Mock<ICliCommandInfoCollection> CommandsMock => Cache.GetValue(() => CreateCommandsMock(Commands))!;
-
-        protected override void OnInitializeTest()
-        {
-            var commonValidators = ParserPrivateType.GetStaticField<List<ICliValidator<object>>>("_commonValidators");
-            Cache.SetValue(commonValidators.ToArray(), "commonValidators");
-        }
-
-        protected override void OnCleanupTest()
-        {
-            var oldValidators = Cache.GetValue<ICliValidator<object>[]>("commonValidators")!;
-            var commonValidators = ParserPrivateType.GetStaticField<List<ICliValidator<object>>>("_commonValidators");
-            commonValidators.Set(oldValidators);
-        }
+        private CliApplicationOptions AppOptions => Cache.GetValue(() => new CliApplicationOptions())!;
+        private Mock<ICliApplicationBase> ApplicationMock => Cache.GetValue(() => CreateApplicationMock())!;
 
         [TestMethod]
         [DataRow(true, DisplayName = "Args: null")]
@@ -1214,7 +1202,7 @@ namespace MaSch.Console.Cli.Test.Runtime
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, optionsInstance: obj);
             SetupValidation(validator, command.Object, obj, false, new[] { new CliError("My Error") }).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
-            CliArgumentParser.AddValidator(validator.Object);
+            Parser.AddValidator(validator.Object);
 
             var result = CallParse("my-command");
 
@@ -1270,13 +1258,32 @@ namespace MaSch.Console.Cli.Test.Runtime
         }
 
         private CliArgumentParserResult CallParse(params string[] args)
-            => CliArgumentParser.Parse(args, AppOptions, CommandsMock.Object);
+            => Parser.Parse(ApplicationMock.Object, args);
 
         private Mock<ICliCommandInfoCollection> CreateCommandsMock(ICollection<ICliCommandInfo> commands)
         {
             var result = Mocks.Create<ICliCommandInfoCollection>();
             result.Setup(x => x.GetEnumerator()).Returns(() => commands.GetEnumerator());
+            result.Setup(x => x.GetRootCommands()).Returns(() => commands.Where(x =>
+            {
+                try
+                {
+                    return x.ParentCommand == null;
+                }
+                catch (MockException)
+                {
+                    return true;
+                }
+            }));
             result.Setup(x => x.DefaultCommand).Returns(() => DefaultCommand);
+            return result;
+        }
+
+        private Mock<ICliApplicationBase> CreateApplicationMock()
+        {
+            var result = Mocks.Create<ICliApplicationBase>();
+            result.Setup(x => x.Commands).Returns(new CliCommandInfoCollection.ReadOnly(CommandsMock.Object));
+            result.Setup(x => x.Options).Returns(AppOptions);
             return result;
         }
 

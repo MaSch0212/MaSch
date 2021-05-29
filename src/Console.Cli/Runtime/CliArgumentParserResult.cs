@@ -10,7 +10,7 @@ namespace MaSch.Console.Cli.Runtime
         public ICliCommandInfo? Command { get; }
         public object? Options { get; }
 
-        internal CliArgumentParserResult(IEnumerable<CliError> errors, ICliCommandInfo? command, object? options)
+        internal protected CliArgumentParserResult(IEnumerable<CliError> errors, ICliCommandInfo? command, object? options)
         {
             Success = false;
             Errors = errors;
@@ -18,12 +18,12 @@ namespace MaSch.Console.Cli.Runtime
             Options = options;
         }
 
-        internal CliArgumentParserResult(IEnumerable<CliError> errors)
+        internal protected CliArgumentParserResult(IEnumerable<CliError> errors)
             : this(errors, null, null)
         {
         }
 
-        internal CliArgumentParserResult(ICliCommandInfo command, object options)
+        internal protected CliArgumentParserResult(ICliCommandInfo command, object options)
         {
             Success = true;
             Errors = Array.Empty<CliError>();

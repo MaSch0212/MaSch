@@ -6,6 +6,14 @@ namespace MaSch.Console.Cli.Runtime
     {
         ICliCommandInfo? DefaultCommand { get; }
 
-        IReadOnlyCollection<ICliCommandInfo> AsReadOnly();
+        IEnumerable<ICliCommandInfo> GetRootCommands();
+        IReadOnlyCliCommandInfoCollection AsReadOnly();
+    }
+
+    public interface IReadOnlyCliCommandInfoCollection : IReadOnlyCollection<ICliCommandInfo>
+    {
+        ICliCommandInfo? DefaultCommand { get; }
+
+        IEnumerable<ICliCommandInfo> GetRootCommands();
     }
 }

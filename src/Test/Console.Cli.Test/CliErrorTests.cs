@@ -9,6 +9,8 @@ namespace MaSch.Console.Cli.Test.ErrorHandling
     [TestClass]
     public class CliErrorTests : TestClassBase
     {
+        private ICliCommandInfoFactory Factory => Cache.GetValue(() => new CliCommandInfoFactory())!;
+
         [TestMethod]
         public void Ctor_Type()
         {
@@ -20,7 +22,7 @@ namespace MaSch.Console.Cli.Test.ErrorHandling
         [TestMethod]
         public void Ctor_Type_Command()
         {
-            var command = CliCommandInfo.From<TestCommandOptions>();
+            var command = Factory.Create<TestCommandOptions>();
             var attr = new CliError((CliErrorType)4711, command);
 
             Assert.AreEqual((CliErrorType)4711, attr.Type);
@@ -30,7 +32,7 @@ namespace MaSch.Console.Cli.Test.ErrorHandling
         [TestMethod]
         public void Ctor_Type_Command_Option()
         {
-            var command = CliCommandInfo.From<TestCommandOptions>();
+            var command = Factory.Create<TestCommandOptions>();
             var attr = new CliError((CliErrorType)4711, command, command.Options[0]);
 
             Assert.AreEqual((CliErrorType)4711, attr.Type);
@@ -41,7 +43,7 @@ namespace MaSch.Console.Cli.Test.ErrorHandling
         [TestMethod]
         public void Ctor_Type_Command_Value()
         {
-            var command = CliCommandInfo.From<TestCommandOptions>();
+            var command = Factory.Create<TestCommandOptions>();
             var attr = new CliError((CliErrorType)4711, command, command.Values[0]);
 
             Assert.AreEqual((CliErrorType)4711, attr.Type);
@@ -61,7 +63,7 @@ namespace MaSch.Console.Cli.Test.ErrorHandling
         [TestMethod]
         public void Ctor_Message_Command()
         {
-            var command = CliCommandInfo.From<TestCommandOptions>();
+            var command = Factory.Create<TestCommandOptions>();
             var attr = new CliError("MyError", command);
 
             Assert.AreEqual(CliErrorType.Custom, attr.Type);
@@ -72,7 +74,7 @@ namespace MaSch.Console.Cli.Test.ErrorHandling
         [TestMethod]
         public void Ctor_MessageCommand_Option()
         {
-            var command = CliCommandInfo.From<TestCommandOptions>();
+            var command = Factory.Create<TestCommandOptions>();
             var attr = new CliError("MyError", command, command.Options[0]);
 
             Assert.AreEqual(CliErrorType.Custom, attr.Type);
@@ -84,7 +86,7 @@ namespace MaSch.Console.Cli.Test.ErrorHandling
         [TestMethod]
         public void Ctor_Message_Command_Value()
         {
-            var command = CliCommandInfo.From<TestCommandOptions>();
+            var command = Factory.Create<TestCommandOptions>();
             var attr = new CliError("MyError", command, command.Values[0]);
 
             Assert.AreEqual(CliErrorType.Custom, attr.Type);

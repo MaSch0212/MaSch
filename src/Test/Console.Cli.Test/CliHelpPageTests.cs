@@ -17,6 +17,7 @@ namespace MaSch.Console.Cli.Test.Help
         private Mock<ICliApplicationBase> AppMock => Cache.GetValue(() => new Mock<ICliApplicationBase>(MockBehavior.Strict))!;
         private Mock<IConsoleService> ConsoleServiceMock => Cache.GetValue(() => new Mock<IConsoleService>(MockBehavior.Strict))!;
         private PrivateCliHelpPage HelpPage => Cache.GetValue(() => new PrivateCliHelpPage(ConsoleServiceMock.Object))!;
+        private ICliCommandInfoFactory Factory => Cache.GetValue(() => new CliCommandInfoFactory())!;
 
         [TestMethod]
         public void GetOptionName_NoShortAlias_OneAlias()
@@ -137,7 +138,7 @@ namespace MaSch.Console.Cli.Test.Help
         public void WriteErrorMessage_MissingOption()
         {
             var sb = AttachStringBuilder(ConsoleServiceMock);
-            var cmd = CliCommandInfo.From<TestCommandOptions>();
+            var cmd = Factory.Create<TestCommandOptions>();
 
             HelpPage.WriteErrorMessage(AppMock.Object, new CliError(CliErrorType.MissingOption, cmd, cmd.Options[0]));
 
@@ -158,7 +159,7 @@ namespace MaSch.Console.Cli.Test.Help
         public void WriteErrorMessage_WrongOptionFormat()
         {
             var sb = AttachStringBuilder(ConsoleServiceMock);
-            var cmd = CliCommandInfo.From<TestCommandOptions>();
+            var cmd = Factory.Create<TestCommandOptions>();
 
             HelpPage.WriteErrorMessage(AppMock.Object, new CliError(CliErrorType.WrongOptionFormat, cmd, cmd.Options[0]));
 
@@ -169,7 +170,7 @@ namespace MaSch.Console.Cli.Test.Help
         public void WriteErrorMessage_WrongValueFormat()
         {
             var sb = AttachStringBuilder(ConsoleServiceMock);
-            var cmd = CliCommandInfo.From<TestCommandOptions>();
+            var cmd = Factory.Create<TestCommandOptions>();
 
             HelpPage.WriteErrorMessage(AppMock.Object, new CliError(CliErrorType.WrongValueFormat, cmd, cmd.Values[0]));
 
@@ -186,6 +187,20 @@ namespace MaSch.Console.Cli.Test.Help
             Assert.AreEqual($"My custom error message{NL}", sb.ToString());
         }
 
+        private CliCommandOptionInfo CreateOptionInfo(CliCommandOptionAttribute option)
+        {
+            var p = Mocks.Create<PropertyInfo>();
+            p.Setup(x => x.GetIndexParameters()).Returns(Array.Empty<ParameterInfo>());
+            p.Setup(x => x.GetAccessors(true)).Returns(Array.Empty<MethodInfo>());
+            p.Setup(x => x.CanRead).Returns(true);
+            p.Setup(x => x.CanWrite).Returns(true);
+
+            return new CliCommandOptionInfo(
+                Factory.Create<TestCommandOptions>(),
+                p.Object,
+                option);
+        }
+
         private static StringBuilder AttachStringBuilder(Mock<IConsoleService> consoleServiceMock)
         {
             var result = new StringBuilder();
@@ -196,14 +211,6 @@ namespace MaSch.Console.Cli.Test.Help
             consoleServiceMock.SetupGet(x => x.BackgroundColor).Returns(ConsoleColor.Black);
             consoleServiceMock.SetupSet(x => x.BackgroundColor = It.IsAny<ConsoleColor>());
             return result;
-        }
-
-        private static CliCommandOptionInfo CreateOptionInfo(CliCommandOptionAttribute option)
-        {
-            return new CliCommandOptionInfo(
-                CliCommandInfo.From<TestCommandOptions>(),
-                new Mock<PropertyInfo>(MockBehavior.Strict).Object,
-                option);
         }
 
         [CliCommand("blub", Executable = false)]

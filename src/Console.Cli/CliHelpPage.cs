@@ -103,7 +103,7 @@ namespace MaSch.Console.Cli
             if (error.AffectedCommand != null)
                 AppendCommandName(error.AffectedCommand);
 
-            var childCommands = error.AffectedCommand?.ChildCommands ?? application.Commands;
+            var childCommands = error.AffectedCommand?.ChildCommands ?? application.Commands.GetRootCommands().ToArray();
             if (childCommands.Count > 0)
             {
                 var childCommandRequired = error.AffectedCommand?.IsExecutable != true;
@@ -214,7 +214,7 @@ namespace MaSch.Console.Cli
 
         protected virtual void WriteCommands(ICliApplicationBase application, CliError error)
         {
-            var commands = error.AffectedCommand?.ChildCommands ?? application.Commands;
+            var commands = error.AffectedCommand?.ChildCommands ?? application.Commands.GetRootCommands().ToArray();
             if (commands.Count == 0)
                 return;
 

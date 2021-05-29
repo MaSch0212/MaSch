@@ -1,5 +1,4 @@
-﻿using MaSch.Console.Cli.Help;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Reflection;
 
@@ -7,7 +6,6 @@ namespace MaSch.Console.Cli
 {
     public class CliApplicationOptions
     {
-        public ICliHelpPage HelpPage { get; set; } = new CliHelpPage(new ConsoleService());
         public string? Name { get; set; } = Assembly.GetEntryAssembly()?.GetName().Name;
         public string? Version { get; set; } = Assembly.GetEntryAssembly()?.GetName().Version?.ToString(3);
         public string? Year { get; set; } = DateTime.Now.Year.ToString(CultureInfo.InvariantCulture);
