@@ -13,6 +13,9 @@ namespace MaSch.Console.Cli.Runtime.Executors
     {
         public static ICliExecutor GetExecutor(Type executorType, Type commandType, object? executorInstance)
         {
+            Guard.NotNull(executorType, nameof(executorType));
+            Guard.NotNull(commandType, nameof(commandType));
+
             var types = (from i in executorType.GetInterfaces()
                          where i.IsGenericType
                          let baseType = i.GetGenericTypeDefinition()
@@ -29,7 +32,7 @@ namespace MaSch.Console.Cli.Runtime.Executors
         public static (object Executor, T TObj) PreExecute<T>(Type executorType, object? executorInstance, object obj)
         {
             if (obj is not T tObj)
-                throw new ArgumentException($"The object needs to be an instance of class {typeof(T).Name}. (Actual: {obj?.GetType().Name ?? "(null)"})", nameof(obj));
+                throw new ArgumentException($"The object needs to be an instance of class {typeof(T).Name}. (Actual: {obj.GetType().Name})", nameof(obj));
             var executor = PreValidate(executorType, executorInstance);
             return (executor, tObj);
         }
@@ -37,8 +40,7 @@ namespace MaSch.Console.Cli.Runtime.Executors
         public static object PreValidate(Type executorType, object? executorInstance)
         {
             var executor = executorInstance
-                ?? Activator.CreateInstance(executorType)
-                ?? throw new ArgumentException($"And instance of type {executorType.Name} could not be created. Please make sure the class has an empty constructor.", nameof(executorType));
+                ?? Activator.CreateInstance(executorType)!; // CreateInstance only returns null for Nullable<> (see https://github.com/dotnet/coreclr/pull/23774#discussion_r354785674)
             return executor;
         }
     }
@@ -49,6 +51,8 @@ namespace MaSch.Console.Cli.Runtime.Executors
         private readonly Type _executorType;
         private readonly object? _executorInstance;
         private object? _cachedExecutor;
+
+        internal object? LastExecutorInstance => _cachedExecutor;
 
         public ExternalExecutor(Type executorType, object? executorInstance)
         {
@@ -61,8 +65,10 @@ namespace MaSch.Console.Cli.Runtime.Executors
 
         public int Execute(object obj)
         {
+            Guard.NotNull(obj, nameof(obj));
             var (ee, tObj) = ExternalExecutor.PreExecute<T>(_executorType, _executorInstance ?? _cachedExecutor, obj);
             _cachedExecutor = ee;
+
             if (ee is ICliCommandExecutor<T> executor)
                 return executor.ExecuteCommand(tObj);
             else if (ee is ICliAsyncCommandExecutor<T> asyncExecutor)
@@ -73,8 +79,10 @@ namespace MaSch.Console.Cli.Runtime.Executors
 
         public async Task<int> ExecuteAsync(object obj)
         {
+            Guard.NotNull(obj, nameof(obj));
             var (ee, tObj) = ExternalExecutor.PreExecute<T>(_executorType, _executorInstance ?? _cachedExecutor, obj);
             _cachedExecutor = ee;
+
             if (ee is ICliAsyncCommandExecutor<T> asyncExecutor)
                 return await asyncExecutor.ExecuteCommandAsync(tObj);
             else if (ee is ICliCommandExecutor<T> executor)
@@ -85,7 +93,10 @@ namespace MaSch.Console.Cli.Runtime.Executors
 
         public bool ValidateOptions(ICliCommandInfo command, object parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors)
         {
+            Guard.NotNull(command, nameof(command));
+            Guard.OfType(parameters, nameof(parameters), false, typeof(T));
             var ee = ExternalExecutor.PreValidate(_executorType, _executorInstance ?? _cachedExecutor);
+            _cachedExecutor = ee;
 
             var types = (from i in ee.GetType().GetInterfaces()
                          where i.IsGenericType

@@ -55,7 +55,12 @@ namespace MaSch.Console.Cli
     public class CliApplicationBuilder : CliApplicationBuilderBase<ICliApplication, CliApplicationBuilder>
     {
         public CliApplicationBuilder()
-            : base(new CliApplication())
+            : this(new CliApplication())
+        {
+        }
+
+        protected CliApplicationBuilder(ICliApplication application)
+            : base(application)
         {
         }
 
@@ -103,6 +108,11 @@ namespace MaSch.Console.Cli
     {
         public CliAsyncApplicationBuilder()
             : base(new CliAsyncApplication())
+        {
+        }
+
+        protected CliAsyncApplicationBuilder(ICliAsyncApplication application)
+            : base(application)
         {
         }
 

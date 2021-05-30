@@ -27,8 +27,8 @@ namespace MaSch.Console.Cli.Runtime.Executors
 
         public static T PreExecute<T>(object obj)
         {
-            if (!(obj is T tObj))
-                throw new ArgumentException($"The object needs to be an instance of class {typeof(T).Name}. (Actual: {obj?.GetType().Name ?? "(null)"})", nameof(obj));
+            if (obj is not T tObj)
+                throw new ArgumentException($"The object needs to be an instance of class {typeof(T).Name}. (Actual: {obj.GetType()})", nameof(obj));
             return tObj;
         }
     }
@@ -49,26 +49,29 @@ namespace MaSch.Console.Cli.Runtime.Executors
 
         public int Execute(object obj)
         {
+            Guard.NotNull(obj, nameof(obj));
             var tObj = FunctionExecutor.PreExecute<T>(obj);
             if (_executorFunc != null)
                 return _executorFunc(tObj);
             else if (_asyncExecutorFunc != null)
                 return _asyncExecutorFunc(tObj).GetAwaiter().GetResult();
             else
-                throw new ArgumentException("At least one function needs to be provided.");
+                throw new InvalidOperationException("At least one function needs to be provided.");
         }
 
         public async Task<int> ExecuteAsync(object obj)
         {
+            Guard.NotNull(obj, nameof(obj));
             var tObj = FunctionExecutor.PreExecute<T>(obj);
             if (_asyncExecutorFunc != null)
                 return await _asyncExecutorFunc(tObj);
             else if (_executorFunc != null)
                 return _executorFunc(tObj);
             else
-                throw new ArgumentException("At least one function needs to be provided.");
+                throw new InvalidOperationException("At least one function needs to be provided.");
         }
 
+        [ExcludeFromCodeCoverage]
         public bool ValidateOptions(ICliCommandInfo command, object parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors)
         {
             // Nothing to validate here. The options are already validated in the CliApplicationArgumentParser.

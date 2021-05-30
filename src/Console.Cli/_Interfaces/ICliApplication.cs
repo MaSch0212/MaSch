@@ -1,9 +1,10 @@
 ﻿using MaSch.Console.Cli.Help;
+using MaSch.Console.Cli.Runtime;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
-namespace MaSch.Console.Cli.Runtime
+namespace MaSch.Console.Cli
 {
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Base interface")]
     public interface ICliApplicationBase
