@@ -1,5 +1,4 @@
-﻿using MaSch.Console.Cli.Help;
-using MaSch.Console.Cli.Runtime;
+﻿using MaSch.Console.Cli.Runtime;
 using MaSch.Core;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -20,18 +19,21 @@ namespace MaSch.Console.Cli
         protected abstract Type ExecutorType { get; }
         protected abstract Type GenericExecutorType { get; }
 
+        [AllowNull]
         public ICliCommandInfoFactory CommandFactory
         {
             get => _commandFactory ??= new CliCommandInfoFactory();
             set => _commandFactory = value;
         }
 
+        [AllowNull]
         public ICliArgumentParser Parser
         {
             get => _parser ??= new CliArgumentParser();
             set => _parser = value;
         }
 
+        [AllowNull]
         public ICliHelpPage HelpPage
         {
             get => _helpPage ??= new CliHelpPage(new ConsoleService());

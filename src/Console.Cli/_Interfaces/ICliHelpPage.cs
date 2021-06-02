@@ -1,7 +1,7 @@
 ﻿using MaSch.Console.Cli.Runtime;
 using System.Collections.Generic;
 
-namespace MaSch.Console.Cli.Help
+namespace MaSch.Console.Cli
 {
     public interface ICliHelpPage
     {

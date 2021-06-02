@@ -4,6 +4,7 @@ using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text;
 
@@ -213,6 +214,7 @@ namespace MaSch.Console.Cli.Test.Help
             return result;
         }
 
+        [ExcludeFromCodeCoverage]
         [CliCommand("blub", Executable = false)]
         private class TestCommandOptions
         {
