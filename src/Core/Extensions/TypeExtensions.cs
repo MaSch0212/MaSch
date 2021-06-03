@@ -334,6 +334,7 @@ namespace MaSch.Core.Extensions
         /// <param name="bindingFlags">The binding flags describing the method.</param>
         /// <param name="types">The parameter types of the method.</param>
         /// <returns>The method that matches the specified filters if found in any base types of <paramref name="t"/>; otherwise, <see langword="null"/>.</returns>
+        [SuppressMessage("ReflectionAnalyzers.SystemReflection", "REFL045:These flags are insufficient to match any members.", Justification = "False positive.")]
         public static MethodInfo? GetMethodRecursive(this Type? t, string name, BindingFlags bindingFlags, params Type[] types)
         {
             Guard.NotNullOrEmpty(name, nameof(name));

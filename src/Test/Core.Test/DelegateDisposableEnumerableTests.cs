@@ -4,6 +4,7 @@ using Moq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace MaSch.Core.Test
@@ -14,11 +15,12 @@ namespace MaSch.Core.Test
         [TestMethod]
         public void Constructor_ParameterChecks()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new DelegateDisposableEnumerable<object>(null!, () => { }));
-            Assert.ThrowsException<ArgumentNullException>(() => new DelegateDisposableEnumerable<object>(Array.Empty<object>(), null!));
+            Assert.ThrowsException<ArgumentNullException>(() => new DelegateDisposableEnumerable<object>(null!, () => { }).Dispose());
+            Assert.ThrowsException<ArgumentNullException>(() => new DelegateDisposableEnumerable<object>(Array.Empty<object>(), null!).Dispose());
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Would fail the test")]
         public void GetEnumerator_Generic()
         {
             var actionMock = new Mock<Action>();
@@ -43,7 +45,7 @@ namespace MaSch.Core.Test
             var enumerableMock = new Mock<IEnumerable<string>>(MockBehavior.Strict);
             enumerableMock.As<IEnumerable>().Setup(x => x.GetEnumerator()).Returns(enumeratorMock.Object);
 
-            var dde = new DelegateDisposableEnumerable<string>(enumerableMock.Object, actionMock.Object);
+            using var dde = new DelegateDisposableEnumerable<string>(enumerableMock.Object, actionMock.Object);
 
             var result = ((IEnumerable)dde).GetEnumerator();
 
@@ -53,6 +55,8 @@ namespace MaSch.Core.Test
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP017:Prefer using.", Justification = "Makes sense here")]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP016:Don't use disposed instance.", Justification = "False positive.")]
         public void Dispose_()
         {
             var disposingMock = new Mock<EventHandler<DisposeEventArgs>>();
@@ -102,6 +106,7 @@ namespace MaSch.Core.Test
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Would fail the test")]
         public void Finalizer()
         {
             var disposingMock = new Mock<EventHandler<DisposeEventArgs>>();
@@ -133,8 +138,8 @@ namespace MaSch.Core.Test
             GC.WaitForPendingFinalizers();
 
             actionMock.Verify(x => x(), Times.Never());
-            disposingMock.Verify(x => x(It.Is<DelegateDisposableEnumerable<string>>(a => a.GetHashCode() == ddeHash), It.Is<DisposeEventArgs>(a => a != null && !a.IsDisposing)), Times.Once());
-            disposedMock.Verify(x => x(It.Is<DelegateDisposableEnumerable<string>>(a => a.GetHashCode() == ddeHash), It.Is<DisposeEventArgs>(a => a != null && !a.IsDisposing)), Times.Once());
+            disposingMock.Verify(x => x(It.Is<DelegateDisposableEnumerable<string>>(a => a.GetHashCode() == ddeHash), It.Is<DisposeEventArgs>(a => a != null && !a.IsDisposing)), Times.Never());
+            disposedMock.Verify(x => x(It.Is<DelegateDisposableEnumerable<string>>(a => a.GetHashCode() == ddeHash), It.Is<DisposeEventArgs>(a => a != null && !a.IsDisposing)), Times.Never());
         }
     }
 
@@ -146,8 +151,8 @@ namespace MaSch.Core.Test
         {
             var enumerableMock = new Mock<IOrderedEnumerable<object>>(MockBehavior.Strict);
 
-            Assert.ThrowsException<ArgumentNullException>(() => new DelegateOrderedDisposableEnumerable<object>(null!, () => { }));
-            Assert.ThrowsException<ArgumentNullException>(() => new DelegateOrderedDisposableEnumerable<object>(enumerableMock.Object, null!));
+            Assert.ThrowsException<ArgumentNullException>(() => new DelegateOrderedDisposableEnumerable<object>(null!, () => { }).Dispose());
+            Assert.ThrowsException<ArgumentNullException>(() => new DelegateOrderedDisposableEnumerable<object>(enumerableMock.Object, null!).Dispose());
         }
 
         [TestMethod]
@@ -160,7 +165,7 @@ namespace MaSch.Core.Test
             var enumerableMock = new Mock<IOrderedEnumerable<string>>(MockBehavior.Strict);
             enumerableMock.Setup(x => x.CreateOrderedEnumerable(It.IsAny<Func<string, int>>(), It.IsAny<IComparer<int>>(), It.IsAny<bool>())).Returns(resultEnumerableMock.Object);
 
-            var dde = new DelegateOrderedDisposableEnumerable<string>(enumerableMock.Object, actionMock.Object);
+            using var dde = new DelegateOrderedDisposableEnumerable<string>(enumerableMock.Object, actionMock.Object);
 
             var result = dde.CreateOrderedEnumerable(keySelectorMock.Object, comparerMock.Object, true);
 
@@ -170,6 +175,7 @@ namespace MaSch.Core.Test
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Would fail the test")]
         public void GetEnumerator_Generic()
         {
             var actionMock = new Mock<Action>();
@@ -194,7 +200,7 @@ namespace MaSch.Core.Test
             var enumerableMock = new Mock<IOrderedEnumerable<string>>(MockBehavior.Strict);
             enumerableMock.As<IEnumerable>().Setup(x => x.GetEnumerator()).Returns(enumeratorMock.Object);
 
-            var dde = new DelegateOrderedDisposableEnumerable<string>(enumerableMock.Object, actionMock.Object);
+            using var dde = new DelegateOrderedDisposableEnumerable<string>(enumerableMock.Object, actionMock.Object);
 
             var result = ((IEnumerable)dde).GetEnumerator();
 
@@ -204,7 +210,9 @@ namespace MaSch.Core.Test
         }
 
         [TestMethod]
-        public void Dispose()
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP017:Prefer using.", Justification = "Makes sense here")]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP016:Don't use disposed instance.", Justification = "False positive.")]
+        public void Dispose_()
         {
             var disposingMock = new Mock<EventHandler<DisposeEventArgs>>();
             var disposedMock = new Mock<EventHandler<DisposeEventArgs>>();
@@ -253,6 +261,7 @@ namespace MaSch.Core.Test
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Would fail the test")]
         public void Finalizer()
         {
             var disposingMock = new Mock<EventHandler<DisposeEventArgs>>();
@@ -284,8 +293,8 @@ namespace MaSch.Core.Test
             GC.WaitForPendingFinalizers();
 
             actionMock.Verify(x => x(), Times.Never());
-            disposingMock.Verify(x => x(It.Is<DelegateOrderedDisposableEnumerable<string>>(a => a.GetHashCode() == ddeHash), It.Is<DisposeEventArgs>(a => a != null && !a.IsDisposing)), Times.Once());
-            disposedMock.Verify(x => x(It.Is<DelegateOrderedDisposableEnumerable<string>>(a => a.GetHashCode() == ddeHash), It.Is<DisposeEventArgs>(a => a != null && !a.IsDisposing)), Times.Once());
+            disposingMock.Verify(x => x(It.Is<DelegateOrderedDisposableEnumerable<string>>(a => a.GetHashCode() == ddeHash), It.Is<DisposeEventArgs>(a => a != null && !a.IsDisposing)), Times.Never());
+            disposedMock.Verify(x => x(It.Is<DelegateOrderedDisposableEnumerable<string>>(a => a.GetHashCode() == ddeHash), It.Is<DisposeEventArgs>(a => a != null && !a.IsDisposing)), Times.Never());
         }
     }
 }

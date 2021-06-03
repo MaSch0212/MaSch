@@ -11,7 +11,7 @@ using Assert = MaSch.Test.Assertion.Assert;
 namespace MaSch.Core.Test
 {
     [TestClass]
-    public class CacheTests
+    public sealed class CacheTests : IDisposable
     {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private Cache _cache;
@@ -26,6 +26,7 @@ namespace MaSch.Core.Test
         {
             if (TestContext.TestName.StartsWith("Static_"))
             {
+                _cache?.Dispose();
                 _cache = null!;
                 _cacheMock = new Mock<Cache>(MockBehavior.Strict);
                 Cache<string>.Instance = _cacheMock.Object;
@@ -33,6 +34,7 @@ namespace MaSch.Core.Test
             else
             {
                 _cacheMock = null!;
+                _cache?.Dispose();
                 _cache = new Cache();
             }
         }
@@ -409,7 +411,7 @@ namespace MaSch.Core.Test
         }
 
         [TestMethod]
-        public void Dispose()
+        public void Dispose_()
         {
             var disposableMock1 = new Mock<IDisposable>();
             var disposableMock2 = new Mock<IDisposable>();
@@ -636,9 +638,14 @@ namespace MaSch.Core.Test
             _cacheMock.Protected().Verify("Dispose", Times.Once(), true, true);
         }
 
+        public void Dispose()
+        {
+            _cache?.Dispose();
+        }
+
         private IDictionary<string, object?> GetCacheDict()
         {
-            var prop = typeof(Cache).GetProperty("Objects", BindingFlags.Instance | BindingFlags.NonPublic);
+            var prop = typeof(Cache).GetProperty("Objects", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             return (IDictionary<string, object?>)prop!.GetValue(_cache)!;
         }
     }

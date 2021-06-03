@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace MaSch.Core.Extensions
@@ -14,6 +15,7 @@ namespace MaSch.Core.Extensions
         /// <typeparam name="TDisposable">The type of the disposable.</typeparam>
         /// <param name="disposable">The <see cref="IDisposable"/> to execute the action on.</param>
         /// <param name="action">The action to execute.</param>
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP007:Don't dispose injected.", Justification = "This is the whole purpose of this method.")]
         public static void DoAndDispose<TDisposable>(this TDisposable disposable, Action<TDisposable> action)
             where TDisposable : IDisposable
         {
@@ -147,6 +149,7 @@ namespace MaSch.Core.Extensions
         /// <param name="disposable">The <see cref="IDisposable"/> to execute the action on.</param>
         /// <param name="function">The function to execute.</param>
         /// <returns>The result of the function.</returns>
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP007:Don't dispose injected.", Justification = "This is the whole purpose of this method.")]
         public static TResult DoAndDispose<TDisposable, TResult>(this TDisposable disposable, Func<TDisposable, TResult> function)
             where TDisposable : IDisposable
         {
@@ -165,6 +168,7 @@ namespace MaSch.Core.Extensions
         /// <param name="disposable">The <see cref="IDisposable"/> to execute the action on.</param>
         /// <param name="action">The action to execute.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP007:Don't dispose injected.", Justification = "This is the whole purpose of this method.")]
         public static async Task DoAndDisposeAsync<TDisposable>(this TDisposable disposable, Func<TDisposable, Task> action)
             where TDisposable : IDisposable
         {
@@ -184,6 +188,7 @@ namespace MaSch.Core.Extensions
         /// <param name="disposable">The <see cref="IDisposable"/> to execute the action on.</param>
         /// <param name="function">The function to execute.</param>
         /// <returns>The result of the function.</returns>
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP007:Don't dispose injected.", Justification = "This is the whole purpose of this method.")]
         public static async Task<TResult> DoAndDisposeAsync<TDisposable, TResult>(this TDisposable disposable, Func<TDisposable, Task<TResult>> function)
             where TDisposable : IDisposable
         {

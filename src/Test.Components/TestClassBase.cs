@@ -2,6 +2,7 @@
 using MaSch.Test.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace MaSch.Test
@@ -10,7 +11,7 @@ namespace MaSch.Test
     /// Represents a base class for unit test classes.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public abstract class TestClassBase
+    public abstract class TestClassBase : IDisposable
     {
         /// <summary>
         /// Gets or sets the default mock behavior.
@@ -91,6 +92,29 @@ namespace MaSch.Test
         /// </summary>
         protected virtual void OnCleanupTest()
         {
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Cache.Clear();
+                Cache.Dispose();
+
+                Verifiables.Clear();
+                ((IDisposable)Verifiables).Dispose();
+            }
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

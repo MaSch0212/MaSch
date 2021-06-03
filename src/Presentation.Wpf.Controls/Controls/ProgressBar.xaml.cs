@@ -424,7 +424,7 @@ namespace MaSch.Presentation.Wpf.Controls
             if (_graphPath != null)
             {
                 var streamGeo = new StreamGeometry();
-                var ctx = streamGeo.Open();
+                using var ctx = streamGeo.Open();
                 ctx.BeginFigure(new Point(0, allHeight + upSpace), true, false);
                 ctx.LineTo(new Point(0, 0), true, false);
                 ctx.LineTo(new Point(0, allHeight + upSpace), true, false);

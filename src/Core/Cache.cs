@@ -214,11 +214,13 @@ namespace MaSch.Core
             if (_disposedValue)
                 return;
 
-            lock (ObjectsLock)
+            if (disposing)
             {
-                if (disposing)
+                lock (ObjectsLock)
+                {
                     Objects.Values.OfType<IDisposable>().ForEach(x => x.Dispose());
-                Objects.Clear();
+                    Objects.Clear();
+                }
             }
 
             _disposedValue = true;
@@ -350,6 +352,7 @@ namespace MaSch.Core
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// Resets the <see cref="Instance"/>, so next time the <see cref="Instance"/> is retrieved a new Cache is created.
         /// </summary>
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP007:Don't dispose injected.", Justification = "Instance is not really injected.")]
         public static void DisposeInstance()
         {
             lock (InstanceLock)

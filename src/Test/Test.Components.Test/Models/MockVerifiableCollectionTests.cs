@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MaSch.Test.Components.Test.Models
 {
@@ -11,12 +12,13 @@ namespace MaSch.Test.Components.Test.Models
         [TestMethod]
         public void Ctor()
         {
-            var collection = new MockVerifiableCollection();
+            using var collection = new MockVerifiableCollection();
 
             Assert.AreEqual(0, collection.Count);
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Would fail test.")]
         public void Ctor_List()
         {
             var mock1 = new Mock<IMockVerifiable>(MockBehavior.Strict);
@@ -30,6 +32,7 @@ namespace MaSch.Test.Components.Test.Models
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Would fail test.")]
         public void Verify()
         {
             var mock1 = new Mock<IMockVerifiable>(MockBehavior.Strict);

@@ -10,7 +10,7 @@ namespace MaSch.Console.Controls
     /// <summary>
     /// Control for a <see cref="IConsoleService"/> with which the progress of an action can be displayed.
     /// </summary>
-    public class ProgressControl
+    public class ProgressControl : IDisposable
     {
         private const int ProgressBarLeftMargin = 3;
         private const int ProgressBarRightMargin = 6;
@@ -163,6 +163,14 @@ namespace MaSch.Console.Controls
         }
 
         /// <summary>
+        /// Finalizes an instance of the <see cref="ProgressControl"/> class.
+        /// </summary>
+        ~ProgressControl()
+        {
+            Dispose(false);
+        }
+
+        /// <summary>
         /// Shows this control. Please make sure to reserve enough space in the console buffer before executing this method.
         /// </summary>
         public void Show()
@@ -190,6 +198,7 @@ namespace MaSch.Console.Controls
 
             DrawInitial();
             IsVisible = true;
+            _renderCancellationSource?.Dispose();
             _renderCancellationSource = new CancellationTokenSource();
             _renderTask = RunRender();
         }
@@ -240,6 +249,7 @@ namespace MaSch.Console.Controls
         public void StopRender()
         {
             _renderCancellationSource?.Cancel();
+            _renderCancellationSource?.Dispose();
             _renderTask?.Wait();
             _renderCancellationSource = null;
             _renderTask = null;
@@ -256,6 +266,25 @@ namespace MaSch.Console.Controls
             using (ConsoleSynchronizer.Scope())
             using (new ConsoleScope(_console, false, true, false))
                 OnRender();
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _renderCancellationSource?.Dispose();
+            }
         }
 
         private async Task RunRender()

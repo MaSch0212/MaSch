@@ -17,6 +17,8 @@ namespace MaSch.Test.Components.Test.TestHelper
         }
 
         public int Compare(T? x, T? y) => _comparer.Compare(x, y);
+
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP007:Don't dispose injected.", Justification = "This behavior is expected by the caller.")]
         public void Dispose() => _disposable.Dispose();
     }
 
@@ -36,6 +38,7 @@ namespace MaSch.Test.Components.Test.TestHelper
         [ExcludeFromCodeCoverage]
         public int GetHashCode([DisallowNull] T obj) => _comparer.GetHashCode(obj);
 
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP007:Don't dispose injected.", Justification = "This behavior is expected by the caller.")]
         public void Dispose() => _disposable.Dispose();
     }
 
@@ -55,6 +58,7 @@ namespace MaSch.Test.Components.Test.TestHelper
         [ExcludeFromCodeCoverage]
         public int GetHashCode(object obj) => _comparer.GetHashCode(obj);
 
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP007:Don't dispose injected.", Justification = "This behavior is expected by the caller.")]
         public void Dispose() => _disposable.Dispose();
     }
 }

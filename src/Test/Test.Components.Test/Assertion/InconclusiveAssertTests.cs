@@ -79,7 +79,7 @@ namespace MaSch.Test.Components.Test.Assertion
         [TestMethod]
         public void AssertNamePrefix()
         {
-            var prop = typeof(MaSch.Test.Assertion.InconclusiveAssert).GetProperty("AssertNamePrefix", BindingFlags.NonPublic | BindingFlags.Instance);
+            var prop = typeof(MaSch.Test.Assertion.InconclusiveAssert).GetProperty("AssertNamePrefix", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             Assert.IsNotNull(prop);
             Assert.AreEqual("Assert.Inc", prop.GetValue(AssertUnderTest));
         }
@@ -87,7 +87,7 @@ namespace MaSch.Test.Components.Test.Assertion
         [TestMethod]
         public void HandleFailedAssertion()
         {
-            var method = typeof(MaSch.Test.Assertion.InconclusiveAssert).GetMethod("HandleFailedAssertion", BindingFlags.NonPublic | BindingFlags.Instance);
+            var method = typeof(MaSch.Test.Assertion.InconclusiveAssert).GetMethod("HandleFailedAssertion", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly, null, new[] { typeof(string) }, null);
             Assert.IsNotNull(method);
             var ex = Assert.ThrowsException<TargetInvocationException>(() => method.Invoke(AssertUnderTest, new object[] { "My test error message" }));
             Assert.IsInstanceOfType(ex.InnerException, typeof(AssertInconclusiveException));

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MaSch.Data.Extensions
 {
@@ -264,6 +265,8 @@ namespace MaSch.Data.Extensions
             }
 
             public void Reset() => throw new NotSupportedException("This enumerable can only be iterated once.");
+
+            [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP007:Don't dispose injected.", Justification = "Makes sense in this case")]
             public void Dispose() => _reader.Dispose();
         }
     }

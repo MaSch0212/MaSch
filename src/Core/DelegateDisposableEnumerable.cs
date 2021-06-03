@@ -55,18 +55,12 @@ namespace MaSch.Core
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
-            Disposing?.Invoke(this, new DisposeEventArgs(disposing));
             if (disposing)
+            {
+                Disposing?.Invoke(this, new DisposeEventArgs(disposing));
                 _actionOnDispose();
-            Disposed?.Invoke(this, new DisposeEventArgs(disposing));
-        }
-
-        /// <summary>
-        /// Finalizes an instance of the <see cref="DelegateDisposableEnumerable{T}"/> class.
-        /// </summary>
-        ~DelegateDisposableEnumerable()
-        {
-            Dispose(false);
+                Disposed?.Invoke(this, new DisposeEventArgs(disposing));
+            }
         }
     }
 
@@ -123,18 +117,12 @@ namespace MaSch.Core
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
-            Disposing?.Invoke(this, new DisposeEventArgs(disposing));
             if (disposing)
+            {
+                Disposing?.Invoke(this, new DisposeEventArgs(disposing));
                 _actionOnDispose();
-            Disposed?.Invoke(this, new DisposeEventArgs(disposing));
-        }
-
-        /// <summary>
-        /// Finalizes an instance of the <see cref="DelegateOrderedDisposableEnumerable{T}"/> class.
-        /// </summary>
-        ~DelegateOrderedDisposableEnumerable()
-        {
-            Dispose(false);
+                Disposed?.Invoke(this, new DisposeEventArgs(disposing));
+            }
         }
     }
 }

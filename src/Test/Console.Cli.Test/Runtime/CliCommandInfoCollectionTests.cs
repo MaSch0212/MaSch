@@ -399,7 +399,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         [TestMethod]
         public void IEnumerable_GetEnumerator()
         {
-            var enum1 = Collection.GetEnumerator();
+            using var enum1 = Collection.GetEnumerator();
             var enum2 = ((IEnumerable)Collection).GetEnumerator();
 
             Assert.IsInstanceOfType(enum2, enum1.GetType());
@@ -441,7 +441,7 @@ namespace MaSch.Console.Cli.Test.Runtime
             Assert.AreEqual(2, readOnly.Count);
             Assert.AreCollectionsEqual(Collection, readOnly);
 
-            var enum1 = readOnly.GetEnumerator();
+            using var enum1 = readOnly.GetEnumerator();
             var enum2 = ((IEnumerable)readOnly).GetEnumerator();
 
             Assert.IsInstanceOfType(enum2, enum1.GetType());

@@ -3,6 +3,7 @@ using MaSch.Console.Cli.Runtime;
 using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Reflection;
 
 namespace MaSch.Console.Cli.Test.Runtime
 {
@@ -13,7 +14,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void Ctor_NullChecks()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(DummyClass).GetProperty(nameof(DummyClass.NormalProperty));
+            var property = typeof(DummyClass).GetProperty(nameof(DummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
             Assert.ThrowsException<ArgumentNullException>(() => new CliCommandOptionInfo(command.Object, property!, null!));
         }
@@ -22,7 +23,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void Ctor()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(DummyClass).GetProperty(nameof(DummyClass.NormalProperty))!;
+            var property = typeof(DummyClass).GetProperty(nameof(DummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)!;
             var attr = new CliCommandOptionAttribute("blub");
 
             var option = new CliCommandOptionInfo(command.Object, property, attr);
@@ -34,7 +35,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void GetterProperties()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(DummyClass).GetProperty(nameof(DummyClass.NormalProperty))!;
+            var property = typeof(DummyClass).GetProperty(nameof(DummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)!;
             var attr = new CliCommandOptionAttribute("blub")
             {
                 Default = new object(),

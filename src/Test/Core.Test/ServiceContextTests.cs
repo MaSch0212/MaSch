@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
@@ -11,6 +12,7 @@ namespace MaSch.Core.Test
     [TestClass]
     public class ServiceContextTests : TestClassBase
     {
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP012:Property should not return created disposable.", Justification = "Should be fine here")]
         private IServiceContext Context => Cache.GetValue(() => ServiceContext.CreateContext())!;
         private IDictionary<(Type Type, string? Name), object> ServiceDict => Cache.GetValue(() => GetServicesDict(Context))!;
         private IDictionary<Type, IDisposable> ViewsDict => Cache.GetValue(() => GetViewsDict(Context))!;
@@ -366,7 +368,7 @@ namespace MaSch.Core.Test
         }
 
         [TestMethod]
-        public void Dispose()
+        public void Dispose_()
         {
             var viewMock1 = new Mock<IServiceContext<string>>(MockBehavior.Strict);
             viewMock1.Setup(x => x.Dispose()).Verifiable(this, Times.Once());
@@ -386,13 +388,13 @@ namespace MaSch.Core.Test
 
         internal static IDictionary<(Type Type, string? Name), object> GetServicesDict(object? instance)
         {
-            var servicesField = typeof(ServiceContext).GetField("_services", BindingFlags.Instance | BindingFlags.NonPublic);
+            var servicesField = typeof(ServiceContext).GetField("_services", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             return (IDictionary<(Type, string?), object>)servicesField!.GetValue(instance)!;
         }
 
         internal static IDictionary<Type, IDisposable> GetViewsDict(object? instance)
         {
-            var servicesField = typeof(ServiceContext).GetField("_views", BindingFlags.Instance | BindingFlags.NonPublic);
+            var servicesField = typeof(ServiceContext).GetField("_views", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             return (IDictionary<Type, IDisposable>)servicesField!.GetValue(instance)!;
         }
     }
@@ -401,12 +403,13 @@ namespace MaSch.Core.Test
     public class ServicecontextTTests : TestClassBase
     {
         private Mock<IServiceContext> ContextMock => Cache.GetValue(() => CreateContextMock())!;
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP012:Property should not return created disposable.", Justification = "Should be fine here")]
         private IServiceContext<string> Context => Cache.GetValue(() => new ServiceContext<string>(ContextMock.Object))!;
 
         [TestMethod]
         public void Constructor()
         {
-            _ = new ServiceContext<string>(ContextMock.Object);
+            using var context = new ServiceContext<string>(ContextMock.Object);
 
             ContextMock.VerifyAdd(x => x.Changing += It.IsAny<ServiceContextEventHandler>(), Times.Once());
             ContextMock.VerifyAdd(x => x.Changed += It.IsAny<ServiceContextEventHandler>(), Times.Once());
@@ -476,7 +479,7 @@ namespace MaSch.Core.Test
         }
 
         [TestMethod]
-        public void Dispose()
+        public void Dispose_()
         {
             ContextMock
                 .SetupAdd(x => x.Changing += It.IsAny<ServiceContextEventHandler>())
@@ -493,6 +496,7 @@ namespace MaSch.Core.Test
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Mock is verified, no need to dispose")]
         public void ChangingEvent_WrongType()
         {
             ServiceContextEventHandler? contextHandler = null;
@@ -509,6 +513,7 @@ namespace MaSch.Core.Test
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Mock is verified, no need to dispose")]
         public void ChangingEvent_CorrectType()
         {
             ServiceContextEventHandler? contextHandler = null;
@@ -529,6 +534,7 @@ namespace MaSch.Core.Test
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Mock is verified, no need to dispose")]
         public void ChangingEvent_CorrectType_NullHandler()
         {
             ServiceContextEventHandler? contextHandler = null;
@@ -544,6 +550,7 @@ namespace MaSch.Core.Test
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Mock is verified, no need to dispose")]
         public void ChangedEvent_WrongType()
         {
             ServiceContextEventHandler? contextHandler = null;
@@ -560,6 +567,7 @@ namespace MaSch.Core.Test
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Mock is verified, no need to dispose")]
         public void ChangedEvent_CorrectType()
         {
             ServiceContextEventHandler? contextHandler = null;
@@ -580,6 +588,7 @@ namespace MaSch.Core.Test
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Mock is verified, no need to dispose")]
         public void ChangedEvent_CorrectType_NullHandler()
         {
             ServiceContextEventHandler? contextHandler = null;
@@ -606,7 +615,7 @@ namespace MaSch.Core.Test
     [TestClass]
     public class ServiceContextStaticTests : TestClassBase
     {
-        private static readonly FieldInfo InstanceField = typeof(ServiceContext).GetField("_instance", BindingFlags.Static | BindingFlags.NonPublic)!;
+        private static readonly FieldInfo InstanceField = typeof(ServiceContext).GetField("_instance", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)!;
 
         protected override void OnCleanupTest()
         {
@@ -635,7 +644,7 @@ namespace MaSch.Core.Test
         [TestMethod]
         public void CreateContext()
         {
-            var context = ServiceContext.CreateContext();
+            using var context = ServiceContext.CreateContext();
 
             Assert.IsNotNull(context);
             Assert.AreEqual(0, ServiceContextTests.GetServicesDict(context).Count);

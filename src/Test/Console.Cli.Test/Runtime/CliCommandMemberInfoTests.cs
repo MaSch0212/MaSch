@@ -15,7 +15,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void Ctor_NullChecks()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
             var ex = Assert.ThrowsException<TargetInvocationException>(() => Mocks.Create<CliCommandMemberInfo>(command.Object, null).Object);
             Assert.IsInstanceOfType<ArgumentNullException>(ex.InnerException);
@@ -27,7 +27,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void Ctor_IndexerProperty()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty("Item");
+            var property = typeof(AbstractDummyClass).GetProperty("Item", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
             Exception ex;
             ex = Assert.ThrowsException<TargetInvocationException>(() => Mocks.Create<CliCommandMemberInfo>(command.Object, property).Object);
@@ -39,7 +39,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void Ctor_StaticProperty()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.StaticProperty));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.StaticProperty), BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
 
             Exception ex;
             ex = Assert.ThrowsException<TargetInvocationException>(() => Mocks.Create<CliCommandMemberInfo>(command.Object, property).Object);
@@ -51,7 +51,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void Ctor_AbstractProperty()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.AbstractProperty));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.AbstractProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
             Exception ex;
             ex = Assert.ThrowsException<TargetInvocationException>(() => Mocks.Create<CliCommandMemberInfo>(command.Object, property).Object);
@@ -77,7 +77,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void Ctor_NormalProperty()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
             var member = Mocks.Create<CliCommandMemberInfo>(command.Object, property);
             var po = new PrivateObject(member.Object);
@@ -90,7 +90,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void Ctor_PrivateProperty()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty("PrivateProperty", BindingFlags.NonPublic | BindingFlags.Instance);
+            var property = typeof(AbstractDummyClass).GetProperty("PrivateProperty", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
             var member = Mocks.Create<CliCommandMemberInfo>(command.Object, property);
             var po = new PrivateObject(member.Object);
@@ -103,7 +103,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void PropertyInfos()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
             var member = Mocks.Create<CliCommandMemberInfo>(command.Object, property);
 
@@ -115,7 +115,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void GetValue_Null()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
             var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
             member.CallBase = true;
@@ -127,7 +127,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void GetValue_WithObject()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var obj = new DummyClass { NormalProperty = 4711 };
 
             var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
@@ -141,7 +141,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void SetValue_Null()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
             var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
             member.CallBase = true;
@@ -153,7 +153,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void SetValue_WithObject_SameType()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var obj = new DummyClass();
 
             var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
@@ -167,7 +167,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void SetValue_WithObject_Convert()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var obj = new DummyClass();
 
             var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
@@ -181,7 +181,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void SetValue_WithObject_Enumerable_PrevNull()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.FloatList));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.FloatList), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var obj = new DummyClass();
 
             var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
@@ -203,7 +203,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void SetValue_WithObject_Enumerable_PrevWithElements()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.FloatList));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.FloatList), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var obj = new DummyClass
             {
                 FloatList = new List<float>
@@ -243,7 +243,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void SetDefaultValue_Null()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
             var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
             member.CallBase = true;
@@ -255,7 +255,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void SetDefaultValue_WithObject_Enumerable()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.FloatList));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.FloatList), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var obj = new DummyClass
             {
                 FloatList = new List<float>
@@ -278,7 +278,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void SetDefaultValue_WithObject_ReferenceType()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.ObjectProperty));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.ObjectProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var obj = new DummyClass { ObjectProperty = new object() };
 
             var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
@@ -292,7 +292,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void SetDefaultValue_WithObject_ValueType()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var obj = new DummyClass { NormalProperty = 4711 };
 
             var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
@@ -306,7 +306,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void HasValue_Null()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
             var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
             member.CallBase = true;
@@ -318,7 +318,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void HasValue_NeverSet()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var obj = new DummyClass();
 
             var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
@@ -332,7 +332,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void HasValue_DefaultSet()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var obj = new DummyClass();
 
             var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
@@ -347,7 +347,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void HasValue_SetValueCalled()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var obj = new DummyClass();
 
             var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
@@ -362,7 +362,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void HasValue_SetValueCalledWithDefaultValue()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var obj = new DummyClass();
 
             var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
@@ -377,7 +377,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void HasValue_DefaultSetAfterSetValueCalled()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var obj = new DummyClass();
 
             var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
@@ -393,7 +393,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void HasValue_DifferentReferenceObjectsWithSameHashCode()
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty));
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var obj1 = new DummyClass();
             var obj2 = new DummyClass();
 

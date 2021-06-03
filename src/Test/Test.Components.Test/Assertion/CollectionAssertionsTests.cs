@@ -5,6 +5,7 @@ using Moq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace MaSch.Test.Components.Test.Assertion
@@ -1312,7 +1313,7 @@ namespace MaSch.Test.Components.Test.Assertion
         [TestMethod]
         public void AreCollectionsEqual_WithComparer_Success()
         {
-            var comparer = CreateEqualityComparerT(("Test", "Test"), ("Hello", "Hello"), ("blub", "blub"));
+            using var comparer = CreateEqualityComparerT(("Test", "Test"), ("Hello", "Hello"), ("blub", "blub"));
             AssertUnderTest.AreCollectionsEqual(new[] { "Test", "Hello", "blub" }, new[] { "Test", "Hello", "blub" }, comparer);
         }
 
@@ -1320,7 +1321,7 @@ namespace MaSch.Test.Components.Test.Assertion
         public void AreCollectionsEqual_WithComparer_Fail_MismatchingItem()
         {
             var nl = Environment.NewLine;
-            var comparer = CreateEqualityComparerT(("Test", "Test"), ("blub", "Hello"), ("Hello", "blub"));
+            using var comparer = CreateEqualityComparerT(("Test", "Test"), ("blub", "Hello"), ("Hello", "blub"));
             var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreCollectionsEqual(new string[] { "Test", "Hello", "blub" }, new[] { "Test", "blub", "Hello" }, comparer));
             Assert.AreEqual($"Assert.AreCollectionsEqual failed. WrongItems:<[{nl}\t[1] Expected:<Hello> Actual:<blub>,{nl}\t[2] Expected:<blub> Actual:<Hello>{nl}]>.", ex.Message);
         }
@@ -1329,7 +1330,7 @@ namespace MaSch.Test.Components.Test.Assertion
         public void AreCollectionsEqual_WithComparer_Fail_MissingItem()
         {
             var nl = Environment.NewLine;
-            var comparer = CreateEqualityComparerT(("Test", "Test"), ("Hello", "Hello"));
+            using var comparer = CreateEqualityComparerT(("Test", "Test"), ("Hello", "Hello"));
             var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreCollectionsEqual(new string[] { "Test", "Hello", "blub" }, new[] { "Test", "Hello" }, comparer));
             Assert.AreEqual($"Assert.AreCollectionsEqual failed. MissingItems:<[{nl}\tblub{nl}]>.", ex.Message);
         }
@@ -1338,7 +1339,7 @@ namespace MaSch.Test.Components.Test.Assertion
         public void AreCollectionsEqual_WithComparer_Fail_UnexpectedItem()
         {
             var nl = Environment.NewLine;
-            var comparer = CreateEqualityComparerT(("Test", "Test"), ("Hello", "Hello"));
+            using var comparer = CreateEqualityComparerT(("Test", "Test"), ("Hello", "Hello"));
             var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreCollectionsEqual(new string[] { "Test", "Hello" }, new[] { "Test", "Hello", "blub" }, comparer));
             Assert.AreEqual($"Assert.AreCollectionsEqual failed. UnexpectedItems:<[{nl}\tblub{nl}]>.", ex.Message);
         }
@@ -1347,7 +1348,7 @@ namespace MaSch.Test.Components.Test.Assertion
         public void AreCollectionsEqual_WithComparer_Fail_MismatchingAndMissingItems()
         {
             var nl = Environment.NewLine;
-            var comparer = CreateEqualityComparerT(("Test", "Test"), ("bbb", "Hello"));
+            using var comparer = CreateEqualityComparerT(("Test", "Test"), ("bbb", "Hello"));
             var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreCollectionsEqual(new string[] { "Test", "Hello", "blub", "blub2" }, new[] { "Test", "bbb" }, comparer));
             Assert.AreEqual($"Assert.AreCollectionsEqual failed. WrongItems:<[{nl}\t[1] Expected:<Hello> Actual:<bbb>{nl}]>. MissingItems:<[{nl}\tblub,{nl}\tblub2{nl}]>.", ex.Message);
         }
@@ -1356,7 +1357,7 @@ namespace MaSch.Test.Components.Test.Assertion
         public void AreCollectionsEqual_WithComparer_Fail_MismatchingAndUnexpectedItems()
         {
             var nl = Environment.NewLine;
-            var comparer = CreateEqualityComparerT(("Test", "Test"), ("bbb", "Hello"));
+            using var comparer = CreateEqualityComparerT(("Test", "Test"), ("bbb", "Hello"));
             var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreCollectionsEqual(new string[] { "Test", "Hello" }, new[] { "Test", "bbb", "blub", "blub2" }, comparer));
             Assert.AreEqual($"Assert.AreCollectionsEqual failed. WrongItems:<[{nl}\t[1] Expected:<Hello> Actual:<bbb>{nl}]>. UnexpectedItems:<[{nl}\tblub,{nl}\tblub2{nl}]>.", ex.Message);
         }
@@ -1365,7 +1366,7 @@ namespace MaSch.Test.Components.Test.Assertion
         public void AreCollectionsEqual_WithComparer_Fail_MismatchingItem_WithMessage()
         {
             var nl = Environment.NewLine;
-            var comparer = CreateEqualityComparerT(("Test", "Test"), ("blub", "Hello"), ("Hello", "blub"));
+            using var comparer = CreateEqualityComparerT(("Test", "Test"), ("blub", "Hello"), ("Hello", "blub"));
             var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreCollectionsEqual(new string[] { "Test", "Hello", "blub" }, new[] { "Test", "blub", "Hello" }, comparer, "This is my test"));
             Assert.AreEqual($"Assert.AreCollectionsEqual failed. WrongItems:<[{nl}\t[1] Expected:<Hello> Actual:<blub>,{nl}\t[2] Expected:<blub> Actual:<Hello>{nl}]>. This is my test", ex.Message);
         }
@@ -1374,7 +1375,7 @@ namespace MaSch.Test.Components.Test.Assertion
         public void AreCollectionsEqual_WithComparer_Fail_MissingItem_WithMessage()
         {
             var nl = Environment.NewLine;
-            var comparer = CreateEqualityComparerT(("Test", "Test"), ("Hello", "Hello"));
+            using var comparer = CreateEqualityComparerT(("Test", "Test"), ("Hello", "Hello"));
             var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreCollectionsEqual(new string[] { "Test", "Hello", "blub" }, new[] { "Test", "Hello" }, comparer, "This is my test"));
             Assert.AreEqual($"Assert.AreCollectionsEqual failed. MissingItems:<[{nl}\tblub{nl}]>. This is my test", ex.Message);
         }
@@ -1383,7 +1384,7 @@ namespace MaSch.Test.Components.Test.Assertion
         public void AreCollectionsEqual_WithComparer_Fail_UnexpectedItem_WithMessage()
         {
             var nl = Environment.NewLine;
-            var comparer = CreateEqualityComparerT(("Test", "Test"), ("Hello", "Hello"));
+            using var comparer = CreateEqualityComparerT(("Test", "Test"), ("Hello", "Hello"));
             var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreCollectionsEqual(new string[] { "Test", "Hello" }, new[] { "Test", "Hello", "blub" }, comparer, "This is my test"));
             Assert.AreEqual($"Assert.AreCollectionsEqual failed. UnexpectedItems:<[{nl}\tblub{nl}]>. This is my test", ex.Message);
         }
@@ -1392,7 +1393,7 @@ namespace MaSch.Test.Components.Test.Assertion
         public void AreCollectionsEqual_WithComparer_Fail_MismatchingAndMissingItems_WithMessage()
         {
             var nl = Environment.NewLine;
-            var comparer = CreateEqualityComparerT(("Test", "Test"), ("bbb", "Hello"));
+            using var comparer = CreateEqualityComparerT(("Test", "Test"), ("bbb", "Hello"));
             var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreCollectionsEqual(new string[] { "Test", "Hello", "blub", "blub2" }, new[] { "Test", "bbb" }, comparer, "This is my test"));
             Assert.AreEqual($"Assert.AreCollectionsEqual failed. WrongItems:<[{nl}\t[1] Expected:<Hello> Actual:<bbb>{nl}]>. MissingItems:<[{nl}\tblub,{nl}\tblub2{nl}]>. This is my test", ex.Message);
         }
@@ -1401,7 +1402,7 @@ namespace MaSch.Test.Components.Test.Assertion
         public void AreCollectionsEqual_WithComparer_Fail_MismatchingAndUnexpectedItems_WithMessage()
         {
             var nl = Environment.NewLine;
-            var comparer = CreateEqualityComparerT(("Test", "Test"), ("bbb", "Hello"));
+            using var comparer = CreateEqualityComparerT(("Test", "Test"), ("bbb", "Hello"));
             var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreCollectionsEqual(new string[] { "Test", "Hello" }, new[] { "Test", "bbb", "blub", "blub2" }, comparer, "This is my test"));
             Assert.AreEqual($"Assert.AreCollectionsEqual failed. WrongItems:<[{nl}\t[1] Expected:<Hello> Actual:<bbb>{nl}]>. UnexpectedItems:<[{nl}\tblub,{nl}\tblub2{nl}]>. This is my test", ex.Message);
         }
@@ -1461,6 +1462,7 @@ namespace MaSch.Test.Components.Test.Assertion
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Comparer calls should not be validated here.")]
         public void AreCollectionsNotEqual_WithComparer_Success_MismatchingItem()
         {
             var comparer = CreateEqualityComparerT(("Test", "Test"), ("blub", "Hello"), ("Hello", "blub"));
@@ -1468,6 +1470,7 @@ namespace MaSch.Test.Components.Test.Assertion
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Comparer calls should not be validated here.")]
         public void AreCollectionsNotEqual_WithComparer_Success_MissingItem()
         {
             var comparer = CreateEqualityComparerT(("Test", "Test"), ("Hello", "Hello"));
@@ -1475,6 +1478,7 @@ namespace MaSch.Test.Components.Test.Assertion
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Comparer calls should not be validated here.")]
         public void AreCollectionsNotEqual_WithComparer_Success_UnexpectedItem()
         {
             var comparer = CreateEqualityComparerT(("Test", "Test"), ("Hello", "Hello"));
@@ -1484,7 +1488,7 @@ namespace MaSch.Test.Components.Test.Assertion
         [TestMethod]
         public void AreCollectionsNotEqual_WithComparer_Fail()
         {
-            var comparer = CreateEqualityComparerT(("Test", "Test"), ("Hello", "Hello"), ("blub", "blub"));
+            using var comparer = CreateEqualityComparerT(("Test", "Test"), ("Hello", "Hello"), ("blub", "blub"));
             var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreCollectionsNotEqual(new[] { "Test", "Hello", "blub" }, new[] { "Test", "Hello", "blub" }, comparer));
             Assert.AreEqual($"Assert.AreCollectionsNotEqual failed.", ex.Message);
         }
@@ -1492,7 +1496,7 @@ namespace MaSch.Test.Components.Test.Assertion
         [TestMethod]
         public void AreCollectionsNotEqual_WithComparer_Fail_WithMessage()
         {
-            var comparer = CreateEqualityComparerT(("Test", "Test"), ("Hello", "Hello"), ("blub", "blub"));
+            using var comparer = CreateEqualityComparerT(("Test", "Test"), ("Hello", "Hello"), ("blub", "blub"));
             var ex = Assert.ThrowsException<AssertFailedException>(() => AssertUnderTest.AreCollectionsNotEqual(new[] { "Test", "Hello", "blub" }, new[] { "Test", "Hello", "blub" }, comparer, "This is my test"));
             Assert.AreEqual($"Assert.AreCollectionsNotEqual failed. This is my test", ex.Message);
         }

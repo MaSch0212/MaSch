@@ -45,9 +45,12 @@ namespace MaSch.Native.Windows.Explorer
             }
 
             var iconPath = $"\"{openWith}\",{iconId}";
-            if (openMethod?.OpenSubKey("DefaultIcon")?.GetValue(string.Empty)?.ToString() != iconPath)
+            var iconKey = openMethod?.OpenSubKey("DefaultIcon");
+            if (iconKey?.GetValue(string.Empty)?.ToString() != iconPath)
             {
-                openMethod?.CreateSubKey("DefaultIcon")?.SetValue(string.Empty, $"\"{openWith}\",{iconId}");
+                iconKey?.Dispose();
+                iconKey = openMethod?.CreateSubKey("DefaultIcon");
+                iconKey?.SetValue(string.Empty, $"\"{openWith}\",{iconId}");
                 hasChange = true;
             }
 
@@ -59,20 +62,30 @@ namespace MaSch.Native.Windows.Explorer
             }
 
             var command = $"\"{openWith}\" \"%1\"";
-            if (shell?.OpenSubKey("open")?.OpenSubKey("command")?.GetValue(string.Empty)?.ToString() != command)
+
+            var openShellKey = shell?.OpenSubKey("open");
+            var commandKey = openShellKey?.OpenSubKey("command");
+            if (commandKey?.GetValue(string.Empty)?.ToString() != command)
             {
-                shell?.CreateSubKey("open")?.CreateSubKey("command")?.SetValue(string.Empty, "\"" + openWith + "\"" + " \"%1\"");
+                openShellKey?.Dispose();
+                commandKey?.Dispose();
+                openShellKey = shell?.CreateSubKey("open");
+                commandKey = openShellKey?.CreateSubKey("command");
+                commandKey?.SetValue(string.Empty, "\"" + openWith + "\"" + " \"%1\"");
                 hasChange = true;
             }
 
-            shell?.Close();
-            openMethod?.Close();
-            baseKey?.Close();
-            root?.Close();
+            shell?.Dispose();
+            openMethod?.Dispose();
+            baseKey?.Dispose();
+            root?.Dispose();
+            iconKey?.Dispose();
+            openShellKey?.Dispose();
+            commandKey?.Dispose();
 
             if (hasChange)
             {
-                var currentUser = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\" + extension, true);
+                using var currentUser = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\" + extension, true);
                 if (currentUser != null)
                 {
                     currentUser.DeleteSubKey("UserChoice", false);

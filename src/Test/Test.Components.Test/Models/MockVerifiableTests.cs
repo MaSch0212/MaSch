@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace MaSch.Test.Components.Test.Models
@@ -9,11 +10,12 @@ namespace MaSch.Test.Components.Test.Models
     [TestClass]
     public class MockVerifiableTests : TestClassBase
     {
-        private static readonly FieldInfo? _verifyActionField = typeof(MockVerifiable).GetField("_verifyAction", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly FieldInfo? _defaultTimesField = typeof(MockVerifiable).GetField("_defaultTimes", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly FieldInfo? _defaultFailMessageField = typeof(MockVerifiable).GetField("_defaultFailMessage", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly FieldInfo? _verifyActionField = typeof(MockVerifiable).GetField("_verifyAction", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+        private static readonly FieldInfo? _defaultTimesField = typeof(MockVerifiable).GetField("_defaultTimes", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+        private static readonly FieldInfo? _defaultFailMessageField = typeof(MockVerifiable).GetField("_defaultFailMessage", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Would fail test.")]
         public void Ctor_Action()
         {
             var actionMock = new Mock<MockVerification>(MockBehavior.Strict);
@@ -26,10 +28,11 @@ namespace MaSch.Test.Components.Test.Models
         [TestMethod]
         public void Ctor_ActionNull()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new MockVerifiable(null!));
+            Assert.ThrowsException<ArgumentNullException>(() => ((IDisposable)new MockVerifiable(null!)).Dispose());
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Would fail test.")]
         public void Ctor_Action_Times()
         {
             var actionMock = new Mock<MockVerification>(MockBehavior.Strict);
@@ -42,10 +45,11 @@ namespace MaSch.Test.Components.Test.Models
         [TestMethod]
         public void Ctor_ActionNull_Times()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new MockVerifiable(null!, Times.Once()));
+            Assert.ThrowsException<ArgumentNullException>(() => ((IDisposable)new MockVerifiable(null!, Times.Once())).Dispose());
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Would fail test.")]
         public void Ctor_Action_Times_Message()
         {
             var actionMock = new Mock<MockVerification>(MockBehavior.Strict);
@@ -58,10 +62,11 @@ namespace MaSch.Test.Components.Test.Models
         [TestMethod]
         public void Ctor_ActionNull_Times_Message()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new MockVerifiable(null!, Times.Once(), "My message"));
+            Assert.ThrowsException<ArgumentNullException>(() => ((IDisposable)new MockVerifiable(null!, Times.Once(), "My message")).Dispose());
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Would fail test.")]
         public void Ctor_Action_Times_MessageNull()
         {
             var actionMock = new Mock<MockVerification>(MockBehavior.Strict);
@@ -76,7 +81,7 @@ namespace MaSch.Test.Components.Test.Models
         {
             var actionMock = new Mock<MockVerification>(MockBehavior.Strict);
             actionMock.Setup(x => x(Times.Once(), "My message"));
-            var verifiable = new MockVerifiable(actionMock.Object, Times.Once(), "My message");
+            using var verifiable = new MockVerifiable(actionMock.Object, Times.Once(), "My message");
 
             verifiable.Verify(null, null);
 
@@ -84,6 +89,7 @@ namespace MaSch.Test.Components.Test.Models
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Would fail test.")]
         public void Verify_WithTimes()
         {
             var actionMock = new Mock<MockVerification>(MockBehavior.Strict);
@@ -96,6 +102,7 @@ namespace MaSch.Test.Components.Test.Models
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Would fail test.")]
         public void Verify_WithMessage()
         {
             var actionMock = new Mock<MockVerification>(MockBehavior.Strict);

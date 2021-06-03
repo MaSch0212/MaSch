@@ -471,8 +471,8 @@ namespace MaSch.Core.Extensions
             Guard.NotNull(action, nameof(action));
 
             var tcs = new TaskCompletionSource<object>();
-            token.Register(() => tcs.TrySetCanceled(), false);
-            await Task.WhenAny(Task.WhenAll(enumerable.Select(action)), tcs.Task);
+            using (token.Register(() => tcs.TrySetCanceled(), false))
+                await Task.WhenAny(Task.WhenAll(enumerable.Select(action)), tcs.Task);
         }
 
         /// <summary>

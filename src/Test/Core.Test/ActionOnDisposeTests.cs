@@ -1,6 +1,7 @@
 ﻿using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 namespace MaSch.Core.Test
@@ -11,14 +12,15 @@ namespace MaSch.Core.Test
         [TestMethod]
         public void Constructor_NullChecks()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new ActionOnDispose((Action)null!));
+            Assert.ThrowsException<ArgumentNullException>(() => new ActionOnDispose((Action)null!).Dispose());
             Assert.IsNotNull(new ActionOnDispose(() => { }));
 
-            Assert.ThrowsException<ArgumentNullException>(() => new ActionOnDispose((Action<TimeSpan>)null!));
+            Assert.ThrowsException<ArgumentNullException>(() => new ActionOnDispose((Action<TimeSpan>)null!).Dispose());
             Assert.IsNotNull(new ActionOnDispose((TimeSpan t) => { }));
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP017:Prefer using.", Justification = "Explicitly calling Dispose makes more sense in this test")]
         public void Dispose_WithoutTime()
         {
             int callCount = 0;
@@ -31,6 +33,7 @@ namespace MaSch.Core.Test
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP017:Prefer using.", Justification = "Explicitly calling Dispose makes more sense in this test")]
         public void Dispose_WithTime()
         {
             int callCount = 0;

@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Moq.Protected;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MaSch.Test.Components.Test
 {
@@ -20,6 +21,7 @@ namespace MaSch.Test.Components.Test
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP004:Don't ignore created IDisposable.", Justification = "Fine here")]
         public void CleanupTest_()
         {
             var mock = CreateTestClassMock(false);
@@ -31,9 +33,10 @@ namespace MaSch.Test.Components.Test
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP004:Don't ignore created IDisposable.", Justification = "Fine here")]
         public void CleanupTest_Cache_Clear()
         {
-            var cache = new Cache();
+            using var cache = new Cache();
             cache.SetValue("blub", "test");
             var mock = CreateTestClassMock(false);
             mock.Protected().SetupGet<bool>("CleanupCacheAfterTest").Returns(true);
@@ -54,9 +57,10 @@ namespace MaSch.Test.Components.Test
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP004:Don't ignore created IDisposable.", Justification = "Fine here")]
         public void CleanupTest_Cache_NoClear()
         {
-            var cache = new Cache();
+            using var cache = new Cache();
             cache.SetValue("blub", "test");
             var mock = CreateTestClassMock(false);
             mock.Protected().SetupGet<bool>("CleanupCacheAfterTest").Returns(false);
@@ -82,7 +86,7 @@ namespace MaSch.Test.Components.Test
         {
             var verifiableMock = new Mock<IMockVerifiable>(MockBehavior.Strict);
             using var v2 = verifiableMock.Setup(x => x.Verify(null, null)).Verifiable(Times.Once());
-            var verifiables = new MockVerifiableCollection { verifiableMock.Object };
+            using var verifiables = new MockVerifiableCollection { verifiableMock.Object };
             var mock = CreateTestClassMock(false);
             mock.Protected().SetupGet<bool>("CleanupCacheAfterTest").Returns(false);
             mock.SetupGet(x => x.Verifiables).Returns(verifiables);
@@ -98,7 +102,7 @@ namespace MaSch.Test.Components.Test
         {
             var verifiableMock = new Mock<IMockVerifiable>(MockBehavior.Strict);
             using var v2 = verifiableMock.Setup(x => x.Verify(null, null)).Verifiable(Times.Never());
-            var verifiables = new MockVerifiableCollection { verifiableMock.Object };
+            using var verifiables = new MockVerifiableCollection { verifiableMock.Object };
             var mock = CreateTestClassMock(false, out var testContextMock);
             testContextMock.Setup(x => x.CurrentTestOutcome).Returns(UnitTestOutcome.Failed);
             mock.Protected().SetupGet<bool>("CleanupCacheAfterTest").Returns(false);

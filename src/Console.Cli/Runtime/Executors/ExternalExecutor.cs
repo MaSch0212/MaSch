@@ -106,7 +106,7 @@ namespace MaSch.Console.Cli.Runtime.Executors
             var pType = parameters.GetType();
             var type = types.Contains(pType)
                 ? pType
-                : types.FirstOrDefault(x => x.IsAssignableFrom(pType));
+                : types.FirstOrDefault(x => x.IsInstanceOfType(parameters));
             if (type != null)
             {
                 var validateMethod = typeof(ICliValidator<>).MakeGenericType(type).GetMethod(nameof(ICliValidator<object>.ValidateOptions))!;

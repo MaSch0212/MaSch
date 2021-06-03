@@ -4,6 +4,7 @@ using MaSch.Core.Observable;
 using MaSch.Presentation.Wpf.Commands;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Printing;
 using System.Reflection;
@@ -277,7 +278,8 @@ namespace MaSch.Presentation.Wpf.Printing
             State = PrintTaskState.Preparing;
             var th = new Thread(() =>
             {
-                using var pq = new PrintQueue(new PrintServer(pqServerName), pqName);
+                using var ps = new PrintServer(pqServerName);
+                using var pq = new PrintQueue(ps, pqName);
                 var document = new FixedDocument();
                 document.DocumentPaginator.PageSize = IsLandscape ? new Size(1142, 807) : new Size(807, 1142);
 
@@ -341,7 +343,8 @@ namespace MaSch.Presentation.Wpf.Printing
 
             await Task.Run(() =>
             {
-                using var pq = new PrintQueue(new PrintServer(pqServerName), pqName);
+                using var ps = new PrintServer(pqServerName);
+                using var pq = new PrintQueue(ps, pqName);
                 PrintSystemJobInfo? p = null;
                 while (th.ThreadState == ThreadState.Running || th.ThreadState == ThreadState.WaitSleepJoin || (Progress < 100 && State != PrintTaskState.Cancelled) ||
                     State == PrintTaskState.Preparing || State == PrintTaskState.WaitingForPrint)
@@ -349,7 +352,8 @@ namespace MaSch.Presentation.Wpf.Printing
                     var prevP = p;
                     try
                     {
-                        p = pq.GetPrintJobInfoCollection().FirstOrDefault(j => j.Name == jobName);
+                        using var pjic = pq.GetPrintJobInfoCollection();
+                        p = pjic.FirstOrDefault(j => j.Name == jobName);
                     }
                     catch
                     {
@@ -410,6 +414,7 @@ namespace MaSch.Presentation.Wpf.Printing
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP007:Don't dispose injected.", Justification = "Should be fine")]
         public void Dispose()
         {
             PrintQueue?.Dispose();

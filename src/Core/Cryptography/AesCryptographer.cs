@@ -94,7 +94,7 @@ namespace MaSch.Core.Cryptography
 
         private void EncryptImpl(Stream output, Stream input, string passPhrase, byte[]? saltBytes)
         {
-            var password = new Rfc2898DeriveBytes(passPhrase, saltBytes ?? DefaultSaltBytes);
+            using var password = new Rfc2898DeriveBytes(passPhrase, saltBytes ?? DefaultSaltBytes);
             var key = password.GetBytes(KeySize / 8);
             using var aes = new AesManaged();
             var encryptor = aes.CreateEncryptor(key, _initVector);
@@ -143,7 +143,7 @@ namespace MaSch.Core.Cryptography
 
         private void DecryptImpl(Stream output, Stream input, string passPhrase, byte[]? saltBytes)
         {
-            var password = new Rfc2898DeriveBytes(passPhrase, saltBytes ?? DefaultSaltBytes);
+            using var password = new Rfc2898DeriveBytes(passPhrase, saltBytes ?? DefaultSaltBytes);
             var key = password.GetBytes(KeySize / 8);
             using var aes = new AesManaged();
             var decryptor = aes.CreateDecryptor(key, _initVector);

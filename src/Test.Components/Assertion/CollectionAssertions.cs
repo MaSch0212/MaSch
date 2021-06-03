@@ -653,6 +653,7 @@ namespace MaSch.Test
         /// <param name="actual">The second collection to compare. This is the collection produced by the code under test.</param>
         /// <param name="comparer">The comparer used to determine if an elements from <paramref name="actual"/> is equal to an element in <paramref name="expected"/>.</param>
         /// <param name="message">The message to include in the exception when <paramref name="actual" /> is not equal to <paramref name="expected" />. The message is shown in test results.</param>
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "False positive.")]
         public static void AreCollectionsEqual<T>(this AssertBase assert, IEnumerable<T> expected, IEnumerable<T> actual, IEqualityComparer<T> comparer, string? message)
         {
             Guard.NotNull(expected, nameof(expected));

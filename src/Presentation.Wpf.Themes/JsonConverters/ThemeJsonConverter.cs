@@ -25,7 +25,8 @@ namespace MaSch.Presentation.Wpf.JsonConverters
         public override ITheme ReadJson(JsonReader reader, Type objectType, ITheme? existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             var jToken = JToken.ReadFrom(reader);
-            var result = serializer.Deserialize<Theme>(jToken.CreateReader()) ?? new Theme();
+            using var jReader = jToken.CreateReader();
+            var result = serializer.Deserialize<Theme>(jReader) ?? new Theme();
 
             var mergedThemesToken = jToken["MergedThemes"];
 

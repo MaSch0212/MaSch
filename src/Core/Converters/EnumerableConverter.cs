@@ -145,7 +145,7 @@ namespace MaSch.Core.Converters
                     }
 
                     if (paramTypes.Length == 0)
-                        result = ctor.Invoke(Array.Empty<object>());
+                        result = ctor.Invoke(null);
                     else if (paramTypes.Length == 1)
                         result = ctor.Invoke(new object?[] { convertManager.Convert(GetCollection().Count, paramTypes[0], formatProvider) });
 

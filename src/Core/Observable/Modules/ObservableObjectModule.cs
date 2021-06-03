@@ -76,9 +76,9 @@ namespace MaSch.Core.Observable.Modules
             var propertyValue = property.GetValue(_observableObject);
             if (propertyValue != null)
             {
-                var method = propertyValue.GetType().GetMethod("RaiseCanExecuteChanged", Array.Empty<Type>());
+                var method = propertyValue.GetType().GetMethod("RaiseCanExecuteChanged", Type.EmptyTypes);
                 if (method != null)
-                    method.Invoke(propertyValue, Array.Empty<object>());
+                    method.Invoke(propertyValue, null);
             }
         }
 

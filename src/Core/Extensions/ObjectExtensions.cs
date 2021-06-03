@@ -184,7 +184,7 @@ namespace MaSch.Core.Extensions
             var cloneMethod = obj?.GetType().GetMethod("Clone", BindingFlags.Public | BindingFlags.Instance);
             if (cloneMethod != null)
             {
-                clone = cloneMethod.Invoke(obj, Array.Empty<object>()) is T t ? t : default;
+                clone = cloneMethod.Invoke(obj, null) is T t ? t : default;
                 return true;
             }
 

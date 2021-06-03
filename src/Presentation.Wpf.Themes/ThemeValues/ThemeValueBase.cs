@@ -108,6 +108,7 @@ namespace MaSch.Presentation.Wpf.ThemeValues
             => RawValue?.GetHashCode() ?? 0;
 
         /// <inheritdoc/>
+        [SuppressMessage("ReflectionAnalyzers.SystemReflection", "REFL026:No parameterless constructor defined for this object.", Justification = "Implementation of this abstract class is expected to have an empty constrcutor.")]
         public virtual object Clone()
         {
             var result = (IThemeValue)Activator.CreateInstance(GetType())!;

@@ -53,6 +53,7 @@ namespace MaSch.Test
         /// <param name="setup">The setup to verify.</param>
         /// <param name="verifiable">The created verifiable object.</param>
         /// <returns>The same instance as this method is called on.</returns>
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP003:Dispose previous before re-assigning.", Justification = "The caller would not expect this.")]
         public static T Verifiable<T>(this T setup, out IMockVerifiable verifiable)
             where T : class, IVerifies
             => VerifiableImpl(setup, out verifiable, Times.AtLeastOnce(), null);
@@ -65,6 +66,7 @@ namespace MaSch.Test
         /// <param name="verifiable">The created verifiable object.</param>
         /// <param name="times">The number of times a method is expected to be called.</param>
         /// <returns>The same instance as this method is called on.</returns>
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP003:Dispose previous before re-assigning.", Justification = "The caller would not expect this.")]
         public static T Verifiable<T>(this T setup, out IMockVerifiable verifiable, Times times)
             where T : class, IVerifies
             => VerifiableImpl(setup, out verifiable, times, null);
@@ -78,6 +80,7 @@ namespace MaSch.Test
         /// <param name="times">The number of times a method is expected to be called.</param>
         /// <param name="failMessage">Message to show if verification fails.</param>
         /// <returns>The same instance as this method is called on.</returns>
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP003:Dispose previous before re-assigning.", Justification = "The caller would not expect this.")]
         public static T Verifiable<T>(this T setup, out IMockVerifiable verifiable, Times times, string? failMessage)
             where T : class, IVerifies
             => VerifiableImpl(setup, out verifiable, times, failMessage);

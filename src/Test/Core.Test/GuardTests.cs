@@ -243,7 +243,7 @@ namespace MaSch.Core.Test
         [TestMethod]
         public void OfType_AllowedTypes_EmptyArray()
         {
-            var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType(1, "MyParamName", Array.Empty<Type>()));
+            var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType(1, "MyParamName", Type.EmptyTypes));
 
             Assert.AreEqual("allowedTypes", ex.ParamName);
         }
@@ -305,7 +305,7 @@ namespace MaSch.Core.Test
         [TestMethod]
         public void OfType_AllowedTypes_AllowNull_EmptyArray()
         {
-            var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType(1, "MyParamName", true, Array.Empty<Type>()));
+            var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType(1, "MyParamName", true, Type.EmptyTypes));
 
             Assert.AreEqual("allowedTypes", ex.ParamName);
         }

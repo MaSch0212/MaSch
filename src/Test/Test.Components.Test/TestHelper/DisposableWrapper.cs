@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MaSch.Test.Components.Test.TestHelper
 {
@@ -14,6 +15,7 @@ namespace MaSch.Test.Components.Test.TestHelper
             Object = @object;
         }
 
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP007:Don't dispose injected.", Justification = "This behavior is expected by the caller.")]
         public void Dispose() => _disposable.Dispose();
     }
 }

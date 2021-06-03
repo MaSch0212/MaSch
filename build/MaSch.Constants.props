@@ -24,6 +24,8 @@
     <SystemComponentModelAnnotationsVersion>5.0.0</SystemComponentModelAnnotationsVersion>
     <PrismWpfVersion>[7.2.0.1367,8.0.0)</PrismWpfVersion>
     <AvaloniaVersion>0.10.3</AvaloniaVersion>
+    <ReflectionAnalyzersVersion>0.1.22-dev</ReflectionAnalyzersVersion>
+    <IDisposableAnalyzersVersion>3.4.13</IDisposableAnalyzersVersion>
 
     <!-- TargetFrameworks -->
     <TfmNetFramework>net48</TfmNetFramework>

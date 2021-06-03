@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace MaSch.Test.Components.Test.Extensions
@@ -9,11 +10,11 @@ namespace MaSch.Test.Components.Test.Extensions
     [TestClass]
     public class MoqExtensionsTests : TestClassBase
     {
-        private static readonly FieldInfo SetupPhraseTypeField = typeof(MoqExtensions).GetField("_setupPhraseType", BindingFlags.NonPublic | BindingFlags.Static)!;
-        private static readonly FieldInfo SetupPropertyField = typeof(MoqExtensions).GetField("_setupProperty", BindingFlags.NonPublic | BindingFlags.Static)!;
-        private static readonly FieldInfo ExpressionPropertyField = typeof(MoqExtensions).GetField("_expressionProperty", BindingFlags.NonPublic | BindingFlags.Static)!;
-        private static readonly FieldInfo MockPropertyField = typeof(MoqExtensions).GetField("_mockProperty", BindingFlags.NonPublic | BindingFlags.Static)!;
-        private static readonly FieldInfo GeneralVerifyMethodField = typeof(MoqExtensions).GetField("_generalVerifyMethod", BindingFlags.NonPublic | BindingFlags.Static)!;
+        private static readonly FieldInfo SetupPhraseTypeField = typeof(MoqExtensions).GetField("_setupPhraseType", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)!;
+        private static readonly FieldInfo SetupPropertyField = typeof(MoqExtensions).GetField("_setupProperty", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)!;
+        private static readonly FieldInfo ExpressionPropertyField = typeof(MoqExtensions).GetField("_expressionProperty", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)!;
+        private static readonly FieldInfo MockPropertyField = typeof(MoqExtensions).GetField("_mockProperty", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)!;
+        private static readonly FieldInfo GeneralVerifyMethodField = typeof(MoqExtensions).GetField("_generalVerifyMethod", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)!;
 
         protected override void OnInitializeTest()
         {
@@ -112,7 +113,7 @@ namespace MaSch.Test.Components.Test.Extensions
             SetupPropertyField.SetValue(null, null);
             var mock = new Mock<Action>();
 
-            Assert.ThrowsException<Exception>(() => MoqExtensions.Verifiable(mock.Setup(x => x()), Times.Once()));
+            Assert.ThrowsException<Exception>(() => MoqExtensions.Verifiable(mock.Setup(x => x()), Times.Once()).Dispose());
         }
 
         [TestMethod]
@@ -121,7 +122,7 @@ namespace MaSch.Test.Components.Test.Extensions
             ExpressionPropertyField.SetValue(null, null);
             var mock = new Mock<Action>();
 
-            Assert.ThrowsException<Exception>(() => MoqExtensions.Verifiable(mock.Setup(x => x()), Times.Once()));
+            Assert.ThrowsException<Exception>(() => MoqExtensions.Verifiable(mock.Setup(x => x()), Times.Once()).Dispose());
         }
 
         [TestMethod]
@@ -130,10 +131,11 @@ namespace MaSch.Test.Components.Test.Extensions
             MockPropertyField.SetValue(null, null);
             var mock = new Mock<Action>();
 
-            Assert.ThrowsException<Exception>(() => MoqExtensions.Verifiable(mock.Setup(x => x()), Times.Once()));
+            Assert.ThrowsException<Exception>(() => MoqExtensions.Verifiable(mock.Setup(x => x()), Times.Once()).Dispose());
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Would lead to failing test")]
         public void Verifiable_NullGeneralVerifyMethod()
         {
             GeneralVerifyMethodField.SetValue(null, null);
@@ -145,6 +147,7 @@ namespace MaSch.Test.Components.Test.Extensions
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Would lead to failing test")]
         public void Verifiable_Success()
         {
             var mock = new Mock<Action>();
@@ -156,6 +159,7 @@ namespace MaSch.Test.Components.Test.Extensions
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Would lead to failing test")]
         public void Verifiable_NoParams()
         {
             var mock = new Mock<Action>();
@@ -167,6 +171,7 @@ namespace MaSch.Test.Components.Test.Extensions
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Would lead to failing test")]
         public void Verifiable_Times()
         {
             var mock = new Mock<Action>();
@@ -178,6 +183,7 @@ namespace MaSch.Test.Components.Test.Extensions
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Would lead to failing test")]
         public void Verifiable_Times_FailMessage()
         {
             var mock = new Mock<Action>();
@@ -222,6 +228,7 @@ namespace MaSch.Test.Components.Test.Extensions
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Would lead to failing test")]
         public void Verifiable_Collection_NoParams()
         {
             var mock = new Mock<Action>();
@@ -234,6 +241,7 @@ namespace MaSch.Test.Components.Test.Extensions
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Would lead to failing test")]
         public void Verifiable_Collection_Times()
         {
             var mock = new Mock<Action>();
@@ -246,6 +254,7 @@ namespace MaSch.Test.Components.Test.Extensions
         }
 
         [TestMethod]
+        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Would lead to failing test")]
         public void Verifiable_Collection_Times_FailMessage()
         {
             var mock = new Mock<Action>();
