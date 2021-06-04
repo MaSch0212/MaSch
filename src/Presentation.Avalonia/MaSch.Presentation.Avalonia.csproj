@@ -14,7 +14,7 @@
 
     <!-- Package Info -->
     <Description>Contains supporting code for .NET Avalonia applications.</Description>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <PackageTags>masch presentation ui frontend avalonia</PackageTags>
   </PropertyGroup>
 
