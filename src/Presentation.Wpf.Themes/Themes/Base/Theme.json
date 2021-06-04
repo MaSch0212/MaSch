@@ -1884,33 +1884,17 @@
       "Type": "SolidColorBrush",
       "Value": "{Bind StatusMessageSuccessBrush}"
     },
-    "ExtendedSplitViewContentSuccessIcon": {
-      "Type": "Icon",
-      "Value": "{Bind StatusMessageSuccessIcon}"
-    },
     "ExtendedSplitViewContentFailureBrush": {
       "Type": "SolidColorBrush",
       "Value": "{Bind StatusMessageFailureBrush}"
-    },
-    "ExtendedSplitViewContentFailureIcon": {
-      "Type": "Icon",
-      "Value": "{Bind StatusMessageFailureIcon}"
     },
     "ExtendedSplitViewContentInformationBrush": {
       "Type": "SolidColorBrush",
       "Value": "{Bind StatusMessageInformationBrush}"
     },
-    "ExtendedSplitViewContentInformationIcon": {
-      "Type": "Icon",
-      "Value": "{Bind StatusMessageInformationIcon}"
-    },
     "ExtendedSplitViewContentWarningBrush": {
       "Type": "SolidColorBrush",
       "Value": "{Bind StatusMessageWarningBrush}"
-    },
-    "ExtendedSplitViewContentWarningIcon": {
-      "Type": "Icon",
-      "Value": "{Bind StatusMessageWarningIcon}"
     },
 
 

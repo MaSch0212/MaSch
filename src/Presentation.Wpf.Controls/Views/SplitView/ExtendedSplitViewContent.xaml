@@ -12,10 +12,10 @@
         <Setter Property="Margin" Value="10" />
         <Setter Property="CallCloseAsync" Value="True" />
         <Setter Property="CallOpenAsync" Value="True" />
-        <Setter Property="SuccessMessageIcon" Value="{m:ThemeValue Key=ExtendedSplitViewContentSuccessIcon}" />
-        <Setter Property="FailureMessageIcon" Value="{m:ThemeValue Key=ExtendedSplitViewContentFailureIcon}" />
-        <Setter Property="InformationMessageIcon" Value="{m:ThemeValue Key=ExtendedSplitViewContentInformationIcon}" />
-        <Setter Property="WarningMessageIcon" Value="{m:ThemeValue Key=ExtendedSplitViewContentWarningIcon}" />
+        <Setter Property="SuccessMessageIcon" Value="{m:ThemeValue Key=StatusMessageSuccessIcon}" />
+        <Setter Property="FailureMessageIcon" Value="{m:ThemeValue Key=StatusMessageFailureIcon}" />
+        <Setter Property="InformationMessageIcon" Value="{m:ThemeValue Key=StatusMessageInformationIcon}" />
+        <Setter Property="WarningMessageIcon" Value="{m:ThemeValue Key=StatusMessageWarningIcon}" />
         <Setter Property="SuccessMessageBrush" Value="{m:ThemeValue Key=ExtendedSplitViewContentSuccessBrush}" />
         <Setter Property="FailureMessageBrush" Value="{m:ThemeValue Key=ExtendedSplitViewContentFailureBrush}" />
         <Setter Property="InformationMessageBrush" Value="{m:ThemeValue Key=ExtendedSplitViewContentInformationBrush}" />
