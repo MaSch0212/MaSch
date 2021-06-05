@@ -1879,24 +1879,6 @@
       "Stretch": "Fill"
     },
 
-    // Extended Split View Content
-    "ExtendedSplitViewContentSuccessBrush": {
-      "Type": "SolidColorBrush",
-      "Value": "{Bind StatusMessageSuccessBrush}"
-    },
-    "ExtendedSplitViewContentFailureBrush": {
-      "Type": "SolidColorBrush",
-      "Value": "{Bind StatusMessageFailureBrush}"
-    },
-    "ExtendedSplitViewContentInformationBrush": {
-      "Type": "SolidColorBrush",
-      "Value": "{Bind StatusMessageInformationBrush}"
-    },
-    "ExtendedSplitViewContentWarningBrush": {
-      "Type": "SolidColorBrush",
-      "Value": "{Bind StatusMessageWarningBrush}"
-    },
-
 
 
 

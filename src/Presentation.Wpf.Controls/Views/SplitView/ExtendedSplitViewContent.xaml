@@ -16,10 +16,10 @@
         <Setter Property="FailureMessageIcon" Value="{m:ThemeValue Key=StatusMessageFailureIcon}" />
         <Setter Property="InformationMessageIcon" Value="{m:ThemeValue Key=StatusMessageInformationIcon}" />
         <Setter Property="WarningMessageIcon" Value="{m:ThemeValue Key=StatusMessageWarningIcon}" />
-        <Setter Property="SuccessMessageBrush" Value="{m:ThemeValue Key=ExtendedSplitViewContentSuccessBrush}" />
-        <Setter Property="FailureMessageBrush" Value="{m:ThemeValue Key=ExtendedSplitViewContentFailureBrush}" />
-        <Setter Property="InformationMessageBrush" Value="{m:ThemeValue Key=ExtendedSplitViewContentInformationBrush}" />
-        <Setter Property="WarningMessageBrush" Value="{m:ThemeValue Key=ExtendedSplitViewContentWarningBrush}" />
+        <Setter Property="SuccessMessageBrush" Value="{m:ThemeValue Key=StatusMessageSuccessBrush}" />
+        <Setter Property="FailureMessageBrush" Value="{m:ThemeValue Key=StatusMessageFailureBrush}" />
+        <Setter Property="InformationMessageBrush" Value="{m:ThemeValue Key=StatusMessageInformationBrush}" />
+        <Setter Property="WarningMessageBrush" Value="{m:ThemeValue Key=StatusMessageWarningBrush}" />
         <Setter Property="ToolbarVisibility" Value="Visible" />
         <Setter Property="Template">
             <Setter.Value>
