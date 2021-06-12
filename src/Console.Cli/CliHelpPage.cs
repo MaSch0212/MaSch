@@ -19,18 +19,27 @@ namespace MaSch.Console.Cli
             _console = Guard.NotNull(console, nameof(console));
         }
 
-        public virtual void Write(ICliApplicationBase application, IEnumerable<CliError>? errors)
+        public virtual bool Write(ICliApplicationBase application, IEnumerable<CliError>? errors)
         {
             IList<CliError> errorList = errors?.ToList() ?? new List<CliError>();
             if (errorList.Count == 0)
                 errorList.Add(new CliError(CliErrorType.Unknown));
 
             if (errorList.TryFirst(x => x.Type == CliErrorType.VersionRequested, out var vError))
+            {
                 WriteVersionPage(application, vError);
+                return true;
+            }
             else if (errorList.TryFirst(x => x.Type == CliErrorType.HelpRequested, out var hError))
+            {
                 WriteHelpPage(application, hError);
+                return true;
+            }
             else
+            {
                 WriteErrorPage(application, errorList);
+                return false;
+            }
         }
 
         protected virtual void WriteVersionPage(ICliApplicationBase application, CliError error)

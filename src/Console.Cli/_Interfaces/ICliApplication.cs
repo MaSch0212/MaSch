@@ -31,8 +31,10 @@ namespace MaSch.Console.Cli
         void RegisterCommand(Type commandType, object? optionsInstance, Func<object, int> executorFunction);
         void RegisterCommand<TCommand>(Func<TCommand, int> executorFunction);
         void RegisterCommand<TCommand>(TCommand optionsInstance, Func<TCommand, int> executorFunction);
-        void RegisterCommand<TCommand>();
-        void RegisterCommand<TCommand>(TCommand optionsInstance);
+        void RegisterCommand<TCommand>()
+            where TCommand : ICliCommandExecutor;
+        void RegisterCommand<TCommand>(TCommand optionsInstance)
+            where TCommand : ICliCommandExecutor;
         void RegisterCommand<TCommand, TExecutor>()
             where TExecutor : ICliCommandExecutor<TCommand>;
         void RegisterCommand<TCommand, TExecutor>(TCommand optionsInstance)
@@ -51,8 +53,10 @@ namespace MaSch.Console.Cli
         void RegisterCommand(Type commandType, object? optionsInstance, Func<object, Task<int>> executorFunction);
         void RegisterCommand<TCommand>(Func<TCommand, Task<int>> executorFunction);
         void RegisterCommand<TCommand>(TCommand optionsInstance, Func<TCommand, Task<int>> executorFunction);
-        void RegisterCommand<TCommand>();
-        void RegisterCommand<TCommand>(TCommand optionsInstance);
+        void RegisterCommand<TCommand>()
+            where TCommand : ICliAsyncCommandExecutor;
+        void RegisterCommand<TCommand>(TCommand optionsInstance)
+            where TCommand : ICliAsyncCommandExecutor;
         void RegisterCommand<TCommand, TExecutor>()
             where TExecutor : ICliAsyncCommandExecutor<TCommand>;
         void RegisterCommand<TCommand, TExecutor>(TCommand optionsInstance)

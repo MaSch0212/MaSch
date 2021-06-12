@@ -580,7 +580,7 @@ namespace MaSch.Test
             }
 
             if (exception == null || !typeof(T).Equals(exception.GetType()))
-                assert.ThrowAssertError(message, ("ExpectedException", typeof(T).Name), ("ActualException", exception?.GetType().Name));
+                assert.ThrowAssertError(message, ("ExpectedException", typeof(T).Name), ("ActualException", exception?.GetType().Name), ("ExceptionDetails", exception?.ToString()));
 
             return (exception as T)!;
         }
@@ -647,7 +647,7 @@ namespace MaSch.Test
             }
 
             if (exception == null || !typeof(T).Equals(exception.GetType()))
-                assert.ThrowAssertError(nameof(ThrowsExceptionAsync), message, ("ExpectedException", typeof(T).Name), ("ActualException", exception?.GetType().Name));
+                assert.ThrowAssertError(nameof(ThrowsExceptionAsync), message, ("ExpectedException", typeof(T).Name), ("ActualException", exception?.GetType().Name), ("ExceptionDetails", exception?.ToString()));
 
             return (exception as T)!;
         }

@@ -5,8 +5,10 @@ namespace MaSch.Console.Cli.Runtime
 {
     public interface ICliCommandInfoFactory
     {
-        ICliCommandInfo Create<TCommand>();
-        ICliCommandInfo Create<TCommand>(TCommand optionsInstance);
+        ICliCommandInfo Create<TCommand>()
+            where TCommand : ICliCommandExecutorBase;
+        ICliCommandInfo Create<TCommand>(TCommand optionsInstance)
+            where TCommand : ICliCommandExecutorBase;
         ICliCommandInfo Create(Type commandType);
         ICliCommandInfo Create(Type commandType, object? optionsInstance);
         ICliCommandInfo Create<TCommand, TExecutor>()

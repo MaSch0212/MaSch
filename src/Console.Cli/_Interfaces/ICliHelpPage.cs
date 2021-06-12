@@ -4,6 +4,6 @@ namespace MaSch.Console.Cli
 {
     public interface ICliHelpPage
     {
-        void Write(ICliApplicationBase application, IEnumerable<CliError>? errors);
+        bool Write(ICliApplicationBase application, IEnumerable<CliError>? errors);
     }
 }

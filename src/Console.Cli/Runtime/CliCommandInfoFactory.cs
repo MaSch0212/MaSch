@@ -6,9 +6,11 @@ namespace MaSch.Console.Cli.Runtime
     public class CliCommandInfoFactory : ICliCommandInfoFactory
     {
         public ICliCommandInfo Create<TCommand>()
+            where TCommand : ICliCommandExecutorBase
             => new CliCommandInfo(typeof(TCommand), null, null, null, null);
 
         public ICliCommandInfo Create<TCommand>(TCommand optionsInstance)
+            where TCommand : ICliCommandExecutorBase
             => new CliCommandInfo(typeof(TCommand), null, optionsInstance, null, null);
 
         public ICliCommandInfo Create(Type commandType)

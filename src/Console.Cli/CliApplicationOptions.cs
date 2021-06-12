@@ -6,6 +6,8 @@ namespace MaSch.Console.Cli
 {
     public class CliApplicationOptions
     {
+        public int ParseErrorExitCode { get; set; } = -1;
+
         public string? Name { get; set; } = Assembly.GetEntryAssembly()?.GetName().Name;
         public string? Version { get; set; } = Assembly.GetEntryAssembly()?.GetName().Version?.ToString(3);
         public string? Year { get; set; } = DateTime.Now.Year.ToString(CultureInfo.InvariantCulture);

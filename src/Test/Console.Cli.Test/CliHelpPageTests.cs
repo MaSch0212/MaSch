@@ -216,13 +216,18 @@ namespace MaSch.Console.Cli.Test.Help
 
         [ExcludeFromCodeCoverage]
         [CliCommand("blub", Executable = false)]
-        private class TestCommandOptions
+        private class TestCommandOptions : ICliCommandExecutor
         {
             [CliCommandOption("my-option")]
             public string? MyOption { get; set; }
 
             [CliCommandValue(0, "MyValue")]
             public string? MyValue { get; set; }
+
+            public int ExecuteCommand()
+            {
+                throw new NotImplementedException();
+            }
         }
 
         private class PrivateCliHelpPage

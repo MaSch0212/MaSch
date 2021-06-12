@@ -15,7 +15,7 @@ namespace MaSch.Console.Cli
         private ICliHelpPage? _helpPage;
         private IReadOnlyCliCommandInfoCollection? _readOnlyCommands;
 
-        protected CliCommandInfoCollection CommandsCollection { get; }
+        protected ICliCommandInfoCollection CommandsCollection { get; }
         protected abstract Type ExecutorType { get; }
         protected abstract Type GenericExecutorType { get; }
 
@@ -44,91 +44,58 @@ namespace MaSch.Console.Cli
         public CliApplicationOptions Options { get; }
 
         protected CliApplicationBase()
-            : this(null)
+            : this(null, null)
         {
         }
 
         protected CliApplicationBase(CliApplicationOptions? options)
+            : this(options, null)
+        {
+        }
+
+        protected CliApplicationBase(CliApplicationOptions? options, ICliCommandInfoCollection? commandsCollection)
         {
             VerifyTypes();
             Options = options ?? new CliApplicationOptions();
-            CommandsCollection = new CliCommandInfoCollection();
+            CommandsCollection = commandsCollection ?? new CliCommandInfoCollection();
         }
 
         public void RegisterCommand(ICliCommandInfo command)
             => CommandsCollection.Add(command);
 
         public void RegisterCommand(Type commandType)
-            => RegisterCommand(commandType, null);
+            => CommandsCollection.Add(CommandFactory.Create(commandType));
 
         public void RegisterCommand(Type commandType, object? optionsInstance)
-        {
-            Guard.NotNull(commandType, nameof(commandType));
-            if (!ExecutorType.IsAssignableFrom(commandType))
-            {
-                throw new ArgumentException(
-                    ExecutorType.IsInterface
-                        ? $"The commandType needs to implement the {ExecutorType.FullName} interface."
-                        : $"The commandType needs to derive from the {ExecutorType.FullName} class.",
-                    nameof(commandType));
-            }
-
-            CommandsCollection.Add(CommandFactory.Create(commandType, optionsInstance));
-        }
+            => CommandsCollection.Add(CommandFactory.Create(commandType, optionsInstance));
 
         public void RegisterCommand(Type commandType, Type? executorType)
-            => RegisterCommand(commandType, null, executorType, null);
+            => CommandsCollection.Add(CommandFactory.Create(commandType, executorType));
 
         public void RegisterCommand(Type commandType, object? optionsInstance, Type? executorType)
-            => RegisterCommand(commandType, optionsInstance, executorType, null);
+            => CommandsCollection.Add(CommandFactory.Create(commandType, optionsInstance, executorType));
 
         public void RegisterCommand(Type commandType, Type? executorType, object? executorInstance)
-            => RegisterCommand(commandType, null, executorType, executorInstance);
+            => CommandsCollection.Add(CommandFactory.Create(commandType, executorType, executorInstance));
 
         public void RegisterCommand(Type commandType, object? optionsInstance, Type? executorType, object? executorInstance)
-        {
-            if (executorType == null)
-            {
-                RegisterCommand(commandType, optionsInstance);
-                return;
-            }
+            => CommandsCollection.Add(CommandFactory.Create(commandType, optionsInstance, executorType, executorInstance));
 
-            Guard.NotNull(commandType, nameof(commandType));
-
-            if (!GenericExecutorType.IsAssignableFrom(executorType))
-            {
-                throw new ArgumentException(
-                    GenericExecutorType.IsInterface
-                        ? $"The executorType needs to implement the {GenericExecutorType.FullName} interface."
-                        : $"The executorType needs to derive from the {GenericExecutorType.FullName} class.",
-                    nameof(executorType));
-            }
-
-            if (!executorType.GenericTypeArguments[0].IsAssignableFrom(commandType))
-            {
-                throw new ArgumentException(
-                    GenericExecutorType.IsInterface
-                        ? $"The first generic argument type of the {GenericExecutorType.Name} interface of class {executorType.FullName} needs to be assignable from type {commandType.FullName}."
-                        : $"The first generic argument type of the base class {GenericExecutorType.Name} of class {executorType.FullName} needs to be assignable from type {commandType.FullName}.",
-                    nameof(executorType));
-            }
-
-            CommandsCollection.Add(CommandFactory.Create(commandType, optionsInstance, executorType, executorInstance));
-        }
-
-        protected bool TryParseArguments(string[] args, [NotNullWhen(true)] out ICliCommandInfo? command, [NotNullWhen(true)] out object? options)
+        protected virtual bool TryParseArguments(string[] args, [NotNullWhen(true)] out ICliCommandInfo? command, [NotNullWhen(true)] out object? options, out int errorCode)
         {
             var result = Parser.Parse(this, args);
             if (result.Success)
             {
                 command = result.Command!;
                 options = result.Options!;
+                errorCode = 0;
                 return true;
             }
             else
             {
                 options = command = null;
-                HelpPage.Write(this, result.Errors);
+                var isHelpPage = HelpPage.Write(this, result.Errors);
+                errorCode = isHelpPage ? 0 : Options.ParseErrorExitCode;
                 return false;
             }
         }
@@ -157,6 +124,14 @@ namespace MaSch.Console.Cli
             : base(options)
         {
         }
+
+        protected CliApplication(CliApplicationOptions? options, ICliCommandInfoCollection? commandsCollection)
+            : base(options, commandsCollection)
+        {
+        }
+
+        public new void RegisterCommand(ICliCommandInfo command)
+            => base.RegisterCommand(command);
 
         public new void RegisterCommand(Type commandType)
             => base.RegisterCommand(commandType);
@@ -189,9 +164,11 @@ namespace MaSch.Console.Cli
             => CommandsCollection.Add(CommandFactory.Create(optionsInstance, executorFunction));
 
         public void RegisterCommand<TCommand>()
+            where TCommand : ICliCommandExecutor
             => CommandsCollection.Add(CommandFactory.Create<TCommand>());
 
         public void RegisterCommand<TCommand>(TCommand optionsInstance)
+            where TCommand : ICliCommandExecutor
             => CommandsCollection.Add(CommandFactory.Create(optionsInstance));
 
         public void RegisterCommand<TCommand, TExecutor>()
@@ -212,9 +189,9 @@ namespace MaSch.Console.Cli
 
         public int Run(string[] args)
         {
-            if (TryParseArguments(args, out var command, out var options))
+            if (TryParseArguments(args, out var command, out var options, out int errorCode))
                 return command.Execute(options);
-            return 0;
+            return errorCode;
         }
     }
 
@@ -233,6 +210,14 @@ namespace MaSch.Console.Cli
             : base(options)
         {
         }
+
+        protected CliAsyncApplication(CliApplicationOptions? options, ICliCommandInfoCollection? commandsCollection)
+            : base(options, commandsCollection)
+        {
+        }
+
+        public new void RegisterCommand(ICliCommandInfo command)
+            => base.RegisterCommand(command);
 
         public new void RegisterCommand(Type commandType)
             => base.RegisterCommand(commandType);
@@ -265,9 +250,11 @@ namespace MaSch.Console.Cli
             => CommandsCollection.Add(CommandFactory.Create(optionsInstance, executorFunction));
 
         public void RegisterCommand<TCommand>()
+            where TCommand : ICliAsyncCommandExecutor
             => CommandsCollection.Add(CommandFactory.Create<TCommand>());
 
         public void RegisterCommand<TCommand>(TCommand optionsInstance)
+            where TCommand : ICliAsyncCommandExecutor
             => CommandsCollection.Add(CommandFactory.Create(optionsInstance));
 
         public void RegisterCommand<TCommand, TExecutor>()
@@ -288,9 +275,9 @@ namespace MaSch.Console.Cli
 
         public async Task<int> RunAsync(string[] args)
         {
-            if (TryParseArguments(args, out var command, out var options))
+            if (TryParseArguments(args, out var command, out var options, out int errorCode))
                 return await command.ExecuteAsync(options);
-            return 0;
+            return errorCode;
         }
     }
 }

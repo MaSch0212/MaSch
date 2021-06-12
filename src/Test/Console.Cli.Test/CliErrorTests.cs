@@ -112,13 +112,18 @@ namespace MaSch.Console.Cli.Test.ErrorHandling
         }
 
         [CliCommand("blub", Executable = false)]
-        private class TestCommandOptions
+        private class TestCommandOptions : ICliCommandExecutor
         {
             [CliCommandOption("my-option")]
             public string? MyOptions { get; set; }
 
             [CliCommandValue(0, "MyValue")]
             public string? MyValue { get; set; }
+
+            public int ExecuteCommand()
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }
