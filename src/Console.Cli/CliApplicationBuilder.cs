@@ -184,7 +184,6 @@ namespace MaSch.Console.Cli
         /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
         /// <returns>Self reference to this builder.</returns>
         public CliApplicationBuilder WithCommand<TCommand>()
-            where TCommand : ICliCommandExecutor
             => Exec(x => x.RegisterCommand<TCommand>());
 
         /// <summary>
@@ -194,7 +193,6 @@ namespace MaSch.Console.Cli
         /// <param name="optionsInstance">An instance of <typeparamref name="TCommand"/> that should be used when the command is executed.</param>
         /// <returns>Self reference to this builder.</returns>
         public CliApplicationBuilder WithCommand<TCommand>(TCommand optionsInstance)
-            where TCommand : ICliCommandExecutor
             => Exec(x => x.RegisterCommand(optionsInstance));
 
         /// <summary>
@@ -316,7 +314,6 @@ namespace MaSch.Console.Cli
         /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
         /// <returns>Self reference to this builder.</returns>
         public CliAsyncApplicationBuilder WithCommand<TCommand>()
-            where TCommand : ICliAsyncCommandExecutor
             => Exec(x => x.RegisterCommand<TCommand>());
 
         /// <summary>
@@ -326,7 +323,6 @@ namespace MaSch.Console.Cli
         /// <param name="optionsInstance">An instance of <typeparamref name="TCommand"/> that should be used when the command is executed.</param>
         /// <returns>Self reference to this builder.</returns>
         public CliAsyncApplicationBuilder WithCommand<TCommand>(TCommand optionsInstance)
-            where TCommand : ICliAsyncCommandExecutor
             => Exec(x => x.RegisterCommand(optionsInstance));
 
         /// <summary>

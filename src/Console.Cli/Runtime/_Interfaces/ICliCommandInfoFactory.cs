@@ -14,8 +14,7 @@ namespace MaSch.Console.Cli.Runtime
         /// </summary>
         /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
         /// <returns>The created <see cref="ICliCommandInfo"/> instance.</returns>
-        ICliCommandInfo Create<TCommand>()
-            where TCommand : ICliCommandExecutorBase;
+        ICliCommandInfo Create<TCommand>();
 
         /// <summary>
         /// Creates a <see cref="ICliCommandInfo"/> from an executable command type.
@@ -23,8 +22,7 @@ namespace MaSch.Console.Cli.Runtime
         /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
         /// <param name="optionsInstance">An instance of <typeparamref name="TCommand"/> that should be used when the command is executed.</param>
         /// <returns>The created <see cref="ICliCommandInfo"/> instance.</returns>
-        ICliCommandInfo Create<TCommand>(TCommand optionsInstance)
-            where TCommand : ICliCommandExecutorBase;
+        ICliCommandInfo Create<TCommand>(TCommand optionsInstance);
 
         /// <summary>
         /// Creates a <see cref="ICliCommandInfo"/> from an executable command type.

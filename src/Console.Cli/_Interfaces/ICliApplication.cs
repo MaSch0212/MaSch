@@ -135,16 +135,14 @@ namespace MaSch.Console.Cli
         /// Registers a <see cref="ICliCommandInfo"/> created from an executable command type to this application.
         /// </summary>
         /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
-        void RegisterCommand<TCommand>()
-            where TCommand : ICliCommandExecutor;
+        void RegisterCommand<TCommand>();
 
         /// <summary>
         /// Registers a <see cref="ICliCommandInfo"/> created from an executable command type to this application.
         /// </summary>
         /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
         /// <param name="optionsInstance">An instance of <typeparamref name="TCommand"/> that should be used when the command is executed.</param>
-        void RegisterCommand<TCommand>(TCommand optionsInstance)
-            where TCommand : ICliCommandExecutor;
+        void RegisterCommand<TCommand>(TCommand optionsInstance);
 
         /// <summary>
         /// Registers a <see cref="ICliCommandInfo"/> created from a command and executor type to this application.
@@ -229,16 +227,14 @@ namespace MaSch.Console.Cli
         /// Registers a <see cref="ICliCommandInfo"/> created from an executable command type to this application.
         /// </summary>
         /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
-        void RegisterCommand<TCommand>()
-            where TCommand : ICliAsyncCommandExecutor;
+        void RegisterCommand<TCommand>();
 
         /// <summary>
         /// Registers a <see cref="ICliCommandInfo"/> created from an executable command type to this application.
         /// </summary>
         /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
         /// <param name="optionsInstance">An instance of <typeparamref name="TCommand"/> that should be used when the command is executed.</param>
-        void RegisterCommand<TCommand>(TCommand optionsInstance)
-            where TCommand : ICliAsyncCommandExecutor;
+        void RegisterCommand<TCommand>(TCommand optionsInstance);
 
         /// <summary>
         /// Registers a <see cref="ICliCommandInfo"/> created from a command and executor type to this application.

@@ -269,12 +269,10 @@ namespace MaSch.Console.Cli
 
         /// <inheritdoc/>
         public void RegisterCommand<TCommand>()
-            where TCommand : ICliCommandExecutor
             => CommandsCollection.Add(CommandFactory.Create<TCommand>());
 
         /// <inheritdoc/>
         public void RegisterCommand<TCommand>(TCommand optionsInstance)
-            where TCommand : ICliCommandExecutor
             => CommandsCollection.Add(CommandFactory.Create(optionsInstance));
 
         /// <inheritdoc/>
@@ -418,12 +416,10 @@ namespace MaSch.Console.Cli
 
         /// <inheritdoc/>
         public void RegisterCommand<TCommand>()
-            where TCommand : ICliAsyncCommandExecutor
             => CommandsCollection.Add(CommandFactory.Create<TCommand>());
 
         /// <inheritdoc/>
         public void RegisterCommand<TCommand>(TCommand optionsInstance)
-            where TCommand : ICliAsyncCommandExecutor
             => CommandsCollection.Add(CommandFactory.Create(optionsInstance));
 
         /// <inheritdoc/>
