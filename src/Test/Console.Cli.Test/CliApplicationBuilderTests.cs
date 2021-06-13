@@ -308,8 +308,8 @@ namespace MaSch.Console.Cli.Test
 
         public abstract class DummyClass : ICliCommandExecutor, ICliCommandExecutor<IDisposable>
         {
-            public abstract int ExecuteCommand();
-            public abstract int ExecuteCommand(IDisposable parameters);
+            public abstract int ExecuteCommand(ICliCommandInfo command);
+            public abstract int ExecuteCommand(ICliCommandInfo command, IDisposable parameters);
         }
     }
 
@@ -470,8 +470,8 @@ namespace MaSch.Console.Cli.Test
 
         public abstract class DummyClass : ICliAsyncCommandExecutor, ICliAsyncCommandExecutor<IDisposable>
         {
-            public abstract Task<int> ExecuteCommandAsync(IDisposable parameters);
-            public abstract Task<int> ExecuteCommandAsync();
+            public abstract Task<int> ExecuteCommandAsync(ICliCommandInfo command, IDisposable parameters);
+            public abstract Task<int> ExecuteCommandAsync(ICliCommandInfo command);
         }
     }
 }

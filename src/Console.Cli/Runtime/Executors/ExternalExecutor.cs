@@ -63,30 +63,32 @@ namespace MaSch.Console.Cli.Runtime.Executors
                 throw new ArgumentException($"The type {executorType.Name} needs to implement {typeof(ICliCommandExecutor<T>).Name} and/or {typeof(ICliAsyncCommandExecutor<T>).Name} for type {typeof(T).Name}.", nameof(executorType));
         }
 
-        public int Execute(object obj)
+        public int Execute(ICliCommandInfo command, object obj)
         {
+            Guard.NotNull(command, nameof(command));
             Guard.NotNull(obj, nameof(obj));
             var (ee, tObj) = ExternalExecutor.PreExecute<T>(_executorType, _executorInstance ?? _cachedExecutor, obj);
             _cachedExecutor = ee;
 
             if (ee is ICliCommandExecutor<T> executor)
-                return executor.ExecuteCommand(tObj);
+                return executor.ExecuteCommand(command, tObj);
             else if (ee is ICliAsyncCommandExecutor<T> asyncExecutor)
-                return asyncExecutor.ExecuteCommandAsync(tObj).GetAwaiter().GetResult();
+                return asyncExecutor.ExecuteCommandAsync(command, tObj).GetAwaiter().GetResult();
             else
                 throw new InvalidOperationException($"The type {_executorType.Name} needs to implement {typeof(ICliCommandExecutor<T>).Name} and/or {typeof(ICliAsyncCommandExecutor<T>).Name} for type {typeof(T).Name}.");
         }
 
-        public async Task<int> ExecuteAsync(object obj)
+        public async Task<int> ExecuteAsync(ICliCommandInfo command, object obj)
         {
+            Guard.NotNull(command, nameof(command));
             Guard.NotNull(obj, nameof(obj));
             var (ee, tObj) = ExternalExecutor.PreExecute<T>(_executorType, _executorInstance ?? _cachedExecutor, obj);
             _cachedExecutor = ee;
 
             if (ee is ICliAsyncCommandExecutor<T> asyncExecutor)
-                return await asyncExecutor.ExecuteCommandAsync(tObj);
+                return await asyncExecutor.ExecuteCommandAsync(command, tObj);
             else if (ee is ICliCommandExecutor<T> executor)
-                return executor.ExecuteCommand(tObj);
+                return executor.ExecuteCommand(command, tObj);
             else
                 throw new InvalidOperationException($"The type {_executorType.Name} needs to implement {typeof(ICliCommandExecutor<T>).Name} and/or {typeof(ICliAsyncCommandExecutor<T>).Name} for type {typeof(T).Name}.");
         }

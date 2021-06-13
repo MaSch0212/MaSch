@@ -65,7 +65,7 @@ namespace MaSch.Console.Cli.Runtime
                     ctx.Errors.Add(vErrors);
             }
 
-            if (ctx.OptionsObj is ICliValidatable validatable && !validatable.ValidateOptions(out vErrors))
+            if (ctx.OptionsObj is ICliValidatable validatable && !validatable.ValidateOptions(ctx.Command, out vErrors))
                 ctx.Errors.Add(vErrors);
 
             if (!ctx.Command.ValidateOptions(ctx.Command, ctx.OptionsObj, out vErrors))

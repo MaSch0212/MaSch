@@ -120,7 +120,7 @@ namespace MaSch.Console.Cli.Test.ErrorHandling
             [CliCommandValue(0, "MyValue")]
             public string? MyValue { get; set; }
 
-            public int ExecuteCommand()
+            public int ExecuteCommand(ICliCommandInfo command)
             {
                 throw new NotImplementedException();
             }

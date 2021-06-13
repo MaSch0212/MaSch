@@ -1,4 +1,5 @@
-﻿using MaSch.Console.Cli.Runtime.Executors;
+﻿using MaSch.Console.Cli.Runtime;
+using MaSch.Console.Cli.Runtime.Executors;
 using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -78,8 +79,9 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         {
             var m = Mocks.Create<Func<IDisposable, int>>();
             var e = new FunctionExecutor<IDisposable>(m.Object, null);
+            var cMock = Mocks.Create<ICliCommandInfo>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => e.Execute(null!));
+            Assert.ThrowsException<ArgumentNullException>(() => e.Execute(cMock.Object, null!));
         }
 
         [TestMethod]
@@ -87,8 +89,9 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         {
             var m = Mocks.Create<Func<IDisposable, int>>();
             var e = new FunctionExecutor<IDisposable>(m.Object, null);
+            var cMock = Mocks.Create<ICliCommandInfo>();
 
-            Assert.ThrowsException<ArgumentException>(() => e.Execute(new object()));
+            Assert.ThrowsException<ArgumentException>(() => e.Execute(cMock.Object, new object()));
         }
 
         [TestMethod]
@@ -98,8 +101,9 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var m = Mocks.Create<Func<IDisposable, int>>();
             var e = new FunctionExecutor<IDisposable>(m.Object, null);
             new PrivateObject(e).SetField("_executorFunc", null);
+            var cMock = Mocks.Create<ICliCommandInfo>();
 
-            Assert.ThrowsException<InvalidOperationException>(() => e.Execute(o.Object));
+            Assert.ThrowsException<InvalidOperationException>(() => e.Execute(cMock.Object, o.Object));
         }
 
         [TestMethod]
@@ -108,9 +112,10 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var o = Mocks.Create<IDisposable>();
             var m = Mocks.Create<Func<IDisposable, int>>();
             var e = new FunctionExecutor<IDisposable>(m.Object, null);
+            var cMock = Mocks.Create<ICliCommandInfo>();
             m.Setup(x => x(o.Object)).Returns(4711).Verifiable(Verifiables, Times.Once());
 
-            var result = e.Execute(o.Object);
+            var result = e.Execute(cMock.Object, o.Object);
 
             Assert.AreEqual(4711, result);
         }
@@ -121,9 +126,10 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var o = Mocks.Create<IDisposable>();
             var m = Mocks.Create<Func<IDisposable, Task<int>>>();
             var e = new FunctionExecutor<IDisposable>(null, m.Object);
+            var cMock = Mocks.Create<ICliCommandInfo>();
             m.Setup(x => x(o.Object)).Returns(Task.Delay(10).ContinueWith(x => 4711)).Verifiable(Verifiables, Times.Once());
 
-            var result = e.Execute(o.Object);
+            var result = e.Execute(cMock.Object, o.Object);
 
             Assert.AreEqual(4711, result);
         }
@@ -135,10 +141,11 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var sm = Mocks.Create<Func<IDisposable, int>>();
             var am = Mocks.Create<Func<IDisposable, Task<int>>>();
             var e = new FunctionExecutor<IDisposable>(sm.Object, am.Object);
+            var cMock = Mocks.Create<ICliCommandInfo>();
             sm.Setup(x => x(o.Object)).Returns(4711).Verifiable(Verifiables, Times.Once());
             am.Setup(x => x(o.Object)).Returns(Task.Delay(10).ContinueWith(x => 4711)).Verifiable(Verifiables, Times.Never());
 
-            var result = e.Execute(o.Object);
+            var result = e.Execute(cMock.Object, o.Object);
 
             Assert.AreEqual(4711, result);
         }
@@ -148,8 +155,9 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         {
             var m = Mocks.Create<Func<IDisposable, Task<int>>>();
             var e = new FunctionExecutor<IDisposable>(null, m.Object);
+            var cMock = Mocks.Create<ICliCommandInfo>();
 
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => e.ExecuteAsync(null!));
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => e.ExecuteAsync(cMock.Object, null!));
         }
 
         [TestMethod]
@@ -157,8 +165,9 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         {
             var m = Mocks.Create<Func<IDisposable, Task<int>>>();
             var e = new FunctionExecutor<IDisposable>(null, m.Object);
+            var cMock = Mocks.Create<ICliCommandInfo>();
 
-            await Assert.ThrowsExceptionAsync<ArgumentException>(() => e.ExecuteAsync(new object()));
+            await Assert.ThrowsExceptionAsync<ArgumentException>(() => e.ExecuteAsync(cMock.Object, new object()));
         }
 
         [TestMethod]
@@ -168,8 +177,9 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var m = Mocks.Create<Func<IDisposable, Task<int>>>();
             var e = new FunctionExecutor<IDisposable>(null, m.Object);
             new PrivateObject(e).SetField("_asyncExecutorFunc", null);
+            var cMock = Mocks.Create<ICliCommandInfo>();
 
-            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => e.ExecuteAsync(o.Object));
+            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => e.ExecuteAsync(cMock.Object, o.Object));
         }
 
         [TestMethod]
@@ -178,9 +188,10 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var o = Mocks.Create<IDisposable>();
             var m = Mocks.Create<Func<IDisposable, int>>();
             var e = new FunctionExecutor<IDisposable>(m.Object, null);
+            var cMock = Mocks.Create<ICliCommandInfo>();
             m.Setup(x => x(o.Object)).Returns(4711).Verifiable(Verifiables, Times.Once());
 
-            var result = await e.ExecuteAsync(o.Object);
+            var result = await e.ExecuteAsync(cMock.Object, o.Object);
 
             Assert.AreEqual(4711, result);
         }
@@ -191,9 +202,10 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var o = Mocks.Create<IDisposable>();
             var m = Mocks.Create<Func<IDisposable, Task<int>>>();
             var e = new FunctionExecutor<IDisposable>(null, m.Object);
+            var cMock = Mocks.Create<ICliCommandInfo>();
             m.Setup(x => x(o.Object)).Returns(Task.Delay(10).ContinueWith(x => 4711)).Verifiable(Verifiables, Times.Once());
 
-            var result = await e.ExecuteAsync(o.Object);
+            var result = await e.ExecuteAsync(cMock.Object, o.Object);
 
             Assert.AreEqual(4711, result);
         }
@@ -205,10 +217,11 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var sm = Mocks.Create<Func<IDisposable, int>>();
             var am = Mocks.Create<Func<IDisposable, Task<int>>>();
             var e = new FunctionExecutor<IDisposable>(sm.Object, am.Object);
+            var cMock = Mocks.Create<ICliCommandInfo>();
             sm.Setup(x => x(o.Object)).Returns(4711).Verifiable(Verifiables, Times.Never());
             am.Setup(x => x(o.Object)).Returns(Task.Delay(10).ContinueWith(x => 4711)).Verifiable(Verifiables, Times.Once());
 
-            var result = await e.ExecuteAsync(o.Object);
+            var result = await e.ExecuteAsync(cMock.Object, o.Object);
 
             Assert.AreEqual(4711, result);
         }

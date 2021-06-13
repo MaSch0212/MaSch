@@ -122,18 +122,21 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         public void Execute_Null()
         {
             var eMock = Mocks.Create<ICliCommandExecutor<IDisposable>>();
+            var cMock = Mocks.Create<ICliCommandInfo>();
             var executor = new ExternalExecutor<IDisposable>(eMock.Object.GetType(), eMock.Object);
 
-            Assert.ThrowsException<ArgumentNullException>(() => executor.Execute(null!));
+            Assert.ThrowsException<ArgumentNullException>(() => executor.Execute(null!, new object()));
+            Assert.ThrowsException<ArgumentNullException>(() => executor.Execute(cMock.Object, null!));
         }
 
         [TestMethod]
         public void Execute_WrongObjType()
         {
             var eMock = Mocks.Create<ICliCommandExecutor<IDisposable>>();
+            var cMock = Mocks.Create<ICliCommandInfo>();
             var executor = new ExternalExecutor<IDisposable>(eMock.Object.GetType(), eMock.Object);
 
-            var ex = Assert.ThrowsException<ArgumentException>(() => executor.Execute(new object()));
+            var ex = Assert.ThrowsException<ArgumentException>(() => executor.Execute(cMock.Object, new object()));
             Assert.ContainsAll(new[] { nameof(IDisposable), nameof(Object) }, ex.Message);
         }
 
@@ -141,11 +144,12 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         public void Execute_NoExecutor()
         {
             var eMock = Mocks.Create<ICliCommandExecutor<IDisposable>>();
+            var cMock = Mocks.Create<ICliCommandInfo>();
             var objMock = Mocks.Create<IDisposable>();
             var executor = new ExternalExecutor<IDisposable>(eMock.Object.GetType(), null);
             new PrivateObject(executor).SetField("_executorInstance", new object());
 
-            Assert.ThrowsException<InvalidOperationException>(() => executor.Execute(objMock.Object));
+            Assert.ThrowsException<InvalidOperationException>(() => executor.Execute(cMock.Object, objMock.Object));
         }
 
         [TestMethod]
@@ -154,16 +158,17 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var obj1Mock = Mocks.Create<IDisposable>();
             var obj2Mock = Mocks.Create<IDisposable>();
             var executor = new ExternalExecutor<IDisposable>(typeof(DummySyncExecutor), null);
+            var cMock = Mocks.Create<ICliCommandInfo>();
 
-            var result = executor.Execute(obj1Mock.Object);
+            var result = executor.Execute(cMock.Object, obj1Mock.Object);
 
             Assert.AreEqual(1234, result);
             var ei = Assert.IsInstanceOfType<DummySyncExecutor>(executor.LastExecutorInstance);
-            Assert.AreCollectionsEqual(new[] { obj1Mock.Object }, ei.Executions);
+            Assert.AreCollectionsEqual(new[] { (cMock.Object, obj1Mock.Object) }, ei.Executions);
 
-            _ = executor.Execute(obj2Mock.Object);
+            _ = executor.Execute(cMock.Object, obj2Mock.Object);
             Assert.AreSame(ei, executor.LastExecutorInstance);
-            Assert.AreCollectionsEqual(new[] { obj1Mock.Object, obj2Mock.Object }, ei.Executions);
+            Assert.AreCollectionsEqual(new[] { (cMock.Object, obj1Mock.Object), (cMock.Object, obj2Mock.Object) }, ei.Executions);
         }
 
         [TestMethod]
@@ -171,12 +176,13 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         {
             var obj1Mock = Mocks.Create<IDisposable>();
             var executor = new ExternalExecutor<IDisposable>(typeof(DummyAsyncExecutor), null);
+            var cMock = Mocks.Create<ICliCommandInfo>();
 
-            var result = executor.Execute(obj1Mock.Object);
+            var result = executor.Execute(cMock.Object, obj1Mock.Object);
 
             Assert.AreEqual(1234, result);
             var ei = Assert.IsInstanceOfType<DummyAsyncExecutor>(executor.LastExecutorInstance);
-            Assert.AreCollectionsEqual(new[] { obj1Mock.Object }, ei.Executions);
+            Assert.AreCollectionsEqual(new[] { (cMock.Object, obj1Mock.Object) }, ei.Executions);
         }
 
         [TestMethod]
@@ -184,31 +190,35 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         {
             var obj1Mock = Mocks.Create<IDisposable>();
             var executor = new ExternalExecutor<IDisposable>(typeof(DummyCombinedExecutor), null);
+            var cMock = Mocks.Create<ICliCommandInfo>();
 
-            var result = executor.Execute(obj1Mock.Object);
+            var result = executor.Execute(cMock.Object, obj1Mock.Object);
 
             Assert.AreEqual(5678, result);
             var ei = Assert.IsInstanceOfType<DummyCombinedExecutor>(executor.LastExecutorInstance);
-            Assert.AreCollectionsEqual(new[] { obj1Mock.Object }, ei.SyncExecutions);
-            Assert.AreCollectionsEqual(Array.Empty<IDisposable>(), ei.AsyncExecutions);
+            Assert.AreCollectionsEqual(new[] { (cMock.Object, obj1Mock.Object) }, ei.SyncExecutions);
+            Assert.AreCollectionsEqual(Array.Empty<(ICliCommandInfo, IDisposable)>(), ei.AsyncExecutions);
         }
 
         [TestMethod]
         public async Task ExecuteAsync_Null()
         {
             var eMock = Mocks.Create<ICliCommandExecutor<IDisposable>>();
+            var cMock = Mocks.Create<ICliCommandInfo>();
             var executor = new ExternalExecutor<IDisposable>(eMock.Object.GetType(), eMock.Object);
 
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => executor.ExecuteAsync(null!));
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => executor.ExecuteAsync(null!, new object()));
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => executor.ExecuteAsync(cMock.Object, null!));
         }
 
         [TestMethod]
         public async Task ExecuteAsync_WrongObjType()
         {
             var eMock = Mocks.Create<ICliCommandExecutor<IDisposable>>();
+            var cMock = Mocks.Create<ICliCommandInfo>();
             var executor = new ExternalExecutor<IDisposable>(eMock.Object.GetType(), eMock.Object);
 
-            var ex = await Assert.ThrowsExceptionAsync<ArgumentException>(() => executor.ExecuteAsync(new object()));
+            var ex = await Assert.ThrowsExceptionAsync<ArgumentException>(() => executor.ExecuteAsync(cMock.Object, new object()));
             Assert.ContainsAll(new[] { nameof(IDisposable), nameof(Object) }, ex.Message);
         }
 
@@ -216,11 +226,12 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         public async Task ExecuteAsync_NoExecutor()
         {
             var eMock = Mocks.Create<ICliCommandExecutor<IDisposable>>();
+            var cMock = Mocks.Create<ICliCommandInfo>();
             var objMock = Mocks.Create<IDisposable>();
             var executor = new ExternalExecutor<IDisposable>(eMock.Object.GetType(), null);
             new PrivateObject(executor).SetField("_executorInstance", new object());
 
-            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => executor.ExecuteAsync(objMock.Object));
+            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => executor.ExecuteAsync(cMock.Object, objMock.Object));
         }
 
         [TestMethod]
@@ -229,43 +240,46 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var obj1Mock = Mocks.Create<IDisposable>();
             var obj2Mock = Mocks.Create<IDisposable>();
             var executor = new ExternalExecutor<IDisposable>(typeof(DummyAsyncExecutor), null);
+            var cMock = Mocks.Create<ICliCommandInfo>();
 
-            var result = await executor.ExecuteAsync(obj1Mock.Object);
+            var result = await executor.ExecuteAsync(cMock.Object, obj1Mock.Object);
 
             Assert.AreEqual(1234, result);
             var ei = Assert.IsInstanceOfType<DummyAsyncExecutor>(executor.LastExecutorInstance);
-            Assert.AreCollectionsEqual(new[] { obj1Mock.Object }, ei.Executions);
+            Assert.AreCollectionsEqual(new[] { (cMock.Object, obj1Mock.Object) }, ei.Executions);
 
-            _ = await executor.ExecuteAsync(obj2Mock.Object);
+            _ = await executor.ExecuteAsync(cMock.Object, obj2Mock.Object);
             Assert.AreSame(ei, executor.LastExecutorInstance);
-            Assert.AreCollectionsEqual(new[] { obj1Mock.Object, obj2Mock.Object }, ei.Executions);
+            Assert.AreCollectionsEqual(new[] { (cMock.Object, obj1Mock.Object), (cMock.Object, obj2Mock.Object) }, ei.Executions);
         }
 
         [TestMethod]
         public async Task ExecuteAsync_SyncExecutor()
         {
             var obj1Mock = Mocks.Create<IDisposable>();
+            var cMock = Mocks.Create<ICliCommandInfo>();
             var executor = new ExternalExecutor<IDisposable>(typeof(DummySyncExecutor), null);
 
-            var result = await executor.ExecuteAsync(obj1Mock.Object);
+            var result = await executor.ExecuteAsync(cMock.Object, obj1Mock.Object);
 
             Assert.AreEqual(1234, result);
             var ei = Assert.IsInstanceOfType<DummySyncExecutor>(executor.LastExecutorInstance);
-            Assert.AreCollectionsEqual(new[] { obj1Mock.Object }, ei.Executions);
+            Assert.AreCollectionsEqual(new[] { (cMock.Object, obj1Mock.Object) }, ei.Executions);
         }
 
         [TestMethod]
         public async Task ExecuteAsync_CombinedExecutor()
         {
             var obj1Mock = Mocks.Create<IDisposable>();
+            var cMock = Mocks.Create<ICliCommandInfo>();
             var executor = new ExternalExecutor<IDisposable>(typeof(DummyCombinedExecutor), null);
 
-            var result = await executor.ExecuteAsync(obj1Mock.Object);
+            var result = await executor.ExecuteAsync(cMock.Object, obj1Mock.Object);
 
             Assert.AreEqual(1234, result);
             var ei = Assert.IsInstanceOfType<DummyCombinedExecutor>(executor.LastExecutorInstance);
-            Assert.AreCollectionsEqual(new[] { obj1Mock.Object }, ei.AsyncExecutions);
-            Assert.AreCollectionsEqual(Array.Empty<IDisposable>(), ei.SyncExecutions);
+            Assert.AreCollectionsEqual(new[] { (cMock.Object, obj1Mock.Object) }, ei.AsyncExecutions);
+            Assert.AreCollectionsEqual(Array.Empty<(ICliCommandInfo, IDisposable)>(), ei.SyncExecutions);
         }
 
         [TestMethod]
@@ -355,44 +369,44 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
 
         public class DummySyncExecutor : ICliCommandExecutor<IDisposable>
         {
-            public List<IDisposable> Executions { get; } = new();
+            public List<(ICliCommandInfo, IDisposable)> Executions { get; } = new();
             public int ReturnValue { get; set; } = 1234;
 
-            public int ExecuteCommand(IDisposable parameters)
+            public int ExecuteCommand(ICliCommandInfo command, IDisposable parameters)
             {
-                Executions.Add(parameters);
+                Executions.Add((command, parameters));
                 return ReturnValue;
             }
         }
 
         private class DummyAsyncExecutor : ICliAsyncCommandExecutor<IDisposable>
         {
-            public List<IDisposable> Executions { get; } = new();
+            public List<(ICliCommandInfo, IDisposable)> Executions { get; } = new();
             public int ReturnValue { get; set; } = 1234;
 
-            public Task<int> ExecuteCommandAsync(IDisposable parameters)
+            public Task<int> ExecuteCommandAsync(ICliCommandInfo command, IDisposable parameters)
             {
-                Executions.Add(parameters);
+                Executions.Add((command, parameters));
                 return Task.Delay(10).ContinueWith(x => ReturnValue);
             }
         }
 
         private class DummyCombinedExecutor : ICliCommandExecutor<IDisposable>, ICliAsyncCommandExecutor<IDisposable>
         {
-            public List<IDisposable> AsyncExecutions { get; } = new();
-            public List<IDisposable> SyncExecutions { get; } = new();
+            public List<(ICliCommandInfo, IDisposable)> AsyncExecutions { get; } = new();
+            public List<(ICliCommandInfo, IDisposable)> SyncExecutions { get; } = new();
             public int AsyncReturnValue { get; set; } = 1234;
             public int SyncReturnValue { get; set; } = 5678;
 
-            public int ExecuteCommand(IDisposable parameters)
+            public int ExecuteCommand(ICliCommandInfo command, IDisposable parameters)
             {
-                SyncExecutions.Add(parameters);
+                SyncExecutions.Add((command, parameters));
                 return SyncReturnValue;
             }
 
-            public Task<int> ExecuteCommandAsync(IDisposable parameters)
+            public Task<int> ExecuteCommandAsync(ICliCommandInfo command, IDisposable parameters)
             {
-                AsyncExecutions.Add(parameters);
+                AsyncExecutions.Add((command, parameters));
                 return Task.Delay(10).ContinueWith(x => AsyncReturnValue);
             }
         }

@@ -57,7 +57,7 @@ namespace MaSch.Console.Cli.Test.Runtime
             var executor = Mocks.Create<Executor1>();
             var options = new DummyClass2();
             var info = new CliCommandInfo(typeof(DummyClass2), typeof(Executor1), options, null, executor.Object);
-            executor.Setup(x => x.ExecuteCommand(options)).Returns(4711).Verifiable(Verifiables, Times.Once());
+            executor.Setup(x => x.ExecuteCommand(info, options)).Returns(4711).Verifiable(Verifiables, Times.Once());
 
             var result = info.Execute(options);
 
@@ -78,7 +78,7 @@ namespace MaSch.Console.Cli.Test.Runtime
             var executor = Mocks.Create<Executor1>();
             var options = new DummyClass2();
             var info = new CliCommandInfo(typeof(DummyClass2), typeof(Executor1), options, null, executor.Object);
-            executor.Setup(x => x.ExecuteCommandAsync(options)).Returns(Task.FromResult(4711)).Verifiable(Verifiables, Times.Once());
+            executor.Setup(x => x.ExecuteCommandAsync(info, options)).Returns(Task.FromResult(4711)).Verifiable(Verifiables, Times.Once());
 
             var result = await info.ExecuteAsync(options);
 
@@ -190,8 +190,8 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             public delegate bool ValidateDelegate(ICliCommandInfo command, DummyClass2 parameters, [MaybeNullWhen(true)] out IEnumerable<CliError>? errors);
 
-            public abstract int ExecuteCommand(DummyClass2 parameters);
-            public abstract Task<int> ExecuteCommandAsync(DummyClass2 parameters);
+            public abstract int ExecuteCommand(ICliCommandInfo command, DummyClass2 parameters);
+            public abstract Task<int> ExecuteCommandAsync(ICliCommandInfo command, DummyClass2 parameters);
             public abstract bool ValidateOptions(ICliCommandInfo command, DummyClass2 parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors);
         }
     }

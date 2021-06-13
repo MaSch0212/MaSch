@@ -47,7 +47,7 @@ namespace MaSch.Console.Cli.Runtime.Executors
             _asyncExecutorFunc = asyncExecutorFunc;
         }
 
-        public int Execute(object obj)
+        public int Execute(ICliCommandInfo command, object obj)
         {
             Guard.NotNull(obj, nameof(obj));
             var tObj = FunctionExecutor.PreExecute<T>(obj);
@@ -59,7 +59,7 @@ namespace MaSch.Console.Cli.Runtime.Executors
                 throw new InvalidOperationException("At least one function needs to be provided.");
         }
 
-        public async Task<int> ExecuteAsync(object obj)
+        public async Task<int> ExecuteAsync(ICliCommandInfo command, object obj)
         {
             Guard.NotNull(obj, nameof(obj));
             var tObj = FunctionExecutor.PreExecute<T>(obj);

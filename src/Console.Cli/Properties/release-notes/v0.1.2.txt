@@ -1,1 +1,2 @@
 ﻿- Fix generic constraints on command registration so that non-executable commands can be registered.
+- Added an instance of ICliCommandInfo to all executors and validators.

@@ -8,8 +8,9 @@
         /// <summary>
         /// Executes the command.
         /// </summary>
+        /// <param name="command">Information about the current command.</param>
         /// <returns>The exit code.</returns>
-        int ExecuteCommand();
+        int ExecuteCommand(ICliCommandInfo command);
     }
 
     /// <summary>
@@ -21,8 +22,9 @@
         /// <summary>
         /// Executes the command.
         /// </summary>
+        /// <param name="command">Information about the command that is executed.</param>
         /// <param name="parameters">The command to execute.</param>
         /// <returns>The exit code.</returns>
-        int ExecuteCommand(TCommand parameters);
+        int ExecuteCommand(ICliCommandInfo command, TCommand parameters);
     }
 }

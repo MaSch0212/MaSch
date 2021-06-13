@@ -16,7 +16,7 @@ namespace MaSch.Console.Cli.Test.Runtime
     public class CliArgumentParserTests : TestClassBase
     {
         private delegate bool CliValidatorDelegate(ICliCommandInfo command, object optionsObj, [MaybeNullWhen(true)] out IEnumerable<CliError>? errors);
-        private delegate bool CliValidatableDelegate([MaybeNullWhen(true)] out IEnumerable<CliError>? errors);
+        private delegate bool CliValidatableDelegate(ICliCommandInfo command, [MaybeNullWhen(true)] out IEnumerable<CliError>? errors);
 
         private ICliCommandInfo? DefaultCommand
         {
@@ -1217,7 +1217,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var obj = Mocks.Create<ICliValidatable>();
             var command = CreateCliCommandMock<object>(new[] { "my-command" }, optionsInstance: obj.Object);
-            SetupValidation(obj, false, new[] { new CliError("My Error") }).Verifiable(Verifiables, Times.Once());
+            SetupValidation(obj, command.Object, false, new[] { new CliError("My Error") }).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command");
@@ -1233,7 +1233,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var obj = Mocks.Create<ICliValidatable>();
             var command = CreateCliCommandMock<object>(new[] { "my-command" }, optionsInstance: obj.Object);
-            SetupValidation(obj, true, null).Verifiable(Verifiables, Times.Once());
+            SetupValidation(obj, command.Object, true, null).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command");
@@ -1390,12 +1390,12 @@ namespace MaSch.Console.Cli.Test.Runtime
                 }));
         }
 
-        private IVerifies SetupValidation(Mock<ICliValidatable> mock, bool result, IEnumerable<CliError>? errors)
+        private IVerifies SetupValidation(Mock<ICliValidatable> mock, ICliCommandInfo command, bool result, IEnumerable<CliError>? errors)
         {
             IEnumerable<CliError>? validationErrors;
             return mock
-                .Setup(x => x.ValidateOptions(out validationErrors))
-                .Returns(new CliValidatableDelegate((out IEnumerable<CliError>? e) =>
+                .Setup(x => x.ValidateOptions(command, out validationErrors))
+                .Returns(new CliValidatableDelegate((ICliCommandInfo c, out IEnumerable<CliError>? e) =>
                 {
                     e = errors;
                     return result;

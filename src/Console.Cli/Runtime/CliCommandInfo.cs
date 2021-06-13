@@ -125,11 +125,11 @@ namespace MaSch.Console.Cli.Runtime
 
         /// <inheritdoc/>
         public int Execute(object obj)
-            => _executor?.Execute(obj) ?? throw new InvalidOperationException($"The command {Name} is not executable.");
+            => _executor?.Execute(this, obj) ?? throw new InvalidOperationException($"The command {Name} is not executable.");
 
         /// <inheritdoc/>
         public async Task<int> ExecuteAsync(object obj)
-            => _executor != null ? await _executor.ExecuteAsync(obj) : throw new InvalidOperationException($"The command {Name} is not executable.");
+            => _executor != null ? await _executor.ExecuteAsync(this, obj) : throw new InvalidOperationException($"The command {Name} is not executable.");
 
         /// <inheritdoc/>
         public void AddChildCommand(ICliCommandInfo childCommand)

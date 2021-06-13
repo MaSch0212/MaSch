@@ -664,7 +664,7 @@ namespace MaSch.Console.Cli.Test
         public class DummyClass2 : ICliCommandExecutor
         {
             [ExcludeFromCodeCoverage]
-            public int ExecuteCommand()
+            public int ExecuteCommand(ICliCommandInfo command)
             {
                 throw new NotImplementedException();
             }
@@ -673,7 +673,7 @@ namespace MaSch.Console.Cli.Test
         public class DummyClass3 : ICliCommandExecutor<DummyClass1>
         {
             [ExcludeFromCodeCoverage]
-            public int ExecuteCommand(DummyClass1 parameters)
+            public int ExecuteCommand(ICliCommandInfo command, DummyClass1 parameters)
             {
                 throw new NotImplementedException();
             }
@@ -998,7 +998,7 @@ namespace MaSch.Console.Cli.Test
         public class DummyClass2 : ICliAsyncCommandExecutor
         {
             [ExcludeFromCodeCoverage]
-            public Task<int> ExecuteCommandAsync()
+            public Task<int> ExecuteCommandAsync(ICliCommandInfo command)
             {
                 throw new NotImplementedException();
             }
@@ -1007,7 +1007,7 @@ namespace MaSch.Console.Cli.Test
         public class DummyClass3 : ICliAsyncCommandExecutor<DummyClass1>
         {
             [ExcludeFromCodeCoverage]
-            public Task<int> ExecuteCommandAsync(DummyClass1 parameters)
+            public Task<int> ExecuteCommandAsync(ICliCommandInfo command, DummyClass1 parameters)
             {
                 throw new NotImplementedException();
             }

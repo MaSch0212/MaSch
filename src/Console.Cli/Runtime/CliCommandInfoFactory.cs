@@ -8,12 +8,10 @@ namespace MaSch.Console.Cli.Runtime
     {
         /// <inheritdoc/>
         public ICliCommandInfo Create<TCommand>()
-            where TCommand : ICliCommandExecutorBase
             => new CliCommandInfo(typeof(TCommand), null, null, null, null);
 
         /// <inheritdoc/>
         public ICliCommandInfo Create<TCommand>(TCommand optionsInstance)
-            where TCommand : ICliCommandExecutorBase
             => new CliCommandInfo(typeof(TCommand), null, optionsInstance, null, null);
 
         /// <inheritdoc/>

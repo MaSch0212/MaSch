@@ -374,7 +374,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         [CliCommand("Command1", IsDefault = true, HelpOrder = 4711, HelpText = "My Help Text", Executable = false)]
         public class DummyClass1 : ICliCommandExecutor
         {
-            public int ExecuteCommand()
+            public int ExecuteCommand(ICliCommandInfo command)
             {
                 throw new NotImplementedException();
             }
@@ -417,15 +417,15 @@ namespace MaSch.Console.Cli.Test.Runtime
         [CliCommand("Command9", IsDefault = true, HelpOrder = 4711, HelpText = "My Help Text")]
         private abstract class DummyClass9 : ICliCommandExecutor
         {
-            public abstract int ExecuteCommand();
+            public abstract int ExecuteCommand(ICliCommandInfo command);
         }
 
         public abstract class Executor1 : ICliCommandExecutor<DummyClass2>, ICliAsyncCommandExecutor<DummyClass2>, ICliValidator<DummyClass2>
         {
             public delegate bool ValidateDelegate(ICliCommandInfo command, DummyClass2 parameters, [MaybeNullWhen(true)] out IEnumerable<CliError>? errors);
 
-            public abstract int ExecuteCommand(DummyClass2 parameters);
-            public abstract Task<int> ExecuteCommandAsync(DummyClass2 parameters);
+            public abstract int ExecuteCommand(ICliCommandInfo command, DummyClass2 parameters);
+            public abstract Task<int> ExecuteCommandAsync(ICliCommandInfo command, DummyClass2 parameters);
             public abstract bool ValidateOptions(ICliCommandInfo command, DummyClass2 parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors);
         }
     }

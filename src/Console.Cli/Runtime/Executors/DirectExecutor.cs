@@ -19,26 +19,28 @@ namespace MaSch.Console.Cli.Runtime.Executors
                 throw new ArgumentException($"The type {commandType.Name} needs to implement {typeof(ICliCommandExecutor).Name} and/or {typeof(ICliAsyncCommandExecutor).Name}. If this command should not be executable, set the Executable Property on the CliCommandAttribute to false.", nameof(commandType));
         }
 
-        public int Execute(object obj)
+        public int Execute(ICliCommandInfo command, object obj)
         {
+            Guard.NotNull(command, nameof(command));
             Guard.OfType(obj, nameof(obj), false, _commandType);
 
             if (obj is ICliCommandExecutor executor)
-                return executor.ExecuteCommand();
+                return executor.ExecuteCommand(command);
             else if (obj is ICliAsyncCommandExecutor asyncExecutor)
-                return asyncExecutor.ExecuteCommandAsync().GetAwaiter().GetResult();
+                return asyncExecutor.ExecuteCommandAsync(command).GetAwaiter().GetResult();
             else
                 throw new InvalidOperationException($"The type {obj.GetType().Name} needs to implement {typeof(ICliCommandExecutor).Name} and/or {typeof(ICliAsyncCommandExecutor).Name}. If this command should not be executable, set the Executable Property on the CliCommandAttribute to false.");
         }
 
-        public async Task<int> ExecuteAsync(object obj)
+        public async Task<int> ExecuteAsync(ICliCommandInfo command, object obj)
         {
+            Guard.NotNull(command, nameof(command));
             Guard.OfType(obj, nameof(obj), false, _commandType);
 
             if (obj is ICliAsyncCommandExecutor asyncExecutor)
-                return await asyncExecutor.ExecuteCommandAsync();
+                return await asyncExecutor.ExecuteCommandAsync(command);
             else if (obj is ICliCommandExecutor executor)
-                return executor.ExecuteCommand();
+                return executor.ExecuteCommand(command);
             else
                 throw new InvalidOperationException($"The type {obj.GetType().Name} needs to implement {typeof(ICliCommandExecutor).Name} and/or {typeof(ICliAsyncCommandExecutor).Name}. If this command should not be executable, set the Executable Property on the CliCommandAttribute to false.");
         }
