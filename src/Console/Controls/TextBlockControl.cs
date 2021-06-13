@@ -2,6 +2,7 @@
 using MaSch.Core.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -14,6 +15,11 @@ namespace MaSch.Console.Controls
     public partial class TextBlockControl
     {
         private readonly IConsoleService _console;
+
+        /// <summary>
+        /// Gets the default value for the <see cref="NonWrappingChars"/> property value.
+        /// </summary>
+        public static IReadOnlyList<char> DefaultNonWrappingChars => new ReadOnlyCollection<char>(new[] { '(', ')', '[', ']', '{', '}', '<', '>', '|', ',', '.' });
 
         /// <summary>
         /// Gets or sets the x position of this control.
@@ -68,7 +74,12 @@ namespace MaSch.Console.Controls
         /// <summary>
         /// Gets the actual width that this control uses.
         /// </summary>
-        public int ActualWidth => Math.Min(Width ?? int.MaxValue, _console.BufferSize.Width - X - 1);
+        public int ActualWidth => Math.Min(Width ?? 10000, _console.BufferSize.Width - X - 1);
+
+        /// <summary>
+        /// Gets or sets a list of characters that should prevent to beeing wrapped.
+        /// </summary>
+        public IList<char> NonWrappingChars { get; set; } = DefaultNonWrappingChars.ToList();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextBlockControl"/> class.
@@ -135,12 +146,12 @@ namespace MaSch.Console.Controls
             }
 
             if ((!Height.HasValue || Height > 1) && wrap != Controls.TextWrap.NoWrap)
-                return FormatAndTrimLines(WrapText(Text, maxLength, wrap), maxLength, Height ?? int.MaxValue, ellipsis, TextAlignment);
+                return FormatAndTrimLines(WrapText(Text, maxLength, wrap, NonWrappingChars), maxLength, Height ?? int.MaxValue, ellipsis, TextAlignment);
             else
                 return new[] { Text.Length > maxLength ? TrimText(Text, maxLength, ellipsis) : AlignText(Text, maxLength, TextAlignment, false) };
         }
 
-        private static string[] WrapText(string text, int maxLineLength, TextWrap wrap)
+        private static string[] WrapText(string text, int maxLineLength, TextWrap wrap, IList<char> nonWrappingChars)
         {
             var lines = text.Replace("\r", string.Empty).Split(new[] { '\n' }, StringSplitOptions.None);
             for (int i = 1; i < lines.Length; i++)
@@ -148,7 +159,7 @@ namespace MaSch.Console.Controls
             return wrap switch
             {
                 Controls.TextWrap.CharacterWrap => lines.SelectMany(x => WrapCharacter(x, maxLineLength)).ToArray(),
-                Controls.TextWrap.WordWrap => lines.SelectMany(x => WrapWord(x, maxLineLength)).ToArray(),
+                Controls.TextWrap.WordWrap => lines.SelectMany(x => WrapWord(x, maxLineLength, nonWrappingChars)).ToArray(),
                 _ => new[] { text },
             };
 
@@ -175,9 +186,9 @@ namespace MaSch.Console.Controls
                 }
             }
 
-            static IEnumerable<string> WrapWord(string text, int maxLineLength)
+            static IEnumerable<string> WrapWord(string text, int maxLineLength, IEnumerable<char> nonWrappingChars)
             {
-                var matches = Regex.Matches(text, @"\W");
+                var matches = Regex.Matches(text, $@"[^\w{Regex.Escape(new string(nonWrappingChars.ToArray())).Replace("]", "\\]")}]");
 
                 var i = 0;
                 foreach (var (cidx, nidx) in matches.OfType<Match>().Select(x => x.Index).Append(text.Length - 1).Distinct().WithNext())

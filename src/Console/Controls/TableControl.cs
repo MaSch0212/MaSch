@@ -81,6 +81,7 @@ namespace MaSch.Console.Controls
                                   {
                                       Text = c.Item,
                                       Width = widths[c.Index],
+                                      NonWrappingChars = Columns[c.Index].NonWrappingChars,
                                   }).ToArray();
                 RenderRow(textBlocks);
             }

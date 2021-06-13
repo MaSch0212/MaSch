@@ -8,6 +8,9 @@ using System.Linq;
 
 namespace MaSch.Console.Cli.Runtime
 {
+    /// <summary>
+    /// Default implementation of the <see cref="ICliArgumentParser"/> interface.
+    /// </summary>
     public class CliArgumentParser : ICliArgumentParser
     {
         private readonly List<ICliValidator<object>> _commonValidators = new()
@@ -15,11 +18,13 @@ namespace MaSch.Console.Cli.Runtime
             new RequiredValidator(),
         };
 
+        /// <inheritdoc/>
         public void AddValidator(ICliValidator<object> validator)
         {
             _commonValidators.Add(validator);
         }
 
+        /// <inheritdoc/>
         public CliArgumentParserResult Parse(ICliApplicationBase application, string[] args)
         {
             try

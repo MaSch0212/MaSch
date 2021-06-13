@@ -10,20 +10,39 @@ using System.Reflection;
 
 namespace MaSch.Console.Cli.Runtime
 {
+    /// <inheritdoc/>
     public abstract class CliCommandMemberInfo : ICliCommandMemberInfo
     {
         private readonly Dictionary<object, bool> _optionsToHasValue = new(new ObjectHashComparer());
 
+        /// <summary>
+        /// Gets the property this member represents.
+        /// </summary>
         protected PropertyInfo Property { get; }
 
+        /// <inheritdoc/>
         public ICliCommandInfo Command { get; }
+
+        /// <inheritdoc/>
         public string PropertyName => Property.Name;
+
+        /// <inheritdoc/>
         public Type PropertyType => Property.PropertyType;
 
+        /// <inheritdoc/>
         public abstract bool IsRequired { get; }
+
+        /// <inheritdoc/>
         public abstract object? DefaultValue { get; }
+
+        /// <inheritdoc/>
         public abstract string? HelpText { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CliCommandMemberInfo"/> class.
+        /// </summary>
+        /// <param name="command">The command this member belongs to.</param>
+        /// <param name="property">The property this member represents.</param>
         protected CliCommandMemberInfo(ICliCommandInfo command, PropertyInfo property)
         {
             Command = Guard.NotNull(command, nameof(command));
@@ -39,18 +58,21 @@ namespace MaSch.Console.Cli.Runtime
                 throw new ArgumentException($"The property \"{property.Name}\" needs to have a setter and getter.", nameof(property));
         }
 
+        /// <inheritdoc/>
         public virtual object? GetValue(object options)
         {
             Guard.NotNull(options, nameof(options));
             return Property.GetValue(options);
         }
 
+        /// <inheritdoc/>
         public virtual bool HasValue(object options)
         {
             Guard.NotNull(options, nameof(options));
             return _optionsToHasValue.TryGetValue(options, out bool hasValue) && hasValue;
         }
 
+        /// <inheritdoc/>
         public virtual void SetDefaultValue(object options)
         {
             Guard.NotNull(options, nameof(options));
@@ -60,6 +82,7 @@ namespace MaSch.Console.Cli.Runtime
                 SetValue(options, DefaultValue ?? PropertyType.GetDefault(), true);
         }
 
+        /// <inheritdoc/>
         public virtual void SetValue(object options, object? value)
         {
             Guard.NotNull(options, nameof(options));
@@ -75,7 +98,14 @@ namespace MaSch.Console.Cli.Runtime
                     value = e1.ToGeneric().Concat(e2.ToGeneric());
             }
 
-            Property.SetValue(options, value.ConvertTo(Property.PropertyType, CultureInfo.InvariantCulture));
+            try
+            {
+                Property.SetValue(options, value.ConvertTo(Property.PropertyType, CultureInfo.InvariantCulture));
+            }
+            catch (InvalidCastException ex)
+            {
+                throw new FormatException($"Could not parse value to {Property.PropertyType.FullName}.", ex);
+            }
 
             if (_optionsToHasValue.ContainsKey(options))
                 _optionsToHasValue[options] = !isDefault;

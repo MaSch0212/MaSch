@@ -178,6 +178,19 @@ namespace MaSch.Console.Cli.Test.Runtime
         }
 
         [TestMethod]
+        public void SetValue_WithObject_Convert_WrongFormat()
+        {
+            var command = Mocks.Create<ICliCommandInfo>();
+            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var obj = new DummyClass();
+
+            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
+            member.CallBase = true;
+
+            Assert.ThrowsException<FormatException>(() => member.Object.SetValue(obj, "abc"));
+        }
+
+        [TestMethod]
         public void SetValue_WithObject_Enumerable_PrevNull()
         {
             var command = Mocks.Create<ICliCommandInfo>();

@@ -4,16 +4,33 @@ using System.Reflection;
 
 namespace MaSch.Console.Cli.Runtime
 {
+    /// <inheritdoc/>
     public class CliCommandValueInfo : CliCommandMemberInfo, ICliCommandValueInfo
     {
+        /// <inheritdoc/>
         public CliCommandValueAttribute Attribute { get; }
 
+        /// <inheritdoc/>
         public override object? DefaultValue => Attribute.Default;
+
+        /// <inheritdoc/>
         public override bool IsRequired => Attribute.Required;
+
+        /// <inheritdoc/>
         public override string? HelpText => Attribute.HelpText;
+
+        /// <inheritdoc/>
         public string DisplayName => Attribute.DisplayName;
+
+        /// <inheritdoc/>
         public int Order => Attribute.Order;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CliCommandValueInfo"/> class.
+        /// </summary>
+        /// <param name="command">The command this member belongs to.</param>
+        /// <param name="property">The property this member represents.</param>
+        /// <param name="attribute">The value code attribute.</param>
         public CliCommandValueInfo(ICliCommandInfo command, PropertyInfo property, CliCommandValueAttribute attribute)
             : base(command, property)
         {

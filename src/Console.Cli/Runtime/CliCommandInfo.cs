@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace MaSch.Console.Cli.Runtime
 {
+    /// <inheritdoc/>
     [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "False positive.")]
     public class CliCommandInfo : ICliCommandInfo
     {
@@ -22,18 +23,43 @@ namespace MaSch.Console.Cli.Runtime
         private readonly ICliExecutor? _executor;
         private readonly Cache _cache = new();
 
+        /// <inheritdoc/>
         public CliCommandAttribute Attribute { get; }
+
+        /// <inheritdoc/>
         public Type CommandType { get; }
+
+        /// <inheritdoc/>
         public object? OptionsInstance { get; }
+
+        /// <inheritdoc/>
         public string Name => Attribute.Name;
+
+        /// <inheritdoc/>
         public IReadOnlyList<string> Aliases => Attribute.Aliases;
+
+        /// <inheritdoc/>
         public bool IsDefault => Attribute.IsDefault;
+
+        /// <inheritdoc/>
         public string? HelpText => Attribute.HelpText;
+
+        /// <inheritdoc/>
         public int Order => Attribute.HelpOrder;
+
+        /// <inheritdoc/>
         public bool IsExecutable => Attribute.Executable;
+
+        /// <inheritdoc/>
         public ICliCommandInfo? ParentCommand { get; private set; }
+
+        /// <inheritdoc/>
         public IReadOnlyList<ICliCommandInfo> ChildCommands => _cache.GetValue(() => _childCommands.AsReadOnly())!;
+
+        /// <inheritdoc/>
         public IReadOnlyList<ICliCommandOptionInfo> Options => _cache.GetValue(() => _options.AsReadOnly())!;
+
+        /// <inheritdoc/>
         public IReadOnlyList<ICliCommandValueInfo> Values => _cache.GetValue(() => _values.AsReadOnly())!;
 
         [SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "False positive.")]
@@ -71,6 +97,7 @@ namespace MaSch.Console.Cli.Runtime
             }
         }
 
+        /// <inheritdoc/>
         public bool ValidateOptions(ICliCommandInfo command, object parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors)
         {
             if (_executor == null)
@@ -84,11 +111,15 @@ namespace MaSch.Console.Cli.Runtime
             }
         }
 
+        /// <inheritdoc/>
         public int Execute(object obj)
             => _executor?.Execute(obj) ?? throw new InvalidOperationException($"The command {Name} is not executable.");
+
+        /// <inheritdoc/>
         public async Task<int> ExecuteAsync(object obj)
             => _executor != null ? await _executor.ExecuteAsync(obj) : throw new InvalidOperationException($"The command {Name} is not executable.");
 
+        /// <inheritdoc/>
         public void AddChildCommand(ICliCommandInfo childCommand)
         {
             _childCommands.Add(childCommand);
@@ -96,6 +127,7 @@ namespace MaSch.Console.Cli.Runtime
                 cc.ParentCommand = this;
         }
 
+        /// <inheritdoc/>
         public void RemoveChildCommand(ICliCommandInfo childCommand)
         {
             _childCommands.Remove(childCommand);

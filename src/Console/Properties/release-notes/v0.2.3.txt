@@ -1,0 +1,1 @@
+﻿- Added ability to add non-wrapping characters to TextBlockControl and Columns of TableControl.

@@ -20,12 +20,6 @@
 
   <Import Project="$(GitBuildDir)MaSch.props" />
 
-  <!-- Remove this group when this project contains usable code. -->
-  <PropertyGroup>
-    <IsPackable>false</IsPackable>
-    <CodeAnalysisRuleSet>Properties\MaSch.Console.Cli.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="$(GitSourceDir)Console/MaSch.Console.csproj" />
     <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />

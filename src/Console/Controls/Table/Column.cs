@@ -1,4 +1,7 @@
-﻿namespace MaSch.Console.Controls.Table
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace MaSch.Console.Controls.Table
 {
     /// <summary>
     /// Represents a coplumn of a <see cref="TableControl"/>.
@@ -29,6 +32,11 @@
         /// Gets or sets the maximum width.
         /// </summary>
         public int? MaxWidth { get; set; } = null;
+
+        /// <summary>
+        /// Gets or sets a list of characters that should prevent to beeing wrapped.
+        /// </summary>
+        public IList<char> NonWrappingChars { get; set; } = TextBlockControl.DefaultNonWrappingChars.ToList();
     }
 
     /// <summary>
