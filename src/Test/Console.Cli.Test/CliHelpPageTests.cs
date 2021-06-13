@@ -60,9 +60,23 @@ namespace MaSch.Console.Cli.Test.Help
             AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Name = "MyName", Version = "MyVersion" });
             var sb = AttachStringBuilder(ConsoleServiceMock);
 
-            HelpPage.WriteCommandNameAndVersion(AppMock.Object, null!);
+            HelpPage.WriteCommandNameAndVersion(AppMock.Object, new CliError("blub"));
 
             Assert.AreEqual($"MyName MyVersion{NL}", sb.ToString());
+        }
+
+        [TestMethod]
+        public void WriteCommandNameAndVersion_CommandSpecific()
+        {
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            commandMock.Setup(x => x.DisplayName).Returns("YourName");
+            commandMock.Setup(x => x.Version).Returns("YourVersion");
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Name = "MyName", Version = "MyVersion" });
+            var sb = AttachStringBuilder(ConsoleServiceMock);
+
+            HelpPage.WriteCommandNameAndVersion(AppMock.Object, new CliError("blub", commandMock.Object));
+
+            Assert.AreEqual($"YourName YourVersion{NL}", sb.ToString());
         }
 
         [TestMethod]
@@ -72,7 +86,7 @@ namespace MaSch.Console.Cli.Test.Help
             ConsoleServiceMock.Setup(x => x.IsFancyConsole).Returns(true);
             var sb = AttachStringBuilder(ConsoleServiceMock);
 
-            HelpPage.WriteCopyright(AppMock.Object, null!);
+            HelpPage.WriteCopyright(AppMock.Object, new CliError("blub"));
 
             Assert.AreEqual($"Copyright © 1337 Me{NL}", sb.ToString());
         }
@@ -84,9 +98,24 @@ namespace MaSch.Console.Cli.Test.Help
             ConsoleServiceMock.Setup(x => x.IsFancyConsole).Returns(false);
             var sb = AttachStringBuilder(ConsoleServiceMock);
 
-            HelpPage.WriteCopyright(AppMock.Object, null!);
+            HelpPage.WriteCopyright(AppMock.Object, new CliError("blub"));
 
             Assert.AreEqual($"Copyright (C) 1337 Me{NL}", sb.ToString());
+        }
+
+        [TestMethod]
+        public void WriteCopyright_CommandSpecific()
+        {
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            commandMock.Setup(x => x.Year).Returns("4711");
+            commandMock.Setup(x => x.Author).Returns("You");
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Year = "1337", Author = "Me" });
+            ConsoleServiceMock.Setup(x => x.IsFancyConsole).Returns(true);
+            var sb = AttachStringBuilder(ConsoleServiceMock);
+
+            HelpPage.WriteCopyright(AppMock.Object, new CliError("blub", commandMock.Object));
+
+            Assert.AreEqual($"Copyright © 4711 You{NL}", sb.ToString());
         }
 
         [TestMethod]
@@ -219,10 +248,11 @@ namespace MaSch.Console.Cli.Test.Help
             helpPageMock.Protected().Setup("WriteVersionPage", app, error).CallBase();
             helpPageMock.Protected().Setup("WriteCommandNameAndVersion", app, error).Callback(() => callOrder.Add("CommandNameAndVersion"));
             helpPageMock.Protected().Setup("WriteCopyright", app, error).Callback(() => callOrder.Add("Copyright"));
+            helpPageMock.Protected().Setup("WriteCommandVersions", app, error).Callback(() => callOrder.Add("CommandVersions"));
 
             new PrivateCliHelpPage(helpPageMock.Object).WriteVersionPage(app, error);
 
-            Assert.AreCollectionsEqual(new[] { "CommandNameAndVersion", "Copyright" }, callOrder);
+            Assert.AreCollectionsEqual(new[] { "CommandNameAndVersion", "Copyright", "CommandVersions" }, callOrder);
         }
 
         [TestMethod]
@@ -916,6 +946,220 @@ namespace MaSch.Console.Cli.Test.Help
                 sb.ToString());
         }
 
+        [TestMethod]
+        public void WriteCommandVersions_NoAffectedCommand_NoCommands()
+        {
+            var sb = AttachStringBuilder(ConsoleServiceMock);
+            var collectionMock = Mocks.Create<IReadOnlyCliCommandInfoCollection>();
+            collectionMock.Setup(x => x.GetRootCommands()).Returns(Array.Empty<ICliCommandInfo>());
+            AppMock.Setup(x => x.Commands).Returns(collectionMock.Object);
+
+            HelpPage.WriteCommandVersions(AppMock.Object, new CliError("MyError"));
+
+            Assert.AreEqual(string.Empty, sb.ToString());
+        }
+
+        [TestMethod]
+        public void WriteCommandVersions_NoAffectedCommand_NoOverridingCommands()
+        {
+            var sb = AttachStringBuilder(ConsoleServiceMock);
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            var collectionMock = Mocks.Create<IReadOnlyCliCommandInfoCollection>();
+            commandMock.Setup(x => x.Author).Returns((string?)null);
+            commandMock.Setup(x => x.DisplayName).Returns((string?)null);
+            commandMock.Setup(x => x.Year).Returns((string?)null);
+            commandMock.Setup(x => x.Version).Returns((string?)null);
+            collectionMock.Setup(x => x.GetRootCommands()).Returns(new[] { commandMock.Object });
+            AppMock.Setup(x => x.Commands).Returns(collectionMock.Object);
+
+            HelpPage.WriteCommandVersions(AppMock.Object, new CliError("MyError"));
+
+            Assert.AreEqual(string.Empty, sb.ToString());
+        }
+
+        [TestMethod]
+        [DataRow(false, DisplayName = "Without Fancy Console")]
+        [DataRow(true, DisplayName = "With Fancy Console")]
+        public void WriteCommandVersions_NoAffectedCommand_WithCommands(bool fancyConsole)
+        {
+            var sb = AttachStringBuilder(ConsoleServiceMock);
+            var command1Mock = Mocks.Create<ICliCommandInfo>();
+            var command2Mock = Mocks.Create<ICliCommandInfo>();
+            var command3Mock = Mocks.Create<ICliCommandInfo>();
+            var collectionMock = Mocks.Create<IReadOnlyCliCommandInfoCollection>();
+            command1Mock.Setup(x => x.Author).Returns((string?)null);
+            command1Mock.Setup(x => x.DisplayName).Returns((string?)null);
+            command1Mock.Setup(x => x.Year).Returns((string?)null);
+            command1Mock.Setup(x => x.Version).Returns((string?)null);
+            command1Mock.Setup(x => x.Order).Returns(0);
+            command1Mock.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
+            command2Mock.Setup(x => x.Name).Returns("cmd2");
+            command2Mock.Setup(x => x.Aliases).Returns(new[] { "cmd2" });
+            command2Mock.Setup(x => x.Author).Returns("You");
+            command2Mock.Setup(x => x.DisplayName).Returns((string?)null);
+            command2Mock.Setup(x => x.Year).Returns("4711");
+            command2Mock.Setup(x => x.Version).Returns((string?)null);
+            command2Mock.Setup(x => x.Order).Returns(0);
+            command2Mock.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
+            command3Mock.Setup(x => x.Name).Returns("cmd3");
+            command3Mock.Setup(x => x.Aliases).Returns(new[] { "cmd3", "command3", "my-command-3" });
+            command3Mock.Setup(x => x.Author).Returns((string?)null);
+            command3Mock.Setup(x => x.DisplayName).Returns("Yours");
+            command3Mock.Setup(x => x.Year).Returns((string?)null);
+            command3Mock.Setup(x => x.Version).Returns("99");
+            command3Mock.Setup(x => x.Order).Returns(0);
+            command3Mock.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
+            collectionMock.Setup(x => x.GetRootCommands()).Returns(new[] { command1Mock.Object, command2Mock.Object, command3Mock.Object });
+            AppMock.Setup(x => x.Commands).Returns(collectionMock.Object);
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Name = "My", Year = "1337", Author = "Me", Version = "15" });
+            ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(55, int.MaxValue));
+            ConsoleServiceMock.Setup(x => x.IsOutputRedirected).Returns(false);
+            ConsoleServiceMock.Setup(x => x.IsFancyConsole).Returns(fancyConsole);
+
+            HelpPage.WriteCommandVersions(AppMock.Object, new CliError("MyError"));
+
+            var cchar = fancyConsole ? "©" : "(C)";
+            Assert.AreEqual(
+                $"{NL}Commands:{NL}" +
+                $"   cmd2                         15   {cchar} 4711 You{NL}" +
+                $"   cmd3, command3,      Yours   99   {cchar} 1337 Me {NL}" +
+                $"   my-command-3                                {(fancyConsole ? string.Empty : "  ")}{NL}",
+                sb.ToString());
+        }
+
+        [TestMethod]
+        public void WriteCommandVersions_WithAffectedCommand_NoCommands()
+        {
+            var sb = AttachStringBuilder(ConsoleServiceMock);
+            var aCommandMock = Mocks.Create<ICliCommandInfo>();
+            aCommandMock.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
+
+            HelpPage.WriteCommandVersions(AppMock.Object, new CliError("MyError", aCommandMock.Object));
+
+            Assert.AreEqual(string.Empty, sb.ToString());
+        }
+
+        [TestMethod]
+        public void WriteCommandVersions_WithAffectedCommand_NoOverridingCommands()
+        {
+            var sb = AttachStringBuilder(ConsoleServiceMock);
+            var aCommandMock = Mocks.Create<ICliCommandInfo>();
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            commandMock.Setup(x => x.Author).Returns((string?)null);
+            commandMock.Setup(x => x.DisplayName).Returns((string?)null);
+            commandMock.Setup(x => x.Year).Returns((string?)null);
+            commandMock.Setup(x => x.Version).Returns((string?)null);
+            aCommandMock.Setup(x => x.ChildCommands).Returns(new[] { commandMock.Object });
+
+            HelpPage.WriteCommandVersions(AppMock.Object, new CliError("MyError", aCommandMock.Object));
+
+            Assert.AreEqual(string.Empty, sb.ToString());
+        }
+
+        [TestMethod]
+        [DataRow(false, DisplayName = "Without Fancy Console")]
+        [DataRow(true, DisplayName = "With Fancy Console")]
+        public void WriteCommandVersions_WithAffectedCommand_WithCommands_FallbackToParentCommand(bool fancyConsole)
+        {
+            var sb = AttachStringBuilder(ConsoleServiceMock);
+            var command1Mock = Mocks.Create<ICliCommandInfo>();
+            var command2Mock = Mocks.Create<ICliCommandInfo>();
+            var command3Mock = Mocks.Create<ICliCommandInfo>();
+            var aCommandMock = Mocks.Create<ICliCommandInfo>();
+            aCommandMock.Setup(x => x.Author).Returns("Other");
+            aCommandMock.Setup(x => x.Year).Returns("0815");
+            aCommandMock.Setup(x => x.Version).Returns("77");
+            command1Mock.Setup(x => x.Author).Returns((string?)null);
+            command1Mock.Setup(x => x.DisplayName).Returns((string?)null);
+            command1Mock.Setup(x => x.Year).Returns((string?)null);
+            command1Mock.Setup(x => x.Version).Returns((string?)null);
+            command1Mock.Setup(x => x.Order).Returns(0);
+            command1Mock.Setup(x => x.ParentCommand).Returns(aCommandMock.Object);
+            command2Mock.Setup(x => x.Name).Returns("cmd2");
+            command2Mock.Setup(x => x.Aliases).Returns(new[] { "cmd2" });
+            command2Mock.Setup(x => x.Author).Returns("You");
+            command2Mock.Setup(x => x.DisplayName).Returns((string?)null);
+            command2Mock.Setup(x => x.Year).Returns("4711");
+            command2Mock.Setup(x => x.Version).Returns((string?)null);
+            command2Mock.Setup(x => x.Order).Returns(0);
+            command2Mock.Setup(x => x.ParentCommand).Returns(aCommandMock.Object);
+            command3Mock.Setup(x => x.Name).Returns("cmd3");
+            command3Mock.Setup(x => x.Aliases).Returns(new[] { "cmd3", "command3", "my-command-3" });
+            command3Mock.Setup(x => x.Author).Returns((string?)null);
+            command3Mock.Setup(x => x.DisplayName).Returns("Yours");
+            command3Mock.Setup(x => x.Year).Returns((string?)null);
+            command3Mock.Setup(x => x.Version).Returns("99");
+            command3Mock.Setup(x => x.Order).Returns(0);
+            command3Mock.Setup(x => x.ParentCommand).Returns(aCommandMock.Object);
+            aCommandMock.Setup(x => x.ChildCommands).Returns(new[] { command1Mock.Object, command2Mock.Object, command3Mock.Object });
+            ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(55, int.MaxValue));
+            ConsoleServiceMock.Setup(x => x.IsOutputRedirected).Returns(false);
+            ConsoleServiceMock.Setup(x => x.IsFancyConsole).Returns(fancyConsole);
+
+            HelpPage.WriteCommandVersions(AppMock.Object, new CliError("MyError", aCommandMock.Object));
+
+            var cchar = fancyConsole ? "©" : "(C)";
+            Assert.AreEqual(
+                $"{NL}Commands:{NL}" +
+                $"   cmd2                         77   {cchar} 4711 You  {NL}" +
+                $"   cmd3, command3,      Yours   99   {cchar} 0815 Other{NL}" +
+                $"   my-command-3                                  {(fancyConsole ? string.Empty : "  ")}{NL}",
+                sb.ToString());
+        }
+
+        [TestMethod]
+        [DataRow(false, DisplayName = "Without Fancy Console")]
+        [DataRow(true, DisplayName = "With Fancy Console")]
+        public void WriteCommandVersions_WithAffectedCommand_WithCommands_FallbackToAppp(bool fancyConsole)
+        {
+            var sb = AttachStringBuilder(ConsoleServiceMock);
+            var command1Mock = Mocks.Create<ICliCommandInfo>();
+            var command2Mock = Mocks.Create<ICliCommandInfo>();
+            var command3Mock = Mocks.Create<ICliCommandInfo>();
+            var aCommandMock = Mocks.Create<ICliCommandInfo>();
+            aCommandMock.Setup(x => x.Author).Returns((string?)null);
+            aCommandMock.Setup(x => x.Year).Returns((string?)null);
+            aCommandMock.Setup(x => x.Version).Returns((string?)null);
+            aCommandMock.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
+            command1Mock.Setup(x => x.Author).Returns((string?)null);
+            command1Mock.Setup(x => x.DisplayName).Returns((string?)null);
+            command1Mock.Setup(x => x.Year).Returns((string?)null);
+            command1Mock.Setup(x => x.Version).Returns((string?)null);
+            command1Mock.Setup(x => x.Order).Returns(0);
+            command1Mock.Setup(x => x.ParentCommand).Returns(aCommandMock.Object);
+            command2Mock.Setup(x => x.Name).Returns("cmd2");
+            command2Mock.Setup(x => x.Aliases).Returns(new[] { "cmd2" });
+            command2Mock.Setup(x => x.Author).Returns("You");
+            command2Mock.Setup(x => x.DisplayName).Returns((string?)null);
+            command2Mock.Setup(x => x.Year).Returns("4711");
+            command2Mock.Setup(x => x.Version).Returns((string?)null);
+            command2Mock.Setup(x => x.Order).Returns(0);
+            command2Mock.Setup(x => x.ParentCommand).Returns(aCommandMock.Object);
+            command3Mock.Setup(x => x.Name).Returns("cmd3");
+            command3Mock.Setup(x => x.Aliases).Returns(new[] { "cmd3", "command3", "my-command-3" });
+            command3Mock.Setup(x => x.Author).Returns((string?)null);
+            command3Mock.Setup(x => x.DisplayName).Returns("Yours");
+            command3Mock.Setup(x => x.Year).Returns((string?)null);
+            command3Mock.Setup(x => x.Version).Returns("99");
+            command3Mock.Setup(x => x.Order).Returns(0);
+            command3Mock.Setup(x => x.ParentCommand).Returns(aCommandMock.Object);
+            aCommandMock.Setup(x => x.ChildCommands).Returns(new[] { command1Mock.Object, command2Mock.Object, command3Mock.Object });
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Name = "My", Year = "1337", Author = "Me", Version = "15" });
+            ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(55, int.MaxValue));
+            ConsoleServiceMock.Setup(x => x.IsOutputRedirected).Returns(false);
+            ConsoleServiceMock.Setup(x => x.IsFancyConsole).Returns(fancyConsole);
+
+            HelpPage.WriteCommandVersions(AppMock.Object, new CliError("MyError", aCommandMock.Object));
+
+            var cchar = fancyConsole ? "©" : "(C)";
+            Assert.AreEqual(
+                $"{NL}Commands:{NL}" +
+                $"   cmd2                         15   {cchar} 4711 You{NL}" +
+                $"   cmd3, command3,      Yours   99   {cchar} 1337 Me {NL}" +
+                $"   my-command-3                                {(fancyConsole ? string.Empty : "  ")}{NL}",
+                sb.ToString());
+        }
+
         private ConsoleSize CreateConsoleSize(int width, int height)
         {
             var widthCallback = Mocks.Create<Action<int>>();
@@ -1035,6 +1279,9 @@ namespace MaSch.Console.Cli.Test.Help
 
             public void WriteCommands(ICliApplicationBase application, CliError error)
                 => _po.Invoke(nameof(WriteCommands), application, error);
+
+            public void WriteCommandVersions(ICliApplicationBase application, CliError error)
+                => _po.Invoke(nameof(WriteCommandVersions), application, error);
 
             public static string GetOptionName(CliCommandOptionInfo option)
                 => (string)_pt.InvokeStatic(nameof(GetOptionName), option);

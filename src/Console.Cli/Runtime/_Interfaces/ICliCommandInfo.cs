@@ -56,6 +56,26 @@ namespace MaSch.Console.Cli.Runtime
         bool IsExecutable { get; }
 
         /// <summary>
+        /// Gets the display name.
+        /// </summary>
+        string? DisplayName { get; }
+
+        /// <summary>
+        /// Gets the version of this command.
+        /// </summary>
+        string? Version { get; }
+
+        /// <summary>
+        /// Gets the author of this command.
+        /// </summary>
+        string? Author { get; }
+
+        /// <summary>
+        /// Gets the year in which this command was last changed.
+        /// </summary>
+        string? Year { get; }
+
+        /// <summary>
         /// Gets the parent command.
         /// </summary>
         ICliCommandInfo? ParentCommand { get; }

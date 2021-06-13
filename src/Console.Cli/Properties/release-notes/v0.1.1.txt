@@ -1,0 +1,1 @@
+﻿- Added ability to set version specific information to commands.

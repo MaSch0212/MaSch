@@ -59,6 +59,7 @@ namespace MaSch.Console.Cli
         {
             WriteCommandNameAndVersion(application, error);
             WriteCopyright(application, error);
+            WriteCommandVersions(application, error);
         }
 
         /// <summary>
@@ -103,7 +104,11 @@ namespace MaSch.Console.Cli
         /// <param name="application">The application in which the error(s) occured.</param>
         /// <param name="error">The error.</param>
         protected virtual void WriteCommandNameAndVersion(ICliApplicationBase application, CliError error)
-            => _console.WriteLine($"{application.Options.Name} {application.Options.Version}");
+        {
+            var name = error.AffectedCommand?.DisplayName ?? application.Options.Name;
+            var version = error.AffectedCommand?.Version ?? application.Options.Version;
+            _console.WriteLine($"{name} {version}");
+        }
 
         /// <summary>
         /// Writes the copyright.
@@ -111,7 +116,11 @@ namespace MaSch.Console.Cli
         /// <param name="application">The application in which the error(s) occured.</param>
         /// <param name="error">The error.</param>
         protected virtual void WriteCopyright(ICliApplicationBase application, CliError error)
-            => _console.WriteLine($"Copyright {(_console.IsFancyConsole ? "©" : "(C)")} {application.Options.Year} {application.Options.Author}");
+        {
+            var year = error.AffectedCommand?.Year ?? application.Options.Year;
+            var author = error.AffectedCommand?.Author ?? application.Options.Author;
+            _console.WriteLine($"Copyright {(_console.IsFancyConsole ? "©" : "(C)")} {year} {author}");
+        }
 
         /// <summary>
         /// Writes an error message.
@@ -343,6 +352,74 @@ namespace MaSch.Console.Cli
             }));
 
             table.Render();
+        }
+
+        /// <summary>
+        /// Writes the command version list.
+        /// </summary>
+        /// <param name="application">The application in which the error(s) occured.</param>
+        /// <param name="error">The error.</param>
+        protected virtual void WriteCommandVersions(ICliApplicationBase application, CliError error)
+        {
+            var commands = (from command in error.AffectedCommand?.ChildCommands ?? application.Commands.GetRootCommands()
+                            where command.Author != null || command.DisplayName != null || command.Version != null || command.Year != null
+                            select command).ToArray();
+            if (commands.Length == 0)
+                return;
+
+            var table = new TableControl(_console)
+            {
+                ShowColumnHeaders = false,
+                Columns =
+                {
+                    new Column
+                    {
+                        Width = 0,
+                        WidthMode = ColumnWidthMode.Fixed,
+                    },
+                    new Column // Command Name
+                    {
+                        WidthMode = ColumnWidthMode.Auto,
+                        MaxWidth = _console.BufferSize.Width / 3,
+                    },
+                    new Column // Command DisplayName
+                    {
+                        WidthMode = ColumnWidthMode.Auto,
+                    },
+                    new Column // Command Version
+                    {
+                        WidthMode = ColumnWidthMode.Auto,
+                    },
+                    new Column // Command Copyright
+                    {
+                        WidthMode = ColumnWidthMode.Auto,
+                    },
+                },
+            };
+            table.Columns[1].NonWrappingChars.Add('-');
+
+            _console.WriteLine();
+            _console.WriteLine("Commands:");
+            table.Rows.Add(commands.OrderBy(x => x.Order).ThenBy(x => x.Name).Select(x => new Row
+            {
+                Values = new[]
+                {
+                    string.Empty,
+                    x.Aliases.Count > 1 ? $"{string.Join(", ", x.Aliases)}" : x.Name,
+                    x.DisplayName ?? string.Empty,
+                    GetVersion(x, application) ?? string.Empty,
+                    $"{(_console.IsFancyConsole ? "©" : "(C)")} {GetYear(x, application)} {GetAuthor(x, application)}",
+                },
+            }));
+
+            table.Render();
+
+            static string? GetVersion(ICliCommandInfo command, ICliApplicationBase app)
+                => command.Version ?? (command.ParentCommand != null ? GetVersion(command.ParentCommand, app) : app.Options.Version);
+            static string? GetYear(ICliCommandInfo command, ICliApplicationBase app)
+                => command.Year ?? (command.ParentCommand != null ? GetYear(command.ParentCommand, app) : app.Options.Year);
+            static string? GetAuthor(ICliCommandInfo command, ICliApplicationBase app)
+                => command.Author ?? (command.ParentCommand != null ? GetAuthor(command.ParentCommand, app) : app.Options.Author);
         }
 
         private static string GetOptionName(ICliCommandOptionInfo option)

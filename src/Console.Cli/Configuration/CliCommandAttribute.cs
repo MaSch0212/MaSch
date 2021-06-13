@@ -47,6 +47,26 @@ namespace MaSch.Console.Cli.Configuration
         public bool Executable { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets the display name that is shown in the help page.
+        /// </summary>
+        public string? DisplayName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the version of this command that is shown in the help page.
+        /// </summary>
+        public string? Version { get; set; }
+
+        /// <summary>
+        /// Gets or sets the author of this command that is shown in the help page.
+        /// </summary>
+        public string? Author { get; set; }
+
+        /// <summary>
+        /// Gets or sets the year in which this command was last changed. This information is shown in the help page.
+        /// </summary>
+        public string? Year { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CliCommandAttribute"/> class.
         /// </summary>
         /// <param name="name">The name of this command.</param>

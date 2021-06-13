@@ -74,6 +74,10 @@ namespace MaSch.Console.Cli.Test.Configuration
             Assert.IsNull(attr.HelpText);
             Assert.IsNull(attr.ParentCommand);
             Assert.IsTrue(attr.Executable);
+            Assert.IsNull(attr.DisplayName);
+            Assert.IsNull(attr.Author);
+            Assert.IsNull(attr.Year);
+            Assert.IsNull(attr.Version);
         }
     }
 }

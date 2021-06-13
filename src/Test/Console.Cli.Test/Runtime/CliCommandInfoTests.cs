@@ -160,6 +160,17 @@ namespace MaSch.Console.Cli.Test.Runtime
             Assert.AreCollectionsEqual(Array.Empty<ICliCommandInfo>(), parentInfo.ChildCommands);
         }
 
+        [TestMethod]
+        public void Metadata()
+        {
+            var info = new CliCommandInfo(typeof(DummyClass3), null, null, null, null);
+
+            Assert.AreEqual("MyDisplayName", info.DisplayName);
+            Assert.AreEqual("MyVersion", info.Version);
+            Assert.AreEqual("MyAuthor", info.Author);
+            Assert.AreEqual("MyYear", info.Year);
+        }
+
         [CliCommand("Command1", IsDefault = true, HelpOrder = 4711, HelpText = "My Help Text", Executable = false)]
         public class DummyClass1
         {
@@ -167,6 +178,11 @@ namespace MaSch.Console.Cli.Test.Runtime
 
         [CliCommand("Command2", IsDefault = true, HelpOrder = 4711, HelpText = "My Help Text")]
         public class DummyClass2
+        {
+        }
+
+        [CliCommand("Command3", DisplayName = "MyDisplayName", Version = "MyVersion", Author = "MyAuthor", Year = "MyYear", Executable = false)]
+        public class DummyClass3
         {
         }
 

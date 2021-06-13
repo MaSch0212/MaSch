@@ -51,6 +51,18 @@ namespace MaSch.Console.Cli.Runtime
         public bool IsExecutable => Attribute.Executable;
 
         /// <inheritdoc/>
+        public string? DisplayName => Attribute.DisplayName;
+
+        /// <inheritdoc/>
+        public string? Version => Attribute.Version;
+
+        /// <inheritdoc/>
+        public string? Author => Attribute.Author;
+
+        /// <inheritdoc/>
+        public string? Year => Attribute.Year;
+
+        /// <inheritdoc/>
         public ICliCommandInfo? ParentCommand { get; private set; }
 
         /// <inheritdoc/>
