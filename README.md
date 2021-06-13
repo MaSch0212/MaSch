@@ -15,6 +15,7 @@ This repo contains all common libraries I use for my applications
 | `MaSch.Core.EventLogging` | [![NuGet](https://img.shields.io/nuget/v/MaSch.Core.EventLogging.svg)](https://www.nuget.org/packages/MaSch.Core.EventLogging/) | Contains a logging provider for windows Event Logging |
 | `MaSch.Data` | [![NuGet](https://img.shields.io/nuget/v/MaSch.Data.svg)](https://www.nuget.org/packages/MaSch.Data/) | Contains supporting code for data access in .NET applications |
 | `MaSch.Console` | [![NuGet](https://img.shields.io/nuget/v/MaSch.Console.svg)](https://www.nuget.org/packages/MaSch.Console/) | Contains supporting code for console applications |
+| `MaSch.Console.Cli` | [![NuGet](https://img.shields.io/nuget/v/MaSch.Console.Cli.svg)](https://www.nuget.org/packages/MaSch.Console.Cli/) | Contains supporting code for console CLI applications |
 | `MaSch.Native.Windows` | [![NuGet](https://img.shields.io/nuget/v/MaSch.Native.Windows.svg)](https://www.nuget.org/packages/MaSch.Native.Windows/) | A small collection of native API calls |
 | `MaSch.Test.Components` | [![NuGet](https://img.shields.io/nuget/v/MaSch.Test.Components.svg)](https://www.nuget.org/packages/MaSch.Test.Components/) | Contains some supporting code for MSTest Unit Tests |
 | `MaSch.Presentation` | [![NuGet](https://img.shields.io/nuget/v/MaSch.Presentation.svg)](https://www.nuget.org/packages/MaSch.Presentation/) | Contains supporting code for .NET front-end applications |
