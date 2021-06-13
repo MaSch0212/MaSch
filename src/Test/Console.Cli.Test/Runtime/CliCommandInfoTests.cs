@@ -169,6 +169,7 @@ namespace MaSch.Console.Cli.Test.Runtime
             Assert.AreEqual("MyVersion", info.Version);
             Assert.AreEqual("MyAuthor", info.Author);
             Assert.AreEqual("MyYear", info.Year);
+            Assert.IsTrue(info.Hidden);
         }
 
         [CliCommand("Command1", IsDefault = true, HelpOrder = 4711, HelpText = "My Help Text", Executable = false)]
@@ -181,7 +182,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
         }
 
-        [CliCommand("Command3", DisplayName = "MyDisplayName", Version = "MyVersion", Author = "MyAuthor", Year = "MyYear", Executable = false)]
+        [CliCommand("Command3", DisplayName = "MyDisplayName", Version = "MyVersion", Author = "MyAuthor", Year = "MyYear", Hidden = true, Executable = false)]
         public class DummyClass3
         {
         }

@@ -37,6 +37,7 @@ namespace MaSch.Console.Cli.Test.Configuration
             Assert.IsNull(attr.Default);
             Assert.IsFalse(attr.Required);
             Assert.IsNull(attr.HelpText);
+            Assert.IsFalse(attr.Hidden);
         }
     }
 }

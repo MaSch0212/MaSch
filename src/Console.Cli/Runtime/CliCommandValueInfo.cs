@@ -20,6 +20,9 @@ namespace MaSch.Console.Cli.Runtime
         public override string? HelpText => Attribute.HelpText;
 
         /// <inheritdoc/>
+        public override bool Hidden => Attribute.Hidden;
+
+        /// <inheritdoc/>
         public string DisplayName => Attribute.DisplayName;
 
         /// <inheritdoc/>

@@ -673,6 +673,25 @@ namespace MaSch.Console.Cli.Test.Help
         }
 
         [TestMethod]
+        public void WriteCommandParameters_NoVisibleValues_NoVisibleOptions()
+        {
+            var sb = AttachStringBuilder(ConsoleServiceMock);
+            var aCommandMock = Mocks.Create<ICliCommandInfo>();
+            var value1Mock = Mocks.Create<ICliCommandValueInfo>();
+            var option1Mock = Mocks.Create<ICliCommandOptionInfo>();
+            value1Mock.Setup(x => x.Hidden).Returns(true);
+            option1Mock.Setup(x => x.Hidden).Returns(true);
+            aCommandMock.Setup(x => x.Options).Returns(new[] { option1Mock.Object });
+            aCommandMock.Setup(x => x.Values).Returns(new[] { value1Mock.Object });
+            ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(50, int.MaxValue));
+            ConsoleServiceMock.Setup(x => x.IsOutputRedirected).Returns(false);
+
+            HelpPage.WriteCommandParameters(AppMock.Object, new CliError("MyError", aCommandMock.Object));
+
+            Assert.AreEqual(string.Empty, sb.ToString());
+        }
+
+        [TestMethod]
         public void WriteCommandParameters_WithValues_NoOptions()
         {
             var sb = AttachStringBuilder(ConsoleServiceMock);
@@ -683,10 +702,12 @@ namespace MaSch.Console.Cli.Test.Help
             value1Mock.Setup(x => x.DisplayName).Returns("Val1");
             value1Mock.Setup(x => x.HelpText).Returns("This is my help text for value 1.");
             value1Mock.Setup(x => x.IsRequired).Returns(false);
+            value1Mock.Setup(x => x.Hidden).Returns(false);
             value2Mock.Setup(x => x.Order).Returns(1);
             value2Mock.Setup(x => x.DisplayName).Returns("Val2");
             value2Mock.Setup(x => x.HelpText).Returns("This is my very longer help text for value 2 to test the wrapping.");
             value2Mock.Setup(x => x.IsRequired).Returns(true);
+            value2Mock.Setup(x => x.Hidden).Returns(false);
             aCommandMock.Setup(x => x.Options).Returns(Array.Empty<ICliCommandOptionInfo>());
             aCommandMock.Setup(x => x.Values).Returns(new[] { value1Mock.Object, value2Mock.Object });
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(50, int.MaxValue));
@@ -715,16 +736,19 @@ namespace MaSch.Console.Cli.Test.Help
             option1Mock.Setup(x => x.HelpOrder).Returns(-1);
             option1Mock.Setup(x => x.HelpText).Returns("Help text for option1.");
             option1Mock.Setup(x => x.IsRequired).Returns(true);
+            option1Mock.Setup(x => x.Hidden).Returns(false);
             option2Mock.Setup(x => x.ShortAliases).Returns(Array.Empty<char>());
             option2Mock.Setup(x => x.Aliases).Returns(new[] { "blib" });
             option2Mock.Setup(x => x.HelpOrder).Returns(0);
             option2Mock.Setup(x => x.HelpText).Returns("Help text for option2.");
             option2Mock.Setup(x => x.IsRequired).Returns(true);
+            option2Mock.Setup(x => x.Hidden).Returns(false);
             option3Mock.Setup(x => x.ShortAliases).Returns(new[] { 'A' });
             option3Mock.Setup(x => x.Aliases).Returns(new[] { "blab", "blob" });
             option3Mock.Setup(x => x.HelpOrder).Returns(0);
             option3Mock.Setup(x => x.HelpText).Returns("Help text for option3. This has longer text to test wrapping.");
             option3Mock.Setup(x => x.IsRequired).Returns(true);
+            option3Mock.Setup(x => x.Hidden).Returns(false);
             aCommandMock.Setup(x => x.Options).Returns(new[] { option1Mock.Object, option2Mock.Object, option3Mock.Object });
             aCommandMock.Setup(x => x.Values).Returns(Array.Empty<ICliCommandValueInfo>());
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(50, int.MaxValue));
@@ -755,16 +779,19 @@ namespace MaSch.Console.Cli.Test.Help
             option1Mock.Setup(x => x.HelpOrder).Returns(-1);
             option1Mock.Setup(x => x.HelpText).Returns("Help text for option1.");
             option1Mock.Setup(x => x.IsRequired).Returns(false);
+            option1Mock.Setup(x => x.Hidden).Returns(false);
             option2Mock.Setup(x => x.ShortAliases).Returns(Array.Empty<char>());
             option2Mock.Setup(x => x.Aliases).Returns(new[] { "blib" });
             option2Mock.Setup(x => x.HelpOrder).Returns(0);
             option2Mock.Setup(x => x.HelpText).Returns("Help text for option2.");
             option2Mock.Setup(x => x.IsRequired).Returns(false);
+            option2Mock.Setup(x => x.Hidden).Returns(false);
             option3Mock.Setup(x => x.ShortAliases).Returns(new[] { 'A' });
             option3Mock.Setup(x => x.Aliases).Returns(new[] { "blab", "blob" });
             option3Mock.Setup(x => x.HelpOrder).Returns(0);
             option3Mock.Setup(x => x.HelpText).Returns("Help text for option3. This has longer text to test wrapping.");
             option3Mock.Setup(x => x.IsRequired).Returns(false);
+            option3Mock.Setup(x => x.Hidden).Returns(false);
             aCommandMock.Setup(x => x.Options).Returns(new[] { option1Mock.Object, option2Mock.Object, option3Mock.Object });
             aCommandMock.Setup(x => x.Values).Returns(Array.Empty<ICliCommandValueInfo>());
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(50, int.MaxValue));
@@ -794,16 +821,19 @@ namespace MaSch.Console.Cli.Test.Help
             value1Mock.Setup(x => x.DisplayName).Returns("Val1");
             value1Mock.Setup(x => x.HelpText).Returns("This is my very longer help text for value 1 to test the wrapping.");
             value1Mock.Setup(x => x.IsRequired).Returns(true);
+            value1Mock.Setup(x => x.Hidden).Returns(false);
             option1Mock.Setup(x => x.ShortAliases).Returns(new[] { 'A' });
             option1Mock.Setup(x => x.Aliases).Returns(new[] { "blab", "blob" });
             option1Mock.Setup(x => x.HelpOrder).Returns(0);
             option1Mock.Setup(x => x.HelpText).Returns("Help text for optional. This has longer text to test wrapping.");
             option1Mock.Setup(x => x.IsRequired).Returns(false);
+            option1Mock.Setup(x => x.Hidden).Returns(false);
             option2Mock.Setup(x => x.ShortAliases).Returns(new[] { 'A' });
             option2Mock.Setup(x => x.Aliases).Returns(new[] { "blab", "blob" });
             option2Mock.Setup(x => x.HelpOrder).Returns(0);
             option2Mock.Setup(x => x.HelpText).Returns("Help text for required. This has longer text to test wrapping.");
             option2Mock.Setup(x => x.IsRequired).Returns(true);
+            option2Mock.Setup(x => x.Hidden).Returns(false);
             aCommandMock.Setup(x => x.Options).Returns(new[] { option1Mock.Object, option2Mock.Object });
             aCommandMock.Setup(x => x.Values).Returns(new[] { value1Mock.Object });
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(50, int.MaxValue));
@@ -840,6 +870,21 @@ namespace MaSch.Console.Cli.Test.Help
         }
 
         [TestMethod]
+        public void WriteCommands_NoAffectedCommand_NoVisibleCommands()
+        {
+            var sb = AttachStringBuilder(ConsoleServiceMock);
+            var collectionMock = Mocks.Create<IReadOnlyCliCommandInfoCollection>();
+            var command1Mock = Mocks.Create<ICliCommandInfo>();
+            command1Mock.Setup(x => x.Hidden).Returns(true);
+            collectionMock.Setup(x => x.GetRootCommands()).Returns(new[] { command1Mock.Object });
+            AppMock.Setup(x => x.Commands).Returns(collectionMock.Object);
+
+            HelpPage.WriteCommands(AppMock.Object, new CliError("MyError"));
+
+            Assert.AreEqual(string.Empty, sb.ToString());
+        }
+
+        [TestMethod]
         public void WriteCommands_NoAffectedCommand_WithCommands()
         {
             var sb = AttachStringBuilder(ConsoleServiceMock);
@@ -853,21 +898,25 @@ namespace MaSch.Console.Cli.Test.Help
             command1Mock.Setup(x => x.Name).Returns("zorro");
             command1Mock.Setup(x => x.Aliases).Returns(new[] { "zorro", "lorro" });
             command1Mock.Setup(x => x.HelpText).Returns("This should be the last command in the list.");
+            command1Mock.Setup(x => x.Hidden).Returns(false);
             command2Mock.Setup(x => x.IsDefault).Returns(true);
             command2Mock.Setup(x => x.Order).Returns(5);
             command2Mock.Setup(x => x.Name).Returns("list");
             command2Mock.Setup(x => x.Aliases).Returns(new[] { "list" });
             command2Mock.Setup(x => x.HelpText).Returns("The is the default command and should be at the top of the list.");
+            command2Mock.Setup(x => x.Hidden).Returns(false);
             command3Mock.Setup(x => x.IsDefault).Returns(false);
             command3Mock.Setup(x => x.Order).Returns(-2);
             command3Mock.Setup(x => x.Name).Returns("zzzzz");
             command3Mock.Setup(x => x.Aliases).Returns(new[] { "zzzzz" });
             command3Mock.Setup(x => x.HelpText).Returns("Should be second command in list.");
+            command3Mock.Setup(x => x.Hidden).Returns(false);
             command4Mock.Setup(x => x.IsDefault).Returns(false);
             command4Mock.Setup(x => x.Order).Returns(0);
             command4Mock.Setup(x => x.Name).Returns("ape");
             command4Mock.Setup(x => x.Aliases).Returns(new[] { "ape" });
             command4Mock.Setup(x => x.HelpText).Returns("Should be third command in list.");
+            command4Mock.Setup(x => x.Hidden).Returns(false);
             collectionMock.Setup(x => x.GetRootCommands()).Returns(new[] { command1Mock.Object, command2Mock.Object, command3Mock.Object, command4Mock.Object });
             AppMock.Setup(x => x.Commands).Returns(collectionMock.Object);
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(55, int.MaxValue));
@@ -900,6 +949,20 @@ namespace MaSch.Console.Cli.Test.Help
         }
 
         [TestMethod]
+        public void WriteCommands_WithAffectedCommand_NoVisibleCommands()
+        {
+            var sb = AttachStringBuilder(ConsoleServiceMock);
+            var aCommandMock = Mocks.Create<ICliCommandInfo>();
+            var command1Mock = Mocks.Create<ICliCommandInfo>();
+            command1Mock.Setup(x => x.Hidden).Returns(true);
+            aCommandMock.Setup(x => x.ChildCommands).Returns(new[] { command1Mock.Object });
+
+            HelpPage.WriteCommands(AppMock.Object, new CliError("MyError", aCommandMock.Object));
+
+            Assert.AreEqual(string.Empty, sb.ToString());
+        }
+
+        [TestMethod]
         public void WriteCommands_WithAffectedCommand_WithCommands()
         {
             var sb = AttachStringBuilder(ConsoleServiceMock);
@@ -913,21 +976,25 @@ namespace MaSch.Console.Cli.Test.Help
             command1Mock.Setup(x => x.Name).Returns("zorro");
             command1Mock.Setup(x => x.Aliases).Returns(new[] { "zorro", "lorro" });
             command1Mock.Setup(x => x.HelpText).Returns("This should be the last command in the list.");
+            command1Mock.Setup(x => x.Hidden).Returns(false);
             command2Mock.Setup(x => x.IsDefault).Returns(true);
             command2Mock.Setup(x => x.Order).Returns(5);
             command2Mock.Setup(x => x.Name).Returns("list");
             command2Mock.Setup(x => x.Aliases).Returns(new[] { "list" });
             command2Mock.Setup(x => x.HelpText).Returns("The is the default command and should be at the top of the list.");
+            command2Mock.Setup(x => x.Hidden).Returns(false);
             command3Mock.Setup(x => x.IsDefault).Returns(false);
             command3Mock.Setup(x => x.Order).Returns(-2);
             command3Mock.Setup(x => x.Name).Returns("zzzzz");
             command3Mock.Setup(x => x.Aliases).Returns(new[] { "zzzzz" });
             command3Mock.Setup(x => x.HelpText).Returns("Should be second command in list.");
+            command3Mock.Setup(x => x.Hidden).Returns(false);
             command4Mock.Setup(x => x.IsDefault).Returns(false);
             command4Mock.Setup(x => x.Order).Returns(0);
             command4Mock.Setup(x => x.Name).Returns("ape");
             command4Mock.Setup(x => x.Aliases).Returns(new[] { "ape" });
             command4Mock.Setup(x => x.HelpText).Returns("Should be third command in list.");
+            command4Mock.Setup(x => x.Hidden).Returns(false);
             aCommandMock.Setup(x => x.ChildCommands).Returns(new[] { command1Mock.Object, command2Mock.Object, command3Mock.Object, command4Mock.Object });
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(55, int.MaxValue));
             ConsoleServiceMock.Setup(x => x.IsOutputRedirected).Returns(false);
@@ -969,6 +1036,22 @@ namespace MaSch.Console.Cli.Test.Help
             commandMock.Setup(x => x.DisplayName).Returns((string?)null);
             commandMock.Setup(x => x.Year).Returns((string?)null);
             commandMock.Setup(x => x.Version).Returns((string?)null);
+            commandMock.Setup(x => x.Hidden).Returns(false);
+            collectionMock.Setup(x => x.GetRootCommands()).Returns(new[] { commandMock.Object });
+            AppMock.Setup(x => x.Commands).Returns(collectionMock.Object);
+
+            HelpPage.WriteCommandVersions(AppMock.Object, new CliError("MyError"));
+
+            Assert.AreEqual(string.Empty, sb.ToString());
+        }
+
+        [TestMethod]
+        public void WriteCommandVersions_NoAffectedCommand_NoVisibleCommands()
+        {
+            var sb = AttachStringBuilder(ConsoleServiceMock);
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            var collectionMock = Mocks.Create<IReadOnlyCliCommandInfoCollection>();
+            commandMock.Setup(x => x.Hidden).Returns(true);
             collectionMock.Setup(x => x.GetRootCommands()).Returns(new[] { commandMock.Object });
             AppMock.Setup(x => x.Commands).Returns(collectionMock.Object);
 
@@ -993,6 +1076,7 @@ namespace MaSch.Console.Cli.Test.Help
             command1Mock.Setup(x => x.Version).Returns((string?)null);
             command1Mock.Setup(x => x.Order).Returns(0);
             command1Mock.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
+            command1Mock.Setup(x => x.Hidden).Returns(false);
             command2Mock.Setup(x => x.Name).Returns("cmd2");
             command2Mock.Setup(x => x.Aliases).Returns(new[] { "cmd2" });
             command2Mock.Setup(x => x.Author).Returns("You");
@@ -1001,6 +1085,7 @@ namespace MaSch.Console.Cli.Test.Help
             command2Mock.Setup(x => x.Version).Returns((string?)null);
             command2Mock.Setup(x => x.Order).Returns(0);
             command2Mock.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
+            command2Mock.Setup(x => x.Hidden).Returns(false);
             command3Mock.Setup(x => x.Name).Returns("cmd3");
             command3Mock.Setup(x => x.Aliases).Returns(new[] { "cmd3", "command3", "my-command-3" });
             command3Mock.Setup(x => x.Author).Returns((string?)null);
@@ -1009,6 +1094,7 @@ namespace MaSch.Console.Cli.Test.Help
             command3Mock.Setup(x => x.Version).Returns("99");
             command3Mock.Setup(x => x.Order).Returns(0);
             command3Mock.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
+            command3Mock.Setup(x => x.Hidden).Returns(false);
             collectionMock.Setup(x => x.GetRootCommands()).Returns(new[] { command1Mock.Object, command2Mock.Object, command3Mock.Object });
             AppMock.Setup(x => x.Commands).Returns(collectionMock.Object);
             AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Name = "My", Year = "1337", Author = "Me", Version = "15" });
@@ -1049,6 +1135,21 @@ namespace MaSch.Console.Cli.Test.Help
             commandMock.Setup(x => x.DisplayName).Returns((string?)null);
             commandMock.Setup(x => x.Year).Returns((string?)null);
             commandMock.Setup(x => x.Version).Returns((string?)null);
+            commandMock.Setup(x => x.Hidden).Returns(false);
+            aCommandMock.Setup(x => x.ChildCommands).Returns(new[] { commandMock.Object });
+
+            HelpPage.WriteCommandVersions(AppMock.Object, new CliError("MyError", aCommandMock.Object));
+
+            Assert.AreEqual(string.Empty, sb.ToString());
+        }
+
+        [TestMethod]
+        public void WriteCommandVersions_WithAffectedCommand_NoVisibleCommands()
+        {
+            var sb = AttachStringBuilder(ConsoleServiceMock);
+            var aCommandMock = Mocks.Create<ICliCommandInfo>();
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            commandMock.Setup(x => x.Hidden).Returns(true);
             aCommandMock.Setup(x => x.ChildCommands).Returns(new[] { commandMock.Object });
 
             HelpPage.WriteCommandVersions(AppMock.Object, new CliError("MyError", aCommandMock.Object));
@@ -1075,6 +1176,7 @@ namespace MaSch.Console.Cli.Test.Help
             command1Mock.Setup(x => x.Version).Returns((string?)null);
             command1Mock.Setup(x => x.Order).Returns(0);
             command1Mock.Setup(x => x.ParentCommand).Returns(aCommandMock.Object);
+            command1Mock.Setup(x => x.Hidden).Returns(false);
             command2Mock.Setup(x => x.Name).Returns("cmd2");
             command2Mock.Setup(x => x.Aliases).Returns(new[] { "cmd2" });
             command2Mock.Setup(x => x.Author).Returns("You");
@@ -1083,6 +1185,7 @@ namespace MaSch.Console.Cli.Test.Help
             command2Mock.Setup(x => x.Version).Returns((string?)null);
             command2Mock.Setup(x => x.Order).Returns(0);
             command2Mock.Setup(x => x.ParentCommand).Returns(aCommandMock.Object);
+            command2Mock.Setup(x => x.Hidden).Returns(false);
             command3Mock.Setup(x => x.Name).Returns("cmd3");
             command3Mock.Setup(x => x.Aliases).Returns(new[] { "cmd3", "command3", "my-command-3" });
             command3Mock.Setup(x => x.Author).Returns((string?)null);
@@ -1091,6 +1194,7 @@ namespace MaSch.Console.Cli.Test.Help
             command3Mock.Setup(x => x.Version).Returns("99");
             command3Mock.Setup(x => x.Order).Returns(0);
             command3Mock.Setup(x => x.ParentCommand).Returns(aCommandMock.Object);
+            command3Mock.Setup(x => x.Hidden).Returns(false);
             aCommandMock.Setup(x => x.ChildCommands).Returns(new[] { command1Mock.Object, command2Mock.Object, command3Mock.Object });
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(55, int.MaxValue));
             ConsoleServiceMock.Setup(x => x.IsOutputRedirected).Returns(false);
@@ -1127,6 +1231,7 @@ namespace MaSch.Console.Cli.Test.Help
             command1Mock.Setup(x => x.Version).Returns((string?)null);
             command1Mock.Setup(x => x.Order).Returns(0);
             command1Mock.Setup(x => x.ParentCommand).Returns(aCommandMock.Object);
+            command1Mock.Setup(x => x.Hidden).Returns(false);
             command2Mock.Setup(x => x.Name).Returns("cmd2");
             command2Mock.Setup(x => x.Aliases).Returns(new[] { "cmd2" });
             command2Mock.Setup(x => x.Author).Returns("You");
@@ -1135,6 +1240,7 @@ namespace MaSch.Console.Cli.Test.Help
             command2Mock.Setup(x => x.Version).Returns((string?)null);
             command2Mock.Setup(x => x.Order).Returns(0);
             command2Mock.Setup(x => x.ParentCommand).Returns(aCommandMock.Object);
+            command2Mock.Setup(x => x.Hidden).Returns(false);
             command3Mock.Setup(x => x.Name).Returns("cmd3");
             command3Mock.Setup(x => x.Aliases).Returns(new[] { "cmd3", "command3", "my-command-3" });
             command3Mock.Setup(x => x.Author).Returns((string?)null);
@@ -1143,6 +1249,7 @@ namespace MaSch.Console.Cli.Test.Help
             command3Mock.Setup(x => x.Version).Returns("99");
             command3Mock.Setup(x => x.Order).Returns(0);
             command3Mock.Setup(x => x.ParentCommand).Returns(aCommandMock.Object);
+            command3Mock.Setup(x => x.Hidden).Returns(false);
             aCommandMock.Setup(x => x.ChildCommands).Returns(new[] { command1Mock.Object, command2Mock.Object, command3Mock.Object });
             AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Name = "My", Year = "1337", Author = "Me", Version = "15" });
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(55, int.MaxValue));

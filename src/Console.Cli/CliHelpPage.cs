@@ -245,6 +245,7 @@ namespace MaSch.Console.Cli
             table.Columns[1].NonWrappingChars.Add('-');
 
             var values = (from o in error.AffectedCommand.Values
+                          where !o.Hidden
                           orderby o.Order
                           select o).ToArray();
             if (values.Length > 0)
@@ -264,7 +265,7 @@ namespace MaSch.Console.Cli
             }
 
             var requiredOptions = (from o in error.AffectedCommand.Options
-                                   where o.IsRequired
+                                   where !o.Hidden && o.IsRequired
                                    orderby o.HelpOrder, o.ShortAliases.TryFirst(out var s) ? s.ToString() : o.Aliases[0]
                                    select o).ToArray();
             if (requiredOptions.Length > 0)
@@ -284,7 +285,7 @@ namespace MaSch.Console.Cli
             }
 
             var optionalOptions = (from o in error.AffectedCommand.Options
-                                   where !o.IsRequired
+                                   where !o.Hidden && !o.IsRequired
                                    orderby o.HelpOrder, o.ShortAliases.TryFirst(out var s) ? s.ToString() : o.Aliases[0]
                                    select o).ToArray();
             if (optionalOptions.Length > 0)
@@ -311,8 +312,10 @@ namespace MaSch.Console.Cli
         /// <param name="error">The error.</param>
         protected virtual void WriteCommands(ICliApplicationBase application, CliError error)
         {
-            var commands = error.AffectedCommand?.ChildCommands ?? application.Commands.GetRootCommands().ToArray();
-            if (commands.Count == 0)
+            var commands = (from command in error.AffectedCommand?.ChildCommands ?? application.Commands.GetRootCommands()
+                            where !command.Hidden
+                            select command).ToArray();
+            if (commands.Length == 0)
                 return;
 
             var table = new TableControl(_console)
@@ -362,7 +365,7 @@ namespace MaSch.Console.Cli
         protected virtual void WriteCommandVersions(ICliApplicationBase application, CliError error)
         {
             var commands = (from command in error.AffectedCommand?.ChildCommands ?? application.Commands.GetRootCommands()
-                            where command.Author != null || command.DisplayName != null || command.Version != null || command.Year != null
+                            where !command.Hidden && (command.Author != null || command.DisplayName != null || command.Version != null || command.Year != null)
                             select command).ToArray();
             if (commands.Length == 0)
                 return;

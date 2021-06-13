@@ -35,6 +35,11 @@ namespace MaSch.Console.Cli.Configuration
         public string? HelpText { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this value should be hidden from the help page.
+        /// </summary>
+        public bool Hidden { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CliCommandValueAttribute"/> class.
         /// </summary>
         /// <param name="order">The order of the value. This is used when multiple values are provided for the command in which order they should appear in the command line arguments.</param>

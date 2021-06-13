@@ -130,6 +130,7 @@ namespace MaSch.Console.Cli.Test.Configuration
             Assert.IsFalse(attr.Required);
             Assert.AreEqual(-1, attr.HelpOrder);
             Assert.IsNull(attr.HelpText);
+            Assert.IsFalse(attr.Hidden);
         }
     }
 }

@@ -41,6 +41,7 @@ namespace MaSch.Console.Cli.Test.Runtime
                 Default = new object(),
                 Required = true,
                 HelpText = "My Help Text",
+                Hidden = true,
             };
 
             var option = new CliCommandValueInfo(command.Object, property, attr);
@@ -49,6 +50,7 @@ namespace MaSch.Console.Cli.Test.Runtime
             Assert.IsTrue(option.IsRequired);
             Assert.AreEqual("My Help Text", option.HelpText);
             Assert.AreEqual(4711, option.Order);
+            Assert.IsTrue(option.Hidden);
         }
 
         private class DummyClass

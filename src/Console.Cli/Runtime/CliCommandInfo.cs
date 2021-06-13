@@ -63,6 +63,9 @@ namespace MaSch.Console.Cli.Runtime
         public string? Year => Attribute.Year;
 
         /// <inheritdoc/>
+        public bool Hidden => Attribute.Hidden;
+
+        /// <inheritdoc/>
         public ICliCommandInfo? ParentCommand { get; private set; }
 
         /// <inheritdoc/>

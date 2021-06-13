@@ -76,6 +76,11 @@ namespace MaSch.Console.Cli.Runtime
         string? Year { get; }
 
         /// <summary>
+        /// Gets a value indicating whether this command should be hidden from the help page.
+        /// </summary>
+        bool Hidden { get; }
+
+        /// <summary>
         /// Gets the parent command.
         /// </summary>
         ICliCommandInfo? ParentCommand { get; }

@@ -38,6 +38,9 @@ namespace MaSch.Console.Cli.Runtime
         /// <inheritdoc/>
         public abstract string? HelpText { get; }
 
+        /// <inheritdoc/>
+        public abstract bool Hidden { get; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CliCommandMemberInfo"/> class.
         /// </summary>

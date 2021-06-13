@@ -67,6 +67,11 @@ namespace MaSch.Console.Cli.Configuration
         public string? Year { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this command should be hidden from the help page.
+        /// </summary>
+        public bool Hidden { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CliCommandAttribute"/> class.
         /// </summary>
         /// <param name="name">The name of this command.</param>

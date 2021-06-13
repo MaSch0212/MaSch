@@ -38,6 +38,11 @@ namespace MaSch.Console.Cli.Runtime
         string? HelpText { get; }
 
         /// <summary>
+        /// Gets a value indicating whether this member should be hidden from the help page.
+        /// </summary>
+        bool Hidden { get; }
+
+        /// <summary>
         /// Sets the default value of this member to the specified command instance.
         /// </summary>
         /// <param name="options">The command instance.</param>

@@ -78,6 +78,7 @@ namespace MaSch.Console.Cli.Test.Configuration
             Assert.IsNull(attr.Author);
             Assert.IsNull(attr.Year);
             Assert.IsNull(attr.Version);
+            Assert.IsFalse(attr.Hidden);
         }
     }
 }

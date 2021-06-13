@@ -50,6 +50,11 @@ namespace MaSch.Console.Cli.Configuration
         /// </summary>
         public string? HelpText { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this option should be hidden from the help page.
+        /// </summary>
+        public bool Hidden { get; set; }
+
         private CliCommandOptionAttribute(char[]? shortAliases, string[] aliases)
         {
             Guard.NotNullOrEmpty(aliases, nameof(aliases));
