@@ -121,7 +121,7 @@ namespace MaSch.Console.Cli.Runtime
         /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
         /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
         /// <returns>The created <see cref="ICliCommandInfo"/> instance.</returns>
-        ICliCommandInfo Create<TCommand>(Func<TCommand, int> executorFunction);
+        ICliCommandInfo Create<TCommand>(Func<CliExecutionContext, TCommand, int> executorFunction);
 
         /// <summary>
         /// Creates a <see cref="ICliCommandInfo"/> from a command type and an executor function.
@@ -130,7 +130,7 @@ namespace MaSch.Console.Cli.Runtime
         /// <param name="optionsInstance">An instance of <typeparamref name="TCommand"/> that should be used when the command is executed.</param>
         /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
         /// <returns>The created <see cref="ICliCommandInfo"/> instance.</returns>
-        ICliCommandInfo Create<TCommand>(TCommand optionsInstance, Func<TCommand, int> executorFunction);
+        ICliCommandInfo Create<TCommand>(TCommand optionsInstance, Func<CliExecutionContext, TCommand, int> executorFunction);
 
         /// <summary>
         /// Creates a <see cref="ICliCommandInfo"/> from a command type and an asynchronous executor function.
@@ -138,7 +138,7 @@ namespace MaSch.Console.Cli.Runtime
         /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
         /// <param name="executorFunction">The asynchronous executor function that is called when the created command is executed.</param>
         /// <returns>The created <see cref="ICliCommandInfo"/> instance.</returns>
-        ICliCommandInfo Create<TCommand>(Func<TCommand, Task<int>> executorFunction);
+        ICliCommandInfo Create<TCommand>(Func<CliExecutionContext, TCommand, Task<int>> executorFunction);
 
         /// <summary>
         /// Creates a <see cref="ICliCommandInfo"/> from a command type and an asynchronous executor function.
@@ -147,7 +147,7 @@ namespace MaSch.Console.Cli.Runtime
         /// <param name="optionsInstance">An instance of <typeparamref name="TCommand"/> that should be used when the command is executed.</param>
         /// <param name="executorFunction">The asynchronous executor function that is called when the created command is executed.</param>
         /// <returns>The created <see cref="ICliCommandInfo"/> instance.</returns>
-        ICliCommandInfo Create<TCommand>(TCommand optionsInstance, Func<TCommand, Task<int>> executorFunction);
+        ICliCommandInfo Create<TCommand>(TCommand optionsInstance, Func<CliExecutionContext, TCommand, Task<int>> executorFunction);
 
         /// <summary>
         /// Creates a <see cref="ICliCommandInfo"/> from a command type and an executor function.
@@ -155,7 +155,7 @@ namespace MaSch.Console.Cli.Runtime
         /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
         /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
         /// <returns>The created <see cref="ICliCommandInfo"/> instance.</returns>
-        ICliCommandInfo Create(Type commandType, Func<object, int> executorFunction);
+        ICliCommandInfo Create(Type commandType, Func<CliExecutionContext, object, int> executorFunction);
 
         /// <summary>
         /// Creates a <see cref="ICliCommandInfo"/> from a command type and an executor function.
@@ -164,7 +164,7 @@ namespace MaSch.Console.Cli.Runtime
         /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
         /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
         /// <returns>The created <see cref="ICliCommandInfo"/> instance.</returns>
-        ICliCommandInfo Create(Type commandType, object? optionsInstance, Func<object, int> executorFunction);
+        ICliCommandInfo Create(Type commandType, object? optionsInstance, Func<CliExecutionContext, object, int> executorFunction);
 
         /// <summary>
         /// Creates a <see cref="ICliCommandInfo"/> from a command type and an asynchronous executor function.
@@ -172,7 +172,7 @@ namespace MaSch.Console.Cli.Runtime
         /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
         /// <param name="executorFunction">The asynchronous executor function that is called when the created command is executed.</param>
         /// <returns>The created <see cref="ICliCommandInfo"/> instance.</returns>
-        ICliCommandInfo Create(Type commandType, Func<object, Task<int>> executorFunction);
+        ICliCommandInfo Create(Type commandType, Func<CliExecutionContext, object, Task<int>> executorFunction);
 
         /// <summary>
         /// Creates a <see cref="ICliCommandInfo"/> from a command type and an asynchronous executor function.
@@ -181,6 +181,6 @@ namespace MaSch.Console.Cli.Runtime
         /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
         /// <param name="executorFunction">The asynchronous executor function that is called when the created command is executed.</param>
         /// <returns>The created <see cref="ICliCommandInfo"/> instance.</returns>
-        ICliCommandInfo Create(Type commandType, object? optionsInstance, Func<object, Task<int>> executorFunction);
+        ICliCommandInfo Create(Type commandType, object? optionsInstance, Func<CliExecutionContext, object, Task<int>> executorFunction);
     }
 }

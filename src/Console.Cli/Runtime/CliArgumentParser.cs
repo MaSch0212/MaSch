@@ -35,7 +35,7 @@ namespace MaSch.Console.Cli.Runtime
                     if (defaultCommand == null)
                         return new(new[] { new CliError(CliErrorType.MissingCommand) });
                     else
-                        return new(defaultCommand, Activator.CreateInstance(defaultCommand.CommandType)!);
+                        return new(new(application, defaultCommand), Activator.CreateInstance(defaultCommand.CommandType)!);
                 }
 
                 if (!TryParseCommandInfo(args, application, out var command, out var commandArgIndex))
@@ -48,7 +48,7 @@ namespace MaSch.Console.Cli.Runtime
                 ParseOptions(ctx);
                 ValidateOptions(ctx);
 
-                return ctx.Errors.Count > 0 ? new(ctx.Errors, command, ctx.OptionsObj) : new(command, ctx.OptionsObj);
+                return ctx.Errors.Count > 0 ? new(ctx.Errors, ctx.ExecutionContext, ctx.OptionsObj) : new(ctx.ExecutionContext, ctx.OptionsObj);
             }
             catch (CliErrorException ex)
             {
@@ -61,14 +61,14 @@ namespace MaSch.Console.Cli.Runtime
             IEnumerable<CliError>? vErrors;
             foreach (var validator in _commonValidators)
             {
-                if (!validator.ValidateOptions(ctx.Command, ctx.OptionsObj, out vErrors))
+                if (!validator.ValidateOptions(ctx.ExecutionContext, ctx.OptionsObj, out vErrors))
                     ctx.Errors.Add(vErrors);
             }
 
-            if (ctx.OptionsObj is ICliValidatable validatable && !validatable.ValidateOptions(ctx.Command, out vErrors))
+            if (ctx.OptionsObj is ICliValidatable validatable && !validatable.ValidateOptions(ctx.ExecutionContext, out vErrors))
                 ctx.Errors.Add(vErrors);
 
-            if (!ctx.Command.ValidateOptions(ctx.Command, ctx.OptionsObj, out vErrors))
+            if (!ctx.Command.ValidateOptions(ctx.ExecutionContext, ctx.OptionsObj, out vErrors))
                 ctx.Errors.Add(vErrors);
         }
 
@@ -299,6 +299,7 @@ namespace MaSch.Console.Cli.Runtime
             public object OptionsObj { get; }
             public IList<CliError> Errors { get; }
             public ICliApplicationBase Application { get; }
+            public CliExecutionContext ExecutionContext { get; }
 
             public int ArgIndex { get; set; }
             public bool IgnoreNextValues { get; set; }
@@ -312,6 +313,7 @@ namespace MaSch.Console.Cli.Runtime
                 Command = command;
                 OptionsObj = CreateOptionsWithDefaultValues(command);
                 Errors = errors;
+                ExecutionContext = new CliExecutionContext(application, command);
             }
 
             private static object CreateOptionsWithDefaultValues(ICliCommandInfo command)

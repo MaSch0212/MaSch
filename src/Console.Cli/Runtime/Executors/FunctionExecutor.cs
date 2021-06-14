@@ -13,11 +13,13 @@ namespace MaSch.Console.Cli.Runtime.Executors
         {
             Guard.NotNull(executorFunction, nameof(executorFunction));
             var type = executorFunction.GetType();
-            if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(Func<,>))
-                throw new ArgumentException($"The executor function needs to be of type Func<,>.", nameof(executorFunction));
+            if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(Func<,,>))
+                throw new ArgumentException($"The executor function needs to be of type Func<,,>.", nameof(executorFunction));
             var genArgs = type.GetGenericArguments();
-            var eType = typeof(FunctionExecutor<>).MakeGenericType(genArgs[0]);
-            return genArgs[1] switch
+            if (!typeof(CliExecutionContext).IsAssignableFrom(genArgs[0]))
+                throw new ArgumentException($"The first function arguments need to be of type CliExecutionContext.");
+            var eType = typeof(FunctionExecutor<>).MakeGenericType(genArgs[1]);
+            return genArgs[2] switch
             {
                 Type x when x == typeof(int) => (ICliExecutor)Activator.CreateInstance(eType, executorFunction, null)!,
                 Type x when x == typeof(Task<int>) => (ICliExecutor)Activator.CreateInstance(eType, null, executorFunction)!,
@@ -36,10 +38,10 @@ namespace MaSch.Console.Cli.Runtime.Executors
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic counterpart to FunctionExecutor")]
     internal class FunctionExecutor<T> : ICliExecutor
     {
-        private readonly Func<T, int>? _executorFunc;
-        private readonly Func<T, Task<int>>? _asyncExecutorFunc;
+        private readonly Func<CliExecutionContext, T, int>? _executorFunc;
+        private readonly Func<CliExecutionContext, T, Task<int>>? _asyncExecutorFunc;
 
-        public FunctionExecutor(Func<T, int>? executorFunc, Func<T, Task<int>>? asyncExecutorFunc)
+        public FunctionExecutor(Func<CliExecutionContext, T, int>? executorFunc, Func<CliExecutionContext, T, Task<int>>? asyncExecutorFunc)
         {
             if (executorFunc == null && asyncExecutorFunc == null)
                 throw new ArgumentException("At least one function needs to be provided.");
@@ -47,32 +49,34 @@ namespace MaSch.Console.Cli.Runtime.Executors
             _asyncExecutorFunc = asyncExecutorFunc;
         }
 
-        public int Execute(ICliCommandInfo command, object obj)
+        public int Execute(CliExecutionContext context, object obj)
         {
+            Guard.NotNull(context, nameof(context));
             Guard.NotNull(obj, nameof(obj));
             var tObj = FunctionExecutor.PreExecute<T>(obj);
             if (_executorFunc != null)
-                return _executorFunc(tObj);
+                return _executorFunc(context, tObj);
             else if (_asyncExecutorFunc != null)
-                return _asyncExecutorFunc(tObj).GetAwaiter().GetResult();
+                return _asyncExecutorFunc(context, tObj).GetAwaiter().GetResult();
             else
                 throw new InvalidOperationException("At least one function needs to be provided.");
         }
 
-        public async Task<int> ExecuteAsync(ICliCommandInfo command, object obj)
+        public async Task<int> ExecuteAsync(CliExecutionContext context, object obj)
         {
+            Guard.NotNull(context, nameof(context));
             Guard.NotNull(obj, nameof(obj));
             var tObj = FunctionExecutor.PreExecute<T>(obj);
             if (_asyncExecutorFunc != null)
-                return await _asyncExecutorFunc(tObj);
+                return await _asyncExecutorFunc(context, tObj);
             else if (_executorFunc != null)
-                return _executorFunc(tObj);
+                return _executorFunc(context, tObj);
             else
                 throw new InvalidOperationException("At least one function needs to be provided.");
         }
 
         [ExcludeFromCodeCoverage]
-        public bool ValidateOptions(ICliCommandInfo command, object parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors)
+        public bool ValidateOptions(CliExecutionContext context, object parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors)
         {
             // Nothing to validate here. The options are already validated in the CliApplicationArgumentParser.
             errors = null;

@@ -19,8 +19,10 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var options = new DummyClass1();
             var info = new CliCommandInfo(typeof(DummyClass1), null, options, null, null);
+            var appMock = Mocks.Create<ICliApplicationBase>();
+            var execCtx = new CliExecutionContext(appMock.Object, info);
 
-            var result = info.ValidateOptions(info, options, out var errors);
+            var result = info.ValidateOptions(execCtx, options, out var errors);
 
             Assert.IsTrue(result);
             Assert.IsNull(errors);
@@ -33,16 +35,18 @@ namespace MaSch.Console.Cli.Test.Runtime
             IEnumerable<CliError>? errors = null;
             var options = new DummyClass2();
             var info = new CliCommandInfo(typeof(DummyClass2), typeof(Executor1), options, null, executor.Object);
+            var appMock = Mocks.Create<ICliApplicationBase>();
+            var execCtx = new CliExecutionContext(appMock.Object, info);
             executor
-                .Setup(x => x.ValidateOptions(info, options, out errors))
-                .Returns(new Executor1.ValidateDelegate((ICliCommandInfo command, DummyClass2 parameters, out IEnumerable<CliError>? errors) =>
+                .Setup(x => x.ValidateOptions(execCtx, options, out errors))
+                .Returns(new Executor1.ValidateDelegate((CliExecutionContext context, DummyClass2 parameters, out IEnumerable<CliError>? errors) =>
                 {
                     errors = new[] { new CliError("My Error") };
                     return false;
                 }))
                 .Verifiable(Verifiables, Times.Once());
 
-            var result = info.ValidateOptions(info, options, out var errors2);
+            var result = info.ValidateOptions(execCtx, options, out var errors2);
 
             Assert.IsFalse(result);
             Assert.IsNotNull(errors2);
@@ -52,51 +56,81 @@ namespace MaSch.Console.Cli.Test.Runtime
         }
 
         [TestMethod]
-        public void Execute_NotExecutable()
-        {
-            var executor = Mocks.Create<Executor1>();
-            var options = new DummyClass2();
-            var info = new CliCommandInfo(typeof(DummyClass2), typeof(Executor1), options, null, executor.Object);
-            executor.Setup(x => x.ExecuteCommand(info, options)).Returns(4711).Verifiable(Verifiables, Times.Once());
-
-            var result = info.Execute(options);
-
-            Assert.AreEqual(4711, result);
-        }
-
-        [TestMethod]
         public void Execute_Executable()
         {
-            var info = new CliCommandInfo(typeof(DummyClass1), null, null, null, null);
-
-            Assert.ThrowsException<InvalidOperationException>(() => info.Execute(new DummyClass1()));
-        }
-
-        [TestMethod]
-        public async Task ExecuteAsync_NotExecutable()
-        {
             var executor = Mocks.Create<Executor1>();
             var options = new DummyClass2();
             var info = new CliCommandInfo(typeof(DummyClass2), typeof(Executor1), options, null, executor.Object);
-            executor.Setup(x => x.ExecuteCommandAsync(info, options)).Returns(Task.FromResult(4711)).Verifiable(Verifiables, Times.Once());
+            var appMock = Mocks.Create<ICliApplicationBase>();
+            var execCtx = new CliExecutionContext(appMock.Object, info);
+            executor.Setup(x => x.ExecuteCommand(execCtx, options)).Returns(4711).Verifiable(Verifiables, Times.Once());
 
-            var result = await info.ExecuteAsync(options);
+            var result = info.Execute(execCtx, options);
 
             Assert.AreEqual(4711, result);
+        }
+
+        [TestMethod]
+        public void Execute_NotExecutable()
+        {
+            var info = new CliCommandInfo(typeof(DummyClass1), null, null, null, null);
+            var appMock = Mocks.Create<ICliApplicationBase>();
+            var execCtx = new CliExecutionContext(appMock.Object, info);
+
+            Assert.ThrowsException<InvalidOperationException>(() => info.Execute(execCtx, new DummyClass1()));
+        }
+
+        [TestMethod]
+        public void Execute_WrongContext()
+        {
+            var info = new CliCommandInfo(typeof(DummyClass1), null, null, null, null);
+            var appMock = Mocks.Create<ICliApplicationBase>();
+            var cmdMock = Mocks.Create<ICliCommandInfo>();
+            var execCtx = new CliExecutionContext(appMock.Object, cmdMock.Object);
+
+            Assert.ThrowsException<ArgumentException>(() => info.Execute(execCtx, new DummyClass1()));
         }
 
         [TestMethod]
         public async Task ExecuteAsync_Executable()
         {
-            var info = new CliCommandInfo(typeof(DummyClass1), null, null, null, null);
+            var executor = Mocks.Create<Executor1>();
+            var options = new DummyClass2();
+            var info = new CliCommandInfo(typeof(DummyClass2), typeof(Executor1), options, null, executor.Object);
+            var appMock = Mocks.Create<ICliApplicationBase>();
+            var execCtx = new CliExecutionContext(appMock.Object, info);
+            executor.Setup(x => x.ExecuteCommandAsync(execCtx, options)).Returns(Task.FromResult(4711)).Verifiable(Verifiables, Times.Once());
 
-            await Assert.ThrowsExceptionAsync<InvalidOperationException>(async () => await info.ExecuteAsync(new DummyClass1()));
+            var result = await info.ExecuteAsync(execCtx, options);
+
+            Assert.AreEqual(4711, result);
+        }
+
+        [TestMethod]
+        public async Task ExecuteAsync_NotExecutable()
+        {
+            var info = new CliCommandInfo(typeof(DummyClass1), null, null, null, null);
+            var appMock = Mocks.Create<ICliApplicationBase>();
+            var execCtx = new CliExecutionContext(appMock.Object, info);
+
+            await Assert.ThrowsExceptionAsync<InvalidOperationException>(async () => await info.ExecuteAsync(execCtx, new DummyClass1()));
+        }
+
+        [TestMethod]
+        public async Task ExecuteAsync_WrongContext()
+        {
+            var info = new CliCommandInfo(typeof(DummyClass1), null, null, null, null);
+            var appMock = Mocks.Create<ICliApplicationBase>();
+            var cmdMock = Mocks.Create<ICliCommandInfo>();
+            var execCtx = new CliExecutionContext(appMock.Object, cmdMock.Object);
+
+            await Assert.ThrowsExceptionAsync<ArgumentException>(async () => await info.ExecuteAsync(execCtx, new DummyClass1()));
         }
 
         [TestMethod]
         public void AddChildCommand()
         {
-            var executorFunc = Mocks.Create<Func<DummyClass2, int>>();
+            var executorFunc = Mocks.Create<Func<CliExecutionContext, DummyClass2, int>>();
             var parentInfo = new CliCommandInfo(typeof(DummyClass1), null, null, null, null);
             var childInfo = new CliCommandInfo(typeof(DummyClass2), null, null, executorFunc.Object, null);
 
@@ -120,7 +154,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         [TestMethod]
         public void RemoveChildCommand()
         {
-            var executorFunc = Mocks.Create<Func<DummyClass2, int>>();
+            var executorFunc = Mocks.Create<Func<CliExecutionContext, DummyClass2, int>>();
             var parentInfo = new CliCommandInfo(typeof(DummyClass1), null, null, null, null);
             var childInfo = new CliCommandInfo(typeof(DummyClass2), null, null, executorFunc.Object, null);
 
@@ -134,7 +168,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         [TestMethod]
         public void RemoveChildCommand_NotCorrectParentCommand()
         {
-            var executorFunc = Mocks.Create<Func<DummyClass2, int>>();
+            var executorFunc = Mocks.Create<Func<CliExecutionContext, DummyClass2, int>>();
             var parentInfo = new CliCommandInfo(typeof(DummyClass1), null, null, null, null);
             var childInfo = new CliCommandInfo(typeof(DummyClass2), null, null, executorFunc.Object, null);
             var otherCommand = Mocks.Create<ICliCommandInfo>();
@@ -189,11 +223,11 @@ namespace MaSch.Console.Cli.Test.Runtime
 
         public abstract class Executor1 : ICliCommandExecutor<DummyClass2>, ICliAsyncCommandExecutor<DummyClass2>, ICliValidator<DummyClass2>
         {
-            public delegate bool ValidateDelegate(ICliCommandInfo command, DummyClass2 parameters, [MaybeNullWhen(true)] out IEnumerable<CliError>? errors);
+            public delegate bool ValidateDelegate(CliExecutionContext context, DummyClass2 parameters, [MaybeNullWhen(true)] out IEnumerable<CliError>? errors);
 
-            public abstract int ExecuteCommand(ICliCommandInfo command, DummyClass2 parameters);
-            public abstract Task<int> ExecuteCommandAsync(ICliCommandInfo command, DummyClass2 parameters);
-            public abstract bool ValidateOptions(ICliCommandInfo command, DummyClass2 parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors);
+            public abstract int ExecuteCommand(CliExecutionContext context, DummyClass2 parameters);
+            public abstract Task<int> ExecuteCommandAsync(CliExecutionContext context, DummyClass2 parameters);
+            public abstract bool ValidateOptions(CliExecutionContext context, DummyClass2 parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors);
         }
     }
 }

@@ -168,7 +168,7 @@ namespace MaSch.Console.Cli.Test
         public void WithCommand_CommandType_ExecutorFunction()
         {
             var builder = CreateCliApplicationBuilder(out var app);
-            var executorFunction = Mocks.Create<Func<object, int>>();
+            var executorFunction = Mocks.Create<Func<CliExecutionContext, object, int>>();
             app.Setup(x => x.RegisterCommand(typeof(object), executorFunction.Object)).Verifiable(Verifiables, Times.Once());
 
             var b = builder.WithCommand(typeof(object), executorFunction.Object);
@@ -181,7 +181,7 @@ namespace MaSch.Console.Cli.Test
         {
             var builder = CreateCliApplicationBuilder(out var app);
             var optionsInstance = Mocks.Create<IDisposable>();
-            var executorFunction = Mocks.Create<Func<object, int>>();
+            var executorFunction = Mocks.Create<Func<CliExecutionContext, object, int>>();
             app.Setup(x => x.RegisterCommand(typeof(object), optionsInstance.Object, executorFunction.Object)).Verifiable(Verifiables, Times.Once());
 
             var b = builder.WithCommand(typeof(object), optionsInstance.Object, executorFunction.Object);
@@ -193,7 +193,7 @@ namespace MaSch.Console.Cli.Test
         public void WithCommand_TCommand_ExecutorFunction()
         {
             var builder = CreateCliApplicationBuilder(out var app);
-            var executorFunction = Mocks.Create<Func<IDisposable, int>>();
+            var executorFunction = Mocks.Create<Func<CliExecutionContext, IDisposable, int>>();
             app.Setup(x => x.RegisterCommand(executorFunction.Object)).Verifiable(Verifiables, Times.Once());
 
             var b = builder.WithCommand(executorFunction.Object);
@@ -206,7 +206,7 @@ namespace MaSch.Console.Cli.Test
         {
             var builder = CreateCliApplicationBuilder(out var app);
             var optionsInstance = Mocks.Create<IDisposable>();
-            var executorFunction = Mocks.Create<Func<IDisposable, int>>();
+            var executorFunction = Mocks.Create<Func<CliExecutionContext, IDisposable, int>>();
             app.Setup(x => x.RegisterCommand(optionsInstance.Object, executorFunction.Object)).Verifiable(Verifiables, Times.Once());
 
             var b = builder.WithCommand(optionsInstance.Object, executorFunction.Object);
@@ -308,8 +308,8 @@ namespace MaSch.Console.Cli.Test
 
         public abstract class DummyClass : ICliCommandExecutor, ICliCommandExecutor<IDisposable>
         {
-            public abstract int ExecuteCommand(ICliCommandInfo command);
-            public abstract int ExecuteCommand(ICliCommandInfo command, IDisposable parameters);
+            public abstract int ExecuteCommand(CliExecutionContext context);
+            public abstract int ExecuteCommand(CliExecutionContext context, IDisposable parameters);
         }
     }
 
@@ -330,7 +330,7 @@ namespace MaSch.Console.Cli.Test
         public void WithCommand_CommandType_ExecutorFunction()
         {
             var builder = CreateCliAsyncApplicationBuilder(out var app);
-            var executorFunction = Mocks.Create<Func<object, Task<int>>>();
+            var executorFunction = Mocks.Create<Func<CliExecutionContext, object, Task<int>>>();
             app.Setup(x => x.RegisterCommand(typeof(object), executorFunction.Object)).Verifiable(Verifiables, Times.Once());
 
             var b = builder.WithCommand(typeof(object), executorFunction.Object);
@@ -343,7 +343,7 @@ namespace MaSch.Console.Cli.Test
         {
             var builder = CreateCliAsyncApplicationBuilder(out var app);
             var optionsInstance = Mocks.Create<IDisposable>();
-            var executorFunction = Mocks.Create<Func<object, Task<int>>>();
+            var executorFunction = Mocks.Create<Func<CliExecutionContext, object, Task<int>>>();
             app.Setup(x => x.RegisterCommand(typeof(object), optionsInstance.Object, executorFunction.Object)).Verifiable(Verifiables, Times.Once());
 
             var b = builder.WithCommand(typeof(object), optionsInstance.Object, executorFunction.Object);
@@ -355,7 +355,7 @@ namespace MaSch.Console.Cli.Test
         public void WithCommand_TCommand_ExecutorFunction()
         {
             var builder = CreateCliAsyncApplicationBuilder(out var app);
-            var executorFunction = Mocks.Create<Func<IDisposable, Task<int>>>();
+            var executorFunction = Mocks.Create<Func<CliExecutionContext, IDisposable, Task<int>>>();
             app.Setup(x => x.RegisterCommand(executorFunction.Object)).Verifiable(Verifiables, Times.Once());
 
             var b = builder.WithCommand(executorFunction.Object);
@@ -368,7 +368,7 @@ namespace MaSch.Console.Cli.Test
         {
             var builder = CreateCliAsyncApplicationBuilder(out var app);
             var optionsInstance = Mocks.Create<IDisposable>();
-            var executorFunction = Mocks.Create<Func<IDisposable, Task<int>>>();
+            var executorFunction = Mocks.Create<Func<CliExecutionContext, IDisposable, Task<int>>>();
             app.Setup(x => x.RegisterCommand(optionsInstance.Object, executorFunction.Object)).Verifiable(Verifiables, Times.Once());
 
             var b = builder.WithCommand(optionsInstance.Object, executorFunction.Object);
@@ -470,8 +470,8 @@ namespace MaSch.Console.Cli.Test
 
         public abstract class DummyClass : ICliAsyncCommandExecutor, ICliAsyncCommandExecutor<IDisposable>
         {
-            public abstract Task<int> ExecuteCommandAsync(ICliCommandInfo command, IDisposable parameters);
-            public abstract Task<int> ExecuteCommandAsync(ICliCommandInfo command);
+            public abstract Task<int> ExecuteCommandAsync(CliExecutionContext context, IDisposable parameters);
+            public abstract Task<int> ExecuteCommandAsync(CliExecutionContext context);
         }
     }
 }

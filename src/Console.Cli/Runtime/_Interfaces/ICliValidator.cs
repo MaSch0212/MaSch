@@ -12,10 +12,10 @@ namespace MaSch.Console.Cli.Runtime
         /// <summary>
         /// Validates the given instance of the command.
         /// </summary>
-        /// <param name="command">Information about the command that is validated.</param>
+        /// <param name="context">The execution context.</param>
         /// <param name="parameters">The command instance to validate.</param>
         /// <param name="errors">The errors that the validation detected.</param>
         /// <returns><c>true</c> when validation succeeded; otherwise <c>false</c>.</returns>
-        bool ValidateOptions(ICliCommandInfo command, TCommand parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors);
+        bool ValidateOptions(CliExecutionContext context, TCommand parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors);
     }
 }

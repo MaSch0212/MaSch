@@ -54,7 +54,7 @@ namespace MaSch.Console.Cli
         [AllowNull]
         public ICliHelpPage HelpPage
         {
-            get => _helpPage ??= new CliHelpPage(new ConsoleService());
+            get => _helpPage ??= new CliHelpPage(Options.ConsoleService);
             set => _helpPage = value;
         }
 
@@ -125,23 +125,23 @@ namespace MaSch.Console.Cli
         /// Tries to parse specified command line arguments.
         /// </summary>
         /// <param name="args">The command line arguments to parse.</param>
-        /// <param name="command">The command that is referenced by the command line arguments.</param>
+        /// <param name="context">The execution context created by the parser.</param>
         /// <param name="options">The options object containing all values and option values set by the command line arguments.</param>
         /// <param name="errorCode">The exit code to use when parsing failed. Is always 0 when <c>true</c> is returned.</param>
         /// <returns><c>true</c> when the command line arguments have been parsed successfully; otherwise <c>false</c>.</returns>
-        protected virtual bool TryParseArguments(string[] args, [NotNullWhen(true)] out ICliCommandInfo? command, [NotNullWhen(true)] out object? options, out int errorCode)
+        protected virtual bool TryParseArguments(string[] args, [NotNullWhen(true)] out CliExecutionContext? context, [NotNullWhen(true)] out object? options, out int errorCode)
         {
             var result = Parser.Parse(this, args);
             if (result.Success)
             {
-                command = result.Command!;
+                context = result.ExecutionContext!;
                 options = result.Options!;
                 errorCode = 0;
                 return true;
             }
             else
             {
-                options = command = null;
+                options = context = null;
                 var isHelpPage = HelpPage.Write(this, result.Errors);
                 errorCode = isHelpPage ? 0 : Options.ParseErrorExitCode;
                 return false;
@@ -252,19 +252,19 @@ namespace MaSch.Console.Cli
             => base.RegisterCommand(commandType, optionsInstance, executorType, executorInstance);
 
         /// <inheritdoc/>
-        public void RegisterCommand(Type commandType, Func<object, int> executorFunction)
+        public void RegisterCommand(Type commandType, Func<CliExecutionContext, object, int> executorFunction)
             => CommandsCollection.Add(CommandFactory.Create(commandType, executorFunction));
 
         /// <inheritdoc/>
-        public void RegisterCommand(Type commandType, object? optionsInstance, Func<object, int> executorFunction)
+        public void RegisterCommand(Type commandType, object? optionsInstance, Func<CliExecutionContext, object, int> executorFunction)
             => CommandsCollection.Add(CommandFactory.Create(commandType, optionsInstance, executorFunction));
 
         /// <inheritdoc/>
-        public void RegisterCommand<TCommand>(Func<TCommand, int> executorFunction)
+        public void RegisterCommand<TCommand>(Func<CliExecutionContext, TCommand, int> executorFunction)
             => CommandsCollection.Add(CommandFactory.Create(executorFunction));
 
         /// <inheritdoc/>
-        public void RegisterCommand<TCommand>(TCommand optionsInstance, Func<TCommand, int> executorFunction)
+        public void RegisterCommand<TCommand>(TCommand optionsInstance, Func<CliExecutionContext, TCommand, int> executorFunction)
             => CommandsCollection.Add(CommandFactory.Create(optionsInstance, executorFunction));
 
         /// <inheritdoc/>
@@ -298,8 +298,8 @@ namespace MaSch.Console.Cli
         /// <inheritdoc/>
         public int Run(string[] args)
         {
-            if (TryParseArguments(args, out var command, out var options, out int errorCode))
-                return command.Execute(options);
+            if (TryParseArguments(args, out var context, out var options, out int errorCode))
+                return context.Command.Execute(context, options);
             return errorCode;
         }
     }
@@ -399,19 +399,19 @@ namespace MaSch.Console.Cli
             => base.RegisterCommand(commandType, optionsInstance, executorType, executorInstance);
 
         /// <inheritdoc/>
-        public void RegisterCommand(Type commandType, Func<object, Task<int>> executorFunction)
+        public void RegisterCommand(Type commandType, Func<CliExecutionContext, object, Task<int>> executorFunction)
             => CommandsCollection.Add(CommandFactory.Create(commandType, executorFunction));
 
         /// <inheritdoc/>
-        public void RegisterCommand(Type commandType, object? optionsInstance, Func<object, Task<int>> executorFunction)
+        public void RegisterCommand(Type commandType, object? optionsInstance, Func<CliExecutionContext, object, Task<int>> executorFunction)
             => CommandsCollection.Add(CommandFactory.Create(commandType, optionsInstance, executorFunction));
 
         /// <inheritdoc/>
-        public void RegisterCommand<TCommand>(Func<TCommand, Task<int>> executorFunction)
+        public void RegisterCommand<TCommand>(Func<CliExecutionContext, TCommand, Task<int>> executorFunction)
             => CommandsCollection.Add(CommandFactory.Create(executorFunction));
 
         /// <inheritdoc/>
-        public void RegisterCommand<TCommand>(TCommand optionsInstance, Func<TCommand, Task<int>> executorFunction)
+        public void RegisterCommand<TCommand>(TCommand optionsInstance, Func<CliExecutionContext, TCommand, Task<int>> executorFunction)
             => CommandsCollection.Add(CommandFactory.Create(optionsInstance, executorFunction));
 
         /// <inheritdoc/>
@@ -445,8 +445,8 @@ namespace MaSch.Console.Cli
         /// <inheritdoc/>
         public async Task<int> RunAsync(string[] args)
         {
-            if (TryParseArguments(args, out var command, out var options, out int errorCode))
-                return await command.ExecuteAsync(options);
+            if (TryParseArguments(args, out var context, out var options, out int errorCode))
+                return await context.Command.ExecuteAsync(context, options);
             return errorCode;
         }
     }

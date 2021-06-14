@@ -15,7 +15,7 @@ namespace MaSch.Console.Cli.Test
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Base class tests")]
     public class CliApplicationBaseTests : TestClassBase
     {
-        public delegate bool TryParseArgumentsDelegate(string[] args, [NotNullWhen(true)] out ICliCommandInfo? command, [NotNullWhen(true)] out object? options, out int errorCode);
+        public delegate bool TryParseArgumentsDelegate(string[] args, [NotNullWhen(true)] out CliExecutionContext? context, [NotNullWhen(true)] out object? options, out int errorCode);
 
         [TestMethod]
         public void Ctor_Success()
@@ -233,16 +233,17 @@ namespace MaSch.Console.Cli.Test
             var appMock = CreateAppMockForParse(out var parserMock, out _);
             var args = new[] { "blub" };
             var commandMock = Mocks.Create<ICliCommandInfo>();
+            var execCtx = new CliExecutionContext(appMock.Object, commandMock.Object);
             var optionsInstance = new object();
             parserMock
                 .Setup(x => x.Parse(appMock.Object, args))
-                .Returns(new CliArgumentParserResult(commandMock.Object, optionsInstance))
+                .Returns(new CliArgumentParserResult(execCtx, optionsInstance))
                 .Verifiable(Verifiables, Times.Once());
 
-            var result = appMock.Object.TryParseArguments(args, out var command, out var options, out var errorCode);
+            var result = appMock.Object.TryParseArguments(args, out var context, out var options, out var errorCode);
 
             Assert.IsTrue(result);
-            Assert.AreSame(commandMock.Object, command);
+            Assert.AreSame(execCtx, context);
             Assert.AreSame(optionsInstance, options);
             Assert.AreEqual(0, errorCode);
         }
@@ -341,8 +342,8 @@ namespace MaSch.Console.Cli.Test
 
         public abstract class TestCliApplicationBase : CliApplicationBase
         {
-            public new bool TryParseArguments(string[] args, [NotNullWhen(true)] out ICliCommandInfo? command, [NotNullWhen(true)] out object? options, out int errorCode)
-                => base.TryParseArguments(args, out command, out options, out errorCode);
+            public new bool TryParseArguments(string[] args, [NotNullWhen(true)] out CliExecutionContext? context, [NotNullWhen(true)] out object? options, out int errorCode)
+                => base.TryParseArguments(args, out context, out options, out errorCode);
         }
     }
 
@@ -472,7 +473,7 @@ namespace MaSch.Console.Cli.Test
             var app = CreateApp(out var collectionMock, out var commandFactoryMock);
             var commandMock = Mocks.Create<ICliCommandInfo>();
             var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var executorFunctionMock = Mocks.Create<Func<object, int>>();
+            var executorFunctionMock = Mocks.Create<Func<CliExecutionContext, object, int>>();
             commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, executorFunctionMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
             collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
 
@@ -486,7 +487,7 @@ namespace MaSch.Console.Cli.Test
             var commandMock = Mocks.Create<ICliCommandInfo>();
             var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
             var optionsInstance = new object();
-            var executorFunctionMock = Mocks.Create<Func<object, int>>();
+            var executorFunctionMock = Mocks.Create<Func<CliExecutionContext, object, int>>();
             commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, optionsInstance, executorFunctionMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
             collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
 
@@ -498,7 +499,7 @@ namespace MaSch.Console.Cli.Test
         {
             var app = CreateApp(out var collectionMock, out var commandFactoryMock);
             var commandMock = Mocks.Create<ICliCommandInfo>();
-            var executorFunctionMock = Mocks.Create<Func<DummyClass1, int>>();
+            var executorFunctionMock = Mocks.Create<Func<CliExecutionContext, DummyClass1, int>>();
             commandFactoryMock.Setup(x => x.Create(executorFunctionMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
             collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
 
@@ -511,7 +512,7 @@ namespace MaSch.Console.Cli.Test
             var app = CreateApp(out var collectionMock, out var commandFactoryMock);
             var commandMock = Mocks.Create<ICliCommandInfo>();
             var optionsInstance = new DummyClass1();
-            var executorFunctionMock = Mocks.Create<Func<DummyClass1, int>>();
+            var executorFunctionMock = Mocks.Create<Func<CliExecutionContext, DummyClass1, int>>();
             commandFactoryMock.Setup(x => x.Create(optionsInstance, executorFunctionMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
             collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
 
@@ -596,18 +597,19 @@ namespace MaSch.Console.Cli.Test
             SetupAppMock(appMock);
             var args = new[] { "blub" };
             var commandMock = Mocks.Create<ICliCommandInfo>();
+            var execCtx = new CliExecutionContext(appMock.Object, commandMock.Object);
             var options = new object();
             appMock.Protected()
-                .Setup<bool>("TryParseArguments", args, ItExpr.Ref<ICliCommandInfo?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
-                .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((string[] a, out ICliCommandInfo? c, out object? o, out int e) =>
+                .Setup<bool>("TryParseArguments", args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
+                .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((string[] a, out CliExecutionContext? c, out object? o, out int e) =>
                 {
-                    c = commandMock.Object;
+                    c = execCtx;
                     o = options;
                     e = 0;
                     return true;
                 }))
                 .Verifiable(Verifiables, Times.Once());
-            commandMock.Setup(x => x.Execute(options)).Returns(4711).Verifiable(Verifiables, Times.Once());
+            commandMock.Setup(x => x.Execute(execCtx, options)).Returns(4711).Verifiable(Verifiables, Times.Once());
 
             var result = appMock.Object.Run(args);
 
@@ -621,8 +623,8 @@ namespace MaSch.Console.Cli.Test
             SetupAppMock(appMock);
             var args = new[] { "blub" };
             appMock.Protected()
-                .Setup<bool>("TryParseArguments", args, ItExpr.Ref<ICliCommandInfo?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
-                .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((string[] a, out ICliCommandInfo? c, out object? o, out int e) =>
+                .Setup<bool>("TryParseArguments", args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
+                .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((string[] a, out CliExecutionContext? c, out object? o, out int e) =>
                 {
                     c = null;
                     o = null;
@@ -664,7 +666,7 @@ namespace MaSch.Console.Cli.Test
         public class DummyClass2 : ICliCommandExecutor
         {
             [ExcludeFromCodeCoverage]
-            public int ExecuteCommand(ICliCommandInfo command)
+            public int ExecuteCommand(CliExecutionContext context)
             {
                 throw new NotImplementedException();
             }
@@ -673,7 +675,7 @@ namespace MaSch.Console.Cli.Test
         public class DummyClass3 : ICliCommandExecutor<DummyClass1>
         {
             [ExcludeFromCodeCoverage]
-            public int ExecuteCommand(ICliCommandInfo command, DummyClass1 parameters)
+            public int ExecuteCommand(CliExecutionContext context, DummyClass1 parameters)
             {
                 throw new NotImplementedException();
             }
@@ -806,7 +808,7 @@ namespace MaSch.Console.Cli.Test
             var app = CreateApp(out var collectionMock, out var commandFactoryMock);
             var commandMock = Mocks.Create<ICliCommandInfo>();
             var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var executorFunctionMock = Mocks.Create<Func<object, Task<int>>>();
+            var executorFunctionMock = Mocks.Create<Func<CliExecutionContext, object, Task<int>>>();
             commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, executorFunctionMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
             collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
 
@@ -820,7 +822,7 @@ namespace MaSch.Console.Cli.Test
             var commandMock = Mocks.Create<ICliCommandInfo>();
             var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
             var optionsInstance = new object();
-            var executorFunctionMock = Mocks.Create<Func<object, Task<int>>>();
+            var executorFunctionMock = Mocks.Create<Func<CliExecutionContext, object, Task<int>>>();
             commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, optionsInstance, executorFunctionMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
             collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
 
@@ -832,7 +834,7 @@ namespace MaSch.Console.Cli.Test
         {
             var app = CreateApp(out var collectionMock, out var commandFactoryMock);
             var commandMock = Mocks.Create<ICliCommandInfo>();
-            var executorFunctionMock = Mocks.Create<Func<DummyClass1, Task<int>>>();
+            var executorFunctionMock = Mocks.Create<Func<CliExecutionContext, DummyClass1, Task<int>>>();
             commandFactoryMock.Setup(x => x.Create(executorFunctionMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
             collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
 
@@ -845,7 +847,7 @@ namespace MaSch.Console.Cli.Test
             var app = CreateApp(out var collectionMock, out var commandFactoryMock);
             var commandMock = Mocks.Create<ICliCommandInfo>();
             var optionsInstance = new DummyClass1();
-            var executorFunctionMock = Mocks.Create<Func<DummyClass1, Task<int>>>();
+            var executorFunctionMock = Mocks.Create<Func<CliExecutionContext, DummyClass1, Task<int>>>();
             commandFactoryMock.Setup(x => x.Create(optionsInstance, executorFunctionMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
             collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
 
@@ -930,18 +932,19 @@ namespace MaSch.Console.Cli.Test
             SetupAppMock(appMock);
             var args = new[] { "blub" };
             var commandMock = Mocks.Create<ICliCommandInfo>();
+            var execCtx = new CliExecutionContext(appMock.Object, commandMock.Object);
             var options = new object();
             appMock.Protected()
-                .Setup<bool>("TryParseArguments", args, ItExpr.Ref<ICliCommandInfo?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
-                .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((string[] a, out ICliCommandInfo? c, out object? o, out int e) =>
+                .Setup<bool>("TryParseArguments", args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
+                .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((string[] a, out CliExecutionContext? c, out object? o, out int e) =>
                 {
-                    c = commandMock.Object;
+                    c = execCtx;
                     o = options;
                     e = 0;
                     return true;
                 }))
                 .Verifiable(Verifiables, Times.Once());
-            commandMock.Setup(x => x.ExecuteAsync(options)).Returns(Task.Delay(10).ContinueWith(t => 4711)).Verifiable(Verifiables, Times.Once());
+            commandMock.Setup(x => x.ExecuteAsync(execCtx, options)).Returns(Task.Delay(10).ContinueWith(t => 4711)).Verifiable(Verifiables, Times.Once());
 
             var result = await appMock.Object.RunAsync(args);
 
@@ -955,8 +958,8 @@ namespace MaSch.Console.Cli.Test
             SetupAppMock(appMock);
             var args = new[] { "blub" };
             appMock.Protected()
-                .Setup<bool>("TryParseArguments", args, ItExpr.Ref<ICliCommandInfo?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
-                .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((string[] a, out ICliCommandInfo? c, out object? o, out int e) =>
+                .Setup<bool>("TryParseArguments", args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
+                .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((string[] a, out CliExecutionContext? c, out object? o, out int e) =>
                 {
                     c = null;
                     o = null;
@@ -998,7 +1001,7 @@ namespace MaSch.Console.Cli.Test
         public class DummyClass2 : ICliAsyncCommandExecutor
         {
             [ExcludeFromCodeCoverage]
-            public Task<int> ExecuteCommandAsync(ICliCommandInfo command)
+            public Task<int> ExecuteCommandAsync(CliExecutionContext context)
             {
                 throw new NotImplementedException();
             }
@@ -1007,7 +1010,7 @@ namespace MaSch.Console.Cli.Test
         public class DummyClass3 : ICliAsyncCommandExecutor<DummyClass1>
         {
             [ExcludeFromCodeCoverage]
-            public Task<int> ExecuteCommandAsync(ICliCommandInfo command, DummyClass1 parameters)
+            public Task<int> ExecuteCommandAsync(CliExecutionContext context, DummyClass1 parameters)
             {
                 throw new NotImplementedException();
             }

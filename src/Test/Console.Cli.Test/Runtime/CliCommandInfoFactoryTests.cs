@@ -242,7 +242,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         [TestMethod]
         public void From_TCommand_ExecutorFunc()
         {
-            var func = Mocks.Create<Func<DummyClass2, int>>();
+            var func = Mocks.Create<Func<CliExecutionContext, DummyClass2, int>>();
             var info = Factory.Create(func.Object);
 
             var po = new PrivateObject(info);
@@ -261,7 +261,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void From_TCommand_ExecutorFunc_WithCommandInstance()
         {
             var command = new DummyClass2();
-            var func = Mocks.Create<Func<DummyClass2, int>>();
+            var func = Mocks.Create<Func<CliExecutionContext, DummyClass2, int>>();
             var info = Factory.Create(command, func.Object);
 
             var po = new PrivateObject(info);
@@ -275,7 +275,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         [TestMethod]
         public void From_TCommand_AsyncExecutorFunc()
         {
-            var func = Mocks.Create<Func<DummyClass2, Task<int>>>();
+            var func = Mocks.Create<Func<CliExecutionContext, DummyClass2, Task<int>>>();
             var info = Factory.Create(func.Object);
 
             var po = new PrivateObject(info);
@@ -294,7 +294,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void From_TCommand_AsyncExecutorFunc_WithCommandInstance()
         {
             var command = new DummyClass2();
-            var func = Mocks.Create<Func<DummyClass2, Task<int>>>();
+            var func = Mocks.Create<Func<CliExecutionContext, DummyClass2, Task<int>>>();
             var info = Factory.Create(command, func.Object);
 
             var po = new PrivateObject(info);
@@ -308,7 +308,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         [TestMethod]
         public void From_CommandType_ExecutorFunc()
         {
-            var func = Mocks.Create<Func<object, int>>();
+            var func = Mocks.Create<Func<CliExecutionContext, object, int>>();
             var info = Factory.Create(typeof(DummyClass2), func.Object);
 
             var po = new PrivateObject(info);
@@ -327,7 +327,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void From_CommandType_ExecutorFunc_WithCommandInstance()
         {
             var command = new DummyClass2();
-            var func = Mocks.Create<Func<object, int>>();
+            var func = Mocks.Create<Func<CliExecutionContext, object, int>>();
             var info = Factory.Create(typeof(DummyClass2), command, func.Object);
 
             var po = new PrivateObject(info);
@@ -341,7 +341,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         [TestMethod]
         public void From_CommandType_AsyncExecutorFunc()
         {
-            var func = Mocks.Create<Func<object, Task<int>>>();
+            var func = Mocks.Create<Func<CliExecutionContext, object, Task<int>>>();
             var info = Factory.Create(typeof(DummyClass2), func.Object);
 
             var po = new PrivateObject(info);
@@ -360,7 +360,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void From_CommandType_AsyncExecutorFunc_WithCommandInstance()
         {
             var command = new DummyClass2();
-            var func = Mocks.Create<Func<object, Task<int>>>();
+            var func = Mocks.Create<Func<CliExecutionContext, object, Task<int>>>();
             var info = Factory.Create(typeof(DummyClass2), command, func.Object);
 
             var po = new PrivateObject(info);
@@ -374,7 +374,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         [CliCommand("Command1", IsDefault = true, HelpOrder = 4711, HelpText = "My Help Text", Executable = false)]
         public class DummyClass1 : ICliCommandExecutor
         {
-            public int ExecuteCommand(ICliCommandInfo command)
+            public int ExecuteCommand(CliExecutionContext context)
             {
                 throw new NotImplementedException();
             }
@@ -417,16 +417,16 @@ namespace MaSch.Console.Cli.Test.Runtime
         [CliCommand("Command9", IsDefault = true, HelpOrder = 4711, HelpText = "My Help Text")]
         private abstract class DummyClass9 : ICliCommandExecutor
         {
-            public abstract int ExecuteCommand(ICliCommandInfo command);
+            public abstract int ExecuteCommand(CliExecutionContext context);
         }
 
         public abstract class Executor1 : ICliCommandExecutor<DummyClass2>, ICliAsyncCommandExecutor<DummyClass2>, ICliValidator<DummyClass2>
         {
-            public delegate bool ValidateDelegate(ICliCommandInfo command, DummyClass2 parameters, [MaybeNullWhen(true)] out IEnumerable<CliError>? errors);
+            public delegate bool ValidateDelegate(CliExecutionContext context, DummyClass2 parameters, [MaybeNullWhen(true)] out IEnumerable<CliError>? errors);
 
-            public abstract int ExecuteCommand(ICliCommandInfo command, DummyClass2 parameters);
-            public abstract Task<int> ExecuteCommandAsync(ICliCommandInfo command, DummyClass2 parameters);
-            public abstract bool ValidateOptions(ICliCommandInfo command, DummyClass2 parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors);
+            public abstract int ExecuteCommand(CliExecutionContext context, DummyClass2 parameters);
+            public abstract Task<int> ExecuteCommandAsync(CliExecutionContext context, DummyClass2 parameters);
+            public abstract bool ValidateOptions(CliExecutionContext context, DummyClass2 parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors);
         }
     }
 }

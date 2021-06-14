@@ -113,7 +113,7 @@ namespace MaSch.Console.Cli.Runtime
         }
 
         /// <inheritdoc/>
-        public bool ValidateOptions(ICliCommandInfo command, object parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors)
+        public bool ValidateOptions(CliExecutionContext context, object parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors)
         {
             if (_executor == null)
             {
@@ -122,17 +122,26 @@ namespace MaSch.Console.Cli.Runtime
             }
             else
             {
-                return _executor.ValidateOptions(command, parameters, out errors);
+                return _executor.ValidateOptions(context, parameters, out errors);
             }
         }
 
         /// <inheritdoc/>
-        public int Execute(object obj)
-            => _executor?.Execute(this, obj) ?? throw new InvalidOperationException($"The command {Name} is not executable.");
+        public int Execute(CliExecutionContext context, object obj)
+        {
+            ValidateExecutionContext(context);
+            return _executor?.Execute(context, obj)
+                ?? throw new InvalidOperationException($"The command {Name} is not executable.");
+        }
 
         /// <inheritdoc/>
-        public async Task<int> ExecuteAsync(object obj)
-            => _executor != null ? await _executor.ExecuteAsync(this, obj) : throw new InvalidOperationException($"The command {Name} is not executable.");
+        public async Task<int> ExecuteAsync(CliExecutionContext context, object obj)
+        {
+            ValidateExecutionContext(context);
+            return _executor != null
+                ? await _executor.ExecuteAsync(context, obj)
+                : throw new InvalidOperationException($"The command {Name} is not executable.");
+        }
 
         /// <inheritdoc/>
         public void AddChildCommand(ICliCommandInfo childCommand)
@@ -148,6 +157,13 @@ namespace MaSch.Console.Cli.Runtime
             _childCommands.Remove(childCommand);
             if (childCommand.ParentCommand == this && childCommand is CliCommandInfo cc)
                 cc.ParentCommand = null;
+        }
+
+        private void ValidateExecutionContext(CliExecutionContext context)
+        {
+            Guard.NotNull(context, nameof(context));
+            if (context.Command != this)
+                throw new ArgumentException("The context contains the wrong command. Its instance needs to match this instance of the ICliCommandInfo.");
         }
     }
 }

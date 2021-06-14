@@ -10,9 +10,9 @@ namespace MaSch.Console.Cli.Runtime
         /// <summary>
         /// Executes the command asynchronously.
         /// </summary>
-        /// <param name="command">Information about the current command.</param>
+        /// <param name="context">The execution context.</param>
         /// <returns>The exit code.</returns>
-        Task<int> ExecuteCommandAsync(ICliCommandInfo command);
+        Task<int> ExecuteCommandAsync(CliExecutionContext context);
     }
 
     /// <summary>
@@ -24,9 +24,9 @@ namespace MaSch.Console.Cli.Runtime
         /// <summary>
         /// Executes the command asynchronously.
         /// </summary>
-        /// <param name="command">Information about the command that is executed.</param>
+        /// <param name="context">The execution context.</param>
         /// <param name="parameters">The command to execute.</param>
         /// <returns>The exit code.</returns>
-        Task<int> ExecuteCommandAsync(ICliCommandInfo command, TCommand parameters);
+        Task<int> ExecuteCommandAsync(CliExecutionContext context, TCommand parameters);
     }
 }

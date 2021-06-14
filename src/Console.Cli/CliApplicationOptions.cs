@@ -15,6 +15,11 @@ namespace MaSch.Console.Cli
         public int ParseErrorExitCode { get; set; } = -1;
 
         /// <summary>
+        /// Gets or sets the console service that should be used for the application.
+        /// </summary>
+        public IConsoleService ConsoleService { get; set; } = new ConsoleService();
+
+        /// <summary>
         /// Gets or sets the name of the application.
         /// </summary>
         public string? Name { get; set; } = Assembly.GetEntryAssembly()?.GetName().Name;

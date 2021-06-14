@@ -15,8 +15,8 @@ namespace MaSch.Console.Cli.Test.Runtime
     [TestClass]
     public class CliArgumentParserTests : TestClassBase
     {
-        private delegate bool CliValidatorDelegate(ICliCommandInfo command, object optionsObj, [MaybeNullWhen(true)] out IEnumerable<CliError>? errors);
-        private delegate bool CliValidatableDelegate(ICliCommandInfo command, [MaybeNullWhen(true)] out IEnumerable<CliError>? errors);
+        private delegate bool CliValidatorDelegate(CliExecutionContext context, object optionsObj, [MaybeNullWhen(true)] out IEnumerable<CliError>? errors);
+        private delegate bool CliValidatableDelegate(CliExecutionContext context, [MaybeNullWhen(true)] out IEnumerable<CliError>? errors);
 
         private ICliCommandInfo? DefaultCommand
         {
@@ -1370,8 +1370,8 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             IEnumerable<CliError>? validationErrors;
             return mock
-                .Setup(x => x.ValidateOptions(It.IsAny<ICliCommandInfo>(), It.IsAny<T>(), out validationErrors))
-                .Returns(new CliValidatorDelegate((ICliCommandInfo c, object o, out IEnumerable<CliError>? e) =>
+                .Setup(x => x.ValidateOptions(It.IsAny<CliExecutionContext>(), It.IsAny<T>(), out validationErrors))
+                .Returns(new CliValidatorDelegate((CliExecutionContext c, object o, out IEnumerable<CliError>? e) =>
                 {
                     e = errors;
                     return result;
@@ -1382,8 +1382,8 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             IEnumerable<CliError>? validationErrors;
             return mock
-                .Setup(x => x.ValidateOptions(command, obj, out validationErrors))
-                .Returns(new CliValidatorDelegate((ICliCommandInfo c, object o, out IEnumerable<CliError>? e) =>
+                .Setup(x => x.ValidateOptions(It.Is<CliExecutionContext>(x => x.Command == command), obj, out validationErrors))
+                .Returns(new CliValidatorDelegate((CliExecutionContext c, object o, out IEnumerable<CliError>? e) =>
                 {
                     e = errors;
                     return result;
@@ -1394,8 +1394,8 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             IEnumerable<CliError>? validationErrors;
             return mock
-                .Setup(x => x.ValidateOptions(command, out validationErrors))
-                .Returns(new CliValidatableDelegate((ICliCommandInfo c, out IEnumerable<CliError>? e) =>
+                .Setup(x => x.ValidateOptions(It.Is<CliExecutionContext>(x => x.Command == command), out validationErrors))
+                .Returns(new CliValidatableDelegate((CliExecutionContext c, out IEnumerable<CliError>? e) =>
                 {
                     e = errors;
                     return result;
@@ -1410,7 +1410,7 @@ namespace MaSch.Console.Cli.Test.Runtime
             where TExpectedOptionsType : class
         {
             Assert.IsTrue(result.Success, "Parse failed unexpectedly.");
-            Assert.AreSame(expectedCommand, result.Command, "Parse resulted in wrong command.");
+            Assert.AreSame(expectedCommand, result.ExecutionContext!.Command, "Parse resulted in wrong command.");
             Assert.IsInstanceOfType<TExpectedOptionsType>(result.Options, "Options returned from parse have unexpected type.");
 
             if (expectedOptions is not null)

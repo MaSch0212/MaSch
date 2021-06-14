@@ -103,16 +103,18 @@ namespace MaSch.Console.Cli.Runtime
         /// <summary>
         /// Executed this command.
         /// </summary>
+        /// <param name="context">The execution context.</param>
         /// <param name="obj">The options instance to use for execution.</param>
         /// <returns>The exit code.</returns>
-        int Execute(object obj);
+        int Execute(CliExecutionContext context, object obj);
 
         /// <summary>
         /// Executed this command asynchronously.
         /// </summary>
+        /// <param name="context">The execution context.</param>
         /// <param name="obj">The options instance to use for execution.</param>
         /// <returns>The exit code.</returns>
-        Task<int> ExecuteAsync(object obj);
+        Task<int> ExecuteAsync(CliExecutionContext context, object obj);
 
         /// <summary>
         /// Adds a child command to this comand.

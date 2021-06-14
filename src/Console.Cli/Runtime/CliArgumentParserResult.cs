@@ -19,9 +19,9 @@ namespace MaSch.Console.Cli.Runtime
         public IEnumerable<CliError> Errors { get; }
 
         /// <summary>
-        /// Gets the command that has been detected by the parse.
+        /// Gets the execution context that can be used to execute the parsed command.
         /// </summary>
-        public ICliCommandInfo? Command { get; }
+        public CliExecutionContext? ExecutionContext { get; }
 
         /// <summary>
         /// Gets the command instance that has been created during the parse.
@@ -32,13 +32,13 @@ namespace MaSch.Console.Cli.Runtime
         /// Initializes a new instance of the <see cref="CliArgumentParserResult"/> class.
         /// </summary>
         /// <param name="errors">The errors that where detected while parsing.</param>
-        /// <param name="command">The command that has been detected by the parse.</param>
+        /// <param name="executionContext">The execution context that can be used to execute the parsed command.</param>
         /// <param name="options">The command instance that has been created during the parse.</param>
-        internal protected CliArgumentParserResult(IEnumerable<CliError> errors, ICliCommandInfo? command, object? options)
+        internal protected CliArgumentParserResult(IEnumerable<CliError> errors, CliExecutionContext? executionContext, object? options)
         {
             Success = false;
             Errors = errors;
-            Command = command;
+            ExecutionContext = executionContext;
             Options = options;
         }
 
@@ -54,13 +54,13 @@ namespace MaSch.Console.Cli.Runtime
         /// <summary>
         /// Initializes a new instance of the <see cref="CliArgumentParserResult"/> class.
         /// </summary>
-        /// <param name="command">The command that has been detected by the parse.</param>
+        /// <param name="executionContext">The execution context that can be used to execute the parsed command.</param>
         /// <param name="options">The command instance that has been created during the parse.</param>
-        internal protected CliArgumentParserResult(ICliCommandInfo command, object options)
+        internal protected CliArgumentParserResult(CliExecutionContext executionContext, object options)
         {
             Success = true;
             Errors = Array.Empty<CliError>();
-            Command = command;
+            ExecutionContext = executionContext;
             Options = options;
         }
     }

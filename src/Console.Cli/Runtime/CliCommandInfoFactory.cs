@@ -59,35 +59,35 @@ namespace MaSch.Console.Cli.Runtime
             => new CliCommandInfo(commandType, executorType, optionsInstance, null, executorInstance);
 
         /// <inheritdoc/>
-        public ICliCommandInfo Create<TCommand>(Func<TCommand, int> executorFunction)
+        public ICliCommandInfo Create<TCommand>(Func<CliExecutionContext, TCommand, int> executorFunction)
             => new CliCommandInfo(typeof(TCommand), null, null, executorFunction, null);
 
         /// <inheritdoc/>
-        public ICliCommandInfo Create<TCommand>(TCommand optionsInstance, Func<TCommand, int> executorFunction)
+        public ICliCommandInfo Create<TCommand>(TCommand optionsInstance, Func<CliExecutionContext, TCommand, int> executorFunction)
             => new CliCommandInfo(typeof(TCommand), null, optionsInstance, executorFunction, null);
 
         /// <inheritdoc/>
-        public ICliCommandInfo Create<TCommand>(Func<TCommand, Task<int>> executorFunction)
+        public ICliCommandInfo Create<TCommand>(Func<CliExecutionContext, TCommand, Task<int>> executorFunction)
             => new CliCommandInfo(typeof(TCommand), null, null, executorFunction, null);
 
         /// <inheritdoc/>
-        public ICliCommandInfo Create<TCommand>(TCommand optionsInstance, Func<TCommand, Task<int>> executorFunction)
+        public ICliCommandInfo Create<TCommand>(TCommand optionsInstance, Func<CliExecutionContext, TCommand, Task<int>> executorFunction)
             => new CliCommandInfo(typeof(TCommand), null, optionsInstance, executorFunction, null);
 
         /// <inheritdoc/>
-        public ICliCommandInfo Create(Type commandType, Func<object, int> executorFunction)
+        public ICliCommandInfo Create(Type commandType, Func<CliExecutionContext, object, int> executorFunction)
             => new CliCommandInfo(commandType, null, null, executorFunction, null);
 
         /// <inheritdoc/>
-        public ICliCommandInfo Create(Type commandType, object? optionsInstance, Func<object, int> executorFunction)
+        public ICliCommandInfo Create(Type commandType, object? optionsInstance, Func<CliExecutionContext, object, int> executorFunction)
             => new CliCommandInfo(commandType, null, optionsInstance, executorFunction, null);
 
         /// <inheritdoc/>
-        public ICliCommandInfo Create(Type commandType, Func<object, Task<int>> executorFunction)
+        public ICliCommandInfo Create(Type commandType, Func<CliExecutionContext, object, Task<int>> executorFunction)
             => new CliCommandInfo(commandType, null, null, executorFunction, null);
 
         /// <inheritdoc/>
-        public ICliCommandInfo Create(Type commandType, object? optionsInstance, Func<object, Task<int>> executorFunction)
+        public ICliCommandInfo Create(Type commandType, object? optionsInstance, Func<CliExecutionContext, object, Task<int>> executorFunction)
             => new CliCommandInfo(commandType, null, optionsInstance, executorFunction, null);
     }
 }

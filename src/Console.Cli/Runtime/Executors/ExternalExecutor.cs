@@ -63,39 +63,39 @@ namespace MaSch.Console.Cli.Runtime.Executors
                 throw new ArgumentException($"The type {executorType.Name} needs to implement {typeof(ICliCommandExecutor<T>).Name} and/or {typeof(ICliAsyncCommandExecutor<T>).Name} for type {typeof(T).Name}.", nameof(executorType));
         }
 
-        public int Execute(ICliCommandInfo command, object obj)
+        public int Execute(CliExecutionContext context, object obj)
         {
-            Guard.NotNull(command, nameof(command));
+            Guard.NotNull(context, nameof(context));
             Guard.NotNull(obj, nameof(obj));
             var (ee, tObj) = ExternalExecutor.PreExecute<T>(_executorType, _executorInstance ?? _cachedExecutor, obj);
             _cachedExecutor = ee;
 
             if (ee is ICliCommandExecutor<T> executor)
-                return executor.ExecuteCommand(command, tObj);
+                return executor.ExecuteCommand(context, tObj);
             else if (ee is ICliAsyncCommandExecutor<T> asyncExecutor)
-                return asyncExecutor.ExecuteCommandAsync(command, tObj).GetAwaiter().GetResult();
+                return asyncExecutor.ExecuteCommandAsync(context, tObj).GetAwaiter().GetResult();
             else
                 throw new InvalidOperationException($"The type {_executorType.Name} needs to implement {typeof(ICliCommandExecutor<T>).Name} and/or {typeof(ICliAsyncCommandExecutor<T>).Name} for type {typeof(T).Name}.");
         }
 
-        public async Task<int> ExecuteAsync(ICliCommandInfo command, object obj)
+        public async Task<int> ExecuteAsync(CliExecutionContext context, object obj)
         {
-            Guard.NotNull(command, nameof(command));
+            Guard.NotNull(context, nameof(context));
             Guard.NotNull(obj, nameof(obj));
             var (ee, tObj) = ExternalExecutor.PreExecute<T>(_executorType, _executorInstance ?? _cachedExecutor, obj);
             _cachedExecutor = ee;
 
             if (ee is ICliAsyncCommandExecutor<T> asyncExecutor)
-                return await asyncExecutor.ExecuteCommandAsync(command, tObj);
+                return await asyncExecutor.ExecuteCommandAsync(context, tObj);
             else if (ee is ICliCommandExecutor<T> executor)
-                return executor.ExecuteCommand(command, tObj);
+                return executor.ExecuteCommand(context, tObj);
             else
                 throw new InvalidOperationException($"The type {_executorType.Name} needs to implement {typeof(ICliCommandExecutor<T>).Name} and/or {typeof(ICliAsyncCommandExecutor<T>).Name} for type {typeof(T).Name}.");
         }
 
-        public bool ValidateOptions(ICliCommandInfo command, object parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors)
+        public bool ValidateOptions(CliExecutionContext context, object parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors)
         {
-            Guard.NotNull(command, nameof(command));
+            Guard.NotNull(context, nameof(context));
             Guard.OfType(parameters, nameof(parameters), false, typeof(T));
             var ee = ExternalExecutor.PreValidate(_executorType, _executorInstance ?? _cachedExecutor);
             _cachedExecutor = ee;
@@ -112,7 +112,7 @@ namespace MaSch.Console.Cli.Runtime.Executors
             if (type != null)
             {
                 var validateMethod = typeof(ICliValidator<>).MakeGenericType(type).GetMethod(nameof(ICliValidator<object>.ValidateOptions))!;
-                var p = new object?[] { command, parameters, null };
+                var p = new object?[] { context, parameters, null };
                 var r = (bool)validateMethod.Invoke(ee, p)!;
                 errors = p[2] as IEnumerable<CliError>;
                 return r;

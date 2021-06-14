@@ -106,7 +106,7 @@ namespace MaSch.Console.Cli
         /// </summary>
         /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
         /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
-        void RegisterCommand(Type commandType, Func<object, int> executorFunction);
+        void RegisterCommand(Type commandType, Func<CliExecutionContext, object, int> executorFunction);
 
         /// <summary>
         /// Registers a <see cref="ICliCommandInfo"/> created from a command type and an executor function to this application.
@@ -114,14 +114,14 @@ namespace MaSch.Console.Cli
         /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
         /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
         /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
-        void RegisterCommand(Type commandType, object? optionsInstance, Func<object, int> executorFunction);
+        void RegisterCommand(Type commandType, object? optionsInstance, Func<CliExecutionContext, object, int> executorFunction);
 
         /// <summary>
         /// Registers a <see cref="ICliCommandInfo"/> created from a command type and an executor function to this application.
         /// </summary>
         /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
         /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
-        void RegisterCommand<TCommand>(Func<TCommand, int> executorFunction);
+        void RegisterCommand<TCommand>(Func<CliExecutionContext, TCommand, int> executorFunction);
 
         /// <summary>
         /// Registers a <see cref="ICliCommandInfo"/> created from a command type and an executor function to this application.
@@ -129,7 +129,7 @@ namespace MaSch.Console.Cli
         /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
         /// <param name="optionsInstance">An instance of <typeparamref name="TCommand"/> that should be used when the command is executed.</param>
         /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
-        void RegisterCommand<TCommand>(TCommand optionsInstance, Func<TCommand, int> executorFunction);
+        void RegisterCommand<TCommand>(TCommand optionsInstance, Func<CliExecutionContext, TCommand, int> executorFunction);
 
         /// <summary>
         /// Registers a <see cref="ICliCommandInfo"/> created from an executable command type to this application.
@@ -198,7 +198,7 @@ namespace MaSch.Console.Cli
         /// </summary>
         /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
         /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
-        void RegisterCommand(Type commandType, Func<object, Task<int>> executorFunction);
+        void RegisterCommand(Type commandType, Func<CliExecutionContext, object, Task<int>> executorFunction);
 
         /// <summary>
         /// Registers a <see cref="ICliCommandInfo"/> created from a command type and an executor function to this application.
@@ -206,14 +206,14 @@ namespace MaSch.Console.Cli
         /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
         /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
         /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
-        void RegisterCommand(Type commandType, object? optionsInstance, Func<object, Task<int>> executorFunction);
+        void RegisterCommand(Type commandType, object? optionsInstance, Func<CliExecutionContext, object, Task<int>> executorFunction);
 
         /// <summary>
         /// Registers a <see cref="ICliCommandInfo"/> created from a command type and an executor function to this application.
         /// </summary>
         /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
         /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
-        void RegisterCommand<TCommand>(Func<TCommand, Task<int>> executorFunction);
+        void RegisterCommand<TCommand>(Func<CliExecutionContext, TCommand, Task<int>> executorFunction);
 
         /// <summary>
         /// Registers a <see cref="ICliCommandInfo"/> created from a command type and an executor function to this application.
@@ -221,7 +221,7 @@ namespace MaSch.Console.Cli
         /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
         /// <param name="optionsInstance">An instance of <typeparamref name="TCommand"/> that should be used when the command is executed.</param>
         /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
-        void RegisterCommand<TCommand>(TCommand optionsInstance, Func<TCommand, Task<int>> executorFunction);
+        void RegisterCommand<TCommand>(TCommand optionsInstance, Func<CliExecutionContext, TCommand, Task<int>> executorFunction);
 
         /// <summary>
         /// Registers a <see cref="ICliCommandInfo"/> created from an executable command type to this application.

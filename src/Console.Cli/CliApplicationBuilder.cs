@@ -146,7 +146,7 @@ namespace MaSch.Console.Cli
         /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
         /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
         /// <returns>Self reference to this builder.</returns>
-        public CliApplicationBuilder WithCommand(Type commandType, Func<object, int> executorFunction)
+        public CliApplicationBuilder WithCommand(Type commandType, Func<CliExecutionContext, object, int> executorFunction)
             => Exec(x => x.RegisterCommand(commandType, executorFunction));
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace MaSch.Console.Cli
         /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
         /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
         /// <returns>Self reference to this builder.</returns>
-        public CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Func<object, int> executorFunction)
+        public CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Func<CliExecutionContext, object, int> executorFunction)
             => Exec(x => x.RegisterCommand(commandType, optionsInstance, executorFunction));
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace MaSch.Console.Cli
         /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
         /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
         /// <returns>Self reference to this builder.</returns>
-        public CliApplicationBuilder WithCommand<TCommand>(Func<TCommand, int> executorFunction)
+        public CliApplicationBuilder WithCommand<TCommand>(Func<CliExecutionContext, TCommand, int> executorFunction)
             => Exec(x => x.RegisterCommand(executorFunction));
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace MaSch.Console.Cli
         /// <param name="optionsInstance">An instance of <typeparamref name="TCommand"/> that should be used when the command is executed.</param>
         /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
         /// <returns>Self reference to this builder.</returns>
-        public CliApplicationBuilder WithCommand<TCommand>(TCommand optionsInstance, Func<TCommand, int> executorFunction)
+        public CliApplicationBuilder WithCommand<TCommand>(TCommand optionsInstance, Func<CliExecutionContext, TCommand, int> executorFunction)
             => Exec(x => x.RegisterCommand(optionsInstance, executorFunction));
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace MaSch.Console.Cli
         /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
         /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
         /// <returns>Self reference to this builder.</returns>
-        public CliAsyncApplicationBuilder WithCommand(Type commandType, Func<object, Task<int>> executorFunction)
+        public CliAsyncApplicationBuilder WithCommand(Type commandType, Func<CliExecutionContext, object, Task<int>> executorFunction)
             => Exec(x => x.RegisterCommand(commandType, executorFunction));
 
         /// <summary>
@@ -286,7 +286,7 @@ namespace MaSch.Console.Cli
         /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
         /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
         /// <returns>Self reference to this builder.</returns>
-        public CliAsyncApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Func<object, Task<int>> executorFunction)
+        public CliAsyncApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Func<CliExecutionContext, object, Task<int>> executorFunction)
             => Exec(x => x.RegisterCommand(commandType, optionsInstance, executorFunction));
 
         /// <summary>
@@ -295,7 +295,7 @@ namespace MaSch.Console.Cli
         /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
         /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
         /// <returns>Self reference to this builder.</returns>
-        public CliAsyncApplicationBuilder WithCommand<TCommand>(Func<TCommand, Task<int>> executorFunction)
+        public CliAsyncApplicationBuilder WithCommand<TCommand>(Func<CliExecutionContext, TCommand, Task<int>> executorFunction)
             => Exec(x => x.RegisterCommand(executorFunction));
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace MaSch.Console.Cli
         /// <param name="optionsInstance">An instance of <typeparamref name="TCommand"/> that should be used when the command is executed.</param>
         /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
         /// <returns>Self reference to this builder.</returns>
-        public CliAsyncApplicationBuilder WithCommand<TCommand>(TCommand optionsInstance, Func<TCommand, Task<int>> executorFunction)
+        public CliAsyncApplicationBuilder WithCommand<TCommand>(TCommand optionsInstance, Func<CliExecutionContext, TCommand, Task<int>> executorFunction)
             => Exec(x => x.RegisterCommand(optionsInstance, executorFunction));
 
         /// <summary>
