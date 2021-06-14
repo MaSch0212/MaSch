@@ -113,16 +113,6 @@ namespace MaSch.Core.Test
             var disposedMock = new Mock<EventHandler<DisposeEventArgs>>();
             var actionMock = new Mock<Action>();
             var enumerableMock = new Mock<IEnumerable<string>>(MockBehavior.Strict);
-            disposingMock.Setup(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()))
-                .Callback(() =>
-                {
-                    disposedMock.Verify(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()), Times.Never());
-                });
-            disposedMock.Setup(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()))
-                .Callback(() =>
-                {
-                    disposedMock.Verify(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()), Times.Once());
-                });
 
             int ddeHash = 0;
             void Act()
@@ -138,8 +128,6 @@ namespace MaSch.Core.Test
             GC.WaitForPendingFinalizers();
 
             actionMock.Verify(x => x(), Times.Never());
-            disposingMock.Verify(x => x(It.Is<DelegateDisposableEnumerable<string>>(a => a.GetHashCode() == ddeHash), It.Is<DisposeEventArgs>(a => a != null && !a.IsDisposing)), Times.Never());
-            disposedMock.Verify(x => x(It.Is<DelegateDisposableEnumerable<string>>(a => a.GetHashCode() == ddeHash), It.Is<DisposeEventArgs>(a => a != null && !a.IsDisposing)), Times.Never());
         }
     }
 
@@ -268,16 +256,6 @@ namespace MaSch.Core.Test
             var disposedMock = new Mock<EventHandler<DisposeEventArgs>>();
             var actionMock = new Mock<Action>();
             var enumerableMock = new Mock<IOrderedEnumerable<string>>(MockBehavior.Strict);
-            disposingMock.Setup(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()))
-                .Callback(() =>
-                {
-                    disposedMock.Verify(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()), Times.Never());
-                });
-            disposedMock.Setup(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()))
-                .Callback(() =>
-                {
-                    disposedMock.Verify(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()), Times.Once());
-                });
 
             int ddeHash = 0;
             void Act()
@@ -293,8 +271,6 @@ namespace MaSch.Core.Test
             GC.WaitForPendingFinalizers();
 
             actionMock.Verify(x => x(), Times.Never());
-            disposingMock.Verify(x => x(It.Is<DelegateOrderedDisposableEnumerable<string>>(a => a.GetHashCode() == ddeHash), It.Is<DisposeEventArgs>(a => a != null && !a.IsDisposing)), Times.Never());
-            disposedMock.Verify(x => x(It.Is<DelegateOrderedDisposableEnumerable<string>>(a => a.GetHashCode() == ddeHash), It.Is<DisposeEventArgs>(a => a != null && !a.IsDisposing)), Times.Never());
         }
     }
 }

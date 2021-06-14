@@ -1405,8 +1405,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         private void AssertSuccessfulParserResult<TExpectedOptionsType>(
             CliArgumentParserResult result,
             ICliCommandInfo expectedCommand,
-            TExpectedOptionsType? expectedOptions = null,
-            bool expectedOptionsShouldBeSame = true)
+            TExpectedOptionsType? expectedOptions = null)
             where TExpectedOptionsType : class
         {
             Assert.IsTrue(result.Success, "Parse failed unexpectedly.");
@@ -1415,10 +1414,7 @@ namespace MaSch.Console.Cli.Test.Runtime
 
             if (expectedOptions is not null)
             {
-                if (expectedOptionsShouldBeSame)
-                    Assert.AreSame(expectedOptions, result.Options, "Options are not the expected ones.");
-                else
-                    Assert.AreEqual(expectedOptions, result.Options, "Options are not the expected ones.");
+                Assert.AreSame(expectedOptions, result.Options, "Options are not the expected ones.");
             }
         }
 

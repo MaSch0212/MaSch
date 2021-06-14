@@ -3,6 +3,7 @@ using MaSch.Console.Cli.Runtime;
 using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MaSch.Console.Cli.Test.ErrorHandling
 {
@@ -111,6 +112,7 @@ namespace MaSch.Console.Cli.Test.ErrorHandling
             Assert.AreSame(testEx, attr.Exception);
         }
 
+        [ExcludeFromCodeCoverage]
         [CliCommand("blub", Executable = false)]
         private class TestCommandOptions : ICliCommandExecutor
         {

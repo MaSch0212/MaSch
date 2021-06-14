@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 
@@ -18,6 +19,7 @@ namespace MaSch.Test
     /// <summary>
     /// This class represents the live NON public INTERNAL object in the system
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class PrivateObject
     {
         // bind everything
@@ -879,6 +881,7 @@ namespace MaSch.Test
     /// <summary>
     /// This class represents a private class for the Private Accessor functionality.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class PrivateType
     {
         /// <summary>
@@ -1375,6 +1378,7 @@ namespace MaSch.Test
     /// <summary>
     /// Provides method signature discovery for generic methods.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal class RuntimeTypeHelper
     {
         /// <summary>

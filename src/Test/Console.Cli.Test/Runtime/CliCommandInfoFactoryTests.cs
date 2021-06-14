@@ -374,6 +374,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         [CliCommand("Command1", IsDefault = true, HelpOrder = 4711, HelpText = "My Help Text", Executable = false)]
         public class DummyClass1 : ICliCommandExecutor
         {
+            [ExcludeFromCodeCoverage]
             public int ExecuteCommand(CliExecutionContext context)
             {
                 throw new NotImplementedException();

@@ -3,6 +3,7 @@ using MaSch.Console.Cli.Runtime;
 using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace MaSch.Console.Cli.Test.Runtime
@@ -53,6 +54,7 @@ namespace MaSch.Console.Cli.Test.Runtime
             Assert.IsTrue(option.Hidden);
         }
 
+        [ExcludeFromCodeCoverage]
         private class DummyClass
         {
             public int NormalProperty { get; set; }

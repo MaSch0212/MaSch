@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 
@@ -11,6 +12,7 @@ namespace MaSch.Test
     /// <summary>
     /// Provides extension methods for the <see cref="PrivateType"/> class.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class PrivateTypeExtensions
     {
         /// <summary>
