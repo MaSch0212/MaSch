@@ -140,6 +140,41 @@ namespace MaSch.Console.Cli
         {
         }
 
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
+        public override CliApplicationBuilder WithCommand(ICliCommandInfo command)
+            => base.WithCommand(command);
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
+        public override CliApplicationBuilder WithCommand(Type commandType)
+            => base.WithCommand(commandType);
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
+        public override CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance)
+            => base.WithCommand(commandType, optionsInstance);
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
+        public override CliApplicationBuilder WithCommand(Type commandType, Type? executorType)
+            => base.WithCommand(commandType, executorType);
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
+        public override CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType)
+            => base.WithCommand(commandType, optionsInstance, executorType);
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
+        public override CliApplicationBuilder WithCommand(Type commandType, Type? executorType, object? executorInstance)
+            => base.WithCommand(commandType, executorType, executorInstance);
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
+        public override CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType, object? executorInstance)
+            => base.WithCommand(commandType, optionsInstance, executorType, executorInstance);
+
         /// <summary>
         /// Adds a <see cref="ICliCommandInfo"/> created from a command type and an executor function to the final application.
         /// </summary>
@@ -269,6 +304,41 @@ namespace MaSch.Console.Cli
             : base(application)
         {
         }
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
+        public override CliAsyncApplicationBuilder WithCommand(ICliCommandInfo command)
+            => base.WithCommand(command);
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
+        public override CliAsyncApplicationBuilder WithCommand(Type commandType)
+            => base.WithCommand(commandType);
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
+        public override CliAsyncApplicationBuilder WithCommand(Type commandType, object? optionsInstance)
+            => base.WithCommand(commandType, optionsInstance);
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
+        public override CliAsyncApplicationBuilder WithCommand(Type commandType, Type? executorType)
+            => base.WithCommand(commandType, executorType);
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
+        public override CliAsyncApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType)
+            => base.WithCommand(commandType, optionsInstance, executorType);
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
+        public override CliAsyncApplicationBuilder WithCommand(Type commandType, Type? executorType, object? executorInstance)
+            => base.WithCommand(commandType, executorType, executorInstance);
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
+        public override CliAsyncApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType, object? executorInstance)
+            => base.WithCommand(commandType, optionsInstance, executorType, executorInstance);
 
         /// <summary>
         /// Adds a <see cref="ICliCommandInfo"/> created from a command type and an executor function to the final application.

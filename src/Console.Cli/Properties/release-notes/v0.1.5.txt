@@ -1,0 +1,1 @@
+﻿- Added overrides from CliApplicationBuilderBase to derived classes to fix issues with compiler choosing the correct overload.
