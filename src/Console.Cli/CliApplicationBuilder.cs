@@ -100,6 +100,44 @@ namespace MaSch.Console.Cli
             => Exec(x => x.RegisterCommand(commandType, optionsInstance, executorType, executorInstance));
 
         /// <summary>
+        /// Configures the options of the final application.
+        /// </summary>
+        /// <param name="action">The configuration action.</param>
+        /// <returns>Self reference to this builder.</returns>
+        public virtual TBuilder Configure(Action<CliApplicationOptions> action)
+            => Exec(x => action(x.Options));
+
+        /// <summary>
+        /// Sets the command factory of the final application.
+        /// </summary>
+        /// <typeparam name="TFactory">The type of factory to use.</typeparam>
+        /// <param name="factory">The factory to use.</param>
+        /// <returns>Self reference to this builder.</returns>
+        public virtual TBuilder WithCommandFactory<TFactory>(TFactory factory)
+            where TFactory : ICliCommandInfoFactory
+            => Exec(x => x.CommandFactory = factory);
+
+        /// <summary>
+        /// Sets the argument parser of the final application.
+        /// </summary>
+        /// <typeparam name="TParser">The type of argument parser to use.</typeparam>
+        /// <param name="parser">The argument parser to use.</param>
+        /// <returns>Self reference to this builder.</returns>
+        public virtual TBuilder WithParser<TParser>(TParser parser)
+            where TParser : ICliArgumentParser
+            => Exec(x => x.Parser = parser);
+
+        /// <summary>
+        /// Sets the help page of the final application.
+        /// </summary>
+        /// <typeparam name="THelpPage">The type of help page to use.</typeparam>
+        /// <param name="helpPage">The help page to use.</param>
+        /// <returns>Self reference to this builder.</returns>
+        public virtual TBuilder WithHelpPage<THelpPage>(THelpPage helpPage)
+            where THelpPage : ICliHelpPage
+            => Exec(x => x.HelpPage = helpPage);
+
+        /// <summary>
         /// Builds the application.
         /// </summary>
         /// <returns>The built application instance.</returns>
@@ -140,39 +178,76 @@ namespace MaSch.Console.Cli
         {
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Adds a <see cref="ICliCommandInfo"/> to the final application.
+        /// </summary>
+        /// <param name="command">The command to register.</param>
+        /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
-        public override CliApplicationBuilder WithCommand(ICliCommandInfo command)
+        public new CliApplicationBuilder WithCommand(ICliCommandInfo command)
             => base.WithCommand(command);
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Adds a <see cref="ICliCommandInfo"/> created from an executable command type to the final application.
+        /// </summary>
+        /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/> and implements the <see cref="ICliCommandExecutor"/> interface.</param>
+        /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
-        public override CliApplicationBuilder WithCommand(Type commandType)
+        public new CliApplicationBuilder WithCommand(Type commandType)
             => base.WithCommand(commandType);
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Adds a <see cref="ICliCommandInfo"/> created from an executable command type to the final application.
+        /// </summary>
+        /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/> and implements the <see cref="ICliCommandExecutor"/> interface.</param>
+        /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
+        /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
-        public override CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance)
+        public new CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance)
             => base.WithCommand(commandType, optionsInstance);
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Adds a <see cref="ICliCommandInfo"/> created from a command and executor type to the final application.
+        /// </summary>
+        /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
+        /// <param name="executorType">The executor type that implements the <see cref="ICliCommandExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
+        /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
-        public override CliApplicationBuilder WithCommand(Type commandType, Type? executorType)
+        public new CliApplicationBuilder WithCommand(Type commandType, Type? executorType)
             => base.WithCommand(commandType, executorType);
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Adds a <see cref="ICliCommandInfo"/> created from a command and executor type to the final application.
+        /// </summary>
+        /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
+        /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
+        /// <param name="executorType">The executor type that implements the <see cref="ICliCommandExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
+        /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
-        public override CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType)
+        public new CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType)
             => base.WithCommand(commandType, optionsInstance, executorType);
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Adds a <see cref="ICliCommandInfo"/> created from a command and executor type to the final application.
+        /// </summary>
+        /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
+        /// <param name="executorType">The executor type that implements the <see cref="ICliCommandExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
+        /// <param name="executorInstance">An instance of <paramref name="executorType"/> that should be used when the command is executed.</param>
+        /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
-        public override CliApplicationBuilder WithCommand(Type commandType, Type? executorType, object? executorInstance)
+        public new CliApplicationBuilder WithCommand(Type commandType, Type? executorType, object? executorInstance)
             => base.WithCommand(commandType, executorType, executorInstance);
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Adds a <see cref="ICliCommandInfo"/> created from a command and executor type to the final application.
+        /// </summary>
+        /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
+        /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
+        /// <param name="executorType">The executor type that implements the <see cref="ICliCommandExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
+        /// <param name="executorInstance">An instance of <paramref name="executorType"/> that should be used when the command is executed.</param>
+        /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
-        public override CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType, object? executorInstance)
+        public new CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType, object? executorInstance)
             => base.WithCommand(commandType, optionsInstance, executorType, executorInstance);
 
         /// <summary>
@@ -273,14 +348,6 @@ namespace MaSch.Console.Cli
         public CliApplicationBuilder WithCommand<TCommand, TExecutor>(TCommand optionsInstance, TExecutor executorInstance)
             where TExecutor : ICliCommandExecutor<TCommand>
             => Exec(x => x.RegisterCommand(optionsInstance, executorInstance));
-
-        /// <summary>
-        /// Configures the options of the final application.
-        /// </summary>
-        /// <param name="action">The configuration action.</param>
-        /// <returns>Self reference to this builder.</returns>
-        public CliApplicationBuilder Configure(Action<CliApplicationOptions> action)
-            => Exec(x => action(x.Options));
     }
 
     /// <summary>
@@ -305,39 +372,76 @@ namespace MaSch.Console.Cli
         {
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Adds a <see cref="ICliCommandInfo"/> to the final application.
+        /// </summary>
+        /// <param name="command">The command to register.</param>
+        /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
-        public override CliAsyncApplicationBuilder WithCommand(ICliCommandInfo command)
+        public new CliAsyncApplicationBuilder WithCommand(ICliCommandInfo command)
             => base.WithCommand(command);
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Adds a <see cref="ICliCommandInfo"/> created from an executable command type to the final application.
+        /// </summary>
+        /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/> and implements the <see cref="ICliAsyncCommandExecutor"/> interface.</param>
+        /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
-        public override CliAsyncApplicationBuilder WithCommand(Type commandType)
+        public new CliAsyncApplicationBuilder WithCommand(Type commandType)
             => base.WithCommand(commandType);
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Adds a <see cref="ICliCommandInfo"/> created from an executable command type to the final application.
+        /// </summary>
+        /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/> and implements the <see cref="ICliAsyncCommandExecutor"/> interface.</param>
+        /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
+        /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
-        public override CliAsyncApplicationBuilder WithCommand(Type commandType, object? optionsInstance)
+        public new CliAsyncApplicationBuilder WithCommand(Type commandType, object? optionsInstance)
             => base.WithCommand(commandType, optionsInstance);
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Adds a <see cref="ICliCommandInfo"/> created from a command and executor type to the final application.
+        /// </summary>
+        /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
+        /// <param name="executorType">The executor type that implements the <see cref="ICliAsyncCommandExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
+        /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
-        public override CliAsyncApplicationBuilder WithCommand(Type commandType, Type? executorType)
+        public new CliAsyncApplicationBuilder WithCommand(Type commandType, Type? executorType)
             => base.WithCommand(commandType, executorType);
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Adds a <see cref="ICliCommandInfo"/> created from a command and executor type to the final application.
+        /// </summary>
+        /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
+        /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
+        /// <param name="executorType">The executor type that implements the <see cref="ICliAsyncCommandExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
+        /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
-        public override CliAsyncApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType)
+        public new CliAsyncApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType)
             => base.WithCommand(commandType, optionsInstance, executorType);
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Adds a <see cref="ICliCommandInfo"/> created from a command and executor type to the final application.
+        /// </summary>
+        /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
+        /// <param name="executorType">The executor type that implements the <see cref="ICliAsyncCommandExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
+        /// <param name="executorInstance">An instance of <paramref name="executorType"/> that should be used when the command is executed.</param>
+        /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
-        public override CliAsyncApplicationBuilder WithCommand(Type commandType, Type? executorType, object? executorInstance)
+        public new CliAsyncApplicationBuilder WithCommand(Type commandType, Type? executorType, object? executorInstance)
             => base.WithCommand(commandType, executorType, executorInstance);
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Adds a <see cref="ICliCommandInfo"/> created from a command and executor type to the final application.
+        /// </summary>
+        /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
+        /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
+        /// <param name="executorType">The executor type that implements the <see cref="ICliAsyncCommandExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
+        /// <param name="executorInstance">An instance of <paramref name="executorType"/> that should be used when the command is executed.</param>
+        /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
-        public override CliAsyncApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType, object? executorInstance)
+        public new CliAsyncApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType, object? executorInstance)
             => base.WithCommand(commandType, optionsInstance, executorType, executorInstance);
 
         /// <summary>
@@ -438,13 +542,5 @@ namespace MaSch.Console.Cli
         public CliAsyncApplicationBuilder WithCommand<TCommand, TExecutor>(TCommand optionsInstance, TExecutor executorInstance)
             where TExecutor : ICliAsyncCommandExecutor<TCommand>
             => Exec(x => x.RegisterCommand(optionsInstance, executorInstance));
-
-        /// <summary>
-        /// Configures the options of the final application.
-        /// </summary>
-        /// <param name="action">The configuration action.</param>
-        /// <returns>Self reference to this builder.</returns>
-        public CliAsyncApplicationBuilder Configure(Action<CliApplicationOptions> action)
-            => Exec(x => action(x.Options));
     }
 }

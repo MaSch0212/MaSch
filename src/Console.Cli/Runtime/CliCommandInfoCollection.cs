@@ -63,7 +63,7 @@ namespace MaSch.Console.Cli.Runtime
             }
 
             _allCommands.Add(item.CommandType, item);
-            if (item.IsDefault)
+            if (item.IsDefault && item.ParentCommand == null)
                 DefaultCommand = item;
         }
 

@@ -85,6 +85,23 @@ namespace MaSch.Console.Cli.Test.Runtime
         }
 
         [TestMethod]
+        public void Add_Success_SubDefaultCommand()
+        {
+            var command1 = CreateCliCommandInfo<DummyClass1>(new CliCommandAttribute("blub"), true);
+            var command2 = CreateCliCommandInfo<DummyClass2>(new CliCommandAttribute("blub2") { ParentCommand = typeof(DummyClass1) }, true);
+            command2.Setup(x => x.ParentCommand).Returns(command1.Object);
+            command1.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
+            command1.Setup(x => x.AddChildCommand(command2.Object)).Verifiable(Verifiables, Times.Once());
+
+            Collection.Add(command1.Object);
+            Collection.Add(command2.Object);
+
+            Assert.AreCollectionsEqual(new[] { command1.Object, command2.Object }, Collection);
+            Assert.AreCollectionsEqual(new[] { command1.Object }, Collection.GetRootCommands());
+            Assert.AreSame(command1.Object, Collection.DefaultCommand);
+        }
+
+        [TestMethod]
         public void Add_Success_ChildCommand()
         {
             var command1 = CreateCliCommandInfo<DummyClass1>(new CliCommandAttribute("blub"), false);
@@ -457,6 +474,7 @@ namespace MaSch.Console.Cli.Test.Runtime
             command.Setup(x => x.Aliases).Returns(attribute?.Aliases!);
             command.Setup(x => x.Name).Returns(attribute?.Name!);
             command.Setup(x => x.IsDefault).Returns(isDefault);
+            command.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
             return command;
         }
 

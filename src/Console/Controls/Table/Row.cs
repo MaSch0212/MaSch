@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace MaSch.Console.Controls.Table
 {
@@ -16,7 +15,7 @@ namespace MaSch.Console.Controls.Table
         /// <summary>
         /// Gets or sets the values.
         /// </summary>
-        public IList<string> Values { get; set; } = Array.Empty<string>();
+        public IList<string> Values { get; set; } = new List<string>();
 
         /// <summary>
         /// Gets or sets the height.

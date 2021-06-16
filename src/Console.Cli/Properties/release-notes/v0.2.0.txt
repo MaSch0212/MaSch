@@ -1,0 +1,10 @@
+﻿- Fix DefaultCommand behavior in CliCommandInfoCollection.
+- Improve detection of code attributes (now allows to set them on interfaces).
+- Added ability to order commands and options by overwriting the ClieHelpPage.
+- Improved method overloads in CliApplicationBuilder and CliAsyncApplicationBuilder.
+- If an unknown command is provided for the help command, an error is now displayed.
+- Added empty line after help, error and version page to be better readable.
+- Fixed command information for help and version page when information is provided by parent.
+- Make visible that required option exists in command usage on help page.
+- Added ability to set command factory, argument parser and help page using the application builders.
+- Fix issue with "--" for option values.

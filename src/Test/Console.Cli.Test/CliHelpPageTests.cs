@@ -1,5 +1,6 @@
 ﻿using MaSch.Console.Cli.Configuration;
 using MaSch.Console.Cli.Runtime;
+using MaSch.Core;
 using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -19,9 +20,9 @@ namespace MaSch.Console.Cli.Test.Help
     {
         private static string NL => Environment.NewLine;
 
-        private Mock<ICliApplicationBase> AppMock => Cache.GetValue(() => new Mock<ICliApplicationBase>(MockBehavior.Strict))!;
+        private Mock<ICliApplicationBase> AppMock => Cache.GetValue(CreateAppMock)!;
         private Mock<IConsoleService> ConsoleServiceMock => Cache.GetValue(() => new Mock<IConsoleService>(MockBehavior.Strict))!;
-        private PrivateCliHelpPage HelpPage => Cache.GetValue(() => new PrivateCliHelpPage(ConsoleServiceMock.Object))!;
+        private PrivateCliHelpPage HelpPage => Cache.GetValue(() => new PrivateCliHelpPage())!;
         private ICliCommandInfoFactory Factory => Cache.GetValue(() => new CliCommandInfoFactory())!;
 
         [TestMethod]
@@ -243,14 +244,14 @@ namespace MaSch.Console.Cli.Test.Help
         {
             var helpPageMock = Mocks.Create<CliHelpPage>(ConsoleServiceMock.Object);
             var app = Mocks.Create<ICliApplicationBase>().Object;
-            var error = new CliError("Blub");
+            var errors = new[] { new CliError("Blub") };
             var callOrder = new List<string>();
-            helpPageMock.Protected().Setup("WriteVersionPage", app, error).CallBase();
-            helpPageMock.Protected().Setup("WriteCommandNameAndVersion", app, error).Callback(() => callOrder.Add("CommandNameAndVersion"));
-            helpPageMock.Protected().Setup("WriteCopyright", app, error).Callback(() => callOrder.Add("Copyright"));
-            helpPageMock.Protected().Setup("WriteCommandVersions", app, error).Callback(() => callOrder.Add("CommandVersions"));
+            helpPageMock.Protected().Setup("WriteVersionPage", app, errors).CallBase();
+            helpPageMock.Protected().Setup("WriteCommandNameAndVersion", app, errors[0]).Callback(() => callOrder.Add("CommandNameAndVersion"));
+            helpPageMock.Protected().Setup("WriteCopyright", app, errors[0]).Callback(() => callOrder.Add("Copyright"));
+            helpPageMock.Protected().Setup("WriteCommandVersions", app, errors[0]).Callback(() => callOrder.Add("CommandVersions"));
 
-            new PrivateCliHelpPage(helpPageMock.Object).WriteVersionPage(app, error);
+            new PrivateCliHelpPage(helpPageMock.Object).WriteVersionPage(app, errors);
 
             Assert.AreCollectionsEqual(new[] { "CommandNameAndVersion", "Copyright", "CommandVersions" }, callOrder);
         }
@@ -260,17 +261,17 @@ namespace MaSch.Console.Cli.Test.Help
         {
             var helpPageMock = Mocks.Create<CliHelpPage>(ConsoleServiceMock.Object);
             var app = Mocks.Create<ICliApplicationBase>().Object;
-            var error = new CliError("Blub");
+            var errors = new[] { new CliError(CliErrorType.HelpRequested) };
             var callOrder = new List<string>();
-            helpPageMock.Protected().Setup("WriteHelpPage", app, error).CallBase();
-            helpPageMock.Protected().Setup("WriteCommandNameAndVersion", app, error).Callback(() => callOrder.Add("CommandNameAndVersion"));
-            helpPageMock.Protected().Setup("WriteCopyright", app, error).Callback(() => callOrder.Add("Copyright"));
-            helpPageMock.Protected().Setup("WriteCommandUsage", app, error).Callback(() => callOrder.Add("CommandUsage"));
-            helpPageMock.Protected().Setup("WriteCommandParameters", app, error).Callback(() => callOrder.Add("CommandParameters"));
-            helpPageMock.Protected().Setup("WriteCommands", app, error).Callback(() => callOrder.Add("Commands"));
+            helpPageMock.Protected().Setup("WriteHelpPage", app, errors).CallBase();
+            helpPageMock.Protected().Setup("WriteCommandNameAndVersion", app, errors[0]).Callback(() => callOrder.Add("CommandNameAndVersion"));
+            helpPageMock.Protected().Setup("WriteCopyright", app, errors[0]).Callback(() => callOrder.Add("Copyright"));
+            helpPageMock.Protected().Setup("WriteCommandUsage", app, errors[0]).Callback(() => callOrder.Add("CommandUsage"));
+            helpPageMock.Protected().Setup("WriteCommandParameters", app, errors[0]).Callback(() => callOrder.Add("CommandParameters"));
+            helpPageMock.Protected().Setup("WriteCommands", app, errors[0]).Callback(() => callOrder.Add("Commands"));
             ConsoleServiceMock.Setup(x => x.WriteLine(string.Empty)).Callback(() => callOrder.Add(string.Empty));
 
-            new PrivateCliHelpPage(helpPageMock.Object).WriteHelpPage(app, error);
+            new PrivateCliHelpPage(helpPageMock.Object).WriteHelpPage(app, errors);
 
             Assert.AreCollectionsEqual(
                 new[]
@@ -286,7 +287,7 @@ namespace MaSch.Console.Cli.Test.Help
         }
 
         [TestMethod]
-        public void WriteErrorPage()
+        public void WriteHelpPage_WithErrors()
         {
             var helpPageMock = Mocks.Create<CliHelpPage>(ConsoleServiceMock.Object);
             var app = Mocks.Create<ICliApplicationBase>().Object;
@@ -301,7 +302,7 @@ namespace MaSch.Console.Cli.Test.Help
             helpPageMock.Protected().Setup("WriteErrorMessage", app, ItExpr.IsAny<CliError>()).Callback<ICliApplicationBase, CliError>((a, e) => callOrder.Add($"ErrorMessage_{e.CustomErrorMessage}"));
             ConsoleServiceMock.Setup(x => x.WriteLine(string.Empty)).Callback(() => callOrder.Add(string.Empty));
 
-            new PrivateCliHelpPage(helpPageMock.Object).WriteErrorPage(app, errors);
+            new PrivateCliHelpPage(helpPageMock.Object).WriteHelpPage(app, errors);
 
             Assert.AreCollectionsEqual(
                 new[]
@@ -1309,8 +1310,10 @@ namespace MaSch.Console.Cli.Test.Help
             p.Setup(x => x.GetAccessors(true)).Returns(Array.Empty<MethodInfo>());
             p.Setup(x => x.CanRead).Returns(true);
             p.Setup(x => x.CanWrite).Returns(true);
+            var extensionStorage = new ObjectExtensionDataStorage();
 
             return new CliCommandOptionInfo(
+                extensionStorage,
                 Factory.Create<TestCommandOptions>(),
                 p.Object,
                 option);
@@ -1325,6 +1328,13 @@ namespace MaSch.Console.Cli.Test.Help
             consoleServiceMock.SetupSet(x => x.ForegroundColor = It.IsAny<ConsoleColor>());
             consoleServiceMock.SetupGet(x => x.BackgroundColor).Returns(ConsoleColor.Black);
             consoleServiceMock.SetupSet(x => x.BackgroundColor = It.IsAny<ConsoleColor>());
+            return result;
+        }
+
+        private Mock<ICliApplicationBase> CreateAppMock()
+        {
+            var result = Mocks.Create<ICliApplicationBase>();
+            result.Setup(x => x.Options).Returns(new CliApplicationOptions { ConsoleService = ConsoleServiceMock.Object });
             return result;
         }
 
@@ -1350,8 +1360,8 @@ namespace MaSch.Console.Cli.Test.Help
 
             private readonly PrivateObject _po;
 
-            public PrivateCliHelpPage(IConsoleService consoleService)
-                : this(new CliHelpPage(consoleService))
+            public PrivateCliHelpPage()
+                : this(new CliHelpPage())
             {
             }
 
@@ -1360,14 +1370,11 @@ namespace MaSch.Console.Cli.Test.Help
                 _po = new PrivateObject(helpPage);
             }
 
-            public void WriteVersionPage(ICliApplicationBase application, CliError error)
-                => _po.Invoke(nameof(WriteVersionPage), application, error);
+            public void WriteVersionPage(ICliApplicationBase application, IList<CliError> errors)
+                => _po.Invoke(nameof(WriteVersionPage), application, errors);
 
-            public void WriteHelpPage(ICliApplicationBase application, CliError error)
-                => _po.Invoke(nameof(WriteHelpPage), application, error);
-
-            public void WriteErrorPage(ICliApplicationBase application, IList<CliError> errors)
-                => _po.Invoke(nameof(WriteErrorPage), application, errors);
+            public void WriteHelpPage(ICliApplicationBase application, IList<CliError> errors)
+                => _po.Invoke(nameof(WriteHelpPage), application, errors);
 
             public void WriteCommandNameAndVersion(ICliApplicationBase application, CliError error)
                 => _po.Invoke(nameof(WriteCommandNameAndVersion), application, error);

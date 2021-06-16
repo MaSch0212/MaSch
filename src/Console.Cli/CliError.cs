@@ -49,6 +49,11 @@ namespace MaSch.Console.Cli
         public Exception? Exception { get; init; }
 
         /// <summary>
+        /// Gets a value indicating whether this is an actual error.
+        /// </summary>
+        public bool IsError => Type != CliErrorType.VersionRequested && Type != CliErrorType.HelpRequested;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CliError"/> class.
         /// </summary>
         /// <param name="type">The error type.</param>
@@ -207,5 +212,10 @@ namespace MaSch.Console.Cli
         /// A value has the wrong format.
         /// </summary>
         WrongValueFormat,
+
+        /// <summary>
+        /// The given command is not executable.
+        /// </summary>
+        CommandNotExecutable,
     }
 }

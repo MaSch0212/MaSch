@@ -2,9 +2,11 @@
 using MaSch.Console.Cli.Internal;
 using MaSch.Console.Cli.Runtime.Executors;
 using MaSch.Core;
+using MaSch.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -83,7 +85,12 @@ namespace MaSch.Console.Cli.Runtime
             CommandType = Guard.NotNull(commandType, nameof(commandType));
             OptionsInstance = Guard.OfType(optionsInstance, nameof(optionsInstance), true, commandType);
 
-            Attribute = commandType.GetCustomAttribute<CliCommandAttribute>(true) ?? throw new ArgumentException($"The type \"{commandType.Name}\" does not have a {nameof(CliCommandAttribute)}.", nameof(commandType));
+            Attribute = (from t in commandType.FlattenHierarchy()
+                         let attr = t.GetCustomAttribute<CliCommandAttribute>()
+                         where attr != null
+                         select attr).FirstOrDefault()
+                ?? throw new ArgumentException($"The type \"{commandType.Name}\" does not have a {nameof(CliCommandAttribute)}.", nameof(commandType));
+
             if (string.IsNullOrWhiteSpace(Attribute.Name))
                 throw new ArgumentException($"The name of command \"{commandType.Name}\" cannot be empty.", nameof(commandType));
             if (IllegalNameCharactersRegex.IsMatch(Attribute.Name))
@@ -99,16 +106,26 @@ namespace MaSch.Console.Cli.Runtime
                     _executor = new DirectExecutor(commandType);
             }
 
-            var properties = commandType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            foreach (var p in properties)
+            var extensionStorage = new ObjectExtensionDataStorage();
+            var members = from t in commandType.FlattenHierarchy()
+                          from p in t.GetTypeInfo().GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                          from a in p.GetCustomAttributes()
+                          where a is CliCommandOptionAttribute || a is CliCommandValueAttribute
+                          group (p, a) by (p.Name, a.GetType()) into g
+                          let first = g.First()
+                          let m = first.a switch
+                          {
+                              CliCommandOptionAttribute oa => (ICliCommandMemberInfo)new CliCommandOptionInfo(extensionStorage, this, first.p, oa),
+                              CliCommandValueAttribute va => new CliCommandValueInfo(extensionStorage, this, first.p, va),
+                              _ => throw new Exception("Impossible Exception"),
+                          }
+                          select m;
+            foreach (var member in members)
             {
-                var optionAttr = p.GetCustomAttribute<CliCommandOptionAttribute>(true);
-                var valueAttr = p.GetCustomAttribute<CliCommandValueAttribute>(true);
-
-                if (optionAttr != null)
-                    _options.Add(new CliCommandOptionInfo(this, p, optionAttr));
-                if (valueAttr != null)
-                    _values.Add(new CliCommandValueInfo(this, p, valueAttr));
+                if (member is ICliCommandOptionInfo option)
+                    _options.Add(option);
+                else if (member is ICliCommandValueInfo value)
+                    _values.Add(value);
             }
         }
 

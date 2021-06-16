@@ -1,0 +1,2 @@
+﻿- Added TypeExtensions.FlattenHierarchy.
+- Added ObjectExtensionDataStorage.

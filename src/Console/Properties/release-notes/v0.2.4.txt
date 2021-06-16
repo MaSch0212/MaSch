@@ -1,0 +1,2 @@
+﻿- Initialize TableControl row values with empty list instead of array.
+- Added margin to TableControl.

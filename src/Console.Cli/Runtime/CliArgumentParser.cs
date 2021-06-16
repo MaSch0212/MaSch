@@ -44,6 +44,15 @@ namespace MaSch.Console.Cli.Runtime
                     return new(new[] { new CliError(CliErrorType.UnknownCommand) { CommandName = args[commandArgIndex] } });
                 }
 
+                if (!command.IsExecutable)
+                {
+                    var defaultCommand = command.ChildCommands.FirstOrDefault(x => x.IsDefault);
+                    if (defaultCommand != null)
+                        command = defaultCommand;
+                    else
+                        return new(new[] { new CliError(CliErrorType.CommandNotExecutable, command) });
+                }
+
                 var ctx = new CommandParserContext(args.Skip(commandArgIndex + 1).ToArray(), application, command, new List<CliError>());
                 ParseOptions(ctx);
                 ValidateOptions(ctx);
@@ -107,7 +116,7 @@ namespace MaSch.Console.Cli.Runtime
                 if (IsCommand("version"))
                     DetermineCommandAndThrow(CliErrorType.VersionRequested);
                 else if (IsOption("version"))
-                    throw GetException(CliErrorType.VersionRequested, null);
+                    throw GetException(CliErrorType.VersionRequested, null, Array.Empty<CliError>());
             }
 
             if (application.Options.ProvideHelpCommand)
@@ -115,7 +124,7 @@ namespace MaSch.Console.Cli.Runtime
                 if (IsCommand("help"))
                     DetermineCommandAndThrow(CliErrorType.HelpRequested);
                 else if (IsOption("help"))
-                    throw GetException(CliErrorType.HelpRequested, null);
+                    throw GetException(CliErrorType.HelpRequested, null, Array.Empty<CliError>());
             }
 
             bool IsCommand(string expectedCommand) => string.Equals(args[0], expectedCommand, StringComparison.OrdinalIgnoreCase);
@@ -124,12 +133,15 @@ namespace MaSch.Console.Cli.Runtime
             void DetermineCommandAndThrow(CliErrorType errorType)
             {
                 ICliCommandInfo? command = null;
-                if (args.Length > 1)
-                    TryParseCommandInfo(args.Skip(1).ToArray(), application, out command, out _);
-                throw GetException(errorType, command);
+                IEnumerable<CliError> additionalErrors = Array.Empty<CliError>();
+                if (args.Length > 1 && !TryParseCommandInfo(args.Skip(1).ToArray(), application, out command, out var idx))
+                    additionalErrors = additionalErrors.Append(new CliError(CliErrorType.UnknownCommand) { CommandName = args[idx + 1] });
+
+                throw GetException(errorType, command, additionalErrors);
             }
 
-            CliErrorException GetException(CliErrorType errorType, ICliCommandInfo? command) => new(new[] { new CliError(errorType, command) });
+            CliErrorException GetException(CliErrorType errorType, ICliCommandInfo? command, IEnumerable<CliError> additionalErrors)
+                => new(additionalErrors.Prepend(new CliError(errorType, command)));
         }
 
         private static void ParseOptions(CommandParserContext ctx)
@@ -219,8 +231,14 @@ namespace MaSch.Console.Cli.Runtime
                     object? v = null;
 
                     var isList = typeof(IEnumerable).IsAssignableFrom(option.PropertyType) && option.PropertyType != typeof(string);
-                    for (ctx.ArgIndex++; ctx.ArgIndex < ctx.Args.Count && !(ctx.Args[ctx.ArgIndex].StartsWith("-") && ctx.Args[ctx.ArgIndex].Length > 1); ctx.ArgIndex++)
+                    for (ctx.ArgIndex++; ctx.ArgIndex < ctx.Args.Count && !((ctx.Args[ctx.ArgIndex].StartsWith("-") && !ctx.AreOptionsEscaped && ctx.Args[ctx.ArgIndex] != "--") && ctx.Args[ctx.ArgIndex].Length > 1); ctx.ArgIndex++)
                     {
+                        if (ctx.Args[ctx.ArgIndex] == "--")
+                        {
+                            ctx.AreOptionsEscaped = true;
+                            continue;
+                        }
+
                         if (isList)
                         {
                             v ??= new List<object>();
@@ -320,7 +338,11 @@ namespace MaSch.Console.Cli.Runtime
             {
                 object result = command.OptionsInstance ?? Activator.CreateInstance(command.CommandType)!;
                 foreach (var m in command.Values.Cast<ICliCommandMemberInfo>().Concat(command.Options))
+                {
+                    if (m.DefaultValue == null && m.GetValue(result) != m.PropertyType.GetDefault())
+                        continue;
                     m.SetDefaultValue(result);
+                }
 
                 return result;
             }

@@ -2,8 +2,6 @@
 using MaSch.Core.Extensions;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -13,7 +11,7 @@ namespace MaSch.Console.Cli.Runtime
     /// <inheritdoc/>
     public abstract class CliCommandMemberInfo : ICliCommandMemberInfo
     {
-        private readonly Dictionary<object, bool> _optionsToHasValue = new(new ObjectHashComparer());
+        private readonly ObjectExtensionDataStorage _extensionStorage;
 
         /// <summary>
         /// Gets the property this member represents.
@@ -44,10 +42,12 @@ namespace MaSch.Console.Cli.Runtime
         /// <summary>
         /// Initializes a new instance of the <see cref="CliCommandMemberInfo"/> class.
         /// </summary>
+        /// <param name="extensionStorage">The extension data storage.</param>
         /// <param name="command">The command this member belongs to.</param>
         /// <param name="property">The property this member represents.</param>
-        protected CliCommandMemberInfo(ICliCommandInfo command, PropertyInfo property)
+        protected CliCommandMemberInfo(ObjectExtensionDataStorage extensionStorage, ICliCommandInfo command, PropertyInfo property)
         {
+            _extensionStorage = Guard.NotNull(extensionStorage, nameof(extensionStorage));
             Command = Guard.NotNull(command, nameof(command));
             Property = Guard.NotNull(property, nameof(property));
 
@@ -55,8 +55,6 @@ namespace MaSch.Console.Cli.Runtime
                 throw new ArgumentException($"The property cannot be an indexer.", nameof(property));
             if (Property.GetAccessors(true).Any(x => x.IsStatic))
                 throw new ArgumentException($"The property \"{property.Name}\" cannot be static.", nameof(property));
-            if (Property.GetAccessors(true).Any(x => x.IsAbstract))
-                throw new ArgumentException($"The property \"{property.Name}\" cannot be abstract.", nameof(property));
             if (!Property.CanRead || !Property.CanWrite)
                 throw new ArgumentException($"The property \"{property.Name}\" needs to have a setter and getter.", nameof(property));
         }
@@ -72,7 +70,7 @@ namespace MaSch.Console.Cli.Runtime
         public virtual bool HasValue(object options)
         {
             Guard.NotNull(options, nameof(options));
-            return _optionsToHasValue.TryGetValue(options, out bool hasValue) && hasValue;
+            return _extensionStorage[options].TryGetValue(GetHasValueKey(), out object? oHasValue) && oHasValue is bool hasValue && hasValue;
         }
 
         /// <inheritdoc/>
@@ -101,6 +99,8 @@ namespace MaSch.Console.Cli.Runtime
                     value = e1.ToGeneric().Concat(e2.ToGeneric());
             }
 
+            _extensionStorage[options][GetHasValueKey()] = !isDefault;
+
             try
             {
                 Property.SetValue(options, value.ConvertTo(Property.PropertyType, CultureInfo.InvariantCulture));
@@ -109,28 +109,8 @@ namespace MaSch.Console.Cli.Runtime
             {
                 throw new FormatException($"Could not parse value to {Property.PropertyType.FullName}.", ex);
             }
-
-            if (_optionsToHasValue.ContainsKey(options))
-                _optionsToHasValue[options] = !isDefault;
-            else
-                _optionsToHasValue.Add(new EquatableWeakReference(options), !isDefault);
         }
 
-        [ExcludeFromCodeCoverage]
-        private class ObjectHashComparer : IEqualityComparer<object>
-        {
-            public new bool Equals(object? x, object? y)
-            {
-                if (x is EquatableWeakReference r1)
-                    return r1.Equals(y);
-                else if (y is EquatableWeakReference r2)
-                    return r2.Equals(x);
-                else
-                    return object.Equals(x, y);
-            }
-
-            public int GetHashCode([DisallowNull] object obj)
-                => obj is EquatableWeakReference r ? r.GetHashCode() : obj.GetInitialHashCode();
-        }
+        private string GetHasValueKey() => $"HasValue_{PropertyName}";
     }
 }

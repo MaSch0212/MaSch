@@ -1,5 +1,6 @@
 ﻿using MaSch.Console.Cli.Configuration;
 using MaSch.Console.Cli.Runtime;
+using MaSch.Core;
 using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -16,8 +17,9 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(DummyClass).GetProperty(nameof(DummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
 
-            Assert.ThrowsException<ArgumentNullException>(() => new CliCommandValueInfo(command.Object, property!, null!));
+            Assert.ThrowsException<ArgumentNullException>(() => new CliCommandValueInfo(extensionStorage, command.Object, property!, null!));
         }
 
         [TestMethod]
@@ -26,8 +28,9 @@ namespace MaSch.Console.Cli.Test.Runtime
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(DummyClass).GetProperty(nameof(DummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)!;
             var attr = new CliCommandValueAttribute(0, "blub");
+            var extensionStorage = new ObjectExtensionDataStorage();
 
-            var option = new CliCommandValueInfo(command.Object, property, attr);
+            var option = new CliCommandValueInfo(extensionStorage, command.Object, property, attr);
 
             Assert.AreSame(attr, option.Attribute);
         }
@@ -44,8 +47,9 @@ namespace MaSch.Console.Cli.Test.Runtime
                 HelpText = "My Help Text",
                 Hidden = true,
             };
+            var extensionStorage = new ObjectExtensionDataStorage();
 
-            var option = new CliCommandValueInfo(command.Object, property, attr);
+            var option = new CliCommandValueInfo(extensionStorage, command.Object, property, attr);
 
             Assert.AreSame(attr.Default, option.DefaultValue);
             Assert.IsTrue(option.IsRequired);

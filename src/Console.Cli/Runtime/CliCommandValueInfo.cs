@@ -31,11 +31,12 @@ namespace MaSch.Console.Cli.Runtime
         /// <summary>
         /// Initializes a new instance of the <see cref="CliCommandValueInfo"/> class.
         /// </summary>
+        /// <param name="extensionStorage">The extension data storage.</param>
         /// <param name="command">The command this member belongs to.</param>
         /// <param name="property">The property this member represents.</param>
         /// <param name="attribute">The value code attribute.</param>
-        public CliCommandValueInfo(ICliCommandInfo command, PropertyInfo property, CliCommandValueAttribute attribute)
-            : base(command, property)
+        public CliCommandValueInfo(ObjectExtensionDataStorage extensionStorage, ICliCommandInfo command, PropertyInfo property, CliCommandValueAttribute attribute)
+            : base(extensionStorage, command, property)
         {
             Attribute = Guard.NotNull(attribute, nameof(attribute));
         }

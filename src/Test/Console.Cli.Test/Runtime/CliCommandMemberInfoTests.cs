@@ -1,4 +1,5 @@
 ﻿using MaSch.Console.Cli.Runtime;
+using MaSch.Core;
 using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -16,10 +17,13 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
 
-            var ex = Assert.ThrowsException<TargetInvocationException>(() => Mocks.Create<CliCommandMemberInfo>(command.Object, null).Object);
+            var ex = Assert.ThrowsException<TargetInvocationException>(() => Mocks.Create<CliCommandMemberInfo>(extensionStorage, command.Object, null).Object);
             Assert.IsInstanceOfType<ArgumentNullException>(ex.InnerException);
-            ex = Assert.ThrowsException<TargetInvocationException>(() => Mocks.Create<CliCommandMemberInfo>(null, property).Object);
+            ex = Assert.ThrowsException<TargetInvocationException>(() => Mocks.Create<CliCommandMemberInfo>(extensionStorage, null, property).Object);
+            Assert.IsInstanceOfType<ArgumentNullException>(ex.InnerException);
+            ex = Assert.ThrowsException<TargetInvocationException>(() => Mocks.Create<CliCommandMemberInfo>(null, command.Object, property).Object);
             Assert.IsInstanceOfType<ArgumentNullException>(ex.InnerException);
         }
 
@@ -28,9 +32,10 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty("Item", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
 
             Exception ex;
-            ex = Assert.ThrowsException<TargetInvocationException>(() => Mocks.Create<CliCommandMemberInfo>(command.Object, property).Object);
+            ex = Assert.ThrowsException<TargetInvocationException>(() => Mocks.Create<CliCommandMemberInfo>(extensionStorage, command.Object, property).Object);
             ex = Assert.IsInstanceOfType<ArgumentException>(ex.InnerException);
             Assert.Contains("indexer", ex.Message);
         }
@@ -40,23 +45,12 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.StaticProperty), BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
 
             Exception ex;
-            ex = Assert.ThrowsException<TargetInvocationException>(() => Mocks.Create<CliCommandMemberInfo>(command.Object, property).Object);
+            ex = Assert.ThrowsException<TargetInvocationException>(() => Mocks.Create<CliCommandMemberInfo>(extensionStorage, command.Object, property).Object);
             ex = Assert.IsInstanceOfType<ArgumentException>(ex.InnerException);
             Assert.ContainsAll(new[] { "static", nameof(AbstractDummyClass.StaticProperty) }, ex.Message);
-        }
-
-        [TestMethod]
-        public void Ctor_AbstractProperty()
-        {
-            var command = Mocks.Create<ICliCommandInfo>();
-            var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.AbstractProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-
-            Exception ex;
-            ex = Assert.ThrowsException<TargetInvocationException>(() => Mocks.Create<CliCommandMemberInfo>(command.Object, property).Object);
-            ex = Assert.IsInstanceOfType<ArgumentException>(ex.InnerException);
-            Assert.ContainsAll(new[] { "abstract", nameof(AbstractDummyClass.AbstractProperty) }, ex.Message);
         }
 
         [TestMethod]
@@ -66,9 +60,10 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(propertyName);
+            var extensionStorage = new ObjectExtensionDataStorage();
 
             Exception ex;
-            ex = Assert.ThrowsException<TargetInvocationException>(() => Mocks.Create<CliCommandMemberInfo>(command.Object, property).Object);
+            ex = Assert.ThrowsException<TargetInvocationException>(() => Mocks.Create<CliCommandMemberInfo>(extensionStorage, command.Object, property).Object);
             ex = Assert.IsInstanceOfType<ArgumentException>(ex.InnerException);
             Assert.ContainsAll(new[] { "setter", "getter", propertyName }, ex.Message);
         }
@@ -78,8 +73,9 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
 
-            var member = Mocks.Create<CliCommandMemberInfo>(command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(extensionStorage, command.Object, property);
             var po = new PrivateObject(member.Object);
 
             Assert.AreSame(command.Object, member.Object.Command);
@@ -91,8 +87,9 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty("PrivateProperty", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
 
-            var member = Mocks.Create<CliCommandMemberInfo>(command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(extensionStorage, command.Object, property);
             var po = new PrivateObject(member.Object);
 
             Assert.AreSame(command.Object, member.Object.Command);
@@ -104,8 +101,9 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
 
-            var member = Mocks.Create<CliCommandMemberInfo>(command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(extensionStorage, command.Object, property);
 
             Assert.AreEqual("NormalProperty", member.Object.PropertyName);
             Assert.AreEqual(typeof(int), member.Object.PropertyType);
@@ -116,8 +114,9 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
 
-            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
             Assert.ThrowsException<ArgumentNullException>(() => member.Object.GetValue(null!));
@@ -128,9 +127,10 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
             var obj = new DummyClass { NormalProperty = 4711 };
 
-            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
             var result = member.Object.GetValue(obj);
@@ -142,8 +142,9 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
 
-            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
             Assert.ThrowsException<ArgumentNullException>(() => member.Object.SetValue(null!, null));
@@ -154,9 +155,10 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
             var obj = new DummyClass();
 
-            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
             member.Object.SetValue(obj, 1337);
@@ -168,9 +170,10 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
             var obj = new DummyClass();
 
-            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
             member.Object.SetValue(obj, "1337");
@@ -182,9 +185,10 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
             var obj = new DummyClass();
 
-            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
             Assert.ThrowsException<FormatException>(() => member.Object.SetValue(obj, "abc"));
@@ -195,9 +199,10 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.FloatList), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
             var obj = new DummyClass();
 
-            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
             member.Object.SetValue(obj, GetElements());
@@ -217,6 +222,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.FloatList), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
             var obj = new DummyClass
             {
                 FloatList = new List<float>
@@ -227,7 +233,7 @@ namespace MaSch.Console.Cli.Test.Runtime
                 },
             };
 
-            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
             member.Object.SetValue(obj, GetElements());
@@ -257,8 +263,9 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
 
-            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
             Assert.ThrowsException<ArgumentNullException>(() => member.Object.SetDefaultValue(null!));
@@ -269,6 +276,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.FloatList), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
             var obj = new DummyClass
             {
                 FloatList = new List<float>
@@ -279,7 +287,7 @@ namespace MaSch.Console.Cli.Test.Runtime
                 },
             };
 
-            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
             member.Object.SetDefaultValue(obj);
@@ -292,9 +300,10 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.ObjectProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
             var obj = new DummyClass { ObjectProperty = new object() };
 
-            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
             member.Object.SetDefaultValue(obj);
@@ -306,9 +315,10 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
             var obj = new DummyClass { NormalProperty = 4711 };
 
-            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
             member.Object.SetDefaultValue(obj);
@@ -320,8 +330,9 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
 
-            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
             Assert.ThrowsException<ArgumentNullException>(() => member.Object.HasValue(null!));
@@ -332,9 +343,10 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
             var obj = new DummyClass();
 
-            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
             var result = member.Object.HasValue(obj);
@@ -346,9 +358,10 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
             var obj = new DummyClass();
 
-            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
             member.Object.SetDefaultValue(obj);
@@ -361,9 +374,10 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
             var obj = new DummyClass();
 
-            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
             member.Object.SetValue(obj, 1337);
@@ -376,9 +390,10 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
             var obj = new DummyClass();
 
-            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
             member.Object.SetValue(obj, 0);
@@ -391,9 +406,10 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
             var obj = new DummyClass();
 
-            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
             member.Object.SetValue(obj, 1337);
@@ -407,10 +423,11 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var command = Mocks.Create<ICliCommandInfo>();
             var property = typeof(AbstractDummyClass).GetProperty(nameof(AbstractDummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var extensionStorage = new ObjectExtensionDataStorage();
             var obj1 = new DummyClass();
             var obj2 = new DummyClass();
 
-            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, command.Object, property);
+            var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
             member.Object.SetValue(obj1, 1337);

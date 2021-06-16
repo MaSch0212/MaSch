@@ -40,6 +40,11 @@ namespace MaSch.Console.Controls
         public IList<Row> Rows { get; set; } = new List<Row>();
 
         /// <summary>
+        /// Gets or sets the margin.
+        /// </summary>
+        public Thickness Margin { get; set; } = new(0);
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TableControl"/> class.
         /// </summary>
         /// <param name="console">The console to use.</param>
@@ -54,7 +59,14 @@ namespace MaSch.Console.Controls
         public void Render()
         {
             var width = _console.IsOutputRedirected ? Width ?? 240 : Math.Min(Width ?? (_console.BufferSize.Width - 1), _console.BufferSize.Width);
+            width -= Margin.Left + Margin.Right;
+            if (width <= 0)
+                return;
+
             var widths = GetColumnWidths(width);
+
+            for (int i = 0; i < Margin.Top; i++)
+                _console.WriteLine();
 
             if (ShowColumnHeaders)
             {
@@ -85,10 +97,16 @@ namespace MaSch.Console.Controls
                                   }).ToArray();
                 RenderRow(textBlocks);
             }
+
+            for (int i = 0; i < Margin.Bottom; i++)
+                _console.WriteLine();
         }
 
         private void RenderSeparator(int[] widths)
         {
+            if (Margin.Left > 0)
+                _console.Write(new string(' ', Margin.Left));
+
             bool isFirst = true;
             foreach (var w in widths)
             {
@@ -98,7 +116,10 @@ namespace MaSch.Console.Controls
                 isFirst = false;
             }
 
-            if (_console.IsOutputRedirected || widths.Sum() + ((widths.Length - 1) * ColumnGutter) < _console.BufferSize.Width)
+            if (Margin.Right > 0)
+                _console.Write(new string(' ', Margin.Right));
+
+            if (_console.IsOutputRedirected || widths.Sum() + ((widths.Length - 1) * ColumnGutter) + Margin.Left + Margin.Right < _console.BufferSize.Width)
                 _console.WriteLine();
         }
 
@@ -106,9 +127,12 @@ namespace MaSch.Console.Controls
         {
             var lines = textBlocks.Select(x => x.GetTextLines()).ToArray();
             var maxLineHeight = lines.Max(x => x.Length);
-            var totalWidth = textBlocks.Sum(x => x.Width) + ((textBlocks.Count - 1) * ColumnGutter);
+            var totalWidth = textBlocks.Sum(x => x.Width) + ((textBlocks.Count - 1) * ColumnGutter) + Margin.Left + Margin.Right;
             for (int l = 0; l < maxLineHeight; l++)
             {
+                if (Margin.Left > 0)
+                    _console.Write(new string(' ', Margin.Left));
+
                 bool isFirst = true;
                 for (int c = 0; c < lines.Length; c++)
                 {
@@ -120,6 +144,9 @@ namespace MaSch.Console.Controls
 
                 if (_console.IsOutputRedirected || totalWidth < _console.BufferSize.Width)
                     _console.WriteLine();
+
+                if (Margin.Right > 0)
+                    _console.Write(new string(' ', Margin.Right));
             }
         }
 
@@ -143,7 +170,7 @@ namespace MaSch.Console.Controls
                                },
                                MinWidth = c.MinWidth ?? 0,
                                MaxWidth = c.MaxWidth ?? int.MaxValue,
-                               StarWidth = c.WidthMode == ColumnWidthMode.Star ? c.Width : 0D,
+                               StarWidth = c.WidthMode == ColumnWidthMode.Star ? (double.IsNaN(c.Width) ? 1 : c.Width) : 0D,
                            }).ToArray();
             var result = new int[columns.Length];
             width -= (result.Length - 1) * ColumnGutter;

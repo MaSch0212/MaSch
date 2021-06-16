@@ -54,7 +54,7 @@ namespace MaSch.Console.Cli
         [AllowNull]
         public ICliHelpPage HelpPage
         {
-            get => _helpPage ??= new CliHelpPage(Options.ConsoleService);
+            get => _helpPage ??= new CliHelpPage();
             set => _helpPage = value;
         }
 

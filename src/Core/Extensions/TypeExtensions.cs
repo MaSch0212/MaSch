@@ -470,5 +470,29 @@ namespace MaSch.Core.Extensions
                 return $"<{string.Join(", ", ga.Select(x => GetCSharpRepresentation(x, forceGlobal)))}>";
             return string.Empty;
         }
+
+        /// <summary>
+        /// Flattenss the type hierarchy of the given type.
+        /// </summary>
+        /// <param name="type">The type from which to get the flattened type hierarchy.</param>
+        /// <returns>An enumerable that iterates through the flattened type hierarchy.</returns>
+        public static IEnumerable<Type> FlattenHierarchy(this Type? type)
+        {
+            if (type == null)
+            {
+                yield break;
+            }
+
+            yield return type;
+            foreach (var @interface in type.GetTypeInfo().GetInterfaces())
+            {
+                yield return @interface;
+            }
+
+            foreach (var @interface in FlattenHierarchy(type.GetTypeInfo().BaseType))
+            {
+                yield return @interface;
+            }
+        }
     }
 }
