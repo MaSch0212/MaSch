@@ -130,6 +130,21 @@ namespace MaSch.Console.Cli.Test
         }
 
         [TestMethod]
+        public void Configure()
+        {
+            var app = Mocks.Create<ICliApplicationBase>();
+            var options = new CliApplicationOptions();
+            var builder = new DummyBuilder(app.Object);
+            var action = Mocks.Create<Action<CliApplicationOptions>>();
+            app.Setup(x => x.Options).Returns(options);
+            action.Setup(x => x(options)).Verifiable(Verifiables, Times.Once());
+
+            var b = builder.Configure(action.Object);
+
+            Assert.AreSame(builder, b);
+        }
+
+        [TestMethod]
         public void Build()
         {
             var app = Mocks.Create<ICliApplicationBase>();
@@ -285,20 +300,6 @@ namespace MaSch.Console.Cli.Test
             Assert.AreSame(builder, b);
         }
 
-        [TestMethod]
-        public void Configure()
-        {
-            var options = new CliApplicationOptions();
-            var builder = CreateCliApplicationBuilder(out var app);
-            var action = Mocks.Create<Action<CliApplicationOptions>>();
-            app.Setup(x => x.Options).Returns(options);
-            action.Setup(x => x(options)).Verifiable(Verifiables, Times.Once());
-
-            var b = builder.Configure(action.Object);
-
-            Assert.AreSame(builder, b);
-        }
-
         private CliApplicationBuilder CreateCliApplicationBuilder(out Mock<ICliApplication> appMock)
         {
             appMock = Mocks.Create<ICliApplication>();
@@ -443,20 +444,6 @@ namespace MaSch.Console.Cli.Test
             app.Setup(x => x.RegisterCommand(optionsInstance.Object, executorInstance.Object)).Verifiable(Verifiables, Times.Once());
 
             var b = builder.WithCommand(optionsInstance.Object, executorInstance.Object);
-
-            Assert.AreSame(builder, b);
-        }
-
-        [TestMethod]
-        public void Configure()
-        {
-            var options = new CliApplicationOptions();
-            var builder = CreateCliAsyncApplicationBuilder(out var app);
-            var action = Mocks.Create<Action<CliApplicationOptions>>();
-            app.Setup(x => x.Options).Returns(options);
-            action.Setup(x => x(options)).Verifiable(Verifiables, Times.Once());
-
-            var b = builder.Configure(action.Object);
 
             Assert.AreSame(builder, b);
         }

@@ -58,7 +58,7 @@ namespace MaSch.Console.Cli.Test.Help
         [TestMethod]
         public void WriteCommandNameAndVersion()
         {
-            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Name = "MyName", Version = "MyVersion" });
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Name = "MyName", Version = "MyVersion", ConsoleService = ConsoleServiceMock.Object });
             var sb = AttachStringBuilder(ConsoleServiceMock);
 
             HelpPage.WriteCommandNameAndVersion(AppMock.Object, new CliError("blub"));
@@ -72,7 +72,7 @@ namespace MaSch.Console.Cli.Test.Help
             var commandMock = Mocks.Create<ICliCommandInfo>();
             commandMock.Setup(x => x.DisplayName).Returns("YourName");
             commandMock.Setup(x => x.Version).Returns("YourVersion");
-            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Name = "MyName", Version = "MyVersion" });
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Name = "MyName", Version = "MyVersion", ConsoleService = ConsoleServiceMock.Object });
             var sb = AttachStringBuilder(ConsoleServiceMock);
 
             HelpPage.WriteCommandNameAndVersion(AppMock.Object, new CliError("blub", commandMock.Object));
@@ -83,7 +83,7 @@ namespace MaSch.Console.Cli.Test.Help
         [TestMethod]
         public void WriteCopyright_FancyConsole()
         {
-            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Year = "1337", Author = "Me" });
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Year = "1337", Author = "Me", ConsoleService = ConsoleServiceMock.Object });
             ConsoleServiceMock.Setup(x => x.IsFancyConsole).Returns(true);
             var sb = AttachStringBuilder(ConsoleServiceMock);
 
@@ -95,7 +95,7 @@ namespace MaSch.Console.Cli.Test.Help
         [TestMethod]
         public void WriteCopyright_NonFancyConsole()
         {
-            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Year = "1337", Author = "Me" });
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Year = "1337", Author = "Me", ConsoleService = ConsoleServiceMock.Object });
             ConsoleServiceMock.Setup(x => x.IsFancyConsole).Returns(false);
             var sb = AttachStringBuilder(ConsoleServiceMock);
 
@@ -110,7 +110,7 @@ namespace MaSch.Console.Cli.Test.Help
             var commandMock = Mocks.Create<ICliCommandInfo>();
             commandMock.Setup(x => x.Year).Returns("4711");
             commandMock.Setup(x => x.Author).Returns("You");
-            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Year = "1337", Author = "Me" });
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Year = "1337", Author = "Me", ConsoleService = ConsoleServiceMock.Object });
             ConsoleServiceMock.Setup(x => x.IsFancyConsole).Returns(true);
             var sb = AttachStringBuilder(ConsoleServiceMock);
 
@@ -242,25 +242,30 @@ namespace MaSch.Console.Cli.Test.Help
         [TestMethod]
         public void WriteVersionPage()
         {
-            var helpPageMock = Mocks.Create<CliHelpPage>(ConsoleServiceMock.Object);
-            var app = Mocks.Create<ICliApplicationBase>().Object;
-            var errors = new[] { new CliError("Blub") };
+            var helpPageMock = Mocks.Create<CliHelpPage>();
+            var appMock = Mocks.Create<ICliApplicationBase>();
+            appMock.Setup(x => x.Options).Returns(new CliApplicationOptions { ConsoleService = ConsoleServiceMock.Object });
+            var app = appMock.Object;
+            var errors = new[] { new CliError(CliErrorType.VersionRequested) };
             var callOrder = new List<string>();
             helpPageMock.Protected().Setup("WriteVersionPage", app, errors).CallBase();
             helpPageMock.Protected().Setup("WriteCommandNameAndVersion", app, errors[0]).Callback(() => callOrder.Add("CommandNameAndVersion"));
             helpPageMock.Protected().Setup("WriteCopyright", app, errors[0]).Callback(() => callOrder.Add("Copyright"));
             helpPageMock.Protected().Setup("WriteCommandVersions", app, errors[0]).Callback(() => callOrder.Add("CommandVersions"));
+            ConsoleServiceMock.Setup(x => x.WriteLine(string.Empty)).Callback(() => callOrder.Add(string.Empty));
 
             new PrivateCliHelpPage(helpPageMock.Object).WriteVersionPage(app, errors);
 
-            Assert.AreCollectionsEqual(new[] { "CommandNameAndVersion", "Copyright", "CommandVersions" }, callOrder);
+            Assert.AreCollectionsEqual(new[] { "CommandNameAndVersion", "Copyright", "CommandVersions", string.Empty }, callOrder);
         }
 
         [TestMethod]
         public void WriteHelpPage()
         {
-            var helpPageMock = Mocks.Create<CliHelpPage>(ConsoleServiceMock.Object);
-            var app = Mocks.Create<ICliApplicationBase>().Object;
+            var helpPageMock = Mocks.Create<CliHelpPage>();
+            var appMock = Mocks.Create<ICliApplicationBase>();
+            appMock.Setup(x => x.Options).Returns(new CliApplicationOptions { ConsoleService = ConsoleServiceMock.Object });
+            var app = appMock.Object;
             var errors = new[] { new CliError(CliErrorType.HelpRequested) };
             var callOrder = new List<string>();
             helpPageMock.Protected().Setup("WriteHelpPage", app, errors).CallBase();
@@ -282,6 +287,7 @@ namespace MaSch.Console.Cli.Test.Help
                     "CommandUsage",
                     "CommandParameters",
                     "Commands",
+                    string.Empty,
                 },
                 callOrder);
         }
@@ -289,11 +295,13 @@ namespace MaSch.Console.Cli.Test.Help
         [TestMethod]
         public void WriteHelpPage_WithErrors()
         {
-            var helpPageMock = Mocks.Create<CliHelpPage>(ConsoleServiceMock.Object);
-            var app = Mocks.Create<ICliApplicationBase>().Object;
+            var helpPageMock = Mocks.Create<CliHelpPage>();
+            var appMock = Mocks.Create<ICliApplicationBase>();
+            appMock.Setup(x => x.Options).Returns(new CliApplicationOptions { ConsoleService = ConsoleServiceMock.Object });
+            var app = appMock.Object;
             var errors = new[] { new CliError("Blub1"), new CliError("Blub2"), new CliError("Blub3") };
             var callOrder = new List<string>();
-            helpPageMock.Protected().Setup("WriteErrorPage", app, errors).CallBase();
+            helpPageMock.Protected().Setup("WriteHelpPage", app, errors).CallBase();
             helpPageMock.Protected().Setup("WriteCommandNameAndVersion", app, errors[0]).Callback(() => callOrder.Add("CommandNameAndVersion"));
             helpPageMock.Protected().Setup("WriteCopyright", app, errors[0]).Callback(() => callOrder.Add("Copyright"));
             helpPageMock.Protected().Setup("WriteCommandUsage", app, errors[0]).Callback(() => callOrder.Add("CommandUsage"));
@@ -317,6 +325,7 @@ namespace MaSch.Console.Cli.Test.Help
                     "CommandUsage",
                     "CommandParameters",
                     "Commands",
+                    string.Empty,
                 },
                 callOrder);
         }
@@ -324,7 +333,7 @@ namespace MaSch.Console.Cli.Test.Help
         [TestMethod]
         public void Write_NullApp()
         {
-            var helpPageMock = Mocks.Create<CliHelpPage>(ConsoleServiceMock.Object);
+            var helpPageMock = Mocks.Create<CliHelpPage>();
             var errors = new[] { new CliError("My Error") };
             helpPageMock.Setup(x => x.Write(It.IsAny<ICliApplicationBase>(), It.IsAny<IEnumerable<CliError>>())).CallBase();
 
@@ -334,11 +343,13 @@ namespace MaSch.Console.Cli.Test.Help
         [TestMethod]
         public void Write_NullErrors()
         {
-            var helpPageMock = Mocks.Create<CliHelpPage>(ConsoleServiceMock.Object);
-            var app = Mocks.Create<ICliApplicationBase>().Object;
+            var helpPageMock = Mocks.Create<CliHelpPage>();
+            var appMock = Mocks.Create<ICliApplicationBase>();
+            appMock.Setup(x => x.Options).Returns(new CliApplicationOptions { ConsoleService = ConsoleServiceMock.Object });
+            var app = appMock.Object;
             IList<CliError>? errors = null;
             helpPageMock.Setup(x => x.Write(It.IsAny<ICliApplicationBase>(), It.IsAny<IEnumerable<CliError>>())).CallBase();
-            helpPageMock.Protected().Setup("WriteErrorPage", app, ItExpr.IsAny<IList<CliError>>()).Callback<ICliApplicationBase, IList<CliError>>((a, e) => errors = e);
+            helpPageMock.Protected().Setup("WriteHelpPage", app, ItExpr.IsAny<IList<CliError>>()).Callback<ICliApplicationBase, IList<CliError>>((a, e) => errors = e);
 
             var result = helpPageMock.Object.Write(app, null);
 
@@ -350,11 +361,13 @@ namespace MaSch.Console.Cli.Test.Help
         [TestMethod]
         public void Write_NoErrors()
         {
-            var helpPageMock = Mocks.Create<CliHelpPage>(ConsoleServiceMock.Object);
-            var app = Mocks.Create<ICliApplicationBase>().Object;
+            var helpPageMock = Mocks.Create<CliHelpPage>();
+            var appMock = Mocks.Create<ICliApplicationBase>();
+            appMock.Setup(x => x.Options).Returns(new CliApplicationOptions { ConsoleService = ConsoleServiceMock.Object });
+            var app = appMock.Object;
             IList<CliError>? errors = null;
             helpPageMock.Setup(x => x.Write(It.IsAny<ICliApplicationBase>(), It.IsAny<IEnumerable<CliError>>())).CallBase();
-            helpPageMock.Protected().Setup("WriteErrorPage", app, ItExpr.IsAny<IList<CliError>>()).Callback<ICliApplicationBase, IList<CliError>>((a, e) => errors = e);
+            helpPageMock.Protected().Setup("WriteHelpPage", app, ItExpr.IsAny<IList<CliError>>()).Callback<ICliApplicationBase, IList<CliError>>((a, e) => errors = e);
 
             var result = helpPageMock.Object.Write(app, Array.Empty<CliError>());
 
@@ -366,11 +379,13 @@ namespace MaSch.Console.Cli.Test.Help
         [TestMethod]
         public void Write_WithNullError()
         {
-            var helpPageMock = Mocks.Create<CliHelpPage>(ConsoleServiceMock.Object);
-            var app = Mocks.Create<ICliApplicationBase>().Object;
+            var helpPageMock = Mocks.Create<CliHelpPage>();
+            var appMock = Mocks.Create<ICliApplicationBase>();
+            appMock.Setup(x => x.Options).Returns(new CliApplicationOptions { ConsoleService = ConsoleServiceMock.Object });
+            var app = appMock.Object;
             IList<CliError>? errors = null;
             helpPageMock.Setup(x => x.Write(It.IsAny<ICliApplicationBase>(), It.IsAny<IEnumerable<CliError>>())).CallBase();
-            helpPageMock.Protected().Setup("WriteErrorPage", app, ItExpr.IsAny<IList<CliError>>()).Callback<ICliApplicationBase, IList<CliError>>((a, e) => errors = e);
+            helpPageMock.Protected().Setup("WriteHelpPage", app, ItExpr.IsAny<IList<CliError>>()).Callback<ICliApplicationBase, IList<CliError>>((a, e) => errors = e);
 
             var result = helpPageMock.Object.Write(app, new[] { (CliError)null! });
 
@@ -382,11 +397,13 @@ namespace MaSch.Console.Cli.Test.Help
         [TestMethod]
         public void Write_HasVersionRequested()
         {
-            var helpPageMock = Mocks.Create<CliHelpPage>(ConsoleServiceMock.Object);
-            var app = Mocks.Create<ICliApplicationBase>().Object;
+            var helpPageMock = Mocks.Create<CliHelpPage>();
+            var appMock = Mocks.Create<ICliApplicationBase>();
+            appMock.Setup(x => x.Options).Returns(new CliApplicationOptions { ConsoleService = ConsoleServiceMock.Object });
+            var app = appMock.Object;
             var errors = new[] { new CliError("gjklhf"), new CliError(CliErrorType.VersionRequested) };
             helpPageMock.Setup(x => x.Write(app, errors)).CallBase();
-            helpPageMock.Protected().Setup("WriteVersionPage", app, errors[1]).Verifiable(Verifiables, Times.Once());
+            helpPageMock.Protected().Setup("WriteVersionPage", app, new[] { errors[1], errors[0] }).Verifiable(Verifiables, Times.Once());
 
             var result = helpPageMock.Object.Write(app, errors);
 
@@ -396,11 +413,13 @@ namespace MaSch.Console.Cli.Test.Help
         [TestMethod]
         public void Write_HelpRequested()
         {
-            var helpPageMock = Mocks.Create<CliHelpPage>(ConsoleServiceMock.Object);
-            var app = Mocks.Create<ICliApplicationBase>().Object;
+            var helpPageMock = Mocks.Create<CliHelpPage>();
+            var appMock = Mocks.Create<ICliApplicationBase>();
+            appMock.Setup(x => x.Options).Returns(new CliApplicationOptions { ConsoleService = ConsoleServiceMock.Object });
+            var app = appMock.Object;
             var errors = new[] { new CliError("gjklhf"), new CliError(CliErrorType.VersionRequested), new CliError(CliErrorType.HelpRequested) };
             helpPageMock.Setup(x => x.Write(app, errors)).CallBase();
-            helpPageMock.Protected().Setup("WriteHelpPage", app, errors[2]).Verifiable(Verifiables, Times.Once());
+            helpPageMock.Protected().Setup("WriteHelpPage", app, new[] { errors[2], errors[0] }).Verifiable(Verifiables, Times.Once());
 
             var result = helpPageMock.Object.Write(app, errors);
 
@@ -410,11 +429,13 @@ namespace MaSch.Console.Cli.Test.Help
         [TestMethod]
         public void Write_OtherErrors()
         {
-            var helpPageMock = Mocks.Create<CliHelpPage>(ConsoleServiceMock.Object);
-            var app = Mocks.Create<ICliApplicationBase>().Object;
+            var helpPageMock = Mocks.Create<CliHelpPage>();
+            var appMock = Mocks.Create<ICliApplicationBase>();
+            appMock.Setup(x => x.Options).Returns(new CliApplicationOptions { ConsoleService = ConsoleServiceMock.Object });
+            var app = appMock.Object;
             var errors = new[] { new CliError("gjklhf") };
             helpPageMock.Setup(x => x.Write(app, errors)).CallBase();
-            helpPageMock.Protected().Setup("WriteErrorPage", app, errors).Verifiable(Verifiables, Times.Once());
+            helpPageMock.Protected().Setup("WriteHelpPage", app, errors).Verifiable(Verifiables, Times.Once());
 
             var result = helpPageMock.Object.Write(app, errors);
 
@@ -427,7 +448,7 @@ namespace MaSch.Console.Cli.Test.Help
             var sb = AttachStringBuilder(ConsoleServiceMock);
             var collectionMock = Mocks.Create<IReadOnlyCliCommandInfoCollection>();
             collectionMock.Setup(x => x.GetRootCommands()).Returns(Array.Empty<ICliCommandInfo>());
-            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { CliName = "MyProgram" });
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { CliName = "MyProgram", ConsoleService = ConsoleServiceMock.Object });
             AppMock.Setup(x => x.Commands).Returns(collectionMock.Object);
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(50, int.MaxValue));
 
@@ -444,7 +465,7 @@ namespace MaSch.Console.Cli.Test.Help
             var command1Mock = Mocks.Create<ICliCommandInfo>();
             var command2Mock = Mocks.Create<ICliCommandInfo>();
             collectionMock.Setup(x => x.GetRootCommands()).Returns(new[] { command1Mock.Object, command2Mock.Object });
-            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { CliName = "MyProgram" });
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { CliName = "MyProgram", ConsoleService = ConsoleServiceMock.Object });
             AppMock.Setup(x => x.Commands).Returns(collectionMock.Object);
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(50, int.MaxValue));
 
@@ -464,7 +485,7 @@ namespace MaSch.Console.Cli.Test.Help
             aCommandMock.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
             aCommandMock.Setup(x => x.Options).Returns(Array.Empty<ICliCommandOptionInfo>());
             aCommandMock.Setup(x => x.Values).Returns(Array.Empty<ICliCommandValueInfo>());
-            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { CliName = "MyProgram" });
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { CliName = "MyProgram", ConsoleService = ConsoleServiceMock.Object });
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(50, int.MaxValue));
 
             HelpPage.WriteCommandUsage(AppMock.Object, new CliError("MyError", aCommandMock.Object));
@@ -482,7 +503,7 @@ namespace MaSch.Console.Cli.Test.Help
             aCommandMock.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
             aCommandMock.Setup(x => x.Options).Returns(Array.Empty<ICliCommandOptionInfo>());
             aCommandMock.Setup(x => x.Values).Returns(Array.Empty<ICliCommandValueInfo>());
-            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { CliName = "MyProgram" });
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { CliName = "MyProgram", ConsoleService = ConsoleServiceMock.Object });
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(50, int.MaxValue));
 
             HelpPage.WriteCommandUsage(AppMock.Object, new CliError("MyError", aCommandMock.Object));
@@ -508,7 +529,7 @@ namespace MaSch.Console.Cli.Test.Help
             aCommandMock.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
             aCommandMock.Setup(x => x.Options).Returns(Array.Empty<ICliCommandOptionInfo>());
             aCommandMock.Setup(x => x.Values).Returns(Array.Empty<ICliCommandValueInfo>());
-            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { CliName = "MyProgram" });
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { CliName = "MyProgram", ConsoleService = ConsoleServiceMock.Object });
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(50, int.MaxValue));
 
             HelpPage.WriteCommandUsage(AppMock.Object, new CliError("MyError", aCommandMock.Object));
@@ -530,7 +551,7 @@ namespace MaSch.Console.Cli.Test.Help
             aCommandMock.Setup(x => x.Options).Returns(Array.Empty<ICliCommandOptionInfo>());
             aCommandMock.Setup(x => x.Values).Returns(Array.Empty<ICliCommandValueInfo>());
             aCommandMock.Setup(x => x.IsExecutable).Returns(true);
-            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { CliName = "MyProgram" });
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { CliName = "MyProgram", ConsoleService = ConsoleServiceMock.Object });
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(50, int.MaxValue));
 
             HelpPage.WriteCommandUsage(AppMock.Object, new CliError("MyError", aCommandMock.Object));
@@ -552,7 +573,7 @@ namespace MaSch.Console.Cli.Test.Help
             aCommandMock.Setup(x => x.Options).Returns(Array.Empty<ICliCommandOptionInfo>());
             aCommandMock.Setup(x => x.Values).Returns(Array.Empty<ICliCommandValueInfo>());
             aCommandMock.Setup(x => x.IsExecutable).Returns(false);
-            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { CliName = "MyProgram" });
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { CliName = "MyProgram", ConsoleService = ConsoleServiceMock.Object });
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(50, int.MaxValue));
 
             HelpPage.WriteCommandUsage(AppMock.Object, new CliError("MyError", aCommandMock.Object));
@@ -573,7 +594,9 @@ namespace MaSch.Console.Cli.Test.Help
             aCommandMock.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
             aCommandMock.Setup(x => x.Options).Returns(new[] { option1Mock.Object, option2Mock.Object });
             aCommandMock.Setup(x => x.Values).Returns(Array.Empty<ICliCommandValueInfo>());
-            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { CliName = "MyProgram" });
+            option1Mock.Setup(x => x.IsRequired).Returns(false);
+            option2Mock.Setup(x => x.IsRequired).Returns(false);
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { CliName = "MyProgram", ConsoleService = ConsoleServiceMock.Object });
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(50, int.MaxValue));
 
             HelpPage.WriteCommandUsage(AppMock.Object, new CliError("MyError", aCommandMock.Object));
@@ -600,7 +623,7 @@ namespace MaSch.Console.Cli.Test.Help
             value2Mock.Setup(x => x.Order).Returns(1);
             value2Mock.Setup(x => x.DisplayName).Returns("Val2");
             value2Mock.Setup(x => x.IsRequired).Returns(true);
-            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { CliName = "MyProgram" });
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { CliName = "MyProgram", ConsoleService = ConsoleServiceMock.Object });
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(50, int.MaxValue));
 
             HelpPage.WriteCommandUsage(AppMock.Object, new CliError("MyError", aCommandMock.Object));
@@ -638,7 +661,9 @@ namespace MaSch.Console.Cli.Test.Help
             value2Mock.Setup(x => x.Order).Returns(1);
             value2Mock.Setup(x => x.DisplayName).Returns("Val2");
             value2Mock.Setup(x => x.IsRequired).Returns(true);
-            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { CliName = "MyProgram" });
+            option1Mock.Setup(x => x.IsRequired).Returns(false);
+            option2Mock.Setup(x => x.IsRequired).Returns(false);
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { CliName = "MyProgram", ConsoleService = ConsoleServiceMock.Object });
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(50, int.MaxValue));
 
             HelpPage.WriteCommandUsage(AppMock.Object, new CliError("MyError", aCommandMock.Object));
@@ -1078,6 +1103,7 @@ namespace MaSch.Console.Cli.Test.Help
             command1Mock.Setup(x => x.Order).Returns(0);
             command1Mock.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
             command1Mock.Setup(x => x.Hidden).Returns(false);
+            command2Mock.Setup(x => x.IsDefault).Returns(false);
             command2Mock.Setup(x => x.Name).Returns("cmd2");
             command2Mock.Setup(x => x.Aliases).Returns(new[] { "cmd2" });
             command2Mock.Setup(x => x.Author).Returns("You");
@@ -1087,6 +1113,7 @@ namespace MaSch.Console.Cli.Test.Help
             command2Mock.Setup(x => x.Order).Returns(0);
             command2Mock.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
             command2Mock.Setup(x => x.Hidden).Returns(false);
+            command2Mock.Setup(x => x.IsDefault).Returns(false);
             command3Mock.Setup(x => x.Name).Returns("cmd3");
             command3Mock.Setup(x => x.Aliases).Returns(new[] { "cmd3", "command3", "my-command-3" });
             command3Mock.Setup(x => x.Author).Returns((string?)null);
@@ -1096,9 +1123,10 @@ namespace MaSch.Console.Cli.Test.Help
             command3Mock.Setup(x => x.Order).Returns(0);
             command3Mock.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
             command3Mock.Setup(x => x.Hidden).Returns(false);
+            command3Mock.Setup(x => x.IsDefault).Returns(false);
             collectionMock.Setup(x => x.GetRootCommands()).Returns(new[] { command1Mock.Object, command2Mock.Object, command3Mock.Object });
             AppMock.Setup(x => x.Commands).Returns(collectionMock.Object);
-            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Name = "My", Year = "1337", Author = "Me", Version = "15" });
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Name = "My", Year = "1337", Author = "Me", Version = "15", ConsoleService = ConsoleServiceMock.Object });
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(55, int.MaxValue));
             ConsoleServiceMock.Setup(x => x.IsOutputRedirected).Returns(false);
             ConsoleServiceMock.Setup(x => x.IsFancyConsole).Returns(fancyConsole);
@@ -1178,6 +1206,7 @@ namespace MaSch.Console.Cli.Test.Help
             command1Mock.Setup(x => x.Order).Returns(0);
             command1Mock.Setup(x => x.ParentCommand).Returns(aCommandMock.Object);
             command1Mock.Setup(x => x.Hidden).Returns(false);
+            command1Mock.Setup(x => x.IsDefault).Returns(false);
             command2Mock.Setup(x => x.Name).Returns("cmd2");
             command2Mock.Setup(x => x.Aliases).Returns(new[] { "cmd2" });
             command2Mock.Setup(x => x.Author).Returns("You");
@@ -1187,6 +1216,7 @@ namespace MaSch.Console.Cli.Test.Help
             command2Mock.Setup(x => x.Order).Returns(0);
             command2Mock.Setup(x => x.ParentCommand).Returns(aCommandMock.Object);
             command2Mock.Setup(x => x.Hidden).Returns(false);
+            command2Mock.Setup(x => x.IsDefault).Returns(false);
             command3Mock.Setup(x => x.Name).Returns("cmd3");
             command3Mock.Setup(x => x.Aliases).Returns(new[] { "cmd3", "command3", "my-command-3" });
             command3Mock.Setup(x => x.Author).Returns((string?)null);
@@ -1196,6 +1226,7 @@ namespace MaSch.Console.Cli.Test.Help
             command3Mock.Setup(x => x.Order).Returns(0);
             command3Mock.Setup(x => x.ParentCommand).Returns(aCommandMock.Object);
             command3Mock.Setup(x => x.Hidden).Returns(false);
+            command3Mock.Setup(x => x.IsDefault).Returns(false);
             aCommandMock.Setup(x => x.ChildCommands).Returns(new[] { command1Mock.Object, command2Mock.Object, command3Mock.Object });
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(55, int.MaxValue));
             ConsoleServiceMock.Setup(x => x.IsOutputRedirected).Returns(false);
@@ -1233,6 +1264,7 @@ namespace MaSch.Console.Cli.Test.Help
             command1Mock.Setup(x => x.Order).Returns(0);
             command1Mock.Setup(x => x.ParentCommand).Returns(aCommandMock.Object);
             command1Mock.Setup(x => x.Hidden).Returns(false);
+            command1Mock.Setup(x => x.IsDefault).Returns(false);
             command2Mock.Setup(x => x.Name).Returns("cmd2");
             command2Mock.Setup(x => x.Aliases).Returns(new[] { "cmd2" });
             command2Mock.Setup(x => x.Author).Returns("You");
@@ -1242,6 +1274,7 @@ namespace MaSch.Console.Cli.Test.Help
             command2Mock.Setup(x => x.Order).Returns(0);
             command2Mock.Setup(x => x.ParentCommand).Returns(aCommandMock.Object);
             command2Mock.Setup(x => x.Hidden).Returns(false);
+            command2Mock.Setup(x => x.IsDefault).Returns(false);
             command3Mock.Setup(x => x.Name).Returns("cmd3");
             command3Mock.Setup(x => x.Aliases).Returns(new[] { "cmd3", "command3", "my-command-3" });
             command3Mock.Setup(x => x.Author).Returns((string?)null);
@@ -1251,8 +1284,9 @@ namespace MaSch.Console.Cli.Test.Help
             command3Mock.Setup(x => x.Order).Returns(0);
             command3Mock.Setup(x => x.ParentCommand).Returns(aCommandMock.Object);
             command3Mock.Setup(x => x.Hidden).Returns(false);
+            command3Mock.Setup(x => x.IsDefault).Returns(false);
             aCommandMock.Setup(x => x.ChildCommands).Returns(new[] { command1Mock.Object, command2Mock.Object, command3Mock.Object });
-            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Name = "My", Year = "1337", Author = "Me", Version = "15" });
+            AppMock.Setup(x => x.Options).Returns(new CliApplicationOptions { Name = "My", Year = "1337", Author = "Me", Version = "15", ConsoleService = ConsoleServiceMock.Object });
             ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(55, int.MaxValue));
             ConsoleServiceMock.Setup(x => x.IsOutputRedirected).Returns(false);
             ConsoleServiceMock.Setup(x => x.IsFancyConsole).Returns(fancyConsole);
@@ -1281,6 +1315,7 @@ namespace MaSch.Console.Cli.Test.Help
             var exMsg1 = Guid.NewGuid().ToString();
             var exMsg2 = Guid.NewGuid().ToString();
             var errorExpr = errorFunc;
+            ConsoleServiceMock.Setup(x => x.BufferSize).Returns(CreateConsoleSize(50, int.MaxValue));
             if (addException)
             {
                 var prop = typeof(CliError).GetProperty(nameof(CliError.Exception), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)!;
@@ -1298,7 +1333,7 @@ namespace MaSch.Console.Cli.Test.Help
             HelpPage.WriteErrorMessage(AppMock.Object, errorExpr.Compile().Invoke());
 
             if (addException)
-                Assert.AreEqual($"{expectedErrorMessage}{NL}    {exMsg1}{NL}    {exMsg2}{NL}", sb.ToString());
+                Assert.AreEqual($"{expectedErrorMessage}{NL}   {exMsg1.PadRight(46)}{NL}   {exMsg2.PadRight(46)}{NL}", sb.ToString());
             else
                 Assert.AreEqual($"{expectedErrorMessage}{NL}", sb.ToString());
         }

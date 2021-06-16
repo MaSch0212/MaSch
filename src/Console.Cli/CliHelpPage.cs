@@ -55,7 +55,7 @@ namespace MaSch.Console.Cli
 
             if (errors.Any(x => x.IsError))
                 console.WriteLine();
-            foreach (var error in errors)
+            foreach (var error in errors.Where(x => x.IsError))
                 WriteErrorMessage(application, error);
 
             WriteCommandVersions(application, errors[0]);
@@ -76,7 +76,7 @@ namespace MaSch.Console.Cli
 
             if (errors.Any(x => x.IsError))
                 console.WriteLine();
-            foreach (var error in errors)
+            foreach (var error in errors.Where(x => x.IsError))
                 WriteErrorMessage(application, error);
 
             console.WriteLine();

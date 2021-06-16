@@ -83,11 +83,11 @@ namespace MaSch.Console.Cli.Test.Runtime
         }
 
         [TestMethod]
-        [DataRow("HELP", null, false, DisplayName = "Different casing")]
-        [DataRow("help", null, false, DisplayName = "No command")]
-        [DataRow("help", "blubbi", false, DisplayName = "Unknown command")]
-        [DataRow("help", "blub", true, DisplayName = "Known command")]
-        public void Parse_HelpCommand(string helpCommand, string commandArg, bool commandExpected)
+        [DataRow("HELP", null, false, false, DisplayName = "Different casing")]
+        [DataRow("help", null, false, false, DisplayName = "No command")]
+        [DataRow("help", "blubbi", false, true, DisplayName = "Unknown command")]
+        [DataRow("help", "blub", true, false, DisplayName = "Known command")]
+        public void Parse_HelpCommand(string helpCommand, string commandArg, bool commandExpected, bool hasUnknown)
         {
             var command = CreateCliCommandMock<DummyClass1>(new[] { "blub" });
             Commands.Add(command.Object);
@@ -95,18 +95,25 @@ namespace MaSch.Console.Cli.Test.Runtime
 
             var result = commandArg == null ? CallParse(helpCommand) : CallParse(helpCommand, commandArg);
 
+            var expectedErrors = !hasUnknown
+                ? new[] { (CliErrorType.HelpRequested, commandExpected ? command.Object : null) }
+                : new[]
+                {
+                    (CliErrorType.HelpRequested, commandExpected ? command.Object : null),
+                    (CliErrorType.UnknownCommand, commandExpected ? command.Object : null),
+                };
             AssertFailedParserResult(
                 result,
                 x => (x.Type, x.AffectedCommand),
-                (CliErrorType.HelpRequested, commandExpected ? command.Object : null));
+                expectedErrors);
         }
 
         [TestMethod]
-        [DataRow("VERSION", null, false, DisplayName = "Different casing")]
-        [DataRow("version", null, false, DisplayName = "No command")]
-        [DataRow("version", "blubbi", false, DisplayName = "Unknown command")]
-        [DataRow("version", "blub", true, DisplayName = "Known command")]
-        public void Parse_VersionCommand(string versionCommand, string commandArg, bool commandExpected)
+        [DataRow("VERSION", null, false, false, DisplayName = "Different casing")]
+        [DataRow("version", null, false, false, DisplayName = "No command")]
+        [DataRow("version", "blubbi", false, true, DisplayName = "Unknown command")]
+        [DataRow("version", "blub", true, false, DisplayName = "Known command")]
+        public void Parse_VersionCommand(string versionCommand, string commandArg, bool commandExpected, bool hasUnknown)
         {
             var command = CreateCliCommandMock<DummyClass1>(new[] { "blub" });
             Commands.Add(command.Object);
@@ -114,10 +121,17 @@ namespace MaSch.Console.Cli.Test.Runtime
 
             var result = commandArg == null ? CallParse(versionCommand) : CallParse(versionCommand, commandArg);
 
+            var expectedErrors = !hasUnknown
+                ? new[] { (CliErrorType.VersionRequested, commandExpected ? command.Object : null) }
+                : new[]
+                {
+                    (CliErrorType.VersionRequested, commandExpected ? command.Object : null),
+                    (CliErrorType.UnknownCommand, commandExpected ? command.Object : null),
+                };
             AssertFailedParserResult(
                 result,
                 x => (x.Type, x.AffectedCommand),
-                (CliErrorType.VersionRequested, commandExpected ? command.Object : null));
+                expectedErrors);
         }
 
         [TestMethod]
@@ -1301,6 +1315,7 @@ namespace MaSch.Console.Cli.Test.Runtime
             command.Setup(x => x.Values).Returns(values ?? Array.Empty<ICliCommandValueInfo>());
             command.Setup(x => x.ChildCommands).Returns(childCommands ?? Array.Empty<ICliCommandInfo>());
             command.Setup(x => x.OptionsInstance).Returns(optionsInstance);
+            command.Setup(x => x.IsExecutable).Returns(true);
             SetupValidation(command.As<ICliValidator<object>>(), true, null);
             return command;
         }
