@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaSch.Console.Cli.Runtime;
+using System;
 using System.Globalization;
 using System.Reflection;
 
@@ -7,7 +8,7 @@ namespace MaSch.Console.Cli
     /// <summary>
     /// Options for an <see cref="ICliApplicationBase"/>.
     /// </summary>
-    public class CliApplicationOptions
+    public class CliApplicationOptions : CliParserOptions
     {
         /// <summary>
         /// Gets or sets the exit code that should be returned when parsing of command line arguments fails.
@@ -20,58 +21,69 @@ namespace MaSch.Console.Cli
         public IConsoleService ConsoleService { get; set; } = new ConsoleService();
 
         /// <summary>
-        /// Gets or sets the name of the application.
+        /// Gets or sets a value indicating whether unknown options should be ignored while parsing command line arguments.
         /// </summary>
-        public string? Name { get; set; } = Assembly.GetEntryAssembly()?.GetName().Name;
+        public new bool IgnoreUnknownOptions
+        {
+            get => base.IgnoreUnknownOptions ?? false;
+            set => base.IgnoreUnknownOptions = value;
+        }
 
         /// <summary>
-        /// Gets or sets the version of the application.
+        /// Gets or sets a value indicating whether additional values should be ignored while parsing command line arguments.
         /// </summary>
-        public string? Version { get; set; } = Assembly.GetEntryAssembly()?.GetName().Version?.ToString(3);
+        public new bool IgnoreAdditionalValues
+        {
+            get => base.IgnoreAdditionalValues ?? false;
+            set => base.IgnoreAdditionalValues = value;
+        }
 
         /// <summary>
-        /// Gets or sets the year in which the version of the application has been released.
+        /// Gets or sets a value indicating whether the "help" command should be automatically provided.
         /// </summary>
-        public string? Year { get; set; } = DateTime.Now.Year.ToString(CultureInfo.InvariantCulture);
+        public new bool ProvideHelpCommand
+        {
+            get => base.ProvideHelpCommand ?? true;
+            set => base.ProvideHelpCommand = value;
+        }
 
         /// <summary>
-        /// Gets or sets the author of the application.
+        /// Gets or sets a value indicating whether the "version" command should be automatically provided.
         /// </summary>
-        public string? Author { get; set; } = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company;
+        public new bool ProvideVersionCommand
+        {
+            get => base.ProvideVersionCommand ?? true;
+            set => base.ProvideVersionCommand = value;
+        }
 
         /// <summary>
-        /// Gets or sets the name of the executable file of the application.
+        /// Gets or sets a value indicating whether the "help" option should be automatically provided to all commands.
         /// </summary>
-        public string? CliName { get; set; } = Assembly.GetEntryAssembly()?.GetName().Name;
+        public new bool ProvideHelpOptions
+        {
+            get => base.ProvideHelpOptions ?? true;
+            set => base.ProvideHelpOptions = value;
+        }
 
         /// <summary>
-        /// Gets or sets a value indicating whether unknown options should be ignored while parsing command line arguments in the application.
+        /// Gets or sets a value indicating whether the "version" option should be automatically provided to all commands.
         /// </summary>
-        public bool IgnoreUnknownOptions { get; set; } = false;
+        public new bool ProvideVersionOptions
+        {
+            get => base.ProvideVersionOptions ?? true;
+            set => base.ProvideVersionOptions = value;
+        }
 
         /// <summary>
-        /// Gets or sets a value indicating whether additional values should be ignored while parsing command line arguments in the application.
+        /// Initializes a new instance of the <see cref="CliApplicationOptions"/> class.
         /// </summary>
-        public bool IgnoreAdditionalValues { get; set; } = false;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the "help" command should be automatically provided with the application.
-        /// </summary>
-        public bool ProvideHelpCommand { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the "version" command should be automatically provided with the application.
-        /// </summary>
-        public bool ProvideVersionCommand { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the "help" option should be automatically provided to all commands of the application.
-        /// </summary>
-        public bool ProvideHelpOptions { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the "version" option should be automatically provided to all commands of the application.
-        /// </summary>
-        public bool ProvideVersionOptions { get; set; } = true;
+        public CliApplicationOptions()
+        {
+            Name = Assembly.GetEntryAssembly()?.GetName().Name;
+            Version = Assembly.GetEntryAssembly()?.GetName().Version?.ToString(3);
+            Year = DateTime.Now.Year.ToString(CultureInfo.InvariantCulture);
+            Author = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company;
+            CliName = Assembly.GetEntryAssembly()?.GetName().Name;
+        }
     }
 }

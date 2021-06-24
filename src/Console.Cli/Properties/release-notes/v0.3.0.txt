@@ -1,0 +1,8 @@
+﻿- Created new Attributes "CliMetadata" and "CliParserOptions" to have more control over a specific CliCommand.
+- Moved properties "DisplayName", "Version", "Author" and "Year" from CliCommandAttribute to CliMetadataAttribute.
+- Added ability to change name of command that is displayed in the usage on the help page.
+- Added ability to change parser options on a command basis using the CliParserOptionsAttribute.
+- Removed property "Executable" from CliCommandAttribute. This information is not detected automatically.
+- Fixed some issues with the help and version commands and options.
+- Added indicator to usage on help page to show when a CliValue accepts multiple values.
+- Options are not shown in the usage anymore when all options are hidden.

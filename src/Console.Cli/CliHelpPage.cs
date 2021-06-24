@@ -4,6 +4,7 @@ using MaSch.Console.Controls.Table;
 using MaSch.Core;
 using MaSch.Core.Extensions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -182,12 +183,20 @@ namespace MaSch.Console.Cli
                 {
                     sb.Append(' ')
                       .Append(value.IsRequired ? '<' : '[')
-                      .Append(value.DisplayName)
-                      .Append(value.IsRequired ? '>' : ']');
+                      .Append(value.DisplayName);
+
+                    if (typeof(IEnumerable).IsAssignableFrom(value.PropertyType) && value.PropertyType != typeof(string))
+                    {
+                        sb.Append(" [")
+                          .Append(value.DisplayName)
+                          .Append("]...");
+                    }
+
+                    sb.Append(value.IsRequired ? '>' : ']');
                 }
             }
 
-            if (error.AffectedCommand != null && error.AffectedCommand.Options.Count > 0)
+            if (error.AffectedCommand != null && error.AffectedCommand.Options.Any(x => !x.Hidden))
             {
                 var hasRequiredOption = error.AffectedCommand.Options.Any(x => x.IsRequired);
                 sb.Append(' ')
@@ -214,7 +223,9 @@ namespace MaSch.Console.Cli
             {
                 if (cmd.ParentCommand != null)
                     AppendCommandName(cmd.ParentCommand);
-                if (cmd.Aliases.Count == 1)
+                if (cmd.ParserOptions.CliName != null)
+                    sb.Append($" {cmd.ParserOptions.CliName}");
+                else if (cmd.Aliases.Count == 1)
                     sb.Append($" {cmd.Name}");
                 else
                     sb.Append($" ({string.Join("|", cmd.Aliases)})");
@@ -265,7 +276,7 @@ namespace MaSch.Console.Cli
                     Values = new[]
                     {
                         x.DisplayName,
-                        x.HelpText ?? string.Empty,
+                        (x.IsRequired ? string.Empty : "(Optional) ") + x.HelpText,
                     },
                 }));
                 table.Render();
@@ -361,7 +372,11 @@ namespace MaSch.Console.Cli
         {
             var console = application.Options.ConsoleService;
             var commands = (from command in error.AffectedCommand?.ChildCommands ?? application.Commands.GetRootCommands()
-                            where !command.Hidden && (command.Author != null || command.DisplayName != null || command.Version != null || command.Year != null)
+                            where !command.Hidden && (
+                                command.ParserOptions.Author != null ||
+                                command.ParserOptions.Name != null ||
+                                command.ParserOptions.Version != null ||
+                                command.ParserOptions.Year != null)
                             select command).ToArray();
             if (commands.Length == 0)
                 return;
@@ -400,7 +415,7 @@ namespace MaSch.Console.Cli
                 Values = new[]
                 {
                     x.Aliases.Count > 1 ? $"{string.Join(", ", x.Aliases)}" : x.Name,
-                    x.DisplayName ?? string.Empty,
+                    x.ParserOptions.Name ?? string.Empty,
                     GetVersion(x, application) ?? string.Empty,
                     $"{(console.IsFancyConsole ? "©" : "(C)")} {GetYear(x, application)} {GetAuthor(x, application)}",
                 },
@@ -440,7 +455,7 @@ namespace MaSch.Console.Cli
         /// <param name="app">The application.</param>
         /// <returns>The first name found in the hierarchy.</returns>
         protected static string? GetDisplayName(ICliCommandInfo? command, ICliApplicationBase app)
-            => command?.DisplayName ?? (command?.ParentCommand != null ? GetDisplayName(command.ParentCommand, app) : app.Options.Name);
+            => command?.ParserOptions.Name ?? (command?.ParentCommand != null ? GetDisplayName(command.ParentCommand, app) : app.Options.Name);
 
         /// <summary>
         /// Gets the correct version from either the command, one of its parent commands or the application.
@@ -449,7 +464,7 @@ namespace MaSch.Console.Cli
         /// <param name="app">The application.</param>
         /// <returns>The first version found in the hierarchy.</returns>
         protected static string? GetVersion(ICliCommandInfo? command, ICliApplicationBase app)
-            => command?.Version ?? (command?.ParentCommand != null ? GetVersion(command.ParentCommand, app) : app.Options.Version);
+            => command?.ParserOptions.Version ?? (command?.ParentCommand != null ? GetVersion(command.ParentCommand, app) : app.Options.Version);
 
         /// <summary>
         /// Gets the correct year from either the command, one of its parent commands or the application.
@@ -458,7 +473,7 @@ namespace MaSch.Console.Cli
         /// <param name="app">The application.</param>
         /// <returns>The first year found in the hierarchy.</returns>
         protected static string? GetYear(ICliCommandInfo? command, ICliApplicationBase app)
-            => command?.Year ?? (command?.ParentCommand != null ? GetYear(command.ParentCommand, app) : app.Options.Year);
+            => command?.ParserOptions.Year ?? (command?.ParentCommand != null ? GetYear(command.ParentCommand, app) : app.Options.Year);
 
         /// <summary>
         /// Gets the correct author from either the command, one of its parent commands or the application.
@@ -467,7 +482,7 @@ namespace MaSch.Console.Cli
         /// <param name="app">The application.</param>
         /// <returns>The first author found in the hierarchy.</returns>
         protected static string? GetAuthor(ICliCommandInfo? command, ICliApplicationBase app)
-            => command?.Author ?? (command?.ParentCommand != null ? GetAuthor(command.ParentCommand, app) : app.Options.Author);
+            => command?.ParserOptions.Author ?? (command?.ParentCommand != null ? GetAuthor(command.ParentCommand, app) : app.Options.Author);
 
         private static string GetOptionName(ICliCommandOptionInfo option)
             => string.Join(", ", option.ShortAliases.Select(y => $"-{y}").Concat(option.Aliases.Select(y => $"--{y}")));

@@ -56,24 +56,9 @@ namespace MaSch.Console.Cli.Runtime
         bool IsExecutable { get; }
 
         /// <summary>
-        /// Gets the display name.
+        /// Gets the parser options for this command.
         /// </summary>
-        string? DisplayName { get; }
-
-        /// <summary>
-        /// Gets the version of this command.
-        /// </summary>
-        string? Version { get; }
-
-        /// <summary>
-        /// Gets the author of this command.
-        /// </summary>
-        string? Author { get; }
-
-        /// <summary>
-        /// Gets the year in which this command was last changed.
-        /// </summary>
-        string? Year { get; }
+        CliParserOptions ParserOptions { get; }
 
         /// <summary>
         /// Gets a value indicating whether this command should be hidden from the help page.

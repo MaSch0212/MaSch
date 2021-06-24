@@ -50,19 +50,10 @@ namespace MaSch.Console.Cli.Runtime
         public int Order => Attribute.HelpOrder;
 
         /// <inheritdoc/>
-        public bool IsExecutable => Attribute.Executable;
+        public bool IsExecutable => _executor != null;
 
         /// <inheritdoc/>
-        public string? DisplayName => Attribute.DisplayName;
-
-        /// <inheritdoc/>
-        public string? Version => Attribute.Version;
-
-        /// <inheritdoc/>
-        public string? Author => Attribute.Author;
-
-        /// <inheritdoc/>
-        public string? Year => Attribute.Year;
+        public CliParserOptions ParserOptions { get; }
 
         /// <inheritdoc/>
         public bool Hidden => Attribute.Hidden;
@@ -96,15 +87,14 @@ namespace MaSch.Console.Cli.Runtime
             if (IllegalNameCharactersRegex.IsMatch(Attribute.Name))
                 throw new ArgumentException($"The name of command \"{commandType.Name}\" contains illegal characters. All characters but control and whitespace characters are allowed.", nameof(commandType));
 
-            if (Attribute.Executable)
-            {
-                if (executorFunc != null)
-                    _executor = FunctionExecutor.GetExecutor(executorFunc);
-                else if (executorType != null)
-                    _executor = ExternalExecutor.GetExecutor(executorType, commandType, executorInstance);
-                else
-                    _executor = new DirectExecutor(commandType);
-            }
+            ParserOptions = GetParserOptions(commandType);
+
+            if (executorFunc != null)
+                _executor = FunctionExecutor.GetExecutor(executorFunc);
+            else if (executorType != null)
+                _executor = ExternalExecutor.GetExecutor(executorType, commandType, executorInstance);
+            else if (DirectExecutor.IsExecutable(commandType))
+                _executor = new DirectExecutor(commandType);
 
             var extensionStorage = new ObjectExtensionDataStorage();
             var members = from t in commandType.FlattenHierarchy()
@@ -181,6 +171,50 @@ namespace MaSch.Console.Cli.Runtime
             Guard.NotNull(context, nameof(context));
             if (context.Command != this)
                 throw new ArgumentException("The context contains the wrong command. Its instance needs to match this instance of the ICliCommandInfo.");
+        }
+
+        private static CliParserOptions GetParserOptions(Type type)
+        {
+            var result = new CliParserOptions();
+            var attributes = from t in type.FlattenHierarchy()
+                             from a in t.GetCustomAttributes()
+                             where a is CliMetadataAttribute || a is CliParserOptionsAttribute
+                             group a by a.GetType() into g
+                             select g.First();
+
+            foreach (var attribute in attributes)
+            {
+                if (attribute is CliMetadataAttribute metadata)
+                {
+                    if (metadata.DisplayName != null)
+                        result.Name = metadata.DisplayName;
+                    if (metadata.Version != null)
+                        result.Version = metadata.Version;
+                    if (metadata.Year != null)
+                        result.Year = metadata.Year;
+                    if (metadata.Author != null)
+                        result.Author = metadata.Author;
+                    if (metadata.CliName != null)
+                        result.CliName = metadata.CliName;
+                }
+                else if (attribute is CliParserOptionsAttribute options)
+                {
+                    if (options.IgnoreUnknownOptionsValue.HasValue)
+                        result.IgnoreUnknownOptions = options.IgnoreUnknownOptionsValue;
+                    if (options.IgnoreAdditionalValuesValue.HasValue)
+                        result.IgnoreAdditionalValues = options.IgnoreAdditionalValuesValue;
+                    if (options.ProvideHelpCommandValue.HasValue)
+                        result.ProvideHelpCommand = options.ProvideHelpCommandValue;
+                    if (options.ProvideVersionCommandValue.HasValue)
+                        result.ProvideVersionCommand = options.ProvideVersionCommandValue;
+                    if (options.ProvideHelpOptionsValue.HasValue)
+                        result.ProvideHelpOptions = options.ProvideHelpOptionsValue;
+                    if (options.ProvideVersionOptionsValue.HasValue)
+                        result.ProvideVersionOptions = options.ProvideVersionOptionsValue;
+                }
+            }
+
+            return result;
         }
     }
 }

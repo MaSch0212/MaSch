@@ -126,12 +126,6 @@ namespace MaSch.Console.Cli.Test.Runtime
         }
 
         [TestMethod]
-        public void From_CommandType_Executable()
-        {
-            Assert.ThrowsException<ArgumentException>(() => Factory.Create(typeof(DummyClass2)));
-        }
-
-        [TestMethod]
         public void From_TCommand_TExecutor()
         {
             var info = Factory.Create<DummyClass2, Executor1>();
@@ -371,19 +365,19 @@ namespace MaSch.Console.Cli.Test.Runtime
             Assert.AreSame(command, info.OptionsInstance);
         }
 
-        [CliCommand("Command1", IsDefault = true, HelpOrder = 4711, HelpText = "My Help Text", Executable = false)]
-        public class DummyClass1 : ICliCommandExecutor
+        [CliCommand("Command1", IsDefault = true, HelpOrder = 4711, HelpText = "My Help Text")]
+        public class DummyClass1
+        {
+        }
+
+        [CliCommand("Command2", IsDefault = true, HelpOrder = 4711, HelpText = "My Help Text")]
+        public class DummyClass2 : ICliCommandExecutor
         {
             [ExcludeFromCodeCoverage]
             public int ExecuteCommand(CliExecutionContext context)
             {
                 throw new NotImplementedException();
             }
-        }
-
-        [CliCommand("Command2", IsDefault = true, HelpOrder = 4711, HelpText = "My Help Text")]
-        public class DummyClass2
-        {
         }
 
         private class DummyClass3

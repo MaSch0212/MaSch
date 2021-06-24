@@ -204,8 +204,8 @@ namespace MaSch.Console.Cli.Test.Runtime
         [DataRow("version")]
         public void Parse_SpecialOption_First_Disabled(string optionName)
         {
-            AppOptions.ProvideHelpCommand = false;
-            AppOptions.ProvideVersionCommand = false;
+            AppOptions.ProvideHelpOptions = false;
+            AppOptions.ProvideVersionOptions = false;
 
             var result = CallParse("--" + optionName);
 
@@ -1316,6 +1316,8 @@ namespace MaSch.Console.Cli.Test.Runtime
             command.Setup(x => x.ChildCommands).Returns(childCommands ?? Array.Empty<ICliCommandInfo>());
             command.Setup(x => x.OptionsInstance).Returns(optionsInstance);
             command.Setup(x => x.IsExecutable).Returns(true);
+            command.Setup(x => x.ParserOptions).Returns(new CliParserOptions());
+            command.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
             SetupValidation(command.As<ICliValidator<object>>(), true, null);
             return command;
         }

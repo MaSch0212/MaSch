@@ -73,11 +73,6 @@ namespace MaSch.Console.Cli.Test.Configuration
             Assert.AreEqual(-1, attr.HelpOrder);
             Assert.IsNull(attr.HelpText);
             Assert.IsNull(attr.ParentCommand);
-            Assert.IsTrue(attr.Executable);
-            Assert.IsNull(attr.DisplayName);
-            Assert.IsNull(attr.Author);
-            Assert.IsNull(attr.Year);
-            Assert.IsNull(attr.Version);
             Assert.IsFalse(attr.Hidden);
         }
     }

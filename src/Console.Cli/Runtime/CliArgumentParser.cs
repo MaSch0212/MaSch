@@ -38,13 +38,13 @@ namespace MaSch.Console.Cli.Runtime
                         return new(new(application, defaultCommand), Activator.CreateInstance(defaultCommand.CommandType)!);
                 }
 
-                if (!TryParseCommandInfo(args, application, out var command, out var commandArgIndex))
-                {
-                    HandleSpecialCommands(args, application);
+                var hasCommand = TryParseCommandInfo(args, application, null, out var command, out var commandArgIndex);
+                if (command == null || args.Length > commandArgIndex + 1)
+                    HandleSpecialCommands(args.Skip(command == null ? commandArgIndex : commandArgIndex + 1).ToArray(), application, command);
+                if (!hasCommand)
                     return new(new[] { new CliError(CliErrorType.UnknownCommand) { CommandName = args[commandArgIndex] } });
-                }
 
-                if (!command.IsExecutable)
+                if (!command!.IsExecutable)
                 {
                     var defaultCommand = command.ChildCommands.FirstOrDefault(x => x.IsDefault);
                     if (defaultCommand != null)
@@ -81,10 +81,12 @@ namespace MaSch.Console.Cli.Runtime
                 ctx.Errors.Add(vErrors);
         }
 
-        private static bool TryParseCommandInfo(string[] args, ICliApplicationBase application, [NotNullWhen(true)] out ICliCommandInfo? command, out int commandArgIndex)
+        private static bool TryParseCommandInfo(string[] args, ICliApplicationBase application, ICliCommandInfo? baseCommand, [NotNullWhen(true)] out ICliCommandInfo? command, out int commandArgIndex)
         {
             commandArgIndex = 0;
-            command = application.Commands.GetRootCommands().FirstOrDefault(x => x.Aliases.Contains(args[0], StringComparer.OrdinalIgnoreCase));
+            command = (baseCommand == null
+                ? application.Commands.GetRootCommands()
+                : baseCommand.ChildCommands).FirstOrDefault(x => x.Aliases.Contains(args[0], StringComparer.OrdinalIgnoreCase));
             if (command != null)
             {
                 for (commandArgIndex = 1; commandArgIndex < args.Length; commandArgIndex++)
@@ -93,6 +95,8 @@ namespace MaSch.Console.Cli.Runtime
                     var next = command.ChildCommands.FirstOrDefault(x => x.Aliases.Contains(args[index], StringComparer.OrdinalIgnoreCase));
                     if (next == null)
                     {
+                        if (!args[index].StartsWith("-") && (command?.Values.Count ?? 0) == 0)
+                            return false;
                         commandArgIndex--;
                         break;
                     }
@@ -106,38 +110,35 @@ namespace MaSch.Console.Cli.Runtime
                 commandArgIndex = -1;
             }
 
+            if (command == null && baseCommand != null)
+                command = baseCommand;
             return command != null;
         }
 
-        private static void HandleSpecialCommands(string[] args, ICliApplicationBase application)
+        private static void HandleSpecialCommands(string[] args, ICliApplicationBase application, ICliCommandInfo? currentCommand)
         {
-            if (application.Options.ProvideVersionCommand)
-            {
-                if (IsCommand("version"))
-                    DetermineCommandAndThrow(CliErrorType.VersionRequested);
-                else if (IsOption("version"))
-                    throw GetException(CliErrorType.VersionRequested, null, Array.Empty<CliError>());
-            }
+            if (IsCommand("version"))
+                DetermineCommandAndThrow(CliErrorType.VersionRequested, x => GetProvideVersionCommand(application, x));
+            else if (currentCommand == null && IsOption("version") && application.Options.ProvideVersionOptions)
+                throw GetException(CliErrorType.VersionRequested, currentCommand, Array.Empty<CliError>());
 
-            if (application.Options.ProvideHelpCommand)
-            {
-                if (IsCommand("help"))
-                    DetermineCommandAndThrow(CliErrorType.HelpRequested);
-                else if (IsOption("help"))
-                    throw GetException(CliErrorType.HelpRequested, null, Array.Empty<CliError>());
-            }
+            if (IsCommand("help"))
+                DetermineCommandAndThrow(CliErrorType.HelpRequested, x => GetProvideHelpCommand(application, x));
+            else if (currentCommand == null && IsOption("help") && application.Options.ProvideHelpOptions)
+                throw GetException(CliErrorType.HelpRequested, currentCommand, Array.Empty<CliError>());
 
             bool IsCommand(string expectedCommand) => string.Equals(args[0], expectedCommand, StringComparison.OrdinalIgnoreCase);
             bool IsOption(string expectedCommand) => string.Equals(args[0], "--" + expectedCommand, StringComparison.OrdinalIgnoreCase);
 
-            void DetermineCommandAndThrow(CliErrorType errorType)
+            void DetermineCommandAndThrow(CliErrorType errorType, Func<ICliCommandInfo?, bool> shouldThrowFunc)
             {
-                ICliCommandInfo? command = null;
+                ICliCommandInfo? command = currentCommand;
                 IEnumerable<CliError> additionalErrors = Array.Empty<CliError>();
-                if (args.Length > 1 && !TryParseCommandInfo(args.Skip(1).ToArray(), application, out command, out var idx))
+                if (args.Length > 1 && !TryParseCommandInfo(args.Skip(1).ToArray(), application, currentCommand, out command, out var idx))
                     additionalErrors = additionalErrors.Append(new CliError(CliErrorType.UnknownCommand) { CommandName = args[idx + 1] });
 
-                throw GetException(errorType, command, additionalErrors);
+                if (shouldThrowFunc(command))
+                    throw GetException(errorType, command, additionalErrors);
             }
 
             CliErrorException GetException(CliErrorType errorType, ICliCommandInfo? command, IEnumerable<CliError> additionalErrors)
@@ -163,7 +164,7 @@ namespace MaSch.Console.Cli.Runtime
                     {
                         ParseValue(ctx, ctx.Command.Values[ctx.CurrentValueIndex]);
                     }
-                    else if (!ctx.Application.Options.IgnoreAdditionalValues && !ctx.Errors.Any(x => x.Type == CliErrorType.UnknownValue))
+                    else if (!GetIgnoreAdditionalValues(ctx.Application, ctx.Command) && !ctx.Errors.Any(x => x.Type == CliErrorType.UnknownValue))
                     {
                         ctx.Errors.Add(new CliError(CliErrorType.UnknownValue, ctx.Command));
                     }
@@ -216,7 +217,7 @@ namespace MaSch.Console.Cli.Runtime
                     var option = ctx.Command.Options.FirstOrDefault(x => x.ShortAliases.Contains(s));
                     if (option != null)
                         SetBoolOption(option);
-                    else if (!ctx.Application.Options.IgnoreUnknownOptions)
+                    else if (!GetIgnoreUnknownOptions(ctx.Application, ctx.Command))
                         ctx.Errors.Add(new CliError(CliErrorType.UnknownOption, ctx.Command) { OptionName = $"-{s}" });
                 }
             }
@@ -271,8 +272,8 @@ namespace MaSch.Console.Cli.Runtime
                 else
                 {
                     if (a.StartsWith("--"))
-                        HandleSpecialOptions(ctx.Application.Options, a[2..], ctx.Command);
-                    if (!ctx.Application.Options.IgnoreUnknownOptions)
+                        HandleSpecialOptions(ctx.Application, a[2..], ctx.Command);
+                    if (!GetIgnoreUnknownOptions(ctx.Application, ctx.Command))
                         ctx.Errors.Add(new CliError(CliErrorType.UnknownOption, ctx.Command) { OptionName = a });
                 }
 
@@ -288,16 +289,29 @@ namespace MaSch.Console.Cli.Runtime
             }
         }
 
-        private static void HandleSpecialOptions(CliApplicationOptions appOptions, string optionName, ICliCommandInfo command)
+        private static void HandleSpecialOptions(ICliApplicationBase application, string optionName, ICliCommandInfo command)
         {
-            if (appOptions.ProvideVersionOptions && IsOption("version"))
+            if (GetProvideVersionOptions(application, command) && IsOption("version"))
                 Throw(CliErrorType.VersionRequested);
-            else if (appOptions.ProvideHelpOptions && IsOption("help"))
+            else if (GetProvideHelpOptions(application, command) && IsOption("help"))
                 Throw(CliErrorType.HelpRequested);
 
             bool IsOption(string expectedOption) => string.Equals(optionName, expectedOption, StringComparison.OrdinalIgnoreCase);
             void Throw(CliErrorType errorType) => throw new CliErrorException(new[] { new CliError(errorType, command) });
         }
+
+        private static bool GetIgnoreUnknownOptions(ICliApplicationBase application, ICliCommandInfo? command)
+            => command == null ? application.Options.IgnoreUnknownOptions : (command.ParserOptions.IgnoreUnknownOptions ?? GetIgnoreUnknownOptions(application, command.ParentCommand));
+        private static bool GetIgnoreAdditionalValues(ICliApplicationBase application, ICliCommandInfo? command)
+            => command == null ? application.Options.IgnoreAdditionalValues : (command.ParserOptions.IgnoreAdditionalValues ?? GetIgnoreAdditionalValues(application, command.ParentCommand));
+        private static bool GetProvideHelpCommand(ICliApplicationBase application, ICliCommandInfo? command)
+            => command == null ? application.Options.ProvideHelpCommand : (command.ParserOptions.ProvideHelpCommand ?? GetProvideHelpCommand(application, command.ParentCommand));
+        private static bool GetProvideVersionCommand(ICliApplicationBase application, ICliCommandInfo? command)
+            => command == null ? application.Options.ProvideVersionCommand : (command.ParserOptions.ProvideVersionCommand ?? GetProvideVersionCommand(application, command.ParentCommand));
+        private static bool GetProvideHelpOptions(ICliApplicationBase application, ICliCommandInfo? command)
+            => command == null ? application.Options.ProvideHelpOptions : (command.ParserOptions.ProvideHelpOptions ?? GetProvideHelpOptions(application, command.ParentCommand));
+        private static bool GetProvideVersionOptions(ICliApplicationBase application, ICliCommandInfo? command)
+            => command == null ? application.Options.ProvideVersionOptions : (command.ParserOptions.ProvideVersionOptions ?? GetProvideVersionOptions(application, command.ParentCommand));
 
         [SuppressMessage("Critical Code Smell", "S3871:Exception types should be \"public\"", Justification = "This exception is always catched, so no need to make it public.")]
         private class CliErrorException : Exception
