@@ -1,6 +1,7 @@
 ﻿using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
@@ -39,6 +40,8 @@ namespace MaSch.Core.Test
             int callCount = 0;
             TimeSpan? lastTimeSpan = null;
 
+            var sw = new Stopwatch();
+            sw.Start();
             var obj = new ActionOnDispose(t =>
             {
                 Interlocked.Increment(ref callCount);
@@ -48,8 +51,9 @@ namespace MaSch.Core.Test
             Assert.AreEqual(0, callCount);
             Thread.Sleep(100);
             obj.Dispose();
+            sw.Stop();
             Assert.AreEqual(1, callCount);
-            Assert.IsBetween(TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(150), lastTimeSpan!.Value);
+            Assert.IsBetween(sw.Elapsed.Add(TimeSpan.FromMilliseconds(-50)), sw.Elapsed.Add(TimeSpan.FromMilliseconds(50)), lastTimeSpan!.Value);
         }
     }
 }
