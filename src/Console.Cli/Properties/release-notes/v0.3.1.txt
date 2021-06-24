@@ -1,0 +1,1 @@
+﻿- Fixed some issues with help and version commands/options.

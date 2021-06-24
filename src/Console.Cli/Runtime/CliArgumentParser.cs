@@ -95,9 +95,9 @@ namespace MaSch.Console.Cli.Runtime
                     var next = command.ChildCommands.FirstOrDefault(x => x.Aliases.Contains(args[index], StringComparer.OrdinalIgnoreCase));
                     if (next == null)
                     {
+                        commandArgIndex--;
                         if (!args[index].StartsWith("-") && (command?.Values.Count ?? 0) == 0)
                             return false;
-                        commandArgIndex--;
                         break;
                     }
 
@@ -119,16 +119,17 @@ namespace MaSch.Console.Cli.Runtime
         {
             if (IsCommand("version"))
                 DetermineCommandAndThrow(CliErrorType.VersionRequested, x => GetProvideVersionCommand(application, x));
-            else if (currentCommand == null && IsOption("version") && application.Options.ProvideVersionOptions)
+            else if (IsOption("version") && GetProvideVersionOptions(application, currentCommand) && !OptionExists("version"))
                 throw GetException(CliErrorType.VersionRequested, currentCommand, Array.Empty<CliError>());
 
             if (IsCommand("help"))
                 DetermineCommandAndThrow(CliErrorType.HelpRequested, x => GetProvideHelpCommand(application, x));
-            else if (currentCommand == null && IsOption("help") && application.Options.ProvideHelpOptions)
+            else if (IsOption("help") && GetProvideHelpOptions(application, currentCommand) && !OptionExists("help"))
                 throw GetException(CliErrorType.HelpRequested, currentCommand, Array.Empty<CliError>());
 
             bool IsCommand(string expectedCommand) => string.Equals(args[0], expectedCommand, StringComparison.OrdinalIgnoreCase);
             bool IsOption(string expectedCommand) => string.Equals(args[0], "--" + expectedCommand, StringComparison.OrdinalIgnoreCase);
+            bool OptionExists(string optionName) => currentCommand?.Options.Any(x => x.Aliases.Any(y => string.Equals(y, optionName, StringComparison.OrdinalIgnoreCase))) == true;
 
             void DetermineCommandAndThrow(CliErrorType errorType, Func<ICliCommandInfo?, bool> shouldThrowFunc)
             {
