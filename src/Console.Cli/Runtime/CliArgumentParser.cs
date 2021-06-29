@@ -38,20 +38,14 @@ namespace MaSch.Console.Cli.Runtime
                         return new(new(application, defaultCommand), Activator.CreateInstance(defaultCommand.CommandType)!);
                 }
 
-                var hasCommand = TryParseCommandInfo(args, application, null, out var command, out var commandArgIndex);
-                if (command == null || args.Length > commandArgIndex + 1)
-                    HandleSpecialCommands(args.Skip(command == null ? commandArgIndex : commandArgIndex + 1).ToArray(), application, command);
-                if (!hasCommand)
-                    return new(new[] { new CliError(CliErrorType.UnknownCommand) { CommandName = args[commandArgIndex] } });
+                var hasCommand = TryParseCommandInfo(args, application, null, out var command, out var commandForHelp, out var commandArgIndex);
+                if (args.Length > commandArgIndex + 1)
+                    HandleSpecialCommands(args.Skip(commandArgIndex + 1).ToArray(), application, commandForHelp);
 
-                if (!command!.IsExecutable)
-                {
-                    var defaultCommand = command.ChildCommands.FirstOrDefault(x => x.IsDefault);
-                    if (defaultCommand != null)
-                        command = defaultCommand;
-                    else
-                        return new(new[] { new CliError(CliErrorType.CommandNotExecutable, command) });
-                }
+                if (!hasCommand || command == null)
+                    return new(new[] { new CliError(CliErrorType.UnknownCommand, command) { CommandName = args[commandArgIndex + 1] } });
+                if (!command.IsExecutable)
+                    return new(new[] { new CliError(CliErrorType.CommandNotExecutable, command) });
 
                 var ctx = new CommandParserContext(args.Skip(commandArgIndex + 1).ToArray(), application, command, new List<CliError>());
                 ParseOptions(ctx);
@@ -81,38 +75,44 @@ namespace MaSch.Console.Cli.Runtime
                 ctx.Errors.Add(vErrors);
         }
 
-        private static bool TryParseCommandInfo(string[] args, ICliApplicationBase application, ICliCommandInfo? baseCommand, [NotNullWhen(true)] out ICliCommandInfo? command, out int commandArgIndex)
+        private static bool TryParseCommandInfo(string[] args, ICliApplicationBase application, ICliCommandInfo? baseCommand, [NotNullWhen(true)] out ICliCommandInfo? command, out ICliCommandInfo? commandForHelp, out int commandArgIndex)
         {
-            commandArgIndex = 0;
-            command = (baseCommand == null
-                ? application.Commands.GetRootCommands()
-                : baseCommand.ChildCommands).FirstOrDefault(x => x.Aliases.Contains(args[0], StringComparer.OrdinalIgnoreCase));
-            if (command != null)
+            command = baseCommand;
+            bool nextIsValue = false;
+            for (commandArgIndex = 0; commandArgIndex < args.Length; commandArgIndex++)
             {
-                for (commandArgIndex = 1; commandArgIndex < args.Length; commandArgIndex++)
-                {
-                    var index = commandArgIndex;
-                    var next = command.ChildCommands.FirstOrDefault(x => x.Aliases.Contains(args[index], StringComparer.OrdinalIgnoreCase));
-                    if (next == null)
-                    {
-                        commandArgIndex--;
-                        if (!args[index].StartsWith("-") && (command?.Values.Count ?? 0) == 0)
-                            return false;
-                        break;
-                    }
+                var nextCommandName = args[commandArgIndex];
+                nextIsValue = !nextCommandName.StartsWith("-");
+                if (!nextIsValue)
+                    break;
 
-                    command = next;
-                }
+                var nextCommand = (command == null
+                    ? application.Commands.GetRootCommands()
+                    : command.ChildCommands)
+                        .FirstOrDefault(x => x.Aliases.Contains(nextCommandName, StringComparer.OrdinalIgnoreCase));
+                if (nextCommand == null)
+                    break;
+
+                command = nextCommand;
             }
-            else if (application.Commands.DefaultCommand?.Values.IsNullOrEmpty() == false)
+
+            if (command == null)
             {
+                commandForHelp = command;
                 command = application.Commands.DefaultCommand;
-                commandArgIndex = -1;
+            }
+            else if (command.IsExecutable)
+            {
+                commandForHelp = command;
+            }
+            else
+            {
+                commandForHelp = command;
+                command = command.ChildCommands.FirstOrDefault(x => x.IsDefault) ?? command;
             }
 
-            if (command == null && baseCommand != null)
-                command = baseCommand;
-            return command != null;
+            commandArgIndex--;
+            return command != null && (!nextIsValue || commandArgIndex + 1 == args.Length || command.Values.Count > 0);
         }
 
         private static void HandleSpecialCommands(string[] args, ICliApplicationBase application, ICliCommandInfo? currentCommand)
@@ -135,7 +135,7 @@ namespace MaSch.Console.Cli.Runtime
             {
                 ICliCommandInfo? command = currentCommand;
                 IEnumerable<CliError> additionalErrors = Array.Empty<CliError>();
-                if (args.Length > 1 && !TryParseCommandInfo(args.Skip(1).ToArray(), application, currentCommand, out command, out var idx))
+                if (args.Length > 1 && !TryParseCommandInfo(args.Skip(1).ToArray(), application, currentCommand, out _, out command, out var idx))
                     additionalErrors = additionalErrors.Append(new CliError(CliErrorType.UnknownCommand) { CommandName = args[idx + 1] });
 
                 if (shouldThrowFunc(command))

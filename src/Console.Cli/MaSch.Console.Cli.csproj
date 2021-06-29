@@ -14,7 +14,7 @@
 
     <!-- Package Info -->
     <Description>Contains supporting code for console CLI applications.</Description>
-    <Version>0.3.1</Version>
+    <Version>0.3.2</Version>
     <PackageTags>masch console terminal cli commandline parser</PackageTags>
   </PropertyGroup>
 

@@ -1,0 +1,1 @@
+﻿- Fix some more issues with command resolution.
