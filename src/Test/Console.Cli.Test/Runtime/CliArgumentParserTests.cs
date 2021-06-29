@@ -216,21 +216,6 @@ namespace MaSch.Console.Cli.Test.Runtime
         }
 
         [TestMethod]
-        [DataRow("help")]
-        [DataRow("version")]
-        public void Parse_SpecialOption_First_ExistingCommand(string commandName)
-        {
-            var command = CreateCliCommandMock<DummyClass1>(new[] { "--" + commandName });
-            Commands.Add(command.Object);
-            AppOptions.ProvideHelpCommand = true;
-            AppOptions.ProvideVersionCommand = true;
-
-            var result = CallParse("--" + commandName);
-
-            AssertSuccessfulParserResult<DummyClass1>(result, command.Object);
-        }
-
-        [TestMethod]
         [DataRow("HELP")]
         [DataRow("help")]
         public void Parse_HelpOption_OnRootCommand(string helpCommand)
