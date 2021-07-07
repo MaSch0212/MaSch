@@ -18,5 +18,19 @@ namespace MaSch.Test
         /// Gets the <see cref="MockRepository"/> for this instance.
         /// </summary>
         public MockRepository Mocks => _mocks ??= new MockRepository(DefaultMockBehavior);
+
+        /// <summary>
+        /// Gets the accessor for the builder that built this sut.
+        /// </summary>
+        public SutBuilderBase.Accessor BuilderAccessor { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SutBase"/> class.
+        /// </summary>
+        /// <param name="builderAccessor">The accessor for the builder.</param>
+        protected SutBase(SutBuilderBase.Accessor builderAccessor)
+        {
+            BuilderAccessor = builderAccessor;
+        }
     }
 }

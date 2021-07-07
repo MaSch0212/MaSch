@@ -1,0 +1,2 @@
+﻿- Improved error message for Assert.ThrowsException and Assert.ThrowsExceptionAsync.
+- Added ability to create Suts in an easy way using the SutBuilderBase and SutBase classes.
