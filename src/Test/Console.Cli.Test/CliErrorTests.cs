@@ -5,12 +5,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace MaSch.Console.Cli.Test.ErrorHandling
+namespace MaSch.Console.Cli.Test
 {
     [TestClass]
     public class CliErrorTests : TestClassBase
     {
-        private ICliCommandInfoFactory Factory => Cache.GetValue(() => new CliCommandInfoFactory())!;
+        private ICliCommandFactory Factory => Cache.GetValue(() => new CliCommandFactory())!;
 
         [TestMethod]
         public void Ctor_Type()

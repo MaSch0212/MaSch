@@ -1,4 +1,5 @@
 ﻿using MaSch.Core;
+using System;
 
 namespace MaSch.Console.Cli.Runtime
 {
@@ -8,9 +9,9 @@ namespace MaSch.Console.Cli.Runtime
     public class CliExecutionContext
     {
         /// <summary>
-        /// Gets the application.
+        /// Gets the service provider for this context.
         /// </summary>
-        public ICliApplicationBase Application { get; }
+        public IServiceProvider ServiceProvider { get; }
 
         /// <summary>
         /// Gets the command information.
@@ -18,18 +19,13 @@ namespace MaSch.Console.Cli.Runtime
         public ICliCommandInfo Command { get; }
 
         /// <summary>
-        /// Gets the console service.
-        /// </summary>
-        public IConsoleService Console => Application.Options.ConsoleService;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="CliExecutionContext"/> class.
         /// </summary>
-        /// <param name="application">The application.</param>
+        /// <param name="serviceProvider">The service provider for the context.</param>
         /// <param name="command">The command information.</param>
-        public CliExecutionContext(ICliApplicationBase application, ICliCommandInfo command)
+        public CliExecutionContext(IServiceProvider serviceProvider, ICliCommandInfo command)
         {
-            Application = Guard.NotNull(application, nameof(application));
+            ServiceProvider = Guard.NotNull(serviceProvider, nameof(serviceProvider));
             Command = Guard.NotNull(command, nameof(command));
         }
     }

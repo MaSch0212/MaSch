@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace MaSch.Console.Cli.Runtime
 {
     /// <inheritdoc/>
-    public class CliCommandInfoFactory : ICliCommandInfoFactory
+    public class CliCommandFactory : ICliCommandFactory
     {
         /// <inheritdoc/>
         public ICliCommandInfo Create<TCommand>()
@@ -24,22 +24,22 @@ namespace MaSch.Console.Cli.Runtime
 
         /// <inheritdoc/>
         public ICliCommandInfo Create<TCommand, TExecutor>()
-            where TExecutor : ICliCommandExecutorBase<TCommand>
+            where TExecutor : ICliExecutorBase<TCommand>
             => new CliCommandInfo(typeof(TCommand), typeof(TExecutor), null, null, null);
 
         /// <inheritdoc/>
         public ICliCommandInfo Create<TCommand, TExecutor>(TExecutor executorInstance)
-            where TExecutor : ICliCommandExecutorBase<TCommand>
+            where TExecutor : ICliExecutorBase<TCommand>
             => new CliCommandInfo(typeof(TCommand), typeof(TExecutor), null, null, executorInstance);
 
         /// <inheritdoc/>
         public ICliCommandInfo Create<TCommand, TExecutor>(TCommand optionsInstance)
-            where TExecutor : ICliCommandExecutorBase<TCommand>
+            where TExecutor : ICliExecutorBase<TCommand>
             => new CliCommandInfo(typeof(TCommand), typeof(TExecutor), optionsInstance, null, null);
 
         /// <inheritdoc/>
         public ICliCommandInfo Create<TCommand, TExecutor>(TCommand optionsInstance, TExecutor executorInstance)
-            where TExecutor : ICliCommandExecutorBase<TCommand>
+            where TExecutor : ICliExecutorBase<TCommand>
             => new CliCommandInfo(typeof(TCommand), typeof(TExecutor), optionsInstance, null, executorInstance);
 
         /// <inheritdoc/>

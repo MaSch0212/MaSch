@@ -9,7 +9,7 @@ namespace MaSch.Console.Cli.Runtime.Executors
 {
     internal static class FunctionExecutor
     {
-        public static ICliExecutor GetExecutor(object executorFunction)
+        public static ICliCommandExecutor GetExecutor(object executorFunction)
         {
             Guard.NotNull(executorFunction, nameof(executorFunction));
             var type = executorFunction.GetType();
@@ -21,8 +21,8 @@ namespace MaSch.Console.Cli.Runtime.Executors
             var eType = typeof(FunctionExecutor<>).MakeGenericType(genArgs[1]);
             return genArgs[2] switch
             {
-                Type x when x == typeof(int) => (ICliExecutor)Activator.CreateInstance(eType, executorFunction, null)!,
-                Type x when x == typeof(Task<int>) => (ICliExecutor)Activator.CreateInstance(eType, null, executorFunction)!,
+                Type x when x == typeof(int) => (ICliCommandExecutor)Activator.CreateInstance(eType, executorFunction, null)!,
+                Type x when x == typeof(Task<int>) => (ICliCommandExecutor)Activator.CreateInstance(eType, null, executorFunction)!,
                 _ => throw new ArgumentException($"The executor function needs to either return int or Task<int>."),
             };
         }
@@ -36,7 +36,7 @@ namespace MaSch.Console.Cli.Runtime.Executors
     }
 
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic counterpart to FunctionExecutor")]
-    internal class FunctionExecutor<T> : ICliExecutor
+    internal class FunctionExecutor<T> : ICliCommandExecutor
     {
         private readonly Func<CliExecutionContext, T, int>? _executorFunc;
         private readonly Func<CliExecutionContext, T, Task<int>>? _asyncExecutorFunc;

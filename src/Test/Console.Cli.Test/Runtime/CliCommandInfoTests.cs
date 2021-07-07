@@ -19,8 +19,8 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
             var options = new DummyClass1();
             var info = new CliCommandInfo(typeof(DummyClass1), null, options, null, null);
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, info);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, info);
 
             var result = info.ValidateOptions(execCtx, options, out var errors);
 
@@ -35,8 +35,8 @@ namespace MaSch.Console.Cli.Test.Runtime
             IEnumerable<CliError>? errors = null;
             var options = new DummyClass2();
             var info = new CliCommandInfo(typeof(DummyClass2), typeof(Executor1), options, null, executor.Object);
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, info);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, info);
             executor
                 .Setup(x => x.ValidateOptions(execCtx, options, out errors))
                 .Returns(new Executor1.ValidateDelegate((CliExecutionContext context, DummyClass2 parameters, out IEnumerable<CliError>? errors) =>
@@ -61,8 +61,8 @@ namespace MaSch.Console.Cli.Test.Runtime
             var executor = Mocks.Create<Executor1>();
             var options = new DummyClass2();
             var info = new CliCommandInfo(typeof(DummyClass2), typeof(Executor1), options, null, executor.Object);
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, info);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, info);
             executor.Setup(x => x.ExecuteCommand(execCtx, options)).Returns(4711).Verifiable(Verifiables, Times.Once());
 
             var result = info.Execute(execCtx, options);
@@ -74,8 +74,8 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void Execute_NotExecutable()
         {
             var info = new CliCommandInfo(typeof(DummyClass1), null, null, null, null);
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, info);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, info);
 
             Assert.ThrowsException<InvalidOperationException>(() => info.Execute(execCtx, new DummyClass1()));
         }
@@ -84,9 +84,9 @@ namespace MaSch.Console.Cli.Test.Runtime
         public void Execute_WrongContext()
         {
             var info = new CliCommandInfo(typeof(DummyClass1), null, null, null, null);
-            var appMock = Mocks.Create<ICliApplicationBase>();
             var cmdMock = Mocks.Create<ICliCommandInfo>();
-            var execCtx = new CliExecutionContext(appMock.Object, cmdMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cmdMock.Object);
 
             Assert.ThrowsException<ArgumentException>(() => info.Execute(execCtx, new DummyClass1()));
         }
@@ -97,8 +97,8 @@ namespace MaSch.Console.Cli.Test.Runtime
             var executor = Mocks.Create<Executor1>();
             var options = new DummyClass2();
             var info = new CliCommandInfo(typeof(DummyClass2), typeof(Executor1), options, null, executor.Object);
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, info);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, info);
             executor.Setup(x => x.ExecuteCommandAsync(execCtx, options)).Returns(Task.FromResult(4711)).Verifiable(Verifiables, Times.Once());
 
             var result = await info.ExecuteAsync(execCtx, options);
@@ -110,8 +110,8 @@ namespace MaSch.Console.Cli.Test.Runtime
         public async Task ExecuteAsync_NotExecutable()
         {
             var info = new CliCommandInfo(typeof(DummyClass1), null, null, null, null);
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, info);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, info);
 
             await Assert.ThrowsExceptionAsync<InvalidOperationException>(async () => await info.ExecuteAsync(execCtx, new DummyClass1()));
         }
@@ -120,9 +120,9 @@ namespace MaSch.Console.Cli.Test.Runtime
         public async Task ExecuteAsync_WrongContext()
         {
             var info = new CliCommandInfo(typeof(DummyClass1), null, null, null, null);
-            var appMock = Mocks.Create<ICliApplicationBase>();
             var cmdMock = Mocks.Create<ICliCommandInfo>();
-            var execCtx = new CliExecutionContext(appMock.Object, cmdMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cmdMock.Object);
 
             await Assert.ThrowsExceptionAsync<ArgumentException>(async () => await info.ExecuteAsync(execCtx, new DummyClass1()));
         }
@@ -223,7 +223,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         {
         }
 
-        public abstract class Executor1 : ICliCommandExecutor<DummyClass2>, ICliAsyncCommandExecutor<DummyClass2>, ICliValidator<DummyClass2>
+        public abstract class Executor1 : ICliExecutor<DummyClass2>, ICliAsyncExecutor<DummyClass2>, ICliValidator<DummyClass2>
         {
             public delegate bool ValidateDelegate(CliExecutionContext context, DummyClass2 parameters, [MaybeNullWhen(true)] out IEnumerable<CliError>? errors);
 

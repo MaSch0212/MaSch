@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MaSch.Console.Cli.Runtime.Executors
 {
-    internal class DirectExecutor : ICliExecutor
+    internal class DirectExecutor : ICliCommandExecutor
     {
         private readonly Type _commandType;
 
@@ -16,7 +16,7 @@ namespace MaSch.Console.Cli.Runtime.Executors
             _commandType = Guard.NotNull(commandType, nameof(commandType));
 
             if (!IsExecutable(commandType))
-                throw new ArgumentException($"The type {commandType.Name} needs to implement {typeof(ICliCommandExecutor).Name} and/or {typeof(ICliAsyncCommandExecutor).Name}. If this command should not be executable, set the Executable Property on the CliCommandAttribute to false.", nameof(commandType));
+                throw new ArgumentException($"The type {commandType.Name} needs to implement {typeof(ICliExecutable).Name} and/or {typeof(ICliAsyncExecutable).Name}. If this command should not be executable, set the Executable Property on the CliCommandAttribute to false.", nameof(commandType));
         }
 
         public int Execute(CliExecutionContext context, object obj)
@@ -24,12 +24,12 @@ namespace MaSch.Console.Cli.Runtime.Executors
             Guard.NotNull(context, nameof(context));
             Guard.OfType(obj, nameof(obj), false, _commandType);
 
-            if (obj is ICliCommandExecutor executor)
+            if (obj is ICliExecutable executor)
                 return executor.ExecuteCommand(context);
-            else if (obj is ICliAsyncCommandExecutor asyncExecutor)
+            else if (obj is ICliAsyncExecutable asyncExecutor)
                 return asyncExecutor.ExecuteCommandAsync(context).GetAwaiter().GetResult();
             else
-                throw new InvalidOperationException($"The type {obj.GetType().Name} needs to implement {typeof(ICliCommandExecutor).Name} and/or {typeof(ICliAsyncCommandExecutor).Name}. If this command should not be executable, set the Executable Property on the CliCommandAttribute to false.");
+                throw new InvalidOperationException($"The type {obj.GetType().Name} needs to implement {typeof(ICliExecutable).Name} and/or {typeof(ICliAsyncExecutable).Name}. If this command should not be executable, set the Executable Property on the CliCommandAttribute to false.");
         }
 
         public async Task<int> ExecuteAsync(CliExecutionContext context, object obj)
@@ -37,12 +37,12 @@ namespace MaSch.Console.Cli.Runtime.Executors
             Guard.NotNull(context, nameof(context));
             Guard.OfType(obj, nameof(obj), false, _commandType);
 
-            if (obj is ICliAsyncCommandExecutor asyncExecutor)
+            if (obj is ICliAsyncExecutable asyncExecutor)
                 return await asyncExecutor.ExecuteCommandAsync(context);
-            else if (obj is ICliCommandExecutor executor)
+            else if (obj is ICliExecutable executor)
                 return executor.ExecuteCommand(context);
             else
-                throw new InvalidOperationException($"The type {obj.GetType().Name} needs to implement {typeof(ICliCommandExecutor).Name} and/or {typeof(ICliAsyncCommandExecutor).Name}. If this command should not be executable, set the Executable Property on the CliCommandAttribute to false.");
+                throw new InvalidOperationException($"The type {obj.GetType().Name} needs to implement {typeof(ICliExecutable).Name} and/or {typeof(ICliAsyncExecutable).Name}. If this command should not be executable, set the Executable Property on the CliCommandAttribute to false.");
         }
 
         [ExcludeFromCodeCoverage]
@@ -54,6 +54,6 @@ namespace MaSch.Console.Cli.Runtime.Executors
         }
 
         public static bool IsExecutable(Type commandType)
-            => typeof(ICliCommandExecutor).IsAssignableFrom(commandType) || typeof(ICliAsyncCommandExecutor).IsAssignableFrom(commandType);
+            => typeof(ICliExecutable).IsAssignableFrom(commandType) || typeof(ICliAsyncExecutable).IsAssignableFrom(commandType);
     }
 }

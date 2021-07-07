@@ -22,7 +22,7 @@ namespace MaSch.Console.Cli.Runtime
         private readonly List<ICliCommandInfo> _childCommands = new();
         private readonly List<ICliCommandOptionInfo> _options = new();
         private readonly List<ICliCommandValueInfo> _values = new();
-        private readonly ICliExecutor? _executor;
+        private readonly ICliCommandExecutor? _executor;
         private readonly Cache _cache = new();
 
         /// <inheritdoc/>

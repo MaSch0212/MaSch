@@ -1,5 +1,6 @@
 ﻿using MaSch.Console.Cli.Runtime;
 using MaSch.Test;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Moq.Protected;
@@ -15,12 +16,12 @@ namespace MaSch.Console.Cli.Test
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Base class tests")]
     public class CliApplicationBaseTests : TestClassBase
     {
-        public delegate bool TryParseArgumentsDelegate(string[] args, [NotNullWhen(true)] out CliExecutionContext? context, [NotNullWhen(true)] out object? options, out int errorCode);
+        public delegate bool TryParseArgumentsDelegate(IServiceProvider serviceProvider, string[] args, [NotNullWhen(true)] out CliExecutionContext? context, [NotNullWhen(true)] out object? options, out int errorCode);
 
         [TestMethod]
         public void Ctor_Success()
         {
-            var appMock = CreateAppMock();
+            var appMock = CreateAppMock(out _, out _, out _);
 
             var app = appMock.Object;
 
@@ -31,14 +32,14 @@ namespace MaSch.Console.Cli.Test
         [TestMethod]
         public void Ctor_NullChecks()
         {
-            var appMock = Mocks.Create<CliApplicationBase>();
+            var appMock = CreateAppMock(out _, out _, out _);
             appMock.Protected().SetupGet<Type>("ExecutorType").Returns((Type?)null!);
-            appMock.Protected().SetupGet<Type>("GenericExecutorType").Returns(typeof(ICliCommandExecutor<>));
+            appMock.Protected().SetupGet<Type>("GenericExecutorType").Returns(typeof(ICliExecutor<>));
 
             var ex = Assert.ThrowsException<TargetInvocationException>(() => appMock.Object);
             Assert.IsInstanceOfType<ArgumentNullException>(ex.InnerException);
 
-            appMock.Protected().SetupGet<Type>("ExecutorType").Returns(typeof(ICliCommandExecutor));
+            appMock.Protected().SetupGet<Type>("ExecutorType").Returns(typeof(ICliExecutable));
             appMock.Protected().SetupGet<Type>("GenericExecutorType").Returns((Type?)null!);
             ex = Assert.ThrowsException<TargetInvocationException>(() => appMock.Object);
             Assert.IsInstanceOfType<ArgumentNullException>(ex.InnerException);
@@ -47,8 +48,8 @@ namespace MaSch.Console.Cli.Test
         [TestMethod]
         public void Ctor_WrongGenericExecutorType()
         {
-            var appMock = Mocks.Create<CliApplicationBase>();
-            appMock.Protected().SetupGet<Type>("ExecutorType").Returns(typeof(ICliCommandExecutor));
+            var appMock = CreateAppMock(out _, out _, out _);
+            appMock.Protected().SetupGet<Type>("ExecutorType").Returns(typeof(ICliExecutable));
             appMock.Protected().SetupGet<Type>("GenericExecutorType").Returns(typeof(Action));
 
             var ex = Assert.ThrowsException<TargetInvocationException>(() => appMock.Object);
@@ -62,185 +63,44 @@ namespace MaSch.Console.Cli.Test
         [TestMethod]
         public void Ctor_WithOptions()
         {
-            var options = new CliApplicationOptions();
-            var appMock = Mocks.Create<CliApplicationBase>(options);
-            appMock.Protected().SetupGet<Type>("ExecutorType").Returns(typeof(ICliCommandExecutor));
-            appMock.Protected().SetupGet<Type>("GenericExecutorType").Returns(typeof(ICliCommandExecutor<>));
+            var appMock = CreateAppMock(out _, out var oMock, out _);
+            appMock.Protected().SetupGet<Type>("ExecutorType").Returns(typeof(ICliExecutable));
+            appMock.Protected().SetupGet<Type>("GenericExecutorType").Returns(typeof(ICliExecutor<>));
 
             var app = appMock.Object;
 
             Assert.IsNotNull(app);
-            Assert.AreSame(options, app.Options);
-        }
-
-        [TestMethod]
-        public void CommandFactory()
-        {
-            var appMock = CreateAppMock();
-            var factoryMock = Mocks.Create<ICliCommandInfoFactory>();
-
-            appMock.Object.CommandFactory = factoryMock.Object;
-
-            Assert.AreSame(factoryMock.Object, appMock.Object.CommandFactory);
-
-            appMock.Object.CommandFactory = null;
-
-            Assert.IsNotNull(appMock.Object.CommandFactory);
-            Assert.IsInstanceOfType<CliCommandInfoFactory>(appMock.Object.CommandFactory);
-        }
-
-        [TestMethod]
-        public void Parser()
-        {
-            var appMock = CreateAppMock();
-            var parserMock = Mocks.Create<ICliArgumentParser>();
-
-            appMock.Object.Parser = parserMock.Object;
-
-            Assert.AreSame(parserMock.Object, appMock.Object.Parser);
-
-            appMock.Object.Parser = null;
-
-            Assert.IsNotNull(appMock.Object.Parser);
-            Assert.IsInstanceOfType<CliArgumentParser>(appMock.Object.Parser);
-        }
-
-        [TestMethod]
-        public void HelpPage()
-        {
-            var appMock = CreateAppMock();
-            var helpPageMock = Mocks.Create<ICliHelpPage>();
-
-            appMock.Object.HelpPage = helpPageMock.Object;
-
-            Assert.AreSame(helpPageMock.Object, appMock.Object.HelpPage);
-
-            appMock.Object.HelpPage = null;
-
-            Assert.IsNotNull(appMock.Object.HelpPage);
-            Assert.IsInstanceOfType<CliHelpPage>(appMock.Object.HelpPage);
+            Assert.AreSame(oMock.Object, app.Options);
         }
 
         [TestMethod]
         public void Commands()
         {
-            var appMock = CreateAppMock();
+            var appMock = CreateAppMock(out _, out _, out var commandsMock);
+            var rcMock = Mocks.Create<IReadOnlyCliCommandInfoCollection>();
+            commandsMock.Setup(x => x.AsReadOnly()).Returns(rcMock.Object).Verifiable(Verifiables, Times.Once());
 
             var commands1 = appMock.Object.Commands;
-
-            Assert.IsNotInstanceOfType<ICliCommandInfoCollection>(commands1);
-            Assert.IsNotInstanceOfType<ICollection<ICliCommandInfo>>(commands1);
+            Assert.AreSame(rcMock.Object, commands1);
 
             var commands2 = appMock.Object.Commands;
-
-            Assert.AreSame(commands1, commands2);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_Command()
-        {
-            var appMock = CreateAppMock(out var collectionMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            appMock.Object.RegisterCommand(commandMock.Object);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType()
-        {
-            var appMock = CreateAppMock(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            appMock.Object.RegisterCommand(commandTypeMock.Object);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType_OptionsInstance()
-        {
-            var appMock = CreateAppMock(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var optionsInstance = new object();
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, optionsInstance)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            appMock.Object.RegisterCommand(commandTypeMock.Object, optionsInstance);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType_ExecutorType()
-        {
-            var appMock = CreateAppMock(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var executorTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, executorTypeMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            appMock.Object.RegisterCommand(commandTypeMock.Object, executorTypeMock.Object);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType_OptionsInstance_ExecutorType()
-        {
-            var appMock = CreateAppMock(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var optionsInstance = new object();
-            var executorTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, optionsInstance, executorTypeMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            appMock.Object.RegisterCommand(commandTypeMock.Object, optionsInstance, executorTypeMock.Object);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType_ExecutorType_ExecutorInstance()
-        {
-            var appMock = CreateAppMock(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var executorTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var executorInstance = new object();
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, executorTypeMock.Object, executorInstance)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            appMock.Object.RegisterCommand(commandTypeMock.Object, executorTypeMock.Object, executorInstance);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType_OptionsInstance_ExecutorType_ExecutorInstance()
-        {
-            var appMock = CreateAppMock(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var executorTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var optionsInstance = new object();
-            var executorInstance = new object();
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, optionsInstance, executorTypeMock.Object, executorInstance)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            appMock.Object.RegisterCommand(commandTypeMock.Object, optionsInstance, executorTypeMock.Object, executorInstance);
+            Assert.AreSame(rcMock.Object, commands2);
         }
 
         [TestMethod]
         public void TryParseArguments_Success()
         {
-            var appMock = CreateAppMockForParse(out var parserMock, out _);
+            var appMock = CreateAppMockForParse(out var spMock, out _, out _, out var parserMock, out _);
             var args = new[] { "blub" };
             var commandMock = Mocks.Create<ICliCommandInfo>();
-            var execCtx = new CliExecutionContext(appMock.Object, commandMock.Object);
+            var execCtx = new CliExecutionContext(Mocks.Create<IServiceProvider>().Object, commandMock.Object);
             var optionsInstance = new object();
             parserMock
-                .Setup(x => x.Parse(appMock.Object, args))
+                .Setup(x => x.Parse(args))
                 .Returns(new CliArgumentParserResult(execCtx, optionsInstance))
                 .Verifiable(Verifiables, Times.Once());
 
-            var result = appMock.Object.TryParseArguments(args, out var context, out var options, out var errorCode);
+            var result = appMock.Object.TryParseArguments(spMock.Object, args, out var context, out var options, out var errorCode);
 
             Assert.IsTrue(result);
             Assert.AreSame(execCtx, context);
@@ -251,21 +111,21 @@ namespace MaSch.Console.Cli.Test
         [TestMethod]
         public void TryParseArguments_Fail_HelpPage()
         {
-            var appMock = CreateAppMockForParse(out var parserMock, out var helpPageMock);
+            var appMock = CreateAppMockForParse(out var spMock, out _, out _, out var parserMock, out var helpPageMock);
             var errors = new[] { new CliError(CliErrorType.VersionRequested) };
             var args = new[] { "blub" };
             var commandMock = Mocks.Create<ICliCommandInfo>();
             var optionsInstance = new object();
             parserMock
-                .Setup(x => x.Parse(appMock.Object, args))
+                .Setup(x => x.Parse(args))
                 .Returns(new CliArgumentParserResult(errors))
                 .Verifiable(Verifiables, Times.Once());
             helpPageMock
-                .Setup(x => x.Write(appMock.Object, errors))
+                .Setup(x => x.Write(errors))
                 .Returns(true)
                 .Verifiable(Verifiables, Times.Once());
 
-            var result = appMock.Object.TryParseArguments(args, out var command, out var options, out var errorCode);
+            var result = appMock.Object.TryParseArguments(spMock.Object, args, out var command, out var options, out var errorCode);
 
             Assert.IsFalse(result);
             Assert.IsNull(command);
@@ -276,22 +136,22 @@ namespace MaSch.Console.Cli.Test
         [TestMethod]
         public void TryParseArguments_Fail_ParseError()
         {
-            var appMock = CreateAppMockForParse(out var parserMock, out var helpPageMock);
+            var appMock = CreateAppMockForParse(out var spMock, out var oMock, out _, out var parserMock, out var helpPageMock);
             var errors = new[] { new CliError("My custom error") };
             var args = new[] { "blub" };
             var commandMock = Mocks.Create<ICliCommandInfo>();
             var optionsInstance = new object();
             parserMock
-                .Setup(x => x.Parse(appMock.Object, args))
+                .Setup(x => x.Parse(args))
                 .Returns(new CliArgumentParserResult(errors))
                 .Verifiable(Verifiables, Times.Once());
             helpPageMock
-                .Setup(x => x.Write(appMock.Object, errors))
+                .Setup(x => x.Write(errors))
                 .Returns(false)
                 .Verifiable(Verifiables, Times.Once());
-            appMock.Object.Options.ParseErrorExitCode = 4711;
+            oMock.Setup(x => x.ParseErrorExitCode).Returns(4711);
 
-            var result = appMock.Object.TryParseArguments(args, out var command, out var options, out var errorCode);
+            var result = appMock.Object.TryParseArguments(spMock.Object, args, out var command, out var options, out var errorCode);
 
             Assert.IsFalse(result);
             Assert.IsNull(command);
@@ -299,51 +159,40 @@ namespace MaSch.Console.Cli.Test
             Assert.AreEqual(4711, errorCode);
         }
 
-        private Mock<CliApplicationBase> CreateAppMock()
-        {
-            var appMock = Mocks.Create<CliApplicationBase>();
-            SetupAppMock(appMock);
-            return appMock;
-        }
+        private Mock<CliApplicationBase> CreateAppMock(out Mock<IServiceProvider> serviceProviderMock, out Mock<ICliApplicationOptions> optionsMock, out Mock<ICliCommandInfoCollection> commandsMock)
+            => CreateAppMock<CliApplicationBase>(out serviceProviderMock, out optionsMock, out commandsMock);
 
-        private Mock<CliApplicationBase> CreateAppMock(out Mock<ICliCommandInfoCollection> collectionMock)
+        private Mock<TestCliApplicationBase> CreateAppMockForParse(out Mock<IServiceProvider> serviceProviderMock, out Mock<ICliApplicationOptions> optionsMock, out Mock<ICliCommandInfoCollection> commandsMock, out Mock<ICliArgumentParser> parserMock, out Mock<ICliHelpPage> helpPageMock)
         {
-            collectionMock = Mocks.Create<ICliCommandInfoCollection>();
-            var appMock = Mocks.Create<CliApplicationBase>(new CliApplicationOptions(), collectionMock.Object);
-            SetupAppMock(appMock);
-            return appMock;
-        }
-
-        private Mock<CliApplicationBase> CreateAppMock(out Mock<ICliCommandInfoCollection> collectionMock, out Mock<ICliCommandInfoFactory> commandFactoryMock)
-        {
-            var appMock = CreateAppMock(out collectionMock);
-            commandFactoryMock = Mocks.Create<ICliCommandInfoFactory>();
-            appMock.Object.CommandFactory = commandFactoryMock.Object;
-            return appMock;
-        }
-
-        private Mock<TestCliApplicationBase> CreateAppMockForParse(out Mock<ICliArgumentParser> parserMock, out Mock<ICliHelpPage> helpPageMock)
-        {
-            var appMock = Mocks.Create<TestCliApplicationBase>();
-            SetupAppMock(appMock);
+            var appMock = CreateAppMock<TestCliApplicationBase>(out serviceProviderMock, out optionsMock, out commandsMock);
             parserMock = Mocks.Create<ICliArgumentParser>();
             helpPageMock = Mocks.Create<ICliHelpPage>();
-            appMock.Object.Parser = parserMock.Object;
-            appMock.Object.HelpPage = helpPageMock.Object;
+            serviceProviderMock.Setup(x => x.GetService(typeof(ICliArgumentParser))).Returns(parserMock.Object);
+            serviceProviderMock.Setup(x => x.GetService(typeof(ICliHelpPage))).Returns(helpPageMock.Object);
             return appMock;
         }
 
-        private static void SetupAppMock<T>(Mock<T> appMock)
+        private Mock<T> CreateAppMock<T>(out Mock<IServiceProvider> serviceProviderMock, out Mock<ICliApplicationOptions> optionsMock, out Mock<ICliCommandInfoCollection> commandsMock)
             where T : CliApplicationBase
         {
-            appMock.Protected().SetupGet<Type>("ExecutorType").Returns(typeof(ICliCommandExecutor));
-            appMock.Protected().SetupGet<Type>("GenericExecutorType").Returns(typeof(ICliCommandExecutor<>));
+            serviceProviderMock = Mocks.Create<IServiceProvider>();
+            optionsMock = Mocks.Create<ICliApplicationOptions>();
+            commandsMock = Mocks.Create<ICliCommandInfoCollection>();
+            var appMock = Mocks.Create<T>(serviceProviderMock.Object, optionsMock.Object, commandsMock.Object);
+            appMock.Protected().SetupGet<Type>("ExecutorType").Returns(typeof(ICliExecutable));
+            appMock.Protected().SetupGet<Type>("GenericExecutorType").Returns(typeof(ICliExecutor<>));
+            return appMock;
         }
 
         public abstract class TestCliApplicationBase : CliApplicationBase
         {
-            public new bool TryParseArguments(string[] args, [NotNullWhen(true)] out CliExecutionContext? context, [NotNullWhen(true)] out object? options, out int errorCode)
-                => base.TryParseArguments(args, out context, out options, out errorCode);
+            protected TestCliApplicationBase(IServiceProvider serviceProvider, ICliApplicationOptions options, ICliCommandInfoCollection commandsCollection)
+                : base(serviceProvider, options, commandsCollection)
+            {
+            }
+
+            public new bool TryParseArguments(IServiceProvider serviceProvider, string[] args, [NotNullWhen(true)] out CliExecutionContext? context, [NotNullWhen(true)] out object? options, out int errorCode)
+                => base.TryParseArguments(serviceProvider, args, out context, out options, out errorCode);
         }
     }
 
@@ -351,257 +200,17 @@ namespace MaSch.Console.Cli.Test
     public class CliApplicationTests : TestClassBase
     {
         [TestMethod]
-        public void Ctor()
-        {
-            var app = new CliApplication();
-
-            Assert.IsNotNull(app.Options);
-        }
-
-        [TestMethod]
-        public void Ctor_Options_Null()
-        {
-            var app = new CliApplication(null);
-
-            Assert.IsNotNull(app.Options);
-        }
-
-        [TestMethod]
-        public void Ctor_Options()
-        {
-            var options = new Mock<CliApplicationOptions>();
-
-            var app = new CliApplication(options.Object);
-
-            Assert.AreSame(options.Object, app.Options);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_Command()
-        {
-            var app = CreateApp(out var collectionMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(commandMock.Object);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(commandTypeMock.Object);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType_OptionsInstance()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var optionsInstance = new object();
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, optionsInstance)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(commandTypeMock.Object, optionsInstance);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType_ExecutorType()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var executorTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, executorTypeMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(commandTypeMock.Object, executorTypeMock.Object);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType_OptionsInstance_ExecutorType()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var optionsInstance = new object();
-            var executorTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, optionsInstance, executorTypeMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(commandTypeMock.Object, optionsInstance, executorTypeMock.Object);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType_ExecutorType_ExecutorInstance()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var executorTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var executorInstance = new object();
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, executorTypeMock.Object, executorInstance)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(commandTypeMock.Object, executorTypeMock.Object, executorInstance);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType_OptionsInstance_ExecutorType_ExecutorInstance()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var executorTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var optionsInstance = new object();
-            var executorInstance = new object();
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, optionsInstance, executorTypeMock.Object, executorInstance)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(commandTypeMock.Object, optionsInstance, executorTypeMock.Object, executorInstance);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType_ExecutorFunction()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var executorFunctionMock = Mocks.Create<Func<CliExecutionContext, object, int>>();
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, executorFunctionMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(commandTypeMock.Object, executorFunctionMock.Object);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType_OptionsInstance_ExecutorFunction()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var optionsInstance = new object();
-            var executorFunctionMock = Mocks.Create<Func<CliExecutionContext, object, int>>();
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, optionsInstance, executorFunctionMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(commandTypeMock.Object, optionsInstance, executorFunctionMock.Object);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_TCommand_ExecutorFunction()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var executorFunctionMock = Mocks.Create<Func<CliExecutionContext, DummyClass1, int>>();
-            commandFactoryMock.Setup(x => x.Create(executorFunctionMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(executorFunctionMock.Object);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_TCommand_OptionsInstance_ExecutorFunction()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var optionsInstance = new DummyClass1();
-            var executorFunctionMock = Mocks.Create<Func<CliExecutionContext, DummyClass1, int>>();
-            commandFactoryMock.Setup(x => x.Create(optionsInstance, executorFunctionMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(optionsInstance, executorFunctionMock.Object);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_TCommand()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            commandFactoryMock.Setup(x => x.Create<DummyClass2>()).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand<DummyClass2>();
-        }
-
-        [TestMethod]
-        public void RegisterCommand_TCommand_OptionsInstance()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var optionsInstance = new DummyClass2();
-            commandFactoryMock.Setup(x => x.Create(optionsInstance)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(optionsInstance);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_TCommand_TExecutor()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            commandFactoryMock.Setup(x => x.Create<DummyClass1, DummyClass3>()).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand<DummyClass1, DummyClass3>();
-        }
-
-        [TestMethod]
-        public void RegisterCommand_TCommand_TExecutor_ExecutorInstance()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var executorInstance = new DummyClass3();
-            commandFactoryMock.Setup(x => x.Create<DummyClass1, DummyClass3>(executorInstance)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand<DummyClass1, DummyClass3>(executorInstance);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_TCommand_TExecutor_OptionsInstance()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var optionsInstance = new DummyClass1();
-            commandFactoryMock.Setup(x => x.Create<DummyClass1, DummyClass3>(optionsInstance)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand<DummyClass1, DummyClass3>(optionsInstance);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_TCommand_TExecutor_OptionsInstance_ExecutorInstance()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var optionsInstance = new DummyClass1();
-            var executorInstance = new DummyClass3();
-            commandFactoryMock.Setup(x => x.Create(optionsInstance, executorInstance)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(optionsInstance, executorInstance);
-        }
-
-        [TestMethod]
         public void Run_Success()
         {
-            var appMock = Mocks.Create<CliApplication>();
-            SetupAppMock(appMock);
+            var appMock = CreateAppMock(out var spMock, out _, out _, out var scopeMock, out var sspMock);
+            scopeMock.Setup(x => x.Dispose()).Verifiable(Verifiables, Times.Once());
             var args = new[] { "blub" };
             var commandMock = Mocks.Create<ICliCommandInfo>();
-            var execCtx = new CliExecutionContext(appMock.Object, commandMock.Object);
+            var execCtx = new CliExecutionContext(spMock.Object, commandMock.Object);
             var options = new object();
             appMock.Protected()
-                .Setup<bool>("TryParseArguments", args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
-                .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((string[] a, out CliExecutionContext? c, out object? o, out int e) =>
+                .Setup<bool>("TryParseArguments", sspMock.Object, args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
+                .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((IServiceProvider serviceProvider, string[] a, out CliExecutionContext? c, out object? o, out int e) =>
                 {
                     c = execCtx;
                     o = options;
@@ -619,12 +228,12 @@ namespace MaSch.Console.Cli.Test
         [TestMethod]
         public void Run_Fail()
         {
-            var appMock = Mocks.Create<CliApplication>();
-            SetupAppMock(appMock);
+            var appMock = CreateAppMock(out var spMock, out _, out _, out var scopeMock, out var sspMock);
+            scopeMock.Setup(x => x.Dispose()).Verifiable(Verifiables, Times.Once());
             var args = new[] { "blub" };
             appMock.Protected()
-                .Setup<bool>("TryParseArguments", args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
-                .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((string[] a, out CliExecutionContext? c, out object? o, out int e) =>
+                .Setup<bool>("TryParseArguments", sspMock.Object, args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
+                .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((IServiceProvider serviceProvider, string[] a, out CliExecutionContext? c, out object? o, out int e) =>
                 {
                     c = null;
                     o = null;
@@ -638,47 +247,27 @@ namespace MaSch.Console.Cli.Test
             Assert.AreEqual(4711, result);
         }
 
-        private CliApplication CreateApp(out Mock<ICliCommandInfoCollection> collectionMock)
+        private Mock<CliApplication> CreateAppMock(
+            out Mock<IServiceProvider> serviceProviderMock,
+            out Mock<CliApplicationOptions> optionsMock,
+            out Mock<ICliCommandInfoCollection> commandsMock,
+            out Mock<IServiceScope> serviceScopeMock,
+            out Mock<IServiceProvider> scopedServiceProviderMock)
         {
-            collectionMock = Mocks.Create<ICliCommandInfoCollection>();
-            var po = new PrivateObject(typeof(CliApplication), null, collectionMock.Object);
-            return (CliApplication)po.Target;
-        }
-
-        private CliApplication CreateApp(out Mock<ICliCommandInfoCollection> collectionMock, out Mock<ICliCommandInfoFactory> commandFactoryMock)
-        {
-            commandFactoryMock = Mocks.Create<ICliCommandInfoFactory>();
-            var result = CreateApp(out collectionMock);
-            result.CommandFactory = commandFactoryMock.Object;
-            return result;
-        }
-
-        private static void SetupAppMock(Mock<CliApplication> appMock)
-        {
+            serviceProviderMock = Mocks.Create<IServiceProvider>();
+            optionsMock = Mocks.Create<CliApplicationOptions>(MockBehavior.Loose);
+            optionsMock.CallBase = true;
+            commandsMock = Mocks.Create<ICliCommandInfoCollection>();
+            scopedServiceProviderMock = Mocks.Create<IServiceProvider>();
+            serviceScopeMock = Mocks.Create<IServiceScope>();
+            var scopeFactoryMock = Mocks.Create<IServiceScopeFactory>();
+            var appMock = Mocks.Create<CliApplication>(serviceProviderMock.Object, optionsMock.Object, commandsMock.Object);
             appMock.Protected().SetupGet<Type>("ExecutorType").CallBase();
             appMock.Protected().SetupGet<Type>("GenericExecutorType").CallBase();
-        }
-
-        public class DummyClass1
-        {
-        }
-
-        public class DummyClass2 : ICliCommandExecutor
-        {
-            [ExcludeFromCodeCoverage]
-            public int ExecuteCommand(CliExecutionContext context)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public class DummyClass3 : ICliCommandExecutor<DummyClass1>
-        {
-            [ExcludeFromCodeCoverage]
-            public int ExecuteCommand(CliExecutionContext context, DummyClass1 parameters)
-            {
-                throw new NotImplementedException();
-            }
+            serviceProviderMock.Setup(x => x.GetService(typeof(IServiceScopeFactory))).Returns(scopeFactoryMock.Object);
+            scopeFactoryMock.Setup(x => x.CreateScope()).Returns(serviceScopeMock.Object);
+            serviceScopeMock.Setup(x => x.ServiceProvider).Returns(scopedServiceProviderMock.Object);
+            return appMock;
         }
     }
 
@@ -686,257 +275,17 @@ namespace MaSch.Console.Cli.Test
     public class CliAsyncApplicationTests : TestClassBase
     {
         [TestMethod]
-        public void Ctor()
-        {
-            var app = new CliAsyncApplication();
-
-            Assert.IsNotNull(app.Options);
-        }
-
-        [TestMethod]
-        public void Ctor_Options_Null()
-        {
-            var app = new CliAsyncApplication(null);
-
-            Assert.IsNotNull(app.Options);
-        }
-
-        [TestMethod]
-        public void Ctor_Options()
-        {
-            var options = new Mock<CliApplicationOptions>();
-
-            var app = new CliAsyncApplication(options.Object);
-
-            Assert.AreSame(options.Object, app.Options);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_Command()
-        {
-            var app = CreateApp(out var collectionMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(commandMock.Object);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(commandTypeMock.Object);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType_OptionsInstance()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var optionsInstance = new object();
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, optionsInstance)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(commandTypeMock.Object, optionsInstance);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType_ExecutorType()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var executorTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, executorTypeMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(commandTypeMock.Object, executorTypeMock.Object);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType_OptionsInstance_ExecutorType()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var optionsInstance = new object();
-            var executorTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, optionsInstance, executorTypeMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(commandTypeMock.Object, optionsInstance, executorTypeMock.Object);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType_ExecutorType_ExecutorInstance()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var executorTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var executorInstance = new object();
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, executorTypeMock.Object, executorInstance)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(commandTypeMock.Object, executorTypeMock.Object, executorInstance);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType_OptionsInstance_ExecutorType_ExecutorInstance()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var executorTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var optionsInstance = new object();
-            var executorInstance = new object();
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, optionsInstance, executorTypeMock.Object, executorInstance)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(commandTypeMock.Object, optionsInstance, executorTypeMock.Object, executorInstance);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType_ExecutorFunction()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var executorFunctionMock = Mocks.Create<Func<CliExecutionContext, object, Task<int>>>();
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, executorFunctionMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(commandTypeMock.Object, executorFunctionMock.Object);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_CommandType_OptionsInstance_ExecutorFunction()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var commandTypeMock = Mocks.Create<Type>(MockBehavior.Loose);
-            var optionsInstance = new object();
-            var executorFunctionMock = Mocks.Create<Func<CliExecutionContext, object, Task<int>>>();
-            commandFactoryMock.Setup(x => x.Create(commandTypeMock.Object, optionsInstance, executorFunctionMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(commandTypeMock.Object, optionsInstance, executorFunctionMock.Object);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_TCommand_ExecutorFunction()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var executorFunctionMock = Mocks.Create<Func<CliExecutionContext, DummyClass1, Task<int>>>();
-            commandFactoryMock.Setup(x => x.Create(executorFunctionMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(executorFunctionMock.Object);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_TCommand_OptionsInstance_ExecutorFunction()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var optionsInstance = new DummyClass1();
-            var executorFunctionMock = Mocks.Create<Func<CliExecutionContext, DummyClass1, Task<int>>>();
-            commandFactoryMock.Setup(x => x.Create(optionsInstance, executorFunctionMock.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(optionsInstance, executorFunctionMock.Object);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_TCommand()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            commandFactoryMock.Setup(x => x.Create<DummyClass2>()).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand<DummyClass2>();
-        }
-
-        [TestMethod]
-        public void RegisterCommand_TCommand_OptionsInstance()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var optionsInstance = new DummyClass2();
-            commandFactoryMock.Setup(x => x.Create(optionsInstance)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(optionsInstance);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_TCommand_TExecutor()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            commandFactoryMock.Setup(x => x.Create<DummyClass1, DummyClass3>()).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand<DummyClass1, DummyClass3>();
-        }
-
-        [TestMethod]
-        public void RegisterCommand_TCommand_TExecutor_ExecutorInstance()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var executorInstance = new DummyClass3();
-            commandFactoryMock.Setup(x => x.Create<DummyClass1, DummyClass3>(executorInstance)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand<DummyClass1, DummyClass3>(executorInstance);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_TCommand_TExecutor_OptionsInstance()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var optionsInstance = new DummyClass1();
-            commandFactoryMock.Setup(x => x.Create<DummyClass1, DummyClass3>(optionsInstance)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand<DummyClass1, DummyClass3>(optionsInstance);
-        }
-
-        [TestMethod]
-        public void RegisterCommand_TCommand_TExecutor_OptionsInstance_ExecutorInstance()
-        {
-            var app = CreateApp(out var collectionMock, out var commandFactoryMock);
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var optionsInstance = new DummyClass1();
-            var executorInstance = new DummyClass3();
-            commandFactoryMock.Setup(x => x.Create(optionsInstance, executorInstance)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
-            collectionMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
-
-            app.RegisterCommand(optionsInstance, executorInstance);
-        }
-
-        [TestMethod]
         public async Task RunAsync_Success()
         {
-            var appMock = Mocks.Create<CliAsyncApplication>();
-            SetupAppMock(appMock);
+            var appMock = CreateAppMock(out var spMock, out _, out _, out var scopeMock, out var sspMock);
+            scopeMock.Setup(x => x.Dispose()).Verifiable(Verifiables, Times.Once());
             var args = new[] { "blub" };
             var commandMock = Mocks.Create<ICliCommandInfo>();
-            var execCtx = new CliExecutionContext(appMock.Object, commandMock.Object);
+            var execCtx = new CliExecutionContext(spMock.Object, commandMock.Object);
             var options = new object();
             appMock.Protected()
-                .Setup<bool>("TryParseArguments", args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
-                .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((string[] a, out CliExecutionContext? c, out object? o, out int e) =>
+                .Setup<bool>("TryParseArguments", sspMock.Object, args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
+                .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((IServiceProvider serviceProvider, string[] a, out CliExecutionContext? c, out object? o, out int e) =>
                 {
                     c = execCtx;
                     o = options;
@@ -954,12 +303,12 @@ namespace MaSch.Console.Cli.Test
         [TestMethod]
         public async Task RunAsync_Fail()
         {
-            var appMock = Mocks.Create<CliAsyncApplication>();
-            SetupAppMock(appMock);
+            var appMock = CreateAppMock(out var spMock, out _, out _, out var scopeMock, out var sspMock);
+            scopeMock.Setup(x => x.Dispose()).Verifiable(Verifiables, Times.Once());
             var args = new[] { "blub" };
             appMock.Protected()
-                .Setup<bool>("TryParseArguments", args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
-                .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((string[] a, out CliExecutionContext? c, out object? o, out int e) =>
+                .Setup<bool>("TryParseArguments", sspMock.Object, args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
+                .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((IServiceProvider serviceProvider, string[] a, out CliExecutionContext? c, out object? o, out int e) =>
                 {
                     c = null;
                     o = null;
@@ -973,47 +322,27 @@ namespace MaSch.Console.Cli.Test
             Assert.AreEqual(4711, result);
         }
 
-        private CliAsyncApplication CreateApp(out Mock<ICliCommandInfoCollection> collectionMock)
+        private Mock<CliAsyncApplication> CreateAppMock(
+            out Mock<IServiceProvider> serviceProviderMock,
+            out Mock<CliApplicationOptions> optionsMock,
+            out Mock<ICliCommandInfoCollection> commandsMock,
+            out Mock<IServiceScope> serviceScopeMock,
+            out Mock<IServiceProvider> scopedServiceProviderMock)
         {
-            collectionMock = Mocks.Create<ICliCommandInfoCollection>();
-            var po = new PrivateObject(typeof(CliAsyncApplication), null, collectionMock.Object);
-            return (CliAsyncApplication)po.Target;
-        }
-
-        private CliAsyncApplication CreateApp(out Mock<ICliCommandInfoCollection> collectionMock, out Mock<ICliCommandInfoFactory> commandFactoryMock)
-        {
-            commandFactoryMock = Mocks.Create<ICliCommandInfoFactory>();
-            var result = CreateApp(out collectionMock);
-            result.CommandFactory = commandFactoryMock.Object;
-            return result;
-        }
-
-        private static void SetupAppMock(Mock<CliAsyncApplication> appMock)
-        {
+            serviceProviderMock = Mocks.Create<IServiceProvider>();
+            optionsMock = Mocks.Create<CliApplicationOptions>(MockBehavior.Loose);
+            optionsMock.CallBase = true;
+            commandsMock = Mocks.Create<ICliCommandInfoCollection>();
+            scopedServiceProviderMock = Mocks.Create<IServiceProvider>();
+            serviceScopeMock = Mocks.Create<IServiceScope>();
+            var scopeFactoryMock = Mocks.Create<IServiceScopeFactory>();
+            var appMock = Mocks.Create<CliAsyncApplication>(serviceProviderMock.Object, optionsMock.Object, commandsMock.Object);
             appMock.Protected().SetupGet<Type>("ExecutorType").CallBase();
             appMock.Protected().SetupGet<Type>("GenericExecutorType").CallBase();
-        }
-
-        public class DummyClass1
-        {
-        }
-
-        public class DummyClass2 : ICliAsyncCommandExecutor
-        {
-            [ExcludeFromCodeCoverage]
-            public Task<int> ExecuteCommandAsync(CliExecutionContext context)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public class DummyClass3 : ICliAsyncCommandExecutor<DummyClass1>
-        {
-            [ExcludeFromCodeCoverage]
-            public Task<int> ExecuteCommandAsync(CliExecutionContext context, DummyClass1 parameters)
-            {
-                throw new NotImplementedException();
-            }
+            serviceProviderMock.Setup(x => x.GetService(typeof(IServiceScopeFactory))).Returns(scopeFactoryMock.Object);
+            scopeFactoryMock.Setup(x => x.CreateScope()).Returns(serviceScopeMock.Object);
+            serviceScopeMock.Setup(x => x.ServiceProvider).Returns(scopedServiceProviderMock.Object);
+            return appMock;
         }
     }
 }

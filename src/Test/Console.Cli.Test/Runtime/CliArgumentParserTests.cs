@@ -1,4 +1,5 @@
 ﻿using MaSch.Console.Cli.Runtime;
+using MaSch.Console.Cli.Runtime.Validators;
 using MaSch.Core.Extensions;
 using MaSch.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -24,11 +25,13 @@ namespace MaSch.Console.Cli.Test.Runtime
             set => Cache.SetValue(value);
         }
 
-        private CliArgumentParser Parser => Cache.GetValue(() => new CliArgumentParser())!;
+        private Mock<IServiceProvider> ServiceProvider => Cache.GetValue(() => Mocks.Create<IServiceProvider>())!;
         private List<ICliCommandInfo> Commands => Cache.GetValue(() => new List<ICliCommandInfo>())!;
         private Mock<ICliCommandInfoCollection> CommandsMock => Cache.GetValue(() => CreateCommandsMock(Commands))!;
         private CliApplicationOptions AppOptions => Cache.GetValue(() => new CliApplicationOptions())!;
         private Mock<ICliApplicationBase> ApplicationMock => Cache.GetValue(() => CreateApplicationMock())!;
+        private List<ICliValidator<object>> Validators => Cache.GetValue(() => new List<ICliValidator<object>>())!;
+        private CliArgumentParser Parser => Cache.GetValue(() => new CliArgumentParser(ApplicationMock.Object, Validators, ServiceProvider.Object))!;
 
         [TestMethod]
         [DataRow(true, DisplayName = "Args: null")]
@@ -1164,6 +1167,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         [TestMethod]
         public void Parse_RequiredOption_Missing()
         {
+            Validators.Add(new RequiredValidator());
             var obj = new DummyClass1();
             var option = CreateCliCommandOptionMock<object>(new[] { "my-option" }, isRequired: true, hasValue: false);
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option.Object }, optionsInstance: obj);
@@ -1180,6 +1184,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         [TestMethod]
         public void Parse_RequiredValueMissing()
         {
+            Validators.Add(new RequiredValidator());
             var obj = new DummyClass1();
             var value = CreateCliCommandValueMock<object>(0, isRequired: true, hasValue: false);
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, values: new[] { value.Object }, optionsInstance: obj);
@@ -1201,7 +1206,7 @@ namespace MaSch.Console.Cli.Test.Runtime
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, optionsInstance: obj);
             SetupValidation(validator, command.Object, obj, false, new[] { new CliError("My Error") }).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
-            Parser.AddValidator(validator.Object);
+            Validators.Add(validator.Object);
 
             var result = CallParse("my-command");
 
@@ -1257,7 +1262,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         }
 
         private CliArgumentParserResult CallParse(params string[] args)
-            => Parser.Parse(ApplicationMock.Object, args);
+            => Parser.Parse(args);
 
         private Mock<ICliCommandInfoCollection> CreateCommandsMock(ICollection<ICliCommandInfo> commands)
         {
@@ -1304,6 +1309,8 @@ namespace MaSch.Console.Cli.Test.Runtime
             command.Setup(x => x.ParserOptions).Returns(new CliParserOptions());
             command.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
             SetupValidation(command.As<ICliValidator<object>>(), true, null);
+            var instance = Activator.CreateInstance<TCommandType>();
+            ServiceProvider.Setup(x => x.GetService(typeof(TCommandType))).Returns(instance);
             return command;
         }
 

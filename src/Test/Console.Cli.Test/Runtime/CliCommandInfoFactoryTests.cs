@@ -13,7 +13,7 @@ namespace MaSch.Console.Cli.Test.Runtime
     [TestClass]
     public class CliCommandInfoFactoryTests : TestClassBase
     {
-        private CliCommandInfoFactory Factory => Cache.GetValue(() => new CliCommandInfoFactory())!;
+        private CliCommandFactory Factory => Cache.GetValue(() => new CliCommandFactory())!;
 
         [TestMethod]
         public void From_TCommand()
@@ -371,7 +371,7 @@ namespace MaSch.Console.Cli.Test.Runtime
         }
 
         [CliCommand("Command2", IsDefault = true, HelpOrder = 4711, HelpText = "My Help Text")]
-        public class DummyClass2 : ICliCommandExecutor
+        public class DummyClass2 : ICliExecutable
         {
             [ExcludeFromCodeCoverage]
             public int ExecuteCommand(CliExecutionContext context)
@@ -410,12 +410,12 @@ namespace MaSch.Console.Cli.Test.Runtime
         }
 
         [CliCommand("Command9", IsDefault = true, HelpOrder = 4711, HelpText = "My Help Text")]
-        private abstract class DummyClass9 : ICliCommandExecutor
+        private abstract class DummyClass9 : ICliExecutable
         {
             public abstract int ExecuteCommand(CliExecutionContext context);
         }
 
-        public abstract class Executor1 : ICliCommandExecutor<DummyClass2>, ICliAsyncCommandExecutor<DummyClass2>, ICliValidator<DummyClass2>
+        public abstract class Executor1 : ICliExecutor<DummyClass2>, ICliAsyncExecutor<DummyClass2>, ICliValidator<DummyClass2>
         {
             public delegate bool ValidateDelegate(CliExecutionContext context, DummyClass2 parameters, [MaybeNullWhen(true)] out IEnumerable<CliError>? errors);
 

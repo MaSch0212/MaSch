@@ -7,7 +7,7 @@ namespace MaSch.Console.Cli.Runtime
     /// <summary>
     /// Represents a factory that is used to create <see cref="ICliCommandInfo"/> objects.
     /// </summary>
-    public interface ICliCommandInfoFactory
+    public interface ICliCommandFactory
     {
         /// <summary>
         /// Creates a <see cref="ICliCommandInfo"/> from an executable command type.
@@ -27,14 +27,14 @@ namespace MaSch.Console.Cli.Runtime
         /// <summary>
         /// Creates a <see cref="ICliCommandInfo"/> from an executable command type.
         /// </summary>
-        /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/> and implements either the <see cref="ICliCommandExecutor"/> or the <see cref="ICliAsyncCommandExecutor"/> interface.</param>
+        /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/> and implements either the <see cref="ICliExecutable"/> or the <see cref="ICliAsyncExecutable"/> interface.</param>
         /// <returns>The created <see cref="ICliCommandInfo"/> instance.</returns>
         ICliCommandInfo Create(Type commandType);
 
         /// <summary>
         /// Creates a <see cref="ICliCommandInfo"/> from an executable command type.
         /// </summary>
-        /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/> and implements either the <see cref="ICliCommandExecutor"/> or the <see cref="ICliAsyncCommandExecutor"/> interface.</param>
+        /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/> and implements either the <see cref="ICliExecutable"/> or the <see cref="ICliAsyncExecutable"/> interface.</param>
         /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
         /// <returns>The created <see cref="ICliCommandInfo"/> instance.</returns>
         ICliCommandInfo Create(Type commandType, object? optionsInstance);
@@ -46,7 +46,7 @@ namespace MaSch.Console.Cli.Runtime
         /// <typeparam name="TExecutor">The executor type.</typeparam>
         /// <returns>The created <see cref="ICliCommandInfo"/> instance.</returns>
         ICliCommandInfo Create<TCommand, TExecutor>()
-            where TExecutor : ICliCommandExecutorBase<TCommand>;
+            where TExecutor : ICliExecutorBase<TCommand>;
 
         /// <summary>
         /// Creates a <see cref="ICliCommandInfo"/> from a command and executor type.
@@ -56,7 +56,7 @@ namespace MaSch.Console.Cli.Runtime
         /// <param name="executorInstance">An instance of <typeparamref name="TExecutor"/> that should be used when the command is executed.</param>
         /// <returns>The created <see cref="ICliCommandInfo"/> instance.</returns>
         ICliCommandInfo Create<TCommand, TExecutor>(TExecutor executorInstance)
-            where TExecutor : ICliCommandExecutorBase<TCommand>;
+            where TExecutor : ICliExecutorBase<TCommand>;
 
         /// <summary>
         /// Creates a <see cref="ICliCommandInfo"/> from a command and executor type.
@@ -66,7 +66,7 @@ namespace MaSch.Console.Cli.Runtime
         /// <param name="optionsInstance">An instance of <typeparamref name="TCommand"/> that should be used when the command is executed.</param>
         /// <returns>The created <see cref="ICliCommandInfo"/> instance.</returns>
         ICliCommandInfo Create<TCommand, TExecutor>(TCommand optionsInstance)
-            where TExecutor : ICliCommandExecutorBase<TCommand>;
+            where TExecutor : ICliExecutorBase<TCommand>;
 
         /// <summary>
         /// Creates a <see cref="ICliCommandInfo"/> from a command and executor type.
@@ -77,13 +77,13 @@ namespace MaSch.Console.Cli.Runtime
         /// <param name="executorInstance">An instance of <typeparamref name="TExecutor"/> that should be used when the command is executed.</param>
         /// <returns>The created <see cref="ICliCommandInfo"/> instance.</returns>
         ICliCommandInfo Create<TCommand, TExecutor>(TCommand optionsInstance, TExecutor executorInstance)
-            where TExecutor : ICliCommandExecutorBase<TCommand>;
+            where TExecutor : ICliExecutorBase<TCommand>;
 
         /// <summary>
         /// Creates a <see cref="ICliCommandInfo"/> from a command and executor type.
         /// </summary>
         /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
-        /// <param name="executorType">The executor type that implements either the <see cref="ICliCommandExecutor{TCommand}"/> or the <see cref="ICliAsyncCommandExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
+        /// <param name="executorType">The executor type that implements either the <see cref="ICliExecutor{TCommand}"/> or the <see cref="ICliAsyncExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
         /// <returns>The created <see cref="ICliCommandInfo"/> instance.</returns>
         ICliCommandInfo Create(Type commandType, Type? executorType);
 
@@ -91,7 +91,7 @@ namespace MaSch.Console.Cli.Runtime
         /// Creates a <see cref="ICliCommandInfo"/> from a command and executor type.
         /// </summary>
         /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
-        /// <param name="executorType">The executor type that implements either the <see cref="ICliCommandExecutor{TCommand}"/> or the <see cref="ICliAsyncCommandExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
+        /// <param name="executorType">The executor type that implements either the <see cref="ICliExecutor{TCommand}"/> or the <see cref="ICliAsyncExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
         /// <param name="executorInstance">An instance of <paramref name="executorType"/> that should be used when the command is executed.</param>
         /// <returns>The created <see cref="ICliCommandInfo"/> instance.</returns>
         ICliCommandInfo Create(Type commandType, Type? executorType, object? executorInstance);
@@ -101,7 +101,7 @@ namespace MaSch.Console.Cli.Runtime
         /// </summary>
         /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
         /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
-        /// <param name="executorType">The executor type that implements either the <see cref="ICliCommandExecutor{TCommand}"/> or the <see cref="ICliAsyncCommandExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
+        /// <param name="executorType">The executor type that implements either the <see cref="ICliExecutor{TCommand}"/> or the <see cref="ICliAsyncExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
         /// <returns>The created <see cref="ICliCommandInfo"/> instance.</returns>
         ICliCommandInfo Create(Type commandType, object? optionsInstance, Type? executorType);
 
@@ -110,7 +110,7 @@ namespace MaSch.Console.Cli.Runtime
         /// </summary>
         /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
         /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
-        /// <param name="executorType">The executor type that implements either the <see cref="ICliCommandExecutor{TCommand}"/> or the <see cref="ICliAsyncCommandExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
+        /// <param name="executorType">The executor type that implements either the <see cref="ICliExecutor{TCommand}"/> or the <see cref="ICliAsyncExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
         /// <param name="executorInstance">An instance of <paramref name="executorType"/> that should be used when the command is executed.</param>
         /// <returns>The created <see cref="ICliCommandInfo"/> instance.</returns>
         ICliCommandInfo Create(Type commandType, object? optionsInstance, Type? executorType, object? executorInstance);

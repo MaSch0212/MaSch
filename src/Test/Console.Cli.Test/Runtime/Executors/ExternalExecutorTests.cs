@@ -30,30 +30,30 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var executorType = mock.Object.GetType();
 
             var ex = Assert.ThrowsException<ArgumentException>(() => ExternalExecutor.GetExecutor(executorType, typeof(object), null));
-            Assert.ContainsAll(new[] { executorType.Name, typeof(ICliCommandExecutor<>).Name, typeof(ICliAsyncCommandExecutor<>).Name, nameof(Object) }, ex.Message);
+            Assert.ContainsAll(new[] { executorType.Name, typeof(ICliExecutor<>).Name, typeof(ICliAsyncExecutor<>).Name, nameof(Object) }, ex.Message);
         }
 
         [TestMethod]
-        [DataRow(true, DisplayName = nameof(ICliCommandExecutor))]
-        [DataRow(false, DisplayName = nameof(ICliAsyncCommandExecutor))]
+        [DataRow(true, DisplayName = nameof(ICliExecutor<IFormatProvider>))]
+        [DataRow(false, DisplayName = nameof(ICliAsyncExecutor<IFormatProvider>))]
         public void GetExecutor_WrongExecutorType_WrongExecutor(bool sync)
         {
             var executorType = sync
-                ? Mocks.Create<ICliCommandExecutor<IFormatProvider>>().Object.GetType()
-                : Mocks.Create<ICliAsyncCommandExecutor<IFormatProvider>>().Object.GetType();
+                ? Mocks.Create<ICliExecutor<IFormatProvider>>().Object.GetType()
+                : Mocks.Create<ICliAsyncExecutor<IFormatProvider>>().Object.GetType();
 
             var ex = Assert.ThrowsException<ArgumentException>(() => ExternalExecutor.GetExecutor(executorType, typeof(IDisposable), null));
-            Assert.ContainsAll(new[] { executorType.Name, typeof(ICliCommandExecutor<>).Name, typeof(ICliAsyncCommandExecutor<>).Name, nameof(IDisposable) }, ex.Message);
+            Assert.ContainsAll(new[] { executorType.Name, typeof(ICliExecutor<>).Name, typeof(ICliAsyncExecutor<>).Name, nameof(IDisposable) }, ex.Message);
         }
 
         [TestMethod]
-        [DataRow(true, DisplayName = nameof(ICliCommandExecutor))]
-        [DataRow(false, DisplayName = nameof(ICliAsyncCommandExecutor))]
+        [DataRow(true, DisplayName = nameof(ICliExecutor<IDisposable>))]
+        [DataRow(false, DisplayName = nameof(ICliAsyncExecutor<IDisposable>))]
         public void GetExecutor_Success_ExactType(bool sync)
         {
             var executorType = sync
-                ? Mocks.Create<ICliCommandExecutor<IDisposable>>().Object.GetType()
-                : Mocks.Create<ICliAsyncCommandExecutor<IDisposable>>().Object.GetType();
+                ? Mocks.Create<ICliExecutor<IDisposable>>().Object.GetType()
+                : Mocks.Create<ICliAsyncExecutor<IDisposable>>().Object.GetType();
 
             var executor = ExternalExecutor.GetExecutor(executorType, typeof(IDisposable), null);
             Assert.IsNotNull(executor);
@@ -61,13 +61,13 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         }
 
         [TestMethod]
-        [DataRow(true, DisplayName = nameof(ICliCommandExecutor))]
-        [DataRow(false, DisplayName = nameof(ICliAsyncCommandExecutor))]
+        [DataRow(true, DisplayName = nameof(ICliExecutor<IDisposable>))]
+        [DataRow(false, DisplayName = nameof(ICliAsyncExecutor<IDisposable>))]
         public void GetExecutor_Success_DerivedType(bool sync)
         {
             var executorType = sync
-                ? Mocks.Create<ICliCommandExecutor<IDisposable>>().Object.GetType()
-                : Mocks.Create<ICliAsyncCommandExecutor<IDisposable>>().Object.GetType();
+                ? Mocks.Create<ICliExecutor<IDisposable>>().Object.GetType()
+                : Mocks.Create<ICliAsyncExecutor<IDisposable>>().Object.GetType();
 
             var executor = ExternalExecutor.GetExecutor(executorType, typeof(IEnumerator<object>), null);
             Assert.IsNotNull(executor);
@@ -83,37 +83,37 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         [TestMethod]
         public void Ctor_ExecutorInstanceWrongType()
         {
-            Assert.ThrowsException<ArgumentException>(() => new ExternalExecutor<IDisposable>(typeof(ICliCommandExecutor<IDisposable>), new object()));
+            Assert.ThrowsException<ArgumentException>(() => new ExternalExecutor<IDisposable>(typeof(ICliExecutor<IDisposable>), new object()));
         }
 
         [TestMethod]
         public void Ctor_NoExecutor()
         {
             var ex = Assert.ThrowsException<ArgumentException>(() => new ExternalExecutor<object>(typeof(object), null));
-            Assert.ContainsAll(new[] { nameof(Object), typeof(ICliCommandExecutor<object>).Name, typeof(ICliAsyncCommandExecutor<object>).Name }, ex.Message);
+            Assert.ContainsAll(new[] { nameof(Object), typeof(ICliExecutor<object>).Name, typeof(ICliAsyncExecutor<object>).Name }, ex.Message);
         }
 
         [TestMethod]
-        [DataRow(true, DisplayName = nameof(ICliCommandExecutor))]
-        [DataRow(false, DisplayName = nameof(ICliAsyncCommandExecutor))]
+        [DataRow(true, DisplayName = nameof(ICliExecutor<IFormatProvider>))]
+        [DataRow(false, DisplayName = nameof(ICliAsyncExecutor<IFormatProvider>))]
         public void Ctor_WrongExecutor(bool sync)
         {
             var executorType = sync
-                ? Mocks.Create<ICliCommandExecutor<IFormatProvider>>().Object.GetType()
-                : Mocks.Create<ICliAsyncCommandExecutor<IFormatProvider>>().Object.GetType();
+                ? Mocks.Create<ICliExecutor<IFormatProvider>>().Object.GetType()
+                : Mocks.Create<ICliAsyncExecutor<IFormatProvider>>().Object.GetType();
 
             var ex = Assert.ThrowsException<ArgumentException>(() => new ExternalExecutor<IDisposable>(executorType, null));
-            Assert.ContainsAll(new[] { executorType.Name, typeof(ICliCommandExecutor<IDisposable>).Name, typeof(ICliAsyncCommandExecutor<IDisposable>).Name, nameof(IDisposable) }, ex.Message);
+            Assert.ContainsAll(new[] { executorType.Name, typeof(ICliExecutor<IDisposable>).Name, typeof(ICliAsyncExecutor<IDisposable>).Name, nameof(IDisposable) }, ex.Message);
         }
 
         [TestMethod]
-        [DataRow(true, DisplayName = nameof(ICliCommandExecutor))]
-        [DataRow(false, DisplayName = nameof(ICliAsyncCommandExecutor))]
+        [DataRow(true, DisplayName = nameof(ICliExecutor<IDisposable>))]
+        [DataRow(false, DisplayName = nameof(ICliAsyncExecutor<IDisposable>))]
         public void Ctor_Success(bool sync)
         {
             object exec = sync
-                ? Mocks.Create<ICliCommandExecutor<IDisposable>>().Object
-                : Mocks.Create<ICliAsyncCommandExecutor<IDisposable>>().Object;
+                ? Mocks.Create<ICliExecutor<IDisposable>>().Object
+                : Mocks.Create<ICliAsyncExecutor<IDisposable>>().Object;
 
             _ = new ExternalExecutor<IDisposable>(exec.GetType(), exec);
         }
@@ -121,10 +121,10 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         [TestMethod]
         public void Execute_Null()
         {
-            var eMock = Mocks.Create<ICliCommandExecutor<IDisposable>>();
+            var eMock = Mocks.Create<ICliExecutor<IDisposable>>();
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
             var executor = new ExternalExecutor<IDisposable>(eMock.Object.GetType(), eMock.Object);
 
             Assert.ThrowsException<ArgumentNullException>(() => executor.Execute(null!, new object()));
@@ -134,10 +134,10 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         [TestMethod]
         public void Execute_WrongObjType()
         {
-            var eMock = Mocks.Create<ICliCommandExecutor<IDisposable>>();
+            var eMock = Mocks.Create<ICliExecutor<IDisposable>>();
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
             var executor = new ExternalExecutor<IDisposable>(eMock.Object.GetType(), eMock.Object);
 
             var ex = Assert.ThrowsException<ArgumentException>(() => executor.Execute(execCtx, new object()));
@@ -147,10 +147,10 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         [TestMethod]
         public void Execute_NoExecutor()
         {
-            var eMock = Mocks.Create<ICliCommandExecutor<IDisposable>>();
+            var eMock = Mocks.Create<ICliExecutor<IDisposable>>();
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
             var objMock = Mocks.Create<IDisposable>();
             var executor = new ExternalExecutor<IDisposable>(eMock.Object.GetType(), null);
             new PrivateObject(executor).SetField("_executorInstance", new object());
@@ -163,62 +163,68 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         {
             var obj1Mock = Mocks.Create<IDisposable>();
             var obj2Mock = Mocks.Create<IDisposable>();
+            var executorInstance = new DummySyncExecutor();
             var executor = new ExternalExecutor<IDisposable>(typeof(DummySyncExecutor), null);
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
+            spMock.Setup(x => x.GetService(typeof(DummySyncExecutor))).Returns(executorInstance).Verifiable(Verifiables, Times.Exactly(2));
 
             var result = executor.Execute(execCtx, obj1Mock.Object);
 
             Assert.AreEqual(1234, result);
-            var ei = Assert.IsInstanceOfType<DummySyncExecutor>(executor.LastExecutorInstance);
-            Assert.AreCollectionsEqual(new[] { (execCtx, obj1Mock.Object) }, ei.Executions);
+            Assert.AreSame(executorInstance, executor.LastExecutorInstance);
+            Assert.AreCollectionsEqual(new[] { (execCtx, obj1Mock.Object) }, executorInstance.Executions);
 
             _ = executor.Execute(execCtx, obj2Mock.Object);
-            Assert.AreSame(ei, executor.LastExecutorInstance);
-            Assert.AreCollectionsEqual(new[] { (execCtx, obj1Mock.Object), (execCtx, obj2Mock.Object) }, ei.Executions);
+            Assert.AreSame(executorInstance, executor.LastExecutorInstance);
+            Assert.AreCollectionsEqual(new[] { (execCtx, obj1Mock.Object), (execCtx, obj2Mock.Object) }, executorInstance.Executions);
         }
 
         [TestMethod]
         public void Execute_AsyncExecutor()
         {
             var obj1Mock = Mocks.Create<IDisposable>();
+            var executorInstance = new DummyAsyncExecutor();
             var executor = new ExternalExecutor<IDisposable>(typeof(DummyAsyncExecutor), null);
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
+            spMock.Setup(x => x.GetService(typeof(DummyAsyncExecutor))).Returns(executorInstance).Verifiable(Verifiables, Times.Once());
 
             var result = executor.Execute(execCtx, obj1Mock.Object);
 
             Assert.AreEqual(1234, result);
-            var ei = Assert.IsInstanceOfType<DummyAsyncExecutor>(executor.LastExecutorInstance);
-            Assert.AreCollectionsEqual(new[] { (execCtx, obj1Mock.Object) }, ei.Executions);
+            Assert.AreSame(executorInstance, executor.LastExecutorInstance);
+            Assert.AreCollectionsEqual(new[] { (execCtx, obj1Mock.Object) }, executorInstance.Executions);
         }
 
         [TestMethod]
         public void Execute_CombinedExecutor()
         {
             var obj1Mock = Mocks.Create<IDisposable>();
+            var executorInstance = new DummyCombinedExecutor();
             var executor = new ExternalExecutor<IDisposable>(typeof(DummyCombinedExecutor), null);
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
+            spMock.Setup(x => x.GetService(typeof(DummyCombinedExecutor))).Returns(executorInstance).Verifiable(Verifiables, Times.Once());
 
             var result = executor.Execute(execCtx, obj1Mock.Object);
 
             Assert.AreEqual(5678, result);
-            var ei = Assert.IsInstanceOfType<DummyCombinedExecutor>(executor.LastExecutorInstance);
-            Assert.AreCollectionsEqual(new[] { (execCtx, obj1Mock.Object) }, ei.SyncExecutions);
-            Assert.AreCollectionsEqual(Array.Empty<(CliExecutionContext, IDisposable)>(), ei.AsyncExecutions);
+            Assert.AreSame(executorInstance, executor.LastExecutorInstance);
+            Assert.AreCollectionsEqual(new[] { (execCtx, obj1Mock.Object) }, executorInstance.SyncExecutions);
+            Assert.AreCollectionsEqual(Array.Empty<(CliExecutionContext, IDisposable)>(), executorInstance.AsyncExecutions);
         }
 
         [TestMethod]
         public async Task ExecuteAsync_Null()
         {
-            var eMock = Mocks.Create<ICliCommandExecutor<IDisposable>>();
+            var eMock = Mocks.Create<ICliExecutor<IDisposable>>();
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
             var executor = new ExternalExecutor<IDisposable>(eMock.Object.GetType(), eMock.Object);
 
             await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => executor.ExecuteAsync(null!, new object()));
@@ -228,10 +234,10 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         [TestMethod]
         public async Task ExecuteAsync_WrongObjType()
         {
-            var eMock = Mocks.Create<ICliCommandExecutor<IDisposable>>();
+            var eMock = Mocks.Create<ICliExecutor<IDisposable>>();
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
             var executor = new ExternalExecutor<IDisposable>(eMock.Object.GetType(), eMock.Object);
 
             var ex = await Assert.ThrowsExceptionAsync<ArgumentException>(() => executor.ExecuteAsync(execCtx, new object()));
@@ -241,11 +247,11 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         [TestMethod]
         public async Task ExecuteAsync_NoExecutor()
         {
-            var eMock = Mocks.Create<ICliCommandExecutor<IDisposable>>();
+            var eMock = Mocks.Create<ICliExecutor<IDisposable>>();
             var cMock = Mocks.Create<ICliCommandInfo>();
             var objMock = Mocks.Create<IDisposable>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
             var executor = new ExternalExecutor<IDisposable>(eMock.Object.GetType(), null);
             new PrivateObject(executor).SetField("_executorInstance", new object());
 
@@ -257,20 +263,22 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         {
             var obj1Mock = Mocks.Create<IDisposable>();
             var obj2Mock = Mocks.Create<IDisposable>();
+            var executorInstance = new DummyAsyncExecutor();
             var executor = new ExternalExecutor<IDisposable>(typeof(DummyAsyncExecutor), null);
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
+            spMock.Setup(x => x.GetService(typeof(DummyAsyncExecutor))).Returns(executorInstance).Verifiable(Verifiables, Times.Exactly(2));
 
             var result = await executor.ExecuteAsync(execCtx, obj1Mock.Object);
 
             Assert.AreEqual(1234, result);
-            var ei = Assert.IsInstanceOfType<DummyAsyncExecutor>(executor.LastExecutorInstance);
-            Assert.AreCollectionsEqual(new[] { (execCtx, obj1Mock.Object) }, ei.Executions);
+            Assert.AreSame(executorInstance, executor.LastExecutorInstance);
+            Assert.AreCollectionsEqual(new[] { (execCtx, obj1Mock.Object) }, executorInstance.Executions);
 
             _ = await executor.ExecuteAsync(execCtx, obj2Mock.Object);
-            Assert.AreSame(ei, executor.LastExecutorInstance);
-            Assert.AreCollectionsEqual(new[] { (execCtx, obj1Mock.Object), (execCtx, obj2Mock.Object) }, ei.Executions);
+            Assert.AreSame(executorInstance, executor.LastExecutorInstance);
+            Assert.AreCollectionsEqual(new[] { (execCtx, obj1Mock.Object), (execCtx, obj2Mock.Object) }, executorInstance.Executions);
         }
 
         [TestMethod]
@@ -278,15 +286,17 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         {
             var obj1Mock = Mocks.Create<IDisposable>();
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
+            var executorInstance = new DummySyncExecutor();
             var executor = new ExternalExecutor<IDisposable>(typeof(DummySyncExecutor), null);
+            spMock.Setup(x => x.GetService(typeof(DummySyncExecutor))).Returns(executorInstance).Verifiable(Verifiables, Times.Once());
 
             var result = await executor.ExecuteAsync(execCtx, obj1Mock.Object);
 
             Assert.AreEqual(1234, result);
-            var ei = Assert.IsInstanceOfType<DummySyncExecutor>(executor.LastExecutorInstance);
-            Assert.AreCollectionsEqual(new[] { (execCtx, obj1Mock.Object) }, ei.Executions);
+            Assert.AreSame(executorInstance, executor.LastExecutorInstance);
+            Assert.AreCollectionsEqual(new[] { (execCtx, obj1Mock.Object) }, executorInstance.Executions);
         }
 
         [TestMethod]
@@ -294,25 +304,27 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         {
             var obj1Mock = Mocks.Create<IDisposable>();
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
+            var executorInstance = new DummyCombinedExecutor();
             var executor = new ExternalExecutor<IDisposable>(typeof(DummyCombinedExecutor), null);
+            spMock.Setup(x => x.GetService(typeof(DummyCombinedExecutor))).Returns(executorInstance).Verifiable(Verifiables, Times.Once());
 
             var result = await executor.ExecuteAsync(execCtx, obj1Mock.Object);
 
             Assert.AreEqual(1234, result);
-            var ei = Assert.IsInstanceOfType<DummyCombinedExecutor>(executor.LastExecutorInstance);
-            Assert.AreCollectionsEqual(new[] { (execCtx, obj1Mock.Object) }, ei.AsyncExecutions);
-            Assert.AreCollectionsEqual(Array.Empty<(CliExecutionContext, IDisposable)>(), ei.SyncExecutions);
+            Assert.AreSame(executorInstance, executor.LastExecutorInstance);
+            Assert.AreCollectionsEqual(new[] { (execCtx, obj1Mock.Object) }, executorInstance.AsyncExecutions);
+            Assert.AreCollectionsEqual(Array.Empty<(CliExecutionContext, IDisposable)>(), executorInstance.SyncExecutions);
         }
 
         [TestMethod]
         public void ValidateOptions_NullChecks()
         {
             var objMock = Mocks.Create<IDisposable>();
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, commandMock.Object);
+            var cMock = Mocks.Create<ICliCommandInfo>();
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
             var executor = new ExternalExecutor<IDisposable>(typeof(DummySyncExecutor), null);
 
             Assert.ThrowsException<ArgumentNullException>(() => executor.ValidateOptions(null!, objMock.Object, out _));
@@ -322,10 +334,10 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         [TestMethod]
         public void ValidateOptions_WrongParamType()
         {
-            var commandMock = Mocks.Create<ICliCommandInfo>();
+            var cMock = Mocks.Create<ICliCommandInfo>();
             var executor = new ExternalExecutor<IDisposable>(typeof(DummySyncExecutor), null);
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, commandMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
 
             Assert.ThrowsException<ArgumentException>(() => executor.ValidateOptions(execCtx, new object(), out _));
         }
@@ -334,10 +346,12 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         public void ValidateOptions_ExecutorIsNotValidator()
         {
             var objMock = Mocks.Create<IDisposable>();
-            var commandMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, commandMock.Object);
+            var cMock = Mocks.Create<ICliCommandInfo>();
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
+            var executorInstance = new DummySyncExecutor();
             var executor = new ExternalExecutor<IDisposable>(typeof(DummySyncExecutor), null);
+            spMock.Setup(x => x.GetService(typeof(DummySyncExecutor))).Returns(executorInstance).Verifiable(Verifiables, Times.Once());
 
             var result = executor.ValidateOptions(execCtx, objMock.Object, out var errors);
 
@@ -350,11 +364,11 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         {
             IEnumerable<CliError>? err;
             var objMock = Mocks.Create<IDisposable>();
-            var commandMock = Mocks.Create<ICliCommandInfo>();
+            var cMock = Mocks.Create<ICliCommandInfo>();
             var eMock = Mocks.Create<DummySyncExecutor>();
             var vMock = eMock.As<ICliValidator<IDisposable>>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, commandMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
             var executor = new ExternalExecutor<IDisposable>(vMock.Object.GetType(), vMock.Object);
             vMock.Setup(x => x.ValidateOptions(execCtx, objMock.Object, out err))
                 .Returns(new CliValidatorDelegate((CliExecutionContext c, IDisposable o, out IEnumerable<CliError>? e) =>
@@ -378,11 +392,11 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         {
             IEnumerable<CliError>? err;
             var objMock = Mocks.Create<IEnumerator<object>>();
-            var commandMock = Mocks.Create<ICliCommandInfo>();
+            var cMock = Mocks.Create<ICliCommandInfo>();
             var eMock = Mocks.Create<DummySyncExecutor>();
             var vMock = eMock.As<ICliValidator<IDisposable>>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, commandMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
             var executor = new ExternalExecutor<IDisposable>(vMock.Object.GetType(), vMock.Object);
             vMock.Setup(x => x.ValidateOptions(execCtx, objMock.Object, out err))
                 .Returns(new CliValidatorDelegate((CliExecutionContext c, IDisposable o, out IEnumerable<CliError>? e) =>
@@ -401,7 +415,7 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
                 errors.Select(x => (x.Type, x.CustomErrorMessage)));
         }
 
-        public class DummySyncExecutor : ICliCommandExecutor<IDisposable>
+        public class DummySyncExecutor : ICliExecutor<IDisposable>
         {
             public List<(CliExecutionContext, IDisposable)> Executions { get; } = new();
             public int ReturnValue { get; set; } = 1234;
@@ -413,7 +427,7 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             }
         }
 
-        private class DummyAsyncExecutor : ICliAsyncCommandExecutor<IDisposable>
+        private class DummyAsyncExecutor : ICliAsyncExecutor<IDisposable>
         {
             public List<(CliExecutionContext, IDisposable)> Executions { get; } = new();
             public int ReturnValue { get; set; } = 1234;
@@ -425,7 +439,7 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             }
         }
 
-        private class DummyCombinedExecutor : ICliCommandExecutor<IDisposable>, ICliAsyncCommandExecutor<IDisposable>
+        private class DummyCombinedExecutor : ICliExecutor<IDisposable>, ICliAsyncExecutor<IDisposable>
         {
             public List<(CliExecutionContext, IDisposable)> AsyncExecutions { get; } = new();
             public List<(CliExecutionContext, IDisposable)> SyncExecutions { get; } = new();

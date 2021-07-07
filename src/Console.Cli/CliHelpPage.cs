@@ -14,11 +14,30 @@ namespace MaSch.Console.Cli
     /// <inheritdoc/>
     public class CliHelpPage : ICliHelpPage
     {
-        /// <inheritdoc/>
-        public virtual bool Write(ICliApplicationBase application, IEnumerable<CliError>? errors)
-        {
-            Guard.NotNull(application, nameof(application));
+        /// <summary>
+        /// Gets the application for which this help page has been created.
+        /// </summary>
+        protected ICliApplicationBase Application { get; }
 
+        /// <summary>
+        /// Gets the console service that is used to write help data.
+        /// </summary>
+        protected IConsoleService Console { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CliHelpPage"/> class.
+        /// </summary>
+        /// <param name="application">The application for which this help page is created for.</param>
+        /// <param name="console">The console service to use to write help data.</param>
+        public CliHelpPage(ICliApplicationBase application, IConsoleService console)
+        {
+            Application = Guard.NotNull(application, nameof(application));
+            Console = Guard.NotNull(console, nameof(console));
+        }
+
+        /// <inheritdoc/>
+        public virtual bool Write(IEnumerable<CliError>? errors)
+        {
             IList<CliError> errorList = errors?.Where(x => x != null).ToList() ?? new List<CliError>();
             if (errorList.Count == 0)
                 errorList.Add(new CliError(CliErrorType.Unknown));
@@ -26,18 +45,18 @@ namespace MaSch.Console.Cli
             if (errorList.TryFirst(x => x.Type == CliErrorType.HelpRequested, out var hError))
             {
                 var e = errorList.Where(x => x.IsError).Prepend(hError).ToArray();
-                WriteHelpPage(application, e);
+                WriteHelpPage(e);
                 return true;
             }
             else if (errorList.TryFirst(x => x.Type == CliErrorType.VersionRequested, out var vError))
             {
                 var e = errorList.Where(x => x.IsError).Prepend(vError).ToArray();
-                WriteVersionPage(application, e);
+                WriteVersionPage(e);
                 return true;
             }
             else
             {
-                WriteHelpPage(application, errorList);
+                WriteHelpPage(errorList);
                 return false;
             }
         }
@@ -45,80 +64,68 @@ namespace MaSch.Console.Cli
         /// <summary>
         /// Writes the version page.
         /// </summary>
-        /// <param name="application">The application in which the error(s) occured.</param>
         /// <param name="errors">The errors that occured.</param>
-        protected virtual void WriteVersionPage(ICliApplicationBase application, IList<CliError> errors)
+        protected virtual void WriteVersionPage(IList<CliError> errors)
         {
-            var console = application.Options.ConsoleService;
-
-            WriteCommandNameAndVersion(application, errors[0]);
-            WriteCopyright(application, errors[0]);
+            WriteCommandNameAndVersion(errors[0]);
+            WriteCopyright(errors[0]);
 
             if (errors.Any(x => x.IsError))
-                console.WriteLine();
+                Console.WriteLine();
             foreach (var error in errors.Where(x => x.IsError))
-                WriteErrorMessage(application, error);
+                WriteErrorMessage(error);
 
-            WriteCommandVersions(application, errors[0]);
-            console.WriteLine();
+            WriteCommandVersions(errors[0]);
+            Console.WriteLine();
         }
 
         /// <summary>
         /// Writes the help page.
         /// </summary>
-        /// <param name="application">The application in which the error(s) occured.</param>
         /// <param name="errors">The errors that occured.</param>
-        protected virtual void WriteHelpPage(ICliApplicationBase application, IList<CliError> errors)
+        protected virtual void WriteHelpPage(IList<CliError> errors)
         {
-            var console = application.Options.ConsoleService;
-
-            WriteCommandNameAndVersion(application, errors[0]);
-            WriteCopyright(application, errors[0]);
+            WriteCommandNameAndVersion(errors[0]);
+            WriteCopyright(errors[0]);
 
             if (errors.Any(x => x.IsError))
-                console.WriteLine();
+                Console.WriteLine();
             foreach (var error in errors.Where(x => x.IsError))
-                WriteErrorMessage(application, error);
+                WriteErrorMessage(error);
 
-            console.WriteLine();
-            WriteCommandUsage(application, errors[0]);
-            WriteCommandParameters(application, errors[0]);
-            WriteCommands(application, errors[0]);
-            console.WriteLine();
+            Console.WriteLine();
+            WriteCommandUsage(errors[0]);
+            WriteCommandParameters(errors[0]);
+            WriteCommands(errors[0]);
+            Console.WriteLine();
         }
 
         /// <summary>
         /// Writes the command name and version.
         /// </summary>
-        /// <param name="application">The application in which the error(s) occured.</param>
         /// <param name="error">The error.</param>
-        protected virtual void WriteCommandNameAndVersion(ICliApplicationBase application, CliError error)
+        protected virtual void WriteCommandNameAndVersion(CliError error)
         {
-            var console = application.Options.ConsoleService;
             var c = error.AffectedCommand;
-            console.WriteLine($"{GetDisplayName(c, application)} {GetVersion(c, application)}");
+            Console.WriteLine($"{GetDisplayName(c, Application)} {GetVersion(c, Application)}");
         }
 
         /// <summary>
         /// Writes the copyright.
         /// </summary>
-        /// <param name="application">The application in which the error(s) occured.</param>
         /// <param name="error">The error.</param>
-        protected virtual void WriteCopyright(ICliApplicationBase application, CliError error)
+        protected virtual void WriteCopyright(CliError error)
         {
-            var console = application.Options.ConsoleService;
             var c = error.AffectedCommand;
-            console.WriteLine($"Copyright {(console.IsFancyConsole ? "©" : "(C)")} {GetYear(c, application)} {GetAuthor(c, application)}");
+            Console.WriteLine($"Copyright {(Console.IsFancyConsole ? "©" : "(C)")} {GetYear(c, Application)} {GetAuthor(c, Application)}");
         }
 
         /// <summary>
         /// Writes an error message.
         /// </summary>
-        /// <param name="application">The application in which the error(s) occured.</param>
         /// <param name="error">The error.</param>
-        protected virtual void WriteErrorMessage(ICliApplicationBase application, CliError error)
+        protected virtual void WriteErrorMessage(CliError error)
         {
-            var console = application.Options.ConsoleService;
             var message = error.Type switch
             {
                 CliErrorType.UnknownCommand => $"The command \"{error.CommandName}\" is unknown.",
@@ -140,34 +147,32 @@ namespace MaSch.Console.Cli
             if (message == null)
                 return;
 
-            console.WriteLineWithColor(message, ConsoleColor.Red);
+            Console.WriteLineWithColor(message, ConsoleColor.Red);
 
             if (error.Exception != null)
             {
-                var lines = new TextBlockControl(console)
+                var lines = new TextBlockControl(Console)
                 {
                     X = 3,
                     Text = error.Exception.Message,
                 }.GetTextLines();
                 foreach (var line in lines)
-                    console.WriteLineWithColor("   " + line, ConsoleColor.Red);
+                    Console.WriteLineWithColor("   " + line, ConsoleColor.Red);
             }
         }
 
         /// <summary>
         /// Writes the command usage.
         /// </summary>
-        /// <param name="application">The application in which the error(s) occured.</param>
         /// <param name="error">The error.</param>
-        protected virtual void WriteCommandUsage(ICliApplicationBase application, CliError error)
+        protected virtual void WriteCommandUsage(CliError error)
         {
-            var console = application.Options.ConsoleService;
-            var sb = new StringBuilder(application.Options.CliName);
+            var sb = new StringBuilder(Application.Options.CliName);
 
             if (error.AffectedCommand != null)
                 AppendCommandName(error.AffectedCommand);
 
-            var childCommands = error.AffectedCommand?.ChildCommands ?? application.Commands.GetRootCommands();
+            var childCommands = error.AffectedCommand?.ChildCommands ?? Application.Commands.GetRootCommands();
             if (childCommands.Any())
             {
                 var childCommandRequired = error.AffectedCommand?.IsExecutable != true;
@@ -206,7 +211,7 @@ namespace MaSch.Console.Cli
             }
 
             var usg = "Usage: ";
-            var tb = new TextBlockControl(console)
+            var tb = new TextBlockControl(Console)
             {
                 Text = sb.ToString(),
                 X = usg.Length,
@@ -214,8 +219,8 @@ namespace MaSch.Console.Cli
             bool isFirst = true;
             foreach (var line in tb.GetTextLines())
             {
-                console.Write(isFirst ? usg : new string(' ', usg.Length));
-                console.WriteLine(line);
+                Console.Write(isFirst ? usg : new string(' ', usg.Length));
+                Console.WriteLine(line);
                 isFirst = false;
             }
 
@@ -235,15 +240,13 @@ namespace MaSch.Console.Cli
         /// <summary>
         /// Writes the command parameter list.
         /// </summary>
-        /// <param name="application">The application in which the error(s) occured.</param>
         /// <param name="error">The error.</param>
-        protected virtual void WriteCommandParameters(ICliApplicationBase application, CliError error)
+        protected virtual void WriteCommandParameters(CliError error)
         {
-            var console = application.Options.ConsoleService;
             if (error.AffectedCommand == null || (error.AffectedCommand.Options.Count == 0 && error.AffectedCommand.Values.Count == 0))
                 return;
 
-            var table = new TableControl(console)
+            var table = new TableControl(Console)
             {
                 Margin = new(3, 0, 0, 0),
                 ShowColumnHeaders = false,
@@ -252,7 +255,7 @@ namespace MaSch.Console.Cli
                     new Column
                     {
                         WidthMode = ColumnWidthMode.Auto,
-                        MaxWidth = console.BufferSize.Width / 3,
+                        MaxWidth = Console.BufferSize.Width / 3,
                     },
                     new Column
                     {
@@ -269,8 +272,8 @@ namespace MaSch.Console.Cli
                           select o).ToArray();
             if (values.Length > 0)
             {
-                console.WriteLine();
-                console.WriteLine("Values:");
+                Console.WriteLine();
+                Console.WriteLine("Values:");
                 table.Rows.Set(values.Select(x => new Row
                 {
                     Values = new[]
@@ -282,11 +285,11 @@ namespace MaSch.Console.Cli
                 table.Render();
             }
 
-            var requiredOptions = OrderOptions(application, error, error.AffectedCommand.Options.Where(x => !x.Hidden && x.IsRequired)).ToArray();
+            var requiredOptions = OrderOptions(error, error.AffectedCommand.Options.Where(x => !x.Hidden && x.IsRequired)).ToArray();
             if (requiredOptions.Length > 0)
             {
-                console.WriteLine();
-                console.WriteLine("Required options:");
+                Console.WriteLine();
+                Console.WriteLine("Required options:");
                 table.Rows.Set(requiredOptions.Select(x => new Row
                 {
                     Values = new[]
@@ -298,11 +301,11 @@ namespace MaSch.Console.Cli
                 table.Render();
             }
 
-            var optionalOptions = OrderOptions(application, error, error.AffectedCommand.Options.Where(x => !x.Hidden && !x.IsRequired)).ToArray();
+            var optionalOptions = OrderOptions(error, error.AffectedCommand.Options.Where(x => !x.Hidden && !x.IsRequired)).ToArray();
             if (optionalOptions.Length > 0)
             {
-                console.WriteLine();
-                console.WriteLine("Optional options:");
+                Console.WriteLine();
+                Console.WriteLine("Optional options:");
                 table.Rows.Set(optionalOptions.Select(x => new Row
                 {
                     Values = new[]
@@ -318,18 +321,16 @@ namespace MaSch.Console.Cli
         /// <summary>
         /// Writes the command list.
         /// </summary>
-        /// <param name="application">The application in which the error(s) occured.</param>
         /// <param name="error">The error.</param>
-        protected virtual void WriteCommands(ICliApplicationBase application, CliError error)
+        protected virtual void WriteCommands(CliError error)
         {
-            var console = application.Options.ConsoleService;
-            var commands = (from command in error.AffectedCommand?.ChildCommands ?? application.Commands.GetRootCommands()
+            var commands = (from command in error.AffectedCommand?.ChildCommands ?? Application.Commands.GetRootCommands()
                             where !command.Hidden
                             select command).ToArray();
             if (commands.Length == 0)
                 return;
 
-            var table = new TableControl(console)
+            var table = new TableControl(Console)
             {
                 Margin = new(3, 0, 0, 0),
                 ShowColumnHeaders = false,
@@ -338,7 +339,7 @@ namespace MaSch.Console.Cli
                     new Column
                     {
                         WidthMode = ColumnWidthMode.Auto,
-                        MaxWidth = console.BufferSize.Width / 3,
+                        MaxWidth = Console.BufferSize.Width / 3,
                     },
                     new Column
                     {
@@ -349,9 +350,9 @@ namespace MaSch.Console.Cli
             };
             table.Columns[0].NonWrappingChars.Add('-');
 
-            console.WriteLine();
-            console.WriteLine("Commands:");
-            table.Rows.Add(OrderCommands(application, error, commands).Select(x => new Row
+            Console.WriteLine();
+            Console.WriteLine("Commands:");
+            table.Rows.Add(OrderCommands(error, commands).Select(x => new Row
             {
                 Values = new[]
                 {
@@ -366,12 +367,10 @@ namespace MaSch.Console.Cli
         /// <summary>
         /// Writes the command version list.
         /// </summary>
-        /// <param name="application">The application in which the error(s) occured.</param>
         /// <param name="error">The error.</param>
-        protected virtual void WriteCommandVersions(ICliApplicationBase application, CliError error)
+        protected virtual void WriteCommandVersions(CliError error)
         {
-            var console = application.Options.ConsoleService;
-            var commands = (from command in error.AffectedCommand?.ChildCommands ?? application.Commands.GetRootCommands()
+            var commands = (from command in error.AffectedCommand?.ChildCommands ?? Application.Commands.GetRootCommands()
                             where !command.Hidden && (
                                 command.ParserOptions.Author != null ||
                                 command.ParserOptions.Name != null ||
@@ -381,7 +380,7 @@ namespace MaSch.Console.Cli
             if (commands.Length == 0)
                 return;
 
-            var table = new TableControl(console)
+            var table = new TableControl(Console)
             {
                 Margin = new(3, 0, 0, 0),
                 ShowColumnHeaders = false,
@@ -390,7 +389,7 @@ namespace MaSch.Console.Cli
                     new Column // Command Name
                     {
                         WidthMode = ColumnWidthMode.Auto,
-                        MaxWidth = console.BufferSize.Width / 3,
+                        MaxWidth = Console.BufferSize.Width / 3,
                     },
                     new Column // Command DisplayName
                     {
@@ -408,16 +407,16 @@ namespace MaSch.Console.Cli
             };
             table.Columns[0].NonWrappingChars.Add('-');
 
-            console.WriteLine();
-            console.WriteLine("Commands:");
-            table.Rows.Add(OrderCommands(application, error, commands).Select(x => new Row
+            Console.WriteLine();
+            Console.WriteLine("Commands:");
+            table.Rows.Add(OrderCommands(error, commands).Select(x => new Row
             {
                 Values = new[]
                 {
                     x.Aliases.Count > 1 ? $"{string.Join(", ", x.Aliases)}" : x.Name,
                     x.ParserOptions.Name ?? string.Empty,
-                    GetVersion(x, application) ?? string.Empty,
-                    $"{(console.IsFancyConsole ? "©" : "(C)")} {GetYear(x, application)} {GetAuthor(x, application)}",
+                    GetVersion(x, Application) ?? string.Empty,
+                    $"{(Console.IsFancyConsole ? "©" : "(C)")} {GetYear(x, Application)} {GetAuthor(x, Application)}",
                 },
             }));
 
@@ -427,11 +426,10 @@ namespace MaSch.Console.Cli
         /// <summary>
         /// Orders the specified <see cref="ICliCommandInfo"/> objects. Override to change ordering in commands list.
         /// </summary>
-        /// <param name="application">The application in which the error(s) occured.</param>
         /// <param name="error">The error.</param>
         /// <param name="commands">The commands to order.</param>
         /// <returns>The ordered commands.</returns>
-        protected virtual IEnumerable<ICliCommandInfo> OrderCommands(ICliApplicationBase application, CliError error, IEnumerable<ICliCommandInfo> commands)
+        protected virtual IEnumerable<ICliCommandInfo> OrderCommands(CliError error, IEnumerable<ICliCommandInfo> commands)
         {
             return commands.OrderByDescending(x => x.IsDefault).ThenBy(x => x.Order).ThenBy(x => x.Name);
         }
@@ -439,11 +437,10 @@ namespace MaSch.Console.Cli
         /// <summary>
         /// Orders the specified <see cref="ICliCommandOptionInfo"/> objects. Override to change ordering in options list.
         /// </summary>
-        /// <param name="application">The application in which the error(s) occured.</param>
         /// <param name="error">The error.</param>
         /// <param name="options">The options to order.</param>
         /// <returns>The ordered options.</returns>
-        protected virtual IEnumerable<ICliCommandOptionInfo> OrderOptions(ICliApplicationBase application, CliError error, IEnumerable<ICliCommandOptionInfo> options)
+        protected virtual IEnumerable<ICliCommandOptionInfo> OrderOptions(CliError error, IEnumerable<ICliCommandOptionInfo> options)
         {
             return options.OrderBy(x => x.HelpOrder).ThenBy(x => x.ShortAliases.TryFirst(out var s) ? s.ToString() : x.Aliases[0]);
         }

@@ -14,11 +14,15 @@
 
     <!-- Package Info -->
     <Description>Contains supporting code for console CLI applications.</Description>
-    <Version>0.3.2</Version>
+    <Version>0.4.0</Version>
     <PackageTags>masch console terminal cli commandline parser</PackageTags>
   </PropertyGroup>
 
   <Import Project="$(GitBuildDir)MaSch.props" />
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="$(GitSourceDir)Console/MaSch.Console.csproj" />

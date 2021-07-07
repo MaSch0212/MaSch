@@ -31,9 +31,9 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         {
             var mock = Mocks.Create<object>();
             if (syncExecutor)
-                mock.As<ICliCommandExecutor>();
+                mock.As<ICliExecutable>();
             if (asyncExecutor)
-                mock.As<ICliAsyncCommandExecutor>();
+                mock.As<ICliAsyncExecutable>();
             var commandType = mock.Object.GetType();
 
             var executor = new DirectExecutor(commandType);
@@ -45,61 +45,44 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         [TestMethod]
         public void Execute_Null()
         {
-            var mock = Mocks.Create<ICliCommandExecutor>();
-            var commandType = mock.Object.GetType();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var sut = CreateSut<ICliExecutable>();
 
-            var executor = new DirectExecutor(commandType);
-
-            Assert.ThrowsException<ArgumentNullException>(() => executor.Execute(execCtx, null!));
-            Assert.ThrowsException<ArgumentNullException>(() => executor.Execute(null!, new object()));
+            Assert.ThrowsException<ArgumentNullException>(() => sut.Executor.Execute(sut.ExecutionContext, null!));
+            Assert.ThrowsException<ArgumentNullException>(() => sut.Executor.Execute(null!, new object()));
         }
 
         [TestMethod]
         public void Execute_TypeCheck()
         {
-            var mock1 = Mocks.Create<ICliCommandExecutor>();
-            var mock2 = Mocks.Create<ICliCommandExecutor>();
+            var mock1 = Mocks.Create<ICliExecutable>();
+            var mock2 = Mocks.Create<ICliExecutable>();
             mock2.As<IDisposable>();
-            var commandType = mock1.Object.GetType();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
 
-            var executor = new DirectExecutor(commandType);
+            var sut = CreateSut(mock1);
 
-            Assert.ThrowsException<ArgumentException>(() => executor.Execute(execCtx, mock2.Object));
+            Assert.ThrowsException<ArgumentException>(() => sut.Executor.Execute(sut.ExecutionContext, mock2.Object));
         }
 
         [TestMethod]
         public void Execute_NotAnExecutor()
         {
-            var executor = new DirectExecutor(typeof(ICliCommandExecutor));
+            var executor = new DirectExecutor(typeof(ICliExecutable));
             var po = new PrivateObject(executor);
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var sut = CreateSut<ICliExecutable>();
 
             po.SetField("_commandType", typeof(object));
 
-            var ex = Assert.ThrowsException<InvalidOperationException>(() => executor.Execute(execCtx, new object()));
-            Assert.ContainsAll(new[] { nameof(Object), nameof(ICliCommandExecutor), nameof(ICliAsyncCommandExecutor) }, ex.Message);
+            var ex = Assert.ThrowsException<InvalidOperationException>(() => executor.Execute(sut.ExecutionContext, new object()));
+            Assert.ContainsAll(new[] { nameof(Object), nameof(ICliExecutable), nameof(ICliAsyncExecutable) }, ex.Message);
         }
 
         [TestMethod]
         public void Execute_SyncExecutor()
         {
-            var mock = Mocks.Create<ICliCommandExecutor>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
-            mock.Setup(x => x.ExecuteCommand(execCtx)).Returns(4711).Verifiable(Verifiables, Times.Once());
+            var sut = CreateSut<ICliExecutable>();
+            sut.ExecutableMock.Setup(x => x.ExecuteCommand(sut.ExecutionContext)).Returns(4711).Verifiable(Verifiables, Times.Once());
 
-            var executor = new DirectExecutor(mock.Object.GetType());
-
-            var result = executor.Execute(execCtx, mock.Object);
+            var result = sut.Executor.Execute(sut.ExecutionContext, sut.ExecutableMock.Object);
 
             Assert.AreEqual(4711, result);
         }
@@ -107,15 +90,10 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         [TestMethod]
         public void Execute_AsyncExecutor()
         {
-            var mock = Mocks.Create<ICliAsyncCommandExecutor>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
-            mock.Setup(x => x.ExecuteCommandAsync(execCtx)).Returns(Task.Delay(10).ContinueWith(x => 4711)).Verifiable(Verifiables, Times.Once());
+            var sut = CreateSut<ICliAsyncExecutable>();
+            sut.ExecutableMock.Setup(x => x.ExecuteCommandAsync(sut.ExecutionContext)).Returns(Task.Delay(10).ContinueWith(x => 4711)).Verifiable(Verifiables, Times.Once());
 
-            var executor = new DirectExecutor(mock.Object.GetType());
-
-            var result = executor.Execute(execCtx, mock.Object);
+            var result = sut.Executor.Execute(sut.ExecutionContext, sut.ExecutableMock.Object);
 
             Assert.AreEqual(4711, result);
         }
@@ -123,19 +101,15 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         [TestMethod]
         public void Execute_SyncAndAsyncExecutor()
         {
-            var mock = Mocks.Create<ICliCommandExecutor>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
-            mock.Setup(x => x.ExecuteCommand(execCtx)).Returns(4711).Verifiable(Verifiables, Times.Once());
-            mock.As<ICliAsyncCommandExecutor>()
-                .Setup(x => x.ExecuteCommandAsync(execCtx))
+            Mock<ICliAsyncExecutable> asyncMock = null!;
+            var sut = CreateSut<ICliExecutable>(action: x => asyncMock = x.As<ICliAsyncExecutable>());
+            sut.ExecutableMock.Setup(x => x.ExecuteCommand(sut.ExecutionContext)).Returns(4711).Verifiable(Verifiables, Times.Once());
+            asyncMock
+                .Setup(x => x.ExecuteCommandAsync(sut.ExecutionContext))
                 .Returns(Task.Delay(10).ContinueWith(x => 1337))
                 .Verifiable(Verifiables, Times.Never());
 
-            var executor = new DirectExecutor(mock.Object.GetType());
-
-            var result = executor.Execute(execCtx, mock.Object);
+            var result = sut.Executor.Execute(sut.ExecutionContext, sut.ExecutableMock.Object);
 
             Assert.AreEqual(4711, result);
         }
@@ -143,61 +117,44 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         [TestMethod]
         public async Task ExecuteAsync_Null()
         {
-            var mock = Mocks.Create<ICliAsyncCommandExecutor>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            var commandType = mock.Object.GetType();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var sut = CreateSut<ICliAsyncExecutable>();
 
-            var executor = new DirectExecutor(commandType);
-
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => executor.ExecuteAsync(execCtx, null!));
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => executor.ExecuteAsync(null!, new object()));
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => sut.Executor.ExecuteAsync(sut.ExecutionContext, null!));
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => sut.Executor.ExecuteAsync(null!, new object()));
         }
 
         [TestMethod]
         public async Task ExecuteAsync_TypeCheck()
         {
-            var mock1 = Mocks.Create<ICliAsyncCommandExecutor>();
-            var mock2 = Mocks.Create<ICliAsyncCommandExecutor>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var mock1 = Mocks.Create<ICliAsyncExecutable>();
+            var mock2 = Mocks.Create<ICliAsyncExecutable>();
             mock2.As<IDisposable>();
-            var commandType = mock1.Object.GetType();
 
-            var executor = new DirectExecutor(commandType);
+            var sut = CreateSut(mock1);
 
-            await Assert.ThrowsExceptionAsync<ArgumentException>(() => executor.ExecuteAsync(execCtx, mock2.Object));
+            await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.Executor.ExecuteAsync(sut.ExecutionContext, mock2.Object));
         }
 
         [TestMethod]
         public async Task ExecuteAsync_NotAnExecutor()
         {
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
-            var executor = new DirectExecutor(typeof(ICliAsyncCommandExecutor));
+            var sut = CreateSut<ICliAsyncExecutable>();
+            var executor = new DirectExecutor(typeof(ICliAsyncExecutable));
             var po = new PrivateObject(executor);
 
             po.SetField("_commandType", typeof(object));
 
-            var ex = await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => executor.ExecuteAsync(execCtx, new object()));
-            Assert.ContainsAll(new[] { nameof(Object), nameof(ICliCommandExecutor), nameof(ICliAsyncCommandExecutor) }, ex.Message);
+            var ex = await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => executor.ExecuteAsync(sut.ExecutionContext, new object()));
+            Assert.ContainsAll(new[] { nameof(Object), nameof(ICliExecutable), nameof(ICliAsyncExecutable) }, ex.Message);
         }
 
         [TestMethod]
         public async Task ExecuteAsync_SyncExecutor()
         {
-            var mock = Mocks.Create<ICliCommandExecutor>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
-            mock.Setup(x => x.ExecuteCommand(execCtx)).Returns(4711).Verifiable(Verifiables, Times.Once());
+            var sut = CreateSut<ICliExecutable>();
+            sut.ExecutableMock.Setup(x => x.ExecuteCommand(sut.ExecutionContext)).Returns(4711).Verifiable(Verifiables, Times.Once());
 
-            var executor = new DirectExecutor(mock.Object.GetType());
-
-            var result = await executor.ExecuteAsync(execCtx, mock.Object);
+            var result = await sut.Executor.ExecuteAsync(sut.ExecutionContext, sut.ExecutableMock.Object);
 
             Assert.AreEqual(4711, result);
         }
@@ -205,15 +162,10 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         [TestMethod]
         public async Task ExecuteAsync_AsyncExecutor()
         {
-            var mock = Mocks.Create<ICliAsyncCommandExecutor>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
-            mock.Setup(x => x.ExecuteCommandAsync(execCtx)).Returns(Task.Delay(10).ContinueWith(x => 4711)).Verifiable(Verifiables, Times.Once());
+            var sut = CreateSut<ICliAsyncExecutable>();
+            sut.ExecutableMock.Setup(x => x.ExecuteCommandAsync(sut.ExecutionContext)).Returns(Task.Delay(10).ContinueWith(x => 4711)).Verifiable(Verifiables, Times.Once());
 
-            var executor = new DirectExecutor(mock.Object.GetType());
-
-            var result = await executor.ExecuteAsync(execCtx, mock.Object);
+            var result = await sut.Executor.ExecuteAsync(sut.ExecutionContext, sut.ExecutableMock.Object);
 
             Assert.AreEqual(4711, result);
         }
@@ -221,21 +173,38 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
         [TestMethod]
         public async Task ExecuteAsync_SyncAndAsyncExecutor()
         {
-            var mock = Mocks.Create<ICliCommandExecutor>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
-            mock.Setup(x => x.ExecuteCommand(execCtx)).Returns(4711).Verifiable(Verifiables, Times.Never());
-            mock.As<ICliAsyncCommandExecutor>()
-                .Setup(x => x.ExecuteCommandAsync(execCtx))
+            Mock<ICliAsyncExecutable> asyncMock = null!;
+            var sut = CreateSut<ICliExecutable>(action: x => asyncMock = x.As<ICliAsyncExecutable>());
+            sut.ExecutableMock.Setup(x => x.ExecuteCommand(sut.ExecutionContext)).Returns(4711).Verifiable(Verifiables, Times.Never());
+            asyncMock
+                .Setup(x => x.ExecuteCommandAsync(sut.ExecutionContext))
                 .Returns(Task.Delay(10).ContinueWith(x => 1337))
                 .Verifiable(Verifiables, Times.Once());
 
-            var executor = new DirectExecutor(mock.Object.GetType());
-
-            var result = await executor.ExecuteAsync(execCtx, mock.Object);
+            var result = await sut.Executor.ExecuteAsync(sut.ExecutionContext, sut.ExecutableMock.Object);
 
             Assert.AreEqual(1337, result);
         }
+
+        private DirectExecutorSut<TExecutable> CreateSut<TExecutable>(Mock<TExecutable>? executableMock = null, Action<Mock<TExecutable>>? action = null)
+            where TExecutable : class, ICliExecutableBase
+        {
+            var eMock = executableMock ?? Mocks.Create<TExecutable>();
+            action?.Invoke(eMock);
+            var cMock = Mocks.Create<ICliCommandInfo>();
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
+            var executor = new DirectExecutor(eMock.Object.GetType());
+
+            return new DirectExecutorSut<TExecutable>(executor, execCtx, spMock, cMock, eMock);
+        }
+
+        private record DirectExecutorSut<TExecutable>(
+            DirectExecutor Executor,
+            CliExecutionContext ExecutionContext,
+            Mock<IServiceProvider> ServiceProviderMock,
+            Mock<ICliCommandInfo> CommandMock,
+            Mock<TExecutable> ExecutableMock)
+            where TExecutable : class, ICliExecutableBase;
     }
 }

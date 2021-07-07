@@ -84,8 +84,8 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var m = Mocks.Create<Func<CliExecutionContext, IDisposable, int>>();
             var e = new FunctionExecutor<IDisposable>(m.Object, null);
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
 
             Assert.ThrowsException<ArgumentNullException>(() => e.Execute(execCtx, null!));
         }
@@ -96,8 +96,8 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var m = Mocks.Create<Func<CliExecutionContext, IDisposable, int>>();
             var e = new FunctionExecutor<IDisposable>(m.Object, null);
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
 
             Assert.ThrowsException<ArgumentException>(() => e.Execute(execCtx, new object()));
         }
@@ -110,8 +110,8 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var e = new FunctionExecutor<IDisposable>(m.Object, null);
             new PrivateObject(e).SetField("_executorFunc", null);
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
 
             Assert.ThrowsException<InvalidOperationException>(() => e.Execute(execCtx, o.Object));
         }
@@ -123,8 +123,8 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var m = Mocks.Create<Func<CliExecutionContext, IDisposable, int>>();
             var e = new FunctionExecutor<IDisposable>(m.Object, null);
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
             m.Setup(x => x(execCtx, o.Object)).Returns(4711).Verifiable(Verifiables, Times.Once());
 
             var result = e.Execute(execCtx, o.Object);
@@ -139,8 +139,8 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var m = Mocks.Create<Func<CliExecutionContext, IDisposable, Task<int>>>();
             var e = new FunctionExecutor<IDisposable>(null, m.Object);
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
             m.Setup(x => x(execCtx, o.Object)).Returns(Task.Delay(10).ContinueWith(x => 4711)).Verifiable(Verifiables, Times.Once());
 
             var result = e.Execute(execCtx, o.Object);
@@ -156,8 +156,8 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var am = Mocks.Create<Func<CliExecutionContext, IDisposable, Task<int>>>();
             var e = new FunctionExecutor<IDisposable>(sm.Object, am.Object);
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
             sm.Setup(x => x(execCtx, o.Object)).Returns(4711).Verifiable(Verifiables, Times.Once());
             am.Setup(x => x(execCtx, o.Object)).Returns(Task.Delay(10).ContinueWith(x => 4711)).Verifiable(Verifiables, Times.Never());
 
@@ -172,8 +172,8 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var m = Mocks.Create<Func<CliExecutionContext, IDisposable, Task<int>>>();
             var e = new FunctionExecutor<IDisposable>(null, m.Object);
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
 
             await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => e.ExecuteAsync(execCtx, null!));
         }
@@ -184,8 +184,8 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var m = Mocks.Create<Func<CliExecutionContext, IDisposable, Task<int>>>();
             var e = new FunctionExecutor<IDisposable>(null, m.Object);
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
 
             await Assert.ThrowsExceptionAsync<ArgumentException>(() => e.ExecuteAsync(execCtx, new object()));
         }
@@ -198,8 +198,8 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var e = new FunctionExecutor<IDisposable>(null, m.Object);
             new PrivateObject(e).SetField("_asyncExecutorFunc", null);
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
 
             await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => e.ExecuteAsync(execCtx, o.Object));
         }
@@ -211,8 +211,8 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var m = Mocks.Create<Func<CliExecutionContext, IDisposable, int>>();
             var e = new FunctionExecutor<IDisposable>(m.Object, null);
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
             m.Setup(x => x(execCtx, o.Object)).Returns(4711).Verifiable(Verifiables, Times.Once());
 
             var result = await e.ExecuteAsync(execCtx, o.Object);
@@ -227,8 +227,8 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var m = Mocks.Create<Func<CliExecutionContext, IDisposable, Task<int>>>();
             var e = new FunctionExecutor<IDisposable>(null, m.Object);
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
             m.Setup(x => x(execCtx, o.Object)).Returns(Task.Delay(10).ContinueWith(x => 4711)).Verifiable(Verifiables, Times.Once());
 
             var result = await e.ExecuteAsync(execCtx, o.Object);
@@ -244,8 +244,8 @@ namespace MaSch.Console.Cli.Test.Runtime.Executors
             var am = Mocks.Create<Func<CliExecutionContext, IDisposable, Task<int>>>();
             var e = new FunctionExecutor<IDisposable>(sm.Object, am.Object);
             var cMock = Mocks.Create<ICliCommandInfo>();
-            var appMock = Mocks.Create<ICliApplicationBase>();
-            var execCtx = new CliExecutionContext(appMock.Object, cMock.Object);
+            var spMock = Mocks.Create<IServiceProvider>();
+            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
             sm.Setup(x => x(execCtx, o.Object)).Returns(4711).Verifiable(Verifiables, Times.Never());
             am.Setup(x => x(execCtx, o.Object)).Returns(Task.Delay(10).ContinueWith(x => 4711)).Verifiable(Verifiables, Times.Once());
 

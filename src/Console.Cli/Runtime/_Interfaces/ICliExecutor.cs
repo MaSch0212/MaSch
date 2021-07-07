@@ -1,13 +1,17 @@
-﻿using MaSch.Console.Cli.Runtime;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
-
-namespace MaSch.Console.Cli.Internal
+﻿namespace MaSch.Console.Cli.Runtime
 {
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:Elements should be documented", Justification = "Internal interface")]
-    internal interface ICliExecutor : ICliValidator<object>
+    /// <summary>
+    /// Represents an executor that can execute a given command.
+    /// </summary>
+    /// <typeparam name="TCommand">The type of commands the executor can execute.</typeparam>
+    public interface ICliExecutor<TCommand> : ICliExecutorBase<TCommand>
     {
-        int Execute(CliExecutionContext context, object obj);
-        Task<int> ExecuteAsync(CliExecutionContext context, object obj);
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="context">The execution context.</param>
+        /// <param name="parameters">The command to execute.</param>
+        /// <returns>The exit code.</returns>
+        int ExecuteCommand(CliExecutionContext context, TCommand parameters);
     }
 }
