@@ -136,7 +136,11 @@ namespace MaSch.Test
         /// <param name="value">The value.</param>
         /// <param name="methodName">The method name (auto detected).</param>
         /// <returns>A self reference to this builder.</returns>
+#if NETFRAMEWORK
+        protected new TBuilder Set<T>(T value, [CallerMemberName] string? methodName = null)
+#else
         protected override TBuilder Set<T>(T value, [CallerMemberName] string? methodName = null)
+#endif
             => (TBuilder)base.Set(value, methodName);
 
         /// <summary>
@@ -146,7 +150,11 @@ namespace MaSch.Test
         /// <param name="value">The value.</param>
         /// <param name="methodName">The method name (auto detected).</param>
         /// <returns>A self reference to this builder.</returns>
+#if NETFRAMEWORK
+        protected new TBuilder Add<T>(T value, [CallerMemberName] string? methodName = null)
+#else
         protected override TBuilder Add<T>(T value, [CallerMemberName] string? methodName = null)
+#endif
             => (TBuilder)base.Add(value, methodName);
     }
 }
