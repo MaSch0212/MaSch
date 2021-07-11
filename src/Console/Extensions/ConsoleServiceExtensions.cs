@@ -1,4 +1,5 @@
-﻿using MaSch.Core;
+﻿using MaSch.Console.Ansi;
+using MaSch.Core;
 using MaSch.Core.Extensions;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -216,6 +217,19 @@ namespace MaSch.Console
         }
 
         /// <summary>
+        /// Wries the specified string value to the standard output stream using the specified style.
+        /// </summary>
+        /// <param name="service">The console to write to.</param>
+        /// <param name="value">The value to write.</param>
+        /// <param name="styleAction">The style for the text.</param>
+        public static void WriteWithStyle(this IConsoleService service, string? value, Action<AnsiStyle> styleAction)
+        {
+            var style = new AnsiStyle();
+            styleAction?.Invoke(style);
+            service.Write(string.Concat(style.BuildAnsiSequence(), value, AnsiEscapeUtility.GetResetStyle()));
+        }
+
+        /// <summary>
         /// Writes the specified string value, followed by the current line terminator, to the standard output stream using specific colors.
         /// </summary>
         /// <param name="service">The console to write to.</param>
@@ -238,6 +252,19 @@ namespace MaSch.Console
         {
             using (SetColors(service, foregroundColor, backgroundColor))
                 service.WriteLine(value);
+        }
+
+        /// <summary>
+        /// Wries the specified string value, followed by the current line terminator, to the standard output stream using the specified style.
+        /// </summary>
+        /// <param name="service">The console to write to.</param>
+        /// <param name="value">The value to write.</param>
+        /// <param name="styleAction">The style for the text.</param>
+        public static void WriteLineWithStyle(this IConsoleService service, string? value, Action<AnsiStyle> styleAction)
+        {
+            var style = new AnsiStyle();
+            styleAction?.Invoke(style);
+            service.WriteLine(string.Concat(style.BuildAnsiSequence(), value, AnsiEscapeUtility.GetResetStyle()));
         }
 
         /// <summary>

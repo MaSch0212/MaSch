@@ -17,6 +17,11 @@ namespace MaSch.Console
         bool IsFancyConsole { get; }
 
         /// <summary>
+        /// Gets a value indicating whether ANSI escape sequences are removed when the console output is redirected.
+        /// </summary>
+        bool IsAnsiEscapeTrimmingEnabled { get; }
+
+        /// <summary>
         /// Gets a modifiable object representing the size of the buffer area.
         /// </summary>
         ConsoleSize BufferSize { get; }

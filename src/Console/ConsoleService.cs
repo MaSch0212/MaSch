@@ -1,4 +1,5 @@
-﻿using MaSch.Core.Lazy;
+﻿using MaSch.Console.Ansi;
+using MaSch.Core.Lazy;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -16,6 +17,9 @@ namespace MaSch.Console
     {
         /// <inheritdoc />
         public bool IsFancyConsole { get; }
+
+        /// <inheritdoc />
+        public bool IsAnsiEscapeTrimmingEnabled { get; }
 
         /// <inheritdoc />
         [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "This is already verified by the ConsoleSize class.")]
@@ -149,9 +153,19 @@ namespace MaSch.Console
         /// Initializes a new instance of the <see cref="ConsoleService"/> class.
         /// </summary>
         public ConsoleService()
+            : this(true)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConsoleService"/> class.
+        /// </summary>
+        /// <param name="enableAnsiEscapeTrimming">A value indicating whether ANSI escape sequences should be removed when the console output is redirected.</param>
+        public ConsoleService(bool enableAnsiEscapeTrimming)
         {
             IsFancyConsole =
                 !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WT_SESSION")); // Windows Terminal
+            IsAnsiEscapeTrimmingEnabled = enableAnsiEscapeTrimming;
 
             if (IsFancyConsole)
                 OutputEncoding = Encoding.UTF8;
@@ -201,9 +215,14 @@ namespace MaSch.Console
         public void ResetColor() => C.ResetColor();
 
         /// <inheritdoc />
-        public void Write(string? value) => C.Write(value);
+        public void Write(string? value)
+            => C.Write(EscapeIfNeeded(value));
 
         /// <inheritdoc />
-        public void WriteLine(string? value) => C.WriteLine(value);
+        public void WriteLine(string? value)
+            => C.WriteLine(EscapeIfNeeded(value));
+
+        private string? EscapeIfNeeded(string? value)
+            => IsAnsiEscapeTrimmingEnabled && value != null ? AnsiEscapeUtility.EscapeSequenceRegex.Replace(value, string.Empty) : value;
     }
 }

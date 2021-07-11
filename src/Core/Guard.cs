@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -16,7 +17,7 @@ namespace MaSch.Core
         /// <typeparam name="T">The type of the value to verify.</typeparam>
         /// <param name="value">The value.</param>
         /// <param name="name">The name of the parameter to verify.</param>
-        /// <exception cref="ArgumentNullException">The value is null.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
         /// <returns>The same instance as <paramref name="value"/>.</returns>
         [return: NotNull]
         public static T NotNull<T>([NotNull] T value, string name)
@@ -31,8 +32,8 @@ namespace MaSch.Core
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="name">The name of the parameter to verify.</param>
-        /// <exception cref="ArgumentException">The parameter value cannot be empty.</exception>
-        /// <exception cref="ArgumentNullException">The value is null.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="value"/> is empty.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
         /// <returns>The same instance as <paramref name="value"/>.</returns>
         public static string NotNullOrEmpty([NotNull] string? value, string name)
         {
@@ -48,8 +49,8 @@ namespace MaSch.Core
         /// <typeparam name="T">The type of collection to verify.</typeparam>
         /// <param name="collection">The collection.</param>
         /// <param name="name">The name of the parameter to verify.</param>
-        /// <exception cref="ArgumentException">The parameter value cannot be empty.</exception>
-        /// <exception cref="ArgumentNullException">The value is null.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="collection"/> is empty.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="collection"/> is null.</exception>
         /// <returns>The same instance as <paramref name="collection"/>.</returns>
         public static T NotNullOrEmpty<T>([NotNull] T? collection, string name)
             where T : ICollection
@@ -68,6 +69,7 @@ namespace MaSch.Core
         /// <param name="name">The name of the parameter to verify.</param>
         /// <param name="min">The minimum accepted value.</param>
         /// <param name="max">The maximum accepted value.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">The <paramref name="value"/> is out of the specified range.</exception>
         /// <returns>The same instance as <paramref name="value"/>.</returns>
         public static T? NotOutOfRange<T>(T? value, string name, T min, T max)
@@ -76,6 +78,44 @@ namespace MaSch.Core
             NotNull(value, name);
             if (value.CompareTo(min) < 0 || value.CompareTo(max) > 0)
                 throw new ArgumentOutOfRangeException(name, $"The parameter value cannot be outside of the range <{min}> to <{max}>.");
+            return value;
+        }
+
+        /// <summary>
+        /// Verifies that a value is not greater than a specified value.
+        /// </summary>
+        /// <typeparam name="T">The type of the value to verify.</typeparam>
+        /// <param name="value">The value.</param>
+        /// <param name="name">The name of the parameter to verify.</param>
+        /// <param name="max">The maximum accepted value.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The <paramref name="value"/> is greater than <paramref name="max"/>.</exception>
+        /// <returns>The same instance as <paramref name="value"/>.</returns>
+        public static T? NotGreaterThan<T>(T? value, string name, T max)
+            where T : IComparable
+        {
+            NotNull(value, name);
+            if (value.CompareTo(max) > 0)
+                throw new ArgumentOutOfRangeException(name, $"The parameter value cannot be greater than <{max}>.");
+            return value;
+        }
+
+        /// <summary>
+        /// Verifies that a value is not smaller than a specified value.
+        /// </summary>
+        /// <typeparam name="T">The type of the value to verify.</typeparam>
+        /// <param name="value">The value.</param>
+        /// <param name="name">The name of the parameter to verify.</param>
+        /// <param name="min">The minimum accepted value.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The <paramref name="value"/> is smaller than <paramref name="min"/>.</exception>
+        /// <returns>The same instance as <paramref name="value"/>.</returns>
+        public static T? NotSmallerThan<T>(T? value, string name, T min)
+            where T : IComparable
+        {
+            NotNull(value, name);
+            if (value.CompareTo(min) < 0)
+                throw new ArgumentOutOfRangeException(name, $"The parameter value cannot be smaller than <{min}>.");
             return value;
         }
 
@@ -105,7 +145,7 @@ namespace MaSch.Core
             if (value is T result)
                 return result;
             if (typeof(T).IsClass && value is null)
-                return allowNull ? default(T) : throw new ArgumentNullException(name);
+                return allowNull ? default : throw new ArgumentNullException(name);
             throw new ArgumentException($"The parameter value should be of type \"{typeof(T).FullName}\" but it is not. Actual type is \"{value?.GetType().FullName ?? "(null)"}\".", name);
         }
 
@@ -150,6 +190,81 @@ namespace MaSch.Core
 
             var typesStr = allowedTypes.Any() ? $"{Environment.NewLine}- {string.Join($"{Environment.NewLine}- ", allowedTypes.Select(x => x.FullName))}" : string.Empty;
             throw new ArgumentException($"The parameter value should be one of the following types but it is not: {typesStr}{Environment.NewLine}Actual type is \"{value?.GetType().FullName ?? "(null)"}\".", name);
+        }
+
+        /// <summary>
+        /// Verifies that a value equals one of the specified values.
+        /// </summary>
+        /// <typeparam name="T">The type of the value to verify.</typeparam>
+        /// <param name="value">The value.</param>
+        /// <param name="name">The name of the parameter to verify.</param>
+        /// <param name="allowedValues">The values of which <paramref name="value"/> needs to equal to at least one.</param>
+        /// <exception cref="ArgumentException">The <paramref name="value"/> does not equal to any values from <paramref name="allowedValues"/>.</exception>
+        /// <returns>Returns the <paramref name="value"/>.</returns>
+        public static T OneOf<T>(T value, string name, params T[] allowedValues)
+            => OneOf(value, name, EqualityComparer<T>.Default, allowedValues);
+
+        /// <summary>
+        /// Verifies that a value equals one of the specified values.
+        /// </summary>
+        /// <typeparam name="T">The type of the value to verify.</typeparam>
+        /// <param name="value">The value.</param>
+        /// <param name="name">The name of the parameter to verify.</param>
+        /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to use when comparing the values.</param>
+        /// <param name="allowedValues">The allowed values.</param>
+        /// <exception cref="ArgumentException">The <paramref name="value"/> does not equal to any values from <paramref name="allowedValues"/>.</exception>
+        /// <returns>Returns the <paramref name="value"/>.</returns>
+        public static T OneOf<T>(T value, string name, IEqualityComparer<T> comparer, params T[] allowedValues)
+        {
+            if (!allowedValues.Contains(value, comparer))
+                throw new ArgumentException($"The parameter value needs to equal one of the following values: {string.Join(", ", allowedValues)}", name);
+            return value;
+        }
+
+        /// <summary>
+        /// Verifies that a value does not equal any of the specified values.
+        /// </summary>
+        /// <typeparam name="T">The type of the value to verify.</typeparam>
+        /// <param name="value">The value.</param>
+        /// <param name="name">The name of the parameter to verify.</param>
+        /// <param name="disallowedValues">The disallowed values.</param>
+        /// <exception cref="ArgumentException">The <paramref name="value"/> equals to at least one value from <paramref name="disallowedValues"/>.</exception>
+        /// <returns>Returns the <paramref name="value"/>.</returns>
+        public static T NotOneOf<T>(T value, string name, params T[] disallowedValues)
+            => NotOneOf(value, name, EqualityComparer<T>.Default, disallowedValues);
+
+        /// <summary>
+        /// Verifies that a value does not equal any of the specified values.
+        /// </summary>
+        /// <typeparam name="T">The type of the value to verify.</typeparam>
+        /// <param name="value">The value.</param>
+        /// <param name="name">The name of the parameter to verify.</param>
+        /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to use when comparing the values.</param>
+        /// <param name="disallowedValues">The disallowed values.</param>
+        /// <exception cref="ArgumentException">The <paramref name="value"/> equals to at least one value from <paramref name="disallowedValues"/>.</exception>
+        /// <returns>Returns the <paramref name="value"/>.</returns>
+        public static T NotOneOf<T>(T value, string name, IEqualityComparer<T> comparer, params T[] disallowedValues)
+        {
+            if (disallowedValues.Contains(value, comparer))
+                throw new ArgumentException($"The parameter value must not equal one of the following values: {string.Join(", ", disallowedValues)}", name);
+            return value;
+        }
+
+        /// <summary>
+        /// Verifies that a enum value is defined in the specified enum type.
+        /// </summary>
+        /// <typeparam name="T">The enum type in which the <paramref name="value"/> needs to be defined.</typeparam>
+        /// <param name="value">The value.</param>
+        /// <param name="name">The name of the parameter to verify.</param>
+        /// <exception cref="ArgumentException">The <paramref name="value"/> is not defined in <typeparamref name="T"/>.</exception>
+        /// <returns>Returns the <paramref name="value"/>.</returns>
+        public static T NotUndefinedEnumMember<T>(T value, string name)
+            where T : Enum
+        {
+            NotNull(value, name);
+            if (!Enum.IsDefined(typeof(T), value))
+                throw new ArgumentException($"The value \"{value}\" is not defined in the enum \"{typeof(T).Name}\".", name);
+            return value;
         }
     }
 }
