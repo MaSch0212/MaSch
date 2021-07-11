@@ -282,7 +282,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i>#</i> m</c></returns>
         public static string GetAddStyle(AnsiTextStyle style)
         {
-            Guard.NotUndefinedEnumMember(style, nameof(style));
+            Guard.NotUndefinedFlagInEnumValue(style, nameof(style));
 
             static void Add(StringBuilder sb, int n) => sb.Append($"{ESC}[{n}m");
 
@@ -315,7 +315,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i>#</i> m</c></returns>
         public static string GetRemoveStyle(AnsiTextStyle style)
         {
-            Guard.NotUndefinedEnumMember(style, nameof(style));
+            Guard.NotUndefinedFlagInEnumValue(style, nameof(style));
 
             static void Add(StringBuilder sb, int n) => sb.Append($"{ESC}[{n}m");
 

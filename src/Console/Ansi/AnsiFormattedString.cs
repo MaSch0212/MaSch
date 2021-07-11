@@ -14,6 +14,7 @@ namespace MaSch.Console.Ansi
     {
         private readonly StringBuilder _builder;
         private readonly LinkedList<StyleRange> _styles = new LinkedList<StyleRange>();
+        private int _nextStyleId;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AnsiFormattedString"/> class.
@@ -761,7 +762,7 @@ namespace MaSch.Console.Ansi
                 while (currentNode != null)
                 {
                     var nextNode = currentNode.Next;
-                    if (currentNode.Value.Start + currentNode.Value.Length >= i)
+                    if (currentNode.Value.Start + currentNode.Value.Length <= i)
                     {
                         UpdatePreStyles(activeStyles, ref preStyles, currentNode.Value.Style);
                         if (currentNode.Value.Style.ForegroundColor is not null)
@@ -784,7 +785,19 @@ namespace MaSch.Console.Ansi
                             hasForegroundColorChanged = true;
                         if (s.Style.BackgroundColor is not null)
                             hasBackgroundColorChanged = true;
-                        activeStyles.AddLast(s);
+
+                        var current = activeStyles.First;
+                        while (current is not null)
+                        {
+                            if (current.Value.Id > s.Id)
+                                break;
+                            current = current.Next;
+                        }
+
+                        if (current is not null)
+                            activeStyles.AddBefore(current, s);
+                        else
+                            activeStyles.AddLast(s);
                     }
                 }
 
@@ -807,7 +820,7 @@ namespace MaSch.Console.Ansi
                 result.Append(_builder[i]);
             }
 
-            return result;
+            return result.Append(AnsiEscapeUtility.GetResetStyle());
         }
 
         /// <summary>
@@ -831,7 +844,7 @@ namespace MaSch.Console.Ansi
         {
             var style = new AnsiStyle();
             styleAction(style);
-            _styles.AddLast(new StyleRange(startIndex, length, style));
+            _styles.AddLast(new StyleRange(_nextStyleId++, startIndex, length, style));
             return this;
         }
 
@@ -864,17 +877,19 @@ namespace MaSch.Console.Ansi
 
         private static AnsiTextStyle CombineStyles(AnsiTextStyle current, StyleRange style)
         {
-            return (current & style.Style.RemovedStyles) | style.Style.AddedStyles;
+            return (current ^ (style.Style.RemovedStyles & current)) | style.Style.AddedStyles;
         }
 
         private class StyleRange
         {
+            public int Id { get; set; }
             public int Start { get; set; }
             public int Length { get; set; }
             public AnsiStyle Style { get; }
 
-            public StyleRange(int start, int length, AnsiStyle style)
+            public StyleRange(int id, int start, int length, AnsiStyle style)
             {
+                Id = id;
                 Start = start;
                 Length = length;
                 Style = style;
@@ -902,7 +917,7 @@ namespace MaSch.Console.Ansi
 
                 foreach (var s in _formattedString._styles)
                 {
-                    if (s.Start >= _index)
+                    if (s.Start >= _index && !(s.Start == _index && s.Start + s.Length == int.MaxValue))
                     {
                         s.Start += addLen;
                     }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace MaSch.Core
 {
@@ -251,7 +252,7 @@ namespace MaSch.Core
         }
 
         /// <summary>
-        /// Verifies that a enum value is defined in the specified enum type.
+        /// Verifies that an enum value is defined in the specified enum type.
         /// </summary>
         /// <typeparam name="T">The enum type in which the <paramref name="value"/> needs to be defined.</typeparam>
         /// <param name="value">The value.</param>
@@ -265,6 +266,49 @@ namespace MaSch.Core
             if (!Enum.IsDefined(typeof(T), value))
                 throw new ArgumentException($"The value \"{value}\" is not defined in the enum \"{typeof(T).Name}\".", name);
             return value;
+        }
+
+        /// <summary>
+        /// Verifies that an enum value consist only of enum values defined in the specified enum type.
+        /// </summary>
+        /// <typeparam name="T">The enum type in which the flags of <paramref name="value"/> needs to be defined.</typeparam>
+        /// <param name="value">The value.</param>
+        /// <param name="name">The name of the parameter to verify.</param>
+        /// <exception cref="ArgumentException">At least one flag in <paramref name="value"/> is not defined in <typeparamref name="T"/>.</exception>
+        /// <returns>Returns the <paramref name="value"/>.</returns>
+        public static T NotUndefinedFlagInEnumValue<T>(T value, string name)
+            where T : Enum
+        {
+            NotNull(value, name);
+
+            if (Equals(value, default(T)) && !Enum.IsDefined(typeof(T), default(T)!))
+                throw new ArgumentException($"The value \"{value}\" is not defined in the enum \"{typeof(T).Name}\".", name);
+
+            var xor = CompileEnumOperatorFunc<T>(Expression.ExclusiveOr);
+            var and = CompileEnumOperatorFunc<T>(Expression.And);
+
+            var result = Enum.GetValues(typeof(T)).Cast<T>().Aggregate(value, (a, x) => and(xor(a, x), a));
+            if (!Equals(result, default(T)))
+                throw new ArgumentException($"At least one flag in \"{value}\" is not defined in the enum \"{typeof(T).Name}\".", name);
+            return value;
+        }
+
+        private static Func<T, T, T> CompileEnumOperatorFunc<T>(Func<Expression, Expression, BinaryExpression> operatorExpressionFactory)
+            where T : Enum
+        {
+            var ulType = Enum.GetUnderlyingType(typeof(T));
+
+            var aArg = Expression.Parameter(typeof(T), "a");
+            var bArg = Expression.Parameter(typeof(T), "b");
+
+            var ulA = Expression.Convert(aArg, ulType);
+            var ulB = Expression.Convert(bArg, ulType);
+
+            var @operator = operatorExpressionFactory(ulA, ulB);
+            var result = Expression.Convert(@operator, typeof(T));
+
+            var lambda = Expression.Lambda<Func<T, T, T>>(result, aArg, bArg);
+            return lambda.Compile();
         }
     }
 }

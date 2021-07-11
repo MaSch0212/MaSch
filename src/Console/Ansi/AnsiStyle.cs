@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using MaSch.Core;
+using System.Text;
 
 namespace MaSch.Console.Ansi
 {
@@ -46,7 +47,9 @@ namespace MaSch.Console.Ansi
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
         public AnsiStyle WithStyles(AnsiTextStyle styles)
         {
+            Guard.NotUndefinedFlagInEnumValue(styles, nameof(styles));
             _addedStyles |= styles;
+            _removedStyles ^= styles & _removedStyles;
             return this;
         }
 
@@ -57,6 +60,8 @@ namespace MaSch.Console.Ansi
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
         public AnsiStyle WithoutStyles(AnsiTextStyle styles)
         {
+            Guard.NotUndefinedFlagInEnumValue(styles, nameof(styles));
+            _addedStyles ^= styles & _addedStyles;
             _removedStyles |= styles;
             return this;
         }
@@ -68,8 +73,9 @@ namespace MaSch.Console.Ansi
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
         public AnsiStyle OverrideStyles(AnsiTextStyle exactStyles)
         {
+            Guard.NotUndefinedFlagInEnumValue(exactStyles, nameof(exactStyles));
             _addedStyles = exactStyles;
-            _removedStyles = AnsiTextStyle.All ^ exactStyles;
+            _removedStyles = AnsiTextStyle.All ^ AnsiTextStyle.Invert ^ exactStyles;
             return this;
         }
 
@@ -150,12 +156,6 @@ namespace MaSch.Console.Ansi
         /// </summary>
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
         public AnsiStyle NotBlinking() => WithoutStyles(AnsiTextStyle.Blink);
-
-        /// <summary>
-        /// Adds the information to this <see cref="AnsiStyle"/> instance that foreground and background colors should not be swapped.
-        /// </summary>
-        /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
-        public AnsiStyle NotInverted() => WithoutStyles(AnsiTextStyle.Invert);
 
         /// <summary>
         /// Adds the information to this <see cref="AnsiStyle"/> instance that text should not be crossed-out.

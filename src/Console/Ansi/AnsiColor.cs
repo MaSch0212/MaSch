@@ -63,9 +63,11 @@ namespace MaSch.Console.Ansi
         /// <inheritdoc/>
         public override string ToString()
         {
-            return _colorCode.HasValue
-                ? Enum.GetName(typeof(AnsiColorCode), _colorCode.Value) ?? "Unknown Color"
-                : $"#{_red.ToHexString()}{_green.ToHexString()}{_blue.ToHexString()} - rgb({_red}, {_green}, {_blue})";
+            return _isDefaultColor
+                ? "Default"
+                : _colorCode.HasValue
+                    ? Enum.GetName(typeof(AnsiColorCode), _colorCode.Value)!
+                    : $"#{_red.ToHexString()}{_green.ToHexString()}{_blue.ToHexString()} - rgb({_red}, {_green}, {_blue})";
         }
 
         /// <summary>
@@ -74,7 +76,7 @@ namespace MaSch.Console.Ansi
         /// <param name="colorCode">The <see cref="AnsiColorCode"/> to use.</param>
         /// <returns>A <see cref="AnsiColor"/> instance that represents the <paramref name="colorCode"/>.</returns>
         public static AnsiColor FromColorCode(AnsiColorCode colorCode)
-            => new(colorCode);
+            => new(Guard.NotUndefinedEnumMember(colorCode, nameof(colorCode)));
 
         /// <summary>
         /// Creates an <see cref="AnsiColor"/> using specified RGB values.
