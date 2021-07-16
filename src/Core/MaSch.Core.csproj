@@ -14,7 +14,7 @@
 
     <!-- Package Info -->
     <Description>Contains common supporting code for .NET applications.</Description>
-    <Version>0.2.6</Version>
+    <Version>0.2.7</Version>
     <PackageTags>masch core common observable logging extensions</PackageTags>
   </PropertyGroup>
 

@@ -1703,8 +1703,8 @@ namespace MaSch.Core.Extensions
         {
             foreach (var element in enumerable)
             {
-                if (element == null)
-                    yield return element!;
+                if (element is not null)
+                    yield return element;
             }
         }
 

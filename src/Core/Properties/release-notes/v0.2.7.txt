@@ -1,0 +1,3 @@
+﻿- Added Methods to Guard: NotSmallerThan, NotGreaterThan, OneOf, NotOneOf, NotUndefinedEnumMember.
+- Added ToHexString and ToHexChars extension methods for byte.
+- Fixed EnumerableExtension.WhereNotNull.
