@@ -20,7 +20,7 @@ namespace MaSch.Console.Ansi
         /// Initializes a new instance of the <see cref="AnsiFormattedString"/> class.
         /// </summary>
         public AnsiFormattedString()
-            : this((string?)null)
+            : this(null)
         {
         }
 
@@ -61,7 +61,13 @@ namespace MaSch.Console.Ansi
         public int Length
         {
             get => _builder.Length;
-            set => _builder.Length = value;
+            set
+            {
+                var preLen = _builder.Length;
+                _builder.Length = value;
+                if (preLen > value)
+                    OnRemove(value, preLen - value);
+            }
         }
 
         /// <summary>
@@ -97,7 +103,7 @@ namespace MaSch.Console.Ansi
         /// <param name="value">The value to append.</param>
         /// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
-        public AnsiFormattedString Append(IFormattable? value, IFormatProvider formatProvider)
+        public AnsiFormattedString Append(IFormattable? value, IFormatProvider? formatProvider)
             => Append(value, formatProvider, null);
 
         /// <summary>
@@ -107,7 +113,7 @@ namespace MaSch.Console.Ansi
         /// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
-        public AnsiFormattedString Append(IFormattable? value, IFormatProvider formatProvider, Action<AnsiStyle>? styleAction)
+        public AnsiFormattedString Append(IFormattable? value, IFormatProvider? formatProvider, Action<AnsiStyle>? styleAction)
             => CallInsert(Length, value?.ToString(null, formatProvider), (b, i, x) => b.Append(x), styleAction);
 
         /// <summary>
@@ -560,33 +566,7 @@ namespace MaSch.Console.Ansi
         public AnsiFormattedString Remove(int startIndex, int length)
         {
             _builder.Remove(startIndex, length);
-
-            var currentNode = _styles.First;
-            while (currentNode is not null)
-            {
-                var nextNode = currentNode.Next;
-                var s = currentNode.Value;
-
-                if (s.Start >= startIndex && s.Start + s.Length <= startIndex + length)
-                {
-                    _styles.Remove(currentNode);
-                }
-                else
-                {
-                    if (s.Start >= startIndex)
-                    {
-                        s.Length -= Math.Max(0, startIndex + length - s.Start);
-                        s.Start -= Math.Min(length, s.Start - startIndex);
-                    }
-                    else if (s.Start + s.Length > startIndex)
-                    {
-                        s.Length -= Math.Min(length, s.Start + s.Length - startIndex);
-                    }
-                }
-
-                currentNode = nextNode;
-            }
-
+            OnRemove(startIndex, length);
             return this;
         }
 
@@ -750,7 +730,7 @@ namespace MaSch.Console.Ansi
 
             var pendingStyles = _styles.GroupBy(x => x.Start).ToDictionary(x => x.Key, x => x.ToArray());
             var activeStyles = new LinkedList<StyleRange>();
-            var result = new StringBuilder();
+            var result = new StringBuilder(AnsiEscapeUtility.GetResetStyle());
             for (int i = 0; i < _builder.Length; i++)
             {
                 AnsiTextStyle? preStyles = null;
@@ -839,6 +819,43 @@ namespace MaSch.Console.Ansi
         /// <returns>A <see cref="string"/> whose value is the same as this instance.</returns>
         public override string ToString()
             => ToString(true);
+
+        private void OnRemove(int startIndex, int length)
+        {
+            var currentNode = _styles.First;
+            while (currentNode is not null)
+            {
+                var nextNode = currentNode.Next;
+                var s = currentNode.Value;
+
+                if (s.Start >= startIndex && s.Start + s.Length <= startIndex + length)
+                {
+                    _styles.Remove(currentNode);
+                }
+                else
+                {
+                    if (s.Start >= startIndex)
+                    {
+                        if (s.Start + s.Length == int.MaxValue)
+                        {
+                            s.Start -= Math.Min(length, s.Start - startIndex);
+                            s.Length = int.MaxValue - s.Start;
+                        }
+                        else
+                        {
+                            s.Length -= Math.Max(0, startIndex + length - s.Start);
+                            s.Start -= Math.Min(length, s.Start - startIndex);
+                        }
+                    }
+                    else if (s.Start + s.Length > startIndex && s.Start + s.Length != int.MaxValue)
+                    {
+                        s.Length -= Math.Min(length, s.Start + s.Length - startIndex);
+                    }
+                }
+
+                currentNode = nextNode;
+            }
+        }
 
         private AnsiFormattedString ApplyStyleImpl(int startIndex, int length, Action<AnsiStyle> styleAction)
         {
