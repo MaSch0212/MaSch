@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../build/MaSch.Constants.props" />
+
+  <PropertyGroup>
+    <!-- General Project info -->
+    <TargetFrameworks>$(TfmNetCore);$(TfmNetFramework)</TargetFrameworks>
+    <RootNamespace>MaSch.Test.UnitTests</RootNamespace>
+    <IsTestProject>true</IsTestProject>
+    <NoMaSchTest>true</NoMaSchTest>
+    <UseMaSchGenerators>true</UseMaSchGenerators>
+    <DefineConstants>$(DefineConstants);MSTEST</DefineConstants>
+
+    <!-- Output info -->
+    <SignAssembly>true</SignAssembly>
+
+    <!-- Disable warning about existing shim in MaSch.Test.MSTest -->
+    <NoWarn>$(NoWarn);0436</NoWarn>
+  </PropertyGroup>
+
+  <Import Project="$(GitBuildDir)MaSch.props" />
+
+  <ItemGroup>
+    <Compile Include="../Test.UnitTests/**/*.cs" Exclude="../Test.UnitTests/obj/**/*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
+    <ProjectReference Include="$(GitSourceDir)Test.MSTest/MaSch.Test.MSTest.csproj" />
+  </ItemGroup>
+
+</Project>

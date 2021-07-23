@@ -117,7 +117,7 @@
     <PackageReference Include="MSTest.TestAdapter" Version="$(MsTestVersion)" />
     <PackageReference Include="MSTest.TestFramework" Version="$(MsTestVersion)" />
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
-    <ProjectReference Include="$(GitSourceDir)Test.Components/MaSch.Test.Components.csproj" />
+    <ProjectReference Include="$(GitSourceDir)Test.MSTest/MaSch.Test.MSTest.csproj" Condition=" $(NoMaSchTest) != 'true' " />
   </ItemGroup>
   
 </Project>

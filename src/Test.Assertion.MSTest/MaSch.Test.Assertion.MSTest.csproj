@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../build/MaSch.Constants.props" />
+
+  <PropertyGroup>
+    <!-- General Project info -->
+    <TargetFrameworks>$(TfmNetCore);$(TfmNetFramework)</TargetFrameworks>
+    <RootNamespace>MaSch.Test.Assertion</RootNamespace>
+    <ConfigureSourceLink>true</ConfigureSourceLink>
+    <AddReleaseNotes>true</AddReleaseNotes>
+    <UseMaSchGenerators>false</UseMaSchGenerators>
+    <DefineConstants>$(DefineConstants);MSTEST</DefineConstants>
+    
+    <!-- Output info -->
+    <SignAssembly>true</SignAssembly>
+
+    <!-- Package Info -->
+    <Description>Contains Assertion logic for tests written with MSTest.</Description>
+    <Version>0.5.0</Version>
+    <PackageTags>masch test mstest</PackageTags>
+  </PropertyGroup>
+
+  <Import Project="$(GitBuildDir)MaSch.props" />
+
+  <ItemGroup>
+    <Compile Include="../Test.Assertion/**/*.cs" Exclude="../Test.Assertion/obj/**/*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Generators\Resources\NullableReferenceTypes.cs" Link="Shims\NullableReferenceTypes.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MSTest.TestFramework" Version="$(MsTestVersion)" />
+  </ItemGroup>
+  
+</Project>

@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../build/MaSch.Constants.props" />
+
+  <PropertyGroup>
+    <!-- General Project info -->
+    <TargetFrameworks>$(TfmNetCore);$(TfmNetFramework)</TargetFrameworks>
+    <ConfigureSourceLink>true</ConfigureSourceLink>
+    <AddReleaseNotes>true</AddReleaseNotes>
+    <UseMaSchGenerators>true</UseMaSchGenerators>
+
+    <!-- Output info -->
+    <SignAssembly>true</SignAssembly>
+
+    <!-- Package Info -->
+    <Description>Contains some supporting code for Unit Tests.</Description>
+    <Version>0.5.0</Version>
+    <PackageTags>masch test</PackageTags>
+
+    <DoesNotReturnAttribute>DoesNotReturnAttribute</DoesNotReturnAttribute>
+  </PropertyGroup>
+
+  <Import Project="$(GitBuildDir)MaSch.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
+    <ProjectReference Include="..\Test.Assertion\MaSch.Test.Assertion.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Moq" Version="$(MoqVersion)" />
+  </ItemGroup>
+
+</Project>

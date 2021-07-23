@@ -1,0 +1,3 @@
+﻿- Renamed to MaSch.Test
+- Split off MSTest dependencies to own package: MaSch.Test.MSTest
+- Moved Assertion stuff to its own package: MaSch.Test.Assertion and MaSch.Test.Assertion.MSTest
