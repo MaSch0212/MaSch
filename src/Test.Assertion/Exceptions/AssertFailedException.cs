@@ -9,6 +9,7 @@ namespace MaSch.Test.Assertion
     /// AssertFailedException class. Used to indicate failure for a test case.
     /// </summary>
     [SuppressMessage("Major Code Smell", "S3925:\"ISerializable\" should be implemented correctly", Justification = "Serialization not necessary")]
+    [ExcludeFromCodeCoverage]
     public class AssertFailedException : TestAssertException
     {
         /// <summary>

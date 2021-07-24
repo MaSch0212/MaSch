@@ -9,6 +9,7 @@ namespace MaSch.Test.Assertion
     /// The assert inconclusive exception.
     /// </summary>
     [SuppressMessage("Major Code Smell", "S3925:\"ISerializable\" should be implemented correctly", Justification = "Serialization not necessary")]
+    [ExcludeFromCodeCoverage]
     public class AssertInconclusiveException : TestAssertException
     {
         /// <summary>

@@ -11,6 +11,66 @@ namespace MaSch.Test.Assertion
     public partial class AssertBase
     {
         /// <summary>
+        /// Tests whether the specified string is null or an empty string.
+        /// </summary>
+        /// <param name="actual">The string expected to be null or an empty string.</param>
+        public void IsNullOrEmpty(string? actual)
+            => IsNullOrEmpty(actual, null);
+
+        /// <summary>
+        /// Tests whether the specified string is null or an empty string.
+        /// </summary>
+        /// <param name="actual">The string expected to be null or an empty string.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="actual" /> is not null nor an empty string. The message is shown in test results.</param>
+        public void IsNullOrEmpty(string? actual, string? message)
+            => RunAssertion(actual, message, string.IsNullOrEmpty);
+
+        /// <summary>
+        /// Tests whether the specified string is null, empty, or consists only of white-space characters.
+        /// </summary>
+        /// <param name="actual">The string expected to be null, empty, or consists only of white-space characters.</param>
+        public void IsNullOrWhitespace(string? actual)
+            => IsNullOrWhitespace(actual, null);
+
+        /// <summary>
+        /// Tests whether the specified string is null, empty, or consists only of white-space characters.
+        /// </summary>
+        /// <param name="actual">The string expected to be null, empty, or consists only of white-space characters.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="actual" /> is not null, empty, nor consists only of white-space characters. The message is shown in test results.</param>
+        public void IsNullOrWhitespace(string? actual, string? message)
+            => RunAssertion(actual, message, string.IsNullOrWhiteSpace);
+
+        /// <summary>
+        /// Tests whether the specified string is not null nor an empty string.
+        /// </summary>
+        /// <param name="actual">The string expected to be not null nor an empty string.</param>
+        public void IsNotNullOrEmpty(string? actual)
+            => IsNotNullOrEmpty(actual, null);
+
+        /// <summary>
+        /// Tests whether the specified string is not null nor an empty string.
+        /// </summary>
+        /// <param name="actual">The string expected to be not null nor an empty string.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="actual" /> is null or an empty string. The message is shown in test results.</param>
+        public void IsNotNullOrEmpty(string? actual, string? message)
+            => RunNegatedAssertion(actual, message, string.IsNullOrEmpty);
+
+        /// <summary>
+        /// Tests whether the specified string is not null, empty, nor consists only of white-space characters.
+        /// </summary>
+        /// <param name="actual">The string expected to be not null, empty, nor consists only of white-space characters.</param>
+        public void IsNotNullOrWhitespace(string? actual)
+            => IsNotNullOrWhitespace(actual, null);
+
+        /// <summary>
+        /// Tests whether the specified string is not null, empty, nor consists only of white-space characters.
+        /// </summary>
+        /// <param name="actual">The string expected to be not null, empty, nor consists only of white-space characters.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="actual" /> is null, empty, or consists only of white-space characters. The message is shown in test results.</param>
+        public void IsNotNullOrWhitespace(string? actual, string? message)
+            => RunNegatedAssertion(actual, message, string.IsNullOrWhiteSpace);
+
+        /// <summary>
         /// Tests whether the specified string contains the specified substring
         /// and throws an exception if the substring does not occur within the
         /// test string.

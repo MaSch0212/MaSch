@@ -1012,6 +1012,74 @@ namespace MaSch.Test.Assertion.UnitTests
             MSAssert.AreEqual($"Assert.ThrowsExceptionAsync failed. ExpectedException:<Exception>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>. My test message", ex.Message);
         }
 
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_FuncObj_Success()
+        {
+            var mockEx = new InvalidOperationException("My test exception");
+            var mock = new Mock<Func<Task<object?>>>();
+            mock.Setup(x => x()).Throws(mockEx);
+            var ex = await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object());
+            MSAssert.AreSame(mockEx, ex);
+        }
+
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_FuncObj_Fail_NoException()
+        {
+            var mock = new Mock<Func<Task<object?>>>();
+            mock.Setup(x => x()).Returns(Task.FromResult<object?>(null));
+            var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object()));
+            MSAssert.AreEqual("Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<(null)>. ExceptionDetails:<(null)>.", ex.Message);
+        }
+
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_FuncObj_Fail_DifferentException()
+        {
+            var mock = new Mock<Func<Task<object?>>>();
+            var exex = new ArgumentException();
+            mock.Setup(x => x()).Throws(exex);
+            var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object()));
+            MSAssert.AreEqual($"Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>.", ex.Message);
+        }
+
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_FuncObj_Fail_DerivedException()
+        {
+            var mock = new Mock<Func<Task<object?>>>();
+            var exex = new ArgumentException();
+            mock.Setup(x => x()).Throws(exex);
+            var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<Exception>(() => mock.Object()));
+            MSAssert.AreEqual($"Assert.ThrowsExceptionAsync failed. ExpectedException:<Exception>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>.", ex.Message);
+        }
+
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_FuncObj_Fail_NoException_WithMessage()
+        {
+            var mock = new Mock<Func<Task<object?>>>();
+            mock.Setup(x => x()).Returns(Task.FromResult<object?>(null));
+            var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object(), "My test message"));
+            MSAssert.AreEqual("Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<(null)>. ExceptionDetails:<(null)>. My test message", ex.Message);
+        }
+
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_FuncObj_Fail_DifferentException_WithMessage()
+        {
+            var mock = new Mock<Func<Task<object?>>>();
+            var exex = new ArgumentException();
+            mock.Setup(x => x()).Throws(exex);
+            var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object(), "My test message"));
+            MSAssert.AreEqual($"Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>. My test message", ex.Message);
+        }
+
+        [TestMethod]
+        public async Task ThrowsExceptionAsync_FuncObj_Fail_DerivedException_WithMessage()
+        {
+            var mock = new Mock<Func<Task<object?>>>();
+            var exex = new ArgumentException();
+            mock.Setup(x => x()).Throws(exex);
+            var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<Exception>(() => mock.Object(), "My test message"));
+            MSAssert.AreEqual($"Assert.ThrowsExceptionAsync failed. ExpectedException:<Exception>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>. My test message", ex.Message);
+        }
+
         #endregion
     }
 }

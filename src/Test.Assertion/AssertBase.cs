@@ -90,6 +90,19 @@ namespace MaSch.Test.Assertion
         /// <summary>
         /// Runs a simple assertion and throws an error when the specified condition is false.
         /// </summary>
+        /// <typeparam name="T">The type of the actual value.</typeparam>
+        /// <param name="actual">The actual value.</param>
+        /// <param name="message">The message to include in the exception when condition is not met. The message is shown in test results.</param>
+        /// <param name="assertFunction">The assert condition function.</param>
+        public virtual void RunAssertion<T>(T actual, string? message, Func<T, bool> assertFunction)
+        {
+            if (!assertFunction(actual))
+                ThrowAssertError(1, message, ("Actual", actual));
+        }
+
+        /// <summary>
+        /// Runs a simple assertion and throws an error when the specified condition is false.
+        /// </summary>
         /// <typeparam name="TExpected">The type of the expected value.</typeparam>
         /// <typeparam name="TActual">The type of the actual value.</typeparam>
         /// <param name="expected">The expected value.</param>
@@ -100,6 +113,30 @@ namespace MaSch.Test.Assertion
         {
             if (!assertFunction(expected, actual))
                 ThrowAssertError(1, message, ("Expected", expected), ("Actual", actual));
+        }
+
+        /// <summary>
+        /// Runs a simple assertion and throws an error when the specified condition is true.
+        /// </summary>
+        /// <param name="message">The message to include in the exception when condition is not met. The message is shown in test results.</param>
+        /// <param name="assertFunction">The assert condition function.</param>
+        public virtual void RunNegatedAssertion(string? message, Func<bool> assertFunction)
+        {
+            if (assertFunction())
+                ThrowAssertError(1, message);
+        }
+
+        /// <summary>
+        /// Runs a simple assertion and throws an error when the specified condition is true.
+        /// </summary>
+        /// <typeparam name="T">The type of the actual value.</typeparam>
+        /// <param name="actual">The actual value.</param>
+        /// <param name="message">The message to include in the exception when condition is not met. The message is shown in test results.</param>
+        /// <param name="assertFunction">The assert condition function.</param>
+        public virtual void RunNegatedAssertion<T>(T actual, string? message, Func<T, bool> assertFunction)
+        {
+            if (assertFunction(actual))
+                ThrowAssertError(1, message, ("Actual", actual));
         }
 
         /// <summary>

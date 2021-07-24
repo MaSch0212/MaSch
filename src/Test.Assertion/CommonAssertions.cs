@@ -593,5 +593,28 @@ namespace MaSch.Test.Assertion
 
             return (exception as T)!;
         }
+
+        /// <summary>
+        /// Tests whether the code specified by delegate <paramref name="action" /> throws exact given exception of type <typeparamref name="T" /> (and not of derived type)
+        /// and throws <c>AssertFailedException</c> if code does not throws exception or throws exception of type other than <typeparamref name="T" />.
+        /// </summary>
+        /// <typeparam name="T">Type of exception expected to be thrown.</typeparam>
+        /// <param name="action">Delegate to code to be tested and which is expected to throw exception.</param>
+        /// <returns>The exception that was thrown.</returns>
+        public async Task<T> ThrowsExceptionAsync<T>(Func<Task<object?>> action)
+            where T : Exception
+            => await ThrowsExceptionAsync<T>(async () => { await action(); }, null);
+
+        /// <summary>
+        /// Tests whether the code specified by delegate <paramref name="action" /> throws exact given exception of type <typeparamref name="T" /> (and not of derived type)
+        /// and throws <c>AssertFailedException</c> if code does not throws exception or throws exception of type other than <typeparamref name="T" />.
+        /// </summary>
+        /// <typeparam name="T">Type of exception expected to be thrown.</typeparam>
+        /// <param name="action">Delegate to code to be tested and which is expected to throw exception.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="action" /> does not throws exception of type <typeparamref name="T" />.</param>
+        /// <returns>The exception that was thrown.</returns>
+        public async Task<T> ThrowsExceptionAsync<T>(Func<Task<object?>> action, string? message)
+            where T : Exception
+            => await ThrowsExceptionAsync<T>(async () => { await action(); }, message);
     }
 }

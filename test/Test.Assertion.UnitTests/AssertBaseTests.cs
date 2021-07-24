@@ -167,6 +167,36 @@ namespace MaSch.Test.Assertion.UnitTests
         }
 
         [TestMethod]
+        public void RunAssertion_WithActualValues_Success()
+        {
+            var funcMock = new Mock<Func<string, bool>>(MockBehavior.Strict);
+            funcMock.Setup(x => x("Str")).Returns(true);
+            var mock = new Mock<AssertBase>(MockBehavior.Strict);
+            mock.Setup(x => x.RunAssertion(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<Func<string, bool>>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)?>()));
+
+            mock.Object.RunAssertion("Str", "My error message", funcMock.Object);
+
+            funcMock.Verify(x => x("Str"), Times.Once());
+            mock.Verify(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)?>()), Times.Never());
+        }
+
+        [TestMethod]
+        public void RunAssertion_WithActualValues_Fail()
+        {
+            var funcMock = new Mock<Func<string, bool>>(MockBehavior.Strict);
+            funcMock.Setup(x => x("Str")).Returns(false);
+            var mock = new Mock<AssertBase>(MockBehavior.Strict);
+            mock.Setup(x => x.RunAssertion(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<Func<string, bool>>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
+
+            mock.Object.RunAssertion("Str", "My error message", funcMock.Object);
+
+            funcMock.Verify(x => x("Str"), Times.Once());
+            mock.Verify(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()), Times.Once());
+        }
+
+        [TestMethod]
         public void RunAssertion_WithValues_Success()
         {
             var funcMock = new Mock<Func<string, int, bool>>(MockBehavior.Strict);
@@ -194,6 +224,66 @@ namespace MaSch.Test.Assertion.UnitTests
 
             funcMock.Verify(x => x("Str", 4711), Times.Once());
             mock.Verify(x => x.ThrowAssertError(1, "My error message", It.Is<(string, object?)?[]?>(y => y != null && y.Length == 2 && y[0]!.Value.Item1 == "Expected" && Equals(y[0]!.Value.Item2, "Str") && y[1]!.Value.Item1 == "Actual" && Equals(y[1]!.Value.Item2, 4711))), Times.Once());
+        }
+
+        [TestMethod]
+        public void RunNegatedAssertion_NoValues_Success()
+        {
+            var funcMock = new Mock<Func<bool>>(MockBehavior.Strict);
+            funcMock.Setup(x => x()).Returns(false);
+            var mock = new Mock<AssertBase>(MockBehavior.Strict);
+            mock.Setup(x => x.RunNegatedAssertion(It.IsAny<string?>(), It.IsAny<Func<bool>>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)?>()));
+
+            mock.Object.RunNegatedAssertion("My error message", funcMock.Object);
+
+            funcMock.Verify(x => x(), Times.Once());
+            mock.Verify(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)?>()), Times.Never());
+        }
+
+        [TestMethod]
+        public void RunNegatedAssertion_NoValues_Fail()
+        {
+            var funcMock = new Mock<Func<bool>>(MockBehavior.Strict);
+            funcMock.Setup(x => x()).Returns(true);
+            var mock = new Mock<AssertBase>(MockBehavior.Strict);
+            mock.Setup(x => x.RunNegatedAssertion(It.IsAny<string?>(), It.IsAny<Func<bool>>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)?>()));
+
+            mock.Object.RunNegatedAssertion("My error message", funcMock.Object);
+
+            funcMock.Verify(x => x(), Times.Once());
+            mock.Verify(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)?>()), Times.Once());
+        }
+
+        [TestMethod]
+        public void RunNegatedAssertion_WithActualValues_Success()
+        {
+            var funcMock = new Mock<Func<string, bool>>(MockBehavior.Strict);
+            funcMock.Setup(x => x("Str")).Returns(false);
+            var mock = new Mock<AssertBase>(MockBehavior.Strict);
+            mock.Setup(x => x.RunNegatedAssertion(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<Func<string, bool>>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
+
+            mock.Object.RunNegatedAssertion("Str", "My error message", funcMock.Object);
+
+            funcMock.Verify(x => x("Str"), Times.Once());
+            mock.Verify(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()), Times.Never());
+        }
+
+        [TestMethod]
+        public void RunNegatedAssertion_WithActualValues_Fail()
+        {
+            var funcMock = new Mock<Func<string, bool>>(MockBehavior.Strict);
+            funcMock.Setup(x => x("Str")).Returns(true);
+            var mock = new Mock<AssertBase>(MockBehavior.Strict);
+            mock.Setup(x => x.RunNegatedAssertion(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<Func<string, bool>>())).CallBase();
+            mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
+
+            mock.Object.RunNegatedAssertion("Str", "My error message", funcMock.Object);
+
+            funcMock.Verify(x => x("Str"), Times.Once());
+            mock.Verify(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()), Times.Once());
         }
 
         [TestMethod]

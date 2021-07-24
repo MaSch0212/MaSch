@@ -39,6 +39,36 @@ namespace MaSch.Test.Assertion.UnitTests
 
         #endregion
 
+        #region IsNullOrEmpty
+
+        [TestMethod]
+        public void IsNullOrEmpty_Success_Null()
+        {
+            AssertUnderTest.IsNullOrEmpty((IEnumerable?)null);
+        }
+
+        [TestMethod]
+        public void IsNullOrEmpty_Success_Empty()
+        {
+            AssertUnderTest.IsNullOrEmpty(Array.Empty<object>());
+        }
+
+        [TestMethod]
+        public void IsNullOrEmpty_Fail_NotEmpty()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNullOrEmpty(new[] { "Test" }));
+            MSAssert.AreEqual("Assert.IsNullOrEmpty failed.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNullOrEmpty_WithMessage_Fail_NotEmpty()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNullOrEmpty(new[] { "Test" }, "This is my test"));
+            MSAssert.AreEqual("Assert.IsNullOrEmpty failed. This is my test", ex.Message);
+        }
+
+        #endregion
+
         #region IsNotEmpty
 
         [TestMethod]
@@ -58,6 +88,44 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotEmpty(Array.Empty<object>()));
             MSAssert.AreEqual("Assert.IsNotEmpty failed.", ex.Message);
+        }
+
+        #endregion
+
+        #region IsNotNullOrEmpty
+
+        [TestMethod]
+        public void IsNotNullOrEmpty_Success_NotEmpty()
+        {
+            AssertUnderTest.IsNotNullOrEmpty(new[] { "Test" });
+        }
+
+        [TestMethod]
+        public void IsNotNullOrEmpty_Fail_Null()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotNullOrEmpty((IEnumerable?)null));
+            MSAssert.AreEqual("Assert.IsNotNullOrEmpty failed.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotNullOrEmpty_Fail_Empty()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotNullOrEmpty(Array.Empty<object>()));
+            MSAssert.AreEqual("Assert.IsNotNullOrEmpty failed.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotNullOrEmpty_WithMessage_Fail_Null()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotNullOrEmpty((IEnumerable?)null, "This is my test"));
+            MSAssert.AreEqual("Assert.IsNotNullOrEmpty failed. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotNullOrEmpty_WithMessage_Fail_Empty()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotNullOrEmpty(Array.Empty<object>(), "This is my test"));
+            MSAssert.AreEqual("Assert.IsNotNullOrEmpty failed. This is my test", ex.Message);
         }
 
         #endregion

@@ -9,6 +9,7 @@ namespace MaSch.Test.Assertion
     /// Base class for exceptions during a test run.
     /// </summary>
     [SuppressMessage("Major Code Smell", "S3925:\"ISerializable\" should be implemented correctly", Justification = "Serialization not necessary")]
+    [ExcludeFromCodeCoverage]
     public abstract class TestAssertException : Exception
     {
         /// <summary>

@@ -10,6 +10,182 @@ namespace MaSch.Test.Assertion.UnitTests
     {
         private static MaSch.Test.Assertion.Assert AssertUnderTest => MaSch.Test.Assertion.Assert.Instance;
 
+        #region IsNullOrEmpty
+
+        [TestMethod]
+        public void IsNullOrEmpty_Success_Null()
+        {
+            AssertUnderTest.IsNullOrEmpty(null);
+        }
+
+        [TestMethod]
+        public void IsNullOrEmpty_Success_Empty()
+        {
+            AssertUnderTest.IsNullOrEmpty(string.Empty);
+        }
+
+        [TestMethod]
+        public void IsNullOrEmpty_Fail_Whitespace()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNullOrEmpty(" "));
+            MSAssert.AreEqual("Assert.IsNullOrEmpty failed. Actual:< >.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNullOrEmpty_Fail_Text()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNullOrEmpty("blub"));
+            MSAssert.AreEqual("Assert.IsNullOrEmpty failed. Actual:<blub>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNullOrEmpty_WithMessage_Fail_Whitespace()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNullOrEmpty(" ", "This is my test"));
+            MSAssert.AreEqual("Assert.IsNullOrEmpty failed. Actual:< >. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNullOrEmpty_WithMessage_Fail_Text()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNullOrEmpty("blub", "This is my test"));
+            MSAssert.AreEqual("Assert.IsNullOrEmpty failed. Actual:<blub>. This is my test", ex.Message);
+        }
+
+        #endregion
+
+        #region IsNotNullOrEmpty
+
+        [TestMethod]
+        public void IsNotNullOrEmpty_Success_Whitespace()
+        {
+            AssertUnderTest.IsNotNullOrEmpty(" ");
+        }
+
+        [TestMethod]
+        public void IsNotNullOrEmpty_Success_Text()
+        {
+            AssertUnderTest.IsNotNullOrEmpty("blub");
+        }
+
+        [TestMethod]
+        public void IsNotNullOrEmpty_Fail_Null()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotNullOrEmpty(null));
+            MSAssert.AreEqual("Assert.IsNotNullOrEmpty failed. Actual:<(null)>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotNullOrEmpty_Fail_Empty()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotNullOrEmpty(string.Empty));
+            MSAssert.AreEqual("Assert.IsNotNullOrEmpty failed. Actual:<>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotNullOrEmpty_WithMessage_Fail_Null()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotNullOrEmpty(null, "This is my test"));
+            MSAssert.AreEqual("Assert.IsNotNullOrEmpty failed. Actual:<(null)>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotNullOrEmpty_WithMessage_Fail_Empty()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotNullOrEmpty(string.Empty, "This is my test"));
+            MSAssert.AreEqual("Assert.IsNotNullOrEmpty failed. Actual:<>. This is my test", ex.Message);
+        }
+
+        #endregion
+
+        #region IsNullOrWhitespace
+
+        [TestMethod]
+        public void IsNullOrWhitespace_Success_Null()
+        {
+            AssertUnderTest.IsNullOrWhitespace(null);
+        }
+
+        [TestMethod]
+        public void IsNullOrWhitespace_Success_Empty()
+        {
+            AssertUnderTest.IsNullOrWhitespace(string.Empty);
+        }
+
+        [TestMethod]
+        public void IsNullOrWhitespace_Success_Whitespace()
+        {
+            AssertUnderTest.IsNullOrWhitespace(" \t\r\n");
+        }
+
+        [TestMethod]
+        public void IsNullOrWhitespace_Fail_Text()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNullOrWhitespace("blub"));
+            MSAssert.AreEqual("Assert.IsNullOrWhitespace failed. Actual:<blub>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNullOrWhitespace_WithMessage_Fail_Text()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNullOrWhitespace("blub", "This is my test"));
+            MSAssert.AreEqual("Assert.IsNullOrWhitespace failed. Actual:<blub>. This is my test", ex.Message);
+        }
+
+        #endregion
+
+        #region IsNotNullOrWhitespace
+
+        [TestMethod]
+        public void IsNotNullOrWhitespace_Success_Text()
+        {
+            AssertUnderTest.IsNotNullOrWhitespace("blub");
+        }
+
+        [TestMethod]
+        public void IsNotNullOrWhitespace_Fail_Null()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotNullOrWhitespace(null));
+            MSAssert.AreEqual("Assert.IsNotNullOrWhitespace failed. Actual:<(null)>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotNullOrWhitespace_Fail_Empty()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotNullOrWhitespace(string.Empty));
+            MSAssert.AreEqual("Assert.IsNotNullOrWhitespace failed. Actual:<>.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotNullOrWhitespace_Fail_Whitespace()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotNullOrWhitespace(" "));
+            MSAssert.AreEqual("Assert.IsNotNullOrWhitespace failed. Actual:< >.", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotNullOrWhitespace_WithMessage_Fail_Null()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotNullOrWhitespace(null, "This is my test"));
+            MSAssert.AreEqual("Assert.IsNotNullOrWhitespace failed. Actual:<(null)>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotNullOrWhitespace_WithMessage_Fail_Empty()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotNullOrWhitespace(string.Empty, "This is my test"));
+            MSAssert.AreEqual("Assert.IsNotNullOrWhitespace failed. Actual:<>. This is my test", ex.Message);
+        }
+
+        [TestMethod]
+        public void IsNotNullOrWhitespace_WithMessage_Fail_Whitespace()
+        {
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotNullOrWhitespace(" ", "This is my test"));
+            MSAssert.AreEqual("Assert.IsNotNullOrWhitespace failed. Actual:< >. This is my test", ex.Message);
+        }
+
+        #endregion
+
         #region Contains
 
         [TestMethod]

@@ -33,6 +33,25 @@ namespace MaSch.Test.Assertion
         }
 
         /// <summary>
+        /// Tests whether the specified collection is null or empty.
+        /// </summary>
+        /// <param name="collection">The collection to test.</param>
+        public void IsNullOrEmpty(IEnumerable? collection)
+            => IsNullOrEmpty(collection, null);
+
+        /// <summary>
+        /// Tests whether the specified collection is null or empty.
+        /// </summary>
+        /// <param name="collection">The collection to test.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="collection"/> is not null nor empty. The message is shown in test results.</param>
+        public void IsNullOrEmpty(IEnumerable? collection, string? message)
+        {
+            var enumerator = collection?.GetEnumerator();
+            if (enumerator?.MoveNext() == true)
+                ThrowAssertError(message);
+        }
+
+        /// <summary>
         /// Tests whether the specified collection is not empty and throws an exception if the collection is empty.
         /// </summary>
         /// <param name="collection">The collection to test.</param>
@@ -50,6 +69,25 @@ namespace MaSch.Test.Assertion
 
             var enumerator = collection.GetEnumerator();
             if (!enumerator.MoveNext())
+                ThrowAssertError(message);
+        }
+
+        /// <summary>
+        /// Tests whether the specified collection is not null nor empty.
+        /// </summary>
+        /// <param name="collection">The collection to test.</param>
+        public void IsNotNullOrEmpty(IEnumerable? collection)
+            => IsNotNullOrEmpty(collection, null);
+
+        /// <summary>
+        /// Tests whether the specified collection is not null nor empty.
+        /// </summary>
+        /// <param name="collection">The collection to test.</param>
+        /// <param name="message">The message to include in the exception when <paramref name="collection"/> is null or empty. The message is shown in test results.</param>
+        public void IsNotNullOrEmpty(IEnumerable? collection, string? message)
+        {
+            var enumerator = collection?.GetEnumerator();
+            if (enumerator?.MoveNext() != true)
                 ThrowAssertError(message);
         }
 
