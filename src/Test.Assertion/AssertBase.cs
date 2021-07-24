@@ -16,7 +16,7 @@ namespace MaSch.Test.Assertion
     /// <summary>
     /// Base class for assertion classes to use in unit tests.
     /// </summary>
-    public abstract class AssertBase
+    public abstract partial class AssertBase
     {
         /// <summary>
         /// Gets the assert name prefix that is shown in custom assertion messages.

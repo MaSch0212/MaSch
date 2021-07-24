@@ -1,0 +1,1 @@
+﻿- Changed assertion methods from extension methods to actual members of AssertBase.
