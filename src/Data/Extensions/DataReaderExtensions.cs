@@ -221,15 +221,15 @@ namespace MaSch.Data.Extensions
 
         private sealed class DataReaderEnumerable<T> : IDisposableEnumerable<T>
         {
-            public event EventHandler<DisposeEventArgs>? Disposing;
-            public event EventHandler<DisposeEventArgs>? Disposed;
-
             private readonly DataReaderEnumerator<T> _enumerator;
 
             public DataReaderEnumerable(IDataReader reader, Func<IDataReader, T> itemFunction)
             {
                 _enumerator = new DataReaderEnumerator<T>(reader, itemFunction);
             }
+
+            public event EventHandler<DisposeEventArgs>? Disposing;
+            public event EventHandler<DisposeEventArgs>? Disposed;
 
             public IEnumerator<T> GetEnumerator() => _enumerator;
             IEnumerator IEnumerable.GetEnumerator() => _enumerator;
@@ -247,14 +247,14 @@ namespace MaSch.Data.Extensions
             private readonly Func<IDataReader, T> _itemFunction;
             private readonly IDataReader _reader;
 
-            public T Current => _itemFunction(_reader);
-            object? IEnumerator.Current => Current;
-
             public DataReaderEnumerator(IDataReader reader, Func<IDataReader, T> itemFunction)
             {
                 _itemFunction = itemFunction;
                 _reader = reader;
             }
+
+            public T Current => _itemFunction(_reader);
+            object? IEnumerator.Current => Current;
 
             public bool MoveNext()
             {

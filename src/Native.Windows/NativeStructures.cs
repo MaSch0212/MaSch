@@ -4,23 +4,6 @@ using System.Runtime.InteropServices;
 
 namespace MaSch.Native.Windows
 {
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Will not fix for this project.")]
-    public static class Constants
-    {
-        public const int RmRebootReasonNone = 0;
-        public const int CchRmMaxAppName = 255;
-        public const int CchRmMaxSvcName = 63;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "I will not mess with names. I dont know if I would break anything.")]
-    public struct PostStruct
-    {
-        public IntPtr dwData;
-        public int cbData;
-        public IntPtr lpData;
-    }
-
     [Flags]
     [SuppressMessage("Critical Code Smell", "S2346:Flags enumerations zero-value members should be named \"None\"", Justification = "Won't fix.")]
     public enum Shgfi : uint
@@ -89,6 +72,109 @@ namespace MaSch.Native.Windows
         RmExplorer = 4,
         RmConsole = 5,
         RmCritical = 1000,
+    }
+
+    [ComImport]
+    [Guid("46EB5926-582E-4017-9FDF-E8998DAA0950")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Will not fix for this project.")]
+    public interface IImageList
+    {
+        [PreserveSig]
+        int Add(IntPtr hbmImage, IntPtr hbmMask, ref int pi);
+
+        [PreserveSig]
+        int ReplaceIcon(int i, IntPtr hicon, ref int pi);
+
+        [PreserveSig]
+        int SetOverlayImage(int iImage, int iOverlay);
+
+        [PreserveSig]
+        int Replace(int i, IntPtr hbmImage, IntPtr hbmMask);
+
+        [PreserveSig]
+        int AddMasked(IntPtr hbmImage, int crMask, ref int pi);
+
+        [PreserveSig]
+        int Draw(ref ImageListDrawParams pimldp);
+
+        [PreserveSig]
+        int Remove(int i);
+
+        [PreserveSig]
+        int GetIcon(int i, int flags, ref IntPtr picon);
+
+        [PreserveSig]
+        int GetImageInfo(int i, ref ImageInfo pImageInfo);
+
+        [PreserveSig]
+        int Copy(int iDst, IImageList punkSrc, int iSrc, int uFlags);
+
+        [PreserveSig]
+        int Merge(int i1, IImageList punk2, int i2, int dx, int dy, ref Guid riid, ref IntPtr ppv);
+
+        [PreserveSig]
+        int Clone(ref Guid riid, ref IntPtr ppv);
+
+        [PreserveSig]
+        int GetImageRect(int i, ref Rect prc);
+
+        [PreserveSig]
+        int GetIconSize(ref int cx, ref int cy);
+
+        [PreserveSig]
+        int SetIconSize(int cx, int cy);
+
+        [PreserveSig]
+        int GetImageCount(ref int pi);
+
+        [PreserveSig]
+        int SetImageCount(int uNewCount);
+
+        [PreserveSig]
+        int SetBkColor(int clrBk, ref int pclr);
+
+        [PreserveSig]
+        int GetBkColor(ref int pclr);
+
+        [PreserveSig]
+        int BeginDrag(int iTrack, int dxHotspot, int dyHotspot);
+
+        [PreserveSig]
+        int EndDrag();
+
+        [PreserveSig]
+        int DragEnter(IntPtr hwndLock, int x, int y);
+
+        [PreserveSig]
+        int DragLeave(IntPtr hwndLock);
+
+        [PreserveSig]
+        int DragMove(int x, int y);
+
+        [PreserveSig]
+        int SetDragCursorImage(ref IImageList punk, int iDrag, int dxHotspot, int dyHotspot);
+
+        [PreserveSig]
+        int DragShowNolock(int fShow);
+
+        [PreserveSig]
+        int GetDragImage(ref Point ppt, ref Point pptHotspot, ref Guid riid, ref IntPtr ppv);
+
+        [PreserveSig]
+        int GetItemFlags(int i, ref int dwFlags);
+
+        [PreserveSig]
+        int GetOverlayImage(int iOverlay, ref int piIndex);
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:Accessible fields should begin with upper-case letter", Justification = "I will not mess with names. I dont know if I would break anything.")]
+    public struct PostStruct
+    {
+        public IntPtr dwData;
+        public int cbData;
+        public IntPtr lpData;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -198,96 +284,10 @@ namespace MaSch.Native.Windows
         public Rect rcImage;
     }
 
-    [ComImport]
-    [Guid("46EB5926-582E-4017-9FDF-E8998DAA0950")]
-    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface IImageList
+    public static class Constants
     {
-        [PreserveSig]
-        int Add(IntPtr hbmImage, IntPtr hbmMask, ref int pi);
-
-        [PreserveSig]
-        int ReplaceIcon(int i, IntPtr hicon, ref int pi);
-
-        [PreserveSig]
-        int SetOverlayImage(int iImage, int iOverlay);
-
-        [PreserveSig]
-        int Replace(int i, IntPtr hbmImage, IntPtr hbmMask);
-
-        [PreserveSig]
-        int AddMasked(IntPtr hbmImage, int crMask, ref int pi);
-
-        [PreserveSig]
-        int Draw(ref ImageListDrawParams pimldp);
-
-        [PreserveSig]
-        int Remove(int i);
-
-        [PreserveSig]
-        int GetIcon(int i, int flags, ref IntPtr picon);
-
-        [PreserveSig]
-        int GetImageInfo(int i, ref ImageInfo pImageInfo);
-
-        [PreserveSig]
-        int Copy(int iDst, IImageList punkSrc, int iSrc, int uFlags);
-
-        [PreserveSig]
-        int Merge(int i1, IImageList punk2, int i2, int dx, int dy, ref Guid riid, ref IntPtr ppv);
-
-        [PreserveSig]
-        int Clone(ref Guid riid, ref IntPtr ppv);
-
-        [PreserveSig]
-        int GetImageRect(int i, ref Rect prc);
-
-        [PreserveSig]
-        int GetIconSize(ref int cx, ref int cy);
-
-        [PreserveSig]
-        int SetIconSize(int cx, int cy);
-
-        [PreserveSig]
-        int GetImageCount(ref int pi);
-
-        [PreserveSig]
-        int SetImageCount(int uNewCount);
-
-        [PreserveSig]
-        int SetBkColor(int clrBk, ref int pclr);
-
-        [PreserveSig]
-        int GetBkColor(ref int pclr);
-
-        [PreserveSig]
-        int BeginDrag(int iTrack, int dxHotspot, int dyHotspot);
-
-        [PreserveSig]
-        int EndDrag();
-
-        [PreserveSig]
-        int DragEnter(IntPtr hwndLock, int x, int y);
-
-        [PreserveSig]
-        int DragLeave(IntPtr hwndLock);
-
-        [PreserveSig]
-        int DragMove(int x, int y);
-
-        [PreserveSig]
-        int SetDragCursorImage(ref IImageList punk, int iDrag, int dxHotspot, int dyHotspot);
-
-        [PreserveSig]
-        int DragShowNolock(int fShow);
-
-        [PreserveSig]
-        int GetDragImage(ref Point ppt, ref Point pptHotspot, ref Guid riid, ref IntPtr ppv);
-
-        [PreserveSig]
-        int GetItemFlags(int i, ref int dwFlags);
-
-        [PreserveSig]
-        int GetOverlayImage(int iOverlay, ref int piIndex);
+        public const int RmRebootReasonNone = 0;
+        public const int CchRmMaxAppName = 255;
+        public const int CchRmMaxSvcName = 63;
     }
 }

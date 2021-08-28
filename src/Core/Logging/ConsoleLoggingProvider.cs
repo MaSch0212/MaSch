@@ -58,19 +58,19 @@ namespace MaSch.Core.Logging
 
         private string? GetErrorText(string? message, Exception? exception)
         {
-            var sbMessage = new StringBuilder(message);
+            var result = new StringBuilder(message);
 
             if (exception is AggregateException aggregateException)
             {
                 foreach (var ex in aggregateException.InnerExceptions)
-                    sbMessage.Append(GetExceptionText(ex, _logExceptionStackTrace));
+                    result.Append(GetExceptionText(ex, _logExceptionStackTrace));
             }
             else if (exception != null)
             {
-                sbMessage.Append(GetExceptionText(exception, _logExceptionStackTrace));
+                result.Append(GetExceptionText(exception, _logExceptionStackTrace));
             }
 
-            return sbMessage.ToString();
+            return result.ToString();
 
             static string GetExceptionText(Exception ex, bool includeStackTrace)
                 => $"{NewLine}    - {(includeStackTrace ? ex.ToString() : ex.Message).Replace(NewLine, $"{NewLine}      ")}";

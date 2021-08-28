@@ -13,7 +13,7 @@ namespace MaSch.Console.Ansi
     public sealed class AnsiFormattedString
     {
         private readonly StringBuilder _builder;
-        private readonly LinkedList<StyleRange> _styles = new LinkedList<StyleRange>();
+        private readonly LinkedList<StyleRange> _styles = new();
         private int _nextStyleId;
 
         /// <summary>
@@ -31,19 +31,6 @@ namespace MaSch.Console.Ansi
         public AnsiFormattedString(string? value)
         {
             _builder = new StringBuilder(value);
-        }
-
-        /// <summary>
-        /// Gets or sets the character at the specified character position in this instance.
-        /// </summary>
-        /// <param name="index">The position of the character.</param>
-        /// <returns>The Unicode character at position <paramref name="index"/>.</returns>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is outside the bounds of this instance while setting a character.</exception>
-        /// <exception cref="IndexOutOfRangeException"><paramref name="index"/> is outside the bounds of this instance while getting a character.</exception>
-        public char this[int index]
-        {
-            get => _builder[index];
-            set => _builder[index] = value;
         }
 
         /// <summary>
@@ -68,6 +55,19 @@ namespace MaSch.Console.Ansi
                 if (preLen > value)
                     OnRemove(value, preLen - value);
             }
+        }
+
+        /// <summary>
+        /// Gets or sets the character at the specified character position in this instance.
+        /// </summary>
+        /// <param name="index">The position of the character.</param>
+        /// <returns>The Unicode character at position <paramref name="index"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is outside the bounds of this instance while setting a character.</exception>
+        /// <exception cref="IndexOutOfRangeException"><paramref name="index"/> is outside the bounds of this instance while getting a character.</exception>
+        public char this[int index]
+        {
+            get => _builder[index];
+            set => _builder[index] = value;
         }
 
         /// <summary>
@@ -820,6 +820,11 @@ namespace MaSch.Console.Ansi
         public override string ToString()
             => ToString(true);
 
+        private static AnsiTextStyle CombineStyles(AnsiTextStyle current, StyleRange style)
+        {
+            return (current ^ (style.Style.RemovedStyles & current)) | style.Style.AddedStyles;
+        }
+
         private void OnRemove(int startIndex, int length)
         {
             var currentNode = _styles.First;
@@ -892,18 +897,8 @@ namespace MaSch.Console.Ansi
             Guard.NotOutOfRange(length, nameof(length), 0, Length - startIndex);
         }
 
-        private static AnsiTextStyle CombineStyles(AnsiTextStyle current, StyleRange style)
-        {
-            return (current ^ (style.Style.RemovedStyles & current)) | style.Style.AddedStyles;
-        }
-
         private class StyleRange
         {
-            public int Id { get; set; }
-            public int Start { get; set; }
-            public int Length { get; set; }
-            public AnsiStyle Style { get; }
-
             public StyleRange(int id, int start, int length, AnsiStyle style)
             {
                 Id = id;
@@ -911,6 +906,11 @@ namespace MaSch.Console.Ansi
                 Length = length;
                 Style = style;
             }
+
+            public int Id { get; set; }
+            public int Start { get; set; }
+            public int Length { get; set; }
+            public AnsiStyle Style { get; }
         }
 
         private sealed class StyleScope : IDisposable

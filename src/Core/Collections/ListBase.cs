@@ -14,16 +14,6 @@ namespace MaSch.Core.Collections
     public abstract class ListBase<T> : IList<T>, IReadOnlyList<T>, IList
     {
         /// <summary>
-        /// Gets the default value for the <see cref="SyncRoot"/> property.
-        /// </summary>
-        protected object DefaultSyncRoot { get; }
-
-        /// <summary>
-        /// Gets or sets the internal list.
-        /// </summary>
-        protected IList<T> InternalList { get; set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ListBase{T}"/> class.
         /// </summary>
         /// <param name="internalList">The internal list.</param>
@@ -42,6 +32,54 @@ namespace MaSch.Core.Collections
         }
 
         /// <inheritdoc />
+        public virtual int Count => InternalList.Count;
+
+        /// <inheritdoc />
+        bool IList.IsReadOnly => IsReadOnly;
+
+        /// <inheritdoc />
+        bool ICollection<T>.IsReadOnly => IsReadOnly;
+
+        /// <inheritdoc />
+        bool IList.IsFixedSize => IsFixedSize;
+
+        /// <inheritdoc />
+        bool ICollection.IsSynchronized => IsSynchronized;
+
+        /// <inheritdoc />
+        object ICollection.SyncRoot => SyncRoot;
+
+        /// <summary>
+        /// Gets the default value for the <see cref="SyncRoot"/> property.
+        /// </summary>
+        protected object DefaultSyncRoot { get; }
+
+        /// <summary>
+        /// Gets or sets the internal list.
+        /// </summary>
+        protected IList<T> InternalList { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether the System.Collections.IList is read-only.
+        /// </summary>
+        protected virtual bool IsReadOnly => InternalList.IsReadOnly;
+
+        /// <summary>
+        /// Gets a value indicating whether the System.Collections.IList has a fixed size.
+        /// </summary>
+        protected virtual bool IsFixedSize => (InternalList as IList)?.IsFixedSize ?? false;
+
+        /// <summary>
+        /// Gets a value indicating whether access to the System.Collections.ICollection is synchronized (thread safe).
+        /// </summary>
+        protected virtual bool IsSynchronized => (InternalList as ICollection)?.IsSynchronized ?? false;
+
+        /// <summary>
+        /// Gets an object that can be used to synchronize access to the System.Collections.ICollection.
+        /// </summary>
+        protected virtual object SyncRoot => DefaultSyncRoot;
+
+        /// <inheritdoc />
         public virtual T this[int index]
         {
             get => InternalList[index];
@@ -56,49 +94,11 @@ namespace MaSch.Core.Collections
         }
 
         /// <inheritdoc />
-        public virtual int Count => InternalList.Count;
-
-        /// <summary>
-        /// Gets a value indicating whether the System.Collections.IList is read-only.
-        /// </summary>
-        protected virtual bool IsReadOnly => InternalList.IsReadOnly;
-
-        /// <inheritdoc />
-        bool IList.IsReadOnly => IsReadOnly;
-
-        /// <inheritdoc />
-        bool ICollection<T>.IsReadOnly => IsReadOnly;
-
-        /// <summary>
-        /// Gets a value indicating whether the System.Collections.IList has a fixed size.
-        /// </summary>
-        protected virtual bool IsFixedSize => (InternalList as IList)?.IsFixedSize ?? false;
-
-        /// <inheritdoc />
-        bool IList.IsFixedSize => IsFixedSize;
-
-        /// <summary>
-        /// Gets a value indicating whether access to the System.Collections.ICollection is synchronized (thread safe).
-        /// </summary>
-        protected virtual bool IsSynchronized => (InternalList as ICollection)?.IsSynchronized ?? false;
-
-        /// <inheritdoc />
-        bool ICollection.IsSynchronized => IsSynchronized;
-
-        /// <summary>
-        /// Gets an object that can be used to synchronize access to the System.Collections.ICollection.
-        /// </summary>
-        protected virtual object SyncRoot => DefaultSyncRoot;
-
-        /// <inheritdoc />
-        object ICollection.SyncRoot => SyncRoot;
-
-        /// <inheritdoc />
         int IList.Add(object? value)
         {
-            var tValue = (T)value!;
-            Add(tValue);
-            return IndexOf(tValue);
+            var castedValue = (T)value!;
+            Add(castedValue);
+            return IndexOf(castedValue);
         }
 
         /// <inheritdoc />
@@ -112,19 +112,6 @@ namespace MaSch.Core.Collections
 
         /// <inheritdoc />
         public virtual bool Contains(T item) => InternalList.Contains(item);
-
-        /// <summary>
-        /// Copies the elements of the <see cref="T:System.Collections.ICollection" /> to an <see cref="T:System.Array" />, starting at a particular <see cref="T:System.Array" /> index.
-        /// </summary>
-        /// <param name="array">The one-dimensional <see cref="T:System.Array" /> that is the destination of the elements copied from <see cref="T:System.Collections.ICollection" />. The <see cref="T:System.Array" /> must have zero-based indexing.</param>
-        /// <param name="index">The zero-based index in <paramref name="array" /> at which copying begins.</param>
-        protected virtual void CopyTo(Array array, int index)
-        {
-            if (InternalList is ICollection collection)
-                collection.CopyTo(array, index);
-            else
-                throw new NotImplementedException();
-        }
 
         /// <inheritdoc />
         void ICollection.CopyTo(Array array, int index) => CopyTo(array, index);
@@ -158,5 +145,18 @@ namespace MaSch.Core.Collections
 
         /// <inheritdoc />
         public virtual void RemoveAt(int index) => InternalList.RemoveAt(index);
+
+        /// <summary>
+        /// Copies the elements of the <see cref="T:System.Collections.ICollection" /> to an <see cref="T:System.Array" />, starting at a particular <see cref="T:System.Array" /> index.
+        /// </summary>
+        /// <param name="array">The one-dimensional <see cref="T:System.Array" /> that is the destination of the elements copied from <see cref="T:System.Collections.ICollection" />. The <see cref="T:System.Array" /> must have zero-based indexing.</param>
+        /// <param name="index">The zero-based index in <paramref name="array" /> at which copying begins.</param>
+        protected virtual void CopyTo(Array array, int index)
+        {
+            if (InternalList is ICollection collection)
+                collection.CopyTo(array, index);
+            else
+                throw new NotImplementedException();
+        }
     }
 }

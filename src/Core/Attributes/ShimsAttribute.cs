@@ -12,11 +12,6 @@ namespace MaSch.Core.Attributes
     public class ShimsAttribute : Attribute
     {
         /// <summary>
-        /// Gets the shims to generate.
-        /// </summary>
-        public Shims Shims { get; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ShimsAttribute"/> class.
         /// </summary>
         /// <param name="shims">The shims to generate.</param>
@@ -24,5 +19,10 @@ namespace MaSch.Core.Attributes
         {
             Shims = shims;
         }
+
+        /// <summary>
+        /// Gets the shims to generate.
+        /// </summary>
+        public Shims Shims { get; }
     }
 }

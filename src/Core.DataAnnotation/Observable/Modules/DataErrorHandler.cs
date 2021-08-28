@@ -18,12 +18,6 @@ namespace MaSch.Core.Observable.Modules
         private readonly IDictionary<string, IEnumerable<ValidationResult>> _errors;
         private readonly object _dataErrorObject;
 
-        /// <inheritdoc />
-        public bool HasErrors => _errors.Count > 0;
-
-        /// <inheritdoc />
-        public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DataErrorHandler"/> class.
         /// </summary>
@@ -34,6 +28,12 @@ namespace MaSch.Core.Observable.Modules
             _properties = dataErrorObject.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
             _dataErrorObject = dataErrorObject;
         }
+
+        /// <inheritdoc />
+        public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
+
+        /// <inheritdoc />
+        public bool HasErrors => _errors.Count > 0;
 
         /// <inheritdoc />
         public IDictionary<string, IEnumerable> GetErrors()

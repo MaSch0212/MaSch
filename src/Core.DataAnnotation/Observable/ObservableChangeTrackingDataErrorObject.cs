@@ -14,18 +14,6 @@ namespace MaSch.Core.Observable
     /// <seealso cref="IChangeTrackedObject" />
     public class ObservableChangeTrackingDataErrorObject : ObservableDataErrorObject, IChangeTrackedObject
     {
-        /// <inheritdoc />
-        [XmlIgnore]
-        public virtual IChangeTracker ChangeTracker { get; }
-
-        /// <inheritdoc />
-        [XmlIgnore]
-        public bool HasChanges => ChangeTracker.HasChanges;
-
-        /// <inheritdoc />
-        [XmlIgnore]
-        public virtual bool ImplicitlyRecurse => true;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableChangeTrackingDataErrorObject"/> class.
         /// </summary>
@@ -43,6 +31,18 @@ namespace MaSch.Core.Observable
         {
             ChangeTracker = changeTracker ?? throw new ArgumentNullException(nameof(changeTracker));
         }
+
+        /// <inheritdoc />
+        [XmlIgnore]
+        public virtual IChangeTracker ChangeTracker { get; }
+
+        /// <inheritdoc />
+        [XmlIgnore]
+        public bool HasChanges => ChangeTracker.HasChanges;
+
+        /// <inheritdoc />
+        [XmlIgnore]
+        public virtual bool ImplicitlyRecurse => true;
 
         /// <summary>
         /// Tracks a change.

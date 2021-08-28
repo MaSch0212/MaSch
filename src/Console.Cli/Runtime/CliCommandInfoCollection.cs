@@ -14,16 +14,6 @@ namespace MaSch.Console.Cli.Runtime
         private readonly Dictionary<Type, ICliCommandInfo> _allCommands = new();
         private readonly List<ICliCommandInfo> _rootCommands = new();
 
-        /// <inheritdoc/>
-        public ICliCommandInfo? DefaultCommand { get; private set; }
-
-        /// <inheritdoc/>
-        public int Count => _allCommands.Count;
-
-        /// <inheritdoc/>
-        [ExcludeFromCodeCoverage]
-        public bool IsReadOnly => false;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="CliCommandInfoCollection"/> class.
         /// </summary>
@@ -40,6 +30,16 @@ namespace MaSch.Console.Cli.Runtime
             if (collection != null)
                 this.Add(collection);
         }
+
+        /// <inheritdoc/>
+        public ICliCommandInfo? DefaultCommand { get; private set; }
+
+        /// <inheritdoc/>
+        public int Count => _allCommands.Count;
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
+        public bool IsReadOnly => false;
 
         /// <inheritdoc/>
         public void Add(ICliCommandInfo item)

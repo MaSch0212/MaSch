@@ -112,26 +112,6 @@ namespace MaSch.Data.Extensions
         public static IDbCommand CreateCommand(this IDbConnection connection, string commandText, Action<DbCommandParameterCollection>? addParametersAction, CommandType commandType, int timeout, Action<IDbCommand>? modifyCommandAction = null)
             => CreateCommandImpl(connection, commandText, addParametersAction, commandType, timeout, modifyCommandAction);
 
-        private static IDbCommand CreateCommandImpl(IDbConnection connection, string commandText, Action<DbCommandParameterCollection>? addParametersAction, CommandType? commandType, int? timeout, Action<IDbCommand>? modifyCommandAction)
-        {
-            var cmd = connection.CreateCommand();
-            cmd.CommandText = commandText;
-            if (commandType.HasValue)
-                cmd.CommandType = commandType.Value;
-            if (timeout.HasValue)
-                cmd.CommandTimeout = timeout.Value;
-            if (addParametersAction != null)
-            {
-                var collection = new DbCommandParameterCollection(cmd);
-                addParametersAction(collection);
-                collection.Close();
-            }
-
-            modifyCommandAction?.Invoke(cmd);
-
-            return cmd;
-        }
-
         /// <summary>
         /// Opens the connection if it was not already opened.
         /// </summary>
@@ -153,16 +133,31 @@ namespace MaSch.Data.Extensions
                 await connection.OpenAsync();
         }
 
+        private static IDbCommand CreateCommandImpl(IDbConnection connection, string commandText, Action<DbCommandParameterCollection>? addParametersAction, CommandType? commandType, int? timeout, Action<IDbCommand>? modifyCommandAction)
+        {
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = commandText;
+            if (commandType.HasValue)
+                cmd.CommandType = commandType.Value;
+            if (timeout.HasValue)
+                cmd.CommandTimeout = timeout.Value;
+            if (addParametersAction != null)
+            {
+                var collection = new DbCommandParameterCollection(cmd);
+                addParametersAction(collection);
+                collection.Close();
+            }
+
+            modifyCommandAction?.Invoke(cmd);
+
+            return cmd;
+        }
+
         /// <summary>
         /// Represents a collection of parameters for a <see cref="IDbCommand"/>.
         /// </summary>
         public class DbCommandParameterCollection
         {
-            /// <summary>
-            /// Gets the command to which the parameters are added.
-            /// </summary>
-            public IDbCommand? Command { get; private set; }
-
             /// <summary>
             /// Initializes a new instance of the <see cref="DbCommandParameterCollection"/> class.
             /// </summary>
@@ -172,6 +167,11 @@ namespace MaSch.Data.Extensions
                 Guard.NotNull(command, nameof(command));
                 Command = command;
             }
+
+            /// <summary>
+            /// Gets the command to which the parameters are added.
+            /// </summary>
+            public IDbCommand? Command { get; private set; }
 
             /// <summary>
             /// Adds the specified parameter to the <see cref="IDbCommand"/>.

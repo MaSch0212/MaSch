@@ -90,16 +90,16 @@ namespace MaSch.Generators
                         string getterModifier = string.Empty;
                         if (accessModifierAttr != null)
                         {
-                            var iAccessModifier = accessModifierAttr.ConstructorArguments.FirstOrDefault().Value as int? ?? (int)AccessModifier.Public;
-                            accessModifier = GetAccessModifier((AccessModifier)iAccessModifier);
+                            var accessModifierKey = accessModifierAttr.ConstructorArguments.FirstOrDefault().Value as int? ?? (int)AccessModifier.Public;
+                            accessModifier = GetAccessModifier((AccessModifier)accessModifierKey);
                             if (accessModifierAttr.NamedArguments.FirstOrDefault(x => x.Key == "IsVirtual").Value.Value as bool? ?? false)
                                 accessModifier += " virtual";
 
-                            if (accessModifierAttr.NamedArguments.FirstOrDefault(x => x.Key == "SetModifier").Value.Value is int iSetterModifier && iSetterModifier != iAccessModifier)
-                                setterModifier = GetAccessModifier((AccessModifier)iSetterModifier) + " ";
+                            if (accessModifierAttr.NamedArguments.FirstOrDefault(x => x.Key == "SetModifier").Value.Value is int setterModifierKey && setterModifierKey != accessModifierKey)
+                                setterModifier = GetAccessModifier((AccessModifier)setterModifierKey) + " ";
 
-                            if (accessModifierAttr.NamedArguments.FirstOrDefault(x => x.Key == "GetModifier").Value.Value is int iGetterModifier && iGetterModifier != iAccessModifier)
-                                getterModifier = GetAccessModifier((AccessModifier)iGetterModifier) + " ";
+                            if (accessModifierAttr.NamedArguments.FirstOrDefault(x => x.Key == "GetModifier").Value.Value is int getterModifierKey && getterModifierKey != accessModifierKey)
+                                getterModifier = GetAccessModifier((AccessModifier)getterModifierKey) + " ";
                         }
 
                         using (builder.AddBlock($"{accessModifier} {propInfo.Type.ToDisplayString(UsageFormat)} {propertyName}"))

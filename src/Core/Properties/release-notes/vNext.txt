@@ -1,0 +1,1 @@
+﻿- Removed static Cache<T> class. Use an instance of the Cache class instead.

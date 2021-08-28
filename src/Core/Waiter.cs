@@ -279,6 +279,37 @@ namespace MaSch.Core
         internal const string DefaultFailMessage = "The waiting action has ended without result.";
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="WaiterOptions" /> class with default values defined by <see cref="Waiter.DefaultOptions"/>.
+        /// </summary>
+        public WaiterOptions()
+            : this(Waiter.DefaultOptions)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WaiterOptions"/> class.
+        /// </summary>
+        /// <param name="defaultValues">The default values.</param>
+        internal WaiterOptions(WaiterOptions? defaultValues)
+        {
+            if (defaultValues != null)
+            {
+                Timeout = defaultValues.Timeout;
+                ThinkTimeBetweenChecks = defaultValues.ThinkTimeBetweenChecks;
+                MinimumCheckCount = defaultValues.MinimumCheckCount;
+                MaximumCheckCount = defaultValues.MaximumCheckCount;
+                IgnoreAllExceptions = defaultValues.IgnoreAllExceptions;
+                IgnoredExceptionTypes = defaultValues.IgnoredExceptionTypes;
+                MaximumIgnoredExceptions = defaultValues.MaximumIgnoredExceptions;
+                OnException = defaultValues.OnException;
+                LogIgnoredExceptions = defaultValues.LogIgnoredExceptions;
+                IncludeExceptionStackInLog = defaultValues.IncludeExceptionStackInLog;
+                ThrowException = defaultValues.ThrowException;
+                ExceptionMessage = defaultValues.ExceptionMessage;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the timeout of the waiting action.
         /// </summary>
         public TimeSpan? Timeout { get; set; }
@@ -343,37 +374,6 @@ namespace MaSch.Core
         /// </summary>
         public ILoggingService? LoggingService { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WaiterOptions" /> class with default values defined by <see cref="Waiter.DefaultOptions"/>.
-        /// </summary>
-        public WaiterOptions()
-            : this(Waiter.DefaultOptions)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WaiterOptions"/> class.
-        /// </summary>
-        /// <param name="defaultValues">The default values.</param>
-        internal WaiterOptions(WaiterOptions? defaultValues)
-        {
-            if (defaultValues != null)
-            {
-                Timeout = defaultValues.Timeout;
-                ThinkTimeBetweenChecks = defaultValues.ThinkTimeBetweenChecks;
-                MinimumCheckCount = defaultValues.MinimumCheckCount;
-                MaximumCheckCount = defaultValues.MaximumCheckCount;
-                IgnoreAllExceptions = defaultValues.IgnoreAllExceptions;
-                IgnoredExceptionTypes = defaultValues.IgnoredExceptionTypes;
-                MaximumIgnoredExceptions = defaultValues.MaximumIgnoredExceptions;
-                OnException = defaultValues.OnException;
-                LogIgnoredExceptions = defaultValues.LogIgnoredExceptions;
-                IncludeExceptionStackInLog = defaultValues.IncludeExceptionStackInLog;
-                ThrowException = defaultValues.ThrowException;
-                ExceptionMessage = defaultValues.ExceptionMessage;
-            }
-        }
-
         /// <inheritdoc />
         object ICloneable.Clone() => MemberwiseClone();
 
@@ -419,14 +419,18 @@ namespace MaSch.Core
     public class WaitingState
     {
         /// <summary>
-        /// Gets the exceptions that occurred during the waiting action.
+        /// Initializes a new instance of the <see cref="WaitingState"/> class.
         /// </summary>
-        internal List<Exception> OccurredExceptionList { get; }
+        /// <param name="options">The options.</param>
+        internal WaitingState(WaiterOptions options)
+        {
+            Stopwatch = new Stopwatch();
+            OccurredExceptionList = new List<Exception>();
+            OccurredExceptions = OccurredExceptionList.AsReadOnly();
+            Options = options;
 
-        /// <summary>
-        /// Gets the stopwatch for this waiting action.
-        /// </summary>
-        internal Stopwatch Stopwatch { get; }
+            Stopwatch.Start();
+        }
 
         /// <summary>
         /// Gets the elapsed time of this waiting operation.
@@ -459,18 +463,14 @@ namespace MaSch.Core
         public WaiterOptions Options { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WaitingState"/> class.
+        /// Gets the exceptions that occurred during the waiting action.
         /// </summary>
-        /// <param name="options">The options.</param>
-        internal WaitingState(WaiterOptions options)
-        {
-            Stopwatch = new Stopwatch();
-            OccurredExceptionList = new List<Exception>();
-            OccurredExceptions = OccurredExceptionList.AsReadOnly();
-            Options = options;
+        internal List<Exception> OccurredExceptionList { get; }
 
-            Stopwatch.Start();
-        }
+        /// <summary>
+        /// Gets the stopwatch for this waiting action.
+        /// </summary>
+        internal Stopwatch Stopwatch { get; }
 
         /// <summary>
         /// Cancels this waiting operation.

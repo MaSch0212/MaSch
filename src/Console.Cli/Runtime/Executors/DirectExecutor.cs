@@ -19,6 +19,9 @@ namespace MaSch.Console.Cli.Runtime.Executors
                 throw new ArgumentException($"The type {commandType.Name} needs to implement {typeof(ICliExecutable).Name} and/or {typeof(ICliAsyncExecutable).Name}. If this command should not be executable, set the Executable Property on the CliCommandAttribute to false.", nameof(commandType));
         }
 
+        public static bool IsExecutable(Type commandType)
+            => typeof(ICliExecutable).IsAssignableFrom(commandType) || typeof(ICliAsyncExecutable).IsAssignableFrom(commandType);
+
         public int Execute(CliExecutionContext context, object obj)
         {
             Guard.NotNull(context, nameof(context));
@@ -52,8 +55,5 @@ namespace MaSch.Console.Cli.Runtime.Executors
             errors = null;
             return true;
         }
-
-        public static bool IsExecutable(Type commandType)
-            => typeof(ICliExecutable).IsAssignableFrom(commandType) || typeof(ICliAsyncExecutable).IsAssignableFrom(commandType);
     }
 }

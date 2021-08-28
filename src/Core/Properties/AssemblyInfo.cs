@@ -1,4 +1,4 @@
-using MaSch.Core.Attributes;
+﻿using MaSch.Core.Attributes;
 using System.Runtime.CompilerServices;
 
 [assembly: Shims(Shims.NullableReferenceTypes | Shims.OSVersioning | Shims.Records)]

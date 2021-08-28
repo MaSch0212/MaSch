@@ -296,18 +296,18 @@ namespace MaSch.Core
         private static Func<T, T, T> CompileEnumOperatorFunc<T>(Func<Expression, Expression, BinaryExpression> operatorExpressionFactory)
             where T : Enum
         {
-            var ulType = Enum.GetUnderlyingType(typeof(T));
+            var enumType = Enum.GetUnderlyingType(typeof(T));
 
-            var aArg = Expression.Parameter(typeof(T), "a");
-            var bArg = Expression.Parameter(typeof(T), "b");
+            var param1 = Expression.Parameter(typeof(T), "a");
+            var param2 = Expression.Parameter(typeof(T), "b");
 
-            var ulA = Expression.Convert(aArg, ulType);
-            var ulB = Expression.Convert(bArg, ulType);
+            var param1Cast = Expression.Convert(param1, enumType);
+            var param2Cast = Expression.Convert(param2, enumType);
 
-            var @operator = operatorExpressionFactory(ulA, ulB);
+            var @operator = operatorExpressionFactory(param1Cast, param2Cast);
             var result = Expression.Convert(@operator, typeof(T));
 
-            var lambda = Expression.Lambda<Func<T, T, T>>(result, aArg, bArg);
+            var lambda = Expression.Lambda<Func<T, T, T>>(result, param1, param2);
             return lambda.Compile();
         }
     }

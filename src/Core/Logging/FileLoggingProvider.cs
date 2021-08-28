@@ -48,6 +48,20 @@ namespace MaSch.Core.Logging
                 File.AppendAllText(GetFile(), $@"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {strLogType}: {actualMessage}{NewLine}");
         }
 
+        private static string GetTypeKey(LogType type)
+        {
+            return type switch
+            {
+                LogType.Debug => "DEBG",
+                LogType.Information => "INFO",
+                LogType.Success => "SUCC",
+                LogType.Warning => "WARN",
+                LogType.Error => "EROR",
+                LogType.FatalError => "FATL",
+                _ => "????",
+            };
+        }
+
         private string GetFile()
         {
             if (_currentFileNumber < 0)
@@ -71,20 +85,6 @@ namespace MaSch.Core.Logging
             while (File.Exists(path) && new FileInfo(path).Length >= FileSizeThreshold)
                 path = Path.Combine(_directoryPath, $"{_fileName}.{++_currentFileNumber:000}.log");
             return path;
-        }
-
-        private static string GetTypeKey(LogType type)
-        {
-            return type switch
-            {
-                LogType.Debug => "DEBG",
-                LogType.Information => "INFO",
-                LogType.Success => "SUCC",
-                LogType.Warning => "WARN",
-                LogType.Error => "EROR",
-                LogType.FatalError => "FATL",
-                _ => "????",
-            };
         }
     }
 }

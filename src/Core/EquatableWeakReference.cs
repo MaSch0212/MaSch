@@ -13,17 +13,6 @@ namespace MaSch.Core
     {
         private int _targetHashCode;
 
-        /// <inheritdoc/>
-        public override object? Target
-        {
-            get => base.Target;
-            set
-            {
-                base.Target = value;
-                OnTargetChanged(value);
-            }
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="EquatableWeakReference"/> class.
         /// </summary>
@@ -56,14 +45,23 @@ namespace MaSch.Core
             OnTargetChanged(Target);
         }
 
-        /// <summary>
-        /// Called when the <see cref="Target"/> property value changed.
-        /// </summary>
-        /// <param name="newTarget">The new target.</param>
-        protected virtual void OnTargetChanged(object? newTarget)
+        /// <inheritdoc/>
+        public override object? Target
         {
-            _targetHashCode = RuntimeHelpers.GetHashCode(newTarget);
+            get => base.Target;
+            set
+            {
+                base.Target = value;
+                OnTargetChanged(value);
+            }
         }
+
+        [SuppressMessage("Blocker Code Smell", "S3875:\"operator==\" should not be overloaded on reference types", Justification = "The caller would expect to compare the references to the target object.")]
+        public static bool operator ==(EquatableWeakReference x, EquatableWeakReference y)
+            => Equals(x, y);
+
+        public static bool operator !=(EquatableWeakReference x, EquatableWeakReference y)
+            => !Equals(x, y);
 
         /// <inheritdoc/>
         [SuppressMessage("Minor Bug", "S2328:\"GetHashCode\" should not reference mutable fields", Justification = "Needed here")]
@@ -78,11 +76,13 @@ namespace MaSch.Core
             return _targetHashCode == (obj is EquatableWeakReference r ? r._targetHashCode : RuntimeHelpers.GetHashCode(obj));
         }
 
-        [SuppressMessage("Blocker Code Smell", "S3875:\"operator==\" should not be overloaded on reference types", Justification = "The caller would expect to compare the references to the target object.")]
-        public static bool operator ==(EquatableWeakReference x, EquatableWeakReference y)
-            => Equals(x, y);
-
-        public static bool operator !=(EquatableWeakReference x, EquatableWeakReference y)
-            => !Equals(x, y);
+        /// <summary>
+        /// Called when the <see cref="Target"/> property value changed.
+        /// </summary>
+        /// <param name="newTarget">The new target.</param>
+        protected virtual void OnTargetChanged(object? newTarget)
+        {
+            _targetHashCode = RuntimeHelpers.GetHashCode(newTarget);
+        }
     }
 }

@@ -11,6 +11,25 @@ namespace MaSch.Console.Cli.Configuration
     public class CliCommandAttribute : Attribute
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="CliCommandAttribute"/> class.
+        /// </summary>
+        /// <param name="name">The name of this command.</param>
+        public CliCommandAttribute(string name)
+        {
+            Aliases = new[] { name };
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CliCommandAttribute"/> class.
+        /// </summary>
+        /// <param name="name">The name of this command.</param>
+        /// <param name="aliases">Additional names for this command.</param>
+        public CliCommandAttribute(string name, params string[] aliases)
+        {
+            Aliases = aliases?.Where(x => !string.IsNullOrEmpty(x)).Prepend(name).Distinct(StringComparer.OrdinalIgnoreCase).ToArray() ?? new[] { name };
+        }
+
+        /// <summary>
         /// Gets the name of this command.
         /// </summary>
         public string Name => Aliases[0];
@@ -44,24 +63,5 @@ namespace MaSch.Console.Cli.Configuration
         /// Gets or sets a value indicating whether this command should be hidden from the help page.
         /// </summary>
         public bool Hidden { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CliCommandAttribute"/> class.
-        /// </summary>
-        /// <param name="name">The name of this command.</param>
-        public CliCommandAttribute(string name)
-        {
-            Aliases = new[] { name };
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CliCommandAttribute"/> class.
-        /// </summary>
-        /// <param name="name">The name of this command.</param>
-        /// <param name="aliases">Additional names for this command.</param>
-        public CliCommandAttribute(string name, params string[] aliases)
-        {
-            Aliases = aliases?.Where(x => !string.IsNullOrEmpty(x)).Prepend(name).Distinct(StringComparer.OrdinalIgnoreCase).ToArray() ?? new[] { name };
-        }
     }
 }

@@ -69,10 +69,10 @@ namespace MaSch.Core.Cryptography
             Guard.NotNull(plainText, nameof(plainText));
             Guard.NotNull(passPhrase, nameof(passPhrase));
 
-            using var ptStream = new MemoryStream(Encoding.UTF8.GetBytes(plainText));
+            using var plainTextStream = new MemoryStream(Encoding.UTF8.GetBytes(plainText));
             using var outStream = new MemoryStream();
 
-            EncryptImpl(outStream, ptStream, passPhrase, saltBytes);
+            EncryptImpl(outStream, plainTextStream, passPhrase, saltBytes);
             return outStream.ToArray();
         }
 
@@ -92,20 +92,6 @@ namespace MaSch.Core.Cryptography
             EncryptImpl(output, input, passPhrase, saltBytes);
         }
 
-        private void EncryptImpl(Stream output, Stream input, string passPhrase, byte[]? saltBytes)
-        {
-            using var password = new Rfc2898DeriveBytes(passPhrase, saltBytes ?? DefaultSaltBytes);
-            var key = password.GetBytes(KeySize / 8);
-            using var aes = new AesManaged();
-            var encryptor = aes.CreateEncryptor(key, _initVector);
-            using var csEncrypt = new CryptoStream(output, encryptor, CryptoStreamMode.Write);
-            int i;
-            while ((i = input.ReadByte()) >= 0)
-            {
-                csEncrypt.WriteByte((byte)i);
-            }
-        }
-
         /// <summary>
         /// Decrypts the specified bytes.
         /// </summary>
@@ -118,10 +104,10 @@ namespace MaSch.Core.Cryptography
             Guard.NotNull(bytes, nameof(bytes));
             Guard.NotNull(passPhrase, nameof(passPhrase));
 
-            using var ctStream = new MemoryStream(bytes);
+            using var inStream = new MemoryStream(bytes);
             using var outStream = new MemoryStream();
 
-            DecryptImpl(outStream, ctStream, passPhrase, saltBytes);
+            DecryptImpl(outStream, inStream, passPhrase, saltBytes);
             return Encoding.UTF8.GetString(outStream.ToArray());
         }
 
@@ -141,26 +127,40 @@ namespace MaSch.Core.Cryptography
             DecryptImpl(output, input, passPhrase, saltBytes);
         }
 
-        private void DecryptImpl(Stream output, Stream input, string passPhrase, byte[]? saltBytes)
-        {
-            using var password = new Rfc2898DeriveBytes(passPhrase, saltBytes ?? DefaultSaltBytes);
-            var key = password.GetBytes(KeySize / 8);
-            using var aes = new AesManaged();
-            var decryptor = aes.CreateDecryptor(key, _initVector);
-            using var csDecrypt = new CryptoStream(input, decryptor, CryptoStreamMode.Read);
-            int i;
-            while ((i = csDecrypt.ReadByte()) >= 0)
-            {
-                output.WriteByte((byte)i);
-            }
-        }
-
         private static void VerifyInitVector(byte[] initVector)
         {
             Guard.NotNull(initVector, nameof(initVector));
 
             if (initVector.Length != 16)
                 throw new ArgumentException("The init-vector has to be 16 bytes long.");
+        }
+
+        private void EncryptImpl(Stream output, Stream input, string passPhrase, byte[]? saltBytes)
+        {
+            using var password = new Rfc2898DeriveBytes(passPhrase, saltBytes ?? DefaultSaltBytes);
+            var key = password.GetBytes(KeySize / 8);
+            using var aes = new AesManaged();
+            var encryptor = aes.CreateEncryptor(key, _initVector);
+            using var encryptStream = new CryptoStream(output, encryptor, CryptoStreamMode.Write);
+            int i;
+            while ((i = input.ReadByte()) >= 0)
+            {
+                encryptStream.WriteByte((byte)i);
+            }
+        }
+
+        private void DecryptImpl(Stream output, Stream input, string passPhrase, byte[]? saltBytes)
+        {
+            using var password = new Rfc2898DeriveBytes(passPhrase, saltBytes ?? DefaultSaltBytes);
+            var key = password.GetBytes(KeySize / 8);
+            using var aes = new AesManaged();
+            var decryptor = aes.CreateDecryptor(key, _initVector);
+            using var decryptStream = new CryptoStream(input, decryptor, CryptoStreamMode.Read);
+            int i;
+            while ((i = decryptStream.ReadByte()) >= 0)
+            {
+                output.WriteByte((byte)i);
+            }
         }
     }
 }

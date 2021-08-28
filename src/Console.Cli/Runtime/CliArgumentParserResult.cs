@@ -9,26 +9,6 @@ namespace MaSch.Console.Cli.Runtime
     public class CliArgumentParserResult
     {
         /// <summary>
-        /// Gets a value indicating whether the parse completed successfully.
-        /// </summary>
-        public bool Success { get; }
-
-        /// <summary>
-        /// Gets the errors that where detected while parsing.
-        /// </summary>
-        public IEnumerable<CliError> Errors { get; }
-
-        /// <summary>
-        /// Gets the execution context that can be used to execute the parsed command.
-        /// </summary>
-        public CliExecutionContext? ExecutionContext { get; }
-
-        /// <summary>
-        /// Gets the command instance that has been created during the parse.
-        /// </summary>
-        public object? Options { get; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="CliArgumentParserResult"/> class.
         /// </summary>
         /// <param name="errors">The errors that where detected while parsing.</param>
@@ -63,5 +43,25 @@ namespace MaSch.Console.Cli.Runtime
             ExecutionContext = executionContext;
             Options = options;
         }
+
+        /// <summary>
+        /// Gets a value indicating whether the parse completed successfully.
+        /// </summary>
+        public bool Success { get; }
+
+        /// <summary>
+        /// Gets the errors that where detected while parsing.
+        /// </summary>
+        public IEnumerable<CliError> Errors { get; }
+
+        /// <summary>
+        /// Gets the execution context that can be used to execute the parsed command.
+        /// </summary>
+        public CliExecutionContext? ExecutionContext { get; }
+
+        /// <summary>
+        /// Gets the command instance that has been created during the parse.
+        /// </summary>
+        public object? Options { get; }
     }
 }

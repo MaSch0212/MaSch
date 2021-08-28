@@ -15,17 +15,17 @@ namespace MaSch.Core
         private readonly List<IObjectConverter> _objectConverters;
 
         /// <summary>
-        /// Gets the registered object converters.
-        /// </summary>
-        internal IReadOnlyCollection<IObjectConverter> ObjectConverters => _objectConverters.AsReadOnly();
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ObjectConvertManager"/> class.
         /// </summary>
         public ObjectConvertManager()
         {
             _objectConverters = new List<IObjectConverter>();
         }
+
+        /// <summary>
+        /// Gets the registered object converters.
+        /// </summary>
+        internal IReadOnlyCollection<IObjectConverter> ObjectConverters => _objectConverters.AsReadOnly();
 
         /// <inheritdoc/>
         public virtual bool CanConvert(Type? sourceType, Type targetType)
@@ -85,18 +85,6 @@ namespace MaSch.Core
             _objectConverters.Add(converter);
         }
 
-        private bool CanConvertWithConverter(IObjectConverter converter, Type? sourceType, Type targetType)
-        {
-            try
-            {
-                return converter.CanConvert(sourceType, targetType, this);
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         private static int GetPriorityForConverter(IObjectConverter converter, Type? sourceType, Type targetType)
         {
             try
@@ -106,6 +94,18 @@ namespace MaSch.Core
             catch
             {
                 return int.MinValue;
+            }
+        }
+
+        private bool CanConvertWithConverter(IObjectConverter converter, Type? sourceType, Type targetType)
+        {
+            try
+            {
+                return converter.CanConvert(sourceType, targetType, this);
+            }
+            catch
+            {
+                return false;
             }
         }
     }

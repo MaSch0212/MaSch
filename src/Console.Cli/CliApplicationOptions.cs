@@ -11,6 +11,18 @@ namespace MaSch.Console.Cli
     public class CliApplicationOptions : CliParserOptions, ICliApplicationOptions
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="CliApplicationOptions"/> class.
+        /// </summary>
+        public CliApplicationOptions()
+        {
+            Name = Assembly.GetEntryAssembly()?.GetName().Name;
+            Version = Assembly.GetEntryAssembly()?.GetName().Version?.ToString(3);
+            Year = DateTime.Now.Year.ToString(CultureInfo.InvariantCulture);
+            Author = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company;
+            CliName = Assembly.GetEntryAssembly()?.GetName().Name;
+        }
+
+        /// <summary>
         /// Gets or sets the exit code that should be returned when parsing of command line arguments fails.
         /// </summary>
         public virtual int ParseErrorExitCode { get; set; } = -1;
@@ -67,18 +79,6 @@ namespace MaSch.Console.Cli
         {
             get => base.ProvideVersionOptions ?? true;
             set => base.ProvideVersionOptions = value;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CliApplicationOptions"/> class.
-        /// </summary>
-        public CliApplicationOptions()
-        {
-            Name = Assembly.GetEntryAssembly()?.GetName().Name;
-            Version = Assembly.GetEntryAssembly()?.GetName().Version?.ToString(3);
-            Year = DateTime.Now.Year.ToString(CultureInfo.InvariantCulture);
-            Author = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company;
-            CliName = Assembly.GetEntryAssembly()?.GetName().Name;
         }
     }
 }

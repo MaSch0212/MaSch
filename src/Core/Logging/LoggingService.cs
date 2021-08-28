@@ -13,9 +13,6 @@ namespace MaSch.Core.Logging
     {
         private readonly IList<ILoggingProvider> _loggingProviders;
 
-        /// <inheritdoc/>
-        public bool HasLoggingProvider => _loggingProviders.Count > 0;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="LoggingService"/> class.
         /// </summary>
@@ -41,6 +38,9 @@ namespace MaSch.Core.Logging
         {
             _loggingProviders = providers?.Where(x => x != null).Distinct().ToList() ?? new List<ILoggingProvider>();
         }
+
+        /// <inheritdoc/>
+        public bool HasLoggingProvider => _loggingProviders.Count > 0;
 
         /// <inheritdoc/>
         public virtual void Log(LogType logType, string? message)

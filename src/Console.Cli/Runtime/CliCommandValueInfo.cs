@@ -7,6 +7,19 @@ namespace MaSch.Console.Cli.Runtime
     /// <inheritdoc/>
     public class CliCommandValueInfo : CliCommandMemberInfo, ICliCommandValueInfo
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CliCommandValueInfo"/> class.
+        /// </summary>
+        /// <param name="extensionStorage">The extension data storage.</param>
+        /// <param name="command">The command this member belongs to.</param>
+        /// <param name="property">The property this member represents.</param>
+        /// <param name="attribute">The value code attribute.</param>
+        public CliCommandValueInfo(ObjectExtensionDataStorage extensionStorage, ICliCommandInfo command, PropertyInfo property, CliCommandValueAttribute attribute)
+            : base(extensionStorage, command, property)
+        {
+            Attribute = Guard.NotNull(attribute, nameof(attribute));
+        }
+
         /// <inheritdoc/>
         public CliCommandValueAttribute Attribute { get; }
 
@@ -27,18 +40,5 @@ namespace MaSch.Console.Cli.Runtime
 
         /// <inheritdoc/>
         public int Order => Attribute.Order;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CliCommandValueInfo"/> class.
-        /// </summary>
-        /// <param name="extensionStorage">The extension data storage.</param>
-        /// <param name="command">The command this member belongs to.</param>
-        /// <param name="property">The property this member represents.</param>
-        /// <param name="attribute">The value code attribute.</param>
-        public CliCommandValueInfo(ObjectExtensionDataStorage extensionStorage, ICliCommandInfo command, PropertyInfo property, CliCommandValueAttribute attribute)
-            : base(extensionStorage, command, property)
-        {
-            Attribute = Guard.NotNull(attribute, nameof(attribute));
-        }
     }
 }

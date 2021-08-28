@@ -1,7 +1,6 @@
 ﻿using MaSch.Core;
 using MaSch.Core.Extensions;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 
 namespace MaSch.Console.Ansi
@@ -16,6 +15,22 @@ namespace MaSch.Console.Ansi
         private readonly byte _red;
         private readonly byte _green;
         private readonly byte _blue;
+
+        private AnsiColor(AnsiColorCode? color)
+        {
+            _isDefaultColor = !color.HasValue;
+            _colorCode = color;
+            _red = _green = _blue = 0;
+        }
+
+        private AnsiColor(int red, int green, int blue)
+        {
+            _isDefaultColor = false;
+            _colorCode = null;
+            _red = (byte)Guard.NotOutOfRange(red, nameof(red), 0, 255);
+            _green = (byte)Guard.NotOutOfRange(green, nameof(green), 0, 255);
+            _blue = (byte)Guard.NotOutOfRange(blue, nameof(blue), 0, 255);
+        }
 
         /// <summary>
         /// Gets the default <see cref="AnsiColor"/>.
@@ -41,34 +56,6 @@ namespace MaSch.Console.Ansi
                 : _colorCode.HasValue
                     ? AnsiEscapeUtility.GetSetBackgroundColor(_colorCode.Value)
                     : AnsiEscapeUtility.GetSetBackgroundColor(_red, _green, _blue);
-
-        [SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "False positive.")]
-        private AnsiColor(AnsiColorCode? color)
-        {
-            _isDefaultColor = !color.HasValue;
-            _colorCode = color;
-            _red = _green = _blue = 0;
-        }
-
-        [SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "False positive.")]
-        private AnsiColor(int red, int green, int blue)
-        {
-            _isDefaultColor = false;
-            _colorCode = null;
-            _red = (byte)Guard.NotOutOfRange(red, nameof(red), 0, 255);
-            _green = (byte)Guard.NotOutOfRange(green, nameof(green), 0, 255);
-            _blue = (byte)Guard.NotOutOfRange(blue, nameof(blue), 0, 255);
-        }
-
-        /// <inheritdoc/>
-        public override string ToString()
-        {
-            return _isDefaultColor
-                ? "Default"
-                : _colorCode.HasValue
-                    ? Enum.GetName(typeof(AnsiColorCode), _colorCode.Value)!
-                    : $"#{_red.ToHexString()}{_green.ToHexString()}{_blue.ToHexString()} - rgb({_red}, {_green}, {_blue})";
-        }
 
         /// <summary>
         /// Creates an <see cref="AnsiColor"/> using a specified <see cref="AnsiColorCode"/>.
@@ -122,5 +109,18 @@ namespace MaSch.Console.Ansi
                 ConsoleColor.White => AnsiColorCode.White,
                 _ => throw new ArgumentOutOfRangeException(nameof(color)),
             });
+
+        /// <summary>
+        /// Returns the string representation of the color represented by this struct.
+        /// </summary>
+        /// <returns>The string representation of the color.</returns>
+        public override string ToString()
+        {
+            return _isDefaultColor
+                ? "Default"
+                : _colorCode.HasValue
+                    ? Enum.GetName(typeof(AnsiColorCode), _colorCode.Value)!
+                    : $"#{_red.ToHexString()}{_green.ToHexString()}{_blue.ToHexString()} - rgb({_red}, {_green}, {_blue})";
+        }
     }
 }

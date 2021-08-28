@@ -15,6 +15,35 @@ namespace MaSch.Console
     /// <seealso cref="IConsoleService" />
     public class ConsoleService : IConsoleService
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConsoleService"/> class.
+        /// </summary>
+        public ConsoleService()
+            : this(true)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConsoleService"/> class.
+        /// </summary>
+        /// <param name="enableAnsiEscapeTrimming">A value indicating whether ANSI escape sequences should be removed when the console output is redirected.</param>
+        public ConsoleService(bool enableAnsiEscapeTrimming)
+        {
+            IsFancyConsole =
+                !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WT_SESSION")); // Windows Terminal
+            IsAnsiEscapeTrimmingEnabled = enableAnsiEscapeTrimming;
+
+            if (IsFancyConsole)
+                OutputEncoding = Encoding.UTF8;
+        }
+
+        /// <inheritdoc />
+        public event ConsoleCancelEventHandler CancelKeyPress
+        {
+            add => C.CancelKeyPress += value;
+            remove => C.CancelKeyPress -= value;
+        }
+
         /// <inheritdoc />
         public bool IsFancyConsole { get; }
 
@@ -140,35 +169,6 @@ namespace MaSch.Console
         {
             get => C.ForegroundColor;
             set => C.ForegroundColor = value;
-        }
-
-        /// <inheritdoc />
-        public event ConsoleCancelEventHandler CancelKeyPress
-        {
-            add => C.CancelKeyPress += value;
-            remove => C.CancelKeyPress -= value;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ConsoleService"/> class.
-        /// </summary>
-        public ConsoleService()
-            : this(true)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ConsoleService"/> class.
-        /// </summary>
-        /// <param name="enableAnsiEscapeTrimming">A value indicating whether ANSI escape sequences should be removed when the console output is redirected.</param>
-        public ConsoleService(bool enableAnsiEscapeTrimming)
-        {
-            IsFancyConsole =
-                !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WT_SESSION")); // Windows Terminal
-            IsAnsiEscapeTrimmingEnabled = enableAnsiEscapeTrimming;
-
-            if (IsFancyConsole)
-                OutputEncoding = Encoding.UTF8;
         }
 
         /// <inheritdoc />

@@ -23,18 +23,18 @@ namespace MaSch.Core
         private readonly Dictionary<(Type Type, string? Name), object> _services = new();
         private readonly Dictionary<Type, IDisposable> _views = new();
 
-        /// <inheritdoc/>
-        public event ServiceContextEventHandler? Changing;
-
-        /// <inheritdoc/>
-        public event ServiceContextEventHandler? Changed;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceContext" /> class.
         /// </summary>
         private ServiceContext()
         {
         }
+
+        /// <inheritdoc/>
+        public event ServiceContextEventHandler? Changing;
+
+        /// <inheritdoc/>
+        public event ServiceContextEventHandler? Changed;
 
         /// <inheritdoc/>
         IReadOnlyDictionary<(Type Type, string? Name), object> IServiceContext.GetAllServices()
@@ -143,17 +143,6 @@ namespace MaSch.Core
     /// <typeparam name="T">The type of services to manage.</typeparam>
     public sealed partial class ServiceContext<T> : IServiceContext<T>
     {
-        /// <inheritdoc/>
-        public event ServiceContextEventHandler<T>? Changing;
-
-        /// <inheritdoc/>
-        public event ServiceContextEventHandler<T>? Changed;
-
-        /// <summary>
-        /// Gets the <see cref="ServiceContext"/> that is wrapped by this <see cref="ServiceContext{T}"/>.
-        /// </summary>
-        public IServiceContext Context { get; }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceContext{T}" /> class.
         /// </summary>
@@ -164,6 +153,17 @@ namespace MaSch.Core
             Context.Changing += OnContextChanging;
             Context.Changed += OnContextChanged;
         }
+
+        /// <inheritdoc/>
+        public event ServiceContextEventHandler<T>? Changing;
+
+        /// <inheritdoc/>
+        public event ServiceContextEventHandler<T>? Changed;
+
+        /// <summary>
+        /// Gets the <see cref="ServiceContext"/> that is wrapped by this <see cref="ServiceContext{T}"/>.
+        /// </summary>
+        public IServiceContext Context { get; }
 
         /// <inheritdoc/>
         IEnumerable<(string? Name, T Service)> IServiceContext<T>.GetAllServices()

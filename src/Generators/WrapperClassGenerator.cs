@@ -81,11 +81,11 @@ namespace MaSch.Generators
 
         private static void GenerateWrapperClassRegion(SourceBuilder builder, IList<ISymbol> existingMembers, ITypeSymbol wrappedType, string wrapperPropName)
         {
-            var wName = wrapperPropName;
+            var name = wrapperPropName;
             using (builder.AddRegion($"{wrappedType.Name} members"))
             {
                 builder.AppendLine()
-                       .AppendLine($"protected {wrappedType} {wName} {{ get; set; }}");
+                       .AppendLine($"protected {wrappedType} {name} {{ get; set; }}");
 
                 var members = wrappedType.GetMembers().Where(x => x.DeclaredAccessibility == Microsoft.CodeAnalysis.Accessibility.Public).ToArray();
 
@@ -96,7 +96,7 @@ namespace MaSch.Generators
                     builder.AppendLine();
                     using (builder.AddBlock($"public virtual {p.ToDisplayString(DefinitionFormat)}"))
                     {
-                        var usage = p.IsIndexer ? $"{wName}{p.ToDisplayString(UsageFormat)[4..]}" : $"{wName}.{p.ToDisplayString(UsageFormat)}";
+                        var usage = p.IsIndexer ? $"{name}{p.ToDisplayString(UsageFormat)[4..]}" : $"{name}.{p.ToDisplayString(UsageFormat)}";
                         if (p.GetMethod != null)
                             builder.AppendLine($"get => {usage};");
                         if (p.SetMethod != null)
@@ -112,9 +112,9 @@ namespace MaSch.Generators
                     using (builder.AddBlock($"public virtual {e.ToDisplayString(DefinitionFormat)}"))
                     {
                         if (e.AddMethod != null)
-                            builder.AppendLine($"add => {wName}.{e.Name} += value;");
+                            builder.AppendLine($"add => {name}.{e.Name} += value;");
                         if (e.RemoveMethod != null)
-                            builder.AppendLine($"remove => {wName}.{e.Name} -= value;");
+                            builder.AppendLine($"remove => {name}.{e.Name} -= value;");
                     }
                 }
 
@@ -125,7 +125,7 @@ namespace MaSch.Generators
                     hadMethod = true;
                     if (existingMembers.OfType<IMethodSymbol>().Any(x => x.Name == m.Name && x.TypeParameters.Length == m.TypeParameters.Length && x.Parameters.Select(y => y.Type).SequenceEqual(m.Parameters.Select(y => y.Type), SymbolEqualityComparer.Default)))
                         continue;
-                    builder.AppendLine($"public virtual {m.ToDisplayString(DefinitionFormat)} => {wName}.{m.ToDisplayString(UsageFormat)};");
+                    builder.AppendLine($"public virtual {m.ToDisplayString(DefinitionFormat)} => {name}.{m.ToDisplayString(UsageFormat)};");
                 }
 
                 if (hadMethod)

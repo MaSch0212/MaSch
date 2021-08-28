@@ -13,13 +13,6 @@ namespace MaSch.Core.Observable
     /// <seealso cref="IObservableObject" />
     public abstract class ObservableObject : IObservableObject
     {
-        /// <inheritdoc/>
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        /// <inheritdoc/>
-        [XmlIgnore]
-        public virtual bool IsNotifyEnabled { get; set; } = true;
-
         private readonly Dictionary<string, NotifyPropertyChangedAttribute> _attributes;
         private readonly ObservableObjectModule _module;
 
@@ -31,6 +24,13 @@ namespace MaSch.Core.Observable
             _module = new ObservableObjectModule(this);
             _attributes = NotifyPropertyChangedAttribute.InitializeAll(this);
         }
+
+        /// <inheritdoc/>
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        /// <inheritdoc/>
+        [XmlIgnore]
+        public virtual bool IsNotifyEnabled { get; set; } = true;
 
         /// <inheritdoc/>
         public virtual void SetProperty<T>(ref T property, T value, [CallerMemberName] string propertyName = "")

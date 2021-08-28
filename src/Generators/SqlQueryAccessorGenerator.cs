@@ -59,13 +59,13 @@ namespace MaSch.Generators
             context.AddSource(CreateHintName(className, nameof(SqlQueryAccessorGenerator)), source);
         }
 
-        [SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed", Justification = "False positive.")]
         private static string GenerateSqlQueryAccessor(string rootNamespace, string className, string rootDir, IEnumerable<AdditionalText> files)
         {
             var rootNode = new Node();
+            var dirStartIndex = rootDir.Length;
             foreach (var file in files)
             {
-                var relativePath = file.Path[rootDir.Length..].Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
+                var relativePath = file.Path[dirStartIndex..].Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
                 rootNode.Add(relativePath, file);
             }
 
@@ -79,14 +79,14 @@ namespace MaSch.Generators
 
         private class Node
         {
-            public string? Name { get; set; }
-            public List<Node> SubNodes { get; set; } = new List<Node>();
-            public List<AdditionalText> Files { get; set; } = new List<AdditionalText>();
-
             public Node(string? name = null)
             {
                 Name = name;
             }
+
+            public string? Name { get; set; }
+            public List<Node> SubNodes { get; set; } = new List<Node>();
+            public List<AdditionalText> Files { get; set; } = new List<AdditionalText>();
 
             public void Add(string[] pathParts, AdditionalText file)
             {

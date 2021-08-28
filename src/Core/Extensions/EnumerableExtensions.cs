@@ -1428,24 +1428,6 @@ namespace MaSch.Core.Extensions
             where TKey : notnull
             => ToDictionaryImpl(enumerable, keySelector, valueSelector, keyComparer, token);
 
-        private static Dictionary<TKey, TValue> ToDictionaryImpl<TSource, TKey, TValue>(IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector, IEqualityComparer<TKey>? keyComparer, CancellationToken token)
-            where TKey : notnull
-        {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            var result = new Dictionary<TKey, TValue>(keyComparer);
-            if (!token.IsCancellationRequested)
-            {
-                foreach (var item in enumerable)
-                {
-                    result.Add(keySelector(item), valueSelector(item));
-                    if (token.IsCancellationRequested)
-                        break;
-                }
-            }
-
-            return result;
-        }
-
         /// <summary>
         /// Tries to find the first element of an <see cref="IEnumerable{T}"/>.
         /// </summary>
@@ -1742,7 +1724,25 @@ namespace MaSch.Core.Extensions
         public static IEnumerable<object?> ToGeneric(this IEnumerable enumerable)
             => enumerable.OfType<object?>();
 
-#endregion
+        #endregion
+
+        private static Dictionary<TKey, TValue> ToDictionaryImpl<TSource, TKey, TValue>(IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector, IEqualityComparer<TKey>? keyComparer, CancellationToken token)
+            where TKey : notnull
+        {
+            Guard.NotNull(enumerable, nameof(enumerable));
+            var result = new Dictionary<TKey, TValue>(keyComparer);
+            if (!token.IsCancellationRequested)
+            {
+                foreach (var item in enumerable)
+                {
+                    result.Add(keySelector(item), valueSelector(item));
+                    if (token.IsCancellationRequested)
+                        break;
+                }
+            }
+
+            return result;
+        }
     }
 
     /// <summary>
@@ -1782,6 +1782,15 @@ namespace MaSch.Core.Extensions
     public class AsyncLoopState : LoopState
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="AsyncLoopState" /> class.
+        /// </summary>
+        /// <param name="token">A cancellation token that is observed while executing the loop.</param>
+        public AsyncLoopState(CancellationToken token)
+        {
+            CancellationToken = token;
+        }
+
+        /// <summary>
         /// Gets a cancellation token that is observed while executing the loop.
         /// </summary>
         public CancellationToken CancellationToken { get; }
@@ -1790,15 +1799,6 @@ namespace MaSch.Core.Extensions
         /// Gets a value indicating whether the loop should the cancelled or not.
         /// </summary>
         public bool IsCancellationRequested => CancellationToken.IsCancellationRequested;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncLoopState" /> class.
-        /// </summary>
-        /// <param name="token">A cancellation token that is observed while executing the loop.</param>
-        public AsyncLoopState(CancellationToken token)
-        {
-            CancellationToken = token;
-        }
 
         /// <inheritdoc/>
         protected internal override bool Next()

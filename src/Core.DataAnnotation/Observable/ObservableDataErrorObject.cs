@@ -17,6 +17,15 @@ namespace MaSch.Core.Observable
     {
         private readonly DataErrorHandler _dataErrorHandler;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableDataErrorObject"/> class.
+        /// </summary>
+        public ObservableDataErrorObject()
+        {
+            _dataErrorHandler = new DataErrorHandler(this);
+            _dataErrorHandler.ErrorsChanged += (s, e) => NotifyPropertyChanged(nameof(HasErrors));
+        }
+
         /// <inheritdoc />
         public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged
         {
@@ -27,15 +36,6 @@ namespace MaSch.Core.Observable
         /// <inheritdoc />
         [XmlIgnore]
         public virtual bool HasErrors => _dataErrorHandler.HasErrors;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableDataErrorObject"/> class.
-        /// </summary>
-        public ObservableDataErrorObject()
-        {
-            _dataErrorHandler = new DataErrorHandler(this);
-            _dataErrorHandler.ErrorsChanged += (s, e) => NotifyPropertyChanged(nameof(HasErrors));
-        }
 
         /// <inheritdoc />
         public override void SetProperty<T>(ref T property, T value, [CallerMemberName] string propertyName = "")

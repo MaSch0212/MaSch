@@ -14,22 +14,6 @@ namespace MaSch.Core.Observable
     /// <seealso cref="IChangeTrackedObject" />
     public abstract class ObservableChangeTrackingObject : ObservableObject, IChangeTrackedObject
     {
-        #region Properties
-
-        /// <inheritdoc/>
-        [XmlIgnore]
-        public virtual IChangeTracker ChangeTracker { get; }
-
-        /// <inheritdoc/>
-        [XmlIgnore]
-        public virtual bool HasChanges => ChangeTracker.HasChanges;
-
-        /// <inheritdoc/>
-        [XmlIgnore]
-        public virtual bool ImplicitlyRecurse => true;
-
-        #endregion
-
         #region Ctor
 
         /// <summary>
@@ -49,6 +33,22 @@ namespace MaSch.Core.Observable
         {
             ChangeTracker = Guard.NotNull(changeTracker, nameof(changeTracker));
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <inheritdoc/>
+        [XmlIgnore]
+        public virtual IChangeTracker ChangeTracker { get; }
+
+        /// <inheritdoc/>
+        [XmlIgnore]
+        public virtual bool HasChanges => ChangeTracker.HasChanges;
+
+        /// <inheritdoc/>
+        [XmlIgnore]
+        public virtual bool ImplicitlyRecurse => true;
 
         #endregion
 

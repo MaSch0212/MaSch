@@ -14,6 +14,13 @@ namespace MaSch.Console.Ansi
         private AnsiColor? _background;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="AnsiStyle"/> class.
+        /// </summary>
+        public AnsiStyle()
+        {
+        }
+
+        /// <summary>
         /// Gets the styles that should be used for this style.
         /// </summary>
         public AnsiTextStyle AddedStyles => _addedStyles;
@@ -32,13 +39,6 @@ namespace MaSch.Console.Ansi
         /// Gets the background color to use for this style.
         /// </summary>
         public AnsiColor? BackgroundColor => _background;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AnsiStyle"/> class.
-        /// </summary>
-        public AnsiStyle()
-        {
-        }
 
         /// <summary>
         /// Adds the information to this <see cref="AnsiStyle"/> instance that the specified styles should be used.

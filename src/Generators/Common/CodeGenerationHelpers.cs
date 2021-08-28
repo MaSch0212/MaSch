@@ -158,32 +158,6 @@ namespace MaSch.Generators.Common
         public static string CreateHintName(string name, string generatorName, string additionalGenerationInfo)
             => CreateHintName(name, (name, generatorName, additionalGenerationInfo).GetHashCode());
 
-        private static string CreateHintName(ISymbol symbol, Func<string, int> hashFunc)
-        {
-            string unescapedFileName;
-            string hashBaseName;
-
-            switch (symbol)
-            {
-                case IAssemblySymbol assembly:
-                    unescapedFileName = assembly.Name;
-                    hashBaseName = assembly.Name;
-                    break;
-                default:
-                    unescapedFileName = symbol.Name;
-                    hashBaseName = symbol.ToDisplayString(DefinitionFormat.WithGenericsOptions(SymbolDisplayGenericsOptions.IncludeTypeParameters));
-                    break;
-            }
-
-            var name = Regex.Replace(unescapedFileName, @"[\.+]", "-");
-            return CreateHintName(name, hashFunc(hashBaseName));
-        }
-
-        private static string CreateHintName(string name, int hash)
-        {
-            return $"{name}-{BitConverter.GetBytes(hash).ToHexString()}.g";
-        }
-
         /// <summary>
         /// Gets the XML (as C# sytax text) for the comment associated with the symbol.
         /// </summary>
@@ -243,6 +217,32 @@ namespace MaSch.Generators.Common
             var processName = Process.GetCurrentProcess().ProcessName;
             if (!Debugger.IsAttached && processName != "ServiceHub.RoslynCodeAnalysisService" && processName != "devenv")
                 Debugger.Launch();
+        }
+
+        private static string CreateHintName(ISymbol symbol, Func<string, int> hashFunc)
+        {
+            string unescapedFileName;
+            string hashBaseName;
+
+            switch (symbol)
+            {
+                case IAssemblySymbol assembly:
+                    unescapedFileName = assembly.Name;
+                    hashBaseName = assembly.Name;
+                    break;
+                default:
+                    unescapedFileName = symbol.Name;
+                    hashBaseName = symbol.ToDisplayString(DefinitionFormat.WithGenericsOptions(SymbolDisplayGenericsOptions.IncludeTypeParameters));
+                    break;
+            }
+
+            var name = Regex.Replace(unescapedFileName, @"[\.+]", "-");
+            return CreateHintName(name, hashFunc(hashBaseName));
+        }
+
+        private static string CreateHintName(string name, int hash)
+        {
+            return $"{name}-{BitConverter.GetBytes(hash).ToHexString()}.g";
         }
     }
 }

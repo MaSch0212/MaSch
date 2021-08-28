@@ -49,9 +49,6 @@ namespace MaSch.Core.Extensions
         public static string? TrimStartOnce(this string? s, string trimString)
             => TrimStartImpl(s, trimString, true);
 
-        private static string? TrimStartImpl(string? s, string trimString, bool onlyOnce)
-            => s == null ? s : Regex.Replace(s, $"^({Regex.Escape(trimString)}){(onlyOnce ? string.Empty : "+")}", string.Empty);
-
         /// <summary>
         /// Removes all the trailing occurrences of a specified string from the current string.
         /// </summary>
@@ -78,9 +75,6 @@ namespace MaSch.Core.Extensions
         public static string? TrimEndOnce(string? s, string trimString)
             => TrimEndImpl(s, trimString, true);
 
-        private static string? TrimEndImpl(string? s, string trimString, bool onlyOnce)
-            => s == null ? s : Regex.Replace(s, $"({Regex.Escape(trimString)}){(onlyOnce ? string.Empty : "+")}$", string.Empty);
-
         /// <summary>
         /// Removes all leading and trailing instances of a specified string from the current string.
         /// </summary>
@@ -106,13 +100,6 @@ namespace MaSch.Core.Extensions
         [return: NotNullIfNotNull("s")]
         public static string? TrimOnce(string? s, string trimString)
             => TrimImpl(s, trimString, true);
-
-        private static string? TrimImpl(string? s, string trimString, bool onlyOnce)
-        {
-            var ets = Regex.Escape(trimString);
-            var p = onlyOnce ? string.Empty : "+";
-            return s == null ? s : Regex.Replace(s, $"(^({ets}){p}|({ets}){p}$)", string.Empty);
-        }
 
         /// <summary>
         /// Ensures that the current string ends with a specified string.
@@ -173,5 +160,18 @@ namespace MaSch.Core.Extensions
         public static bool Contains(this string s, string value, StringComparison comparisonType)
             => s.IndexOf(value, comparisonType) >= 0;
 #endif
+
+        private static string? TrimStartImpl(string? s, string trimString, bool onlyOnce)
+            => s == null ? s : Regex.Replace(s, $"^({Regex.Escape(trimString)}){(onlyOnce ? string.Empty : "+")}", string.Empty);
+
+        private static string? TrimEndImpl(string? s, string trimString, bool onlyOnce)
+            => s == null ? s : Regex.Replace(s, $"({Regex.Escape(trimString)}){(onlyOnce ? string.Empty : "+")}$", string.Empty);
+
+        private static string? TrimImpl(string? s, string trimString, bool onlyOnce)
+        {
+            var ets = Regex.Escape(trimString);
+            var p = onlyOnce ? string.Empty : "+";
+            return s == null ? s : Regex.Replace(s, $"(^({ets}){p}|({ets}){p}$)", string.Empty);
+        }
     }
 }

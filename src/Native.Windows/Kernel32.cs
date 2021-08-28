@@ -23,26 +23,6 @@ namespace MaSch.Native.Windows
 
         #endregion
 
-        #region Extern Methods
-
-        [DllImport(Kernel32DllName, CharSet = CharSet.Auto, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool CopyFileEx(string lpExistingFileName, string lpNewFileName, CopyProgressRoutine lpProgressRoutine, IntPtr lpData, ref int pbCancel, CopyFileFlags dwCopyFlags);
-
-        [DllImport(Kernel32DllName)]
-        public static extern bool AllocConsole();
-
-        [DllImport(Kernel32DllName)]
-        public static extern bool FreeConsole();
-
-        [DllImport(Kernel32DllName)]
-        public static extern IntPtr GetConsoleWindow();
-
-        [DllImport(Kernel32DllName)]
-        public static extern int GetConsoleOutputCP();
-
-        #endregion
-
         #region Enums
 
         public enum CopyProgressResult : uint
@@ -69,6 +49,26 @@ namespace MaSch.Native.Windows
             CopyFileAllowDecryptedDestination = 8,
             CopyFileCopySymlink = 2048,
         }
+
+        #endregion
+
+        #region Extern Methods
+
+        [DllImport(Kernel32DllName, CharSet = CharSet.Auto, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool CopyFileEx(string lpExistingFileName, string lpNewFileName, CopyProgressRoutine lpProgressRoutine, IntPtr lpData, ref int pbCancel, CopyFileFlags dwCopyFlags);
+
+        [DllImport(Kernel32DllName)]
+        public static extern bool AllocConsole();
+
+        [DllImport(Kernel32DllName)]
+        public static extern bool FreeConsole();
+
+        [DllImport(Kernel32DllName)]
+        public static extern IntPtr GetConsoleWindow();
+
+        [DllImport(Kernel32DllName)]
+        public static extern int GetConsoleOutputCP();
 
         #endregion
     }

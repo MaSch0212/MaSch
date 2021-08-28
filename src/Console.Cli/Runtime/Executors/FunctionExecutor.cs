@@ -18,20 +18,20 @@ namespace MaSch.Console.Cli.Runtime.Executors
             var genArgs = type.GetGenericArguments();
             if (!typeof(CliExecutionContext).IsAssignableFrom(genArgs[0]))
                 throw new ArgumentException($"The first function arguments need to be of type CliExecutionContext.");
-            var eType = typeof(FunctionExecutor<>).MakeGenericType(genArgs[1]);
+            var executorType = typeof(FunctionExecutor<>).MakeGenericType(genArgs[1]);
             return genArgs[2] switch
             {
-                Type x when x == typeof(int) => (ICliCommandExecutor)Activator.CreateInstance(eType, executorFunction, null)!,
-                Type x when x == typeof(Task<int>) => (ICliCommandExecutor)Activator.CreateInstance(eType, null, executorFunction)!,
+                Type x when x == typeof(int) => (ICliCommandExecutor)Activator.CreateInstance(executorType, executorFunction, null)!,
+                Type x when x == typeof(Task<int>) => (ICliCommandExecutor)Activator.CreateInstance(executorType, null, executorFunction)!,
                 _ => throw new ArgumentException($"The executor function needs to either return int or Task<int>."),
             };
         }
 
         public static T PreExecute<T>(object obj)
         {
-            if (obj is not T tObj)
+            if (obj is not T castedObject)
                 throw new ArgumentException($"The object needs to be an instance of class {typeof(T).Name}. (Actual: {obj.GetType()})", nameof(obj));
-            return tObj;
+            return castedObject;
         }
     }
 
@@ -53,11 +53,11 @@ namespace MaSch.Console.Cli.Runtime.Executors
         {
             Guard.NotNull(context, nameof(context));
             Guard.NotNull(obj, nameof(obj));
-            var tObj = FunctionExecutor.PreExecute<T>(obj);
+            var castedObject = FunctionExecutor.PreExecute<T>(obj);
             if (_executorFunc != null)
-                return _executorFunc(context, tObj);
+                return _executorFunc(context, castedObject);
             else if (_asyncExecutorFunc != null)
-                return _asyncExecutorFunc(context, tObj).GetAwaiter().GetResult();
+                return _asyncExecutorFunc(context, castedObject).GetAwaiter().GetResult();
             else
                 throw new InvalidOperationException("At least one function needs to be provided.");
         }
@@ -66,11 +66,11 @@ namespace MaSch.Console.Cli.Runtime.Executors
         {
             Guard.NotNull(context, nameof(context));
             Guard.NotNull(obj, nameof(obj));
-            var tObj = FunctionExecutor.PreExecute<T>(obj);
+            var castedObject = FunctionExecutor.PreExecute<T>(obj);
             if (_asyncExecutorFunc != null)
-                return await _asyncExecutorFunc(context, tObj);
+                return await _asyncExecutorFunc(context, castedObject);
             else if (_executorFunc != null)
-                return _executorFunc(context, tObj);
+                return _executorFunc(context, castedObject);
             else
                 throw new InvalidOperationException("At least one function needs to be provided.");
         }

@@ -22,11 +22,6 @@ namespace MaSch.Core.Attributes
         private MethodInfo? _callbackMethod;
 
         /// <summary>
-        /// Gets a value indicating whether the <see cref="NotifyPropertyChangedAttribute"/> is initialized.
-        /// </summary>
-        public bool IsInitialized => _propertyInfo != null && _callbackMethod != null;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="NotifyPropertyChangedAttribute"/> class.
         /// </summary>
         /// <param name="methodName">The name of the method which is executed when the property have changed.</param>
@@ -35,6 +30,50 @@ namespace MaSch.Core.Attributes
             Guard.NotNull(methodName, nameof(methodName));
 
             _callbackMethodName = methodName;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="NotifyPropertyChangedAttribute"/> is initialized.
+        /// </summary>
+        public bool IsInitialized => _propertyInfo != null && _callbackMethod != null;
+
+        /// <summary>
+        /// Initializes all properties that have an <see cref="NotifyParentPropertyAttribute"/> attached.
+        /// </summary>
+        /// <param name="classObject">The object on which to initialize the <see cref="NotifyParentPropertyAttribute"/>s to.</param>
+        /// <param name="reinitialize">Determines wether the attributes should do the initialization even if they already are initialized.</param>
+        /// <returns>Returns a dictionary that contains the <see cref="NotifyParentPropertyAttribute"/> of all properties.</returns>
+        public static Dictionary<string, NotifyPropertyChangedAttribute> InitializeAll(object classObject, bool reinitialize = false)
+        {
+            Guard.NotNull(classObject, nameof(classObject));
+
+            var result = GetAttributes(classObject.GetType());
+            result.ForEach(x => x.Value.Initialize(x.Key, reinitialize));
+            return result.ToDictionary(x => x.Key.Name, x => x.Value);
+        }
+
+        /// <summary>
+        /// Subscribes to all properties that have an <see cref="NotifyParentPropertyAttribute"/> attached.
+        /// </summary>
+        /// <param name="classObject">The object on which to subscribe to.</param>
+        public static void SubscribeAll(object classObject)
+        {
+            Guard.NotNull(classObject, nameof(classObject));
+
+            var result = GetAttributes(classObject.GetType());
+            result.ForEach(x => x.Value.SubscribeEvent(classObject));
+        }
+
+        /// <summary>
+        /// Unsubscribes from all properties that have an <see cref="NotifyParentPropertyAttribute"/> attached.
+        /// </summary>
+        /// <param name="classObject">The object on which to unsubscribe from.</param>
+        public static void UnsubscribeAll(object classObject)
+        {
+            Guard.NotNull(classObject, nameof(classObject));
+
+            var result = GetAttributes(classObject.GetType());
+            result.ForEach(x => x.Value.UnsubscribeEvent(classObject));
         }
 
         /// <summary>
@@ -120,11 +159,6 @@ namespace MaSch.Core.Attributes
             }
         }
 
-        private PropertyChangedEventHandler GetOnPropertyChanged(object classObject)
-        {
-            return (s, e) => _callbackMethod?.Invoke(classObject, new[] { s, e });
-        }
-
         [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "Just scanning for all properties that use this attribute.")]
         private static Dictionary<PropertyInfo, NotifyPropertyChangedAttribute> GetAttributes(Type classType)
         {
@@ -145,55 +179,21 @@ namespace MaSch.Core.Attributes
             return result;
         }
 
-        /// <summary>
-        /// Initializes all properties that have an <see cref="NotifyParentPropertyAttribute"/> attached.
-        /// </summary>
-        /// <param name="classObject">The object on which to initialize the <see cref="NotifyParentPropertyAttribute"/>s to.</param>
-        /// <param name="reinitialize">Determines wether the attributes should do the initialization even if they already are initialized.</param>
-        /// <returns>Returns a dictionary that contains the <see cref="NotifyParentPropertyAttribute"/> of all properties.</returns>
-        public static Dictionary<string, NotifyPropertyChangedAttribute> InitializeAll(object classObject, bool reinitialize = false)
+        private PropertyChangedEventHandler GetOnPropertyChanged(object classObject)
         {
-            Guard.NotNull(classObject, nameof(classObject));
-
-            var result = GetAttributes(classObject.GetType());
-            result.ForEach(x => x.Value.Initialize(x.Key, reinitialize));
-            return result.ToDictionary(x => x.Key.Name, x => x.Value);
-        }
-
-        /// <summary>
-        /// Subscribes to all properties that have an <see cref="NotifyParentPropertyAttribute"/> attached.
-        /// </summary>
-        /// <param name="classObject">The object on which to subscribe to.</param>
-        public static void SubscribeAll(object classObject)
-        {
-            Guard.NotNull(classObject, nameof(classObject));
-
-            var result = GetAttributes(classObject.GetType());
-            result.ForEach(x => x.Value.SubscribeEvent(classObject));
-        }
-
-        /// <summary>
-        /// Unsubscribes from all properties that have an <see cref="NotifyParentPropertyAttribute"/> attached.
-        /// </summary>
-        /// <param name="classObject">The object on which to unsubscribe from.</param>
-        public static void UnsubscribeAll(object classObject)
-        {
-            Guard.NotNull(classObject, nameof(classObject));
-
-            var result = GetAttributes(classObject.GetType());
-            result.ForEach(x => x.Value.UnsubscribeEvent(classObject));
+            return (s, e) => _callbackMethod?.Invoke(classObject, new[] { s, e });
         }
 
         private class EventCacheItem
         {
-            public PropertyChangedEventHandler EventHandler { get; }
-            public int SubscribeCount { get; set; }
-
             public EventCacheItem(PropertyChangedEventHandler handler)
             {
                 EventHandler = handler;
                 SubscribeCount = 0;
             }
+
+            public PropertyChangedEventHandler EventHandler { get; }
+            public int SubscribeCount { get; set; }
         }
     }
 }

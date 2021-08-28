@@ -13,12 +13,6 @@ namespace MaSch.Core
     /// <seealso cref="IDisposableEnumerable{T}" />
     public class DelegateDisposableEnumerable<T> : IDisposableEnumerable<T>
     {
-        /// <inheritdoc/>
-        public event EventHandler<DisposeEventArgs>? Disposing;
-
-        /// <inheritdoc/>
-        public event EventHandler<DisposeEventArgs>? Disposed;
-
         private readonly IEnumerable<T> _enumerable;
         private readonly Action _actionOnDispose;
 
@@ -35,6 +29,12 @@ namespace MaSch.Core
             _enumerable = enumerable;
             _actionOnDispose = actionOnDispose;
         }
+
+        /// <inheritdoc/>
+        public event EventHandler<DisposeEventArgs>? Disposing;
+
+        /// <inheritdoc/>
+        public event EventHandler<DisposeEventArgs>? Disposed;
 
         /// <inheritdoc/>
         public IEnumerator<T> GetEnumerator() => _enumerable.GetEnumerator();
@@ -72,12 +72,6 @@ namespace MaSch.Core
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Can be in same file.")]
     public class DelegateOrderedDisposableEnumerable<T> : IOrderedDisposableEnumerable<T>
     {
-        /// <inheritdoc/>
-        public event EventHandler<DisposeEventArgs>? Disposing;
-
-        /// <inheritdoc/>
-        public event EventHandler<DisposeEventArgs>? Disposed;
-
         private readonly IOrderedEnumerable<T> _enumerable;
         private readonly Action _actionOnDispose;
 
@@ -94,6 +88,12 @@ namespace MaSch.Core
             _enumerable = enumerable;
             _actionOnDispose = actionOnDispose;
         }
+
+        /// <inheritdoc/>
+        public event EventHandler<DisposeEventArgs>? Disposing;
+
+        /// <inheritdoc/>
+        public event EventHandler<DisposeEventArgs>? Disposed;
 
         /// <inheritdoc/>
         public IOrderedEnumerable<T> CreateOrderedEnumerable<TKey>(Func<T, TKey> keySelector, IComparer<TKey>? comparer, bool @descending) => _enumerable.CreateOrderedEnumerable(keySelector, comparer, @descending);

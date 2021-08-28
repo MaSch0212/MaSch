@@ -83,17 +83,6 @@ namespace MaSch.Core.Extensions
             return items.Count(x => AddIfNotExistsImpl(collection, x));
         }
 
-        private static bool AddIfNotExistsImpl<T>(ICollection<T> collection, T itemToAdd)
-        {
-            if (!collection.Contains(itemToAdd))
-            {
-                collection.Add(itemToAdd);
-                return true;
-            }
-
-            return false;
-        }
-
         /// <summary>
         /// Removes an item from the <see cref="ICollection{T}"/> if it exists in the <see cref="ICollection{T}"/>.
         /// </summary>
@@ -122,31 +111,6 @@ namespace MaSch.Core.Extensions
             Guard.NotNull(comparer, nameof(comparer));
 
             return TryRemoveImpl(collection, itemToRemove, comparer);
-        }
-
-        private static bool TryRemoveImpl<T>(ICollection<T> collection, T itemToRemove)
-        {
-            if (collection.Contains(itemToRemove))
-            {
-                collection.Remove(itemToRemove);
-                return true;
-            }
-
-            return false;
-        }
-
-        private static bool TryRemoveImpl<T>(ICollection<T> collection, T itemToRemove, IEqualityComparer<T> comparer)
-        {
-            foreach (var element in collection)
-            {
-                if (comparer.Equals(element, itemToRemove))
-                {
-                    collection.Remove(element);
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -208,6 +172,42 @@ namespace MaSch.Core.Extensions
             foreach (var i in enumerable)
                 result.Add(i);
             return result;
+        }
+
+        private static bool AddIfNotExistsImpl<T>(ICollection<T> collection, T itemToAdd)
+        {
+            if (!collection.Contains(itemToAdd))
+            {
+                collection.Add(itemToAdd);
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool TryRemoveImpl<T>(ICollection<T> collection, T itemToRemove)
+        {
+            if (collection.Contains(itemToRemove))
+            {
+                collection.Remove(itemToRemove);
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool TryRemoveImpl<T>(ICollection<T> collection, T itemToRemove, IEqualityComparer<T> comparer)
+        {
+            foreach (var element in collection)
+            {
+                if (comparer.Equals(element, itemToRemove))
+                {
+                    collection.Remove(element);
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

@@ -12,6 +12,15 @@ namespace MaSch.Core.Attributes
     public class WrappingAttribute : Attribute
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="WrappingAttribute"/> class.
+        /// </summary>
+        /// <param name="typeToWrap">The type to wrap.</param>
+        public WrappingAttribute(Type typeToWrap)
+        {
+            TypeToWrap = typeToWrap;
+        }
+
+        /// <summary>
         /// Gets the type to wrap.
         /// </summary>
         public Type TypeToWrap { get; }
@@ -20,14 +29,5 @@ namespace MaSch.Core.Attributes
         /// Gets or sets the name of the property for the instance that is wrapped.
         /// </summary>
         public string? WrappingPropName { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WrappingAttribute"/> class.
-        /// </summary>
-        /// <param name="typeToWrap">The type to wrap.</param>
-        public WrappingAttribute(Type typeToWrap)
-        {
-            TypeToWrap = typeToWrap;
-        }
     }
 }

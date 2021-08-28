@@ -77,9 +77,9 @@ namespace MaSch.Core.Helper
                 {
                     yield return t;
                 }
-                else if (o is IEnumerable tList)
+                else if (o is IEnumerable enumerable)
                 {
-                    foreach (var item in Merge<T>(tList.OfType<object>().ToArray()))
+                    foreach (var item in Merge<T>(enumerable.OfType<object>().ToArray()))
                         yield return item;
                 }
                 else if (!ignoreInvalidObjects)

@@ -13,6 +13,13 @@ namespace MaSch.Generators
     [Generator]
     public class ObservableObjectGenerator : ISourceGenerator
     {
+        private enum InterfaceType
+        {
+            None,
+            ObservableObject,
+            NotifyPropertyChanged,
+        }
+
         /// <inheritdoc />
         public void Initialize(GeneratorInitializationContext context)
         {
@@ -136,13 +143,6 @@ namespace MaSch.Generators
 
                 context.AddSource(typeSymbol, builder, nameof(ObservableObjectGenerator));
             }
-        }
-
-        private enum InterfaceType
-        {
-            None,
-            ObservableObject,
-            NotifyPropertyChanged,
         }
     }
 }

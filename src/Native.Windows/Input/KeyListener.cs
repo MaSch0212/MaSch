@@ -6,8 +6,6 @@ namespace MaSch.Native.Windows.Input
 {
     public class KeyListener
     {
-        public event Action<Keys>? KeyPressed;
-
         private readonly bool[] _keyStates = new bool[255];
         private readonly int _interval;
         private Task? _listener;
@@ -17,6 +15,18 @@ namespace MaSch.Native.Windows.Input
         {
             StartListener();
             _interval = checkInterval;
+        }
+
+        public event Action<Keys>? KeyPressed;
+
+        public static bool IsControlKey(Keys key)
+        {
+            return key == Keys.ControlKey || key == Keys.LControlKey || key == Keys.RControlKey;
+        }
+
+        public static bool IsShiftKey(Keys key)
+        {
+            return key == Keys.ShiftKey || key == Keys.LShiftKey || key == Keys.RShiftKey;
         }
 
         public void StopListener()
@@ -39,16 +49,6 @@ namespace MaSch.Native.Windows.Input
         public bool IsKeyPressed(Keys key)
         {
             return _keyStates[(int)key];
-        }
-
-        public static bool IsControlKey(Keys key)
-        {
-            return key == Keys.ControlKey || key == Keys.LControlKey || key == Keys.RControlKey;
-        }
-
-        public static bool IsShiftKey(Keys key)
-        {
-            return key == Keys.ShiftKey || key == Keys.LShiftKey || key == Keys.RShiftKey;
         }
 
         private void DoListenerAction()

@@ -27,6 +27,27 @@ namespace MaSch.Console.Cli
         private ICliCommandFactory? _commandFactory;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="CliApplicationBuilderBase{TApplication, TBuilder}"/> class.
+        /// </summary>
+        protected CliApplicationBuilderBase()
+            : this(new ServiceCollection(), new CliCommandInfoCollection(), new CliApplicationOptions())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CliApplicationBuilderBase{TApplication, TBuilder}"/> class.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <param name="commands">The commands.</param>
+        /// <param name="options">The options.</param>
+        protected CliApplicationBuilderBase(IServiceCollection services, ICliCommandInfoCollection commands, CliApplicationOptions options)
+        {
+            Services = services;
+            Commands = commands;
+            Options = options;
+        }
+
+        /// <summary>
         /// Gets the command factory to use when creating commands.
         /// </summary>
         public ICliCommandFactory CommandFactory
@@ -63,27 +84,6 @@ namespace MaSch.Console.Cli
         /// Gets the options.
         /// </summary>
         protected CliApplicationOptions Options { get; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CliApplicationBuilderBase{TApplication, TBuilder}"/> class.
-        /// </summary>
-        protected CliApplicationBuilderBase()
-            : this(new ServiceCollection(), new CliCommandInfoCollection(), new CliApplicationOptions())
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CliApplicationBuilderBase{TApplication, TBuilder}"/> class.
-        /// </summary>
-        /// <param name="services">The services.</param>
-        /// <param name="commands">The commands.</param>
-        /// <param name="options">The options.</param>
-        protected CliApplicationBuilderBase(IServiceCollection services, ICliCommandInfoCollection commands, CliApplicationOptions options)
-        {
-            Services = services;
-            Commands = commands;
-            Options = options;
-        }
 
         /// <summary>
         /// Adds a <see cref="ICliCommandInfo"/> to the final application.

@@ -6,44 +6,31 @@ using System.Runtime.InteropServices;
 
 namespace MaSch.Native.Windows.Explorer
 {
+    public enum IconSize
+    {
+        /// <summary>
+        /// 16x16.
+        /// </summary>
+        Small = Shell32.ShilSmall,
+
+        /// <summary>
+        /// 32x32.
+        /// </summary>
+        Medium = Shell32.ShilLarge,
+
+        /// <summary>
+        /// 48x48.
+        /// </summary>
+        Large = Shell32.ShilExtralarge,
+
+        /// <summary>
+        /// 256x256.
+        /// </summary>
+        Jumbo = Shell32.ShilJumbo,
+    }
+
     public static class FileInfo
     {
-        private static int GetFileIconIndex(string pszFile)
-        {
-            var sfi = default(ShFileInfo);
-            Shell32.SHGetFileInfo(
-                pszFile,
-                0,
-                ref sfi,
-                (uint)Marshal.SizeOf(sfi),
-                (uint)(Shgfi.SysIconIndex | Shgfi.LargeIcon | Shgfi.UseFileAttributes));
-            return sfi.iIcon;
-        }
-
-        private static int GetDirectoryIconIndex(string pszFile)
-        {
-            var sfi = default(ShFileInfo);
-            Shell32.SHGetFileInfo(
-                pszFile,
-                Shell32.FileAttributeDirectory,
-                ref sfi,
-                (uint)Marshal.SizeOf(sfi),
-                (uint)(Shgfi.SysIconIndex | Shgfi.LargeIcon | Shgfi.UseFileAttributes | Shgfi.OpenIcon));
-            return sfi.iIcon;
-        }
-
-        private static IntPtr GetIcon(int iImage, IconSize size)
-        {
-            IImageList? spiml = null;
-            Guid guil = new(Shell32.IidIImageList);
-
-            Shell32.SHGetImageList((int)size, ref guil, ref spiml);
-            IntPtr hIcon = IntPtr.Zero;
-            spiml?.GetIcon(iImage, Shell32.IldTransparent | Shell32.IldImage, ref hIcon);
-
-            return hIcon;
-        }
-
         public static Icon GetIconFromFile(string filePath, IconSize size)
         {
             var iconIndex = GetFileIconIndex(filePath);
@@ -142,28 +129,41 @@ namespace MaSch.Native.Windows.Explorer
 
             return processes;
         }
-    }
 
-    public enum IconSize
-    {
-        /// <summary>
-        /// 16x16.
-        /// </summary>
-        Small = Shell32.ShilSmall,
+        private static int GetFileIconIndex(string pszFile)
+        {
+            var sfi = default(ShFileInfo);
+            Shell32.SHGetFileInfo(
+                pszFile,
+                0,
+                ref sfi,
+                (uint)Marshal.SizeOf(sfi),
+                (uint)(Shgfi.SysIconIndex | Shgfi.LargeIcon | Shgfi.UseFileAttributes));
+            return sfi.iIcon;
+        }
 
-        /// <summary>
-        /// 32x32.
-        /// </summary>
-        Medium = Shell32.ShilLarge,
+        private static int GetDirectoryIconIndex(string pszFile)
+        {
+            var sfi = default(ShFileInfo);
+            Shell32.SHGetFileInfo(
+                pszFile,
+                Shell32.FileAttributeDirectory,
+                ref sfi,
+                (uint)Marshal.SizeOf(sfi),
+                (uint)(Shgfi.SysIconIndex | Shgfi.LargeIcon | Shgfi.UseFileAttributes | Shgfi.OpenIcon));
+            return sfi.iIcon;
+        }
 
-        /// <summary>
-        /// 48x48.
-        /// </summary>
-        Large = Shell32.ShilExtralarge,
+        private static IntPtr GetIcon(int iImage, IconSize size)
+        {
+            IImageList? spiml = null;
+            Guid guil = new(Shell32.IidIImageList);
 
-        /// <summary>
-        /// 256x256.
-        /// </summary>
-        Jumbo = Shell32.ShilJumbo,
+            Shell32.SHGetImageList((int)size, ref guil, ref spiml);
+            IntPtr hIcon = IntPtr.Zero;
+            spiml?.GetIcon(iImage, Shell32.IldTransparent | Shell32.IldImage, ref hIcon);
+
+            return hIcon;
+        }
     }
 }

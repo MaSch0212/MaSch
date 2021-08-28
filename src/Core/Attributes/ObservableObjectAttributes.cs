@@ -18,14 +18,6 @@ namespace MaSch.Core.Attributes
     public class DependsOnAttribute : Attribute
     {
         /// <summary>
-        /// Gets the names of the dependent properties.
-        /// </summary>
-        /// <value>
-        /// The names of the dependent properties.
-        /// </value>
-        public string[] PropertyNames { get; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="DependsOnAttribute"/> class.
         /// </summary>
         /// <param name="propertyNames">The names of the dependent properties.</param>
@@ -33,6 +25,14 @@ namespace MaSch.Core.Attributes
         {
             PropertyNames = propertyNames;
         }
+
+        /// <summary>
+        /// Gets the names of the dependent properties.
+        /// </summary>
+        /// <value>
+        /// The names of the dependent properties.
+        /// </value>
+        public string[] PropertyNames { get; }
     }
 
     /// <summary>
@@ -72,6 +72,25 @@ namespace MaSch.Core.Attributes
     public class ObservablePropertyAccessModifierAttribute : Attribute
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="ObservablePropertyAccessModifierAttribute"/> class.
+        /// </summary>
+        public ObservablePropertyAccessModifierAttribute()
+            : this(AccessModifier.Public)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservablePropertyAccessModifierAttribute"/> class.
+        /// </summary>
+        /// <param name="accessModifier">The access modifier to use for the generated property.</param>
+        public ObservablePropertyAccessModifierAttribute(AccessModifier accessModifier)
+        {
+            AccessModifier = accessModifier;
+            SetModifier = accessModifier;
+            GetModifier = accessModifier;
+        }
+
+        /// <summary>
         /// Gets the access modifier to use for the generated property.
         /// </summary>
         public AccessModifier AccessModifier { get; }
@@ -90,24 +109,5 @@ namespace MaSch.Core.Attributes
         /// Gets or sets a value indicating whether the generated property should have the <c>virtual</c> keyword.
         /// </summary>
         public bool IsVirtual { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservablePropertyAccessModifierAttribute"/> class.
-        /// </summary>
-        public ObservablePropertyAccessModifierAttribute()
-            : this(AccessModifier.Public)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservablePropertyAccessModifierAttribute"/> class.
-        /// </summary>
-        /// <param name="accessModifier">The access modifier to use for the generated property.</param>
-        public ObservablePropertyAccessModifierAttribute(AccessModifier accessModifier)
-        {
-            AccessModifier = accessModifier;
-            SetModifier = accessModifier;
-            GetModifier = accessModifier;
-        }
     }
 }

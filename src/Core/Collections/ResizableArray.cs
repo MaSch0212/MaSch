@@ -15,17 +15,6 @@ namespace MaSch.Core.Collections
         private T[] _array;
 
         /// <summary>
-        /// Gets the internal array.
-        /// </summary>
-        public T[] InternalArray => _array;
-
-        /// <inheritdoc />
-        public int Count { get; private set; }
-
-        /// <inheritdoc />
-        public bool IsReadOnly => false;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ResizableArray{T}"/> class.
         /// </summary>
         /// <param name="initialCapacity">The starting capacity of the array. Default is 4.</param>
@@ -46,14 +35,38 @@ namespace MaSch.Core.Collections
         }
 
         /// <summary>
+        /// Gets the internal array.
+        /// </summary>
+        public T[] InternalArray => _array;
+
+        /// <inheritdoc />
+        public int Count { get; private set; }
+
+        /// <inheritdoc />
+        public bool IsReadOnly => false;
+
+        /// <inheritdoc />
+        public T this[int index]
+        {
+            get
+            {
+                Guard.NotOutOfRange(index, nameof(index), 0, Count - 1);
+                return _array[index];
+            }
+            set
+            {
+                Guard.NotOutOfRange(index, nameof(index), 0, Count - 1);
+                _array[index] = value;
+            }
+        }
+
+        /// <summary>
         /// Resizes the array to the actual Count of this List.
         /// </summary>
         public void ShrinkArray()
         {
             Array.Resize(ref _array, Count);
         }
-
-        #region IList<T> Members
 
         /// <inheritdoc />
         public void Add(T item)
@@ -136,22 +149,5 @@ namespace MaSch.Core.Collections
                 _array[i] = _array[i + 1];
             _array[Count - 1] = default!;
         }
-
-        /// <inheritdoc />
-        public T this[int index]
-        {
-            get
-            {
-                Guard.NotOutOfRange(index, nameof(index), 0, Count - 1);
-                return _array[index];
-            }
-            set
-            {
-                Guard.NotOutOfRange(index, nameof(index), 0, Count - 1);
-                _array[index] = value;
-            }
-        }
-
-        #endregion
     }
 }

@@ -30,39 +30,6 @@ namespace MaSch.Core.Observable.Modules
             _propertyDependencies = FillCache(_objectType);
         }
 
-        private static Dictionary<string, List<string>> FillCache(Type type)
-        {
-            lock (FillCacheLock)
-            {
-                if (!PropertyDependencyCache.ContainsKey(type))
-                {
-                    var dependencies = new Dictionary<string, List<string>>();
-                    var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                    foreach (var p in properties)
-                    {
-                        var attr = p.GetCustomAttribute<DependsOnAttribute>();
-                        if (attr != null)
-                        {
-                            string prefix = string.Empty;
-                            if (typeof(ICommand).IsAssignableFrom(p.PropertyType))
-                                prefix = "command:";
-                            foreach (var dp in attr.PropertyNames)
-                            {
-                                if (!dependencies.ContainsKey(dp))
-                                    dependencies.Add(dp, new List<string>());
-                                dependencies[dp].Add(prefix + p.Name);
-                            }
-                        }
-                    }
-
-                    PropertyDependencyCache.Add(type, dependencies);
-                    return dependencies;
-                }
-
-                return PropertyDependencyCache[type];
-            }
-        }
-
         /// <summary>
         /// Notifies the subscribers that a command has changed.
         /// </summary>
@@ -103,6 +70,39 @@ namespace MaSch.Core.Observable.Modules
                         _observableObject.NotifyPropertyChanged(p);
                     }
                 }
+            }
+        }
+
+        private static Dictionary<string, List<string>> FillCache(Type type)
+        {
+            lock (FillCacheLock)
+            {
+                if (!PropertyDependencyCache.ContainsKey(type))
+                {
+                    var dependencies = new Dictionary<string, List<string>>();
+                    var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                    foreach (var p in properties)
+                    {
+                        var attr = p.GetCustomAttribute<DependsOnAttribute>();
+                        if (attr != null)
+                        {
+                            string prefix = string.Empty;
+                            if (typeof(ICommand).IsAssignableFrom(p.PropertyType))
+                                prefix = "command:";
+                            foreach (var dp in attr.PropertyNames)
+                            {
+                                if (!dependencies.ContainsKey(dp))
+                                    dependencies.Add(dp, new List<string>());
+                                dependencies[dp].Add(prefix + p.Name);
+                            }
+                        }
+                    }
+
+                    PropertyDependencyCache.Add(type, dependencies);
+                    return dependencies;
+                }
+
+                return PropertyDependencyCache[type];
             }
         }
     }

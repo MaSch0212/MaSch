@@ -20,12 +20,6 @@ namespace MaSch.Core.Observable.Collections
     {
         private readonly Queue<T> _queue;
 
-        /// <inheritdoc/>
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        /// <inheritdoc/>
-        public event NotifyCollectionChangedEventHandler? CollectionChanged;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableQueue{T}"/> class that
         /// is empty and has the default initial capacity.
@@ -73,17 +67,11 @@ namespace MaSch.Core.Observable.Collections
             _queue = queue;
         }
 
-        #region IEnumerable
+        /// <inheritdoc/>
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <inheritdoc/>
-        public IEnumerator<T> GetEnumerator() => _queue.GetEnumerator();
-
-        /// <inheritdoc/>
-        IEnumerator IEnumerable.GetEnumerator() => _queue.GetEnumerator();
-
-        #endregion
-
-        #region ICollection
+        public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
         /// <summary>
         /// Gets the number of elements contained in the <see cref="ObservableQueue{T}"/>.
@@ -107,6 +95,12 @@ namespace MaSch.Core.Observable.Collections
         /// <returns>An object that can be used to synchronize access to the <see cref="ICollection"/>.</returns>
         public object SyncRoot => ((ICollection)_queue).SyncRoot;
 
+        /// <inheritdoc/>
+        public IEnumerator<T> GetEnumerator() => _queue.GetEnumerator();
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator() => _queue.GetEnumerator();
+
         /// <summary>
         /// Copies the elements of the <see cref="ICollection"/> to an System.Array,
         /// starting at a particular System.Array index.
@@ -125,8 +119,6 @@ namespace MaSch.Core.Observable.Collections
         /// automatically to the type of the destination array.
         /// </exception>
         public void CopyTo(Array array, int index) => ((ICollection)_queue).CopyTo(array, index);
-
-        #endregion
 
         /// <summary>
         /// Removes all objects from the <see cref="ObservableQueue{T}"/>.

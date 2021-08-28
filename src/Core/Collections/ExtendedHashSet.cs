@@ -17,14 +17,6 @@ namespace MaSch.Core.Collections
         private readonly Func<TItem, THash> _hashFunction;
 
         /// <summary>
-        /// Gets the number of elements contained in the <see cref="ExtendedHashSet{TItem,THash}"></see>.
-        /// </summary>
-        public int Count => _dict.Count;
-
-        /// <inheritdoc />
-        bool ICollection<TItem>.IsReadOnly => false;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ExtendedHashSet{TItem, THash}"/> class.
         /// </summary>
         /// <param name="hashFunction">The hash function.</param>
@@ -45,11 +37,22 @@ namespace MaSch.Core.Collections
         }
 
         /// <summary>
-        /// Gets the items hash code.
+        /// Gets the number of elements contained in the <see cref="ExtendedHashSet{TItem,THash}"></see>.
         /// </summary>
-        /// <param name="item">The item for which a hash code should be generated.</param>
-        /// <returns>Returns the hash code for the given item.</returns>
-        protected virtual THash GetItemHashCode(TItem item) => _hashFunction(item);
+        public int Count => _dict.Count;
+
+        /// <inheritdoc />
+        bool ICollection<TItem>.IsReadOnly => false;
+
+        /// <summary>
+        /// Gets the <typeparamref name="TItem"/> with the specified hashcode.
+        /// </summary>
+        /// <value>
+        /// The <typeparamref name="TItem"/>.
+        /// </value>
+        /// <param name="hashcode">The hashcode.</param>
+        /// <returns>The <typeparamref name="TItem"/> with the specified hashcode.</returns>
+        public virtual TItem this[THash hashcode] => _dict[hashcode];
 
         /// <summary>
         /// Determines whether the <see cref="ExtendedHashSet{TItem,THash}"/> contains a value with a specific hash code.
@@ -59,8 +62,6 @@ namespace MaSch.Core.Collections
         ///   <c>true</c> if an item with the <paramref name="hashcode">hash code</paramref> is found in the <see cref="ExtendedHashSet{TItem,THash}"/>; otherwise, <c>false</c>.
         /// </returns>
         public virtual bool ContainsHashCode(THash hashcode) => _dict.ContainsKey(hashcode);
-
-        #region ICollection
 
         /// <summary>
         /// Adds an item to the <see cref="ExtendedHashSet{TItem, THash}"></see>.
@@ -110,15 +111,10 @@ namespace MaSch.Core.Collections
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_dict.Values).GetEnumerator();
 
         /// <summary>
-        /// Gets the <typeparamref name="TItem"/> with the specified hashcode.
+        /// Gets the items hash code.
         /// </summary>
-        /// <value>
-        /// The <typeparamref name="TItem"/>.
-        /// </value>
-        /// <param name="hashcode">The hashcode.</param>
-        /// <returns>The <typeparamref name="TItem"/> with the specified hashcode.</returns>
-        public virtual TItem this[THash hashcode] => _dict[hashcode];
-
-        #endregion
+        /// <param name="item">The item for which a hash code should be generated.</param>
+        /// <returns>Returns the hash code for the given item.</returns>
+        protected virtual THash GetItemHashCode(TItem item) => _hashFunction(item);
     }
 }

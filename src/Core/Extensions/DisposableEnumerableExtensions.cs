@@ -9,7 +9,6 @@ namespace MaSch.Core.Extensions
     /// <summary>
     /// Provides extension methods for <see cref="IDisposableEnumerable{T}"/> and <see cref="IDisposableEnumerable"/>.
     /// </summary>
-    [SuppressMessage("Minor Code Smell", "S4136:Method overloads should be grouped together", Justification = "This ordering does not make sense here.")]
     public static class DisposableEnumerableExtensions
     {
         #region IDisposableEnumerable<T>
@@ -753,15 +752,6 @@ namespace MaSch.Core.Extensions
 
         #endregion
 
-        private static IDisposableEnumerable<TTarget> Redirect<TSource, TTarget>(IDisposableEnumerable<TSource> enumerable, Func<IEnumerable<TSource>, IEnumerable<TTarget>> function)
-            => new DelegateDisposableEnumerable<TTarget>(function(enumerable), enumerable.Dispose);
-
-        private static IOrderedDisposableEnumerable<TTarget> Redirect<TSource, TTarget>(IDisposableEnumerable<TSource> enumerable, Func<IEnumerable<TSource>, IOrderedEnumerable<TTarget>> function)
-            => new DelegateOrderedDisposableEnumerable<TTarget>(function(enumerable), enumerable.Dispose);
-
-        private static IOrderedDisposableEnumerable<TTarget> Redirect<TSource, TTarget>(IOrderedDisposableEnumerable<TSource> enumerable, Func<IOrderedEnumerable<TSource>, IOrderedEnumerable<TTarget>> function)
-            => new DelegateOrderedDisposableEnumerable<TTarget>(function(enumerable), enumerable.Dispose);
-
         #endregion
 
         #region IDisposableEnumerable
@@ -792,8 +782,18 @@ namespace MaSch.Core.Extensions
         public static IDisposableEnumerable<object?> ToGeneric(this IDisposableEnumerable enumerable)
             => Redirect(Guard.NotNull(enumerable, nameof(enumerable)), x => x.ToGeneric());
 
+        #endregion
+
+        private static IDisposableEnumerable<TTarget> Redirect<TSource, TTarget>(IDisposableEnumerable<TSource> enumerable, Func<IEnumerable<TSource>, IEnumerable<TTarget>> function)
+            => new DelegateDisposableEnumerable<TTarget>(function(enumerable), enumerable.Dispose);
+
+        private static IOrderedDisposableEnumerable<TTarget> Redirect<TSource, TTarget>(IDisposableEnumerable<TSource> enumerable, Func<IEnumerable<TSource>, IOrderedEnumerable<TTarget>> function)
+            => new DelegateOrderedDisposableEnumerable<TTarget>(function(enumerable), enumerable.Dispose);
+
+        private static IOrderedDisposableEnumerable<TTarget> Redirect<TSource, TTarget>(IOrderedDisposableEnumerable<TSource> enumerable, Func<IOrderedEnumerable<TSource>, IOrderedEnumerable<TTarget>> function)
+            => new DelegateOrderedDisposableEnumerable<TTarget>(function(enumerable), enumerable.Dispose);
+
         private static IDisposableEnumerable<T> Redirect<T>(IDisposableEnumerable enumerable, Func<IEnumerable, IEnumerable<T>> function)
             => new DelegateDisposableEnumerable<T>(function(enumerable), enumerable.Dispose);
-        #endregion
     }
 }
