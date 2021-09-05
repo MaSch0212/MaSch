@@ -2,7 +2,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace MaSch.Test.UnitTests.Extensions
@@ -15,30 +14,6 @@ namespace MaSch.Test.UnitTests.Extensions
         private static readonly FieldInfo ExpressionPropertyField = typeof(MoqExtensions).GetField("_expressionProperty", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)!;
         private static readonly FieldInfo MockPropertyField = typeof(MoqExtensions).GetField("_mockProperty", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)!;
         private static readonly FieldInfo GeneralVerifyMethodField = typeof(MoqExtensions).GetField("_generalVerifyMethod", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)!;
-
-        protected override void OnInitializeTest()
-        {
-            base.OnInitializeTest();
-            if (TestContext.TestName.StartsWith("Verifiable_Null"))
-            {
-                Cache.SetValue(SetupPropertyField.GetValue(null), "_setupProperty");
-                Cache.SetValue(ExpressionPropertyField.GetValue(null), "_expressionProperty");
-                Cache.SetValue(MockPropertyField.GetValue(null), "_mockProperty");
-                Cache.SetValue(GeneralVerifyMethodField.GetValue(null), "_generalVerifyMethod");
-            }
-        }
-
-        protected override void OnCleanupTest()
-        {
-            base.OnCleanupTest();
-            if (TestContext.TestName.StartsWith("Verifiable_Null"))
-            {
-                SetupPropertyField.SetValue(null, Cache.GetValue<object?>("_setupProperty"));
-                ExpressionPropertyField.SetValue(null, Cache.GetValue<object?>("_expressionProperty"));
-                MockPropertyField.SetValue(null, Cache.GetValue<object?>("_mockProperty"));
-                GeneralVerifyMethodField.SetValue(null, Cache.GetValue<object?>("_generalVerifyMethod"));
-            }
-        }
 
         [TestMethod]
         public void SetupPhraseType()
@@ -113,7 +88,7 @@ namespace MaSch.Test.UnitTests.Extensions
             SetupPropertyField.SetValue(null, null);
             var mock = new Mock<Action>();
 
-            Assert.ThrowsException<Exception>(() => MoqExtensions.Verifiable(mock.Setup(x => x()), Times.Once()).Dispose());
+            _ = Assert.ThrowsException<Exception>(() => MoqExtensions.Verifiable(mock.Setup(x => x()), Times.Once()).Dispose());
         }
 
         [TestMethod]
@@ -122,7 +97,7 @@ namespace MaSch.Test.UnitTests.Extensions
             ExpressionPropertyField.SetValue(null, null);
             var mock = new Mock<Action>();
 
-            Assert.ThrowsException<Exception>(() => MoqExtensions.Verifiable(mock.Setup(x => x()), Times.Once()).Dispose());
+            _ = Assert.ThrowsException<Exception>(() => MoqExtensions.Verifiable(mock.Setup(x => x()), Times.Once()).Dispose());
         }
 
         [TestMethod]
@@ -131,7 +106,7 @@ namespace MaSch.Test.UnitTests.Extensions
             MockPropertyField.SetValue(null, null);
             var mock = new Mock<Action>();
 
-            Assert.ThrowsException<Exception>(() => MoqExtensions.Verifiable(mock.Setup(x => x()), Times.Once()).Dispose());
+            _ = Assert.ThrowsException<Exception>(() => MoqExtensions.Verifiable(mock.Setup(x => x()), Times.Once()).Dispose());
         }
 
         [TestMethod]
@@ -142,7 +117,7 @@ namespace MaSch.Test.UnitTests.Extensions
 
             var verifiable = MoqExtensions.Verifiable(mock.Setup(x => x()), Times.Once());
 
-            Assert.ThrowsException<Exception>(() => verifiable.Verify(null, null));
+            _ = Assert.ThrowsException<Exception>(() => verifiable.Verify(null, null));
         }
 
         [TestMethod]
@@ -194,7 +169,7 @@ namespace MaSch.Test.UnitTests.Extensions
         {
             var mock = new Mock<Action>();
 
-            MoqExtensions.Verifiable(mock.Setup(x => x()), out var verifiable);
+            _ = MoqExtensions.Verifiable(mock.Setup(x => x()), out var verifiable);
 
             var ex = Assert.ThrowsException<MockException>(() => verifiable.Verify(null, null));
             Assert.StartsWith($"{Environment.NewLine}Expected invocation on the mock at least once", ex.Message);
@@ -205,7 +180,7 @@ namespace MaSch.Test.UnitTests.Extensions
         {
             var mock = new Mock<Action>();
 
-            MoqExtensions.Verifiable(mock.Setup(x => x()), out var verifiable, Times.Once());
+            _ = MoqExtensions.Verifiable(mock.Setup(x => x()), out var verifiable, Times.Once());
 
             var ex = Assert.ThrowsException<MockException>(() => verifiable.Verify(null, null));
             Assert.StartsWith($"{Environment.NewLine}Expected invocation on the mock once", ex.Message);
@@ -216,7 +191,7 @@ namespace MaSch.Test.UnitTests.Extensions
         {
             var mock = new Mock<Action>();
 
-            MoqExtensions.Verifiable(mock.Setup(x => x()), out var verifiable, Times.Once(), "My fail message");
+            _ = MoqExtensions.Verifiable(mock.Setup(x => x()), out var verifiable, Times.Once(), "My fail message");
 
             var ex = Assert.ThrowsException<MockException>(() => verifiable.Verify(null, null));
             Assert.StartsWith($"My fail message{Environment.NewLine}Expected invocation on the mock once", ex.Message);
@@ -228,7 +203,7 @@ namespace MaSch.Test.UnitTests.Extensions
             var mock = new Mock<Action>();
             var collection = new MockVerifiableCollection();
 
-            MoqExtensions.Verifiable(mock.Setup(x => x()), collection);
+            _ = MoqExtensions.Verifiable(mock.Setup(x => x()), collection);
 
             var ex = Assert.ThrowsException<MockException>(() => collection.Verify(null, null));
             Assert.StartsWith($"{Environment.NewLine}Expected invocation on the mock at least once", ex.Message);
@@ -240,7 +215,7 @@ namespace MaSch.Test.UnitTests.Extensions
             var mock = new Mock<Action>();
             var collection = new MockVerifiableCollection();
 
-            MoqExtensions.Verifiable(mock.Setup(x => x()), collection, Times.Once());
+            _ = MoqExtensions.Verifiable(mock.Setup(x => x()), collection, Times.Once());
 
             var ex = Assert.ThrowsException<MockException>(() => collection.Verify(null, null));
             Assert.StartsWith($"{Environment.NewLine}Expected invocation on the mock once", ex.Message);
@@ -252,7 +227,7 @@ namespace MaSch.Test.UnitTests.Extensions
             var mock = new Mock<Action>();
             var collection = new MockVerifiableCollection();
 
-            MoqExtensions.Verifiable(mock.Setup(x => x()), collection, Times.Once(), "My fail message");
+            _ = MoqExtensions.Verifiable(mock.Setup(x => x()), collection, Times.Once(), "My fail message");
 
             var ex = Assert.ThrowsException<MockException>(() => collection.Verify(null, null));
             Assert.StartsWith($"My fail message{Environment.NewLine}Expected invocation on the mock once", ex.Message);
@@ -264,7 +239,7 @@ namespace MaSch.Test.UnitTests.Extensions
             var mock = new Mock<Action>();
             var testClass = new Mock<TestClassBase>(MockBehavior.Loose) { CallBase = true };
 
-            MoqExtensions.Verifiable(mock.Setup(x => x()), testClass.Object);
+            _ = MoqExtensions.Verifiable(mock.Setup(x => x()), testClass.Object);
 
             var ex = Assert.ThrowsException<MockException>(() => testClass.Object.Verifiables.Verify(null, null));
             Assert.StartsWith($"{Environment.NewLine}Expected invocation on the mock at least once", ex.Message);
@@ -276,7 +251,7 @@ namespace MaSch.Test.UnitTests.Extensions
             var mock = new Mock<Action>();
             var testClass = new Mock<TestClassBase>(MockBehavior.Loose) { CallBase = true };
 
-            MoqExtensions.Verifiable(mock.Setup(x => x()), testClass.Object, Times.Once());
+            _ = MoqExtensions.Verifiable(mock.Setup(x => x()), testClass.Object, Times.Once());
 
             var ex = Assert.ThrowsException<MockException>(() => testClass.Object.Verifiables.Verify(null, null));
             Assert.StartsWith($"{Environment.NewLine}Expected invocation on the mock once", ex.Message);
@@ -288,7 +263,7 @@ namespace MaSch.Test.UnitTests.Extensions
             var mock = new Mock<Action>();
             var testClass = new Mock<TestClassBase>(MockBehavior.Loose) { CallBase = true };
 
-            MoqExtensions.Verifiable(mock.Setup(x => x()), testClass.Object, Times.Once(), "My fail message");
+            _ = MoqExtensions.Verifiable(mock.Setup(x => x()), testClass.Object, Times.Once(), "My fail message");
 
             var ex = Assert.ThrowsException<MockException>(() => testClass.Object.Verifiables.Verify(null, null));
             Assert.StartsWith($"My fail message{Environment.NewLine}Expected invocation on the mock once", ex.Message);
@@ -298,7 +273,7 @@ namespace MaSch.Test.UnitTests.Extensions
         public void Verify()
         {
             var mock = new Mock<IMockVerifiable>(MockBehavior.Strict);
-            mock.Setup(x => x.Verify(null, null));
+            _ = mock.Setup(x => x.Verify(null, null));
 
             MoqExtensions.Verify(mock.Object);
 
@@ -309,7 +284,7 @@ namespace MaSch.Test.UnitTests.Extensions
         public void Verify_FailMessage()
         {
             var mock = new Mock<IMockVerifiable>(MockBehavior.Strict);
-            mock.Setup(x => x.Verify(null, "My message"));
+            _ = mock.Setup(x => x.Verify(null, "My message"));
 
             MoqExtensions.Verify(mock.Object, "My message");
 
@@ -321,7 +296,7 @@ namespace MaSch.Test.UnitTests.Extensions
         {
             var mock = new Mock<IMockVerifiable>(MockBehavior.Strict);
             var expectedTimes = Times.Never();
-            mock.Setup(x => x.Verify(It.IsAny<Times>(), null));
+            _ = mock.Setup(x => x.Verify(It.IsAny<Times>(), null));
 
             MoqExtensions.Verify(mock.Object, expectedTimes);
 
@@ -332,11 +307,35 @@ namespace MaSch.Test.UnitTests.Extensions
         public void Verify_FuncTimes()
         {
             var mock = new Mock<IMockVerifiable>(MockBehavior.Strict);
-            mock.Setup(x => x.Verify(Times.Never(), null));
+            _ = mock.Setup(x => x.Verify(Times.Never(), null));
 
             MoqExtensions.Verify(mock.Object, Times.Never());
 
             mock.Verify(x => x.Verify(Times.Never(), null), Times.Once);
+        }
+
+        protected override void OnInitializeTest()
+        {
+            base.OnInitializeTest();
+            if (TestContext.TestName.StartsWith("Verifiable_Null"))
+            {
+                Cache.SetValue(SetupPropertyField.GetValue(null), "_setupProperty");
+                Cache.SetValue(ExpressionPropertyField.GetValue(null), "_expressionProperty");
+                Cache.SetValue(MockPropertyField.GetValue(null), "_mockProperty");
+                Cache.SetValue(GeneralVerifyMethodField.GetValue(null), "_generalVerifyMethod");
+            }
+        }
+
+        protected override void OnCleanupTest()
+        {
+            base.OnCleanupTest();
+            if (TestContext.TestName.StartsWith("Verifiable_Null"))
+            {
+                SetupPropertyField.SetValue(null, Cache.GetValue<object?>("_setupProperty"));
+                ExpressionPropertyField.SetValue(null, Cache.GetValue<object?>("_expressionProperty"));
+                MockPropertyField.SetValue(null, Cache.GetValue<object?>("_mockProperty"));
+                GeneralVerifyMethodField.SetValue(null, Cache.GetValue<object?>("_generalVerifyMethod"));
+            }
         }
     }
 }

@@ -21,6 +21,20 @@ namespace MaSch.Test
         /// </summary>
         public static MockBehavior DefaultMockBehavior { get; set; } = MockBehavior.Default;
 
+#if MSTEST
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        /// <summary>
+        /// Gets or sets the test context.
+        /// </summary>
+        public TestContext TestContext { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#endif
+
+        /// <summary>
+        /// Gets the verifiables of the current test.
+        /// </summary>
+        protected internal virtual MockVerifiableCollection Verifiables { get; } = new MockVerifiableCollection();
+
         /// <summary>
         /// Gets an object to execute assertions.
         /// </summary>
@@ -45,20 +59,6 @@ namespace MaSch.Test
         /// Gets the <see cref="MockRepository"/> with which mocks should be created in this <see cref="TestClassBase"/>.
         /// </summary>
         protected virtual MockRepository Mocks => Cache.GetValue(() => new MockRepository(MockBehavior))!;
-
-        /// <summary>
-        /// Gets the verifiables of the current test.
-        /// </summary>
-        protected internal virtual MockVerifiableCollection Verifiables { get; } = new MockVerifiableCollection();
-
-#if MSTEST
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        /// <summary>
-        /// Gets or sets the test context.
-        /// </summary>
-        public TestContext TestContext { get; set; }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#endif
 
         /// <summary>
         /// Initializes the test execution.
@@ -97,6 +97,13 @@ namespace MaSch.Test
                 Cache.Clear();
         }
 
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
         /// <summary>
         /// Called when the test has been initialized.
         /// </summary>
@@ -125,13 +132,6 @@ namespace MaSch.Test
                 Verifiables.Clear();
                 ((IDisposable)Verifiables).Dispose();
             }
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
     }
 }

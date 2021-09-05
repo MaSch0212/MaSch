@@ -10,7 +10,7 @@ namespace MaSch.Presentation.Wpf.Models
     /// <summary>
     /// Defines an override for a specific theme value.
     /// </summary>
-    /// <seealso cref="MaSch.Presentation.Wpf.Observable.ObservableDependencyObject" />
+    /// <seealso cref="ObservableDependencyObject" />
     [ContentProperty(nameof(Value))]
     public class ThemeOverride : ObservableDependencyObject
     {
@@ -25,35 +25,6 @@ namespace MaSch.Presentation.Wpf.Models
         /// </summary>
         public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register(nameof(Value), typeof(object), typeof(ThemeOverride), new PropertyMetadata(null));
-
-        /// <summary>
-        /// Gets or sets the key to override.
-        /// </summary>
-        public ThemeKey Key
-        {
-            get => (ThemeKey)Enum.Parse(typeof(ThemeKey), CustomKey);
-            set => CustomKey = value.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets the custom key to override.
-        /// </summary>
-        [NotifyDependencyPropertyChanged(nameof(CustomKey))]
-        public string CustomKey
-        {
-            get => (string)GetValue(CustomKeyProperty);
-            set => SetValue(CustomKeyProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets the new value value to use for the specified key.
-        /// </summary>
-        [NotifyDependencyPropertyChanged(nameof(Value))]
-        public object Value
-        {
-            get => GetValue(ValueProperty);
-            set => SetValue(ValueProperty, value);
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThemeOverride"/> class.
@@ -82,6 +53,35 @@ namespace MaSch.Presentation.Wpf.Models
         {
             Key = key;
             Value = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the key to override.
+        /// </summary>
+        public ThemeKey Key
+        {
+            get => (ThemeKey)Enum.Parse(typeof(ThemeKey), CustomKey);
+            set => CustomKey = value.ToString();
+        }
+
+        /// <summary>
+        /// Gets or sets the custom key to override.
+        /// </summary>
+        [NotifyDependencyPropertyChanged(nameof(CustomKey))]
+        public string CustomKey
+        {
+            get => (string)GetValue(CustomKeyProperty);
+            set => SetValue(CustomKeyProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the new value value to use for the specified key.
+        /// </summary>
+        [NotifyDependencyPropertyChanged(nameof(Value))]
+        public object Value
+        {
+            get => GetValue(ValueProperty);
+            set => SetValue(ValueProperty, value);
         }
     }
 }

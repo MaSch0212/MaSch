@@ -45,7 +45,7 @@ namespace MaSch.Core.Observable.Modules
             {
                 var method = propertyValue.GetType().GetMethod("RaiseCanExecuteChanged", Type.EmptyTypes);
                 if (method != null)
-                    method.Invoke(propertyValue, null);
+                    _ = method.Invoke(propertyValue, null);
             }
         }
 

@@ -23,6 +23,26 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                 typeof(DataGrid),
                 new UIPropertyMetadata(null, BindableColumnsPropertyChanged));
 
+        /// <summary>
+        /// Sets the value of the <see cref="BindableColumnsProperty"/>.
+        /// </summary>
+        /// <param name="element">The element to set the value to.</param>
+        /// <param name="value">The value to set.</param>
+        public static void SetBindableColumns(DependencyObject element, ObservableCollection<DataGridColumn> value)
+        {
+            element.SetValue(BindableColumnsProperty, value);
+        }
+
+        /// <summary>
+        /// Gets the value of the <see cref="BindableColumnsProperty"/>.
+        /// </summary>
+        /// <param name="element">The element to get the value from.</param>
+        /// <returns>The value of the <see cref="BindableColumnsProperty"/>.</returns>
+        public static ObservableCollection<DataGridColumn> GetBindableColumns(DependencyObject element)
+        {
+            return (ObservableCollection<DataGridColumn>)element.GetValue(BindableColumnsProperty);
+        }
+
         private static void BindableColumnsPropertyChanged(DependencyObject source, DependencyPropertyChangedEventArgs e)
         {
             var dataGrid = Guard.OfType<System.Windows.Controls.DataGrid>(source, nameof(source));
@@ -56,7 +76,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                         break;
                     case NotifyCollectionChangedAction.Remove:
                         if (e2.OldItems != null)
-                            dataGrid.Columns.Remove(e2.OldItems.OfType<DataGridColumn>());
+                            _ = dataGrid.Columns.Remove(e2.OldItems.OfType<DataGridColumn>());
                         break;
                     case NotifyCollectionChangedAction.Replace:
                         if (e2.NewItems != null)
@@ -64,26 +84,6 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                         break;
                 }
             };
-        }
-
-        /// <summary>
-        /// Sets the value of the <see cref="BindableColumnsProperty"/>.
-        /// </summary>
-        /// <param name="element">The element to set the value to.</param>
-        /// <param name="value">The value to set.</param>
-        public static void SetBindableColumns(DependencyObject element, ObservableCollection<DataGridColumn> value)
-        {
-            element.SetValue(BindableColumnsProperty, value);
-        }
-
-        /// <summary>
-        /// Gets the value of the <see cref="BindableColumnsProperty"/>.
-        /// </summary>
-        /// <param name="element">The element to get the value from.</param>
-        /// <returns>The value of the <see cref="BindableColumnsProperty"/>.</returns>
-        public static ObservableCollection<DataGridColumn> GetBindableColumns(DependencyObject element)
-        {
-            return (ObservableCollection<DataGridColumn>)element.GetValue(BindableColumnsProperty);
         }
     }
 }

@@ -11,42 +11,6 @@ using System.Windows.Media;
 namespace MaSch.Presentation.Wpf.Extensions
 {
     /// <summary>
-    /// Adapts a DependencyObject to provide methods required for generate
-    /// a Linq To Tree API.
-    /// </summary>
-    public class VisualTreeAdapter : ILinqTree<DependencyObject>
-    {
-        private readonly DependencyObject _item;
-
-        /// <summary>
-        /// Gets the parent of the element that is represented by this <see cref="VisualTreeAdapter"/>.
-        /// </summary>
-        public DependencyObject Parent => VisualTreeHelper.GetParent(_item);
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VisualTreeAdapter"/> class.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        public VisualTreeAdapter(DependencyObject item)
-        {
-            _item = item;
-        }
-
-        /// <summary>
-        /// Gets all children of the element that is represented by this <see cref="VisualTreeAdapter"/>.
-        /// </summary>
-        /// <returns>All children of the element that is represented by this <see cref="VisualTreeAdapter"/>.</returns>
-        public IEnumerable<DependencyObject> Children()
-        {
-            var childrenCount = VisualTreeHelper.GetChildrenCount(_item);
-            for (int i = 0; i < childrenCount; i++)
-            {
-                yield return VisualTreeHelper.GetChild(_item, i);
-            }
-        }
-    }
-
-    /// <summary>
     /// Defines an interface that must be implemented to generate the LinqToTree methods.
     /// </summary>
     /// <typeparam name="T">The type of the target.</typeparam>
@@ -307,23 +271,6 @@ namespace MaSch.Presentation.Wpf.Extensions
     {
         /// <summary>
         /// Applies the given function to each of the items in the supplied
-        /// IEnumerable.
-        /// </summary>
-        private static IEnumerable<DependencyObject> DrillDown(
-            this IEnumerable<DependencyObject> items,
-            Func<DependencyObject, IEnumerable<DependencyObject>> function)
-        {
-            foreach (var item in items)
-            {
-                foreach (var itemChild in function(item))
-                {
-                    yield return itemChild;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Applies the given function to each of the items in the supplied
         /// IEnumerable, which match the given type.
         /// </summary>
         public static IEnumerable<DependencyObject> DrillDown<T>(
@@ -440,6 +387,59 @@ namespace MaSch.Presentation.Wpf.Extensions
             where T : DependencyObject
         {
             return items.DrillDown<T>(i => i.ElementsAndSelf());
+        }
+
+        /// <summary>
+        /// Applies the given function to each of the items in the supplied
+        /// IEnumerable.
+        /// </summary>
+        private static IEnumerable<DependencyObject> DrillDown(
+            this IEnumerable<DependencyObject> items,
+            Func<DependencyObject, IEnumerable<DependencyObject>> function)
+        {
+            foreach (var item in items)
+            {
+                foreach (var itemChild in function(item))
+                {
+                    yield return itemChild;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Adapts a DependencyObject to provide methods required for generate
+    /// a Linq To Tree API.
+    /// </summary>
+    public class VisualTreeAdapter : ILinqTree<DependencyObject>
+    {
+        private readonly DependencyObject _item;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VisualTreeAdapter"/> class.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        public VisualTreeAdapter(DependencyObject item)
+        {
+            _item = item;
+        }
+
+        /// <summary>
+        /// Gets the parent of the element that is represented by this <see cref="VisualTreeAdapter"/>.
+        /// </summary>
+        public DependencyObject Parent => VisualTreeHelper.GetParent(_item);
+
+        /// <summary>
+        /// Gets all children of the element that is represented by this <see cref="VisualTreeAdapter"/>.
+        /// </summary>
+        /// <returns>All children of the element that is represented by this <see cref="VisualTreeAdapter"/>.</returns>
+        public IEnumerable<DependencyObject> Children()
+        {
+            var childrenCount = VisualTreeHelper.GetChildrenCount(_item);
+            for (int i = 0; i < childrenCount; i++)
+            {
+                yield return VisualTreeHelper.GetChild(_item, i);
+            }
         }
     }
 }

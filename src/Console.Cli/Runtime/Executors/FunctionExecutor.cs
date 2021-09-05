@@ -11,7 +11,7 @@ namespace MaSch.Console.Cli.Runtime.Executors
     {
         public static ICliCommandExecutor GetExecutor(object executorFunction)
         {
-            Guard.NotNull(executorFunction, nameof(executorFunction));
+            _ = Guard.NotNull(executorFunction, nameof(executorFunction));
             var type = executorFunction.GetType();
             if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(Func<,,>))
                 throw new ArgumentException($"The executor function needs to be of type Func<,,>.", nameof(executorFunction));
@@ -51,8 +51,8 @@ namespace MaSch.Console.Cli.Runtime.Executors
 
         public int Execute(CliExecutionContext context, object obj)
         {
-            Guard.NotNull(context, nameof(context));
-            Guard.NotNull(obj, nameof(obj));
+            _ = Guard.NotNull(context, nameof(context));
+            _ = Guard.NotNull(obj, nameof(obj));
             var castedObject = FunctionExecutor.PreExecute<T>(obj);
             if (_executorFunc != null)
                 return _executorFunc(context, castedObject);
@@ -64,8 +64,8 @@ namespace MaSch.Console.Cli.Runtime.Executors
 
         public async Task<int> ExecuteAsync(CliExecutionContext context, object obj)
         {
-            Guard.NotNull(context, nameof(context));
-            Guard.NotNull(obj, nameof(obj));
+            _ = Guard.NotNull(context, nameof(context));
+            _ = Guard.NotNull(obj, nameof(obj));
             var castedObject = FunctionExecutor.PreExecute<T>(obj);
             if (_asyncExecutorFunc != null)
                 return await _asyncExecutorFunc(context, castedObject);

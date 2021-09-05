@@ -58,7 +58,7 @@ namespace MaSch.Generators
                         var propName = attribute.NamedArguments.FirstOrDefault(x => x.Key == "WrappingPropName").Value.Value as string ?? $"Wrapped{wrappedType.Name}";
                         wrappedTypes.Add((wrappedType, propName));
                         if (!isFirstRegion)
-                            builder.AppendLine();
+                            _ = builder.AppendLine();
                         isFirstRegion = false;
 
                         GenerateWrapperClassRegion(builder, existingMembers, wrappedType, propName);
@@ -66,11 +66,11 @@ namespace MaSch.Generators
 
                     if (!existingMembers.OfType<IMethodSymbol>().Any(x => x.MethodKind == MethodKind.Constructor && x.Parameters.Length > 0))
                     {
-                        builder.AppendLine();
+                        _ = builder.AppendLine();
                         using (builder.AddBlock($"public {type.Key.typeSymbol.Name}({string.Join(", ", wrappedTypes.Select(x => $"{x} wrapped{x.Type.Name}"))})"))
                         {
                             foreach (var t in wrappedTypes)
-                                builder.AppendLine($"{t.PropName} = wrapped{t.Type.Name};");
+                                _ = builder.AppendLine($"{t.PropName} = wrapped{t.Type.Name};");
                         }
                     }
                 }
@@ -84,7 +84,7 @@ namespace MaSch.Generators
             var name = wrapperPropName;
             using (builder.AddRegion($"{wrappedType.Name} members"))
             {
-                builder.AppendLine()
+                _ = builder.AppendLine()
                        .AppendLine($"protected {wrappedType} {name} {{ get; set; }}");
 
                 var members = wrappedType.GetMembers().Where(x => x.DeclaredAccessibility == Microsoft.CodeAnalysis.Accessibility.Public).ToArray();
@@ -93,14 +93,14 @@ namespace MaSch.Generators
                 {
                     if (existingMembers.OfType<IPropertySymbol>().Any(x => x.Name == p.Name))
                         continue;
-                    builder.AppendLine();
+                    _ = builder.AppendLine();
                     using (builder.AddBlock($"public virtual {p.ToDisplayString(DefinitionFormat)}"))
                     {
                         var usage = p.IsIndexer ? $"{name}{p.ToDisplayString(UsageFormat)[4..]}" : $"{name}.{p.ToDisplayString(UsageFormat)}";
                         if (p.GetMethod != null)
-                            builder.AppendLine($"get => {usage};");
+                            _ = builder.AppendLine($"get => {usage};");
                         if (p.SetMethod != null)
-                            builder.AppendLine($"set => {usage} = value;");
+                            _ = builder.AppendLine($"set => {usage} = value;");
                     }
                 }
 
@@ -108,28 +108,28 @@ namespace MaSch.Generators
                 {
                     if (existingMembers.OfType<IEventSymbol>().Any(x => x.Name == e.Name))
                         continue;
-                    builder.AppendLine();
+                    _ = builder.AppendLine();
                     using (builder.AddBlock($"public virtual {e.ToDisplayString(DefinitionFormat)}"))
                     {
                         if (e.AddMethod != null)
-                            builder.AppendLine($"add => {name}.{e.Name} += value;");
+                            _ = builder.AppendLine($"add => {name}.{e.Name} += value;");
                         if (e.RemoveMethod != null)
-                            builder.AppendLine($"remove => {name}.{e.Name} -= value;");
+                            _ = builder.AppendLine($"remove => {name}.{e.Name} -= value;");
                     }
                 }
 
-                builder.AppendLine();
+                _ = builder.AppendLine();
                 bool hadMethod = false;
                 foreach (var m in members.OfType<IMethodSymbol>().Where(x => x.MethodKind == MethodKind.Ordinary))
                 {
                     hadMethod = true;
                     if (existingMembers.OfType<IMethodSymbol>().Any(x => x.Name == m.Name && x.TypeParameters.Length == m.TypeParameters.Length && x.Parameters.Select(y => y.Type).SequenceEqual(m.Parameters.Select(y => y.Type), SymbolEqualityComparer.Default)))
                         continue;
-                    builder.AppendLine($"public virtual {m.ToDisplayString(DefinitionFormat)} => {name}.{m.ToDisplayString(UsageFormat)};");
+                    _ = builder.AppendLine($"public virtual {m.ToDisplayString(DefinitionFormat)} => {name}.{m.ToDisplayString(UsageFormat)};");
                 }
 
                 if (hadMethod)
-                    builder.AppendLine();
+                    _ = builder.AppendLine();
             }
         }
     }

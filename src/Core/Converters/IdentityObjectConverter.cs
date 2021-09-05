@@ -19,7 +19,10 @@ namespace MaSch.Core.Converters
         }
 
         /// <inheritdoc />
-        public int GetPriority(Type? sourceType, Type targetType) => _priority;
+        public int GetPriority(Type? sourceType, Type targetType)
+        {
+            return _priority;
+        }
 
         /// <inheritdoc />
         public bool CanConvert(Type? sourceType, Type targetType, IObjectConvertManager convertManager)

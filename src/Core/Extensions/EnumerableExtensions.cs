@@ -32,8 +32,8 @@ namespace MaSch.Core.Extensions
         /// <returns>Returns each item after the action has been executed.</returns>
         public static IEnumerable<T> Each<T>(this IEnumerable<T> enumerable, Action<T> action)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
             foreach (var item in enumerable)
             {
                 action(item);
@@ -50,8 +50,8 @@ namespace MaSch.Core.Extensions
         /// <returns>Returns each item after the action has been executed.</returns>
         public static IEnumerable<T> Each<T>(this IEnumerable<T> enumerable, Action<T, LoopState> action)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
             var state = new LoopState();
             foreach (var item in enumerable)
             {
@@ -71,8 +71,8 @@ namespace MaSch.Core.Extensions
         /// <returns>Returns each item with the exception that occurred after the action has been executed. If no exception occurred, the exception entry is <c>null</c>.</returns>
         public static IEnumerable<(T Item, Exception? Error)> TryEach<T>(this IEnumerable<T> enumerable, Action<T> action)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
             foreach (var item in enumerable)
             {
                 Exception? error = null;
@@ -98,8 +98,8 @@ namespace MaSch.Core.Extensions
         /// <returns>Returns each item with the exception that occurred after the action has been executed. If no exception occurred, the exception entry is <c>null</c>.</returns>
         public static IEnumerable<(T Item, Exception? Error)> TryEach<T>(this IEnumerable<T> enumerable, Action<T, LoopState> action)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
             var state = new LoopState();
             foreach (var item in enumerable)
             {
@@ -131,8 +131,8 @@ namespace MaSch.Core.Extensions
         /// <param name="action">The action to execute.</param>
         public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
             foreach (var item in enumerable)
                 action(item);
         }
@@ -145,8 +145,8 @@ namespace MaSch.Core.Extensions
         /// <param name="action">The action to execute.</param>
         public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T, LoopState> action)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
             var state = new LoopState();
             foreach (var item in enumerable)
             {
@@ -164,8 +164,8 @@ namespace MaSch.Core.Extensions
         /// <param name="action">The action to execute. The first parameter is the last element of the loop - for the first item, this parameter is <c>default</c>.</param>
         public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T?, T, LoopState> action)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
             T? last = default;
             var state = new LoopState();
             foreach (var item in enumerable)
@@ -185,7 +185,9 @@ namespace MaSch.Core.Extensions
         /// <param name="action">The action to execute.</param>
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
         public static bool TryForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
-            => TryForEach(enumerable, action, true);
+        {
+            return TryForEach(enumerable, action, true);
+        }
 
         /// <summary>
         /// Tries to execute an action for each item in the <see cref="IEnumerable{T}"/>.
@@ -197,8 +199,8 @@ namespace MaSch.Core.Extensions
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
         public static bool TryForEach<T>(this IEnumerable<T> enumerable, Action<T> action, bool continueOnError)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
             bool result = true;
             foreach (var item in enumerable)
             {
@@ -225,7 +227,9 @@ namespace MaSch.Core.Extensions
         /// <param name="action">The action to execute.</param>
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
         public static bool TryForEach<T>(this IEnumerable<T> enumerable, Action<T, LoopState> action)
-            => TryForEach(enumerable, action, true);
+        {
+            return TryForEach(enumerable, action, true);
+        }
 
         /// <summary>
         /// Tries to execute an action for each item in the <see cref="IEnumerable{T}"/>.
@@ -237,8 +241,8 @@ namespace MaSch.Core.Extensions
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
         public static bool TryForEach<T>(this IEnumerable<T> enumerable, Action<T, LoopState> action, bool continueOnError)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
             bool result = true;
             var state = new LoopState();
             foreach (var item in enumerable)
@@ -270,7 +274,9 @@ namespace MaSch.Core.Extensions
         /// <param name="errors">A collection containing the errors that occurred.</param>
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
         public static bool TryForEach<T>(this IEnumerable<T> enumerable, Action<T> action, out ICollection<(T Item, Exception Error)> errors)
-            => TryForEach(enumerable, action, out errors, true);
+        {
+            return TryForEach(enumerable, action, out errors, true);
+        }
 
         /// <summary>
         /// Tries to execute an action for each item in the <see cref="IEnumerable{T}"/>.
@@ -283,8 +289,8 @@ namespace MaSch.Core.Extensions
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
         public static bool TryForEach<T>(this IEnumerable<T> enumerable, Action<T> action, out ICollection<(T Item, Exception Error)> errors, bool continueOnError)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
             errors = new List<(T, Exception)>();
             foreach (var item in enumerable)
             {
@@ -312,7 +318,9 @@ namespace MaSch.Core.Extensions
         /// <param name="errors">A collection containing the errors that occurred.</param>
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
         public static bool TryForEach<T>(this IEnumerable<T> enumerable, Action<T, LoopState> action, out ICollection<(T Item, int Index, Exception Error)> errors)
-            => TryForEach(enumerable, action, out errors, true);
+        {
+            return TryForEach(enumerable, action, out errors, true);
+        }
 
         /// <summary>
         /// Tries to execute an action for each item in the <see cref="IEnumerable{T}"/>.
@@ -325,8 +333,8 @@ namespace MaSch.Core.Extensions
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
         public static bool TryForEach<T>(this IEnumerable<T> enumerable, Action<T, LoopState> action, out ICollection<(T Item, int Index, Exception Error)> errors, bool continueOnError)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
             errors = new List<(T, int, Exception)>();
             var state = new LoopState();
             foreach (var item in enumerable)
@@ -361,7 +369,9 @@ namespace MaSch.Core.Extensions
         /// <param name="action">The action to execute.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task ForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, Task> action)
-            => await ForEachAsync(enumerable, action, CancellationToken.None);
+        {
+            await ForEachAsync(enumerable, action, CancellationToken.None);
+        }
 
         /// <summary>
         /// Executes an async action for each item in the <see cref="IEnumerable{T}"/>.
@@ -373,8 +383,8 @@ namespace MaSch.Core.Extensions
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task ForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, Task> action, CancellationToken token)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
             foreach (var item in enumerable)
             {
                 await action(item);
@@ -391,7 +401,9 @@ namespace MaSch.Core.Extensions
         /// <param name="action">The action to execute.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task ForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, AsyncLoopState, Task> action)
-            => await ForEachAsync(enumerable, action, CancellationToken.None);
+        {
+            await ForEachAsync(enumerable, action, CancellationToken.None);
+        }
 
         /// <summary>
         /// Executes an async action for each item in the <see cref="IEnumerable{T}"/>.
@@ -403,8 +415,8 @@ namespace MaSch.Core.Extensions
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task ForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, AsyncLoopState, Task> action, CancellationToken token)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
             var state = new AsyncLoopState(token);
             foreach (var item in enumerable)
             {
@@ -422,7 +434,9 @@ namespace MaSch.Core.Extensions
         /// <param name="action">The action to execute. The first parameter is the last element of the loop - for the first item, this parameter is <c>default</c>.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task ForEachAsync<T>(this IEnumerable<T> enumerable, Func<T?, T, AsyncLoopState, Task> action)
-            => await ForEachAsync(enumerable, action, CancellationToken.None);
+        {
+            await ForEachAsync(enumerable, action, CancellationToken.None);
+        }
 
         /// <summary>
         /// Executes an async action for each item in the <see cref="IEnumerable{T}"/>.
@@ -434,8 +448,8 @@ namespace MaSch.Core.Extensions
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task ForEachAsync<T>(this IEnumerable<T> enumerable, Func<T?, T, AsyncLoopState, Task> action, CancellationToken token)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
             T? last = default;
             var state = new AsyncLoopState(token);
             foreach (var item in enumerable)
@@ -455,7 +469,9 @@ namespace MaSch.Core.Extensions
         /// <param name="action">The action to execute.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task ParallelForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, Task> action)
-            => await ParallelForEachAsync(enumerable, action, CancellationToken.None);
+        {
+            await ParallelForEachAsync(enumerable, action, CancellationToken.None);
+        }
 
         /// <summary>
         /// Executes an async action for each item in the <see cref="IEnumerable{T}"/> in parallel.
@@ -467,12 +483,12 @@ namespace MaSch.Core.Extensions
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task ParallelForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, Task> action, CancellationToken token)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
 
             var tcs = new TaskCompletionSource<object>();
             using (token.Register(() => tcs.TrySetCanceled(), false))
-                await Task.WhenAny(Task.WhenAll(enumerable.Select(action)), tcs.Task);
+                _ = await Task.WhenAny(Task.WhenAll(enumerable.Select(action)), tcs.Task);
         }
 
         /// <summary>
@@ -484,7 +500,9 @@ namespace MaSch.Core.Extensions
         /// <param name="maxDegreeOfParallelism">The maximum number of parallel running actions.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task ParallelForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, Task> action, int maxDegreeOfParallelism)
-            => await ParallelForEachAsync(enumerable, action, maxDegreeOfParallelism, CancellationToken.None);
+        {
+            await ParallelForEachAsync(enumerable, action, maxDegreeOfParallelism, CancellationToken.None);
+        }
 
         /// <summary>
         /// Executes an async action for each item in the <see cref="IEnumerable{T}"/> in parallel.
@@ -497,17 +515,17 @@ namespace MaSch.Core.Extensions
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task ParallelForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, Task> action, int maxDegreeOfParallelism, CancellationToken token)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
 
             var activeTasks = new HashSet<Task>();
             foreach (var item in enumerable)
             {
-                activeTasks.Add(action(item));
+                _ = activeTasks.Add(action(item));
                 if (activeTasks.Count >= maxDegreeOfParallelism)
                 {
                     var completed = await Task.WhenAny(activeTasks);
-                    activeTasks.Remove(completed);
+                    _ = activeTasks.Remove(completed);
                     if (token.IsCancellationRequested)
                         break;
                 }
@@ -522,7 +540,9 @@ namespace MaSch.Core.Extensions
         /// <param name="action">The action to execute.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task ParallelForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, AsyncLoopState, Task> action)
-            => await ParallelForEachAsync(enumerable, action, CancellationToken.None);
+        {
+            await ParallelForEachAsync(enumerable, action, CancellationToken.None);
+        }
 
         /// <summary>
         /// Executes an async action for each item in the <see cref="IEnumerable{T}"/> in parallel.
@@ -534,15 +554,15 @@ namespace MaSch.Core.Extensions
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task ParallelForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, AsyncLoopState, Task> action, CancellationToken token)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
 
             var state = new AsyncLoopState(token);
             var activeTasks = new HashSet<Task>(enumerable.Select(x => action(x, state)));
             while (activeTasks.Count > 0)
             {
                 var completed = await Task.WhenAny(activeTasks);
-                activeTasks.Remove(completed);
+                _ = activeTasks.Remove(completed);
                 if (!state.Next())
                     break;
             }
@@ -557,7 +577,9 @@ namespace MaSch.Core.Extensions
         /// <param name="maxDegreeOfParallelism">The maximum number of parallel running actions.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task ParallelForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, AsyncLoopState, Task> action, int maxDegreeOfParallelism)
-            => await ParallelForEachAsync(enumerable, action, maxDegreeOfParallelism, CancellationToken.None);
+        {
+            await ParallelForEachAsync(enumerable, action, maxDegreeOfParallelism, CancellationToken.None);
+        }
 
         /// <summary>
         /// Executes an async action for each item in the <see cref="IEnumerable{T}"/> in parallel.
@@ -570,18 +592,18 @@ namespace MaSch.Core.Extensions
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task ParallelForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, AsyncLoopState, Task> action, int maxDegreeOfParallelism, CancellationToken token)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
 
             var state = new AsyncLoopState(token);
             var activeTasks = new HashSet<Task>();
             foreach (var item in enumerable)
             {
-                activeTasks.Add(action(item, state));
+                _ = activeTasks.Add(action(item, state));
                 if (activeTasks.Count >= maxDegreeOfParallelism)
                 {
                     var completed = await Task.WhenAny(activeTasks);
-                    activeTasks.Remove(completed);
+                    _ = activeTasks.Remove(completed);
                     if (!state.Next())
                         break;
                 }
@@ -596,7 +618,9 @@ namespace MaSch.Core.Extensions
         /// <param name="action">The action to execute.</param>
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
         public static async Task<bool> TryForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, Task> action)
-            => await TryForEachAsync(enumerable, action, true, CancellationToken.None);
+        {
+            return await TryForEachAsync(enumerable, action, true, CancellationToken.None);
+        }
 
         /// <summary>
         /// Tries to execute an async action for each item in the <see cref="IEnumerable{T}"/>.
@@ -607,7 +631,9 @@ namespace MaSch.Core.Extensions
         /// <param name="token">A cancellation token to observe while executing the asynchronous actions.</param>
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
         public static async Task<bool> TryForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, Task> action, CancellationToken token)
-            => await TryForEachAsync(enumerable, action, true, token);
+        {
+            return await TryForEachAsync(enumerable, action, true, token);
+        }
 
         /// <summary>
         /// Tries to execute an async action for each item in the <see cref="IEnumerable{T}"/>.
@@ -618,7 +644,9 @@ namespace MaSch.Core.Extensions
         /// <param name="continueOnError">Determines wether the loop should continue if an error occurres.</param>
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
         public static async Task<bool> TryForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, Task> action, bool continueOnError)
-            => await TryForEachAsync(enumerable, action, continueOnError, CancellationToken.None);
+        {
+            return await TryForEachAsync(enumerable, action, continueOnError, CancellationToken.None);
+        }
 
         /// <summary>
         /// Tries to execute an async action for each item in the <see cref="IEnumerable{T}"/>.
@@ -631,8 +659,8 @@ namespace MaSch.Core.Extensions
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
         public static async Task<bool> TryForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, Task> action, bool continueOnError, CancellationToken token)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
             bool result = true;
             foreach (var item in enumerable)
             {
@@ -662,7 +690,9 @@ namespace MaSch.Core.Extensions
         /// <param name="action">The action to execute.</param>
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
         public static async Task<bool> TryForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, AsyncLoopState, Task> action)
-            => await TryForEachAsync(enumerable, action, true, CancellationToken.None);
+        {
+            return await TryForEachAsync(enumerable, action, true, CancellationToken.None);
+        }
 
         /// <summary>
         /// Tries to execute an async action for each item in the <see cref="IEnumerable{T}"/>.
@@ -673,7 +703,9 @@ namespace MaSch.Core.Extensions
         /// <param name="token">A cancellation token to observe while executing the asynchronous actions.</param>
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
         public static async Task<bool> TryForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, AsyncLoopState, Task> action, CancellationToken token)
-            => await TryForEachAsync(enumerable, action, true, token);
+        {
+            return await TryForEachAsync(enumerable, action, true, token);
+        }
 
         /// <summary>
         /// Tries to execute an async action for each item in the <see cref="IEnumerable{T}"/>.
@@ -684,7 +716,9 @@ namespace MaSch.Core.Extensions
         /// <param name="continueOnError">Determines wether the loop should continue if an error occurres.</param>
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
         public static async Task<bool> TryForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, AsyncLoopState, Task> action, bool continueOnError)
-            => await TryForEachAsync(enumerable, action, continueOnError, CancellationToken.None);
+        {
+            return await TryForEachAsync(enumerable, action, continueOnError, CancellationToken.None);
+        }
 
         /// <summary>
         /// Tries to execute an async action for each item in the <see cref="IEnumerable{T}"/>.
@@ -697,8 +731,8 @@ namespace MaSch.Core.Extensions
         /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
         public static async Task<bool> TryForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, AsyncLoopState, Task> action, bool continueOnError, CancellationToken token)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
             bool result = true;
             var state = new AsyncLoopState(token);
             foreach (var item in enumerable)
@@ -732,7 +766,7 @@ namespace MaSch.Core.Extensions
         /// <returns>The zero-based index of the first occurrence of item within the entire <see cref="IEnumerable{T}"/>, if found; otherwise, –1.</returns>
         public static int IndexOf<T>(this IEnumerable<T> enumerable, T value)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             int i = 0;
             foreach (var item in enumerable)
             {
@@ -754,8 +788,8 @@ namespace MaSch.Core.Extensions
         /// <returns>The zero-based index of the first occurrence of item within the entire <see cref="IEnumerable{T}"/>, if found; otherwise, –1.</returns>
         public static int IndexOf<T>(this IEnumerable<T> enumerable, T value, IEqualityComparer<T> comparer)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(comparer, nameof(comparer));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(comparer, nameof(comparer));
             int i = 0;
             foreach (var item in enumerable)
             {
@@ -777,8 +811,8 @@ namespace MaSch.Core.Extensions
         /// <exception cref="ArgumentNullException"><paramref name="enumerable"/> or <paramref name="match"/> is <see langword="null"/>.</exception>
         public static int IndexOf<T>(this IEnumerable<T> enumerable, Predicate<T> match)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(match, nameof(match));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(match, nameof(match));
             int i = 0;
             foreach (var item in enumerable)
             {
@@ -800,8 +834,8 @@ namespace MaSch.Core.Extensions
         /// <exception cref="ArgumentNullException"><paramref name="enumerable"/> or <paramref name="match"/> is <see langword="null"/>.</exception>
         public static int IndexOf<T>(this IEnumerable<T> enumerable, Func<T, int, bool> match)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(match, nameof(match));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(match, nameof(match));
             int i = 0;
             foreach (var item in enumerable)
             {
@@ -823,8 +857,8 @@ namespace MaSch.Core.Extensions
         ///   <paramref name="enumerable" /> or <paramref name="expression" /> is <see langword="null" />.</exception>
         public static bool Any<T>(this IEnumerable<T> enumerable, Func<T, int, bool> expression)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(expression, nameof(expression));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(expression, nameof(expression));
             int i = 0;
             return enumerable.Any(x => expression(x, i++));
         }
@@ -840,7 +874,7 @@ namespace MaSch.Core.Extensions
         public static TSource? FirstMaxElement<TSource, TValue>(this IEnumerable<TSource> enumerable, Func<TSource, TValue> func)
             where TValue : IComparable<TValue>
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             var first = true;
             var maxO = default(TSource);
             var maxV = default(TValue);
@@ -870,7 +904,7 @@ namespace MaSch.Core.Extensions
         public static int FirstMaxIndex<TSource, TValue>(this IEnumerable<TSource> enumerable, Func<TSource, TValue> func)
             where TValue : IComparable<TValue>
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             var result = -1;
             var currentIndex = -1;
             var maxV = default(TValue);
@@ -899,7 +933,7 @@ namespace MaSch.Core.Extensions
         public static TSource? FirstMinElement<TSource, TValue>(this IEnumerable<TSource> enumerable, Func<TSource, TValue> func)
             where TValue : IComparable<TValue>
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             var first = true;
             var maxO = default(TSource);
             var maxV = default(TValue);
@@ -929,7 +963,7 @@ namespace MaSch.Core.Extensions
         public static int FirstMinIndex<TSource, TValue>(this IEnumerable<TSource> enumerable, Func<TSource, TValue> func)
             where TValue : IComparable<TValue>
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             var result = -1;
             var currentIndex = -1;
             var maxV = default(TValue);
@@ -957,12 +991,12 @@ namespace MaSch.Core.Extensions
         /// <returns>A specified number of continuous elements from the end of a sequence.</returns>
         public static IEnumerable<T> TakeLast<T>(this IEnumerable<T> enumerable, int count)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             var buffer = new LinkedList<T>();
             int c = 0;
             foreach (var item in enumerable)
             {
-                buffer.AddLast(item);
+                _ = buffer.AddLast(item);
                 if (++c > count)
                     buffer.RemoveFirst();
             }
@@ -981,12 +1015,12 @@ namespace MaSch.Core.Extensions
         /// <returns>A specified number of continuous elements from the end of a sequence.</returns>
         public static IEnumerable<T> TakeLast<T>(this IEnumerable<T> enumerable, int count, int skip)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             var buffer = new LinkedList<T>();
             int c = 0;
             foreach (var item in enumerable)
             {
-                buffer.AddLast(item);
+                _ = buffer.AddLast(item);
                 if (++c > count + skip)
                     buffer.RemoveFirst();
             }
@@ -1003,7 +1037,7 @@ namespace MaSch.Core.Extensions
         ///   <paramref name="enumerable" /> is <see langword="null" />.</exception>
         public static IEnumerable<TSource> Except<TSource>(this IEnumerable<TSource> enumerable, TSource itemToExclude)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             return enumerable.Except(new[] { itemToExclude });
         }
 
@@ -1017,7 +1051,7 @@ namespace MaSch.Core.Extensions
         ///   <paramref name="enumerable" /> is <see langword="null" />.</exception>
         public static IEnumerable<TSource> Except<TSource>(this IEnumerable<TSource> enumerable, TSource itemToExclude, IEqualityComparer<TSource> comparer)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             return enumerable.Except(new[] { itemToExclude }, comparer);
         }
 
@@ -1030,7 +1064,7 @@ namespace MaSch.Core.Extensions
         ///   <paramref name="enumerable" /> or <paramref name="func" /> is <see langword="null" />.</exception>
         public static IEnumerable<TSource> Where<TSource>(this IEnumerable<TSource> enumerable, Func<TSource?, TSource, bool> func)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             TSource? last = default;
             foreach (TSource item in enumerable)
             {
@@ -1050,9 +1084,9 @@ namespace MaSch.Core.Extensions
         /// <returns>An <see cref="IEnumerable{T}"/> that contains elements for which the action threw an exception.</returns>
         public static IEnumerable<T> WhereException<T>(this IEnumerable<T> enumerable, Action<T> action, params Type[] matchedExceptions)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
-            Guard.NotNull(matchedExceptions, nameof(matchedExceptions));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(matchedExceptions, nameof(matchedExceptions));
             foreach (T item in enumerable)
             {
                 bool matched;
@@ -1084,9 +1118,9 @@ namespace MaSch.Core.Extensions
         /// <returns>An <see cref="IEnumerable{T}"/> that contains elements for which the action did not throw an exception.</returns>
         public static IEnumerable<T> WhereNoException<T>(this IEnumerable<T> enumerable, Action<T> action, params Type[] expectedExceptions)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(action, nameof(action));
-            Guard.NotNull(expectedExceptions, nameof(expectedExceptions));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(expectedExceptions, nameof(expectedExceptions));
             foreach (T item in enumerable)
             {
                 bool matched;
@@ -1115,7 +1149,9 @@ namespace MaSch.Core.Extensions
         /// <param name="second">The items to add.</param>
         /// <returns>An <see cref="IEnumerable"/> that contains the concatenated elements of the two input sequences.</returns>
         public static IEnumerable<T> Concat<T>(this IEnumerable<T> first, params T[] second)
-            => first.Concat((IEnumerable<T>)second);
+        {
+            return first.Concat((IEnumerable<T>)second);
+        }
 
         /// <summary>Creates a <see cref="List{T}" /> asynchronously from an <see cref="IEnumerable{T}" />.</summary>
         /// <param name="enumerable">The <see cref="IEnumerable{T}" /> to create a <see cref="List{T}" /> from.</param>
@@ -1124,7 +1160,9 @@ namespace MaSch.Core.Extensions
         /// <exception cref="ArgumentNullException">
         ///   <paramref name="enumerable" /> is <see langword="null" />.</exception>
         public static async Task<List<T>> ToListAsync<T>(this IEnumerable<T> enumerable)
-            => await ToListAsync(enumerable, CancellationToken.None);
+        {
+            return await ToListAsync(enumerable, CancellationToken.None);
+        }
 
         /// <summary>Creates a <see cref="List{T}" /> asynchronously from an <see cref="IEnumerable{T}" />.</summary>
         /// <param name="enumerable">The <see cref="IEnumerable{T}" /> to create a <see cref="List{T}" /> from.</param>
@@ -1135,7 +1173,7 @@ namespace MaSch.Core.Extensions
         ///   <paramref name="enumerable" /> is <see langword="null" />.</exception>
         public static async Task<List<T>> ToListAsync<T>(this IEnumerable<T> enumerable, CancellationToken token)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             return await Task.Run(() => ToList(enumerable, token), token);
         }
 
@@ -1148,7 +1186,7 @@ namespace MaSch.Core.Extensions
         ///   <paramref name="enumerable" /> is <see langword="null" />.</exception>
         public static List<T> ToList<T>(this IEnumerable<T> enumerable, CancellationToken token)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             var result = new List<T>();
             if (!token.IsCancellationRequested)
             {
@@ -1170,7 +1208,9 @@ namespace MaSch.Core.Extensions
         /// <exception cref="ArgumentNullException">
         ///   <paramref name="enumerable" /> is <see langword="null" />.</exception>
         public static async Task<T[]> ToArrayAsync<T>(this IEnumerable<T> enumerable)
-            => await ToArrayAsync(enumerable, CancellationToken.None);
+        {
+            return await ToArrayAsync(enumerable, CancellationToken.None);
+        }
 
         /// <summary>Creates an array asynchronously from a <see cref="IEnumerable{T}" />.</summary>
         /// <param name="enumerable">An <see cref="IEnumerable{T}" /> to create an array from.</param>
@@ -1181,7 +1221,7 @@ namespace MaSch.Core.Extensions
         ///   <paramref name="enumerable" /> is <see langword="null" />.</exception>
         public static async Task<T[]> ToArrayAsync<T>(this IEnumerable<T> enumerable, CancellationToken token)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             return await Task.Run(() => ToArray(enumerable, token), token);
         }
 
@@ -1194,7 +1234,7 @@ namespace MaSch.Core.Extensions
         ///   <paramref name="enumerable" /> is <see langword="null" />.</exception>
         public static T[] ToArray<T>(this IEnumerable<T> enumerable, CancellationToken token)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             var result = new ResizableArray<T>();
             if (!token.IsCancellationRequested)
             {
@@ -1224,7 +1264,9 @@ namespace MaSch.Core.Extensions
         ///   <paramref name="keySelector" /> produces duplicate keys for two elements.</exception>
         public static async Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(this IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector)
             where TKey : notnull
-            => await Task.Run(() => ToDictionaryImpl(enumerable, keySelector, x => x, null, CancellationToken.None));
+        {
+            return await Task.Run(() => ToDictionaryImpl(enumerable, keySelector, x => x, null, CancellationToken.None));
+        }
 
         /// <summary>Creates a <see cref="Dictionary{TKey, TValue}"/> asynchronously from an <see cref="IEnumerable{T}" /> according to a specified key selector function.</summary>
         /// <param name="enumerable">An <see cref="IEnumerable{T}" /> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
@@ -1241,7 +1283,9 @@ namespace MaSch.Core.Extensions
         ///   <paramref name="keySelector" /> produces duplicate keys for two elements.</exception>
         public static async Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(this IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector, CancellationToken token)
             where TKey : notnull
-            => await Task.Run(() => ToDictionaryImpl(enumerable, keySelector, x => x, null, token));
+        {
+            return await Task.Run(() => ToDictionaryImpl(enumerable, keySelector, x => x, null, token));
+        }
 
         /// <summary>Creates a <see cref="Dictionary{TKey, TValue}"/> asynchronously from an <see cref="IEnumerable{T}" /> according to a specified key selector function and key comparer.</summary>
         /// <param name="enumerable">An <see cref="IEnumerable{T}" /> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
@@ -1258,7 +1302,9 @@ namespace MaSch.Core.Extensions
         ///   <paramref name="keySelector" /> produces duplicate keys for two elements.</exception>
         public static async Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(this IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> keyComparer)
             where TKey : notnull
-            => await Task.Run(() => ToDictionaryImpl(enumerable, keySelector, x => x, keyComparer, CancellationToken.None));
+        {
+            return await Task.Run(() => ToDictionaryImpl(enumerable, keySelector, x => x, keyComparer, CancellationToken.None));
+        }
 
         /// <summary>Creates a <see cref="Dictionary{TKey, TValue}"/> asynchronously from an <see cref="IEnumerable{T}" /> according to a specified key selector function and key comparer.</summary>
         /// <param name="enumerable">An <see cref="IEnumerable{T}" /> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
@@ -1276,7 +1322,9 @@ namespace MaSch.Core.Extensions
         ///   <paramref name="keySelector" /> produces duplicate keys for two elements.</exception>
         public static async Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(this IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> keyComparer, CancellationToken token)
             where TKey : notnull
-            => await Task.Run(() => ToDictionaryImpl(enumerable, keySelector, x => x, keyComparer, token));
+        {
+            return await Task.Run(() => ToDictionaryImpl(enumerable, keySelector, x => x, keyComparer, token));
+        }
 
         /// <summary>Creates a <see cref="Dictionary{TKey, TValue}"/> asynchronously from an <see cref="IEnumerable{T}" /> according to specified key selector and element selector functions.</summary>
         /// <param name="enumerable">An <see cref="IEnumerable{T}" /> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
@@ -1294,7 +1342,9 @@ namespace MaSch.Core.Extensions
         ///   <paramref name="keySelector" /> produces duplicate keys for two elements.</exception>
         public static async Task<Dictionary<TKey, TValue>> ToDictionaryAsync<TSource, TKey, TValue>(this IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
             where TKey : notnull
-            => await Task.Run(() => ToDictionaryImpl(enumerable, keySelector, valueSelector, null, CancellationToken.None));
+        {
+            return await Task.Run(() => ToDictionaryImpl(enumerable, keySelector, valueSelector, null, CancellationToken.None));
+        }
 
         /// <summary>Creates a <see cref="Dictionary{TKey, TValue}"/> asynchronously from an <see cref="IEnumerable{T}" /> according to specified key selector and element selector functions.</summary>
         /// <param name="enumerable">An <see cref="IEnumerable{T}" /> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
@@ -1313,7 +1363,9 @@ namespace MaSch.Core.Extensions
         ///   <paramref name="keySelector" /> produces duplicate keys for two elements.</exception>
         public static async Task<Dictionary<TKey, TValue>> ToDictionaryAsync<TSource, TKey, TValue>(this IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector, CancellationToken token)
             where TKey : notnull
-            => await Task.Run(() => ToDictionaryImpl(enumerable, keySelector, valueSelector, null, token));
+        {
+            return await Task.Run(() => ToDictionaryImpl(enumerable, keySelector, valueSelector, null, token));
+        }
 
         /// <summary>Creates a<see cref="Dictionary{TKey, TValue}"/> asynchronously from an <see cref="IEnumerable{T}" /> according to a specified key selector function, a comparer, and an element selector function.</summary>
         /// <param name="enumerable">An <see cref="IEnumerable{T}" /> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
@@ -1332,7 +1384,9 @@ namespace MaSch.Core.Extensions
         ///   <paramref name="keySelector" /> produces duplicate keys for two elements.</exception>
         public static async Task<Dictionary<TKey, TValue>> ToDictionaryAsync<TSource, TKey, TValue>(this IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector, IEqualityComparer<TKey> keyComparer)
             where TKey : notnull
-            => await Task.Run(() => ToDictionaryImpl(enumerable, keySelector, valueSelector, keyComparer, CancellationToken.None));
+        {
+            return await Task.Run(() => ToDictionaryImpl(enumerable, keySelector, valueSelector, keyComparer, CancellationToken.None));
+        }
 
         /// <summary>Creates a<see cref="Dictionary{TKey, TValue}"/> asynchronously from an <see cref="IEnumerable{T}" /> according to a specified key selector function, a comparer, and an element selector function.</summary>
         /// <param name="enumerable">An <see cref="IEnumerable{T}" /> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
@@ -1352,7 +1406,9 @@ namespace MaSch.Core.Extensions
         ///   <paramref name="keySelector" /> produces duplicate keys for two elements.</exception>
         public static async Task<Dictionary<TKey, TValue>> ToDictionaryAsync<TSource, TKey, TValue>(this IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector, IEqualityComparer<TKey> keyComparer, CancellationToken token)
             where TKey : notnull
-            => await Task.Run(() => ToDictionaryImpl(enumerable, keySelector, valueSelector, keyComparer, token));
+        {
+            return await Task.Run(() => ToDictionaryImpl(enumerable, keySelector, valueSelector, keyComparer, token));
+        }
 
         /// <summary>Creates a <see cref="Dictionary{TKey, TValue}"/> from an <see cref="IEnumerable{T}" /> according to a specified key selector function.</summary>
         /// <param name="enumerable">An <see cref="IEnumerable{T}" /> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
@@ -1369,7 +1425,9 @@ namespace MaSch.Core.Extensions
         ///   <paramref name="keySelector" /> produces duplicate keys for two elements.</exception>
         public static Dictionary<TKey, TSource> ToDictionary<TSource, TKey>(this IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector, CancellationToken token)
             where TKey : notnull
-            => ToDictionaryImpl(enumerable, keySelector, x => x, null, token);
+        {
+            return ToDictionaryImpl(enumerable, keySelector, x => x, null, token);
+        }
 
         /// <summary>Creates a <see cref="Dictionary{TKey, TValue}"/> from an <see cref="IEnumerable{T}" /> according to a specified key selector function and key comparer.</summary>
         /// <param name="enumerable">An <see cref="IEnumerable{T}" /> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
@@ -1387,7 +1445,9 @@ namespace MaSch.Core.Extensions
         ///   <paramref name="keySelector" /> produces duplicate keys for two elements.</exception>
         public static Dictionary<TKey, TSource> ToDictionary<TSource, TKey>(this IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> keyComparer, CancellationToken token)
             where TKey : notnull
-            => ToDictionaryImpl(enumerable, keySelector, x => x, keyComparer, token);
+        {
+            return ToDictionaryImpl(enumerable, keySelector, x => x, keyComparer, token);
+        }
 
         /// <summary>Creates a <see cref="Dictionary{TKey, TValue}"/> from an <see cref="IEnumerable{T}" /> according to specified key selector and element selector functions.</summary>
         /// <param name="enumerable">An <see cref="IEnumerable{T}" /> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
@@ -1406,7 +1466,9 @@ namespace MaSch.Core.Extensions
         ///   <paramref name="keySelector" /> produces duplicate keys for two elements.</exception>
         public static Dictionary<TKey, TValue> ToDictionary<TSource, TKey, TValue>(this IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector, CancellationToken token)
             where TKey : notnull
-            => ToDictionaryImpl(enumerable, keySelector, valueSelector, null, token);
+        {
+            return ToDictionaryImpl(enumerable, keySelector, valueSelector, null, token);
+        }
 
         /// <summary>Creates a<see cref="Dictionary{TKey, TValue}"/> from an <see cref="IEnumerable{T}" /> according to a specified key selector function, a comparer, and an element selector function.</summary>
         /// <param name="enumerable">An <see cref="IEnumerable{T}" /> to create a <see cref="Dictionary{TKey, TValue}"/> from.</param>
@@ -1426,7 +1488,9 @@ namespace MaSch.Core.Extensions
         ///   <paramref name="keySelector" /> produces duplicate keys for two elements.</exception>
         public static Dictionary<TKey, TValue> ToDictionary<TSource, TKey, TValue>(this IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector, IEqualityComparer<TKey> keyComparer, CancellationToken token)
             where TKey : notnull
-            => ToDictionaryImpl(enumerable, keySelector, valueSelector, keyComparer, token);
+        {
+            return ToDictionaryImpl(enumerable, keySelector, valueSelector, keyComparer, token);
+        }
 
         /// <summary>
         /// Tries to find the first element of an <see cref="IEnumerable{T}"/>.
@@ -1437,7 +1501,7 @@ namespace MaSch.Core.Extensions
         /// <returns><see langword="true"/> if an element was found in the <see cref="IEnumerable{T}"/>; otherwise, <see langword="false"/>.</returns>
         public static bool TryFirst<T>(this IEnumerable<T> enumerable, [MaybeNullWhen(false)] out T value)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             using var enumerator = enumerable.GetEnumerator();
             var result = enumerator.MoveNext();
             value = result ? enumerator.Current : default;
@@ -1454,7 +1518,7 @@ namespace MaSch.Core.Extensions
         /// <returns><see langword="true"/> if an element that matches <paramref name="predicate"/> was found in the <see cref="IEnumerable{T}"/>; otherwise, <see langword="false"/>.</returns>
         public static bool TryFirst<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate, [MaybeNullWhen(false)] out T value)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             using var enumerator = enumerable.Where(predicate).GetEnumerator();
             var result = enumerator.MoveNext();
             value = result ? enumerator.Current : default;
@@ -1470,7 +1534,7 @@ namespace MaSch.Core.Extensions
         /// <returns><see langword="true"/> if exactly one element was found in the <see cref="IEnumerable{T}"/>; otherwise, <see langword="false"/>.</returns>
         public static bool TrySingle<T>(this IEnumerable<T> enumerable, [MaybeNullWhen(false)] out T value)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             using var enumerator = enumerable.GetEnumerator();
             var result = enumerator.MoveNext();
             value = result ? enumerator.Current : default;
@@ -1489,7 +1553,7 @@ namespace MaSch.Core.Extensions
         /// <returns><see langword="true"/> if exactly one element matches <paramref name="predicate"/> was found in the <see cref="IEnumerable{T}"/>; otherwise, <see langword="false"/>.</returns>
         public static bool TrySingle<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate, [MaybeNullWhen(false)] out T value)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             using var enumerator = enumerable.Where(predicate).GetEnumerator();
             var result = enumerator.MoveNext();
             value = result ? enumerator.Current : default;
@@ -1507,7 +1571,7 @@ namespace MaSch.Core.Extensions
         /// <returns><see langword="true"/> if an element was found in the <see cref="IEnumerable{T}"/>; otherwise, <see langword="false"/>.</returns>
         public static bool TryLast<T>(this IEnumerable<T> enumerable, [MaybeNullWhen(false)] out T value)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             bool result = false;
             value = default;
             foreach (var item in enumerable)
@@ -1529,7 +1593,7 @@ namespace MaSch.Core.Extensions
         /// <returns><see langword="true"/> if an element that matches <paramref name="predicate"/> was found in the <see cref="IEnumerable{T}"/>; otherwise, <see langword="false"/>.</returns>
         public static bool TryLast<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate, [MaybeNullWhen(false)] out T value)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             bool result = false;
             value = default;
             foreach (var item in enumerable.Where(predicate))
@@ -1551,7 +1615,7 @@ namespace MaSch.Core.Extensions
         /// <returns><c>true</c> if an element exists at the specified <paramref name="index"/> in the <paramref name="enumerable"/>.</returns>
         public static bool TryElementAt<T>(this IEnumerable<T> enumerable, int index, [MaybeNullWhen(false)] out T value)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             return TryFirst(enumerable.Skip(index), out value);
         }
 
@@ -1644,8 +1708,8 @@ namespace MaSch.Core.Extensions
         /// <returns>An <see cref="IEnumerable{T}"/> which contains the result of the <paramref name="aggregateFunction"/> of each element in the <paramref name="enumerable"/>.</returns>
         public static IEnumerable<TResult> Link<TItem, TResult>(this IEnumerable<TItem> enumerable, TResult? seed, Func<TResult?, TItem, TResult> aggregateFunction)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(aggregateFunction, nameof(aggregateFunction));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(aggregateFunction, nameof(aggregateFunction));
 
             var previousResult = seed;
             foreach (var item in enumerable)
@@ -1662,7 +1726,9 @@ namespace MaSch.Core.Extensions
         /// <param name="enumerable">The enumerable.</param>
         /// <returns>An <see cref="ObservableCollection{T}"/> containing all elements of the <paramref name="enumerable"/>.</returns>
         public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> enumerable)
-            => new(enumerable);
+        {
+            return new(enumerable);
+        }
 
         /// <summary>
         /// Converts the <see cref="IEnumerable{T}"/> to an <see cref="FullyObservableCollection{T}"/>.
@@ -1672,7 +1738,9 @@ namespace MaSch.Core.Extensions
         /// <returns>An <see cref="FullyObservableCollection{T}"/> containing all elements of the <paramref name="enumerable"/>.</returns>
         public static FullyObservableCollection<T> ToFullyObservableCollection<T>(this IEnumerable<T> enumerable)
             where T : INotifyPropertyChanged
-            => new(enumerable);
+        {
+            return new(enumerable);
+        }
 
         /// <summary>
         /// Filters out null values from an <see cref="IEnumerable{T}"/>.
@@ -1722,14 +1790,16 @@ namespace MaSch.Core.Extensions
         /// <param name="enumerable">The <see cref="IEnumerable"/> to convert.</param>
         /// <returns>Returns a <see cref="IEnumerable{T}"/> that represents the <see cref="IEnumerable"/>.</returns>
         public static IEnumerable<object?> ToGeneric(this IEnumerable enumerable)
-            => enumerable.OfType<object?>();
+        {
+            return enumerable.OfType<object?>();
+        }
 
         #endregion
 
         private static Dictionary<TKey, TValue> ToDictionaryImpl<TSource, TKey, TValue>(IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector, IEqualityComparer<TKey>? keyComparer, CancellationToken token)
             where TKey : notnull
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
             var result = new Dictionary<TKey, TValue>(keyComparer);
             if (!token.IsCancellationRequested)
             {

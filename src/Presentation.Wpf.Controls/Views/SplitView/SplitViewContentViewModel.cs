@@ -36,25 +36,10 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
     /// <summary>
     /// Abstract class that is used for view models of a <see cref="SplitViewContent"/>.
     /// </summary>
-    /// <seealso cref="MaSch.Core.Observable.ObservableObject" />
+    /// <seealso cref="ObservableObject" />
     public abstract partial class SplitViewContentViewModel : ObservableObject, ISplitViewContentViewModelProps
     {
-        /// <summary>
-        /// Occurs when a new message has been posted.
-        /// </summary>
-        public event EventHandler<Tuple<string, MessageType>>? NewMessage;
-
         private readonly string? _productName;
-
-        /// <summary>
-        /// Gets a value indicating whether the view this model is attached to is in design mode.
-        /// </summary>
-        protected bool IsInDesignMode => DesignerProperties.GetIsInDesignMode(new DependencyObject());
-
-        /// <summary>
-        /// Gets or sets the message box service to show message boxes.
-        /// </summary>
-        protected IMessageBoxService MessageBox { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SplitViewContentViewModel"/> class.
@@ -66,11 +51,20 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             MessageBox = new MessageBoxService();
         }
 
-        partial void OnIsLoadingChanged(bool previous, bool value)
-        {
-            if (!value)
-                LoadingText = string.Empty;
-        }
+        /// <summary>
+        /// Occurs when a new message has been posted.
+        /// </summary>
+        public event EventHandler<Tuple<string, MessageType>>? NewMessage;
+
+        /// <summary>
+        /// Gets a value indicating whether the view this model is attached to is in design mode.
+        /// </summary>
+        protected bool IsInDesignMode => DesignerProperties.GetIsInDesignMode(new DependencyObject());
+
+        /// <summary>
+        /// Gets or sets the message box service to show message boxes.
+        /// </summary>
+        protected IMessageBoxService MessageBox { get; set; }
 
         /// <summary>
         /// Executed when the page has been opened.
@@ -109,14 +103,16 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="succeededMessage">The succeeded message.</param>
         /// <param name="failedMessage">The failed message.</param>
         protected void ExecuteLoadingAction(Action action, string succeededMessage, string failedMessage)
-            => ExecuteLoadingAction(
-                () =>
-                {
-                    action();
-                    return true;
-                },
-                succeededMessage,
-                failedMessage);
+        {
+            ExecuteLoadingAction(
+                           () =>
+                           {
+                               action();
+                               return true;
+                           },
+                           succeededMessage,
+                           failedMessage);
+        }
 
         /// <summary>
         /// Executes a loading action.
@@ -148,19 +144,21 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="succeededMessage">The succeeded message.</param>
         /// <param name="failedMessage">The failed message.</param>
         protected void ExecuteLoadingAction(bool hasChanges, string noChangesText, Action action, string succeededMessage, string failedMessage)
-            => ExecuteLoadingAction(
-                hasChanges,
-                null,
-                AlertImage.Warning,
-                AlertResult.Yes,
-                noChangesText,
-                () =>
-                {
-                    action();
-                    return true;
-                },
-                succeededMessage,
-                failedMessage);
+        {
+            ExecuteLoadingAction(
+                           hasChanges,
+                           null,
+                           AlertImage.Warning,
+                           AlertResult.Yes,
+                           noChangesText,
+                           () =>
+                           {
+                               action();
+                               return true;
+                           },
+                           succeededMessage,
+                           failedMessage);
+        }
 
         /// <summary>
         /// Executes a loading action.
@@ -172,19 +170,21 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="succeededMessage">The succeeded message.</param>
         /// <param name="failedMessage">The failed message.</param>
         protected void ExecuteLoadingAction(bool hasChanges, string? askText, string noChangesText, Action action, string succeededMessage, string failedMessage)
-            => ExecuteLoadingAction(
-                hasChanges,
-                askText,
-                AlertImage.Warning,
-                AlertResult.Yes,
-                noChangesText,
-                () =>
-                {
-                    action();
-                    return true;
-                },
-                succeededMessage,
-                failedMessage);
+        {
+            ExecuteLoadingAction(
+                           hasChanges,
+                           askText,
+                           AlertImage.Warning,
+                           AlertResult.Yes,
+                           noChangesText,
+                           () =>
+                           {
+                               action();
+                               return true;
+                           },
+                           succeededMessage,
+                           failedMessage);
+        }
 
         /// <summary>
         /// Executes a loading action.
@@ -198,19 +198,21 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="succeededMessage">The succeeded message.</param>
         /// <param name="failedMessage">The failed message.</param>
         protected void ExecuteLoadingAction(bool hasChanges, string? askText, AlertImage msgBoxImage, AlertResult resultForExec, string noChangesText, Action action, string succeededMessage, string failedMessage)
-            => ExecuteLoadingAction(
-                hasChanges,
-                askText,
-                msgBoxImage,
-                resultForExec,
-                noChangesText,
-                () =>
-                {
-                    action();
-                    return true;
-                },
-                succeededMessage,
-                failedMessage);
+        {
+            ExecuteLoadingAction(
+                           hasChanges,
+                           askText,
+                           msgBoxImage,
+                           resultForExec,
+                           noChangesText,
+                           () =>
+                           {
+                               action();
+                               return true;
+                           },
+                           succeededMessage,
+                           failedMessage);
+        }
 
         /// <summary>
         /// Executes a loading action.
@@ -221,7 +223,9 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="succeededMessage">The succeeded message.</param>
         /// <param name="failedMessage">The failed message.</param>
         protected void ExecuteLoadingAction(bool hasChanges, string noChangesText, Func<bool> action, string succeededMessage, string failedMessage)
-            => ExecuteLoadingAction(hasChanges, null, AlertImage.Warning, AlertResult.Yes, noChangesText, action, succeededMessage, failedMessage);
+        {
+            ExecuteLoadingAction(hasChanges, null, AlertImage.Warning, AlertResult.Yes, noChangesText, action, succeededMessage, failedMessage);
+        }
 
         /// <summary>
         /// Executes a loading action.
@@ -233,7 +237,9 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="succeededMessage">The succeeded message.</param>
         /// <param name="failedMessage">The failed message.</param>
         protected void ExecuteLoadingAction(bool hasChanges, string? askText, string noChangesText, Func<bool> action, string succeededMessage, string failedMessage)
-            => ExecuteLoadingAction(hasChanges, askText, AlertImage.Warning, AlertResult.Yes, noChangesText, action, succeededMessage, failedMessage);
+        {
+            ExecuteLoadingAction(hasChanges, askText, AlertImage.Warning, AlertResult.Yes, noChangesText, action, succeededMessage, failedMessage);
+        }
 
         /// <summary>
         /// Executes a loading action.
@@ -281,15 +287,17 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="failedMessage">The failed message.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         protected async Task ExecuteLoadingAction(string loadingText, Func<Task> action, string succeededMessage, string failedMessage)
-            => await ExecuteLoadingAction(
-                loadingText,
-                async () =>
-                {
-                    await action();
-                    return true;
-                },
-                succeededMessage,
-                failedMessage);
+        {
+            await ExecuteLoadingAction(
+                           loadingText,
+                           async () =>
+                           {
+                               await action();
+                               return true;
+                           },
+                           succeededMessage,
+                           failedMessage);
+        }
 
         /// <summary>
         /// Executes a loading action.
@@ -331,20 +339,22 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="failedMessage">The failed message.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         protected async Task ExecuteLoadingAction(bool hasChanges, string noChangesText, string loadingText, Func<Task> action, string succeededMessage, string failedMessage)
-            => await ExecuteLoadingAction(
-                hasChanges,
-                null,
-                AlertImage.Warning,
-                AlertResult.Yes,
-                noChangesText,
-                loadingText,
-                async () =>
-                {
-                    await action();
-                    return true;
-                },
-                succeededMessage,
-                failedMessage);
+        {
+            await ExecuteLoadingAction(
+                           hasChanges,
+                           null,
+                           AlertImage.Warning,
+                           AlertResult.Yes,
+                           noChangesText,
+                           loadingText,
+                           async () =>
+                           {
+                               await action();
+                               return true;
+                           },
+                           succeededMessage,
+                           failedMessage);
+        }
 
         /// <summary>
         /// Executes a loading action.
@@ -358,20 +368,22 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="failedMessage">The failed message.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         protected async Task ExecuteLoadingAction(bool hasChanges, string? askText, string noChangesText, string loadingText, Func<Task> action, string succeededMessage, string failedMessage)
-            => await ExecuteLoadingAction(
-                hasChanges,
-                askText,
-                AlertImage.Warning,
-                AlertResult.Yes,
-                noChangesText,
-                loadingText,
-                async () =>
-                {
-                    await action();
-                    return true;
-                },
-                succeededMessage,
-                failedMessage);
+        {
+            await ExecuteLoadingAction(
+                           hasChanges,
+                           askText,
+                           AlertImage.Warning,
+                           AlertResult.Yes,
+                           noChangesText,
+                           loadingText,
+                           async () =>
+                           {
+                               await action();
+                               return true;
+                           },
+                           succeededMessage,
+                           failedMessage);
+        }
 
         /// <summary>
         /// Executes a loading action.
@@ -387,20 +399,22 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="failedMessage">The failed message.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         protected async Task ExecuteLoadingAction(bool hasChanges, string? askText, AlertImage msgBoxImage, AlertResult resultForExec, string noChangesText, string loadingText, Func<Task> action, string succeededMessage, string failedMessage)
-            => await ExecuteLoadingAction(
-                hasChanges,
-                askText,
-                msgBoxImage,
-                resultForExec,
-                noChangesText,
-                loadingText,
-                async () =>
-                {
-                    await action();
-                    return true;
-                },
-                succeededMessage,
-                failedMessage);
+        {
+            await ExecuteLoadingAction(
+                           hasChanges,
+                           askText,
+                           msgBoxImage,
+                           resultForExec,
+                           noChangesText,
+                           loadingText,
+                           async () =>
+                           {
+                               await action();
+                               return true;
+                           },
+                           succeededMessage,
+                           failedMessage);
+        }
 
         /// <summary>
         /// Executes a loading action.
@@ -413,7 +427,9 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="failedMessage">The failed message.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         protected async Task ExecuteLoadingAction(bool hasChanges, string noChangesText, string loadingText, Func<Task<bool>> action, string succeededMessage, string failedMessage)
-            => await ExecuteLoadingAction(hasChanges, null, AlertImage.Warning, AlertResult.Yes, noChangesText, loadingText, action, succeededMessage, failedMessage);
+        {
+            await ExecuteLoadingAction(hasChanges, null, AlertImage.Warning, AlertResult.Yes, noChangesText, loadingText, action, succeededMessage, failedMessage);
+        }
 
         /// <summary>
         /// Executes a loading action.
@@ -427,7 +443,9 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// <param name="failedMessage">The failed message.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         protected async Task ExecuteLoadingAction(bool hasChanges, string? askText, string noChangesText, string loadingText, Func<Task<bool>> action, string succeededMessage, string failedMessage)
-            => await ExecuteLoadingAction(hasChanges, askText, AlertImage.Warning, AlertResult.Yes, noChangesText, loadingText, action, succeededMessage, failedMessage);
+        {
+            await ExecuteLoadingAction(hasChanges, askText, AlertImage.Warning, AlertResult.Yes, noChangesText, loadingText, action, succeededMessage, failedMessage);
+        }
 
         /// <summary>
         /// Executes a loading action.
@@ -466,6 +484,12 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             {
                 RaiseOnMessage(noChangesText, MessageType.Information);
             }
+        }
+
+        partial void OnIsLoadingChanged(bool previous, bool value)
+        {
+            if (!value)
+                LoadingText = string.Empty;
         }
     }
 }

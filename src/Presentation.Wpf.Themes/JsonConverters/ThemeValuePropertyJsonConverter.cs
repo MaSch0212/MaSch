@@ -10,7 +10,7 @@ namespace MaSch.Presentation.Wpf.JsonConverters
     /// <summary>
     /// Base class for the <see cref="ThemeValuePropertyJsonConverter{T}"/>.
     /// </summary>
-    /// <seealso cref="Newtonsoft.Json.JsonConverter" />
+    /// <seealso cref="JsonConverter" />
     public abstract class ThemeValuePropertyJsonConverter : JsonConverter
     {
         /// <summary>
@@ -23,12 +23,15 @@ namespace MaSch.Presentation.Wpf.JsonConverters
     /// <see cref="JsonConverter"/> that is used to convert a property of a <see cref="IThemeValue"/> to and from json.
     /// </summary>
     /// <typeparam name="T">The type of the property.</typeparam>
-    /// <seealso cref="Newtonsoft.Json.JsonConverter" />
+    /// <seealso cref="JsonConverter" />
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic representation can be in same file")]
     public class ThemeValuePropertyJsonConverter<T> : ThemeValuePropertyJsonConverter
     {
         /// <inheritdoc/>
-        public override bool CanConvert(Type objectType) => true;
+        public override bool CanConvert(Type objectType)
+        {
+            return true;
+        }
 
         /// <inheritdoc/>
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)

@@ -18,7 +18,9 @@ namespace MaSch.Console
         /// <param name="format">A composite format string.</param>
         /// <param name="args">An object to write using format.</param>
         public static void Write(this IConsoleService service, string format, params object?[] args)
-            => service.Write(string.Format(format, args));
+        {
+            service.Write(string.Format(format, args));
+        }
 
         /// <summary>
         /// Writes the text representation of the specified object, to the standard output stream.
@@ -27,7 +29,9 @@ namespace MaSch.Console
         /// <param name="service">The console to write to.</param>
         /// <param name="value">The value to write.</param>
         public static void Write<T>(this IConsoleService service, [AllowNull] T value)
-            => service.Write(value?.ToString());
+        {
+            service.Write(value?.ToString());
+        }
 
         /// <summary>
         /// Writes the text representation of the specified object, to the standard output stream.
@@ -38,7 +42,9 @@ namespace MaSch.Console
         /// <param name="format">The format to use.</param>
         public static void Write<T>(this IConsoleService service, [AllowNull] T value, string format)
             where T : IFormattable
-            => service.Write(value?.ToString(format, null));
+        {
+            service.Write(value?.ToString(format, null));
+        }
 
         /// <summary>
         /// Writes the text representation of the specified object, to the standard output stream.
@@ -49,7 +55,9 @@ namespace MaSch.Console
         /// <param name="formatProvider">The format provider to use.</param>
         public static void Write<T>(this IConsoleService service, [AllowNull] T value, IFormatProvider formatProvider)
             where T : IFormattable
-            => service.Write(value?.ToString(null, formatProvider));
+        {
+            service.Write(value?.ToString(null, formatProvider));
+        }
 
         /// <summary>
         /// Writes the text representation of the specified object, to the standard output stream.
@@ -61,7 +69,9 @@ namespace MaSch.Console
         /// <param name="formatProvider">The format provider to use.</param>
         public static void Write<T>(this IConsoleService service, [AllowNull] T value, string format, IFormatProvider formatProvider)
             where T : IFormattable
-            => service.Write(value?.ToString(format, formatProvider));
+        {
+            service.Write(value?.ToString(format, formatProvider));
+        }
 
         /// <summary>
         /// Writes the specified array of Unicode characters to the standard output stream.
@@ -69,7 +79,9 @@ namespace MaSch.Console
         /// <param name="service">The console to write to.</param>
         /// <param name="buffer">A Unicode character array.</param>
         public static void Write(this IConsoleService service, char[] buffer)
-            => service.Write(new string(buffer));
+        {
+            service.Write(new string(buffer));
+        }
 
         /// <summary>
         /// Writes the specified subarray of Unicode characters to the standard output stream.
@@ -79,7 +91,9 @@ namespace MaSch.Console
         /// <param name="index">The starting position in buffer.</param>
         /// <param name="count">The number of characters to write.</param>
         public static void Write(this IConsoleService service, char[] buffer, int index, int count)
-            => service.Write(new string(buffer, index, count));
+        {
+            service.Write(new string(buffer, index, count));
+        }
 
         /// <summary>
         /// Writes the text representation of the specified object, followed by the current line terminator, to the standard output stream using the specified format information.
@@ -88,7 +102,9 @@ namespace MaSch.Console
         /// <param name="format">A composite format string.</param>
         /// <param name="args">An object to write using format.</param>
         public static void WriteLine(this IConsoleService service, string format, params object?[] args)
-            => service.WriteLine(string.Format(format, args));
+        {
+            service.WriteLine(string.Format(format, args));
+        }
 
         /// <summary>
         /// Writes the text representation of the specified object, followed by the current line terminator, to the standard output stream.
@@ -97,7 +113,9 @@ namespace MaSch.Console
         /// <param name="service">The console to write to.</param>
         /// <param name="value">The value to write.</param>
         public static void WriteLine<T>(this IConsoleService service, [AllowNull] T value)
-            => service.WriteLine(value?.ToString());
+        {
+            service.WriteLine(value?.ToString());
+        }
 
         /// <summary>
         /// Writes the text representation of the specified object, followed by the current line terminator, to the standard output stream.
@@ -108,7 +126,9 @@ namespace MaSch.Console
         /// <param name="format">The format to use.</param>
         public static void WriteLine<T>(this IConsoleService service, [AllowNull] T value, string format)
             where T : IFormattable
-            => service.WriteLine(value?.ToString(format, null));
+        {
+            service.WriteLine(value?.ToString(format, null));
+        }
 
         /// <summary>
         /// Writes the text representation of the specified object, followed by the current line terminator, to the standard output stream.
@@ -119,7 +139,9 @@ namespace MaSch.Console
         /// <param name="formatProvider">The format provider to use.</param>
         public static void WriteLine<T>(this IConsoleService service, [AllowNull] T value, IFormatProvider formatProvider)
             where T : IFormattable
-            => service.WriteLine(value?.ToString(null, formatProvider));
+        {
+            service.WriteLine(value?.ToString(null, formatProvider));
+        }
 
         /// <summary>
         /// Writes the text representation of the specified object, followed by the current line terminator, to the standard output stream.
@@ -131,7 +153,9 @@ namespace MaSch.Console
         /// <param name="formatProvider">The format provider to use.</param>
         public static void WriteLine<T>(this IConsoleService service, [AllowNull] T value, string format, IFormatProvider formatProvider)
             where T : IFormattable
-            => service.WriteLine(value?.ToString(format, formatProvider));
+        {
+            service.WriteLine(value?.ToString(format, formatProvider));
+        }
 
         /// <summary>
         /// Writes the specified array of Unicode characters, followed by the current line terminator, to the standard output stream.
@@ -139,7 +163,9 @@ namespace MaSch.Console
         /// <param name="service">The console to write to.</param>
         /// <param name="buffer">A Unicode character array.</param>
         public static void WriteLine(this IConsoleService service, char[] buffer)
-            => service.WriteLine(new string(buffer));
+        {
+            service.WriteLine(new string(buffer));
+        }
 
         /// <summary>
         /// Writes the specified subarray of Unicode characters, followed by the current line terminator, to the standard output stream.
@@ -149,14 +175,18 @@ namespace MaSch.Console
         /// <param name="index">The starting position in buffer.</param>
         /// <param name="count">The number of characters to write.</param>
         public static void WriteLine(this IConsoleService service, char[] buffer, int index, int count)
-            => service.WriteLine(new string(buffer, index, count));
+        {
+            service.WriteLine(new string(buffer, index, count));
+        }
 
         /// <summary>
         /// Writes the current line terminator to the standard output stream.
         /// </summary>
         /// <param name="service">The console to write to.</param>
         public static void WriteLine(this IConsoleService service)
-            => service.WriteLine(string.Empty);
+        {
+            service.WriteLine(string.Empty);
+        }
 
         /// <summary>
         /// Reserves lines in the console buffer.
@@ -165,7 +195,7 @@ namespace MaSch.Console
         /// <param name="lineCount">The number of lines to reserve.</param>
         public static void ReserveBufferLines(this IConsoleService service, int lineCount)
         {
-            Guard.NotOutOfRange(lineCount, nameof(lineCount), 0, service.BufferSize.Height - 1);
+            _ = Guard.NotOutOfRange(lineCount, nameof(lineCount), 0, service.BufferSize.Height - 1);
 
             if (!service.IsOutputRedirected && lineCount > 0)
             {
@@ -180,7 +210,9 @@ namespace MaSch.Console
         /// <param name="service">The console to write to.</param>
         /// <param name="title">The title to write.</param>
         public static void WriteTitle(this IConsoleService service, string? title)
-            => WriteTitle(service, title, '-');
+        {
+            WriteTitle(service, title, '-');
+        }
 
         /// <summary>
         /// Writes a title to the console.
@@ -189,7 +221,9 @@ namespace MaSch.Console
         /// <param name="title">The title to write.</param>
         /// <param name="lineChar">The line character for the left and right padding.</param>
         public static void WriteTitle(this IConsoleService service, string? title, char lineChar)
-            => service.Write(title?.PadBoth(service.BufferSize.Width, lineChar) ?? new string(lineChar, service.BufferSize.Width));
+        {
+            service.Write(title?.PadBoth(service.BufferSize.Width, lineChar) ?? new string(lineChar, service.BufferSize.Width));
+        }
 
         /// <summary>
         /// Writes the specified string value to the standard output stream using specific colors.
@@ -274,7 +308,9 @@ namespace MaSch.Console
         /// <param name="foregroundColor">The foreground color that should be used inside this scope.</param>
         /// <returns>An instance of the <see cref="ConsoleColorScope"/> class.</returns>
         public static ConsoleColorScope SetColors(this IConsoleService service, ConsoleColor foregroundColor)
-            => new(service, foregroundColor);
+        {
+            return new(service, foregroundColor);
+        }
 
         /// <summary>
         /// Creates a <see cref="ConsoleColorScope"/> for this <see cref="IConsoleService"/>.
@@ -284,6 +320,8 @@ namespace MaSch.Console
         /// <param name="backgroundColor">The background color that should be used inside this scope.</param>
         /// <returns>An instance of the <see cref="ConsoleColorScope"/> class.</returns>
         public static ConsoleColorScope SetColors(this IConsoleService service, ConsoleColor foregroundColor, ConsoleColor backgroundColor)
-            => new(service, foregroundColor, backgroundColor);
+        {
+            return new(service, foregroundColor, backgroundColor);
+        }
     }
 }

@@ -57,43 +57,43 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         [TestMethod]
         public void From_CommandType_Null()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => Factory.Create(null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => Factory.Create(null!));
         }
 
         [TestMethod]
         public void From_CommandType_MissingAttribute()
         {
-            Assert.ThrowsException<ArgumentException>(() => Factory.Create(typeof(DummyClass3)));
+            _ = Assert.ThrowsException<ArgumentException>(() => Factory.Create(typeof(DummyClass3)));
         }
 
         [TestMethod]
         public void From_CommandType_EmptyCommandName()
         {
-            Assert.ThrowsException<ArgumentException>(() => Factory.Create(typeof(DummyClass4)));
+            _ = Assert.ThrowsException<ArgumentException>(() => Factory.Create(typeof(DummyClass4)));
         }
 
         [TestMethod]
         public void From_CommandType_WhitespaceCommandName()
         {
-            Assert.ThrowsException<ArgumentException>(() => Factory.Create(typeof(DummyClass5)));
+            _ = Assert.ThrowsException<ArgumentException>(() => Factory.Create(typeof(DummyClass5)));
         }
 
         [TestMethod]
         public void From_CommandType_NullCommandName()
         {
-            Assert.ThrowsException<ArgumentException>(() => Factory.Create(typeof(DummyClass6)));
+            _ = Assert.ThrowsException<ArgumentException>(() => Factory.Create(typeof(DummyClass6)));
         }
 
         [TestMethod]
         public void From_CommandType_CommandNameContainsSpace()
         {
-            Assert.ThrowsException<ArgumentException>(() => Factory.Create(typeof(DummyClass7)));
+            _ = Assert.ThrowsException<ArgumentException>(() => Factory.Create(typeof(DummyClass7)));
         }
 
         [TestMethod]
         public void From_CommandType_CommandNameContainsControlCharacter()
         {
-            Assert.ThrowsException<ArgumentException>(() => Factory.Create(typeof(DummyClass8)));
+            _ = Assert.ThrowsException<ArgumentException>(() => Factory.Create(typeof(DummyClass8)));
         }
 
         [TestMethod]
@@ -108,13 +108,13 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         [TestMethod]
         public void From_CommandType_Null_WithInstance()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => Factory.Create((Type)null!, (object)new DummyClass1()));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => Factory.Create((Type)null!, (object)new DummyClass1()));
         }
 
         [TestMethod]
         public void From_CommandType_WithInstance_WrongType()
         {
-            Assert.ThrowsException<ArgumentException>(() => Factory.Create(typeof(DummyClass1), (object)new DummyClass2()));
+            _ = Assert.ThrowsException<ArgumentException>(() => Factory.Create(typeof(DummyClass1), (object)new DummyClass2()));
         }
 
         [TestMethod]
@@ -134,7 +134,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var executor = po.GetField("_executor");
 
             Assert.IsNotNull(executor);
-            Assert.IsInstanceOfType<ExternalExecutor<DummyClass2>>(executor);
+            _ = Assert.IsInstanceOfType<ExternalExecutor<DummyClass2>>(executor);
         }
 
         [TestMethod]
@@ -161,7 +161,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
 
             Assert.AreSame(command, info.OptionsInstance);
             Assert.IsNotNull(executor);
-            Assert.IsInstanceOfType<ExternalExecutor<DummyClass2>>(executor);
+            _ = Assert.IsInstanceOfType<ExternalExecutor<DummyClass2>>(executor);
         }
 
         [TestMethod]
@@ -188,7 +188,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var executor = po.GetField("_executor");
 
             Assert.IsNotNull(executor);
-            Assert.IsInstanceOfType<ExternalExecutor<DummyClass2>>(executor);
+            _ = Assert.IsInstanceOfType<ExternalExecutor<DummyClass2>>(executor);
         }
 
         [TestMethod]
@@ -215,7 +215,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
 
             Assert.AreSame(command, info.OptionsInstance);
             Assert.IsNotNull(executor);
-            Assert.IsInstanceOfType<ExternalExecutor<DummyClass2>>(executor);
+            _ = Assert.IsInstanceOfType<ExternalExecutor<DummyClass2>>(executor);
         }
 
         [TestMethod]
@@ -243,7 +243,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var cliExecutor = po.GetField("_executor");
 
             Assert.IsNotNull(cliExecutor);
-            Assert.IsInstanceOfType<FunctionExecutor<DummyClass2>>(cliExecutor);
+            _ = Assert.IsInstanceOfType<FunctionExecutor<DummyClass2>>(cliExecutor);
 
             po = new PrivateObject(cliExecutor);
             var actualFunc = po.GetField("_executorFunc");
@@ -276,7 +276,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var cliExecutor = po.GetField("_executor");
 
             Assert.IsNotNull(cliExecutor);
-            Assert.IsInstanceOfType<FunctionExecutor<DummyClass2>>(cliExecutor);
+            _ = Assert.IsInstanceOfType<FunctionExecutor<DummyClass2>>(cliExecutor);
 
             po = new PrivateObject(cliExecutor);
             var actualFunc = po.GetField("_asyncExecutorFunc");
@@ -309,7 +309,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var cliExecutor = po.GetField("_executor");
 
             Assert.IsNotNull(cliExecutor);
-            Assert.IsInstanceOfType<FunctionExecutor<object>>(cliExecutor);
+            _ = Assert.IsInstanceOfType<FunctionExecutor<object>>(cliExecutor);
 
             po = new PrivateObject(cliExecutor);
             var actualFunc = po.GetField("_executorFunc");
@@ -342,7 +342,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var cliExecutor = po.GetField("_executor");
 
             Assert.IsNotNull(cliExecutor);
-            Assert.IsInstanceOfType<FunctionExecutor<object>>(cliExecutor);
+            _ = Assert.IsInstanceOfType<FunctionExecutor<object>>(cliExecutor);
 
             po = new PrivateObject(cliExecutor);
             var actualFunc = po.GetField("_asyncExecutorFunc");
@@ -380,6 +380,15 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             }
         }
 
+        public abstract class Executor1 : ICliExecutor<DummyClass2>, ICliAsyncExecutor<DummyClass2>, ICliValidator<DummyClass2>
+        {
+            public delegate bool ValidateDelegate(CliExecutionContext context, DummyClass2 parameters, [MaybeNullWhen(true)] out IEnumerable<CliError>? errors);
+
+            public abstract int ExecuteCommand(CliExecutionContext context, DummyClass2 parameters);
+            public abstract Task<int> ExecuteCommandAsync(CliExecutionContext context, DummyClass2 parameters);
+            public abstract bool ValidateOptions(CliExecutionContext context, DummyClass2 parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors);
+        }
+
         private class DummyClass3
         {
         }
@@ -413,15 +422,6 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         private abstract class DummyClass9 : ICliExecutable
         {
             public abstract int ExecuteCommand(CliExecutionContext context);
-        }
-
-        public abstract class Executor1 : ICliExecutor<DummyClass2>, ICliAsyncExecutor<DummyClass2>, ICliValidator<DummyClass2>
-        {
-            public delegate bool ValidateDelegate(CliExecutionContext context, DummyClass2 parameters, [MaybeNullWhen(true)] out IEnumerable<CliError>? errors);
-
-            public abstract int ExecuteCommand(CliExecutionContext context, DummyClass2 parameters);
-            public abstract Task<int> ExecuteCommandAsync(CliExecutionContext context, DummyClass2 parameters);
-            public abstract bool ValidateOptions(CliExecutionContext context, DummyClass2 parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors);
         }
     }
 }

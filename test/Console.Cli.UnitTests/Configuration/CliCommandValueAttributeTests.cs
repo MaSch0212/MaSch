@@ -11,13 +11,13 @@ namespace MaSch.Console.Cli.UnitTests.Configuration
         [TestMethod]
         public void Ctor_Order_DisplayName_Null()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new CliCommandValueAttribute(0, null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => new CliCommandValueAttribute(0, null!));
         }
 
         [TestMethod]
         public void Ctor_Order_DisplayName_Empty()
         {
-            Assert.ThrowsException<ArgumentException>(() => new CliCommandValueAttribute(0, string.Empty));
+            _ = Assert.ThrowsException<ArgumentException>(() => new CliCommandValueAttribute(0, string.Empty));
         }
 
         [TestMethod]

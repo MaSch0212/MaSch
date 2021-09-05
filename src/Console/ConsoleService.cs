@@ -172,57 +172,105 @@ namespace MaSch.Console
         }
 
         /// <inheritdoc />
-        public void Beep() => C.Beep();
+        public void Beep()
+        {
+            C.Beep();
+        }
 
         /// <inheritdoc />
         [SupportedOSPlatform("windows")]
-        public void Beep(int frequency, int duration) => C.Beep(frequency, duration);
+        public void Beep(int frequency, int duration)
+        {
+            C.Beep(frequency, duration);
+        }
 
         /// <inheritdoc />
-        public void Clear() => C.Clear();
+        public void Clear()
+        {
+            C.Clear();
+        }
 
         /// <inheritdoc />
-        public Stream OpenStandardError() => C.OpenStandardError();
+        public Stream OpenStandardError()
+        {
+            return C.OpenStandardError();
+        }
 
         /// <inheritdoc />
-        public Stream OpenStandardError(int bufferSize) => C.OpenStandardError(bufferSize);
+        public Stream OpenStandardError(int bufferSize)
+        {
+            return C.OpenStandardError(bufferSize);
+        }
 
         /// <inheritdoc />
-        public Stream OpenStandardInput() => C.OpenStandardInput();
+        public Stream OpenStandardInput()
+        {
+            return C.OpenStandardInput();
+        }
 
         /// <inheritdoc />
-        public Stream OpenStandardInput(int bufferSize) => C.OpenStandardInput(bufferSize);
+        public Stream OpenStandardInput(int bufferSize)
+        {
+            return C.OpenStandardInput(bufferSize);
+        }
 
         /// <inheritdoc />
-        public Stream OpenStandardOutput() => C.OpenStandardOutput();
+        public Stream OpenStandardOutput()
+        {
+            return C.OpenStandardOutput();
+        }
 
         /// <inheritdoc />
-        public Stream OpenStandardOutput(int bufferSize) => C.OpenStandardOutput(bufferSize);
+        public Stream OpenStandardOutput(int bufferSize)
+        {
+            return C.OpenStandardOutput(bufferSize);
+        }
 
         /// <inheritdoc />
-        public int Read() => C.Read();
+        public int Read()
+        {
+            return C.Read();
+        }
 
         /// <inheritdoc />
-        public ConsoleKeyInfo ReadKey() => C.ReadKey();
+        public ConsoleKeyInfo ReadKey()
+        {
+            return C.ReadKey();
+        }
 
         /// <inheritdoc />
-        public ConsoleKeyInfo ReadKey(bool intercept) => C.ReadKey(intercept);
+        public ConsoleKeyInfo ReadKey(bool intercept)
+        {
+            return C.ReadKey(intercept);
+        }
 
         /// <inheritdoc />
-        public string? ReadLine() => C.ReadLine();
+        public string? ReadLine()
+        {
+            return C.ReadLine();
+        }
 
         /// <inheritdoc />
-        public void ResetColor() => C.ResetColor();
+        public void ResetColor()
+        {
+            C.ResetColor();
+        }
 
         /// <inheritdoc />
         public void Write(string? value)
-            => C.Write(EscapeIfNeeded(value));
+        {
+            C.Write(EscapeIfNeeded(value));
+        }
 
         /// <inheritdoc />
         public void WriteLine(string? value)
-            => C.WriteLine(EscapeIfNeeded(value));
+        {
+            C.WriteLine(EscapeIfNeeded(value));
+        }
 
         private string? EscapeIfNeeded(string? value)
-            => IsAnsiEscapeTrimmingEnabled && value != null ? AnsiEscapeUtility.EscapeSequenceRegex.Replace(value, string.Empty) : value;
+        {
+            return IsAnsiEscapeTrimmingEnabled && value != null ? AnsiEscapeUtility.EscapeSequenceRegex.Replace(value, string.Empty) : value;
+        }
     }
 }

@@ -49,8 +49,8 @@ namespace MaSch.Core.Converters
         /// <param name="canConvertFunc">The function that determines wether a convertion is possible.</param>
         public static void AddCanConvertFunction(Type sourceType, Func<Type, bool> canConvertFunc)
         {
-            Guard.NotNull(sourceType, nameof(sourceType));
-            Guard.NotNull(canConvertFunc, nameof(canConvertFunc));
+            _ = Guard.NotNull(sourceType, nameof(sourceType));
+            _ = Guard.NotNull(canConvertFunc, nameof(canConvertFunc));
             if (!CanConvertFunctions.TryGetValue(sourceType, out var functions))
             {
                 functions = new List<Func<Type, bool>>();
@@ -61,7 +61,10 @@ namespace MaSch.Core.Converters
         }
 
         /// <inheritdoc />
-        public int GetPriority(Type? sourceType, Type targetType) => _priority;
+        public int GetPriority(Type? sourceType, Type targetType)
+        {
+            return _priority;
+        }
 
         /// <inheritdoc />
         public bool CanConvert(Type? sourceType, Type targetType, IObjectConvertManager convertManager)

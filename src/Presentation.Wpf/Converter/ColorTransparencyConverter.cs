@@ -18,8 +18,8 @@ namespace MaSch.Presentation.Wpf.Converter
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             Color? color = null;
-            if (value is SolidColorBrush scBrush)
-                color = Color.FromArgb((byte)(scBrush.Opacity * scBrush.Color.A), scBrush.Color.R, scBrush.Color.G, scBrush.Color.B);
+            if (value is SolidColorBrush solidColorBrush)
+                color = Color.FromArgb((byte)(solidColorBrush.Opacity * solidColorBrush.Color.A), solidColorBrush.Color.R, solidColorBrush.Color.G, solidColorBrush.Color.B);
             if (value is Color c)
                 color = c;
 

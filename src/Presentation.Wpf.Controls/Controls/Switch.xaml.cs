@@ -6,7 +6,7 @@ namespace MaSch.Presentation.Wpf.Controls
     /// <summary>
     /// Check box that is displayed like a switch.
     /// </summary>
-    /// <seealso cref="System.Windows.Controls.CheckBox" />
+    /// <seealso cref="CheckBox" />
     public class Switch : CheckBox
     {
         static Switch()

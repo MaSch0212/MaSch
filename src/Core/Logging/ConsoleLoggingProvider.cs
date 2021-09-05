@@ -34,7 +34,9 @@ namespace MaSch.Core.Logging
 
         /// <inheritdoc/>
         public void Log(LogType logType, string? message)
-            => Log(logType, message, null);
+        {
+            Log(logType, message, null);
+        }
 
         /// <inheritdoc/>
         public void Log(LogType logType, string? message, Exception? exception)
@@ -63,11 +65,11 @@ namespace MaSch.Core.Logging
             if (exception is AggregateException aggregateException)
             {
                 foreach (var ex in aggregateException.InnerExceptions)
-                    result.Append(GetExceptionText(ex, _logExceptionStackTrace));
+                    _ = result.Append(GetExceptionText(ex, _logExceptionStackTrace));
             }
             else if (exception != null)
             {
-                result.Append(GetExceptionText(exception, _logExceptionStackTrace));
+                _ = result.Append(GetExceptionText(exception, _logExceptionStackTrace));
             }
 
             return result.ToString();

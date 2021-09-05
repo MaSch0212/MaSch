@@ -34,11 +34,11 @@ namespace MaSch.Presentation.Translation.Validation
             {
                 isError = true;
             }
-            else if (value is string sValue)
+            else if (value is string stringValue)
             {
                 isError = StringNullMode == StringNullMode.IsNull ||
-                         (StringNullMode == StringNullMode.IsNullOrEmpty && string.IsNullOrEmpty(sValue)) ||
-                         (StringNullMode == StringNullMode.IsNullOrWhitespace && string.IsNullOrWhiteSpace(sValue));
+                         (StringNullMode == StringNullMode.IsNullOrEmpty && string.IsNullOrEmpty(stringValue)) ||
+                         (StringNullMode == StringNullMode.IsNullOrWhitespace && string.IsNullOrWhiteSpace(stringValue));
             }
 
             return isError ? new ValidationResult(GetTranslatedErrorMessage()) : ValidationResult.Success;

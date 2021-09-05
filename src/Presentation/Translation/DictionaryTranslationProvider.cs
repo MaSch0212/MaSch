@@ -23,9 +23,13 @@ namespace MaSch.Presentation.Translation
         private readonly IDictionary<CultureInfo, IReadOnlyDictionary<string, string>?> _translationCache = new Dictionary<CultureInfo, IReadOnlyDictionary<string, string>?>();
 
         /// <summary>
-        /// Gets the handler for dictionary loading.
+        /// Initializes a new instance of the <see cref="DictionaryTranslationProvider"/> class.
         /// </summary>
-        protected RetrieveDictionaryHandler? Handler { get; }
+        /// <param name="handler">The handler for dictionary loading.</param>
+        public DictionaryTranslationProvider(RetrieveDictionaryHandler? handler)
+        {
+            Handler = handler;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DictionaryTranslationProvider"/> class.
@@ -36,13 +40,9 @@ namespace MaSch.Presentation.Translation
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DictionaryTranslationProvider"/> class.
+        /// Gets the handler for dictionary loading.
         /// </summary>
-        /// <param name="handler">The handler for dictionary loading.</param>
-        public DictionaryTranslationProvider(RetrieveDictionaryHandler? handler)
-        {
-            Handler = handler;
-        }
+        protected RetrieveDictionaryHandler? Handler { get; }
 
         /// <summary>
         /// Translates a resource key into a given language.
@@ -86,7 +86,7 @@ namespace MaSch.Presentation.Translation
             {
                 var dict = GetDictionaryForLanguageInternal(c);
                 if (dict != null)
-                    result.AddIfNotExists(dict);
+                    _ = result.AddIfNotExists(dict);
             }
             while (c.LCID != CultureInfo.InvariantCulture.LCID);
             return result;
@@ -161,7 +161,7 @@ namespace MaSch.Presentation.Translation
             var oldDict = _translationCache.TryGetValue(language);
             var newDict = GetDictionaryForLanguage(language, oldDict);
             if (newDict == null)
-                _translationCache.TryRemove(language);
+                _ = _translationCache.TryRemove(language);
             if (oldDict != newDict)
                 _translationCache[language] = newDict;
             return newDict;

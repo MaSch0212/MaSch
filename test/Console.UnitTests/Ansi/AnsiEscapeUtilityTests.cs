@@ -19,7 +19,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(-1)]
         public void GetCursorUp_ArgumentOutOfRangeException(int n)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetCursorUp(n));
+            _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetCursorUp(n));
         }
 
         [TestMethod]
@@ -37,7 +37,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(-1)]
         public void GetCursorDown_ArgumentOutOfRangeException(int n)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetCursorDown(n));
+            _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetCursorDown(n));
         }
 
         [TestMethod]
@@ -55,7 +55,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(-1)]
         public void GetCursorBack_ArgumentOutOfRangeException(int n)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetCursorBack(n));
+            _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetCursorBack(n));
         }
 
         [TestMethod]
@@ -73,7 +73,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(-1)]
         public void GetCursorForward_ArgumentOutOfRangeException(int n)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetCursorForward(n));
+            _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetCursorForward(n));
         }
 
         [TestMethod]
@@ -91,7 +91,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(-1)]
         public void GetCursorNextLine_ArgumentOutOfRangeException(int n)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetCursorNextLine(n));
+            _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetCursorNextLine(n));
         }
 
         [TestMethod]
@@ -109,7 +109,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(-1)]
         public void GetCursorPreviousLine_ArgumentOutOfRangeException(int n)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetCursorPreviousLine(n));
+            _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetCursorPreviousLine(n));
         }
 
         [TestMethod]
@@ -127,7 +127,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(-1)]
         public void GetCursorToColumn_ArgumentOutOfRangeException(int n)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetCursorToColumn(n));
+            _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetCursorToColumn(n));
         }
 
         [TestMethod]
@@ -147,7 +147,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(0, -1)]
         public void GetCursorToPosition_ArgumentOutOfRangeException(int row, int column)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetCursorToPosition(row, column));
+            _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetCursorToPosition(row, column));
         }
 
         [TestMethod]
@@ -165,7 +165,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(4)]
         public void GetEraseScreen_ArgumentException(AnsiClearMode mode)
         {
-            Assert.ThrowsException<ArgumentException>(() => AnsiEscapeUtility.GetEraseScreen(mode));
+            _ = Assert.ThrowsException<ArgumentException>(() => AnsiEscapeUtility.GetEraseScreen(mode));
         }
 
         [TestMethod]
@@ -184,7 +184,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(3)]
         public void GetEraseLine_ArgumentException(AnsiLineClearMode mode)
         {
-            Assert.ThrowsException<ArgumentException>(() => AnsiEscapeUtility.GetEraseLine(mode));
+            _ = Assert.ThrowsException<ArgumentException>(() => AnsiEscapeUtility.GetEraseLine(mode));
         }
 
         [TestMethod]
@@ -202,7 +202,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(-1)]
         public void GetScrollUp_ArgumentOutOfRangeException(int n)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetScrollUp(n));
+            _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetScrollUp(n));
         }
 
         [TestMethod]
@@ -220,7 +220,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(-1)]
         public void GetScrollDown_ArgumentOutOfRangeException(int n)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetScrollDown(n));
+            _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetScrollDown(n));
         }
 
         [TestMethod]
@@ -238,7 +238,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(-1)]
         public void GetDeleteLines_ArgumentOutOfRangeException(int n)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetDeleteLines(n));
+            _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetDeleteLines(n));
         }
 
         [TestMethod]
@@ -256,7 +256,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(-1)]
         public void GetInsertLines_ArgumentOutOfRangeException(int n)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetInsertLines(n));
+            _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetInsertLines(n));
         }
 
         [TestMethod]
@@ -274,7 +274,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(-1)]
         public void GetEraseCharacters_ArgumentOutOfRangeException(int n)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetEraseCharacters(n));
+            _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetEraseCharacters(n));
         }
 
         [TestMethod]
@@ -292,7 +292,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(-1)]
         public void GetDeleteCharacters_ArgumentOutOfRangeException(int n)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetDeleteCharacters(n));
+            _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetDeleteCharacters(n));
         }
 
         [TestMethod]
@@ -310,7 +310,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(-1)]
         public void GetInsertCharacters_ArgumentOutOfRangeException(int n)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetInsertCharacters(n));
+            _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiEscapeUtility.GetInsertCharacters(n));
         }
 
         [TestMethod]
@@ -364,7 +364,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(AnsiTextStyle.Bold | AnsiTextStyle.Faint | (AnsiTextStyle)512)]
         public void GetAddStyle_ArgumentException(AnsiTextStyle style)
         {
-            Assert.ThrowsException<ArgumentException>(() => AnsiEscapeUtility.GetAddStyle(style));
+            _ = Assert.ThrowsException<ArgumentException>(() => AnsiEscapeUtility.GetAddStyle(style));
         }
 
         [TestMethod]
@@ -391,7 +391,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(AnsiTextStyle.Bold | AnsiTextStyle.Faint | (AnsiTextStyle)512)]
         public void GetRemoveStyle_ArgumentException(AnsiTextStyle style)
         {
-            Assert.ThrowsException<ArgumentException>(() => AnsiEscapeUtility.GetRemoveStyle(style));
+            _ = Assert.ThrowsException<ArgumentException>(() => AnsiEscapeUtility.GetRemoveStyle(style));
         }
 
         [TestMethod]
@@ -419,7 +419,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(256)]
         public void GetSetForegroundColor_ColorCode_ArgumentException(AnsiColorCode colorCode)
         {
-            Assert.ThrowsException<ArgumentException>(() => AnsiEscapeUtility.GetSetForegroundColor(colorCode));
+            _ = Assert.ThrowsException<ArgumentException>(() => AnsiEscapeUtility.GetSetForegroundColor(colorCode));
         }
 
         [TestMethod]
@@ -707,7 +707,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(256)]
         public void GetSetBackgroundColor_ColorCode_ArgumentException(AnsiColorCode colorCode)
         {
-            Assert.ThrowsException<ArgumentException>(() => AnsiEscapeUtility.GetSetBackgroundColor(colorCode));
+            _ = Assert.ThrowsException<ArgumentException>(() => AnsiEscapeUtility.GetSetBackgroundColor(colorCode));
         }
 
         [TestMethod]

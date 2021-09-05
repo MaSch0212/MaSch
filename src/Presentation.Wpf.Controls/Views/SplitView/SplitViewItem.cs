@@ -6,7 +6,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
     /// <summary>
     /// Represents a split view item (page) in a <see cref="SplitView"/>.
     /// </summary>
-    /// <seealso cref="MaSch.Presentation.Wpf.Views.SplitView.SplitViewItemBase" />
+    /// <seealso cref="SplitViewItemBase" />
     [ContentProperty(nameof(Content))]
     public class SplitViewItem : SplitViewItemBase
     {

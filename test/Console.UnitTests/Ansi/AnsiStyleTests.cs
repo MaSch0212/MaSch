@@ -16,13 +16,13 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(AnsiTextStyle.Bold | AnsiTextStyle.Blink | (AnsiTextStyle)512)]
         public void WithStyles_ArgumentException(AnsiTextStyle styles)
         {
-            Assert.ThrowsException<ArgumentException>(() => Style.WithStyles(styles));
+            _ = Assert.ThrowsException<ArgumentException>(() => Style.WithStyles(styles));
         }
 
         [TestMethod]
         public void WithStyles_Success()
         {
-            Style.WithoutStyles(AnsiTextStyle.Bold | AnsiTextStyle.Blink);
+            _ = Style.WithoutStyles(AnsiTextStyle.Bold | AnsiTextStyle.Blink);
             var result = Style.WithStyles(AnsiTextStyle.Bold | AnsiTextStyle.Italic);
 
             Assert.AreEqual(AnsiTextStyle.Bold | AnsiTextStyle.Italic, Style.AddedStyles);
@@ -36,13 +36,13 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(AnsiTextStyle.Bold | AnsiTextStyle.Blink | (AnsiTextStyle)512)]
         public void WithoutStyles_ArgumentException(AnsiTextStyle styles)
         {
-            Assert.ThrowsException<ArgumentException>(() => Style.WithoutStyles(styles));
+            _ = Assert.ThrowsException<ArgumentException>(() => Style.WithoutStyles(styles));
         }
 
         [TestMethod]
         public void WithoutStyles_Success()
         {
-            Style.WithStyles(AnsiTextStyle.Bold | AnsiTextStyle.Blink);
+            _ = Style.WithStyles(AnsiTextStyle.Bold | AnsiTextStyle.Blink);
             var result = Style.WithoutStyles(AnsiTextStyle.Bold | AnsiTextStyle.Italic);
 
             Assert.AreEqual(AnsiTextStyle.Blink, Style.AddedStyles);
@@ -56,14 +56,14 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(AnsiTextStyle.Bold | AnsiTextStyle.Blink | (AnsiTextStyle)512)]
         public void OverrideStyles_ArgumentException(AnsiTextStyle styles)
         {
-            Assert.ThrowsException<ArgumentException>(() => Style.OverrideStyles(styles));
+            _ = Assert.ThrowsException<ArgumentException>(() => Style.OverrideStyles(styles));
         }
 
         [TestMethod]
         public void OverrideStyles_Success()
         {
-            Style.WithStyles(AnsiTextStyle.Bold | AnsiTextStyle.Blink);
-            Style.WithoutStyles(AnsiTextStyle.Bold | AnsiTextStyle.Italic);
+            _ = Style.WithStyles(AnsiTextStyle.Bold | AnsiTextStyle.Blink);
+            _ = Style.WithoutStyles(AnsiTextStyle.Bold | AnsiTextStyle.Italic);
             var result = Style.OverrideStyles(AnsiTextStyle.Faint | AnsiTextStyle.Overlined);
 
             Assert.AreEqual(AnsiTextStyle.Faint | AnsiTextStyle.Overlined, Style.AddedStyles);
@@ -74,7 +74,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [TestMethod]
         public void Bold_Success()
         {
-            Style.WithoutStyles(AnsiTextStyle.Bold);
+            _ = Style.WithoutStyles(AnsiTextStyle.Bold);
             var result = Style.Bold();
 
             Assert.AreEqual(AnsiTextStyle.Bold, Style.AddedStyles);
@@ -85,7 +85,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [TestMethod]
         public void Faint_Success()
         {
-            Style.WithoutStyles(AnsiTextStyle.Faint);
+            _ = Style.WithoutStyles(AnsiTextStyle.Faint);
             var result = Style.Faint();
 
             Assert.AreEqual(AnsiTextStyle.Faint, Style.AddedStyles);
@@ -96,7 +96,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [TestMethod]
         public void Italic_Success()
         {
-            Style.WithoutStyles(AnsiTextStyle.Italic);
+            _ = Style.WithoutStyles(AnsiTextStyle.Italic);
             var result = Style.Italic();
 
             Assert.AreEqual(AnsiTextStyle.Italic, Style.AddedStyles);
@@ -107,7 +107,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [TestMethod]
         public void Underlined_Success()
         {
-            Style.WithoutStyles(AnsiTextStyle.Underline);
+            _ = Style.WithoutStyles(AnsiTextStyle.Underline);
             var result = Style.Underlined();
 
             Assert.AreEqual(AnsiTextStyle.Underline, Style.AddedStyles);
@@ -118,7 +118,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [TestMethod]
         public void Blinking_Success()
         {
-            Style.WithoutStyles(AnsiTextStyle.Blink);
+            _ = Style.WithoutStyles(AnsiTextStyle.Blink);
             var result = Style.Blinking();
 
             Assert.AreEqual(AnsiTextStyle.Blink, Style.AddedStyles);
@@ -129,7 +129,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [TestMethod]
         public void Inverted_Success()
         {
-            Style.WithoutStyles(AnsiTextStyle.Invert);
+            _ = Style.WithoutStyles(AnsiTextStyle.Invert);
             var result = Style.Inverted();
 
             Assert.AreEqual(AnsiTextStyle.Invert, Style.AddedStyles);
@@ -140,7 +140,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [TestMethod]
         public void CrossedOut_Success()
         {
-            Style.WithoutStyles(AnsiTextStyle.CrossedOut);
+            _ = Style.WithoutStyles(AnsiTextStyle.CrossedOut);
             var result = Style.CrossedOut();
 
             Assert.AreEqual(AnsiTextStyle.CrossedOut, Style.AddedStyles);
@@ -151,7 +151,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [TestMethod]
         public void DoublyUnderlined_Success()
         {
-            Style.WithoutStyles(AnsiTextStyle.DoublyUnderlined);
+            _ = Style.WithoutStyles(AnsiTextStyle.DoublyUnderlined);
             var result = Style.DoublyUnderlined();
 
             Assert.AreEqual(AnsiTextStyle.DoublyUnderlined, Style.AddedStyles);
@@ -162,7 +162,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [TestMethod]
         public void Overlined_Success()
         {
-            Style.WithoutStyles(AnsiTextStyle.Overlined);
+            _ = Style.WithoutStyles(AnsiTextStyle.Overlined);
             var result = Style.Overlined();
 
             Assert.AreEqual(AnsiTextStyle.Overlined, Style.AddedStyles);
@@ -173,7 +173,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [TestMethod]
         public void NotBoldOrFaint_Success()
         {
-            Style.WithStyles(AnsiTextStyle.Bold | AnsiTextStyle.Faint);
+            _ = Style.WithStyles(AnsiTextStyle.Bold | AnsiTextStyle.Faint);
             var result = Style.NotBoldOrFaint();
 
             Assert.AreEqual(AnsiTextStyle.None, Style.AddedStyles);
@@ -184,7 +184,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [TestMethod]
         public void NotItalic_Success()
         {
-            Style.WithStyles(AnsiTextStyle.Italic);
+            _ = Style.WithStyles(AnsiTextStyle.Italic);
             var result = Style.NotItalic();
 
             Assert.AreEqual(AnsiTextStyle.None, Style.AddedStyles);
@@ -195,7 +195,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [TestMethod]
         public void NotUnderlined_Success()
         {
-            Style.WithStyles(AnsiTextStyle.Underline | AnsiTextStyle.DoublyUnderlined);
+            _ = Style.WithStyles(AnsiTextStyle.Underline | AnsiTextStyle.DoublyUnderlined);
             var result = Style.NotUnderlined();
 
             Assert.AreEqual(AnsiTextStyle.None, Style.AddedStyles);
@@ -206,7 +206,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [TestMethod]
         public void NotBlinking_Success()
         {
-            Style.WithStyles(AnsiTextStyle.Blink);
+            _ = Style.WithStyles(AnsiTextStyle.Blink);
             var result = Style.NotBlinking();
 
             Assert.AreEqual(AnsiTextStyle.None, Style.AddedStyles);
@@ -217,7 +217,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [TestMethod]
         public void NotCrossedOut_Success()
         {
-            Style.WithStyles(AnsiTextStyle.CrossedOut);
+            _ = Style.WithStyles(AnsiTextStyle.CrossedOut);
             var result = Style.NotCrossedOut();
 
             Assert.AreEqual(AnsiTextStyle.None, Style.AddedStyles);
@@ -228,7 +228,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [TestMethod]
         public void NotOverlined_Success()
         {
-            Style.WithStyles(AnsiTextStyle.Overlined);
+            _ = Style.WithStyles(AnsiTextStyle.Overlined);
             var result = Style.NotOverlined();
 
             Assert.AreEqual(AnsiTextStyle.None, Style.AddedStyles);
@@ -272,7 +272,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(AnsiTextStyle.Bold | AnsiTextStyle.Overlined | AnsiTextStyle.Italic, "\u001b[22m\u001b[23m\u001b[55m")]
         public void BuildAnsiSequence_RemovedStyles_Success(AnsiTextStyle styles, string expected)
         {
-            Style.WithoutStyles(styles);
+            _ = Style.WithoutStyles(styles);
             var result = Style.BuildAnsiSequence();
 
             Assert.AreEqual(expected, result);
@@ -292,7 +292,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(AnsiTextStyle.Blink | AnsiTextStyle.Invert | AnsiTextStyle.Overlined, "\u001b[5m\u001b[7m\u001b[53m")]
         public void BuildAnsiSequence_AddedStyles_Success(AnsiTextStyle styles, string expected)
         {
-            Style.WithStyles(styles);
+            _ = Style.WithStyles(styles);
             var result = Style.BuildAnsiSequence();
 
             Assert.AreEqual(expected, result);
@@ -304,7 +304,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow("64,52,124", "\u001b[38;2;64;52;124m")]
         public void BuildAnsiSequence_Foreground_Success(object? color, string expected)
         {
-            Style.Foreground(GetColorFromObject(color));
+            _ = Style.Foreground(GetColorFromObject(color));
             var result = Style.BuildAnsiSequence();
 
             Assert.AreEqual(expected, result);
@@ -316,7 +316,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow("64,52,124", "\u001b[48;2;64;52;124m")]
         public void BuildAnsiSequence_Background_Success(object? color, string expected)
         {
-            Style.Background(GetColorFromObject(color));
+            _ = Style.Background(GetColorFromObject(color));
             var result = Style.BuildAnsiSequence();
 
             Assert.AreEqual(expected, result);
@@ -325,10 +325,10 @@ namespace MaSch.Console.UnitTests.Ansi
         [TestMethod]
         public void BuildAnsiSequence_Combined_Success()
         {
-            Style.WithoutStyles(AnsiTextStyle.Bold);
-            Style.WithStyles(AnsiTextStyle.Italic);
-            Style.Foreground(AnsiColor.FromColorCode(AnsiColorCode.Cyan));
-            Style.Background(AnsiColor.FromRgb(45, 46, 47));
+            _ = Style.WithoutStyles(AnsiTextStyle.Bold);
+            _ = Style.WithStyles(AnsiTextStyle.Italic);
+            _ = Style.Foreground(AnsiColor.FromColorCode(AnsiColorCode.Cyan));
+            _ = Style.Background(AnsiColor.FromRgb(45, 46, 47));
             var result = Style.BuildAnsiSequence();
 
             Assert.AreEqual("\u001b[22m\u001b[3m\u001b[38;5;14m\u001b[48;2;45;46;47m", result);

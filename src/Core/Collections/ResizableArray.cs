@@ -29,7 +29,7 @@ namespace MaSch.Core.Collections
         /// <param name="array">The array to wrap.</param>
         public ResizableArray(T[] array)
         {
-            Guard.NotNull(array, nameof(array));
+            _ = Guard.NotNull(array, nameof(array));
 
             _array = array;
         }
@@ -50,12 +50,12 @@ namespace MaSch.Core.Collections
         {
             get
             {
-                Guard.NotOutOfRange(index, nameof(index), 0, Count - 1);
+                _ = Guard.NotOutOfRange(index, nameof(index), 0, Count - 1);
                 return _array[index];
             }
             set
             {
-                Guard.NotOutOfRange(index, nameof(index), 0, Count - 1);
+                _ = Guard.NotOutOfRange(index, nameof(index), 0, Count - 1);
                 _array[index] = value;
             }
         }
@@ -130,7 +130,7 @@ namespace MaSch.Core.Collections
         /// <inheritdoc />
         public void Insert(int index, T item)
         {
-            Guard.NotOutOfRange(index, nameof(index), 0, Count);
+            _ = Guard.NotOutOfRange(index, nameof(index), 0, Count);
             if (Count == _array.Length)
             {
                 Array.Resize(ref _array, _array.Length * 2);
@@ -144,7 +144,7 @@ namespace MaSch.Core.Collections
         /// <inheritdoc />
         public void RemoveAt(int index)
         {
-            Guard.NotOutOfRange(index, nameof(index), 0, Count - 1);
+            _ = Guard.NotOutOfRange(index, nameof(index), 0, Count - 1);
             for (int i = index; i < Count - 1; i++)
                 _array[i] = _array[i + 1];
             _array[Count - 1] = default!;

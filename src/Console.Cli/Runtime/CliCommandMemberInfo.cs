@@ -62,21 +62,21 @@ namespace MaSch.Console.Cli.Runtime
         /// <inheritdoc/>
         public virtual object? GetValue(object options)
         {
-            Guard.NotNull(options, nameof(options));
+            _ = Guard.NotNull(options, nameof(options));
             return Property.GetValue(options);
         }
 
         /// <inheritdoc/>
         public virtual bool HasValue(object options)
         {
-            Guard.NotNull(options, nameof(options));
+            _ = Guard.NotNull(options, nameof(options));
             return _extensionStorage[options].TryGetValue(GetHasValueKey(), out object? objHasValue) && objHasValue is bool hasValue && hasValue;
         }
 
         /// <inheritdoc/>
         public virtual void SetDefaultValue(object options)
         {
-            Guard.NotNull(options, nameof(options));
+            _ = Guard.NotNull(options, nameof(options));
             if (typeof(IEnumerable).IsAssignableFrom(PropertyType) && PropertyType != typeof(string))
                 SetValue(options, Array.Empty<object?>(), true);
             else
@@ -86,7 +86,7 @@ namespace MaSch.Console.Cli.Runtime
         /// <inheritdoc/>
         public virtual void SetValue(object options, object? value)
         {
-            Guard.NotNull(options, nameof(options));
+            _ = Guard.NotNull(options, nameof(options));
             SetValue(options, value, false);
         }
 
@@ -111,6 +111,9 @@ namespace MaSch.Console.Cli.Runtime
             }
         }
 
-        private string GetHasValueKey() => $"HasValue_{PropertyName}";
+        private string GetHasValueKey()
+        {
+            return $"HasValue_{PropertyName}";
+        }
     }
 }

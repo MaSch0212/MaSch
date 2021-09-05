@@ -21,7 +21,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
     /// <summary>
     /// Content control that can be used inside a <see cref="SplitView"/>.
     /// </summary>
-    /// <seealso cref="System.Windows.Controls.ContentControl" />
+    /// <seealso cref="ContentControl" />
     public class SplitViewContent : ContentControl
     {
         /// <summary>
@@ -47,6 +47,32 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         /// </summary>
         public static readonly DependencyProperty CallCloseAsyncProperty =
             DependencyProperty.Register("CallCloseAsync", typeof(bool), typeof(SplitViewContent), new PropertyMetadata(false));
+
+        /// <summary>
+        /// Occurs when the view opened.
+        /// </summary>
+        public event CancelEventHandler? ViewOpened;
+
+        /// <summary>
+        /// Asynchronous event that occurs when the view opened.
+        /// </summary>
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+        [SuppressMessage("Major Code Smell", "S3264:Events should be invoked", Justification = "False positive.")]
+#pragma warning restore IDE0079 // Remove unnecessary suppression
+        public event AsyncCancelEventHandler? ViewOpenedAsync;
+
+        /// <summary>
+        /// Occurs when the view closed.
+        /// </summary>
+        public event CancelEventHandler? ViewClosed;
+
+        /// <summary>
+        /// Asynchronous event that occurs when the view closed.
+        /// </summary>
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+        [SuppressMessage("Major Code Smell", "S3264:Events should be invoked", Justification = "False positive.")]
+#pragma warning restore IDE0079 // Remove unnecessary suppression
+        public event AsyncCancelEventHandler? ViewClosedAsync;
 
         /// <summary>
         /// Gets or sets the command that is executed when the page this <see cref="SplitViewContent"/> is on is opened.
@@ -85,28 +111,6 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         }
 
         /// <summary>
-        /// Occurs when the view opened.
-        /// </summary>
-        public event CancelEventHandler? ViewOpened;
-
-        /// <summary>
-        /// Asynchronous event that occurs when the view opened.
-        /// </summary>
-        [SuppressMessage("Major Code Smell", "S3264:Events should be invoked", Justification = "False positive.")]
-        public event AsyncCancelEventHandler? ViewOpenedAsync;
-
-        /// <summary>
-        /// Occurs when the view closed.
-        /// </summary>
-        public event CancelEventHandler? ViewClosed;
-
-        /// <summary>
-        /// Asynchronous event that occurs when the view closed.
-        /// </summary>
-        [SuppressMessage("Major Code Smell", "S3264:Events should be invoked", Justification = "False positive.")]
-        public event AsyncCancelEventHandler? ViewClosedAsync;
-
-        /// <summary>
         /// Opens this page.
         /// </summary>
         /// <returns><c>true</c> if the page has been opened successfully; otherwise, <c>false</c>.</returns>
@@ -121,13 +125,29 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         }
 
         /// <summary>
+        /// Closes the page.
+        /// </summary>
+        /// <returns><c>true</c> if the page has been closed successfully; otherwise, <c>false</c>.</returns>
+        public virtual async Task<bool> Close()
+        {
+            var e = new CancelEventArgs(false);
+            if (CallCloseAsync)
+                await CloseInternalAsync(e, CloseCommand, DataContext);
+            else
+                CloseInternal(e, CloseCommand, DataContext);
+            return !e.Cancel;
+        }
+
+        /// <summary>
         /// Called when the <see cref="Open"/> method has been called.
         /// </summary>
         /// <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
         /// <param name="command">The command.</param>
         /// <param name="dataContext">The data context.</param>
         protected virtual void OpenInternal(CancelEventArgs e, ICommand command, object dataContext)
-            => Task.Run(async () => await OpenInternalAsync(e, command, dataContext)).Wait();
+        {
+            Task.Run(async () => await OpenInternalAsync(e, command, dataContext)).Wait();
+        }
 
         /// <summary>
         /// Called when the <see cref="Open"/> method has been called.
@@ -153,27 +173,15 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         }
 
         /// <summary>
-        /// Closes the page.
-        /// </summary>
-        /// <returns><c>true</c> if the page has been closed successfully; otherwise, <c>false</c>.</returns>
-        public virtual async Task<bool> Close()
-        {
-            var e = new CancelEventArgs(false);
-            if (CallCloseAsync)
-                await CloseInternalAsync(e, CloseCommand, DataContext);
-            else
-                CloseInternal(e, CloseCommand, DataContext);
-            return !e.Cancel;
-        }
-
-        /// <summary>
         /// Called when the <see cref="Close"/> method has been called.
         /// </summary>
         /// <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
         /// <param name="command">The command.</param>
         /// <param name="dataContext">The data context.</param>
         protected virtual void CloseInternal(CancelEventArgs e, ICommand command, object dataContext)
-            => Task.Run(async () => await CloseInternalAsync(e, command, dataContext)).Wait();
+        {
+            Task.Run(async () => await CloseInternalAsync(e, command, dataContext)).Wait();
+        }
 
         /// <summary>
         /// Called when the <see cref="Close"/> method has been called.

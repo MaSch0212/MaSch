@@ -127,7 +127,9 @@ namespace MaSch.Generators.Common
         /// <param name="generatorName">The name of the generator.</param>
         /// <returns>Returns a name that can be used for a generated file.</returns>
         public static string CreateHintName(this ISymbol symbol, string generatorName)
-            => CreateHintName(symbol, x => (x, generatorName).GetHashCode());
+        {
+            return CreateHintName(symbol, x => (x, generatorName).GetHashCode());
+        }
 
         /// <summary>
         /// Creates a file name that can be used for a generated file.
@@ -136,7 +138,9 @@ namespace MaSch.Generators.Common
         /// <param name="generatorName">The name of the generator.</param>
         /// <returns>Returns a name that can be used for a generated file.</returns>
         public static string CreateHintName(string name, string generatorName)
-            => CreateHintName(name, (name, generatorName).GetHashCode());
+        {
+            return CreateHintName(name, (name, generatorName).GetHashCode());
+        }
 
         /// <summary>
         /// Creates a name out of a <see cref="ISymbol"/> that can be used for the generated file.
@@ -146,7 +150,9 @@ namespace MaSch.Generators.Common
         /// <param name="additionalGenerationInfo">Additional info to create a unique hash for this generation.</param>
         /// <returns>Returns a name that can be used for a generated file.</returns>
         public static string CreateHintName(this ISymbol symbol, string generatorName, string additionalGenerationInfo)
-            => CreateHintName(symbol, x => (x, generatorName, additionalGenerationInfo).GetHashCode());
+        {
+            return CreateHintName(symbol, x => (x, generatorName, additionalGenerationInfo).GetHashCode());
+        }
 
         /// <summary>
         /// Creates a file name that can be used for a generated file.
@@ -156,7 +162,9 @@ namespace MaSch.Generators.Common
         /// <param name="additionalGenerationInfo">Additional info to create a unique hash for this generation.</param>
         /// <returns>Returns a name that can be used for a generated file.</returns>
         public static string CreateHintName(string name, string generatorName, string additionalGenerationInfo)
-            => CreateHintName(name, (name, generatorName, additionalGenerationInfo).GetHashCode());
+        {
+            return CreateHintName(name, (name, generatorName, additionalGenerationInfo).GetHashCode());
+        }
 
         /// <summary>
         /// Gets the XML (as C# sytax text) for the comment associated with the symbol.
@@ -187,7 +195,9 @@ namespace MaSch.Generators.Common
         /// <param name="builder">The builder that includes the generated source code.</param>
         /// <param name="generatorName">The name of the generator.</param>
         public static void AddSource(this GeneratorExecutionContext context, ITypeSymbol forType, SourceBuilder builder, string generatorName)
-            => context.AddSource(forType.CreateHintName(generatorName), SourceText.From(builder.ToString(), Encoding.UTF8));
+        {
+            context.AddSource(forType.CreateHintName(generatorName), SourceText.From(builder.ToString(), Encoding.UTF8));
+        }
 
         /// <summary>
         /// Adds a <see cref="SourceBuilder"/> to the compilation.
@@ -198,7 +208,9 @@ namespace MaSch.Generators.Common
         /// <param name="generatorName">The name of the generator.</param>
         /// <param name="additionalGenerationInfo">Additional info to create a unique hash for this generation.</param>
         public static void AddSource(this GeneratorExecutionContext context, ITypeSymbol forType, SourceBuilder builder, string generatorName, string additionalGenerationInfo)
-            => context.AddSource(forType.CreateHintName(generatorName, additionalGenerationInfo), SourceText.From(builder.ToString(), Encoding.UTF8));
+        {
+            context.AddSource(forType.CreateHintName(generatorName, additionalGenerationInfo), SourceText.From(builder.ToString(), Encoding.UTF8));
+        }
 
         /// <summary>
         /// Adds a <see cref="SourceBuilder"/> to the compilation.
@@ -207,7 +219,9 @@ namespace MaSch.Generators.Common
         /// <param name="hintName">The name of the generated file.</param>
         /// <param name="builder">The builder that includes the generated source code.</param>
         public static void AddSource(this GeneratorExecutionContext context, string hintName, SourceBuilder builder)
-            => context.AddSource(hintName, SourceText.From(builder.ToString(), Encoding.UTF8));
+        {
+            context.AddSource(hintName, SourceText.From(builder.ToString(), Encoding.UTF8));
+        }
 
         /// <summary>
         /// Launches the debugger if the generator was not executed from an IDE.
@@ -216,7 +230,7 @@ namespace MaSch.Generators.Common
         {
             var processName = Process.GetCurrentProcess().ProcessName;
             if (!Debugger.IsAttached && processName != "ServiceHub.RoslynCodeAnalysisService" && processName != "devenv")
-                Debugger.Launch();
+                _ = Debugger.Launch();
         }
 
         private static string CreateHintName(ISymbol symbol, Func<string, int> hashFunc)

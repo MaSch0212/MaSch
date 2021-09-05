@@ -63,6 +63,19 @@ namespace MaSch.Presentation.Wpf.Controls
         private bool _isPreview;
         private bool _isNewPreview;
 
+        static TabControl()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(TabControl), new FrameworkPropertyMetadata(typeof(TabControl)));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TabControl"/> class.
+        /// </summary>
+        public TabControl()
+        {
+            _previewIndex = -1;
+        }
+
         /// <summary>
         /// Gets or sets the duration of the tab switch animation in seconds.
         /// </summary>
@@ -99,17 +112,15 @@ namespace MaSch.Presentation.Wpf.Controls
             set => SetValue(IsNavigationPartVisibleProperty, value);
         }
 
-        static TabControl()
+        /// <inheritdoc/>
+        public override void OnApplyTemplate()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(TabControl), new FrameworkPropertyMetadata(typeof(TabControl)));
-        }
+            base.OnApplyTemplate();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TabControl"/> class.
-        /// </summary>
-        public TabControl()
-        {
-            _previewIndex = -1;
+            InitializeButtons();
+            InitializeUnderline();
+            InitializeTabItems();
+            InitializeContent();
         }
 
         /// <inheritdoc/>
@@ -123,17 +134,6 @@ namespace MaSch.Presentation.Wpf.Controls
                     AddPreviewEventToTabItem(ti);
                 }
             }
-        }
-
-        /// <inheritdoc/>
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-
-            InitializeButtons();
-            InitializeUnderline();
-            InitializeTabItems();
-            InitializeContent();
         }
 
         private void AddPreviewEventToTabItem(TabItem item, FrameworkElement? eventTo = null)
@@ -186,12 +186,12 @@ namespace MaSch.Presentation.Wpf.Controls
         {
             if (_previewContent != null && _currentContent != null && wasPreview)
             {
-                var daOut = new DoubleAnimation(0.85, 0, new Duration(TimeSpan.FromSeconds(AnimationDurationSeconds / 2)));
-                _previewContent.BeginAnimation(OpacityProperty, daOut);
+                var fadeOutAnimation = new DoubleAnimation(0.85, 0, new Duration(TimeSpan.FromSeconds(AnimationDurationSeconds / 2)));
+                _previewContent.BeginAnimation(OpacityProperty, fadeOutAnimation);
                 await Task.Delay((int)(AnimationDurationSeconds / 2 * 1000));
                 _previewContent.Content = content;
-                var daIn = new DoubleAnimation(0, 0.85, new Duration(TimeSpan.FromSeconds(AnimationDurationSeconds / 2)));
-                _previewContent.BeginAnimation(OpacityProperty, daIn);
+                var fadeInAnimation = new DoubleAnimation(0, 0.85, new Duration(TimeSpan.FromSeconds(AnimationDurationSeconds / 2)));
+                _previewContent.BeginAnimation(OpacityProperty, fadeInAnimation);
             }
 
             if (_previewContent != null && _currentContent != null && !wasPreview)
@@ -205,11 +205,11 @@ namespace MaSch.Presentation.Wpf.Controls
                 _currentContent.RenderTransform = sc;
                 var opaPrev = new DoubleAnimation(0, 0.85, new Duration(TimeSpan.FromSeconds(AnimationDurationSeconds)));
                 _previewContent.BeginAnimation(OpacityProperty, opaPrev);
-                var blur = new DoubleAnimation(0, 20, new Duration(TimeSpan.FromSeconds(AnimationDurationSeconds)));
-                be.BeginAnimation(BlurEffect.RadiusProperty, blur);
-                var scDa = new DoubleAnimation(1, 0.9, new Duration(TimeSpan.FromSeconds(AnimationDurationSeconds)));
-                sc.BeginAnimation(ScaleTransform.ScaleXProperty, scDa);
-                sc.BeginAnimation(ScaleTransform.ScaleYProperty, scDa);
+                var blurAnimation = new DoubleAnimation(0, 20, new Duration(TimeSpan.FromSeconds(AnimationDurationSeconds)));
+                be.BeginAnimation(BlurEffect.RadiusProperty, blurAnimation);
+                var scaleAnimation = new DoubleAnimation(1, 0.9, new Duration(TimeSpan.FromSeconds(AnimationDurationSeconds)));
+                sc.BeginAnimation(ScaleTransform.ScaleXProperty, scaleAnimation);
+                sc.BeginAnimation(ScaleTransform.ScaleYProperty, scaleAnimation);
                 var opaCur = new DoubleAnimation(1, 0.75, new Duration(TimeSpan.FromSeconds(AnimationDurationSeconds)));
                 _currentContent.BeginAnimation(OpacityProperty, opaCur);
             }
@@ -221,11 +221,11 @@ namespace MaSch.Presentation.Wpf.Controls
             {
                 var opaPrev = new DoubleAnimation(0.85, 0, new Duration(TimeSpan.FromSeconds(AnimationDurationSeconds)));
                 _previewContent.BeginAnimation(OpacityProperty, opaPrev);
-                var blur = new DoubleAnimation(20, 0, new Duration(TimeSpan.FromSeconds(AnimationDurationSeconds)));
-                be.BeginAnimation(BlurEffect.RadiusProperty, blur);
-                var scDa = new DoubleAnimation(0.9, 1, new Duration(TimeSpan.FromSeconds(AnimationDurationSeconds)));
-                sc.BeginAnimation(ScaleTransform.ScaleXProperty, scDa);
-                sc.BeginAnimation(ScaleTransform.ScaleYProperty, scDa);
+                var blurAnimation = new DoubleAnimation(20, 0, new Duration(TimeSpan.FromSeconds(AnimationDurationSeconds)));
+                be.BeginAnimation(BlurEffect.RadiusProperty, blurAnimation);
+                var scaleAnimation = new DoubleAnimation(0.9, 1, new Duration(TimeSpan.FromSeconds(AnimationDurationSeconds)));
+                sc.BeginAnimation(ScaleTransform.ScaleXProperty, scaleAnimation);
+                sc.BeginAnimation(ScaleTransform.ScaleYProperty, scaleAnimation);
                 var opaCur = new DoubleAnimation(0.75, 1, new Duration(TimeSpan.FromSeconds(AnimationDurationSeconds)));
                 _currentContent.BeginAnimation(OpacityProperty, opaCur);
 
@@ -296,9 +296,9 @@ namespace MaSch.Presentation.Wpf.Controls
                             {
                                 Duration = new Duration(TimeSpan.FromSeconds(AnimationDurationSeconds)),
                             };
-                            opaCurr.KeyFrames.Add(new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0))));
-                            opaCurr.KeyFrames.Add(new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(AnimationDurationSeconds / 2))));
-                            opaCurr.KeyFrames.Add(new LinearDoubleKeyFrame(1, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(AnimationDurationSeconds))));
+                            _ = opaCurr.KeyFrames.Add(new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0))));
+                            _ = opaCurr.KeyFrames.Add(new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(AnimationDurationSeconds / 2))));
+                            _ = opaCurr.KeyFrames.Add(new LinearDoubleKeyFrame(1, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(AnimationDurationSeconds))));
                             lastContent.BeginAnimation(OpacityProperty, opaLast);
                             _currentContent.BeginAnimation(OpacityProperty, opaCurr);
                             _previewContent.BeginAnimation(OpacityProperty, opaPrev);
@@ -309,9 +309,9 @@ namespace MaSch.Presentation.Wpf.Controls
                             {
                                 Duration = new Duration(TimeSpan.FromSeconds(AnimationDurationSeconds)),
                             };
-                            transCurr.KeyFrames.Add(new LinearDoubleKeyFrame(-mult * 50, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0))));
-                            transCurr.KeyFrames.Add(new LinearDoubleKeyFrame(-mult * 50, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(AnimationDurationSeconds / 2))));
-                            transCurr.KeyFrames.Add(new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(AnimationDurationSeconds))));
+                            _ = transCurr.KeyFrames.Add(new LinearDoubleKeyFrame(-mult * 50, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0))));
+                            _ = transCurr.KeyFrames.Add(new LinearDoubleKeyFrame(-mult * 50, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(AnimationDurationSeconds / 2))));
+                            _ = transCurr.KeyFrames.Add(new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(AnimationDurationSeconds))));
                             lastTrans.BeginAnimation(TranslateTransform.XProperty, transLast);
                             currTrans.BeginAnimation(TranslateTransform.XProperty, transCurr);
                         }
@@ -328,10 +328,10 @@ namespace MaSch.Presentation.Wpf.Controls
             if (GetTemplateChild("MaSch_Underline") is Border underline && GetTemplateChild("MaSch_TabsInner") is StackPanel stackpnl)
             {
                 var tg = new TransformGroup();
-                var scTrans = new ScaleTransform();
-                var tlTrans = new TranslateTransform();
-                tg.Children.Add(scTrans);
-                tg.Children.Add(tlTrans);
+                var scaleTransform = new ScaleTransform();
+                var translateTransform = new TranslateTransform();
+                tg.Children.Add(scaleTransform);
+                tg.Children.Add(translateTransform);
                 underline.RenderTransform = tg;
                 TabItem? lastItem = null;
 
@@ -349,8 +349,8 @@ namespace MaSch.Presentation.Wpf.Controls
                             try
                             {
                                 var v = t.TransformToVisual(stackpnl);
-                                scTrans.ScaleX = t.ActualWidth - 6;
-                                tlTrans.X = v.Transform(new Point(0, 0)).X + 3;
+                                scaleTransform.ScaleX = t.ActualWidth - 6;
+                                translateTransform.X = v.Transform(new Point(0, 0)).X + 3;
                             }
                             catch
                             {
@@ -387,8 +387,8 @@ namespace MaSch.Presentation.Wpf.Controls
                                 var ttv = tab.TransformToVisual(stackpnl);
                                 var scale = new DoubleAnimation(tab.ActualWidth - 6, new Duration(TimeSpan.FromSeconds(AnimationDurationSeconds)));
                                 var translate = new DoubleAnimation(ttv.Transform(new Point(0, 0)).X + 3, new Duration(TimeSpan.FromSeconds(AnimationDurationSeconds)));
-                                scTrans.BeginAnimation(ScaleTransform.ScaleXProperty, scale);
-                                tlTrans.BeginAnimation(TranslateTransform.XProperty, translate);
+                                scaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, scale);
+                                translateTransform.BeginAnimation(TranslateTransform.XProperty, translate);
                             }
                             catch
                             {

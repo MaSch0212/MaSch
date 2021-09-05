@@ -37,7 +37,7 @@ namespace MaSch.Native.Windows.Input
         public void StartListener()
         {
             while (_listener != null && _listener.Status != TaskStatus.Running)
-                Task.Delay(50);
+                _ = Task.Delay(50);
             _listener = Task.Run(new Action(DoListenerAction));
         }
 
@@ -71,7 +71,7 @@ namespace MaSch.Native.Windows.Input
                     }
                 }
 
-                Task.Delay(_interval);
+                _ = Task.Delay(_interval);
             }
         }
     }

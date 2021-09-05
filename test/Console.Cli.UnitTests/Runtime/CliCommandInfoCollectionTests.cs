@@ -89,9 +89,9 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         {
             var command1 = CreateCliCommandInfo<DummyClass1>(new CliCommandAttribute("blub"), true);
             var command2 = CreateCliCommandInfo<DummyClass2>(new CliCommandAttribute("blub2") { ParentCommand = typeof(DummyClass1) }, true);
-            command2.Setup(x => x.ParentCommand).Returns(command1.Object);
-            command1.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
-            command1.Setup(x => x.AddChildCommand(command2.Object)).Verifiable(Verifiables, Times.Once());
+            _ = command2.Setup(x => x.ParentCommand).Returns(command1.Object);
+            _ = command1.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
+            _ = command1.Setup(x => x.AddChildCommand(command2.Object)).Verifiable(Verifiables, Times.Once());
 
             Collection.Add(command1.Object);
             Collection.Add(command2.Object);
@@ -106,8 +106,8 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         {
             var command1 = CreateCliCommandInfo<DummyClass1>(new CliCommandAttribute("blub"), false);
             var command2 = CreateCliCommandInfo<DummyClass2>(new CliCommandAttribute("blub") { ParentCommand = typeof(DummyClass1) }, false);
-            command1.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
-            command1.Setup(x => x.AddChildCommand(command2.Object)).Verifiable(Verifiables, Times.Once());
+            _ = command1.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
+            _ = command1.Setup(x => x.AddChildCommand(command2.Object)).Verifiable(Verifiables, Times.Once());
 
             Collection.Add(command1.Object);
             Collection.Add(command2.Object);
@@ -118,7 +118,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         [TestMethod]
         public void Add_Null()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => Collection.Add(null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => Collection.Add(null!));
         }
 
         [TestMethod]
@@ -126,7 +126,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         {
             var command = CreateCliCommandInfo(null!, new CliCommandAttribute("blub"), false);
 
-            Assert.ThrowsException<ArgumentException>(() => Collection.Add(command.Object));
+            _ = Assert.ThrowsException<ArgumentException>(() => Collection.Add(command.Object));
         }
 
         [TestMethod]
@@ -134,7 +134,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         {
             var command = CreateCliCommandInfo<DummyClass1>(null!, false);
 
-            Assert.ThrowsException<ArgumentException>(() => Collection.Add(command.Object));
+            _ = Assert.ThrowsException<ArgumentException>(() => Collection.Add(command.Object));
         }
 
         [TestMethod]
@@ -198,7 +198,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         [TestMethod]
         public void Remove_Null()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => Collection.Remove(null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => Collection.Remove(null!));
         }
 
         [TestMethod]
@@ -243,8 +243,8 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         public void Remove_RootCommand()
         {
             var command1 = CreateCliCommandInfo<DummyClass1>(new CliCommandAttribute("blub"), false);
-            command1.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
-            command1.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
+            _ = command1.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
+            _ = command1.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
 
             Collection.Add(command1.Object);
 
@@ -259,16 +259,16 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         {
             var command1 = CreateCliCommandInfo<DummyClass1>(new CliCommandAttribute("blub"), false);
             var command2 = CreateCliCommandInfo<DummyClass2>(new CliCommandAttribute("blub") { ParentCommand = typeof(DummyClass1) }, false);
-            command1.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
-            command1.Setup(x => x.AddChildCommand(command2.Object));
-            command1.Setup(x => x.RemoveChildCommand(command2.Object)).Verifiable(Verifiables, Times.Once());
-            command2.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
+            _ = command1.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
+            _ = command1.Setup(x => x.AddChildCommand(command2.Object));
+            _ = command1.Setup(x => x.RemoveChildCommand(command2.Object)).Verifiable(Verifiables, Times.Once());
+            _ = command2.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
 
             Collection.Add(command1.Object);
             Collection.Add(command2.Object);
 
-            command1.Setup(x => x.ChildCommands).Returns(new[] { command2.Object });
-            command2.Setup(x => x.ParentCommand).Returns(command1.Object);
+            _ = command1.Setup(x => x.ChildCommands).Returns(new[] { command2.Object });
+            _ = command2.Setup(x => x.ParentCommand).Returns(command1.Object);
 
             var result = Collection.Remove(command2.Object);
 
@@ -281,16 +281,16 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         {
             var command1 = CreateCliCommandInfo<DummyClass1>(new CliCommandAttribute("blub"), false);
             var command2 = CreateCliCommandInfo<DummyClass2>(new CliCommandAttribute("blub") { ParentCommand = typeof(DummyClass1) }, false);
-            command1.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
-            command1.Setup(x => x.AddChildCommand(command2.Object));
-            command1.Setup(x => x.RemoveChildCommand(command2.Object)).Verifiable(Verifiables, Times.Once());
-            command2.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
+            _ = command1.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
+            _ = command1.Setup(x => x.AddChildCommand(command2.Object));
+            _ = command1.Setup(x => x.RemoveChildCommand(command2.Object)).Verifiable(Verifiables, Times.Once());
+            _ = command2.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
 
             Collection.Add(command1.Object);
             Collection.Add(command2.Object);
 
-            command1.Setup(x => x.ChildCommands).Returns(new[] { command2.Object });
-            command2.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
+            _ = command1.Setup(x => x.ChildCommands).Returns(new[] { command2.Object });
+            _ = command2.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
 
             var result = Collection.Remove(command2.Object);
 
@@ -304,23 +304,23 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var command1 = CreateCliCommandInfo<DummyClass1>(new CliCommandAttribute("blub"), false);
             var command2 = CreateCliCommandInfo<DummyClass2>(new CliCommandAttribute("blub") { ParentCommand = typeof(DummyClass1) }, false);
             var command3 = CreateCliCommandInfo<DummyClass3>(new CliCommandAttribute("blub") { ParentCommand = typeof(DummyClass2) }, false);
-            command1.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
-            command1.Setup(x => x.AddChildCommand(command2.Object));
-            command1.Setup(x => x.RemoveChildCommand(command2.Object)).Verifiable(Verifiables, Times.Once());
-            command2.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
-            command2.Setup(x => x.AddChildCommand(command3.Object));
-            command2.Setup(x => x.RemoveChildCommand(command3.Object)).Verifiable(Verifiables, Times.Once());
-            command3.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
+            _ = command1.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
+            _ = command1.Setup(x => x.AddChildCommand(command2.Object));
+            _ = command1.Setup(x => x.RemoveChildCommand(command2.Object)).Verifiable(Verifiables, Times.Once());
+            _ = command2.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
+            _ = command2.Setup(x => x.AddChildCommand(command3.Object));
+            _ = command2.Setup(x => x.RemoveChildCommand(command3.Object)).Verifiable(Verifiables, Times.Once());
+            _ = command3.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
 
             Collection.Add(command1.Object);
             Collection.Add(command2.Object);
             Collection.Add(command3.Object);
 
-            command1.Setup(x => x.ChildCommands).Returns(new[] { command2.Object });
-            command1.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
-            command2.Setup(x => x.ChildCommands).Returns(new[] { command3.Object });
-            command2.Setup(x => x.ParentCommand).Returns(command1.Object);
-            command3.Setup(x => x.ParentCommand).Returns(command2.Object);
+            _ = command1.Setup(x => x.ChildCommands).Returns(new[] { command2.Object });
+            _ = command1.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
+            _ = command2.Setup(x => x.ChildCommands).Returns(new[] { command3.Object });
+            _ = command2.Setup(x => x.ParentCommand).Returns(command1.Object);
+            _ = command3.Setup(x => x.ParentCommand).Returns(command2.Object);
 
             var result = Collection.Remove(command1.Object);
 
@@ -334,20 +334,20 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var command1 = CreateCliCommandInfo<DummyClass1>(new CliCommandAttribute("blub"), false);
             var command2 = CreateCliCommandInfo<DummyClass2>(new CliCommandAttribute("blub") { ParentCommand = typeof(DummyClass1) }, false);
             var command3 = CreateCliCommandInfo<DummyClass3>(new CliCommandAttribute("blub2"), false);
-            command1.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
-            command1.Setup(x => x.AddChildCommand(command2.Object));
-            command1.Setup(x => x.RemoveChildCommand(command2.Object)).Verifiable(Verifiables, Times.Once());
-            command2.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
-            command3.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
-            command3.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
+            _ = command1.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
+            _ = command1.Setup(x => x.AddChildCommand(command2.Object));
+            _ = command1.Setup(x => x.RemoveChildCommand(command2.Object)).Verifiable(Verifiables, Times.Once());
+            _ = command2.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
+            _ = command3.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
+            _ = command3.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
 
             Collection.Add(command1.Object);
             Collection.Add(command2.Object);
             Collection.Add(command3.Object);
 
-            command1.Setup(x => x.ChildCommands).Returns(new[] { command2.Object });
-            command1.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
-            command2.Setup(x => x.ParentCommand).Returns(command1.Object);
+            _ = command1.Setup(x => x.ChildCommands).Returns(new[] { command2.Object });
+            _ = command1.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
+            _ = command2.Setup(x => x.ParentCommand).Returns(command1.Object);
 
             Collection.Clear();
 
@@ -428,10 +428,10 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var command1 = CreateCliCommandInfo<DummyClass1>(new CliCommandAttribute("blub"), false);
             var command2 = CreateCliCommandInfo<DummyClass2>(new CliCommandAttribute("blub") { ParentCommand = typeof(DummyClass1) }, false);
             var command3 = CreateCliCommandInfo<DummyClass3>(new CliCommandAttribute("blub2"), false);
-            command1.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
-            command1.Setup(x => x.AddChildCommand(command2.Object));
-            command2.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
-            command3.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
+            _ = command1.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
+            _ = command1.Setup(x => x.AddChildCommand(command2.Object));
+            _ = command2.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
+            _ = command3.Setup(x => x.ChildCommands).Returns(Array.Empty<ICliCommandInfo>());
 
             Collection.Add(command1.Object);
             Collection.Add(command2.Object);
@@ -465,16 +465,19 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         }
 
         private Mock<ICliCommandInfo> CreateCliCommandInfo<TCommand>(CliCommandAttribute attribute, bool isDefault)
-            => CreateCliCommandInfo(typeof(TCommand), attribute, isDefault);
+        {
+            return CreateCliCommandInfo(typeof(TCommand), attribute, isDefault);
+        }
+
         private Mock<ICliCommandInfo> CreateCliCommandInfo(Type commandType, CliCommandAttribute attribute, bool isDefault)
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            command.Setup(x => x.CommandType).Returns(commandType);
-            command.Setup(x => x.Attribute).Returns(attribute);
-            command.Setup(x => x.Aliases).Returns(attribute?.Aliases!);
-            command.Setup(x => x.Name).Returns(attribute?.Name!);
-            command.Setup(x => x.IsDefault).Returns(isDefault);
-            command.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
+            _ = command.Setup(x => x.CommandType).Returns(commandType);
+            _ = command.Setup(x => x.Attribute).Returns(attribute);
+            _ = command.Setup(x => x.Aliases).Returns(attribute?.Aliases!);
+            _ = command.Setup(x => x.Name).Returns(attribute?.Name!);
+            _ = command.Setup(x => x.IsDefault).Returns(isDefault);
+            _ = command.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
             return command;
         }
 

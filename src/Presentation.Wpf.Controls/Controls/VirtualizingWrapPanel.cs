@@ -50,8 +50,6 @@ namespace MaSch.Presentation.Wpf.Controls
         private Size _pixelMeasuredViewport = new(0, 0);
         private WrapPanelAbstraction _abstractPanel;
 
-        private Size ChildSlotSize => new(ItemWidth, ItemHeight);
-
         [TypeConverter(typeof(LengthConverter))]
         public double ItemHeight
         {
@@ -89,6 +87,8 @@ namespace MaSch.Presentation.Wpf.Controls
         public double ViewportWidth => _viewport.Width;
 
         public WinControls.ScrollViewer ScrollOwner { get; set; }
+
+        private Size ChildSlotSize => new(ItemWidth, ItemHeight);
 
         public void SetFirstRowViewItemIndex(int index)
         {
@@ -456,7 +456,7 @@ namespace MaSch.Presentation.Wpf.Controls
             {
                 int firstIndexCache = _firstIndex;
                 _abstractPanel = null;
-                MeasureOverride(_viewport);
+                _ = MeasureOverride(_viewport);
                 SetFirstRowViewItemIndex(_firstIndex);
                 _firstIndex = firstIndexCache;
             }
@@ -585,7 +585,7 @@ namespace MaSch.Presentation.Wpf.Controls
                 depth--;
             }
 
-            (next as UIElement).Focus();
+            _ = (next as UIElement).Focus();
         }
 
         private void NavigateLeft()
@@ -633,7 +633,7 @@ namespace MaSch.Presentation.Wpf.Controls
                 depth--;
             }
 
-            (next as UIElement).Focus();
+            _ = (next as UIElement).Focus();
         }
 
         private void NavigateRight()
@@ -680,7 +680,7 @@ namespace MaSch.Presentation.Wpf.Controls
                 depth--;
             }
 
-            (next as UIElement).Focus();
+            _ = (next as UIElement).Focus();
         }
 
         private void NavigateUp()
@@ -727,7 +727,7 @@ namespace MaSch.Presentation.Wpf.Controls
                 depth--;
             }
 
-            (next as UIElement).Focus();
+            _ = (next as UIElement).Focus();
         }
 
         private class ItemAbstraction
@@ -735,6 +735,12 @@ namespace MaSch.Presentation.Wpf.Controls
             private readonly WrapPanelAbstraction _panel;
             private int _sectionIndex = -1;
             private int _section = -1;
+
+            public ItemAbstraction(WrapPanelAbstraction panel, int index)
+            {
+                _panel = panel;
+                Index = index;
+            }
 
             public int Index { get; }
 
@@ -773,12 +779,6 @@ namespace MaSch.Presentation.Wpf.Controls
                         _section = value;
                 }
             }
-
-            public ItemAbstraction(WrapPanelAbstraction panel, int index)
-            {
-                _panel = panel;
-                Index = index;
-            }
         }
 
         private class WrapPanelAbstraction : IEnumerable<ItemAbstraction>
@@ -788,9 +788,22 @@ namespace MaSch.Presentation.Wpf.Controls
             private int _currentSetItemIndex = -1;
             private int _itemsInCurrentSecction = 0;
 
+            public WrapPanelAbstraction(int itemCount)
+            {
+                List<ItemAbstraction> items = new(itemCount);
+                for (int i = 0; i < itemCount; i++)
+                {
+                    ItemAbstraction item = new(this, i);
+                    items.Add(item);
+                }
+
+                Items = new ReadOnlyCollection<ItemAbstraction>(items);
+                AverageItemsPerSection = itemCount;
+                ItemCount = itemCount;
+            }
+
             public int ItemCount { get; }
             public int AverageItemsPerSection { get; private set; }
-            private ReadOnlyCollection<ItemAbstraction> Items { get; set; }
 
             public int SectionCount
             {
@@ -807,19 +820,9 @@ namespace MaSch.Presentation.Wpf.Controls
                 }
             }
 
-            public WrapPanelAbstraction(int itemCount)
-            {
-                List<ItemAbstraction> items = new(itemCount);
-                for (int i = 0; i < itemCount; i++)
-                {
-                    ItemAbstraction item = new(this, i);
-                    items.Add(item);
-                }
+            private ReadOnlyCollection<ItemAbstraction> Items { get; set; }
 
-                Items = new ReadOnlyCollection<ItemAbstraction>(items);
-                AverageItemsPerSection = itemCount;
-                ItemCount = itemCount;
-            }
+            public ItemAbstraction this[int index] => Items[index];
 
             public void SetItemSection(int index, int section)
             {
@@ -848,8 +851,6 @@ namespace MaSch.Presentation.Wpf.Controls
                     }
                 }
             }
-
-            public ItemAbstraction this[int index] => Items[index];
 
             public IEnumerator<ItemAbstraction> GetEnumerator()
             {

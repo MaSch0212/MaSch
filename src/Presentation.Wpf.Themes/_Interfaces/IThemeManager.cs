@@ -32,6 +32,21 @@ namespace MaSch.Presentation.Wpf
         IThemeManager? ParentThemeManager { get; set; }
 
         /// <summary>
+        /// Gets or sets the theme value with the specified key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>The theme value.</returns>
+        object? this[string key] { get; set; }
+
+        /// <summary>
+        /// Gets or sets the property value of a theme value with the specified key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <returns>The property value of the theme value.</returns>
+        object? this[string key, string propertyName] { get; set; }
+
+        /// <summary>
         /// Determines whether the theme contains a specific key.
         /// </summary>
         /// <param name="key">The key.</param>
@@ -90,21 +105,6 @@ namespace MaSch.Presentation.Wpf
         /// </summary>
         /// <param name="key">The key.</param>
         void RemoveValue(string key);
-
-        /// <summary>
-        /// Gets or sets the theme value with the specified key.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <returns>The theme value.</returns>
-        object? this[string key] { get; set; }
-
-        /// <summary>
-        /// Gets or sets the property value of a theme value with the specified key.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="propertyName">Name of the property.</param>
-        /// <returns>The property value of the theme value.</returns>
-        object? this[string key, string propertyName] { get; set; }
     }
 
     /// <summary>
@@ -121,7 +121,9 @@ namespace MaSch.Presentation.Wpf
         ///   <c>true</c> if the theme contains a spefific key; otherwise, <c>false</c>.
         /// </returns>
         public static bool ContainsKey(this IThemeManager themeManager, ThemeKey key)
-            => themeManager.ContainsKey(key.ToString());
+        {
+            return themeManager.ContainsKey(key.ToString());
+        }
 
         /// <summary>
         /// Determines whether the theme contains a specific key.
@@ -133,7 +135,9 @@ namespace MaSch.Presentation.Wpf
         ///   <c>true</c> if the theme contains a spefific key; otherwise, <c>false</c>.
         /// </returns>
         public static bool ContainsKey<T>(this IThemeManager themeManager, ThemeKey key)
-            => themeManager.ContainsKey<T>(key.ToString());
+        {
+            return themeManager.ContainsKey<T>(key.ToString());
+        }
 
         /// <summary>
         /// Gets a theme value.
@@ -142,7 +146,9 @@ namespace MaSch.Presentation.Wpf
         /// <param name="key">The key.</param>
         /// <returns>The theme value.</returns>
         public static IThemeValue? GetValue(this IThemeManager themeManager, ThemeKey key)
-            => themeManager.GetValue(key.ToString());
+        {
+            return themeManager.GetValue(key.ToString());
+        }
 
         /// <summary>
         /// Gets a theme value.
@@ -152,7 +158,9 @@ namespace MaSch.Presentation.Wpf
         /// <param name="key">The key.</param>
         /// <returns>The theme value.</returns>
         public static IThemeValue<T>? GetValue<T>(this IThemeManager themeManager, ThemeKey key)
-            => themeManager.GetValue<T>(key.ToString());
+        {
+            return themeManager.GetValue<T>(key.ToString());
+        }
 
         /// <summary>
         /// Sets a theme value.
@@ -161,7 +169,9 @@ namespace MaSch.Presentation.Wpf
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
         public static void SetValue(this IThemeManager themeManager, ThemeKey key, object value)
-            => themeManager.SetValue(key.ToString(), value);
+        {
+            themeManager.SetValue(key.ToString(), value);
+        }
 
         /// <summary>
         /// Adds a new theme value.
@@ -170,14 +180,19 @@ namespace MaSch.Presentation.Wpf
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
         public static void AddValue(this IThemeManager themeManager, ThemeKey key, object value)
-            => themeManager.AddValue(key.ToString(), value);
+        {
+            themeManager.AddValue(key.ToString(), value);
+        }
 
         /// <summary>
         /// Removes a theme value.
         /// </summary>
         /// <param name="themeManager">The theme manager.</param>
         /// <param name="key">The key.</param>
-        public static void RemoveValue(this IThemeManager themeManager, ThemeKey key) => themeManager.RemoveValue(key.ToString());
+        public static void RemoveValue(this IThemeManager themeManager, ThemeKey key)
+        {
+            themeManager.RemoveValue(key.ToString());
+        }
     }
 
     /// <summary>
@@ -187,6 +202,14 @@ namespace MaSch.Presentation.Wpf
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Event arguments can be in same file.")]
     public class ThemeValueChangedEventArgs : EventArgs
     {
+        private ThemeValueChangedEventArgs(ThemeValueChangeType type, IEnumerable<IThemeValue>? addedValues, IEnumerable<IThemeValue>? removedValues, IEnumerable<IThemeValue>? changedValues)
+        {
+            ChangeType = type;
+            AddedValues = addedValues?.Where(x => x.Key != null).ToDictionary(x => x.Key!);
+            RemovedValues = removedValues?.Where(x => x.Key != null).ToDictionary(x => x.Key!);
+            ChangedValues = changedValues?.Where(x => x.Key != null).ToDictionary(x => x.Key!);
+        }
+
         /// <summary>
         /// Gets the type of the change.
         /// </summary>
@@ -207,12 +230,46 @@ namespace MaSch.Presentation.Wpf
         /// </summary>
         public IReadOnlyDictionary<string, IThemeValue>? ChangedValues { get; }
 
-        private ThemeValueChangedEventArgs(ThemeValueChangeType type, IEnumerable<IThemeValue>? addedValues, IEnumerable<IThemeValue>? removedValues, IEnumerable<IThemeValue>? changedValues)
+        /// <summary>
+        /// Create a new <see cref="ThemeValueChangedEventArgs"/> object for when keys are added to an <see cref="IThemeManager"/>.
+        /// </summary>
+        /// <param name="addedValues">The added values.</param>
+        /// <returns>The created <see cref="ThemeValueChangedEventArgs"/>.</returns>
+        public static ThemeValueChangedEventArgs ForAdd(IEnumerable<IThemeValue>? addedValues)
         {
-            ChangeType = type;
-            AddedValues = addedValues?.Where(x => x.Key != null).ToDictionary(x => x.Key!);
-            RemovedValues = removedValues?.Where(x => x.Key != null).ToDictionary(x => x.Key!);
-            ChangedValues = changedValues?.Where(x => x.Key != null).ToDictionary(x => x.Key!);
+            return new(ThemeValueChangeType.Add, addedValues, null, null);
+        }
+
+        /// <summary>
+        /// Create a new <see cref="ThemeValueChangedEventArgs"/> object for when keys are removed from an <see cref="IThemeManager"/>.
+        /// </summary>
+        /// <param name="removedValues">The removed values.</param>
+        /// <returns>The created <see cref="ThemeValueChangedEventArgs"/>.</returns>
+        public static ThemeValueChangedEventArgs ForRemove(IEnumerable<IThemeValue>? removedValues)
+        {
+            return new(ThemeValueChangeType.Remove, null, removedValues, null);
+        }
+
+        /// <summary>
+        /// Create a new <see cref="ThemeValueChangedEventArgs"/> object for when keys are changed on an <see cref="IThemeManager"/>.
+        /// </summary>
+        /// <param name="addedValues">The added values.</param>
+        /// <param name="removedValues">The removed values.</param>
+        /// <param name="changedValues">The changed values.</param>
+        /// <returns>The created <see cref="ThemeValueChangedEventArgs"/>.</returns>
+        public static ThemeValueChangedEventArgs ForChange(IEnumerable<IThemeValue>? addedValues, IEnumerable<IThemeValue>? removedValues, IEnumerable<IThemeValue>? changedValues)
+        {
+            return new(ThemeValueChangeType.Change, addedValues, removedValues, changedValues);
+        }
+
+        /// <summary>
+        /// Create a new <see cref="ThemeValueChangedEventArgs"/> object for when keys are cleared from an <see cref="IThemeManager"/>.
+        /// </summary>
+        /// <param name="removedValues">The removed values.</param>
+        /// <returns>The created <see cref="ThemeValueChangedEventArgs"/>.</returns>
+        public static ThemeValueChangedEventArgs ForClear(IEnumerable<IThemeValue>? removedValues)
+        {
+            return new(ThemeValueChangeType.Clear, null, removedValues, null);
         }
 
         /// <summary>
@@ -223,40 +280,8 @@ namespace MaSch.Presentation.Wpf
         ///   <c>true</c> if the key has been chnaged; otherwise, <c>false</c>.
         /// </returns>
         public bool HasChangeForKey(string key)
-            => AddedValues?.ContainsKey(key) == true || RemovedValues?.ContainsKey(key) == true || ChangedValues?.ContainsKey(key) == true;
-
-        /// <summary>
-        /// Create a new <see cref="ThemeValueChangedEventArgs"/> object for when keys are added to an <see cref="IThemeManager"/>.
-        /// </summary>
-        /// <param name="addedValues">The added values.</param>
-        /// <returns>The created <see cref="ThemeValueChangedEventArgs"/>.</returns>
-        public static ThemeValueChangedEventArgs ForAdd(IEnumerable<IThemeValue>? addedValues)
-            => new(ThemeValueChangeType.Add, addedValues, null, null);
-
-        /// <summary>
-        /// Create a new <see cref="ThemeValueChangedEventArgs"/> object for when keys are removed from an <see cref="IThemeManager"/>.
-        /// </summary>
-        /// <param name="removedValues">The removed values.</param>
-        /// <returns>The created <see cref="ThemeValueChangedEventArgs"/>.</returns>
-        public static ThemeValueChangedEventArgs ForRemove(IEnumerable<IThemeValue>? removedValues)
-            => new(ThemeValueChangeType.Remove, null, removedValues, null);
-
-        /// <summary>
-        /// Create a new <see cref="ThemeValueChangedEventArgs"/> object for when keys are changed on an <see cref="IThemeManager"/>.
-        /// </summary>
-        /// <param name="addedValues">The added values.</param>
-        /// <param name="removedValues">The removed values.</param>
-        /// <param name="changedValues">The changed values.</param>
-        /// <returns>The created <see cref="ThemeValueChangedEventArgs"/>.</returns>
-        public static ThemeValueChangedEventArgs ForChange(IEnumerable<IThemeValue>? addedValues, IEnumerable<IThemeValue>? removedValues, IEnumerable<IThemeValue>? changedValues)
-            => new(ThemeValueChangeType.Change, addedValues, removedValues, changedValues);
-
-        /// <summary>
-        /// Create a new <see cref="ThemeValueChangedEventArgs"/> object for when keys are cleared from an <see cref="IThemeManager"/>.
-        /// </summary>
-        /// <param name="removedValues">The removed values.</param>
-        /// <returns>The created <see cref="ThemeValueChangedEventArgs"/>.</returns>
-        public static ThemeValueChangedEventArgs ForClear(IEnumerable<IThemeValue>? removedValues)
-            => new(ThemeValueChangeType.Clear, null, removedValues, null);
+        {
+            return AddedValues?.ContainsKey(key) == true || RemovedValues?.ContainsKey(key) == true || ChangedValues?.ContainsKey(key) == true;
+        }
     }
 }

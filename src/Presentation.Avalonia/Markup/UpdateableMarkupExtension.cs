@@ -67,7 +67,7 @@ namespace MaSch.Presentation.Avalonia.Markup
                     if (obj?.CheckAccess() ?? false)
                         UpdateAction();
                     else
-                        Dispatcher.UIThread.InvokeAsync(UpdateAction);
+                        _ = Dispatcher.UIThread.InvokeAsync(UpdateAction);
                 }
 
                 // targetProperty is PropertyInfo

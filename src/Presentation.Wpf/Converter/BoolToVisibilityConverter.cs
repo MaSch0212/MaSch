@@ -8,7 +8,7 @@ namespace MaSch.Presentation.Wpf.Converter
     /// A <see cref="IValueConverter"/> that converts boolean to <see cref="Visibility"/>.
     /// <c>true</c> is converted to <see cref="Visibility.Visible"/> and <c>false</c> to <see cref="Visibility.Hidden"/> or <see cref="Visibility.Collapsed"/>.
     /// </summary>
-    /// <seealso cref="System.Windows.Data.IValueConverter" />
+    /// <seealso cref="IValueConverter" />
     [ValueConversion(typeof(bool), typeof(Visibility))]
     public class BoolToVisibilityConverter : IValueConverter
     {

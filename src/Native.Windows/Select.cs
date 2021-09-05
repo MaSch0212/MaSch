@@ -45,19 +45,19 @@ namespace MaSch.Native.Windows
         public DialogResult ShowVistaDialog(IWin32Window owner)
         {
             var frm = (NativeMethods.IFileDialog)new NativeMethods.FileOpenDialogRCW();
-            frm.GetOptions(out uint options);
+            _ = frm.GetOptions(out uint options);
             options |= NativeMethods.FOS_PICKFOLDERS |
                        NativeMethods.FOS_FORCEFILESYSTEM |
                        NativeMethods.FOS_NOVALIDATE |
                        NativeMethods.FOS_NOTESTFILECREATE |
                        NativeMethods.FOS_DONTADDTORECENT;
-            frm.SetOptions(options);
+            _ = frm.SetOptions(options);
             if (InitialFolder != null)
             {
                 var riid = new Guid("43826D1E-E718-42EE-BC55-A1E261C37BFE"); // IShellItem
                 if (NativeMethods.SHCreateItemFromParsingName(InitialFolder, IntPtr.Zero, ref riid, out var directoryShellItem) == NativeMethods.S_OK)
                 {
-                    frm.SetFolder(directoryShellItem);
+                    _ = frm.SetFolder(directoryShellItem);
                 }
             }
 

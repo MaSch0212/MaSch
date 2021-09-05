@@ -25,7 +25,9 @@ namespace MaSch.Test
         /// <param name="setup">The setup to verify.</param>
         /// <returns>A <see cref="IMockVerifiable"/> that verifies this setup.</returns>
         public static IMockVerifiable Verifiable(this IVerifies setup)
-            => CreateVerifiable(setup, Times.AtLeastOnce(), null);
+        {
+            return CreateVerifiable(setup, Times.AtLeastOnce(), null);
+        }
 
         /// <summary>
         /// Creates a verifiable object for this setup.
@@ -34,7 +36,9 @@ namespace MaSch.Test
         /// <param name="times">The number of times a method is expected to be called.</param>
         /// <returns>A <see cref="IMockVerifiable"/> that verifies this setup.</returns>
         public static IMockVerifiable Verifiable(this IVerifies setup, Times times)
-            => CreateVerifiable(setup, times, null);
+        {
+            return CreateVerifiable(setup, times, null);
+        }
 
         /// <summary>
         /// Creates a verifiable object for this setup.
@@ -44,7 +48,9 @@ namespace MaSch.Test
         /// <param name="failMessage">Message to show if verification fails.</param>
         /// <returns>A <see cref="IMockVerifiable"/> that verifies this setup.</returns>
         public static IMockVerifiable Verifiable(this IVerifies setup, Times times, string? failMessage)
-            => CreateVerifiable(setup, times, failMessage);
+        {
+            return CreateVerifiable(setup, times, failMessage);
+        }
 
         /// <summary>
         /// Creates a verifiable object for this setup.
@@ -56,7 +62,9 @@ namespace MaSch.Test
         [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP003:Dispose previous before re-assigning.", Justification = "The caller would not expect this.")]
         public static T Verifiable<T>(this T setup, out IMockVerifiable verifiable)
             where T : class, IVerifies
-            => VerifiableImpl(setup, out verifiable, Times.AtLeastOnce(), null);
+        {
+            return VerifiableImpl(setup, out verifiable, Times.AtLeastOnce(), null);
+        }
 
         /// <summary>
         /// Creates a verifiable object for this setup.
@@ -69,7 +77,9 @@ namespace MaSch.Test
         [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP003:Dispose previous before re-assigning.", Justification = "The caller would not expect this.")]
         public static T Verifiable<T>(this T setup, out IMockVerifiable verifiable, Times times)
             where T : class, IVerifies
-            => VerifiableImpl(setup, out verifiable, times, null);
+        {
+            return VerifiableImpl(setup, out verifiable, times, null);
+        }
 
         /// <summary>
         /// Creates a verifiable object for this setup.
@@ -83,7 +93,9 @@ namespace MaSch.Test
         [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP003:Dispose previous before re-assigning.", Justification = "The caller would not expect this.")]
         public static T Verifiable<T>(this T setup, out IMockVerifiable verifiable, Times times, string? failMessage)
             where T : class, IVerifies
-            => VerifiableImpl(setup, out verifiable, times, failMessage);
+        {
+            return VerifiableImpl(setup, out verifiable, times, failMessage);
+        }
 
         /// <summary>
         /// Creates a verifiable object for this setup.
@@ -94,7 +106,9 @@ namespace MaSch.Test
         /// <returns>The same instance as this method is called on.</returns>
         public static T Verifiable<T>(this T setup, MockVerifiableCollection verifiableCollection)
             where T : class, IVerifies
-            => VerifiableImpl(setup, verifiableCollection, Times.AtLeastOnce(), null);
+        {
+            return VerifiableImpl(setup, verifiableCollection, Times.AtLeastOnce(), null);
+        }
 
         /// <summary>
         /// Creates a verifiable object for this setup.
@@ -106,7 +120,9 @@ namespace MaSch.Test
         /// <returns>The same instance as this method is called on.</returns>
         public static T Verifiable<T>(this T setup, MockVerifiableCollection verifiableCollection, Times times)
             where T : class, IVerifies
-            => VerifiableImpl(setup, verifiableCollection, times, null);
+        {
+            return VerifiableImpl(setup, verifiableCollection, times, null);
+        }
 
         /// <summary>
         /// Creates a verifiable object for this setup.
@@ -119,7 +135,9 @@ namespace MaSch.Test
         /// <returns>The same instance as this method is called on.</returns>
         public static T Verifiable<T>(this T setup, MockVerifiableCollection verifiableCollection, Times times, string? failMessage)
             where T : class, IVerifies
-            => VerifiableImpl(setup, verifiableCollection, times, failMessage);
+        {
+            return VerifiableImpl(setup, verifiableCollection, times, failMessage);
+        }
 
         /// <summary>
         /// Creates a verifiable object for this setup.
@@ -130,7 +148,9 @@ namespace MaSch.Test
         /// <returns>The same instance as this method is called on.</returns>
         public static T Verifiable<T>(this T setup, TestClassBase testClass)
             where T : class, IVerifies
-            => VerifiableImpl(setup, testClass.Verifiables, Times.AtLeastOnce(), null);
+        {
+            return VerifiableImpl(setup, testClass.Verifiables, Times.AtLeastOnce(), null);
+        }
 
         /// <summary>
         /// Creates a verifiable object for this setup.
@@ -142,7 +162,9 @@ namespace MaSch.Test
         /// <returns>The same instance as this method is called on.</returns>
         public static T Verifiable<T>(this T setup, TestClassBase testClass, Times times)
             where T : class, IVerifies
-            => VerifiableImpl(setup, testClass.Verifiables, times, null);
+        {
+            return VerifiableImpl(setup, testClass.Verifiables, times, null);
+        }
 
         /// <summary>
         /// Creates a verifiable object for this setup.
@@ -155,14 +177,18 @@ namespace MaSch.Test
         /// <returns>The same instance as this method is called on.</returns>
         public static T Verifiable<T>(this T setup, TestClassBase testClass, Times times, string? failMessage)
             where T : class, IVerifies
-            => VerifiableImpl(setup, testClass.Verifiables, times, failMessage);
+        {
+            return VerifiableImpl(setup, testClass.Verifiables, times, failMessage);
+        }
 
         /// <summary>
         /// Verifies this <see cref="IMockVerifiable"/>.
         /// </summary>
         /// <param name="verifiable">The object to verify.</param>
         public static void Verify(this IMockVerifiable verifiable)
-            => verifiable.Verify(null, null);
+        {
+            verifiable.Verify(null, null);
+        }
 
         /// <summary>
         /// Verifies this <see cref="IMockVerifiable"/>.
@@ -170,7 +196,9 @@ namespace MaSch.Test
         /// <param name="verifiable">The object to verify.</param>
         /// <param name="failMessage">Message to show if verification fails.</param>
         public static void Verify(this IMockVerifiable verifiable, string failMessage)
-            => verifiable.Verify(null, failMessage);
+        {
+            verifiable.Verify(null, failMessage);
+        }
 
         /// <summary>
         /// Verifies this <see cref="IMockVerifiable"/>.
@@ -178,7 +206,9 @@ namespace MaSch.Test
         /// <param name="verifiable">The object to verify.</param>
         /// <param name="times">The number of times a method is expected to be called.</param>
         public static void Verify(this IMockVerifiable verifiable, Times times)
-            => verifiable.Verify(times, null);
+        {
+            verifiable.Verify(times, null);
+        }
 
         private static T VerifiableImpl<T>(T setup, out IMockVerifiable verifiable, Times times, string? failMessage)
             where T : class
@@ -208,7 +238,7 @@ namespace MaSch.Test
 
                 try
                 {
-                    _generalVerifyMethod.Invoke(null, new object?[] { innerMock, expression, times, msg });
+                    _ = _generalVerifyMethod.Invoke(null, new object?[] { innerMock, expression, times, msg });
                 }
                 catch (TargetInvocationException ex)
                 {

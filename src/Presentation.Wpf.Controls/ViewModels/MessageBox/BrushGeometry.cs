@@ -31,8 +31,8 @@ namespace MaSch.Presentation.Wpf.ViewModels.MessageBox
     /// <summary>
     /// Represents an icon with defined brushes.
     /// </summary>
-    /// <seealso cref="MaSch.Core.Observable.ObservableObject" />
-    /// <seealso cref="MaSch.Presentation.Wpf.ViewModels.MessageBox.IBrushGeometryProps" />
+    /// <seealso cref="ObservableObject" />
+    /// <seealso cref="IBrushGeometryProps" />
     public partial class BrushGeometry : ObservableObject, IBrushGeometryProps
     {
         /// <summary>

@@ -47,7 +47,9 @@ namespace MaSch.Console.Controls
         /// <param name="console">The console that is used to request input.</param>
         /// <returns>The typed in value by the user.</returns>
         public static double Show(IConsoleService console)
-            => ShowInternal(console, null, double.MinValue, double.MaxValue, false);
+        {
+            return ShowInternal(console, null, double.MinValue, double.MaxValue, false);
+        }
 
         /// <summary>
         /// Requests a number from the user.
@@ -57,7 +59,9 @@ namespace MaSch.Console.Controls
         /// <param name="max">The maximum allowed value.</param>
         /// <returns>The typed in value by the user.</returns>
         public static double Show(IConsoleService console, double min, double max)
-            => ShowInternal(console, null, min, max, false);
+        {
+            return ShowInternal(console, null, min, max, false);
+        }
 
         /// <summary>
         /// Requests a number from the user.
@@ -66,7 +70,9 @@ namespace MaSch.Console.Controls
         /// <param name="value">The value the user can edit.</param>
         /// <returns>The typed in value by the user.</returns>
         public static double Show(IConsoleService console, double value)
-            => ShowInternal(console, value, double.MinValue, double.MaxValue, false);
+        {
+            return ShowInternal(console, value, double.MinValue, double.MaxValue, false);
+        }
 
         /// <summary>
         /// Requests a number from the user.
@@ -77,7 +83,9 @@ namespace MaSch.Console.Controls
         /// <param name="max">The maximum allowed value.</param>
         /// <returns>The typed in value by the user.</returns>
         public static double Show(IConsoleService console, double value, double min, double max)
-            => ShowInternal(console, value, min, max, false);
+        {
+            return ShowInternal(console, value, min, max, false);
+        }
 
         /// <summary>
         /// Requests a number from the user.
@@ -89,13 +97,17 @@ namespace MaSch.Console.Controls
         /// <param name="isDecimal">if set to <c>true</c> the user can input decimal numbers.</param>
         /// <returns>The typed in value by the user.</returns>
         public static double Show(IConsoleService console, double value, double min, double max, bool isDecimal)
-            => ShowInternal(console, value, min, max, isDecimal);
+        {
+            return ShowInternal(console, value, min, max, isDecimal);
+        }
 
         /// <summary>
         /// Requests a number from the user.
         /// </summary>
         public void Show()
-            => Value = ShowInternal(_console, Value, Minimum, Maximum, IsDecimal);
+        {
+            Value = ShowInternal(_console, Value, Minimum, Maximum, IsDecimal);
+        }
 
         private static double ShowInternal(IConsoleService console, double? value, double min, double max, bool isDecimal)
         {

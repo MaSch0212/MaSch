@@ -6,7 +6,7 @@ namespace MaSch.Console
     /// <summary>
     /// Scopes an instance of the <see cref="IConsoleService"/> interface.
     /// </summary>
-    /// <seealso cref="System.IDisposable" />
+    /// <seealso cref="IDisposable" />
     public sealed class ConsoleScope : IDisposable
     {
         private readonly IConsoleService _console;

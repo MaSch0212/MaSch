@@ -19,7 +19,7 @@ namespace MaSch.Native.Windows.Common
         {
             if (!HasConsole)
             {
-                Kernel32.AllocConsole();
+                _ = Kernel32.AllocConsole();
                 InvalidateOutAndError();
             }
         }
@@ -32,7 +32,7 @@ namespace MaSch.Native.Windows.Common
             if (HasConsole)
             {
                 SetOutAndErrorNull();
-                Kernel32.FreeConsole();
+                _ = Kernel32.FreeConsole();
             }
         }
 
@@ -66,7 +66,7 @@ namespace MaSch.Native.Windows.Common
             @out.SetValue(null, null);
             error.SetValue(null, null);
 
-            initializeStdOutError.Invoke(null, new object[] { true });
+            _ = initializeStdOutError.Invoke(null, new object[] { true });
         }
 
         internal static void SetOutAndErrorNull()

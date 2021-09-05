@@ -83,8 +83,8 @@ namespace MaSch.Console.Cli
 
         private void VerifyTypes()
         {
-            Guard.NotNull(ExecutorType, nameof(ExecutorType));
-            Guard.NotNull(GenericExecutorType, nameof(GenericExecutorType));
+            _ = Guard.NotNull(ExecutorType, nameof(ExecutorType));
+            _ = Guard.NotNull(GenericExecutorType, nameof(GenericExecutorType));
 
             if (!GenericExecutorType.IsGenericType || GenericExecutorType.GetGenericArguments().Length != 1)
                 throw new ArgumentException($"The generic executor type needs to be a generic type with exactly one gneric argument.");

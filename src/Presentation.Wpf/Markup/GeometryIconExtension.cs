@@ -9,35 +9,13 @@ namespace MaSch.Presentation.Wpf.Markup
     /// <summary>
     /// A <see cref="MarkupExtension"/> that creates an <see cref="Icon"/> using a geometry.
     /// </summary>
-    /// <seealso cref="System.Windows.Markup.MarkupExtension" />
+    /// <seealso cref="MarkupExtension" />
     [MarkupExtensionReturnType(typeof(Icon))]
     public class GeometryIconExtension : MarkupExtension
     {
-        /// <summary>
-        /// Gets or sets the geometry to use.
-        /// </summary>
-        [ConstructorArgument("geometry")]
-        public Geometry? Geometry { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the geometry is filled.
-        /// </summary>
-        [ConstructorArgument("filled")]
-        public bool Filled { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets the stroke thickness.
-        /// </summary>
-        public double StrokeThickness { get; set; } = 0;
-
-        /// <summary>
-        /// Gets or sets the stretchmode.
-        /// </summary>
-        public Stretch Stretch { get; set; } = Stretch.Uniform;
-
         static GeometryIconExtension()
         {
-            TypeDescriptor.AddAttributes(typeof(Geometry), new TypeConverterAttribute(typeof(TypeConverter)));
+            _ = TypeDescriptor.AddAttributes(typeof(Geometry), new TypeConverterAttribute(typeof(TypeConverter)));
         }
 
         /// <summary>
@@ -66,6 +44,28 @@ namespace MaSch.Presentation.Wpf.Markup
             Geometry = geometry;
             Filled = filled;
         }
+
+        /// <summary>
+        /// Gets or sets the geometry to use.
+        /// </summary>
+        [ConstructorArgument("geometry")]
+        public Geometry? Geometry { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the geometry is filled.
+        /// </summary>
+        [ConstructorArgument("filled")]
+        public bool Filled { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets the stroke thickness.
+        /// </summary>
+        public double StrokeThickness { get; set; } = 0;
+
+        /// <summary>
+        /// Gets or sets the stretchmode.
+        /// </summary>
+        public Stretch Stretch { get; set; } = Stretch.Uniform;
 
         /// <summary>
         /// When implemented in a derived class, returns an object that is provided as the value of the target property for this markup extension.

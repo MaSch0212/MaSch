@@ -22,9 +22,9 @@ namespace MaSch.Console.Cli.UnitTests
         private Mock<IServiceCollection> ServiceCollectionMock => Cache.GetValue(() =>
         {
             var mock = Mocks.Create<IServiceCollection>();
-            mock.Setup(x => x.GetEnumerator()).Returns(() => Services.GetEnumerator());
-            mock.Setup(x => x.Count).Returns(() => Services.Count);
-            mock.Setup(x => x.CopyTo(It.IsAny<ServiceDescriptor[]>(), It.IsAny<int>())).Callback<ServiceDescriptor[], int>((a, b) => Services.CopyTo(a, b));
+            _ = mock.Setup(x => x.GetEnumerator()).Returns(() => Services.GetEnumerator());
+            _ = mock.Setup(x => x.Count).Returns(() => Services.Count);
+            _ = mock.Setup(x => x.CopyTo(It.IsAny<ServiceDescriptor[]>(), It.IsAny<int>())).Callback<ServiceDescriptor[], int>((a, b) => Services.CopyTo(a, b));
             return mock;
         })!;
         private Mock<ICliCommandInfoCollection> CommandsMock => Cache.GetValue(() => Mocks.Create<ICliCommandInfoCollection>())!;
@@ -41,11 +41,11 @@ namespace MaSch.Console.Cli.UnitTests
         [TestMethod]
         public void Ctor()
         {
-            var rcMock = Mocks.Create<IReadOnlyCliCommandInfoCollection>();
-            CommandsMock.Setup(x => x.AsReadOnly()).Returns(rcMock.Object);
+            var readOnlyCommandsMock = Mocks.Create<IReadOnlyCliCommandInfoCollection>();
+            _ = CommandsMock.Setup(x => x.AsReadOnly()).Returns(readOnlyCommandsMock.Object);
 
             Assert.AreSame(OptionsMock.Object, Builder.Options);
-            Assert.AreSame(rcMock.Object, Builder.Commands);
+            Assert.AreSame(readOnlyCommandsMock.Object, Builder.Commands);
             Assert.IsNotNull(Builder.GetServiceProvider());
 
             Assert.IsGreaterThan(0, ServiceCollectionMock.Invocations.Count);
@@ -55,8 +55,8 @@ namespace MaSch.Console.Cli.UnitTests
         public void WithCommand_Command_WithoutInstance()
         {
             var command = CreateCommand(typeof(DummyClass), null);
-            BuilderMock.Setup(x => x.WithCommand(command)).CallBase();
-            CommandsMock.Setup(x => x.Add(command)).Verifiable(Verifiables, Times.Once());
+            _ = BuilderMock.Setup(x => x.WithCommand(command)).CallBase();
+            _ = CommandsMock.Setup(x => x.Add(command)).Verifiable(Verifiables, Times.Once());
             AddScopedSetup(typeof(DummyClass), typeof(DummyClass), Times.Once());
 
             var b = Builder.WithCommand(command);
@@ -69,8 +69,8 @@ namespace MaSch.Console.Cli.UnitTests
         {
             var instance = new DummyClass();
             var command = CreateCommand(typeof(DummyClass), instance);
-            BuilderMock.Setup(x => x.WithCommand(command)).CallBase();
-            CommandsMock.Setup(x => x.Add(command)).Verifiable(Verifiables, Times.Once());
+            _ = BuilderMock.Setup(x => x.WithCommand(command)).CallBase();
+            _ = CommandsMock.Setup(x => x.Add(command)).Verifiable(Verifiables, Times.Once());
             AddSingletonSetup(typeof(DummyClass), instance, Times.Once());
 
             var b = Builder.WithCommand(command);
@@ -82,10 +82,10 @@ namespace MaSch.Console.Cli.UnitTests
         public void WithCommand_CommandType()
         {
             var commandType = Mocks.Create<Type>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            BuilderMock.Setup(x => x.WithCommand(commandType.Object)).CallBase();
-            CommandFactoryMock.Setup(x => x.Create(commandType.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = BuilderMock.Setup(x => x.WithCommand(commandType.Object)).CallBase();
+            _ = CommandFactoryMock.Setup(x => x.Create(commandType.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddScopedSetup(commandType.Object, commandType.Object, Times.Once());
 
             var b = Builder.WithCommand(commandType.Object);
@@ -98,10 +98,10 @@ namespace MaSch.Console.Cli.UnitTests
         {
             var commandType = Mocks.Create<Type>();
             var optionsInstance = Mocks.Create<object>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            BuilderMock.Setup(x => x.WithCommand(commandType.Object, optionsInstance.Object)).CallBase();
-            CommandFactoryMock.Setup(x => x.Create(commandType.Object, optionsInstance.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = BuilderMock.Setup(x => x.WithCommand(commandType.Object, optionsInstance.Object)).CallBase();
+            _ = CommandFactoryMock.Setup(x => x.Create(commandType.Object, optionsInstance.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddSingletonSetup(commandType.Object, optionsInstance.Object, Times.Once());
 
             var b = Builder.WithCommand(commandType.Object, optionsInstance.Object);
@@ -114,10 +114,10 @@ namespace MaSch.Console.Cli.UnitTests
         {
             var commandType = typeof(IDisposable);
             var executorType = typeof(IEnumerable);
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            BuilderMock.Setup(x => x.WithCommand(commandType, executorType)).CallBase();
-            CommandFactoryMock.Setup(x => x.Create(commandType, executorType)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = BuilderMock.Setup(x => x.WithCommand(commandType, executorType)).CallBase();
+            _ = CommandFactoryMock.Setup(x => x.Create(commandType, executorType)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddScopedSetup(commandType, commandType, Times.Once());
             AddScopedSetup(executorType, executorType, Times.Once());
 
@@ -132,10 +132,10 @@ namespace MaSch.Console.Cli.UnitTests
             var commandType = Mocks.Create<Type>();
             var optionsInstance = Mocks.Create<object>();
             var executorType = Mocks.Create<Type>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            BuilderMock.Setup(x => x.WithCommand(commandType.Object, optionsInstance.Object, executorType.Object)).CallBase();
-            CommandFactoryMock.Setup(x => x.Create(commandType.Object, optionsInstance.Object, executorType.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = BuilderMock.Setup(x => x.WithCommand(commandType.Object, optionsInstance.Object, executorType.Object)).CallBase();
+            _ = CommandFactoryMock.Setup(x => x.Create(commandType.Object, optionsInstance.Object, executorType.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddSingletonSetup(commandType.Object, optionsInstance.Object, Times.Once());
             AddScopedSetup(executorType.Object, executorType.Object, Times.Once());
 
@@ -150,10 +150,10 @@ namespace MaSch.Console.Cli.UnitTests
             var commandType = Mocks.Create<Type>();
             var executorType = Mocks.Create<Type>();
             var executorInstance = Mocks.Create<object>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            BuilderMock.Setup(x => x.WithCommand(commandType.Object, executorType.Object, executorInstance.Object)).CallBase();
-            CommandFactoryMock.Setup(x => x.Create(commandType.Object, executorType.Object, executorInstance.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = BuilderMock.Setup(x => x.WithCommand(commandType.Object, executorType.Object, executorInstance.Object)).CallBase();
+            _ = CommandFactoryMock.Setup(x => x.Create(commandType.Object, executorType.Object, executorInstance.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddScopedSetup(commandType.Object, commandType.Object, Times.Once());
             AddSingletonSetup(executorType.Object, executorInstance.Object, Times.Once());
 
@@ -169,10 +169,10 @@ namespace MaSch.Console.Cli.UnitTests
             var optionsInstance = Mocks.Create<object>();
             var executorType = typeof(IEnumerable);
             var executorInstance = Mocks.Create<object>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            BuilderMock.Setup(x => x.WithCommand(commandType, optionsInstance.Object, executorType, executorInstance.Object)).CallBase();
-            CommandFactoryMock.Setup(x => x.Create(commandType, optionsInstance.Object, executorType, executorInstance.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = BuilderMock.Setup(x => x.WithCommand(commandType, optionsInstance.Object, executorType, executorInstance.Object)).CallBase();
+            _ = CommandFactoryMock.Setup(x => x.Create(commandType, optionsInstance.Object, executorType, executorInstance.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddSingletonSetup(commandType, optionsInstance.Object, Times.Once());
             AddSingletonSetup(executorType, executorInstance.Object, Times.Once());
 
@@ -186,8 +186,8 @@ namespace MaSch.Console.Cli.UnitTests
         {
             var action = Mocks.Create<Action<ICliApplicationOptions>>();
             var options = Builder.Options;
-            BuilderMock.Setup(x => x.ConfigureOptions(action.Object)).CallBase();
-            action.Setup(x => x(options)).Verifiable(Verifiables, Times.Once());
+            _ = BuilderMock.Setup(x => x.ConfigureOptions(action.Object)).CallBase();
+            _ = action.Setup(x => x(options)).Verifiable(Verifiables, Times.Once());
 
             var b = Builder.ConfigureOptions(action.Object);
 
@@ -199,13 +199,13 @@ namespace MaSch.Console.Cli.UnitTests
         {
             var app = Mocks.Create<ICliApplicationBase>();
             Services.Clear();
-            ServiceCollectionMock.Setup(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(IConsoleService)))).Verifiable(Verifiables, Times.Once());
-            ServiceCollectionMock.Setup(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(ICliArgumentParser)))).Verifiable(Verifiables, Times.Once());
-            ServiceCollectionMock.Setup(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(ICliHelpPage)))).Verifiable(Verifiables, Times.Once());
-            ServiceCollectionMock.Setup(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(ICliCommandFactory)))).Verifiable(Verifiables, Times.Once());
-            ServiceCollectionMock.Setup(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(ICliApplicationBase)))).Verifiable(Verifiables, Times.Once());
-            ServiceCollectionMock.Setup(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(ICliValidator<object>)))).Verifiable(Verifiables, Times.Once());
-            BuilderMock.Protected().Setup<ICliApplicationBase>("OnBuild").Returns(app.Object);
+            _ = ServiceCollectionMock.Setup(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(IConsoleService)))).Verifiable(Verifiables, Times.Once());
+            _ = ServiceCollectionMock.Setup(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(ICliArgumentParser)))).Verifiable(Verifiables, Times.Once());
+            _ = ServiceCollectionMock.Setup(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(ICliHelpPage)))).Verifiable(Verifiables, Times.Once());
+            _ = ServiceCollectionMock.Setup(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(ICliCommandFactory)))).Verifiable(Verifiables, Times.Once());
+            _ = ServiceCollectionMock.Setup(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(ICliApplicationBase)))).Verifiable(Verifiables, Times.Once());
+            _ = ServiceCollectionMock.Setup(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(ICliValidator<object>)))).Verifiable(Verifiables, Times.Once());
+            _ = BuilderMock.Protected().Setup<ICliApplicationBase>("OnBuild").Returns(app.Object);
 
             var a = Builder.Build();
 
@@ -214,15 +214,15 @@ namespace MaSch.Console.Cli.UnitTests
 
         private ICliCommandInfo CreateCommand(Type commandType, object? optionsInstance)
         {
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            cMock.Setup(x => x.CommandType).Returns(commandType);
-            cMock.Setup(x => x.OptionsInstance).Returns(optionsInstance);
-            return cMock.Object;
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = commandMock.Setup(x => x.CommandType).Returns(commandType);
+            _ = commandMock.Setup(x => x.OptionsInstance).Returns(optionsInstance);
+            return commandMock.Object;
         }
 
         private void AddSingletonSetup(Type serviceType, object instance, Times times)
         {
-            ServiceCollectionMock
+            _ = ServiceCollectionMock
                 .Setup(x => x.Add(It.Is<ServiceDescriptor>(d =>
                     d.Lifetime == ServiceLifetime.Singleton &&
                     d.ServiceType == serviceType &&
@@ -232,7 +232,7 @@ namespace MaSch.Console.Cli.UnitTests
 
         private void AddScopedSetup(Type serviceType, Type implementationType, Times times)
         {
-            ServiceCollectionMock
+            _ = ServiceCollectionMock
                 .Setup(x => x.Add(It.Is<ServiceDescriptor>(d =>
                     d.Lifetime == ServiceLifetime.Scoped &&
                     d.ServiceType == serviceType &&
@@ -254,7 +254,10 @@ namespace MaSch.Console.Cli.UnitTests
             public new IReadOnlyCliCommandInfoCollection Commands => base.Commands.AsReadOnly();
             public new ICliApplicationOptions Options => base.Options;
 
-            public ServiceProvider GetServiceProvider() => Services.BuildServiceProvider();
+            public ServiceProvider GetServiceProvider()
+            {
+                return Services.BuildServiceProvider();
+            }
         }
     }
 
@@ -265,9 +268,9 @@ namespace MaSch.Console.Cli.UnitTests
         private Mock<IServiceCollection> ServiceCollectionMock => Cache.GetValue(() =>
         {
             var mock = Mocks.Create<IServiceCollection>();
-            mock.Setup(x => x.GetEnumerator()).Returns(() => Services.GetEnumerator());
-            mock.Setup(x => x.Count).Returns(() => Services.Count);
-            mock.Setup(x => x.CopyTo(It.IsAny<ServiceDescriptor[]>(), It.IsAny<int>())).Callback<ServiceDescriptor[], int>((a, b) => Services.CopyTo(a, b));
+            _ = mock.Setup(x => x.GetEnumerator()).Returns(() => Services.GetEnumerator());
+            _ = mock.Setup(x => x.Count).Returns(() => Services.Count);
+            _ = mock.Setup(x => x.CopyTo(It.IsAny<ServiceDescriptor[]>(), It.IsAny<int>())).Callback<ServiceDescriptor[], int>((a, b) => Services.CopyTo(a, b));
             return mock;
         })!;
         private Mock<ICliCommandInfoCollection> CommandsMock => Cache.GetValue(() => Mocks.Create<ICliCommandInfoCollection>())!;
@@ -285,9 +288,9 @@ namespace MaSch.Console.Cli.UnitTests
         public void WithCommand_CommandType_ExecutorFunction()
         {
             var executorFunction = Mocks.Create<Func<CliExecutionContext, object, int>>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            CommandFactoryMock.Setup(x => x.Create(typeof(object), executorFunction.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = CommandFactoryMock.Setup(x => x.Create(typeof(object), executorFunction.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddScopedSetup(typeof(object), typeof(object), Times.Once());
 
             var b = Builder.WithCommand(typeof(object), executorFunction.Object);
@@ -300,9 +303,9 @@ namespace MaSch.Console.Cli.UnitTests
         {
             var optionsInstance = Mocks.Create<IDisposable>();
             var executorFunction = Mocks.Create<Func<CliExecutionContext, object, int>>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            CommandFactoryMock.Setup(x => x.Create(typeof(object), optionsInstance.Object, executorFunction.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = CommandFactoryMock.Setup(x => x.Create(typeof(object), optionsInstance.Object, executorFunction.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddSingletonSetup(typeof(object), optionsInstance.Object, Times.Once());
 
             var b = Builder.WithCommand(typeof(object), optionsInstance.Object, executorFunction.Object);
@@ -314,9 +317,9 @@ namespace MaSch.Console.Cli.UnitTests
         public void WithCommand_TCommand_ExecutorFunction()
         {
             var executorFunction = Mocks.Create<Func<CliExecutionContext, IDisposable, int>>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            CommandFactoryMock.Setup(x => x.Create(executorFunction.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = CommandFactoryMock.Setup(x => x.Create(executorFunction.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddScopedSetup(typeof(IDisposable), typeof(IDisposable), Times.Once());
 
             var b = Builder.WithCommand(executorFunction.Object);
@@ -329,9 +332,9 @@ namespace MaSch.Console.Cli.UnitTests
         {
             var optionsInstance = Mocks.Create<IDisposable>();
             var executorFunction = Mocks.Create<Func<CliExecutionContext, IDisposable, int>>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            CommandFactoryMock.Setup(x => x.Create(optionsInstance.Object, executorFunction.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = CommandFactoryMock.Setup(x => x.Create(optionsInstance.Object, executorFunction.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddSingletonSetup(typeof(IDisposable), optionsInstance.Object, Times.Once());
 
             var b = Builder.WithCommand(optionsInstance.Object, executorFunction.Object);
@@ -342,9 +345,9 @@ namespace MaSch.Console.Cli.UnitTests
         [TestMethod]
         public void WithCommand_TCommand()
         {
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            CommandFactoryMock.Setup(x => x.Create<DummyClass>()).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = CommandFactoryMock.Setup(x => x.Create<DummyClass>()).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddScopedSetup(typeof(DummyClass), typeof(DummyClass), Times.Once());
 
             var b = Builder.WithCommand<DummyClass>();
@@ -356,9 +359,9 @@ namespace MaSch.Console.Cli.UnitTests
         public void WithCommand_TCommand_OptionsInstance()
         {
             var optionsInstance = Mocks.Create<DummyClass>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            CommandFactoryMock.Setup(x => x.Create(optionsInstance.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = CommandFactoryMock.Setup(x => x.Create(optionsInstance.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddSingletonSetup(typeof(DummyClass), optionsInstance.Object, Times.Once());
 
             var b = Builder.WithCommand(optionsInstance.Object);
@@ -369,9 +372,9 @@ namespace MaSch.Console.Cli.UnitTests
         [TestMethod]
         public void WithCommand_TCommand_TExecutor()
         {
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            CommandFactoryMock.Setup(x => x.Create<IDisposable, DummyClass>()).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = CommandFactoryMock.Setup(x => x.Create<IDisposable, DummyClass>()).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddScopedSetup(typeof(IDisposable), typeof(IDisposable), Times.Once());
             AddScopedSetup(typeof(DummyClass), typeof(DummyClass), Times.Once());
 
@@ -384,9 +387,9 @@ namespace MaSch.Console.Cli.UnitTests
         public void WithCommand_TCommand_TExecutor_ExecutorInstance()
         {
             var executorInstance = Mocks.Create<DummyClass>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            CommandFactoryMock.Setup(x => x.Create<IDisposable, DummyClass>(executorInstance.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = CommandFactoryMock.Setup(x => x.Create<IDisposable, DummyClass>(executorInstance.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddScopedSetup(typeof(IDisposable), typeof(IDisposable), Times.Once());
             AddSingletonSetup(typeof(DummyClass), executorInstance.Object, Times.Once());
 
@@ -399,9 +402,9 @@ namespace MaSch.Console.Cli.UnitTests
         public void WithCommand_TCommand_TExecutor_OptionsInstance()
         {
             var optionsInstance = Mocks.Create<IDisposable>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            CommandFactoryMock.Setup(x => x.Create<IDisposable, DummyClass>(optionsInstance.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = CommandFactoryMock.Setup(x => x.Create<IDisposable, DummyClass>(optionsInstance.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddSingletonSetup(typeof(IDisposable), optionsInstance.Object, Times.Once());
             AddScopedSetup(typeof(DummyClass), typeof(DummyClass), Times.Once());
 
@@ -415,9 +418,9 @@ namespace MaSch.Console.Cli.UnitTests
         {
             var optionsInstance = Mocks.Create<IDisposable>();
             var executorInstance = Mocks.Create<DummyClass>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            CommandFactoryMock.Setup(x => x.Create(optionsInstance.Object, executorInstance.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = CommandFactoryMock.Setup(x => x.Create(optionsInstance.Object, executorInstance.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddSingletonSetup(typeof(IDisposable), optionsInstance.Object, Times.Once());
             AddSingletonSetup(typeof(DummyClass), executorInstance.Object, Times.Once());
 
@@ -428,7 +431,7 @@ namespace MaSch.Console.Cli.UnitTests
 
         private void AddSingletonSetup(Type serviceType, object instance, Times times)
         {
-            ServiceCollectionMock
+            _ = ServiceCollectionMock
                 .Setup(x => x.Add(It.Is<ServiceDescriptor>(d =>
                     d.Lifetime == ServiceLifetime.Singleton &&
                     d.ServiceType == serviceType &&
@@ -438,7 +441,7 @@ namespace MaSch.Console.Cli.UnitTests
 
         private void AddScopedSetup(Type serviceType, Type implementationType, Times times)
         {
-            ServiceCollectionMock
+            _ = ServiceCollectionMock
                 .Setup(x => x.Add(It.Is<ServiceDescriptor>(d =>
                     d.Lifetime == ServiceLifetime.Scoped &&
                     d.ServiceType == serviceType &&
@@ -460,9 +463,9 @@ namespace MaSch.Console.Cli.UnitTests
         private Mock<IServiceCollection> ServiceCollectionMock => Cache.GetValue(() =>
         {
             var mock = Mocks.Create<IServiceCollection>();
-            mock.Setup(x => x.GetEnumerator()).Returns(() => Services.GetEnumerator());
-            mock.Setup(x => x.Count).Returns(() => Services.Count);
-            mock.Setup(x => x.CopyTo(It.IsAny<ServiceDescriptor[]>(), It.IsAny<int>())).Callback<ServiceDescriptor[], int>((a, b) => Services.CopyTo(a, b));
+            _ = mock.Setup(x => x.GetEnumerator()).Returns(() => Services.GetEnumerator());
+            _ = mock.Setup(x => x.Count).Returns(() => Services.Count);
+            _ = mock.Setup(x => x.CopyTo(It.IsAny<ServiceDescriptor[]>(), It.IsAny<int>())).Callback<ServiceDescriptor[], int>((a, b) => Services.CopyTo(a, b));
             return mock;
         })!;
         private Mock<ICliCommandInfoCollection> CommandsMock => Cache.GetValue(() => Mocks.Create<ICliCommandInfoCollection>())!;
@@ -480,9 +483,9 @@ namespace MaSch.Console.Cli.UnitTests
         public void WithCommand_CommandType_ExecutorFunction()
         {
             var executorFunction = Mocks.Create<Func<CliExecutionContext, object, Task<int>>>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            CommandFactoryMock.Setup(x => x.Create(typeof(object), executorFunction.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = CommandFactoryMock.Setup(x => x.Create(typeof(object), executorFunction.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddScopedSetup(typeof(object), typeof(object), Times.Once());
 
             var b = Builder.WithCommand(typeof(object), executorFunction.Object);
@@ -495,9 +498,9 @@ namespace MaSch.Console.Cli.UnitTests
         {
             var optionsInstance = Mocks.Create<IDisposable>();
             var executorFunction = Mocks.Create<Func<CliExecutionContext, object, Task<int>>>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            CommandFactoryMock.Setup(x => x.Create(typeof(object), optionsInstance.Object, executorFunction.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = CommandFactoryMock.Setup(x => x.Create(typeof(object), optionsInstance.Object, executorFunction.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddSingletonSetup(typeof(object), optionsInstance.Object, Times.Once());
 
             var b = Builder.WithCommand(typeof(object), optionsInstance.Object, executorFunction.Object);
@@ -509,9 +512,9 @@ namespace MaSch.Console.Cli.UnitTests
         public void WithCommand_TCommand_ExecutorFunction()
         {
             var executorFunction = Mocks.Create<Func<CliExecutionContext, IDisposable, Task<int>>>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            CommandFactoryMock.Setup(x => x.Create(executorFunction.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = CommandFactoryMock.Setup(x => x.Create(executorFunction.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddScopedSetup(typeof(IDisposable), typeof(IDisposable), Times.Once());
 
             var b = Builder.WithCommand(executorFunction.Object);
@@ -524,9 +527,9 @@ namespace MaSch.Console.Cli.UnitTests
         {
             var optionsInstance = Mocks.Create<IDisposable>();
             var executorFunction = Mocks.Create<Func<CliExecutionContext, IDisposable, Task<int>>>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            CommandFactoryMock.Setup(x => x.Create(optionsInstance.Object, executorFunction.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = CommandFactoryMock.Setup(x => x.Create(optionsInstance.Object, executorFunction.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddSingletonSetup(typeof(IDisposable), optionsInstance.Object, Times.Once());
 
             var b = Builder.WithCommand(optionsInstance.Object, executorFunction.Object);
@@ -537,9 +540,9 @@ namespace MaSch.Console.Cli.UnitTests
         [TestMethod]
         public void WithCommand_TCommand()
         {
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            CommandFactoryMock.Setup(x => x.Create<DummyClass>()).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = CommandFactoryMock.Setup(x => x.Create<DummyClass>()).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddScopedSetup(typeof(DummyClass), typeof(DummyClass), Times.Once());
 
             var b = Builder.WithCommand<DummyClass>();
@@ -551,9 +554,9 @@ namespace MaSch.Console.Cli.UnitTests
         public void WithCommand_TCommand_OptionsInstance()
         {
             var optionsInstance = Mocks.Create<DummyClass>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            CommandFactoryMock.Setup(x => x.Create(optionsInstance.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = CommandFactoryMock.Setup(x => x.Create(optionsInstance.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddSingletonSetup(typeof(DummyClass), optionsInstance.Object, Times.Once());
 
             var b = Builder.WithCommand(optionsInstance.Object);
@@ -564,9 +567,9 @@ namespace MaSch.Console.Cli.UnitTests
         [TestMethod]
         public void WithCommand_TCommand_TExecutor()
         {
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            CommandFactoryMock.Setup(x => x.Create<IDisposable, DummyClass>()).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = CommandFactoryMock.Setup(x => x.Create<IDisposable, DummyClass>()).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddScopedSetup(typeof(IDisposable), typeof(IDisposable), Times.Once());
             AddScopedSetup(typeof(DummyClass), typeof(DummyClass), Times.Once());
 
@@ -579,9 +582,9 @@ namespace MaSch.Console.Cli.UnitTests
         public void WithCommand_TCommand_TExecutor_ExecutorInstance()
         {
             var executorInstance = Mocks.Create<DummyClass>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            CommandFactoryMock.Setup(x => x.Create<IDisposable, DummyClass>(executorInstance.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = CommandFactoryMock.Setup(x => x.Create<IDisposable, DummyClass>(executorInstance.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddScopedSetup(typeof(IDisposable), typeof(IDisposable), Times.Once());
             AddSingletonSetup(typeof(DummyClass), executorInstance.Object, Times.Once());
 
@@ -594,9 +597,9 @@ namespace MaSch.Console.Cli.UnitTests
         public void WithCommand_TCommand_TExecutor_OptionsInstance()
         {
             var optionsInstance = Mocks.Create<IDisposable>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            CommandFactoryMock.Setup(x => x.Create<IDisposable, DummyClass>(optionsInstance.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = CommandFactoryMock.Setup(x => x.Create<IDisposable, DummyClass>(optionsInstance.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddSingletonSetup(typeof(IDisposable), optionsInstance.Object, Times.Once());
             AddScopedSetup(typeof(DummyClass), typeof(DummyClass), Times.Once());
 
@@ -610,9 +613,9 @@ namespace MaSch.Console.Cli.UnitTests
         {
             var optionsInstance = Mocks.Create<IDisposable>();
             var executorInstance = Mocks.Create<DummyClass>();
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            CommandFactoryMock.Setup(x => x.Create(optionsInstance.Object, executorInstance.Object)).Returns(cMock.Object).Verifiable(Verifiables, Times.Once());
-            CommandsMock.Setup(x => x.Add(cMock.Object)).Verifiable(Verifiables, Times.Once());
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            _ = CommandFactoryMock.Setup(x => x.Create(optionsInstance.Object, executorInstance.Object)).Returns(commandMock.Object).Verifiable(Verifiables, Times.Once());
+            _ = CommandsMock.Setup(x => x.Add(commandMock.Object)).Verifiable(Verifiables, Times.Once());
             AddSingletonSetup(typeof(IDisposable), optionsInstance.Object, Times.Once());
             AddSingletonSetup(typeof(DummyClass), executorInstance.Object, Times.Once());
 
@@ -623,7 +626,7 @@ namespace MaSch.Console.Cli.UnitTests
 
         private void AddSingletonSetup(Type serviceType, object instance, Times times)
         {
-            ServiceCollectionMock
+            _ = ServiceCollectionMock
                 .Setup(x => x.Add(It.Is<ServiceDescriptor>(d =>
                     d.Lifetime == ServiceLifetime.Singleton &&
                     d.ServiceType == serviceType &&
@@ -633,7 +636,7 @@ namespace MaSch.Console.Cli.UnitTests
 
         private void AddScopedSetup(Type serviceType, Type implementationType, Times times)
         {
-            ServiceCollectionMock
+            _ = ServiceCollectionMock
                 .Setup(x => x.Add(It.Is<ServiceDescriptor>(d =>
                     d.Lifetime == ServiceLifetime.Scoped &&
                     d.ServiceType == serviceType &&

@@ -81,18 +81,27 @@ namespace MaSch.Core.Observable
         /// Gets a value indicating wether the <see cref="ChangeTracker"/> property should be serialized.
         /// </summary>
         /// <returns><c>true</c> if the <see cref="ChangeTracker"/> property should be serialized; otherwise, <c>false</c>.</returns>
-        public virtual bool ShouldSerializeChangeTracker() => false;
+        public virtual bool ShouldSerializeChangeTracker()
+        {
+            return false;
+        }
 
         /// <summary>
         /// Gets a value indicating wether the <see cref="HasChanges"/> property should be serialized.
         /// </summary>
         /// <returns><c>true</c> if the <see cref="HasChanges"/> property should be serialized; otherwise, <c>false</c>.</returns>
-        public virtual bool ShouldSerializeHasChanges() => false;
+        public virtual bool ShouldSerializeHasChanges()
+        {
+            return false;
+        }
 
         /// <summary>
         /// Gets a value indicating wether the <see cref="ImplicitlyRecurse"/> property should be serialized.
         /// </summary>
         /// <returns><c>true</c> if the <see cref="ImplicitlyRecurse"/> property should be serialized; otherwise, <c>false</c>.</returns>
-        public virtual bool ShouldSerializeImplicitlyRecurse() => false;
+        public virtual bool ShouldSerializeImplicitlyRecurse()
+        {
+            return false;
+        }
     }
 }

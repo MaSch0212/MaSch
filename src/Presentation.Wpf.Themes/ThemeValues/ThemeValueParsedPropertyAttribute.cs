@@ -5,15 +5,10 @@ namespace MaSch.Presentation.Wpf.ThemeValues
     /// <summary>
     /// When applied to a property inside a <see cref="IThemeValue"/> class, the raw property is linked with the actual value.
     /// </summary>
-    /// <seealso cref="System.Attribute" />
+    /// <seealso cref="Attribute" />
     [AttributeUsage(AttributeTargets.Property)]
     public class ThemeValueParsedPropertyAttribute : Attribute
     {
-        /// <summary>
-        /// Gets the name of the raw property.
-        /// </summary>
-        public string RawPropertyName { get; }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ThemeValueParsedPropertyAttribute"/> class.
         /// </summary>
@@ -22,5 +17,10 @@ namespace MaSch.Presentation.Wpf.ThemeValues
         {
             RawPropertyName = rawPropertyName;
         }
+
+        /// <summary>
+        /// Gets the name of the raw property.
+        /// </summary>
+        public string RawPropertyName { get; }
     }
 }

@@ -16,7 +16,7 @@ namespace MaSch.Console.Cli.Configuration
         /// <param name="displayName">The display name of this value. This is used when displaying the value list on the help page.</param>
         public CliCommandValueAttribute(int order, string displayName)
         {
-            Guard.NotNullOrEmpty(displayName, nameof(displayName));
+            _ = Guard.NotNullOrEmpty(displayName, nameof(displayName));
 
             Order = order;
             DisplayName = displayName;

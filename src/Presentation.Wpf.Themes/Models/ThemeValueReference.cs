@@ -7,9 +7,31 @@ namespace MaSch.Presentation.Wpf.Models
     /// <summary>
     /// Represents a reference to a theme value.
     /// </summary>
-    /// <seealso cref="System.ICloneable" />
+    /// <seealso cref="ICloneable" />
     public class ThemeValueReference : ICloneable
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThemeValueReference"/> class.
+        /// </summary>
+        /// <param name="key">The key that the reference points to..</param>
+        public ThemeValueReference(string key)
+            : this(key, null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThemeValueReference"/> class.
+        /// </summary>
+        /// <param name="key">The key that the reference points to..</param>
+        /// <param name="property">The property that the reference points to..</param>
+        public ThemeValueReference(string key, string? property)
+        {
+            _ = Guard.NotNullOrEmpty(key, nameof(key));
+
+            CustomKey = key;
+            Property = property;
+        }
+
         /// <summary>
         /// Gets or sets the key that the reference points to.
         /// </summary>
@@ -29,33 +51,17 @@ namespace MaSch.Presentation.Wpf.Models
         /// </summary>
         public string? Property { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ThemeValueReference"/> class.
-        /// </summary>
-        /// <param name="key">The key that the reference points to..</param>
-        public ThemeValueReference(string key)
-            : this(key, null)
+        /// <inheritdoc/>
+        public override bool Equals(object? obj)
         {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ThemeValueReference"/> class.
-        /// </summary>
-        /// <param name="key">The key that the reference points to..</param>
-        /// <param name="property">The property that the reference points to..</param>
-        public ThemeValueReference(string key, string? property)
-        {
-            Guard.NotNullOrEmpty(key, nameof(key));
-
-            CustomKey = key;
-            Property = property;
+            return obj is ThemeValueReference other && other.CustomKey == CustomKey && other.Property == Property;
         }
 
         /// <inheritdoc/>
-        public override bool Equals(object? obj) => obj is ThemeValueReference other && other.CustomKey == CustomKey && other.Property == Property;
-
-        /// <inheritdoc/>
-        public override int GetHashCode() => (CustomKey, Property).GetHashCode();
+        public override int GetHashCode()
+        {
+            return (CustomKey, Property).GetHashCode();
+        }
 
         /// <inheritdoc/>
         public object Clone()

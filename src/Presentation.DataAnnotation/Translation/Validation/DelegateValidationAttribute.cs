@@ -20,6 +20,16 @@ namespace MaSch.Presentation.Translation.Validation
         public static readonly ValidationResult FailedResult = new(string.Empty);
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="DelegateValidationAttribute"/> class.
+        /// </summary>
+        /// <param name="methodName">The name of the method to use. The method head needs to look like this: <see cref="ValidationResult"/> MyValidation(<see cref="object"/> value);
+        /// (can be private or public as well as static or non static).</param>
+        public DelegateValidationAttribute(string methodName)
+        {
+            MethodName = methodName;
+        }
+
+        /// <summary>
         /// Gets the name of the validation method.
         /// </summary>
         /// <value>
@@ -44,16 +54,6 @@ namespace MaSch.Presentation.Translation.Validation
         /// The type that contains the method with the name set in <see cref="MethodName"/>.
         /// </value>
         public Type? ContainingType { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DelegateValidationAttribute"/> class.
-        /// </summary>
-        /// <param name="methodName">The name of the method to use. The method head needs to look like this: <see cref="ValidationResult"/> MyValidation(<see cref="object"/> value);
-        /// (can be private or public as well as static or non static).</param>
-        public DelegateValidationAttribute(string methodName)
-        {
-            MethodName = methodName;
-        }
 
         /// <summary>
         /// Validates the given value using the given validation method.

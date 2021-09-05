@@ -14,7 +14,7 @@ namespace MaSch.Test.Assertion.UnitTests
     [TestClass]
     public class InconclusiveAssertTests
     {
-        private static MaSch.Test.Assertion.InconclusiveAssert AssertUnderTest => MaSch.Test.Assertion.InconclusiveAssert.Instance;
+        private static InconclusiveAssert AssertUnderTest => MaSch.Test.Assertion.InconclusiveAssert.Instance;
 
         [TestMethod]
         public void Instance()
@@ -27,10 +27,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void That_Action()
         {
             var actionMock = new Mock<Action<MSAssert>>(MockBehavior.Strict);
-            actionMock.Setup(x => x(MSAssert.That)).Throws(new Exception(nameof(That_Action)));
-            var mock = new Mock<MaSch.Test.Assertion.InconclusiveAssert>(MockBehavior.Strict);
-            mock.Setup(x => x.That(It.IsAny<Action<MSAssert>>())).CallBase();
-            mock.Setup(x => x.CatchAssertException(It.IsAny<Action>()));
+            _ = actionMock.Setup(x => x(MSAssert.That)).Throws(new Exception(nameof(That_Action)));
+            var mock = new Mock<InconclusiveAssert>(MockBehavior.Strict);
+            _ = mock.Setup(x => x.That(It.IsAny<Action<MSAssert>>())).CallBase();
+            _ = mock.Setup(x => x.CatchAssertException(It.IsAny<Action>()));
 
             mock.Object.That(actionMock.Object);
 
@@ -41,10 +41,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void That_FuncT()
         {
             var actionMock = new Mock<Func<MSAssert, string>>(MockBehavior.Strict);
-            actionMock.Setup(x => x(MSAssert.That)).Throws(new Exception(nameof(That_FuncT)));
-            var mock = new Mock<MaSch.Test.Assertion.InconclusiveAssert>(MockBehavior.Strict);
-            mock.Setup(x => x.That(It.IsAny<Func<MSAssert, string>>())).CallBase();
-            mock.Setup(x => x.CatchAssertException(It.IsAny<Func<string>>())).Returns("Str");
+            _ = actionMock.Setup(x => x(MSAssert.That)).Throws(new Exception(nameof(That_FuncT)));
+            var mock = new Mock<InconclusiveAssert>(MockBehavior.Strict);
+            _ = mock.Setup(x => x.That(It.IsAny<Func<MSAssert, string>>())).CallBase();
+            _ = mock.Setup(x => x.CatchAssertException(It.IsAny<Func<string>>())).Returns("Str");
 
             var result = mock.Object.That(actionMock.Object);
 
@@ -56,10 +56,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public async Task That_AsyncAction()
         {
             var actionMock = new Mock<Func<MSAssert, Task>>(MockBehavior.Strict);
-            actionMock.Setup(x => x(MSAssert.That)).Throws(new Exception(nameof(That_AsyncAction)));
-            var mock = new Mock<MaSch.Test.Assertion.InconclusiveAssert>(MockBehavior.Strict);
-            mock.Setup(x => x.That(It.IsAny<Func<MSAssert, Task>>())).CallBase();
-            mock.Setup(x => x.CatchAssertException(It.IsAny<Func<Task>>())).Returns(Task.CompletedTask);
+            _ = actionMock.Setup(x => x(MSAssert.That)).Throws(new Exception(nameof(That_AsyncAction)));
+            var mock = new Mock<InconclusiveAssert>(MockBehavior.Strict);
+            _ = mock.Setup(x => x.That(It.IsAny<Func<MSAssert, Task>>())).CallBase();
+            _ = mock.Setup(x => x.CatchAssertException(It.IsAny<Func<Task>>())).Returns(Task.CompletedTask);
 
             await mock.Object.That(actionMock.Object);
 
@@ -70,10 +70,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public async Task That_FuncTaskT()
         {
             var actionMock = new Mock<Func<MSAssert, Task<string>>>(MockBehavior.Strict);
-            actionMock.Setup(x => x(MSAssert.That)).Throws(new Exception(nameof(That_FuncTaskT)));
-            var mock = new Mock<MaSch.Test.Assertion.InconclusiveAssert>(MockBehavior.Strict);
-            mock.Setup(x => x.That(It.IsAny<Func<MSAssert, Task<string>>>())).CallBase();
-            mock.Setup(x => x.CatchAssertException(It.IsAny<Func<Task<string>>>())).Returns(Task.FromResult("Str"));
+            _ = actionMock.Setup(x => x(MSAssert.That)).Throws(new Exception(nameof(That_FuncTaskT)));
+            var mock = new Mock<InconclusiveAssert>(MockBehavior.Strict);
+            _ = mock.Setup(x => x.That(It.IsAny<Func<MSAssert, Task<string>>>())).CallBase();
+            _ = mock.Setup(x => x.CatchAssertException(It.IsAny<Func<Task<string>>>())).Returns(Task.FromResult("Str"));
 
             var result = await mock.Object.That(actionMock.Object);
 
@@ -85,7 +85,7 @@ namespace MaSch.Test.Assertion.UnitTests
         [TestMethod]
         public void AssertNamePrefix()
         {
-            var prop = typeof(MaSch.Test.Assertion.InconclusiveAssert).GetProperty("AssertNamePrefix", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var prop = typeof(InconclusiveAssert).GetProperty("AssertNamePrefix", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             MSAssert.IsNotNull(prop);
             MSAssert.AreEqual("Assert.Inc", prop.GetValue(AssertUnderTest));
         }
@@ -93,7 +93,7 @@ namespace MaSch.Test.Assertion.UnitTests
         [TestMethod]
         public void HandleFailedAssertion()
         {
-            var method = typeof(MaSch.Test.Assertion.InconclusiveAssert).GetMethod("HandleFailedAssertion", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly, null, new[] { typeof(string) }, null);
+            var method = typeof(InconclusiveAssert).GetMethod("HandleFailedAssertion", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly, null, new[] { typeof(string) }, null);
             MSAssert.IsNotNull(method);
             var ex = MSAssert.ThrowsException<TargetInvocationException>(() => method.Invoke(AssertUnderTest, new object[] { "My test error message" }));
             MSAssert.IsInstanceOfType(ex.InnerException, typeof(AssertInconclusiveException));

@@ -32,7 +32,9 @@ namespace MaSch.Core.Logging
 
         /// <inheritdoc/>
         public void Log(LogType logType, string? message)
-            => Log(logType, message, null);
+        {
+            Log(logType, message, null);
+        }
 
         /// <inheritdoc/>
         public void Log(LogType logType, string? message, Exception? exception)
@@ -76,7 +78,7 @@ namespace MaSch.Core.Logging
                 }
                 else
                 {
-                    Directory.CreateDirectory(_directoryPath);
+                    _ = Directory.CreateDirectory(_directoryPath);
                     _currentFileNumber = 0;
                 }
             }

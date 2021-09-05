@@ -19,7 +19,7 @@ namespace MaSch.Data.Extensions
             var param = command.CreateParameter();
             param.ParameterName = paramName;
             param.Value = value ?? DBNull.Value;
-            command.Parameters.Add(param);
+            _ = command.Parameters.Add(param);
         }
     }
 }

@@ -11,6 +11,34 @@ namespace MaSch.Presentation.Translation.Validation
     public class StringLengthAttribute : TranslatableValidationAttribute
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="StringLengthAttribute"/> class.
+        /// </summary>
+        /// <param name="exactLength">The exact expected length of the string.</param>
+        /// <param name="errorMsg">The error message to return if a value is invalid.</param>
+        public StringLengthAttribute(int exactLength, string errorMsg)
+        {
+            ExactLength = exactLength;
+            MinLength = MaxLength = -1;
+            ErrorMessageResourceName = errorMsg;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StringLengthAttribute"/> class.
+        /// </summary>
+        /// <param name="minLength">The minimum expected length of the string.</param>
+        /// <param name="maxLength">The maximum expected length of the string.</param>
+        /// <param name="errorMsgToSmall">The error message returned if the string is to short.</param>
+        /// <param name="errorMsgToLarge">The error message returned if the string is to long.</param>
+        public StringLengthAttribute(int minLength = -1, int maxLength = -1, string? errorMsgToSmall = null, string? errorMsgToLarge = null)
+        {
+            ExactLength = -1;
+            MinLength = minLength;
+            MaxLength = maxLength;
+            ErrorMsgToLarge = errorMsgToLarge;
+            ErrorMsgToSmall = errorMsgToSmall;
+        }
+
+        /// <summary>
         /// Gets the error message to return when the string is to long.
         /// </summary>
         /// <value>
@@ -59,34 +87,6 @@ namespace MaSch.Presentation.Translation.Validation
         public int MinLength { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StringLengthAttribute"/> class.
-        /// </summary>
-        /// <param name="exactLength">The exact expected length of the string.</param>
-        /// <param name="errorMsg">The error message to return if a value is invalid.</param>
-        public StringLengthAttribute(int exactLength, string errorMsg)
-        {
-            ExactLength = exactLength;
-            MinLength = MaxLength = -1;
-            ErrorMessageResourceName = errorMsg;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StringLengthAttribute"/> class.
-        /// </summary>
-        /// <param name="minLength">The minimum expected length of the string.</param>
-        /// <param name="maxLength">The maximum expected length of the string.</param>
-        /// <param name="errorMsgToSmall">The error message returned if the string is to short.</param>
-        /// <param name="errorMsgToLarge">The error message returned if the string is to long.</param>
-        public StringLengthAttribute(int minLength = -1, int maxLength = -1, string? errorMsgToSmall = null, string? errorMsgToLarge = null)
-        {
-            ExactLength = -1;
-            MinLength = minLength;
-            MaxLength = maxLength;
-            ErrorMsgToLarge = errorMsgToLarge;
-            ErrorMsgToSmall = errorMsgToSmall;
-        }
-
-        /// <summary>
         /// Validates the specified value on the specified string length.
         /// </summary>
         /// <param name="value">The value to validate.</param>
@@ -96,14 +96,14 @@ namespace MaSch.Presentation.Translation.Validation
         /// </returns>
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            var sValue = value as string;
-            if (string.IsNullOrEmpty(sValue) && IgnoreNullString)
+            var stringValue = value as string;
+            if (string.IsNullOrEmpty(stringValue) && IgnoreNullString)
                 return ValidationResult.Success;
-            if (ExactLength >= 0 && (sValue?.Length ?? 0) != ExactLength)
+            if (ExactLength >= 0 && (stringValue?.Length ?? 0) != ExactLength)
                 return new ValidationResult(GetTranslatedErrorMessage());
-            if (MinLength >= 0 && (sValue?.Length ?? 0) < MinLength)
+            if (MinLength >= 0 && (stringValue?.Length ?? 0) < MinLength)
                 return new ValidationResult(GetTranslatedErrorMessage(ErrorMsgToSmall ?? ErrorMessageResourceName ?? string.Empty));
-            if (MaxLength >= 0 && (sValue?.Length ?? 0) > MaxLength)
+            if (MaxLength >= 0 && (stringValue?.Length ?? 0) > MaxLength)
                 return new ValidationResult(GetTranslatedErrorMessage(ErrorMsgToLarge ?? ErrorMessageResourceName ?? string.Empty));
             return ValidationResult.Success;
         }

@@ -9,7 +9,7 @@ namespace MaSch.Presentation.Wpf.Controls
     /// Window that is styled more modern that the default <see cref="System.Windows.Window"/>.
     /// </summary>
     /// <seealso cref="System.Windows.Window" />
-    /// <seealso cref="MaSch.Presentation.Views.IWindow" />
+    /// <seealso cref="IWindow" />
     public class Window : System.Windows.Window, IWindow
     {
         /// <summary>
@@ -68,6 +68,14 @@ namespace MaSch.Presentation.Wpf.Controls
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Window"/> class.
+        /// </summary>
+        public Window()
+        {
+            SizeChanged += ModernUIWindow_SizeChanged;
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this <see cref="Window"/> is maximizable.
         /// </summary>
         public bool Maximizable
@@ -112,12 +120,25 @@ namespace MaSch.Presentation.Wpf.Controls
             set => SetValue(TitleAlignmentProperty, value);
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Window"/> class.
-        /// </summary>
-        public Window()
+        /// <inheritdoc/>
+        WindowVisualState IWindow.WindowState
         {
-            SizeChanged += ModernUIWindow_SizeChanged;
+            get => (WindowVisualState)(int)WindowState;
+            set => WindowState = (WindowState)(int)value;
+        }
+
+        /// <inheritdoc/>
+        double IWindow.Width
+        {
+            get => ActualWidth;
+            set => Width = value;
+        }
+
+        /// <inheritdoc/>
+        double IWindow.Height
+        {
+            get => ActualHeight;
+            set => Height = value;
         }
 
         /// <inheritdoc />
@@ -181,27 +202,6 @@ namespace MaSch.Presentation.Wpf.Controls
                         DragMove();
                 };
             }
-        }
-
-        /// <inheritdoc/>
-        WindowVisualState IWindow.WindowState
-        {
-            get => (WindowVisualState)(int)WindowState;
-            set => WindowState = (WindowState)(int)value;
-        }
-
-        /// <inheritdoc/>
-        double IWindow.Width
-        {
-            get => ActualWidth;
-            set => Width = value;
-        }
-
-        /// <inheritdoc/>
-        double IWindow.Height
-        {
-            get => ActualHeight;
-            set => Height = value;
         }
 
         private void ModernUIWindow_SizeChanged(object sender, SizeChangedEventArgs e)

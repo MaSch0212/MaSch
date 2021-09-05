@@ -27,7 +27,7 @@ namespace MaSch.Core.Attributes
         /// <param name="methodName">The name of the method which is executed when the property have changed.</param>
         public NotifyPropertyChangedAttribute(string methodName)
         {
-            Guard.NotNull(methodName, nameof(methodName));
+            _ = Guard.NotNull(methodName, nameof(methodName));
 
             _callbackMethodName = methodName;
         }
@@ -45,7 +45,7 @@ namespace MaSch.Core.Attributes
         /// <returns>Returns a dictionary that contains the <see cref="NotifyParentPropertyAttribute"/> of all properties.</returns>
         public static Dictionary<string, NotifyPropertyChangedAttribute> InitializeAll(object classObject, bool reinitialize = false)
         {
-            Guard.NotNull(classObject, nameof(classObject));
+            _ = Guard.NotNull(classObject, nameof(classObject));
 
             var result = GetAttributes(classObject.GetType());
             result.ForEach(x => x.Value.Initialize(x.Key, reinitialize));
@@ -58,7 +58,7 @@ namespace MaSch.Core.Attributes
         /// <param name="classObject">The object on which to subscribe to.</param>
         public static void SubscribeAll(object classObject)
         {
-            Guard.NotNull(classObject, nameof(classObject));
+            _ = Guard.NotNull(classObject, nameof(classObject));
 
             var result = GetAttributes(classObject.GetType());
             result.ForEach(x => x.Value.SubscribeEvent(classObject));
@@ -70,7 +70,7 @@ namespace MaSch.Core.Attributes
         /// <param name="classObject">The object on which to unsubscribe from.</param>
         public static void UnsubscribeAll(object classObject)
         {
-            Guard.NotNull(classObject, nameof(classObject));
+            _ = Guard.NotNull(classObject, nameof(classObject));
 
             var result = GetAttributes(classObject.GetType());
             result.ForEach(x => x.Value.UnsubscribeEvent(classObject));
@@ -89,7 +89,7 @@ namespace MaSch.Core.Attributes
         [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "Member name is given into this attribute.")]
         public void Initialize(PropertyInfo property, bool reinitialize = false)
         {
-            Guard.NotNull(property, nameof(property));
+            _ = Guard.NotNull(property, nameof(property));
 
             if (IsInitialized && !reinitialize)
                 return;
@@ -118,7 +118,7 @@ namespace MaSch.Core.Attributes
         /// <exception cref="ArgumentException">The declaring type of the property does not match the type of the given object.</exception>
         public void SubscribeEvent(object classObject)
         {
-            Guard.NotNull(classObject, nameof(classObject));
+            _ = Guard.NotNull(classObject, nameof(classObject));
 
             if (!IsInitialized || _propertyInfo == null)
                 throw new InvalidOperationException("You first need to initialize this attribute.");
@@ -143,7 +143,7 @@ namespace MaSch.Core.Attributes
         /// <exception cref="ArgumentException">The declaring type of the property does not match the type of the given object.</exception>
         public void UnsubscribeEvent(object classObject)
         {
-            Guard.NotNull(classObject, nameof(classObject));
+            _ = Guard.NotNull(classObject, nameof(classObject));
             if (!IsInitialized || _propertyInfo == null)
                 throw new InvalidOperationException("You first need to initialize this attribute.");
             if (_propertyInfo.DeclaringType != classObject.GetType())
@@ -155,7 +155,7 @@ namespace MaSch.Core.Attributes
                 var cache = _eventCache[classObject];
                 value.PropertyChanged -= cache.EventHandler;
                 if (--cache.SubscribeCount <= 0)
-                    _eventCache.Remove(classObject);
+                    _ = _eventCache.Remove(classObject);
             }
         }
 

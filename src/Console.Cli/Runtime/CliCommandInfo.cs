@@ -159,7 +159,7 @@ namespace MaSch.Console.Cli.Runtime
         /// <inheritdoc/>
         public void RemoveChildCommand(ICliCommandInfo childCommand)
         {
-            _childCommands.Remove(childCommand);
+            _ = _childCommands.Remove(childCommand);
             if (childCommand.ParentCommand == this && childCommand is CliCommandInfo cc)
                 cc.ParentCommand = null;
         }
@@ -210,7 +210,7 @@ namespace MaSch.Console.Cli.Runtime
 
         private void ValidateExecutionContext(CliExecutionContext context)
         {
-            Guard.NotNull(context, nameof(context));
+            _ = Guard.NotNull(context, nameof(context));
             if (context.Command != this)
                 throw new ArgumentException("The context contains the wrong command. Its instance needs to match this instance of the ICliCommandInfo.");
         }

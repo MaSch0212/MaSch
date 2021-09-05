@@ -22,6 +22,11 @@ namespace MaSch.Presentation.Wpf.Commands
             DependencyProperty.Register("Parameter", typeof(object), typeof(CommandGroupItem), new PropertyMetadata(null));
 
         /// <summary>
+        /// Occurs when the value of the <see cref="Command"/> property changed.
+        /// </summary>
+        public event DependencyPropertyChangedEventHandler? CommandChanged;
+
+        /// <summary>
         /// Gets or sets the command that the <see cref="CommandGroupItem"/> represents.
         /// </summary>
         public ICommand Command
@@ -38,11 +43,6 @@ namespace MaSch.Presentation.Wpf.Commands
             get => GetValue(ParameterProperty);
             set => SetValue(ParameterProperty, value);
         }
-
-        /// <summary>
-        /// Occurs when the value of the <see cref="Command"/> property changed.
-        /// </summary>
-        public event DependencyPropertyChangedEventHandler? CommandChanged;
 
         /// <summary>
         /// Determines whether this instance can execute.

@@ -12,7 +12,7 @@ namespace MaSch.Presentation.Wpf.Controls
     /// <summary>
     /// Control that indicates something is loading.
     /// </summary>
-    /// <seealso cref="System.Windows.Controls.Control" />
+    /// <seealso cref="Control" />
     public class BusyIndicator : Control
     {
         /// <summary>
@@ -51,6 +51,11 @@ namespace MaSch.Presentation.Wpf.Controls
         private Viewbox? _circle;
         private Canvas? _barEllipses;
 
+        static BusyIndicator()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(BusyIndicator), new FrameworkPropertyMetadata(typeof(BusyIndicator)));
+        }
+
         /// <summary>
         /// Gets or sets the Brush to use for the dots.
         /// </summary>
@@ -78,11 +83,6 @@ namespace MaSch.Presentation.Wpf.Controls
             set => SetValue(BarWidthProperty, value);
         }
 
-        static BusyIndicator()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(BusyIndicator), new FrameworkPropertyMetadata(typeof(BusyIndicator)));
-        }
-
         /// <inheritdoc />
         public override void OnApplyTemplate()
         {
@@ -104,6 +104,28 @@ namespace MaSch.Presentation.Wpf.Controls
                 ModernUILoading_SizeChanged(this, null);
                 CircleModeChanged(this, new DependencyPropertyChangedEventArgs(CircleModeProperty, false, CircleMode));
             };
+        }
+
+        private static void CircleModeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            if (obj is BusyIndicator th && th._circle != null && th._barEllipses != null)
+            {
+                th._circle.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Hidden;
+                th._barEllipses.Visibility = (bool)e.NewValue ? Visibility.Hidden : Visibility.Visible;
+                if (e.OldValue != e.NewValue && e.NewValue != null && th.IsEnabled)
+                {
+                    if ((bool)e.NewValue)
+                    {
+                        th._bSb?.Stop(th);
+                        th._cSb?.Begin(th, th.Template, true);
+                    }
+                    else
+                    {
+                        th._cSb?.Stop(th);
+                        th.InitializeAndStartBarStoryboard();
+                    }
+                }
+            }
         }
 
         private void ResizeTimer_Tick(object? sender, EventArgs e)
@@ -172,53 +194,31 @@ namespace MaSch.Presentation.Wpf.Controls
                 var targetX = ActualWidth + dotHeight;
                 var beginTime = i * beginTimeIncrement;
 
-                var daE1 = new DoubleAnimationUsingKeyFrames
+                var animation = new DoubleAnimationUsingKeyFrames
                 {
                     Duration = TimeSpan.FromSeconds(durationTime * 5),
                 };
-                daE1.KeyFrames.Add(new LinearDoubleKeyFrame(fromX, TimeSpan.FromSeconds(0)));
-                daE1.KeyFrames.Add(new LinearDoubleKeyFrame(fromX, TimeSpan.FromSeconds(beginTime)));
-                daE1.KeyFrames.Add(new SplineDoubleKeyFrame(
+                _ = animation.KeyFrames.Add(new LinearDoubleKeyFrame(fromX, TimeSpan.FromSeconds(0)));
+                _ = animation.KeyFrames.Add(new LinearDoubleKeyFrame(fromX, TimeSpan.FromSeconds(beginTime)));
+                _ = animation.KeyFrames.Add(new SplineDoubleKeyFrame(
                     middleXEnter,
                     TimeSpan.FromSeconds(durationTime + beginTime),
                     new KeySpline(0, 0, 0, 1 - (1 / splineIndicator))));
-                daE1.KeyFrames.Add(new LinearDoubleKeyFrame(middleXLeave, TimeSpan.FromSeconds((durationTime * 2) + beginTime)));
-                daE1.KeyFrames.Add(new SplineDoubleKeyFrame(
+                _ = animation.KeyFrames.Add(new LinearDoubleKeyFrame(middleXLeave, TimeSpan.FromSeconds((durationTime * 2) + beginTime)));
+                _ = animation.KeyFrames.Add(new SplineDoubleKeyFrame(
                     targetX,
                     TimeSpan.FromSeconds((durationTime * 3) + beginTime),
                     new KeySpline(1, 1 / splineIndicator, 1, 1)));
 
                 if (_barEllipses.Children[i] is Ellipse ellipse)
                 {
-                    Storyboard.SetTarget(daE1, ellipse);
-                    Storyboard.SetTargetProperty(daE1, new PropertyPath(Canvas.LeftProperty));
-                    _bSb.Children.Add(daE1);
+                    Storyboard.SetTarget(animation, ellipse);
+                    Storyboard.SetTargetProperty(animation, new PropertyPath(Canvas.LeftProperty));
+                    _bSb.Children.Add(animation);
                 }
             }
 
             _bSb.Begin(this, Template, true);
-        }
-
-        private static void CircleModeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
-        {
-            if (obj is BusyIndicator th && th._circle != null && th._barEllipses != null)
-            {
-                th._circle.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Hidden;
-                th._barEllipses.Visibility = (bool)e.NewValue ? Visibility.Hidden : Visibility.Visible;
-                if (e.OldValue != e.NewValue && e.NewValue != null && th.IsEnabled)
-                {
-                    if ((bool)e.NewValue)
-                    {
-                        th._bSb?.Stop(th);
-                        th._cSb?.Begin(th, th.Template, true);
-                    }
-                    else
-                    {
-                        th._cSb?.Stop(th);
-                        th.InitializeAndStartBarStoryboard();
-                    }
-                }
-            }
         }
     }
 }

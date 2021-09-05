@@ -6,7 +6,7 @@ namespace MaSch.Presentation.Wpf.Controls
     /// <summary>
     /// Control that displays an <see cref="IIcon"/>.
     /// </summary>
-    /// <seealso cref="System.Windows.Controls.Control" />
+    /// <seealso cref="Control" />
     public class IconPresenter : Control
     {
         /// <summary>
@@ -15,6 +15,11 @@ namespace MaSch.Presentation.Wpf.Controls
         public static readonly DependencyProperty IconProperty =
             DependencyProperty.Register("Icon", typeof(IIcon), typeof(IconPresenter), new PropertyMetadata(null));
 
+        static IconPresenter()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(IconPresenter), new FrameworkPropertyMetadata(typeof(IconPresenter)));
+        }
+
         /// <summary>
         /// Gets or sets the icon.
         /// </summary>
@@ -22,11 +27,6 @@ namespace MaSch.Presentation.Wpf.Controls
         {
             get => (IIcon)GetValue(IconProperty);
             set => SetValue(IconProperty, value);
-        }
-
-        static IconPresenter()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(IconPresenter), new FrameworkPropertyMetadata(typeof(IconPresenter)));
         }
     }
 }

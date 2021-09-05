@@ -234,13 +234,13 @@ namespace MaSch.Console.Controls
                 {
                     var startindex = startMatches.Peek().Index;
                     var endIndex = text.Length - (endMatches.Peek().Index + endMatches.Peek().Length);
-                    cycle.AddLast(((startindex < endIndex ? endMatches : startMatches).Pop(), 1));
+                    _ = cycle.AddLast(((startindex < endIndex ? endMatches : startMatches).Pop(), 1));
                 }
 
                 while (endMatches.Count > 0)
-                    cycle.AddLast((endMatches.Pop(), 1));
+                    _ = cycle.AddLast((endMatches.Pop(), 1));
                 while (startMatches.Count > 0)
-                    cycle.AddLast((startMatches.Pop(), 1));
+                    _ = cycle.AddLast((startMatches.Pop(), 1));
 
                 var current = cycle.First;
                 for (int i = 0; i < maxLength - text.Length; i++)
@@ -253,11 +253,11 @@ namespace MaSch.Console.Controls
                 int lastIndex = 0;
                 foreach ((Match match, int count) in cycle.OrderBy(x => x.Match.Index))
                 {
-                    result.Append(text[lastIndex..match.Index]).Append(new string(' ', count));
+                    _ = result.Append(text[lastIndex..match.Index]).Append(new string(' ', count));
                     lastIndex = match.Index + match.Length;
                 }
 
-                result.Append(text[lastIndex..]);
+                _ = result.Append(text[lastIndex..]);
                 return result.ToString();
             }
         }
@@ -392,7 +392,7 @@ namespace MaSch.Console.Controls
                         break;
                     }
 
-                    (startIndex < endIndex ? endMatches : startMatches).Pop();
+                    _ = (startIndex < endIndex ? endMatches : startMatches).Pop();
                 }
 
                 return start == null && end == null ? TrimEndWords(text, maxLength) : start + "..." + end;

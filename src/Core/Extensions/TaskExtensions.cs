@@ -86,7 +86,7 @@ namespace MaSch.Core.Extensions
         [SuppressMessage("Major Bug", "S3168:\"async\" methods should not return \"void\"", Justification = "The purpose of this method is to not return a Task.")]
         public static async void Forget<T>(this Task<T> task)
         {
-            await Guard.NotNull(task, nameof(task));
+            _ = await Guard.NotNull(task, nameof(task));
         }
 
         /// <summary>

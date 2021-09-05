@@ -20,12 +20,14 @@ namespace MaSch.Console.Cli.Runtime.Executors
         }
 
         public static bool IsExecutable(Type commandType)
-            => typeof(ICliExecutable).IsAssignableFrom(commandType) || typeof(ICliAsyncExecutable).IsAssignableFrom(commandType);
+        {
+            return typeof(ICliExecutable).IsAssignableFrom(commandType) || typeof(ICliAsyncExecutable).IsAssignableFrom(commandType);
+        }
 
         public int Execute(CliExecutionContext context, object obj)
         {
-            Guard.NotNull(context, nameof(context));
-            Guard.OfType(obj, nameof(obj), false, _commandType);
+            _ = Guard.NotNull(context, nameof(context));
+            _ = Guard.OfType(obj, nameof(obj), false, _commandType);
 
             if (obj is ICliExecutable executor)
                 return executor.ExecuteCommand(context);
@@ -37,8 +39,8 @@ namespace MaSch.Console.Cli.Runtime.Executors
 
         public async Task<int> ExecuteAsync(CliExecutionContext context, object obj)
         {
-            Guard.NotNull(context, nameof(context));
-            Guard.OfType(obj, nameof(obj), false, _commandType);
+            _ = Guard.NotNull(context, nameof(context));
+            _ = Guard.OfType(obj, nameof(obj), false, _commandType);
 
             if (obj is ICliAsyncExecutable asyncExecutor)
                 return await asyncExecutor.ExecuteCommandAsync(context);

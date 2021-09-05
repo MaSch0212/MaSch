@@ -6,7 +6,7 @@ namespace MaSch.Presentation.Wpf.Controls
     /// <summary>
     /// Toggle button that has an <see cref="Wpf.Icon"/> as content.
     /// </summary>
-    /// <seealso cref="System.Windows.Controls.Primitives.ToggleButton" />
+    /// <seealso cref="ToggleButton" />
     public class IconToggleButton : ToggleButton
     {
         /// <summary>
@@ -39,6 +39,11 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(IconToggleButton),
                 new PropertyMetadata(AnchorStyle.None));
 
+        static IconToggleButton()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(IconToggleButton), new FrameworkPropertyMetadata(typeof(IconToggleButton)));
+        }
+
         /// <summary>
         /// Gets or sets the icon.
         /// </summary>
@@ -64,11 +69,6 @@ namespace MaSch.Presentation.Wpf.Controls
         {
             get { return (AnchorStyle)GetValue(ContentAnchorProperty); }
             set { SetValue(ContentAnchorProperty, value); }
-        }
-
-        static IconToggleButton()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(IconToggleButton), new FrameworkPropertyMetadata(typeof(IconToggleButton)));
         }
     }
 }

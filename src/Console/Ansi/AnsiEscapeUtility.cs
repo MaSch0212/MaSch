@@ -30,7 +30,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i><paramref name="count"/></i> A</c></returns>
         public static string GetCursorUp(int count)
         {
-            Guard.NotSmallerThan(count, nameof(count), 0);
+            _ = Guard.NotSmallerThan(count, nameof(count), 0);
             return $"{ESC}[{count}A";
         }
 
@@ -42,7 +42,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i><paramref name="count"/></i> B</c></returns>
         public static string GetCursorDown(int count)
         {
-            Guard.NotSmallerThan(count, nameof(count), 0);
+            _ = Guard.NotSmallerThan(count, nameof(count), 0);
             return $"{ESC}[{count}B";
         }
 
@@ -54,7 +54,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i><paramref name="count"/></i> D</c></returns>
         public static string GetCursorBack(int count)
         {
-            Guard.NotSmallerThan(count, nameof(count), 0);
+            _ = Guard.NotSmallerThan(count, nameof(count), 0);
             return $"{ESC}[{count}D";
         }
 
@@ -66,7 +66,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i><paramref name="count"/></i> C</c></returns>
         public static string GetCursorForward(int count)
         {
-            Guard.NotSmallerThan(count, nameof(count), 0);
+            _ = Guard.NotSmallerThan(count, nameof(count), 0);
             return $"{ESC}[{count}C";
         }
 
@@ -78,7 +78,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i><paramref name="count"/></i> E</c></returns>
         public static string GetCursorNextLine(int count)
         {
-            Guard.NotSmallerThan(count, nameof(count), 0);
+            _ = Guard.NotSmallerThan(count, nameof(count), 0);
             return $"{ESC}[{count}E";
         }
 
@@ -90,7 +90,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i><paramref name="count"/></i> F</c></returns>
         public static string GetCursorPreviousLine(int count)
         {
-            Guard.NotSmallerThan(count, nameof(count), 0);
+            _ = Guard.NotSmallerThan(count, nameof(count), 0);
             return $"{ESC}[{count}F";
         }
 
@@ -102,7 +102,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i><paramref name="column"/></i> G</c></returns>
         public static string GetCursorToColumn(int column)
         {
-            Guard.NotSmallerThan(column, nameof(column), 0);
+            _ = Guard.NotSmallerThan(column, nameof(column), 0);
             return $"{ESC}[{column}G";
         }
 
@@ -115,8 +115,8 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i><paramref name="row"/></i> ; <i><paramref name="column"/></i> H</c></returns>
         public static string GetCursorToPosition(int row, int column)
         {
-            Guard.NotSmallerThan(row, nameof(row), 0);
-            Guard.NotSmallerThan(column, nameof(column), 0);
+            _ = Guard.NotSmallerThan(row, nameof(row), 0);
+            _ = Guard.NotSmallerThan(column, nameof(column), 0);
             return $"{ESC}[{row};{column}H";
         }
 
@@ -128,7 +128,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i><paramref name="mode"/></i> J</c></returns>
         public static string GetEraseScreen(AnsiClearMode mode)
         {
-            Guard.NotUndefinedEnumMember(mode, nameof(mode));
+            _ = Guard.NotUndefinedEnumMember(mode, nameof(mode));
             return $"{ESC}[{(int)mode}J";
         }
 
@@ -140,7 +140,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i><paramref name="mode"/></i> K</c></returns>
         public static string GetEraseLine(AnsiLineClearMode mode)
         {
-            Guard.NotUndefinedEnumMember(mode, nameof(mode));
+            _ = Guard.NotUndefinedEnumMember(mode, nameof(mode));
             return $"{ESC}[{(int)mode}K";
         }
 
@@ -152,7 +152,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i><paramref name="count"/></i> S</c></returns>
         public static string GetScrollUp(int count)
         {
-            Guard.NotSmallerThan(count, nameof(count), 0);
+            _ = Guard.NotSmallerThan(count, nameof(count), 0);
             return $"{ESC}[{count}S";
         }
 
@@ -164,7 +164,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i><paramref name="count"/></i> T</c></returns>
         public static string GetScrollDown(int count)
         {
-            Guard.NotSmallerThan(count, nameof(count), 0);
+            _ = Guard.NotSmallerThan(count, nameof(count), 0);
             return $"{ESC}[{count}T";
         }
 
@@ -177,7 +177,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i><paramref name="count"/></i> M</c></returns>
         public static string GetDeleteLines(int count)
         {
-            Guard.NotSmallerThan(count, nameof(count), 0);
+            _ = Guard.NotSmallerThan(count, nameof(count), 0);
             return $"{ESC}[{count}M";
         }
 
@@ -190,7 +190,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i><paramref name="count"/></i> L</c></returns>
         public static string GetInsertLines(int count)
         {
-            Guard.NotSmallerThan(count, nameof(count), 0);
+            _ = Guard.NotSmallerThan(count, nameof(count), 0);
             return $"{ESC}[{count}L";
         }
 
@@ -204,7 +204,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i><paramref name="count"/></i> X</c></returns>
         public static string GetEraseCharacters(int count)
         {
-            Guard.NotSmallerThan(count, nameof(count), 0);
+            _ = Guard.NotSmallerThan(count, nameof(count), 0);
             return $"{ESC}[{count}X";
         }
 
@@ -218,7 +218,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i><paramref name="count"/></i> P</c></returns>
         public static string GetDeleteCharacters(int count)
         {
-            Guard.NotSmallerThan(count, nameof(count), 0);
+            _ = Guard.NotSmallerThan(count, nameof(count), 0);
             return $"{ESC}[{count}P";
         }
 
@@ -232,7 +232,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i><paramref name="count"/></i> @</c></returns>
         public static string GetInsertCharacters(int count)
         {
-            Guard.NotSmallerThan(count, nameof(count), 0);
+            _ = Guard.NotSmallerThan(count, nameof(count), 0);
             return $"{ESC}[{count}@";
         }
 
@@ -242,7 +242,9 @@ namespace MaSch.Console.Ansi
         /// </summary>
         /// <returns><c>ESC 7</c></returns>
         public static string GetSaveCursor()
-            => $"{ESC}7";
+        {
+            return $"{ESC}7";
+        }
 
         /// <summary>
         /// Gets the ANSI escape sequence for "DEC Restore Cursor" (DECRC).<br/>
@@ -251,21 +253,27 @@ namespace MaSch.Console.Ansi
         /// </summary>
         /// <returns><c>ESC 8</c></returns>
         public static string GetRestoreCursor()
-            => $"{ESC}8";
+        {
+            return $"{ESC}8";
+        }
 
         /// <summary>
         /// Gets the ANSI escape sequence for hiding the cursor (DECTCEM).
         /// </summary>
         /// <returns><c>ESC [ ? 25 h</c></returns>
         public static string GetHideCursor()
-            => $"{ESC}[?25l";
+        {
+            return $"{ESC}[?25l";
+        }
 
         /// <summary>
         /// Gets the ANSI escape sequence for showing the cursor (DECTCEM).
         /// </summary>
         /// <returns><c>ESC [ ? 25 l</c></returns>
         public static string GetShowCursor()
-            => $"{ESC}[?25h";
+        {
+            return $"{ESC}[?25h";
+        }
 
         /// <summary>
         /// Gets the ANSI escape sequence for resetting the "Select Graphic Rendition" (SGR).
@@ -273,7 +281,9 @@ namespace MaSch.Console.Ansi
         /// </summary>
         /// <returns><c>ESC [ 0 m</c></returns>
         public static string GetResetStyle()
-            => $"{ESC}[0m";
+        {
+            return $"{ESC}[0m";
+        }
 
         /// <summary>
         /// Gets the ANSI escape sequence for adding a style attribute using the "Select Graphic Rendition" (SGR) sequence.
@@ -282,7 +292,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i>#</i> m</c></returns>
         public static string GetAddStyle(AnsiTextStyle style)
         {
-            Guard.NotUndefinedFlagInEnumValue(style, nameof(style));
+            _ = Guard.NotUndefinedFlagInEnumValue(style, nameof(style));
 
             static void Add(StringBuilder sb, int n) => sb.Append($"{ESC}[{n}m");
 
@@ -315,7 +325,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ <i>#</i> m</c></returns>
         public static string GetRemoveStyle(AnsiTextStyle style)
         {
-            Guard.NotUndefinedFlagInEnumValue(style, nameof(style));
+            _ = Guard.NotUndefinedFlagInEnumValue(style, nameof(style));
 
             static void Add(StringBuilder sb, int n) => sb.Append($"{ESC}[{n}m");
 
@@ -344,7 +354,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ 38 ; 5 ; <i><paramref name="colorCode"/></i> m</c></returns>
         public static string GetSetForegroundColor(AnsiColorCode colorCode)
         {
-            Guard.NotUndefinedEnumMember(colorCode, nameof(colorCode));
+            _ = Guard.NotUndefinedEnumMember(colorCode, nameof(colorCode));
             return $"{ESC}[38;5;{(int)colorCode}m";
         }
 
@@ -365,7 +375,9 @@ namespace MaSch.Console.Ansi
         /// </summary>
         /// <returns><c>ESC [ 39 m</c></returns>
         public static string GetResetForegroundColor()
-            => $"{ESC}[39m";
+        {
+            return $"{ESC}[39m";
+        }
 
         /// <summary>
         /// Gets the ANSI escape sequence for setting the background color using the "Select Graphic Rendition" (SGR) sequence.
@@ -374,7 +386,7 @@ namespace MaSch.Console.Ansi
         /// <returns><c>ESC [ 48 ; 5 ; <i><paramref name="colorCode"/></i> m</c></returns>
         public static string GetSetBackgroundColor(AnsiColorCode colorCode)
         {
-            Guard.NotUndefinedEnumMember(colorCode, nameof(colorCode));
+            _ = Guard.NotUndefinedEnumMember(colorCode, nameof(colorCode));
             return $"{ESC}[48;5;{(int)colorCode}m";
         }
 
@@ -395,6 +407,8 @@ namespace MaSch.Console.Ansi
         /// </summary>
         /// <returns><c>ESC [ 49 m</c></returns>
         public static string GetResetBackgroundColor()
-            => $"{ESC}[49m";
+        {
+            return $"{ESC}[49m";
+        }
     }
 }

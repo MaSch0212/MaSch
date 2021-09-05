@@ -38,8 +38,8 @@ namespace MaSch.Core
         /// <inheritdoc/>
         public virtual object? Convert(object? objectToConvert, Type? sourceType, Type targetType, IFormatProvider formatProvider)
         {
-            Guard.NotNull(targetType, nameof(targetType));
-            Guard.NotNull(formatProvider, nameof(formatProvider));
+            _ = Guard.NotNull(targetType, nameof(targetType));
+            _ = Guard.NotNull(formatProvider, nameof(formatProvider));
 
             if (objectToConvert == null && sourceType?.IsClass == false)
                 throw new ArgumentException("The object cannot be null, because the sourceType is not nullable.");
@@ -81,7 +81,7 @@ namespace MaSch.Core
         /// <inheritdoc/>
         public virtual void RegisterConverter(IObjectConverter converter)
         {
-            Guard.NotNull(converter, nameof(converter));
+            _ = Guard.NotNull(converter, nameof(converter));
             _objectConverters.Add(converter);
         }
 

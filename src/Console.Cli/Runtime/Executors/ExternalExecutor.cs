@@ -13,8 +13,8 @@ namespace MaSch.Console.Cli.Runtime.Executors
     {
         public static ICliCommandExecutor GetExecutor(Type executorType, Type commandType, object? executorInstance)
         {
-            Guard.NotNull(executorType, nameof(executorType));
-            Guard.NotNull(commandType, nameof(commandType));
+            _ = Guard.NotNull(executorType, nameof(executorType));
+            _ = Guard.NotNull(commandType, nameof(commandType));
 
             var types = (from i in executorType.GetInterfaces()
                          where i.IsGenericType
@@ -49,8 +49,8 @@ namespace MaSch.Console.Cli.Runtime.Executors
 
         public int Execute(CliExecutionContext context, object obj)
         {
-            Guard.NotNull(context, nameof(context));
-            Guard.NotNull(obj, nameof(obj));
+            _ = Guard.NotNull(context, nameof(context));
+            _ = Guard.NotNull(obj, nameof(obj));
             var (executor, castedObject) = PreExecute(context.ServiceProvider, obj);
             LastExecutorInstance = executor;
 
@@ -64,8 +64,8 @@ namespace MaSch.Console.Cli.Runtime.Executors
 
         public async Task<int> ExecuteAsync(CliExecutionContext context, object obj)
         {
-            Guard.NotNull(context, nameof(context));
-            Guard.NotNull(obj, nameof(obj));
+            _ = Guard.NotNull(context, nameof(context));
+            _ = Guard.NotNull(obj, nameof(obj));
             var (executor, castedObject) = PreExecute(context.ServiceProvider, obj);
             LastExecutorInstance = executor;
 
@@ -79,8 +79,8 @@ namespace MaSch.Console.Cli.Runtime.Executors
 
         public bool ValidateOptions(CliExecutionContext context, object parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors)
         {
-            Guard.NotNull(context, nameof(context));
-            Guard.OfType(parameters, nameof(parameters), false, typeof(T));
+            _ = Guard.NotNull(context, nameof(context));
+            _ = Guard.OfType(parameters, nameof(parameters), false, typeof(T));
             var ee = PreValidate(context.ServiceProvider);
             LastExecutorInstance = ee;
 

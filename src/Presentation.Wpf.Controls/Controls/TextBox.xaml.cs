@@ -205,6 +205,29 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(TextBox),
                 new PropertyMetadata(null));
 
+        private readonly Regex _valueRegex;
+        private TextBlock? _suffixTextBlock;
+        private double _actualValue;
+
+        static TextBox()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(TextBox), new FrameworkPropertyMetadata(typeof(TextBox)));
+            PaddingProperty.OverrideMetadata(typeof(TextBox), new FrameworkPropertyMetadata(new Thickness(0), OnPaddingChanged));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextBox"/> class.
+        /// </summary>
+        public TextBox()
+        {
+            PreviewTextInput += ModernUITextBox_PreviewTextInput;
+            PreviewKeyDown += ModernUITextBox_PreviewKeyDown;
+            Loaded += (s, e) => OnNumericValueChanged(this, new DependencyPropertyChangedEventArgs(NumericValueProperty, null, NumericValue));
+            DataObject.AddPastingHandler(this, OnPaste);
+            var numberSep = CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator;
+            _valueRegex = new Regex("\\A(\\+|\\-)?[0-9]*\\" + numberSep + "?[0-9]*[Ee]?[0-9]*\\Z", RegexOptions.Compiled);
+        }
+
         /// <summary>
         /// Occurs when the <see cref="NumericValue"/> property changed.
         /// </summary>
@@ -224,10 +247,6 @@ namespace MaSch.Presentation.Wpf.Controls
         /// Occurs when the <see cref="OnlyNumericValues"/> property changed.
         /// </summary>
         public event BooleanEventHandler? OnlyNumericValuesChanged;
-
-        private readonly Regex _valueRegex;
-        private TextBlock? _suffixTextBlock;
-        private double _actualValue;
 
         /// <summary>
         /// Gets or sets the numeric value of the text box. Only works when <see cref="OnlyNumericValues"/> is set to <c>true</c>.
@@ -382,154 +401,6 @@ namespace MaSch.Presentation.Wpf.Controls
             set => SetValue(StartContentProperty, value);
         }
 
-        static TextBox()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(TextBox), new FrameworkPropertyMetadata(typeof(TextBox)));
-            PaddingProperty.OverrideMetadata(typeof(TextBox), new FrameworkPropertyMetadata(new Thickness(0), OnPaddingChanged));
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TextBox"/> class.
-        /// </summary>
-        public TextBox()
-        {
-            PreviewTextInput += ModernUITextBox_PreviewTextInput;
-            PreviewKeyDown += ModernUITextBox_PreviewKeyDown;
-            Loaded += (s, e) => OnNumericValueChanged(this, new DependencyPropertyChangedEventArgs(NumericValueProperty, null, NumericValue));
-            DataObject.AddPastingHandler(this, OnPaste);
-            var numberSep = CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator;
-            _valueRegex = new Regex("\\A(\\+|\\-)?[0-9]*\\" + numberSep + "?[0-9]*[Ee]?[0-9]*\\Z", RegexOptions.Compiled);
-        }
-
-        /// <summary>
-        /// Raises the <see cref="E:PaddingChanged" /> event.
-        /// </summary>
-        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
-        protected virtual void OnPaddingChanged(DependencyPropertyChangedEventArgs e)
-        {
-            if (_suffixTextBlock != null)
-                _suffixTextBlock.Margin = new Thickness(0, Padding.Top, Padding.Right, Padding.Bottom);
-        }
-
-        private void ModernUITextBox_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter || e.Key == Key.Return)
-            {
-                var be = GetBindingExpression(TextProperty);
-                be?.UpdateSource();
-            }
-        }
-
-        private void OnPaste(object sender, DataObjectPastingEventArgs e)
-        {
-            if (e.DataObject.GetDataPresent(typeof(string)))
-            {
-                if (OnlyNumericValues)
-                {
-                    var text = (string)e.DataObject.GetData(typeof(string));
-                    var previewText = Text.Substring(0, SelectionStart) + text +
-                        Text.Substring(SelectionStart + SelectionLength, Text.Length - SelectionStart - SelectionLength);
-                    if (!_valueRegex.IsMatch(previewText))
-                        e.CancelCommand();
-                }
-            }
-            else
-            {
-                e.CancelCommand();
-            }
-        }
-
-        private void ModernUITextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            if (OnlyNumericValues)
-            {
-                var previewText = Text.Substring(0, SelectionStart) + e.Text +
-                    Text.Substring(SelectionStart + SelectionLength, Text.Length - SelectionStart - SelectionLength);
-                e.Handled = !_valueRegex.IsMatch(previewText.Replace(" ", string.Empty));
-            }
-        }
-
-        /// <inheritdoc/>
-        protected override void OnTextChanged(TextChangedEventArgs e)
-        {
-            base.OnTextChanged(e);
-            InvalidateVisual();
-        }
-
-        /// <inheritdoc/>
-        protected override void OnRender(DrawingContext drawingContext)
-        {
-            base.OnRender(drawingContext);
-
-            if (Text != string.Empty)
-            {
-                var leftMargin = BorderThickness.Left + Padding.Left;
-                var topMargin = BorderThickness.Top + Padding.Top - VerticalOffset;
-                var rightMargin = BorderThickness.Right + Padding.Right;
-
-                var dpi = (PresentationSource.FromVisual(this)?.CompositionTarget?.TransformToDevice.M11 ?? 1D) * 96D;
-                var ft = new FormattedText(
-                    Text,
-                    CultureInfo.CurrentUICulture,
-                    FlowDirection.LeftToRight,
-                    new Typeface(FontFamily, FontStyle, FontWeight, FontStretch),
-                    FontSize,
-                    Foreground,
-                    new NumberSubstitution(),
-                    TextFormattingMode.Ideal,
-                    dpi)
-                {
-                    LineHeight = FontSize * FontFamily.LineSpacing,
-                    MaxTextWidth = ActualWidth - leftMargin - rightMargin,
-                };
-
-                if (!string.IsNullOrEmpty(HighlightText))
-                {
-                    var highlights = HighlightSingleWord ? HighlightText.Split(' ') : new[] { HighlightText };
-                    foreach (var highlight in highlights.Distinct())
-                    {
-                        var start = 0;
-                        while (true)
-                        {
-                            var index = Text.IndexOf(HighlightText, start, HighlightMatchCase ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase);
-                            if (index >= 0)
-                            {
-                                var geom = ft.BuildHighlightGeometry(new Point(leftMargin, topMargin), index, HighlightText.Length);
-                                if (geom != null)
-                                    drawingContext.DrawGeometry(HighlightBrush, null, geom);
-                                start = index + 1;
-                            }
-                            else
-                            {
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <inheritdoc/>
-        protected override void OnGotFocus(RoutedEventArgs e)
-        {
-            base.OnGotFocus(e);
-            if (SelectAllOnFocus)
-                SelectAll();
-        }
-
-        /// <inheritdoc/>
-        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
-        {
-            if (e.Property == PaddingProperty && _suffixTextBlock != null)
-            {
-                var padding = e.NewValue as Thickness?;
-                if (padding.HasValue)
-                    _suffixTextBlock.Margin = new Thickness(2, padding.Value.Top, 2, padding.Value.Bottom);
-            }
-
-            base.OnPropertyChanged(e);
-        }
-
         /// <inheritdoc/>
         public override void OnApplyTemplate()
         {
@@ -538,8 +409,10 @@ namespace MaSch.Presentation.Wpf.Controls
             _suffixTextBlock = GetTemplateChild("MaSch_Suffix") as TextBlock;
             if (GetTemplateChild("MaSch_Up") is Button btnUp)
             {
+#pragma warning disable SA1305 // Field names should not use Hungarian notation
                 var upRunning = false;
                 var upRunningLock = new object();
+#pragma warning restore SA1305 // Field names should not use Hungarian notation
                 btnUp.PreviewMouseLeftButtonDown += async (s, e) =>
                 {
                     NumericValue += StepSize;
@@ -628,6 +501,97 @@ namespace MaSch.Presentation.Wpf.Controls
                         NumberChange();
                 };
             }
+        }
+
+        /// <summary>
+        /// Raises the <see cref="E:PaddingChanged" /> event.
+        /// </summary>
+        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
+        protected virtual void OnPaddingChanged(DependencyPropertyChangedEventArgs e)
+        {
+            if (_suffixTextBlock != null)
+                _suffixTextBlock.Margin = new Thickness(0, Padding.Top, Padding.Right, Padding.Bottom);
+        }
+
+        /// <inheritdoc/>
+        protected override void OnTextChanged(TextChangedEventArgs e)
+        {
+            base.OnTextChanged(e);
+            InvalidateVisual();
+        }
+
+        /// <inheritdoc/>
+        protected override void OnRender(DrawingContext drawingContext)
+        {
+            base.OnRender(drawingContext);
+
+            if (Text != string.Empty)
+            {
+                var leftMargin = BorderThickness.Left + Padding.Left;
+                var topMargin = BorderThickness.Top + Padding.Top - VerticalOffset;
+                var rightMargin = BorderThickness.Right + Padding.Right;
+
+                var dpi = (PresentationSource.FromVisual(this)?.CompositionTarget?.TransformToDevice.M11 ?? 1D) * 96D;
+                var ft = new FormattedText(
+                    Text,
+                    CultureInfo.CurrentUICulture,
+                    FlowDirection.LeftToRight,
+                    new Typeface(FontFamily, FontStyle, FontWeight, FontStretch),
+                    FontSize,
+                    Foreground,
+                    new NumberSubstitution(),
+                    TextFormattingMode.Ideal,
+                    dpi)
+                {
+                    LineHeight = FontSize * FontFamily.LineSpacing,
+                    MaxTextWidth = ActualWidth - leftMargin - rightMargin,
+                };
+
+                if (!string.IsNullOrEmpty(HighlightText))
+                {
+                    var highlights = HighlightSingleWord ? HighlightText.Split(' ') : new[] { HighlightText };
+                    foreach (var highlight in highlights.Distinct())
+                    {
+                        var start = 0;
+                        while (true)
+                        {
+                            var index = Text.IndexOf(HighlightText, start, HighlightMatchCase ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase);
+                            if (index >= 0)
+                            {
+                                var geom = ft.BuildHighlightGeometry(new Point(leftMargin, topMargin), index, HighlightText.Length);
+                                if (geom != null)
+                                    drawingContext.DrawGeometry(HighlightBrush, null, geom);
+                                start = index + 1;
+                            }
+                            else
+                            {
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        protected override void OnGotFocus(RoutedEventArgs e)
+        {
+            base.OnGotFocus(e);
+            if (SelectAllOnFocus)
+                SelectAll();
+        }
+
+        /// <inheritdoc/>
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            if (e.Property == PaddingProperty && _suffixTextBlock != null)
+            {
+                var padding = e.NewValue as Thickness?;
+                if (padding.HasValue)
+                    _suffixTextBlock.Margin = new Thickness(2, padding.Value.Top, 2, padding.Value.Bottom);
+            }
+
+            base.OnPropertyChanged(e);
         }
 
         private static void OnNumericValueChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
@@ -739,6 +703,44 @@ namespace MaSch.Presentation.Wpf.Controls
         {
             if (obj is TextBox tb)
                 tb.OnPaddingChanged(e);
+        }
+
+        private void ModernUITextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter || e.Key == Key.Return)
+            {
+                var be = GetBindingExpression(TextProperty);
+                be?.UpdateSource();
+            }
+        }
+
+        private void OnPaste(object sender, DataObjectPastingEventArgs e)
+        {
+            if (e.DataObject.GetDataPresent(typeof(string)))
+            {
+                if (OnlyNumericValues)
+                {
+                    var text = (string)e.DataObject.GetData(typeof(string));
+                    var previewText = Text.Substring(0, SelectionStart) + text +
+                        Text.Substring(SelectionStart + SelectionLength, Text.Length - SelectionStart - SelectionLength);
+                    if (!_valueRegex.IsMatch(previewText))
+                        e.CancelCommand();
+                }
+            }
+            else
+            {
+                e.CancelCommand();
+            }
+        }
+
+        private void ModernUITextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (OnlyNumericValues)
+            {
+                var previewText = Text.Substring(0, SelectionStart) + e.Text +
+                    Text.Substring(SelectionStart + SelectionLength, Text.Length - SelectionStart - SelectionLength);
+                e.Handled = !_valueRegex.IsMatch(previewText.Replace(" ", string.Empty));
+            }
         }
     }
 }

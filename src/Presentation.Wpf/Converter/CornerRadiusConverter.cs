@@ -8,7 +8,7 @@ namespace MaSch.Presentation.Wpf.Converter
     /// <summary>
     /// A <see cref="IValueConverter"/> that calculates a new <see cref="CornerRadius"/> from another <see cref="CornerRadius"/> using formula for each corner.
     /// </summary>
-    /// <seealso cref="System.Windows.Data.IValueConverter" />
+    /// <seealso cref="IValueConverter" />
     public class CornerRadiusConverter : IValueConverter
     {
         private readonly MathConverter _mathConverter = new();

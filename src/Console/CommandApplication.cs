@@ -166,7 +166,7 @@ namespace MaSch.Console
                 }
                 else if (s.EndsWith("\""))
                 {
-                    current.Append(" " + s[0..^1]);
+                    _ = current.Append(" " + s[0..^1]);
                     if (quotationMarksCount == 0)
                     {
                         _console.WriteLine("The syntax is not valid!");
@@ -184,12 +184,12 @@ namespace MaSch.Console
                 }
                 else if (s.StartsWith("\"") && quotationMarksCount == 0)
                 {
-                    current.Clear().Append(s[1..]);
+                    _ = current.Clear().Append(s[1..]);
                     quotationMarksCount = 1;
                 }
                 else if (quotationMarksCount > 0)
                 {
-                    current.Append(" " + s);
+                    _ = current.Append(" " + s);
                 }
                 else
                 {

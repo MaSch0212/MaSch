@@ -8,7 +8,7 @@ namespace MaSch.Test.Assertion.UnitTests
     [TestClass]
     public class StringAssertionsTests
     {
-        private static MaSch.Test.Assertion.Assert AssertUnderTest => MaSch.Test.Assertion.Assert.Instance;
+        private static Assert AssertUnderTest => MaSch.Test.Assertion.Assert.Instance;
 
         #region IsNullOrEmpty
 

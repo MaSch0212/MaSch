@@ -13,9 +13,16 @@ namespace MaSch.Test.Assertion
     /// A collection of helper classes to test various conditions within unit tests.
     /// If the condition being tested is not met, an <see cref="AssertInconclusiveException"/> is thrown.
     /// </summary>
-    /// <seealso cref="MaSch.Test.Assertion.AssertBase" />
+    /// <seealso cref="AssertBase" />
     public class InconclusiveAssert : AssertBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InconclusiveAssert"/> class.
+        /// </summary>
+        protected InconclusiveAssert()
+        {
+        }
+
         /// <summary>
         /// Gets the singleton instance of the <see cref="InconclusiveAssert"/>.
         /// </summary>
@@ -24,13 +31,6 @@ namespace MaSch.Test.Assertion
         /// <inheritdoc/>
         protected override string? AssertNamePrefix { get; } = "Assert.Inc";
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InconclusiveAssert"/> class.
-        /// </summary>
-        protected InconclusiveAssert()
-        {
-        }
-
 #if MSTEST
         /// <summary>
         /// Runs an assertion from an extension method for <see cref="Microsoft.VisualStudio.TestTools.UnitTesting.Assert"/>.
@@ -38,7 +38,9 @@ namespace MaSch.Test.Assertion
         /// </summary>
         /// <param name="assertAction">The assert action.</param>
         public virtual void That(Action<MSAssert> assertAction)
-            => CatchAssertException(() => assertAction(MSAssert.That));
+        {
+            CatchAssertException(() => assertAction(MSAssert.That));
+        }
 
         /// <summary>
         /// Runs an assertion from an extension method for <see cref="Microsoft.VisualStudio.TestTools.UnitTesting.Assert"/>.
@@ -48,7 +50,9 @@ namespace MaSch.Test.Assertion
         /// <param name="assertAction">The assert action.</param>
         /// <returns>The result of the action.</returns>
         public virtual T That<T>(Func<MSAssert, T> assertAction)
-            => CatchAssertException(() => assertAction(MSAssert.That));
+        {
+            return CatchAssertException(() => assertAction(MSAssert.That));
+        }
 
         /// <summary>
         /// Runs an assertion from an extension method for <see cref="Microsoft.VisualStudio.TestTools.UnitTesting.Assert"/>.
@@ -57,7 +61,9 @@ namespace MaSch.Test.Assertion
         /// <param name="assertAction">The assert action.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public virtual async Task That(Func<MSAssert, Task> assertAction)
-            => await CatchAssertException(() => assertAction(MSAssert.That));
+        {
+            await CatchAssertException(() => assertAction(MSAssert.That));
+        }
 
         /// <summary>
         /// Runs an assertion from an extension method for <see cref="Microsoft.VisualStudio.TestTools.UnitTesting.Assert"/>.
@@ -67,7 +73,9 @@ namespace MaSch.Test.Assertion
         /// <param name="assertAction">The assert action.</param>
         /// <returns>The result of the action.</returns>
         public virtual async Task<T> That<T>(Func<MSAssert, Task<T>> assertAction)
-            => await CatchAssertException(() => assertAction(MSAssert.That));
+        {
+            return await CatchAssertException(() => assertAction(MSAssert.That));
+        }
 #endif
 
         /// <inheritdoc/>

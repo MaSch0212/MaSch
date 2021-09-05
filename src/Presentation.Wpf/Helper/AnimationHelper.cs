@@ -6,6 +6,32 @@ using System.Windows.Media.Animation;
 namespace MaSch.Presentation.Wpf.Helper
 {
     /// <summary>
+    /// Specifies the direction of the switch animation.
+    /// </summary>
+    public enum SwitchDirection
+    {
+        /// <summary>
+        /// Switches the view to the left.
+        /// </summary>
+        Left,
+
+        /// <summary>
+        /// Switches the view to the right.
+        /// </summary>
+        Right,
+
+        /// <summary>
+        /// Switches the view down.
+        /// </summary>
+        Down,
+
+        /// <summary>
+        /// Switches the view up.
+        /// </summary>
+        Up,
+    }
+
+    /// <summary>
     /// Helper methods for animations.
     /// </summary>
     public static class AnimationHelper
@@ -56,13 +82,13 @@ namespace MaSch.Presentation.Wpf.Helper
         /// <param name="durationSec">The duration in seconds.</param>
         public static void Switch(UIElement control, SwitchDirection direction, bool fromHidden = true, TimeSpan? beginTime = null, double durationSec = 0.2)
         {
-            var dur = new Duration(TimeSpan.FromSeconds(durationSec));
-            var daOp = fromHidden ? new DoubleAnimation(1, dur) : new DoubleAnimation(0, dur);
-            var daTrans = new DoubleAnimation(0, 0, dur);
+            var duration = new Duration(TimeSpan.FromSeconds(durationSec));
+            var opacityAnimation = fromHidden ? new DoubleAnimation(1, duration) : new DoubleAnimation(0, duration);
+            var translateAnimation = new DoubleAnimation(0, 0, duration);
             if (beginTime.HasValue)
             {
-                daOp.BeginTime = beginTime.Value;
-                daTrans.BeginTime = beginTime.Value;
+                opacityAnimation.BeginTime = beginTime.Value;
+                translateAnimation.BeginTime = beginTime.Value;
             }
 
             switch (direction)
@@ -70,16 +96,16 @@ namespace MaSch.Presentation.Wpf.Helper
                 case SwitchDirection.Left:
                 case SwitchDirection.Up:
                     if (fromHidden)
-                        daTrans.From = 50;
+                        translateAnimation.From = 50;
                     else
-                        daTrans.To = -50;
+                        translateAnimation.To = -50;
                     break;
                 case SwitchDirection.Right:
                 case SwitchDirection.Down:
                     if (fromHidden)
-                        daTrans.From = -50;
+                        translateAnimation.From = -50;
                     else
-                        daTrans.To = 50;
+                        translateAnimation.To = 50;
                     break;
             }
 
@@ -88,45 +114,19 @@ namespace MaSch.Presentation.Wpf.Helper
             {
                 case SwitchDirection.Left:
                 case SwitchDirection.Right:
-                    trans.X = daTrans.From ?? 0;
+                    trans.X = translateAnimation.From ?? 0;
                     control.RenderTransform = trans;
-                    trans.BeginAnimation(TranslateTransform.XProperty, daTrans);
+                    trans.BeginAnimation(TranslateTransform.XProperty, translateAnimation);
                     break;
                 case SwitchDirection.Down:
                 case SwitchDirection.Up:
-                    trans.Y = daTrans.From ?? 0;
+                    trans.Y = translateAnimation.From ?? 0;
                     control.RenderTransform = trans;
-                    trans.BeginAnimation(TranslateTransform.YProperty, daTrans);
+                    trans.BeginAnimation(TranslateTransform.YProperty, translateAnimation);
                     break;
             }
 
-            control.BeginAnimation(UIElement.OpacityProperty, daOp);
+            control.BeginAnimation(UIElement.OpacityProperty, opacityAnimation);
         }
-    }
-
-    /// <summary>
-    /// Specifies the direction of the switch animation.
-    /// </summary>
-    public enum SwitchDirection
-    {
-        /// <summary>
-        /// Switches the view to the left.
-        /// </summary>
-        Left,
-
-        /// <summary>
-        /// Switches the view to the right.
-        /// </summary>
-        Right,
-
-        /// <summary>
-        /// Switches the view down.
-        /// </summary>
-        Down,
-
-        /// <summary>
-        /// Switches the view up.
-        /// </summary>
-        Up,
     }
 }

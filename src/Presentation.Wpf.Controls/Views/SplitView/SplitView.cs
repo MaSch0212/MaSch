@@ -27,34 +27,11 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
     /// <summary>
     /// Control that shows a hamburger menu.
     /// </summary>
-    /// <seealso cref="System.Windows.Controls.Control" />
+    /// <seealso cref="Control" />
     [ContentProperty(nameof(ItemSource))]
     [DefaultProperty(nameof(ItemSource))]
     public class SplitView : Control
     {
-        #region Private Fields
-
-        private readonly Duration _animationDuration = new(TimeSpan.FromSeconds(0.25));
-        private TreeView? _treeView;
-        private ColumnDefinition? _buttonsColumn;
-        private ContentControl? _content;
-        private Storyboard? _currentStoryboard;
-        private ContentPresenter? _infoAreaExpandedTop;
-        private ContentPresenter? _infoAreaExpandedBottom;
-        private ContentPresenter? _infoAreaCollapsedTop;
-        private ContentPresenter? _infoAreaCollapsedBottom;
-        private ScrollViewer? _treeViewScroll;
-        private UIElement? _indicatorTop;
-        private UIElement? _indicatorBottom;
-        private bool _ignoreNextSwitch;
-
-        private DispatcherTimer? _scrollTopTimer;
-        private DispatcherTimer? _scrollBottomTimer;
-
-        #endregion
-
-        #region Dependency Properties
-
         /// <summary>
         /// Dependency property. Gets or sets the item source for the groups and pages.
         /// </summary>
@@ -151,32 +128,36 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         public static readonly DependencyProperty EasingFunctionProperty =
             DependencyProperty.Register("EasingFunction", typeof(IEasingFunction), typeof(SplitView), new PropertyMetadata(null));
 
-        #endregion
+        private readonly Duration _animationDuration = new(TimeSpan.FromSeconds(0.25));
+        private TreeView? _treeView;
+        private ColumnDefinition? _buttonsColumn;
+        private ContentControl? _content;
+        private Storyboard? _currentStoryboard;
+        private ContentPresenter? _infoAreaExpandedTop;
+        private ContentPresenter? _infoAreaExpandedBottom;
+        private ContentPresenter? _infoAreaCollapsedTop;
+        private ContentPresenter? _infoAreaCollapsedBottom;
+        private ScrollViewer? _treeViewScroll;
+        private UIElement? _indicatorTop;
+        private UIElement? _indicatorBottom;
+        private bool _ignoreNextSwitch;
+        private bool _closeConfirmed;
 
-        #region Dependecy Property Changed Handlers
+        private DispatcherTimer? _scrollTopTimer;
+        private DispatcherTimer? _scrollBottomTimer;
 
-        private static void OnIsExpandedChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        static SplitView()
         {
-            if (obj is SplitView view)
-            {
-                if (view.IsExpanded)
-                    view.StartExpandAnimation();
-                else
-                    view.StartShrinkAnimation();
-            }
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(SplitView), new FrameworkPropertyMetadata(typeof(SplitView)));
         }
 
-        private static void OnUseAnimationsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SplitView"/> class.
+        /// </summary>
+        public SplitView()
         {
-            if (obj is SplitView view && view.UseAnimations)
-            {
-                view.StopAnimations();
-            }
+            ItemSource = new ObservableCollection<SplitViewItemBase>();
         }
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         /// Gets or sets the item source for the groups and pages.
@@ -343,27 +324,6 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             set => SetValue(EasingFunctionProperty, value);
         }
 
-        #endregion
-
-        #region Ctor
-
-        static SplitView()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(SplitView), new FrameworkPropertyMetadata(typeof(SplitView)));
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SplitView"/> class.
-        /// </summary>
-        public SplitView()
-        {
-            ItemSource = new ObservableCollection<SplitViewItemBase>();
-        }
-
-        #endregion
-
-        #region Overrides
-
         /// <inheritdoc/>
         public override void OnApplyTemplate()
         {
@@ -380,17 +340,17 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             _indicatorBottom = GetTemplateChild("PART_IndicatorBottom") as UIElement;
             _indicatorTop = GetTemplateChild("PART_IndicatorTop") as UIElement;
 
-            Guard.NotNull(_treeView, nameof(_treeView));
-            Guard.NotNull(menuButton, nameof(menuButton));
-            Guard.NotNull(_buttonsColumn, nameof(_buttonsColumn));
-            Guard.NotNull(_content, nameof(_content));
-            Guard.NotNull(_infoAreaCollapsedTop, nameof(_infoAreaCollapsedTop));
-            Guard.NotNull(_infoAreaCollapsedBottom, nameof(_infoAreaCollapsedBottom));
-            Guard.NotNull(_infoAreaExpandedTop, nameof(_infoAreaExpandedTop));
-            Guard.NotNull(_infoAreaExpandedBottom, nameof(_infoAreaExpandedBottom));
-            Guard.NotNull(_treeViewScroll, nameof(_treeViewScroll));
-            Guard.NotNull(_indicatorBottom, nameof(_indicatorBottom));
-            Guard.NotNull(_indicatorTop, nameof(_indicatorTop));
+            _ = Guard.NotNull(_treeView, nameof(_treeView));
+            _ = Guard.NotNull(menuButton, nameof(menuButton));
+            _ = Guard.NotNull(_buttonsColumn, nameof(_buttonsColumn));
+            _ = Guard.NotNull(_content, nameof(_content));
+            _ = Guard.NotNull(_infoAreaCollapsedTop, nameof(_infoAreaCollapsedTop));
+            _ = Guard.NotNull(_infoAreaCollapsedBottom, nameof(_infoAreaCollapsedBottom));
+            _ = Guard.NotNull(_infoAreaExpandedTop, nameof(_infoAreaExpandedTop));
+            _ = Guard.NotNull(_infoAreaExpandedBottom, nameof(_infoAreaExpandedBottom));
+            _ = Guard.NotNull(_treeViewScroll, nameof(_treeViewScroll));
+            _ = Guard.NotNull(_indicatorBottom, nameof(_indicatorBottom));
+            _ = Guard.NotNull(_indicatorTop, nameof(_indicatorTop));
 
             _treeView.SelectedItemChanged += TreeView_SelectedItemChanged;
             menuButton.Click += MenuButton_Click;
@@ -420,6 +380,178 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             }
         }
 
+        /// <summary>
+        /// Switches to a specified page.
+        /// </summary>
+        /// <param name="item">The item to switch to.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<bool> SwitchToItem(SplitViewItem item)
+        {
+            _ignoreNextSwitch = true;
+            SetSelected(item);
+            return await SwitchContentInternal(_treeView!.SelectedItem as SplitViewItem, item);
+        }
+
+        /// <summary>
+        /// Collapses the menu.
+        /// </summary>
+        /// <param name="useAnimation">Determines wether to use an animation. When null uses current value of <see cref="UseAnimations"/>.</param>
+        public void CollapseMenu(bool? useAnimation)
+        {
+            if (!IsExpanded)
+                return;
+            var prevUa = UseAnimations;
+            if (useAnimation.HasValue)
+                UseAnimations = useAnimation.Value;
+            try
+            {
+                IsExpanded = false;
+            }
+            finally
+            {
+                UseAnimations = prevUa;
+            }
+        }
+
+        /// <summary>
+        /// Expands the menu.
+        /// </summary>
+        /// <param name="useAnimation">Determines wether to use an animation. When null uses current value of <see cref="UseAnimations"/>.</param>
+        public void ExpandMenu(bool? useAnimation)
+        {
+            if (IsExpanded)
+                return;
+            var prevUa = UseAnimations;
+            if (useAnimation.HasValue)
+                UseAnimations = useAnimation.Value;
+            try
+            {
+                IsExpanded = true;
+            }
+            finally
+            {
+                UseAnimations = prevUa;
+            }
+        }
+
+        /// <summary>
+        /// Sets the items of this <see cref="SplitView"/>.
+        /// </summary>
+        /// <param name="pageGroups">The page groups.</param>
+        /// <param name="pages">The pages.</param>
+        public void SetItems(IEnumerable<IPageGroup> pageGroups, IEnumerable<IPage> pages)
+        {
+            SetItems(pageGroups, pages, null);
+        }
+
+        /// <summary>
+        /// Sets the items of this <see cref="SplitView"/>.
+        /// </summary>
+        /// <param name="pageGroups">The page groups.</param>
+        /// <param name="pages">The pages.</param>
+        /// <param name="translationManager">The translation manager to use to translate the items.</param>
+        [SuppressMessage("Minor Code Smell", "S1905:Redundant casts should not be used", Justification = "False positive.")]
+        public void SetItems(IEnumerable<IPageGroup> pageGroups, IEnumerable<IPage> pages, ITranslationManager? translationManager)
+        {
+            var items = new List<SplitViewItemBase>();
+
+            var pageArr = pages.ToArray();
+            var groups = from g in ((IOrderedEnumerable<IPageGroup?>)pageGroups.OrderBy(x => x.PageGroupPriority)).Append(null)
+                         select new { Group = g, Pages = pageArr.Where(x => x.PageGroupId == g?.PageGroupId).OrderBy(x => x.PagePriority) };
+
+            bool selectionSet = false;
+            var topLevelPrio = new List<int>();
+            foreach (var group in groups)
+            {
+                IList list = items;
+                if (group.Group != null)
+                {
+                    var itemGroup = new SplitViewItemGroup
+                    {
+                        Header = group.Group.PageGroupName == null
+                            ? null
+                            : translationManager?.GetTranslation(group.Group.PageGroupName, group.Group.TranslationProviderKey ?? translationManager.DefaultProviderKey) ?? group.Group.PageGroupName,
+                    };
+                    if (translationManager != null && group.Group.PageGroupName != null)
+                        translationManager.LanguageChanged += (s, e) => itemGroup.Header = translationManager.GetTranslation(group.Group.PageGroupName, group.Group.TranslationProviderKey ?? translationManager.DefaultProviderKey);
+                    items.Add(itemGroup);
+                    topLevelPrio.Add(group.Group.PageGroupPriority);
+                    list = itemGroup.Children;
+                }
+
+                foreach (var page in group.Pages)
+                {
+                    var item = new SplitViewItem
+                    {
+                        Icon = page.PageIcon,
+                        Header = translationManager?.GetTranslation(page.PageName, page.TranslationProviderKey ?? translationManager.DefaultProviderKey) ?? page.PageName,
+                        Content = page.PageContent,
+                    };
+                    if (translationManager != null)
+                        translationManager.LanguageChanged += (s, e) => item.Header = translationManager.GetTranslation(page.PageName, page.TranslationProviderKey ?? translationManager.DefaultProviderKey);
+                    if (ReferenceEquals(list, items))
+                    {
+                        var idx = topLevelPrio.IndexOf(x => x > page.PagePriority);
+                        if (idx == -1)
+                            items.Add(item);
+                        else
+                            items.Insert(idx, item);
+                    }
+                    else
+                    {
+                        _ = list.Add(item);
+                    }
+
+                    if (page.IsPageSelectedByDefault && !selectionSet)
+                    {
+                        item.IsSelected = true;
+                        selectionSet = true;
+                    }
+                }
+            }
+
+            ItemSource = items;
+        }
+
+        private static void OnIsExpandedChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            if (obj is SplitView view)
+            {
+                if (view.IsExpanded)
+                    view.StartExpandAnimation();
+                else
+                    view.StartShrinkAnimation();
+            }
+        }
+
+        private static void OnUseAnimationsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            if (obj is SplitView view && view.UseAnimations)
+            {
+                view.StopAnimations();
+            }
+        }
+
+        private static void GetGroupItemsRec(List<Border> items, TreeViewItem root)
+        {
+            _ = Guard.NotNull(items, nameof(items));
+            _ = Guard.NotNull(root, nameof(root));
+
+            if (root.DataContext is SplitViewItemGroup group)
+            {
+                if ((VisualTreeHelper.GetChild(root, 0) as Grid)?.Children[0] is Border border)
+                    items.Add(border);
+                if (group.Children != null)
+                {
+                    foreach (var child in group.Children.OfType<SplitViewItemGroup>())
+                    {
+                        if (root.ItemContainerGenerator.ContainerFromItem(child) is TreeViewItem tvi)
+                            GetGroupItemsRec(items, tvi);
+                    }
+                }
+            }
+        }
+
         private void ScrollTopTimer_Tick(object? sender, EventArgs e)
         {
             _treeViewScroll!.ScrollToVerticalOffset(_treeViewScroll.VerticalOffset - 10);
@@ -439,10 +571,6 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             }
         }
 
-        #endregion
-
-        #region Private Methods
-
         private void ParentWindow_StateChanged(object? sender, EventArgs e)
         {
             if (sender is Window wdw)
@@ -459,7 +587,6 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             }
         }
 
-        private bool _closeConfirmed;
         private async void ParentWindow_Closing(object sender, CancelEventArgs e)
         {
             if (!_closeConfirmed && SelectedItem is SplitViewItem item && item.Content is SplitViewContent content)
@@ -473,7 +600,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                         if (await content.Close())
                         {
                             _closeConfirmed = true;
-                            await Task.Run(() => Waiter.Retry(() => Application.Current.Dispatcher.Invoke(() => (sender as Window)?.Close()), new RetryOptions { ThinkTimeBetweenChecks = TimeSpan.FromSeconds(1000) }));
+                            _ = await Task.Run(() => Waiter.Retry(() => Application.Current.Dispatcher.Invoke(() => (sender as Window)?.Close()), new RetryOptions { ThinkTimeBetweenChecks = TimeSpan.FromSeconds(1000) }));
                         }
                     }
                     finally
@@ -544,7 +671,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             }
 
             if (!_ignoreNextSwitch)
-                await SwitchContentInternal(o, n);
+                _ = await SwitchContentInternal(o, n);
             else
                 _ignoreNextSwitch = false;
         }
@@ -604,15 +731,15 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             Storyboard.SetTargetProperty(columnAnimation, new PropertyPath(ColumnDefinition.WidthProperty));
             _currentStoryboard.Children.Add(columnAnimation);
 
-            var iAET = new DoubleAnimation(0, _animationDuration) { EasingFunction = new CubicEase() };
-            var iAEB = new DoubleAnimation(0, _animationDuration) { EasingFunction = new CubicEase() };
-            var iACT = new DoubleAnimation(1, _animationDuration) { EasingFunction = new CubicEase() };
-            var iACB = new DoubleAnimation(1, _animationDuration) { EasingFunction = new CubicEase() };
-            iAET.SetTarget(_infoAreaExpandedTop!, OpacityProperty);
-            iAEB.SetTarget(_infoAreaExpandedBottom!, OpacityProperty);
-            iACT.SetTarget(_infoAreaCollapsedTop!, OpacityProperty);
-            iACB.SetTarget(_infoAreaCollapsedBottom!, OpacityProperty);
-            _currentStoryboard.Children.Add(iAET, iAEB, iACT, iACB);
+            var expandedTopAnimation = new DoubleAnimation(0, _animationDuration) { EasingFunction = new CubicEase() };
+            var expandedBottomAnimation = new DoubleAnimation(0, _animationDuration) { EasingFunction = new CubicEase() };
+            var collapsedTopAnimation = new DoubleAnimation(1, _animationDuration) { EasingFunction = new CubicEase() };
+            var collapsedBottomAnimation = new DoubleAnimation(1, _animationDuration) { EasingFunction = new CubicEase() };
+            _ = expandedTopAnimation.SetTarget(_infoAreaExpandedTop!, OpacityProperty);
+            _ = expandedBottomAnimation.SetTarget(_infoAreaExpandedBottom!, OpacityProperty);
+            _ = collapsedTopAnimation.SetTarget(_infoAreaCollapsedTop!, OpacityProperty);
+            _ = collapsedBottomAnimation.SetTarget(_infoAreaCollapsedBottom!, OpacityProperty);
+            _currentStoryboard.Children.Add(expandedTopAnimation, expandedBottomAnimation, collapsedTopAnimation, collapsedBottomAnimation);
 
             foreach (var item in groupItems)
             {
@@ -622,10 +749,10 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                     item.Tag = item.ActualHeight;
                 }
 
-                var hAnimation = new DoubleAnimation(10, _animationDuration) { EasingFunction = new CubicEase() };
-                Storyboard.SetTarget(hAnimation, item);
-                Storyboard.SetTargetProperty(hAnimation, new PropertyPath(HeightProperty));
-                _currentStoryboard.Children.Add(hAnimation);
+                var heightAnimation = new DoubleAnimation(10, _animationDuration) { EasingFunction = new CubicEase() };
+                Storyboard.SetTarget(heightAnimation, item);
+                Storyboard.SetTargetProperty(heightAnimation, new PropertyPath(HeightProperty));
+                _currentStoryboard.Children.Add(heightAnimation);
             }
 
             _currentStoryboard.Completed += CurrentStoryboard_Completed;
@@ -670,15 +797,15 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             Storyboard.SetTargetProperty(columnAnimation, new PropertyPath(ColumnDefinition.WidthProperty));
             _currentStoryboard.Children.Add(columnAnimation);
 
-            var iAET = new DoubleAnimation(1, _animationDuration) { EasingFunction = new CubicEase() };
-            var iAEB = new DoubleAnimation(1, _animationDuration) { EasingFunction = new CubicEase() };
-            var iACT = new DoubleAnimation(0, _animationDuration) { EasingFunction = new CubicEase() };
-            var iACB = new DoubleAnimation(0, _animationDuration) { EasingFunction = new CubicEase() };
-            iAET.SetTarget(_infoAreaExpandedTop!, OpacityProperty);
-            iAEB.SetTarget(_infoAreaExpandedBottom!, OpacityProperty);
-            iACT.SetTarget(_infoAreaCollapsedTop!, OpacityProperty);
-            iACB.SetTarget(_infoAreaCollapsedBottom!, OpacityProperty);
-            _currentStoryboard.Children.Add(iAET, iAEB, iACT, iACB);
+            var expandedTopAnimation = new DoubleAnimation(1, _animationDuration) { EasingFunction = new CubicEase() };
+            var expandedBottomAnimation = new DoubleAnimation(1, _animationDuration) { EasingFunction = new CubicEase() };
+            var collapsedTopAnimation = new DoubleAnimation(0, _animationDuration) { EasingFunction = new CubicEase() };
+            var collapsedBottomAnimation = new DoubleAnimation(0, _animationDuration) { EasingFunction = new CubicEase() };
+            _ = expandedTopAnimation.SetTarget(_infoAreaExpandedTop!, OpacityProperty);
+            _ = expandedBottomAnimation.SetTarget(_infoAreaExpandedBottom!, OpacityProperty);
+            _ = collapsedTopAnimation.SetTarget(_infoAreaCollapsedTop!, OpacityProperty);
+            _ = collapsedBottomAnimation.SetTarget(_infoAreaCollapsedBottom!, OpacityProperty);
+            _currentStoryboard.Children.Add(expandedTopAnimation, expandedBottomAnimation, collapsedTopAnimation, collapsedBottomAnimation);
 
             foreach (var item in groupItems)
             {
@@ -688,23 +815,23 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                     item.Tag = item.ActualHeight;
                 }
 
-                var hAnimation = new DoubleAnimation((double)item.Tag, _animationDuration) { EasingFunction = new CubicEase() };
-                Storyboard.SetTarget(hAnimation, item);
-                Storyboard.SetTargetProperty(hAnimation, new PropertyPath(HeightProperty));
-                _currentStoryboard.Children.Add(hAnimation);
+                var heightAnimation = new DoubleAnimation((double)item.Tag, _animationDuration) { EasingFunction = new CubicEase() };
+                Storyboard.SetTarget(heightAnimation, item);
+                Storyboard.SetTargetProperty(heightAnimation, new PropertyPath(HeightProperty));
+                _currentStoryboard.Children.Add(heightAnimation);
             }
 
             _currentStoryboard.Completed += CurrentStoryboard_Completed;
             _currentStoryboard.Completed += (s, e) =>
             {
-                Task.Run(() =>
-                {
-                    Thread.Sleep(100);
-                    Dispatcher.Invoke(() =>
-                    {
-                        _buttonsColumn.Width = GridLength.Auto;
-                    });
-                });
+                _ = Task.Run(() =>
+                  {
+                      Thread.Sleep(100);
+                      Dispatcher.Invoke(() =>
+                      {
+                          _buttonsColumn.Width = GridLength.Auto;
+                      });
+                  });
             };
             _currentStoryboard.Begin();
         }
@@ -735,165 +862,5 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
                     _currentStoryboard.Stop();
             }
         }
-
-        #endregion
-
-        #region Public Methods
-
-        /// <summary>
-        /// Switches to a specified page.
-        /// </summary>
-        /// <param name="item">The item to switch to.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task<bool> SwitchToItem(SplitViewItem item)
-        {
-            _ignoreNextSwitch = true;
-            SetSelected(item);
-            return await SwitchContentInternal(_treeView!.SelectedItem as SplitViewItem, item);
-        }
-
-        /// <summary>
-        /// Collapses the menu.
-        /// </summary>
-        /// <param name="useAnimation">Determines wether to use an animation. When null uses current value of <see cref="UseAnimations"/>.</param>
-        public void CollapseMenu(bool? useAnimation)
-        {
-            if (!IsExpanded)
-                return;
-            var prevUa = UseAnimations;
-            if (useAnimation.HasValue)
-                UseAnimations = useAnimation.Value;
-            try
-            {
-                IsExpanded = false;
-            }
-            finally
-            {
-                UseAnimations = prevUa;
-            }
-        }
-
-        /// <summary>
-        /// Expands the menu.
-        /// </summary>
-        /// <param name="useAnimation">Determines wether to use an animation. When null uses current value of <see cref="UseAnimations"/>.</param>
-        public void ExpandMenu(bool? useAnimation)
-        {
-            if (IsExpanded)
-                return;
-            var prevUa = UseAnimations;
-            if (useAnimation.HasValue)
-                UseAnimations = useAnimation.Value;
-            try
-            {
-                IsExpanded = true;
-            }
-            finally
-            {
-                UseAnimations = prevUa;
-            }
-        }
-
-        /// <summary>
-        /// Sets the items of this <see cref="SplitView"/>.
-        /// </summary>
-        /// <param name="pageGroups">The page groups.</param>
-        /// <param name="pages">The pages.</param>
-        public void SetItems(IEnumerable<IPageGroup> pageGroups, IEnumerable<IPage> pages) => SetItems(pageGroups, pages, null);
-
-        /// <summary>
-        /// Sets the items of this <see cref="SplitView"/>.
-        /// </summary>
-        /// <param name="pageGroups">The page groups.</param>
-        /// <param name="pages">The pages.</param>
-        /// <param name="translationManager">The translation manager to use to translate the items.</param>
-        [SuppressMessage("Minor Code Smell", "S1905:Redundant casts should not be used", Justification = "False positive.")]
-        public void SetItems(IEnumerable<IPageGroup> pageGroups, IEnumerable<IPage> pages, ITranslationManager? translationManager)
-        {
-            var items = new List<SplitViewItemBase>();
-
-            var pageArr = pages.ToArray();
-            var groups = from g in ((IOrderedEnumerable<IPageGroup?>)pageGroups.OrderBy(x => x.PageGroupPriority)).Append(null)
-                         select new { Group = g, Pages = pageArr.Where(x => x.PageGroupId == g?.PageGroupId).OrderBy(x => x.PagePriority) };
-
-            bool selectionSet = false;
-            var topLevelPrio = new List<int>();
-            foreach (var group in groups)
-            {
-                IList list = items;
-                if (group.Group != null)
-                {
-                    var svGroup = new SplitViewItemGroup
-                    {
-                        Header = group.Group.PageGroupName == null
-                            ? null
-                            : translationManager?.GetTranslation(group.Group.PageGroupName, group.Group.TranslationProviderKey ?? translationManager.DefaultProviderKey) ?? group.Group.PageGroupName,
-                    };
-                    if (translationManager != null && group.Group.PageGroupName != null)
-                        translationManager.LanguageChanged += (s, e) => svGroup.Header = translationManager.GetTranslation(group.Group.PageGroupName, group.Group.TranslationProviderKey ?? translationManager.DefaultProviderKey);
-                    items.Add(svGroup);
-                    topLevelPrio.Add(group.Group.PageGroupPriority);
-                    list = svGroup.Children;
-                }
-
-                foreach (var page in group.Pages)
-                {
-                    var svItem = new SplitViewItem
-                    {
-                        Icon = page.PageIcon,
-                        Header = translationManager?.GetTranslation(page.PageName, page.TranslationProviderKey ?? translationManager.DefaultProviderKey) ?? page.PageName,
-                        Content = page.PageContent,
-                    };
-                    if (translationManager != null)
-                        translationManager.LanguageChanged += (s, e) => svItem.Header = translationManager.GetTranslation(page.PageName, page.TranslationProviderKey ?? translationManager.DefaultProviderKey);
-                    if (ReferenceEquals(list, items))
-                    {
-                        var idx = topLevelPrio.IndexOf(x => x > page.PagePriority);
-                        if (idx == -1)
-                            items.Add(svItem);
-                        else
-                            items.Insert(idx, svItem);
-                    }
-                    else
-                    {
-                        list.Add(svItem);
-                    }
-
-                    if (page.IsPageSelectedByDefault && !selectionSet)
-                    {
-                        svItem.IsSelected = true;
-                        selectionSet = true;
-                    }
-                }
-            }
-
-            ItemSource = items;
-        }
-
-        #endregion
-
-        #region Static Methods
-
-        private static void GetGroupItemsRec(List<Border> items, TreeViewItem root)
-        {
-            Guard.NotNull(items, nameof(items));
-            Guard.NotNull(root, nameof(root));
-
-            if (root.DataContext is SplitViewItemGroup group)
-            {
-                if ((VisualTreeHelper.GetChild(root, 0) as Grid)?.Children[0] is Border border)
-                    items.Add(border);
-                if (group.Children != null)
-                {
-                    foreach (var child in group.Children.OfType<SplitViewItemGroup>())
-                    {
-                        if (root.ItemContainerGenerator.ContainerFromItem(child) is TreeViewItem tvi)
-                            GetGroupItemsRec(items, tvi);
-                    }
-                }
-            }
-        }
-
-        #endregion
     }
 }

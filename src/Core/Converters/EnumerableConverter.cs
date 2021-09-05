@@ -167,7 +167,7 @@ namespace MaSch.Core.Converters
                         {
                             var itemType = addMethod.GetParameters()[0];
                             foreach (var item in GetCollection())
-                                addMethod.Invoke(result, new object?[] { convertManager.Convert(item, itemType.ParameterType, formatProvider) });
+                                _ = addMethod.Invoke(result, new object?[] { convertManager.Convert(item, itemType.ParameterType, formatProvider) });
                             r = result;
                             return true;
                         }
@@ -203,6 +203,9 @@ namespace MaSch.Core.Converters
         }
 
         /// <inheritdoc />
-        public int GetPriority(Type? sourceType, Type targetType) => _priority;
+        public int GetPriority(Type? sourceType, Type targetType)
+        {
+            return _priority;
+        }
     }
 }

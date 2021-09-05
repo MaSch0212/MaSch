@@ -74,6 +74,9 @@ namespace MaSch.Core.Observable
         /// Gets a value indicating wether the <see cref="IsNotifyEnabled"/> property should be serialized.
         /// </summary>
         /// <returns><c>true</c> if the <see cref="IsNotifyEnabled"/> property should be serialized; otherwise, <c>false</c>.</returns>
-        public virtual bool ShouldSerializeIsNotifyEnabled() => false;
+        public virtual bool ShouldSerializeIsNotifyEnabled()
+        {
+            return false;
+        }
     }
 }

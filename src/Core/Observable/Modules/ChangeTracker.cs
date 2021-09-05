@@ -138,7 +138,7 @@ namespace MaSch.Core.Observable.Modules
         public void ResetChangeTracking()
         {
             _baseValues.ForEach(x => x.Value.Reset());
-            RemoveFixedChangeInternal();
+            _ = RemoveFixedChangeInternal();
             EvaluateHasChangesChanged();
         }
 
@@ -174,7 +174,7 @@ namespace MaSch.Core.Observable.Modules
         {
             if (_baseValues.ContainsKey(FixedChangeKey))
             {
-                _baseValues.Remove(FixedChangeKey);
+                _ = _baseValues.Remove(FixedChangeKey);
                 return true;
             }
 

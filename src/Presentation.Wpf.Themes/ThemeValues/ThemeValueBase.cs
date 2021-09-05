@@ -17,8 +17,8 @@ namespace MaSch.Presentation.Wpf.ThemeValues
     /// <summary>
     /// Base class for theme values.
     /// </summary>
-    /// <seealso cref="MaSch.Core.Observable.ObservableObject" />
-    /// <seealso cref="MaSch.Presentation.Wpf.IThemeValue" />
+    /// <seealso cref="ObservableObject" />
+    /// <seealso cref="IThemeValue" />
     [SuppressMessage("Major Code Smell", "S2971:\"IEnumerable\" LINQs should be simplified", Justification = "ToArray is needed so no error is raised when a collection changes.")]
     [JsonConverter(typeof(ThemeValueJsonConverter), false)]
     public abstract class ThemeValueBase : ObservableObject, IThemeValue
@@ -28,6 +28,18 @@ namespace MaSch.Presentation.Wpf.ThemeValues
         private string? _key;
         private IThemeManager? _themeManager;
         private object? _rawValue;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThemeValueBase"/> class.
+        /// </summary>
+        protected ThemeValueBase()
+        {
+            _references = (from p in GetType().GetProperties()
+                           let ppa = p.GetCustomAttribute<ThemeValueParsedPropertyAttribute>()
+                           where ppa != null
+                           select ppa.RawPropertyName).ToDictionary(x => x, x => (ThemeValueReference?)null);
+            PropertyChanged += OnPropertyChanged;
+        }
 
         /// <inheritdoc/>
         [JsonIgnore]
@@ -44,7 +56,7 @@ namespace MaSch.Presentation.Wpf.ThemeValues
             get => _themeManager;
             set
             {
-                Guard.NotNull(value, nameof(value));
+                _ = Guard.NotNull(value, nameof(value));
 
                 if (_themeManager != null)
                     _themeManager.ThemeValueChanged -= ThemeManagerOnThemeValueChanged;
@@ -73,16 +85,11 @@ namespace MaSch.Presentation.Wpf.ThemeValues
             set => RawValue = value;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ThemeValueBase"/> class.
-        /// </summary>
-        protected ThemeValueBase()
+        /// <inheritdoc/>
+        public object? this[string propertyName]
         {
-            _references = (from p in GetType().GetProperties()
-                           let ppa = p.GetCustomAttribute<ThemeValueParsedPropertyAttribute>()
-                           where ppa != null
-                           select ppa.RawPropertyName).ToDictionary(x => x, x => (ThemeValueReference?)null);
-            PropertyChanged += OnPropertyChanged;
+            get => ParseValue(GetProperty(propertyName, false).GetValue(this));
+            set => GetProperty(propertyName, true).SetValue(this, value);
         }
 
         /// <inheritdoc/>
@@ -93,19 +100,16 @@ namespace MaSch.Presentation.Wpf.ThemeValues
         }
 
         /// <inheritdoc/>
-        public object? this[string propertyName]
+        public override bool Equals(object? obj)
         {
-            get => ParseValue(GetProperty(propertyName, false).GetValue(this));
-            set => GetProperty(propertyName, true).SetValue(this, value);
+            return obj is IThemeValue other && Equals(other.RawValue, RawValue);
         }
 
         /// <inheritdoc/>
-        public override bool Equals(object? obj)
-            => obj is IThemeValue other && Equals(other.RawValue, RawValue);
-
-        /// <inheritdoc/>
         public override int GetHashCode()
-            => RawValue?.GetHashCode() ?? 0;
+        {
+            return RawValue?.GetHashCode() ?? 0;
+        }
 
         /// <inheritdoc/>
         [SuppressMessage("ReflectionAnalyzers.SystemReflection", "REFL026:No parameterless constructor defined for this object.", Justification = "Implementation of this abstract class is expected to have an empty constrcutor.")]
@@ -251,7 +255,7 @@ namespace MaSch.Presentation.Wpf.ThemeValues
         private PropertyInfo GetProperty(string propertyName, bool rawProperty)
         {
             var type = GetType();
-            var property = type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public);
+            var property = type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
 
             if (rawProperty)
             {
@@ -259,13 +263,11 @@ namespace MaSch.Presentation.Wpf.ThemeValues
                 if (ppa != null)
                 {
                     propertyName = ppa.RawPropertyName;
-                    property = type.GetProperty(ppa.RawPropertyName, BindingFlags.Instance | BindingFlags.Public);
+                    property = type.GetProperty(ppa.RawPropertyName, BindingFlags.Public | BindingFlags.Instance);
                 }
             }
 
-            if (property == null)
-                throw new InvalidOperationException($"A property with the name \"{propertyName}\" was not found on type \"{type.Name}\".");
-            return property;
+            return property ?? throw new InvalidOperationException($"A property with the name \"{propertyName}\" was not found on type \"{type.Name}\".");
         }
     }
 

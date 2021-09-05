@@ -66,8 +66,8 @@ namespace MaSch.Core.Cryptography
         /// <returns>Returns the encrypted data.</returns>
         public byte[] Encrypt(string plainText, string passPhrase, byte[]? saltBytes = null)
         {
-            Guard.NotNull(plainText, nameof(plainText));
-            Guard.NotNull(passPhrase, nameof(passPhrase));
+            _ = Guard.NotNull(plainText, nameof(plainText));
+            _ = Guard.NotNull(passPhrase, nameof(passPhrase));
 
             using var plainTextStream = new MemoryStream(Encoding.UTF8.GetBytes(plainText));
             using var outStream = new MemoryStream();
@@ -85,9 +85,9 @@ namespace MaSch.Core.Cryptography
         /// <param name="saltBytes">The salt bytes.</param>
         public void Encrypt(Stream output, Stream input, string passPhrase, byte[]? saltBytes = null)
         {
-            Guard.NotNull(output, nameof(output));
-            Guard.NotNull(input, nameof(input));
-            Guard.NotNull(passPhrase, nameof(passPhrase));
+            _ = Guard.NotNull(output, nameof(output));
+            _ = Guard.NotNull(input, nameof(input));
+            _ = Guard.NotNull(passPhrase, nameof(passPhrase));
 
             EncryptImpl(output, input, passPhrase, saltBytes);
         }
@@ -101,8 +101,8 @@ namespace MaSch.Core.Cryptography
         /// <returns>Returns the decrypted data as UTF8 string.</returns>
         public string Decrypt(byte[] bytes, string passPhrase, byte[]? saltBytes = null)
         {
-            Guard.NotNull(bytes, nameof(bytes));
-            Guard.NotNull(passPhrase, nameof(passPhrase));
+            _ = Guard.NotNull(bytes, nameof(bytes));
+            _ = Guard.NotNull(passPhrase, nameof(passPhrase));
 
             using var inStream = new MemoryStream(bytes);
             using var outStream = new MemoryStream();
@@ -120,16 +120,16 @@ namespace MaSch.Core.Cryptography
         /// <param name="saltBytes">The salt bytes.</param>
         public void Decrypt(Stream output, Stream input, string passPhrase, byte[]? saltBytes = null)
         {
-            Guard.NotNull(output, nameof(output));
-            Guard.NotNull(input, nameof(input));
-            Guard.NotNull(passPhrase, nameof(passPhrase));
+            _ = Guard.NotNull(output, nameof(output));
+            _ = Guard.NotNull(input, nameof(input));
+            _ = Guard.NotNull(passPhrase, nameof(passPhrase));
 
             DecryptImpl(output, input, passPhrase, saltBytes);
         }
 
         private static void VerifyInitVector(byte[] initVector)
         {
-            Guard.NotNull(initVector, nameof(initVector));
+            _ = Guard.NotNull(initVector, nameof(initVector));
 
             if (initVector.Length != 16)
                 throw new ArgumentException("The init-vector has to be 16 bytes long.");

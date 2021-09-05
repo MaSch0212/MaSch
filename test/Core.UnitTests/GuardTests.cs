@@ -8,6 +8,10 @@ namespace MaSch.Core.UnitTests
     [TestClass]
     public class GuardTests : TestClassBase
     {
+        private interface ITestInterfaceType
+        {
+        }
+
         [TestMethod]
         public void NotNull_Null()
         {
@@ -346,10 +350,6 @@ namespace MaSch.Core.UnitTests
             var result = Guard.OfType(obj, nameof(obj), true, typeof(int), typeof(ITestInterfaceType), typeof(double));
 
             Assert.AreSame(obj, result);
-        }
-
-        private interface ITestInterfaceType
-        {
         }
 
         private class TestClassType : ITestInterfaceType

@@ -65,7 +65,7 @@ namespace MaSch.Presentation.Wpf
                     DataContext = vm,
                 };
                 dialog.Owner = owner ?? (ReferenceEquals(Application.Current?.MainWindow, dialog) ? null : Application.Current?.MainWindow);
-                dialog.ShowDialog();
+                _ = dialog.ShowDialog();
                 return dialog.MessageBoxResult;
             });
         }

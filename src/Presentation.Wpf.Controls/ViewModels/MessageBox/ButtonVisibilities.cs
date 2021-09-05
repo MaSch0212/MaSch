@@ -38,8 +38,8 @@ namespace MaSch.Presentation.Wpf.ViewModels.MessageBox
     /// <summary>
     /// Button state for a message box.
     /// </summary>
-    /// <seealso cref="MaSch.Core.Observable.ObservableObject" />
-    /// <seealso cref="MaSch.Presentation.Wpf.ViewModels.MessageBox.IButtonVisibilitiesProps" />
+    /// <seealso cref="ObservableObject" />
+    /// <seealso cref="IButtonVisibilitiesProps" />
     public partial class ButtonVisibilities : ObservableObject, IButtonVisibilitiesProps
     {
         /// <summary>
@@ -86,7 +86,7 @@ namespace MaSch.Presentation.Wpf.ViewModels.MessageBox
             Visibility[] visibilities = { Ok, Cancel, Yes, No };
             StringBuilder sb = new(4);
             foreach (var vis in visibilities)
-                sb.Append(vis == Visibility.Visible ? "1" : "0");
+                _ = sb.Append(vis == Visibility.Visible ? "1" : "0");
             string s = sb.ToString();
             if (s == "1000")
                 return MessageBoxButton.OK;

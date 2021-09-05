@@ -22,7 +22,7 @@ namespace MaSch.Core.Extensions
         public static TValue? TryGetValue<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key)
             where TKey : notnull
         {
-            Guard.NotNull(dict, nameof(dict));
+            _ = Guard.NotNull(dict, nameof(dict));
 
             return dict.ContainsKey(key) ? dict[key] : default;
         }
@@ -35,7 +35,7 @@ namespace MaSch.Core.Extensions
         /// <returns>Return the value for the key if the key exists in the <see cref="IDictionary"/>; otherwise <see langword="null"/>.</returns>
         public static object? TryGetValue(this IDictionary dict, object key)
         {
-            Guard.NotNull(dict, nameof(dict));
+            _ = Guard.NotNull(dict, nameof(dict));
 
             return dict.Contains(key) ? dict[key] : null;
         }
@@ -52,7 +52,7 @@ namespace MaSch.Core.Extensions
         public static TValue? TryGetValue<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, out bool keyFound)
             where TKey : notnull
         {
-            Guard.NotNull(dict, nameof(dict));
+            _ = Guard.NotNull(dict, nameof(dict));
 
             if (dict.ContainsKey(key))
             {
@@ -75,15 +75,15 @@ namespace MaSch.Core.Extensions
         public static bool[] TryRemove<TKey, TValue>(this IDictionary<TKey, TValue> dict, params TKey[] keysToRemove)
             where TKey : notnull
         {
-            Guard.NotNull(dict, nameof(dict));
-            Guard.NotNull(keysToRemove, nameof(keysToRemove));
+            _ = Guard.NotNull(dict, nameof(dict));
+            _ = Guard.NotNull(keysToRemove, nameof(keysToRemove));
 
             var result = new bool[keysToRemove.Length];
             for (int i = 0; i < keysToRemove.Length; i++)
             {
                 if (dict.ContainsKey(keysToRemove[i]))
                 {
-                    dict.Remove(keysToRemove[i]);
+                    _ = dict.Remove(keysToRemove[i]);
                     result[i] = true;
                 }
             }
@@ -99,8 +99,8 @@ namespace MaSch.Core.Extensions
         /// <returns>Returns bool values determining which elements were removed successfully.</returns>
         public static bool[] TryRemove(this IDictionary dict, params object[] keysToRemove)
         {
-            Guard.NotNull(dict, nameof(dict));
-            Guard.NotNull(keysToRemove, nameof(keysToRemove));
+            _ = Guard.NotNull(dict, nameof(dict));
+            _ = Guard.NotNull(keysToRemove, nameof(keysToRemove));
 
             var result = new bool[keysToRemove.Length];
             for (int i = 0; i < keysToRemove.Length; i++)
@@ -127,12 +127,12 @@ namespace MaSch.Core.Extensions
         public static bool TryRemove<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey keyToRemove, [MaybeNullWhen(false)] out TValue value)
             where TKey : notnull
         {
-            Guard.NotNull(dict, nameof(dict));
+            _ = Guard.NotNull(dict, nameof(dict));
 
             if (dict.ContainsKey(keyToRemove))
             {
                 value = dict[keyToRemove];
-                dict.Remove(keyToRemove);
+                _ = dict.Remove(keyToRemove);
                 return true;
             }
 
@@ -152,7 +152,7 @@ namespace MaSch.Core.Extensions
         public static bool AddIfNotExists<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue value)
             where TKey : notnull
         {
-            Guard.NotNull(dict, nameof(dict));
+            _ = Guard.NotNull(dict, nameof(dict));
 
             if (dict.ContainsKey(key))
                 return false;
@@ -172,7 +172,9 @@ namespace MaSch.Core.Extensions
         public static void Add<TKey, TValue, TItem>(this IDictionary<TKey, TValue> dict, IEnumerable<TItem> itemsToAdd, Func<TItem, TKey> keySelector)
             where TItem : TValue
             where TKey : notnull
-            => Add(dict, itemsToAdd, keySelector, x => x);
+        {
+            Add(dict, itemsToAdd, keySelector, x => x);
+        }
 
         /// <summary>
         /// Adds the specified items to the <see cref="IDictionary{TKey, TValue}"/>.
@@ -187,10 +189,10 @@ namespace MaSch.Core.Extensions
         public static void Add<TKey, TValue, TItem>(this IDictionary<TKey, TValue> dict, IEnumerable<TItem> itemsToAdd, Func<TItem, TKey> keySelector, Func<TItem, TValue> elementSelector)
             where TKey : notnull
         {
-            Guard.NotNull(dict, nameof(dict));
-            Guard.NotNull(itemsToAdd, nameof(itemsToAdd));
-            Guard.NotNull(keySelector, nameof(keySelector));
-            Guard.NotNull(elementSelector, nameof(elementSelector));
+            _ = Guard.NotNull(dict, nameof(dict));
+            _ = Guard.NotNull(itemsToAdd, nameof(itemsToAdd));
+            _ = Guard.NotNull(keySelector, nameof(keySelector));
+            _ = Guard.NotNull(elementSelector, nameof(elementSelector));
 
             foreach (var item in itemsToAdd)
             {
@@ -209,7 +211,7 @@ namespace MaSch.Core.Extensions
         public static void AddToList<TKey, TValue>(this IDictionary<TKey, IList<TValue>> dict, TKey key, TValue valueToAdd)
             where TKey : notnull
         {
-            Guard.NotNull(dict, nameof(dict));
+            _ = Guard.NotNull(dict, nameof(dict));
 
             if (!dict.ContainsKey(key))
                 dict.Add(key, new List<TValue>());
@@ -247,6 +249,8 @@ namespace MaSch.Core.Extensions
         /// <returns>The converted <see cref="ObservableDictionary{TKey, TValue}"/>.</returns>
         public static ObservableDictionary<TKey, TValue> ToObservableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> dict)
             where TKey : notnull
-            => new(dict);
+        {
+            return new(dict);
+        }
     }
 }

@@ -20,11 +20,11 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var extensionStorage = new ObjectExtensionDataStorage();
 
             var ex = Assert.ThrowsException<TargetInvocationException>(() => Mocks.Create<CliCommandMemberInfo>(extensionStorage, command.Object, null).Object);
-            Assert.IsInstanceOfType<ArgumentNullException>(ex.InnerException);
+            _ = Assert.IsInstanceOfType<ArgumentNullException>(ex.InnerException);
             ex = Assert.ThrowsException<TargetInvocationException>(() => Mocks.Create<CliCommandMemberInfo>(extensionStorage, null, property).Object);
-            Assert.IsInstanceOfType<ArgumentNullException>(ex.InnerException);
+            _ = Assert.IsInstanceOfType<ArgumentNullException>(ex.InnerException);
             ex = Assert.ThrowsException<TargetInvocationException>(() => Mocks.Create<CliCommandMemberInfo>(null, command.Object, property).Object);
-            Assert.IsInstanceOfType<ArgumentNullException>(ex.InnerException);
+            _ = Assert.IsInstanceOfType<ArgumentNullException>(ex.InnerException);
         }
 
         [TestMethod]
@@ -119,7 +119,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
-            Assert.ThrowsException<ArgumentNullException>(() => member.Object.GetValue(null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => member.Object.GetValue(null!));
         }
 
         [TestMethod]
@@ -147,7 +147,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
-            Assert.ThrowsException<ArgumentNullException>(() => member.Object.SetValue(null!, null));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => member.Object.SetValue(null!, null));
         }
 
         [TestMethod]
@@ -191,7 +191,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
-            Assert.ThrowsException<FormatException>(() => member.Object.SetValue(obj, "abc"));
+            _ = Assert.ThrowsException<FormatException>(() => member.Object.SetValue(obj, "abc"));
         }
 
         [TestMethod]
@@ -268,7 +268,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
-            Assert.ThrowsException<ArgumentNullException>(() => member.Object.SetDefaultValue(null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => member.Object.SetDefaultValue(null!));
         }
 
         [TestMethod]
@@ -335,7 +335,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var member = Mocks.Create<CliCommandMemberInfo>(Moq.MockBehavior.Loose, extensionStorage, command.Object, property);
             member.CallBase = true;
 
-            Assert.ThrowsException<ArgumentNullException>(() => member.Object.HasValue(null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => member.Object.HasValue(null!));
         }
 
         [TestMethod]
@@ -457,8 +457,15 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
                 set { PrivateProperty = value - idx; }
             }
 
-            public override int GetHashCode() => 4711;
-            public override bool Equals(object? obj) => true;
+            public override int GetHashCode()
+            {
+                return 4711;
+            }
+
+            public override bool Equals(object? obj)
+            {
+                return true;
+            }
         }
 
         [ExcludeFromCodeCoverage]

@@ -44,18 +44,26 @@ namespace MaSch.Core.Logging
 
         /// <inheritdoc/>
         public virtual void Log(LogType logType, string? message)
-            => _loggingProviders.ForEach(x => x.Log(logType, message));
+        {
+            _loggingProviders.ForEach(x => x.Log(logType, message));
+        }
 
         /// <inheritdoc/>
         public virtual void Log(LogType logType, string? message, Exception? exception)
-            => _loggingProviders.ForEach(x => x.Log(logType, message, exception));
+        {
+            _loggingProviders.ForEach(x => x.Log(logType, message, exception));
+        }
 
         /// <inheritdoc/>
         public virtual bool AddLoggingProvider(ILoggingProvider provider)
-            => _loggingProviders.AddIfNotExists(Guard.NotNull(provider, nameof(provider)));
+        {
+            return _loggingProviders.AddIfNotExists(Guard.NotNull(provider, nameof(provider)));
+        }
 
         /// <inheritdoc/>
         public virtual bool RemoveLoggingProvider(ILoggingProvider provider)
-            => _loggingProviders.TryRemove(Guard.NotNull(provider, nameof(provider)));
+        {
+            return _loggingProviders.TryRemove(Guard.NotNull(provider, nameof(provider)));
+        }
     }
 }

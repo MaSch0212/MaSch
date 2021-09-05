@@ -92,7 +92,9 @@ namespace MaSch.Console.Controls
         /// <param name="items">The items from which the user can choose one.</param>
         /// <returns>The from the user selected item.</returns>
         public static Selection Show(IConsoleService console, OneSelectionMode mode, string? label, int startIndex, params string?[] items)
-            => Show(console, mode, label, startIndex, (IList<string?>?)items);
+        {
+            return Show(console, mode, label, startIndex, (IList<string?>?)items);
+        }
 
         /// <summary>
         /// Requests the user to select an item.

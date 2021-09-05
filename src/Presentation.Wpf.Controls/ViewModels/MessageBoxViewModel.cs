@@ -43,8 +43,8 @@ namespace MaSch.Presentation.Wpf.ViewModels
     /// <summary>
     /// View model for the <see cref="Views.MessageBox"/>.
     /// </summary>
-    /// <seealso cref="MaSch.Core.Observable.ObservableObject" />
-    /// <seealso cref="MaSch.Presentation.Wpf.ViewModels.IMessageBoxViewModelProps" />
+    /// <seealso cref="ObservableObject" />
+    /// <seealso cref="IMessageBoxViewModelProps" />
     public partial class MessageBoxViewModel : ObservableObject, IMessageBoxViewModelProps
     {
         private static readonly Dictionary<int, Func<BrushGeometry>> IconDict = new()
@@ -71,8 +71,6 @@ namespace MaSch.Presentation.Wpf.ViewModels
                 FillBrush = new SolidColorBrush(Color.FromArgb(255, 25, 88, 185)),
             },
         };
-
-        private static IThemeManager CurrentThemeManager => ServiceContext.TryGetService<IThemeManager>() ?? ThemeManager.DefaultThemeManager;
 
         private MessageBoxImage _messageBoxImage = MessageBoxImage.None;
 
@@ -102,5 +100,7 @@ namespace MaSch.Presentation.Wpf.ViewModels
         /// Gets or sets the default result.
         /// </summary>
         public MessageBoxResult DefaultResult { get; set; }
+
+        private static IThemeManager CurrentThemeManager => ServiceContext.TryGetService<IThemeManager>() ?? ThemeManager.DefaultThemeManager;
     }
 }

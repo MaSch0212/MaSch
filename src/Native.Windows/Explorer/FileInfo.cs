@@ -48,7 +48,7 @@ namespace MaSch.Native.Windows.Explorer
         public static ShFileInfo GetFileInfo(string filePath)
         {
             ShFileInfo sfi = default;
-            Shell32.SHGetFileInfo(
+            _ = Shell32.SHGetFileInfo(
                 filePath,
                 0,
                 ref sfi,
@@ -124,7 +124,7 @@ namespace MaSch.Native.Windows.Explorer
             }
             finally
             {
-                Rstrtmgr.RmEndSession(handle);
+                _ = Rstrtmgr.RmEndSession(handle);
             }
 
             return processes;
@@ -133,7 +133,7 @@ namespace MaSch.Native.Windows.Explorer
         private static int GetFileIconIndex(string pszFile)
         {
             var sfi = default(ShFileInfo);
-            Shell32.SHGetFileInfo(
+            _ = Shell32.SHGetFileInfo(
                 pszFile,
                 0,
                 ref sfi,
@@ -145,7 +145,7 @@ namespace MaSch.Native.Windows.Explorer
         private static int GetDirectoryIconIndex(string pszFile)
         {
             var sfi = default(ShFileInfo);
-            Shell32.SHGetFileInfo(
+            _ = Shell32.SHGetFileInfo(
                 pszFile,
                 Shell32.FileAttributeDirectory,
                 ref sfi,
@@ -159,9 +159,9 @@ namespace MaSch.Native.Windows.Explorer
             IImageList? spiml = null;
             Guid guil = new(Shell32.IidIImageList);
 
-            Shell32.SHGetImageList((int)size, ref guil, ref spiml);
+            _ = Shell32.SHGetImageList((int)size, ref guil, ref spiml);
             IntPtr hIcon = IntPtr.Zero;
-            spiml?.GetIcon(iImage, Shell32.IldTransparent | Shell32.IldImage, ref hIcon);
+            _ = (spiml?.GetIcon(iImage, Shell32.IldTransparent | Shell32.IldImage, ref hIcon));
 
             return hIcon;
         }

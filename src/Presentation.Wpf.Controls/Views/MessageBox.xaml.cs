@@ -8,14 +8,10 @@ namespace MaSch.Presentation.Wpf.Views
     /// <summary>
     /// MessageBox that is styled using MaSch.Presentation.Wpf.Themes.
     /// </summary>
-    /// <seealso cref="MaSch.Presentation.Wpf.Controls.Window" />
+    /// <seealso cref="Controls.Window" />
     /// <seealso cref="System.Windows.Markup.IComponentConnector" />
     internal partial class MessageBox
     {
-        /// <summary>
-        /// Gets or sets the message box result.
-        /// </summary>
-        public MessageBoxResult MessageBoxResult { get; set; }
         private readonly double[] _steps = { 3D, 2D, 1.5D, 1.1D };
         private int _stepIndex;
 
@@ -33,9 +29,14 @@ namespace MaSch.Presentation.Wpf.Views
             Loaded += (s, e) =>
             {
                 WindowState = WindowState.Normal;
-                Activate();
+                _ = Activate();
             };
         }
+
+        /// <summary>
+        /// Gets or sets the message box result.
+        /// </summary>
+        public MessageBoxResult MessageBoxResult { get; set; }
 
         private void MessageBoxContent_SizeChanged(object sender, SizeChangedEventArgs e)
         {

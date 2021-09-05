@@ -19,7 +19,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var property = typeof(DummyClass).GetProperty(nameof(DummyClass.NormalProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             var extensionStorage = new ObjectExtensionDataStorage();
 
-            Assert.ThrowsException<ArgumentNullException>(() => new CliCommandValueInfo(extensionStorage, command.Object, property!, null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => new CliCommandValueInfo(extensionStorage, command.Object, property!, null!));
         }
 
         [TestMethod]

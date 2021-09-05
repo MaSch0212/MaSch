@@ -9,8 +9,8 @@ namespace MaSch.Test.Models
     /// <summary>
     /// Collection that contains <see cref="IMockVerifiable"/> and can itself also be verified, so verify all its items.
     /// </summary>
-    /// <seealso cref="System.Collections.ObjectModel.Collection{T}" />
-    /// <seealso cref="MaSch.Test.Models.IMockVerifiable" />
+    /// <seealso cref="Collection{T}" />
+    /// <seealso cref="IMockVerifiable" />
     public sealed class MockVerifiableCollection : Collection<IMockVerifiable>, IMockVerifiable
     {
         /// <summary>
@@ -31,10 +31,14 @@ namespace MaSch.Test.Models
 
         /// <inheritdoc/>
         public void Verify(Times? times, string? failMessage)
-            => Items.ForEach(x => x.Verify(times, failMessage));
+        {
+            Items.ForEach(x => x.Verify(times, failMessage));
+        }
 
         /// <inheritdoc/>
         void IDisposable.Dispose()
-            => Items.ForEach(x => x.Dispose());
+        {
+            Items.ForEach(x => x.Dispose());
+        }
     }
 }

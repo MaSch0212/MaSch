@@ -51,7 +51,7 @@ namespace MaSch.Presentation.Wpf.Controls
     /// <summary>
     /// Control that displays status messages.
     /// </summary>
-    /// <seealso cref="System.Windows.Controls.Control" />
+    /// <seealso cref="Control" />
     [GenerateObservableObject]
     public partial class StatusMessage : Control, IStatusMessageProps
     {
@@ -158,6 +158,11 @@ namespace MaSch.Presentation.Wpf.Controls
         private FrameworkElement? _rootElement;
         private Storyboard? _showMessageStoryboard;
 
+        static StatusMessage()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(StatusMessage), new FrameworkPropertyMetadata(typeof(StatusMessage)));
+        }
+
         /// <summary>
         /// Gets or sets the success message icon.
         /// </summary>
@@ -235,8 +240,8 @@ namespace MaSch.Presentation.Wpf.Controls
         /// </summary>
         public Thickness StatusIconPadding
         {
-            get { return (Thickness)GetValue(StatusIconPaddingProperty); }
-            set { SetValue(StatusIconPaddingProperty, value); }
+            get => (Thickness)GetValue(StatusIconPaddingProperty);
+            set => SetValue(StatusIconPaddingProperty, value);
         }
 
         /// <summary>
@@ -244,13 +249,8 @@ namespace MaSch.Presentation.Wpf.Controls
         /// </summary>
         public IStatusMessageService Service
         {
-            get { return (IStatusMessageService)GetValue(ServiceProperty); }
-            set { SetValue(ServiceProperty, value); }
-        }
-
-        static StatusMessage()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(StatusMessage), new FrameworkPropertyMetadata(typeof(StatusMessage)));
+            get => (IStatusMessageService)GetValue(ServiceProperty);
+            set => SetValue(ServiceProperty, value);
         }
 
         /// <inheritdoc/>
@@ -272,6 +272,12 @@ namespace MaSch.Presentation.Wpf.Controls
                 oldService.StatusChanged -= OnStatusChanged;
             if (newService != null)
                 newService.StatusChanged += OnStatusChanged;
+        }
+
+        private static void OnServiceChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (sender is StatusMessage sm)
+                sm.OnServiceChanged(e.OldValue as IStatusMessageService, e.NewValue as IStatusMessageService);
         }
 
         private void OnStatusChanged(object sender, StatusChangedEventArgs e)
@@ -304,12 +310,6 @@ namespace MaSch.Presentation.Wpf.Controls
                 default:
                     throw new ArgumentOutOfRangeException($"The status \"{e.Status}\" is unknown.");
             }
-        }
-
-        private static void OnServiceChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (sender is StatusMessage sm)
-                sm.OnServiceChanged(e.OldValue as IStatusMessageService, e.NewValue as IStatusMessageService);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace MaSch.Test.Assertion.UnitTests
     [TestClass]
     public class ComparableAssertionsTests
     {
-        private static MaSch.Test.Assertion.Assert AssertUnderTest => MaSch.Test.Assertion.Assert.Instance;
+        private static Assert AssertUnderTest => MaSch.Test.Assertion.Assert.Instance;
 
         #region IsGreaterThan
 
@@ -1157,7 +1157,7 @@ namespace MaSch.Test.Assertion.UnitTests
         private static DisposableComparer<int> CreateComparer(int x, int y, int result)
         {
             var comparerMock = new Mock<IComparer<int>>(MockBehavior.Strict);
-            comparerMock.Setup(m => m.Compare(x, y)).Returns(result);
+            _ = comparerMock.Setup(m => m.Compare(x, y)).Returns(result);
 
             return new DisposableComparer<int>(
                 comparerMock.Object,
@@ -1167,7 +1167,7 @@ namespace MaSch.Test.Assertion.UnitTests
         private static DisposableComparer<int> CreateBetweenComparer(int value)
         {
             var comparerMock = new Mock<IComparer<int>>(MockBehavior.Strict);
-            comparerMock.Setup(m => m.Compare(value, It.IsAny<int>())).Returns<int, int>((x, y) => x.CompareTo(y));
+            _ = comparerMock.Setup(m => m.Compare(value, It.IsAny<int>())).Returns<int, int>((x, y) => x.CompareTo(y));
 
             return new DisposableComparer<int>(
                 comparerMock.Object,

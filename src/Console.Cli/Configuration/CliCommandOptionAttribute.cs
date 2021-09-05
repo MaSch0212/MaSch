@@ -42,7 +42,7 @@ namespace MaSch.Console.Cli.Configuration
 
         private CliCommandOptionAttribute(char[]? shortAliases, string[] aliases)
         {
-            Guard.NotNullOrEmpty(aliases, nameof(aliases));
+            _ = Guard.NotNullOrEmpty(aliases, nameof(aliases));
 
             ShortAliases = shortAliases ?? Array.Empty<char>();
             Aliases = aliases;

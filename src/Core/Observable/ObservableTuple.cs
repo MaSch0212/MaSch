@@ -19,7 +19,9 @@ namespace MaSch.Core.Observable
         /// <param name="item1">The first value.</param>
         /// <returns>An <see cref="ObservableTuple{T1}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1> Create<T1>(T1 item1)
-            => new(item1);
+        {
+            return new(item1);
+        }
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2}"/> of the specified values.
@@ -30,7 +32,9 @@ namespace MaSch.Core.Observable
         /// <param name="item2">The second value.</param>
         /// <returns>An <see cref="ObservableTuple{T1,T2}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2> Create<T1, T2>(T1 item1, T2 item2)
-            => new(item1, item2);
+        {
+            return new(item1, item2);
+        }
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2,T3}"/> of the specified values.
@@ -43,7 +47,9 @@ namespace MaSch.Core.Observable
         /// <param name="item3">The thrid value.</param>
         /// <returns>An <see cref="ObservableTuple{T1,T2,T3}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2, T3> Create<T1, T2, T3>(T1 item1, T2 item2, T3 item3)
-            => new(item1, item2, item3);
+        {
+            return new(item1, item2, item3);
+        }
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2,T3,T4}"/> of the specified values.
@@ -58,7 +64,9 @@ namespace MaSch.Core.Observable
         /// <param name="item4">The fourth value.</param>
         /// <returns>An <see cref="ObservableTuple{T1,T2,T3,T4}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2, T3, T4> Create<T1, T2, T3, T4>(T1 item1, T2 item2, T3 item3, T4 item4)
-            => new(item1, item2, item3, item4);
+        {
+            return new(item1, item2, item3, item4);
+        }
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2,T3,T4,T5}"/> of the specified values.
@@ -75,7 +83,9 @@ namespace MaSch.Core.Observable
         /// <param name="item5">The fifth value.</param>
         /// <returns>An <see cref="ObservableTuple{T1,T2,T3,T4,T5}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2, T3, T4, T5> Create<T1, T2, T3, T4, T5>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5)
-            => new(item1, item2, item3, item4, item5);
+        {
+            return new(item1, item2, item3, item4, item5);
+        }
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2,T3,T4,T5,T6}"/> of the specified values.
@@ -94,7 +104,9 @@ namespace MaSch.Core.Observable
         /// <param name="item6">The sixth value.</param>
         /// <returns>An <see cref="ObservableTuple{T1,T2,T3,T4,T5,T6}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2, T3, T4, T5, T6> Create<T1, T2, T3, T4, T5, T6>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6)
-            => new(item1, item2, item3, item4, item5, item6);
+        {
+            return new(item1, item2, item3, item4, item5, item6);
+        }
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2,T3,T4,T5,T6,T7}"/> of the specified values.
@@ -115,7 +127,9 @@ namespace MaSch.Core.Observable
         /// <param name="item7">The seventh value.</param>
         /// <returns>An <see cref="ObservableTuple{T1,T2,T3,T4,T5,T6,T7}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2, T3, T4, T5, T6, T7> Create<T1, T2, T3, T4, T5, T6, T7>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7)
-            => new(item1, item2, item3, item4, item5, item6, item7);
+        {
+            return new(item1, item2, item3, item4, item5, item6, item7);
+        }
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2,T3,T4,T5,T6,T7,TRest}"/> of the specified values.
@@ -139,7 +153,9 @@ namespace MaSch.Core.Observable
         /// <returns>An <see cref="ObservableTuple{T1,T2,T3,T4,T5,T6,T7,TRest}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2, T3, T4, T5, T6, T7, TRest> Create<T1, T2, T3, T4, T5, T6, T7, TRest>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7, TRest rest)
             where TRest : ObservableTupleBase
-            => new(item1, item2, item3, item4, item5, item6, item7, rest);
+        {
+            return new(item1, item2, item3, item4, item5, item6, item7, rest);
+        }
     }
 
     /// <summary>
@@ -173,19 +189,27 @@ namespace MaSch.Core.Observable
         /// </summary>
         /// <returns>All items in the current <see cref="ObservableTupleBase"/>.</returns>
         public object?[] GetItems()
-            => GetType().GetProperties().OrderBy(x => x.Name).Select(x => x.GetValue(this)).ToArray();
+        {
+            return GetType().GetProperties().OrderBy(x => x.Name).Select(x => x.GetValue(this)).ToArray();
+        }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-            => obj is ObservableTupleBase other && other.GetItems().SequenceEqual(GetItems());
+        {
+            return obj is ObservableTupleBase other && other.GetItems().SequenceEqual(GetItems());
+        }
 
         /// <inheritdoc/>
         public override int GetHashCode()
-            => CommonHelper.GetHashCode(GetItems());
+        {
+            return CommonHelper.GetHashCode(GetItems());
+        }
 
         /// <inheritdoc/>
         public int CompareTo(object? obj)
-            => obj is ObservableTupleBase other ? CompareTo(other) : 1;
+        {
+            return obj is ObservableTupleBase other ? CompareTo(other) : 1;
+        }
 
         /// <inheritdoc/>
         public int CompareTo(ObservableTupleBase? other)
@@ -221,14 +245,18 @@ namespace MaSch.Core.Observable
 
         /// <inheritdoc/>
         public override string ToString()
-            => $"({ToStringInternal()})";
+        {
+            return $"({ToStringInternal()})";
+        }
 
         /// <summary>
         /// Converts this object to a string.
         /// </summary>
         /// <returns>A string representation of this instance.</returns>
         internal virtual string ToStringInternal()
-            => string.Join(", ", GetItems());
+        {
+            return string.Join(", ", GetItems());
+        }
     }
 
     /// <summary>
@@ -985,6 +1013,8 @@ namespace MaSch.Core.Observable
 
         /// <inheritdoc />
         internal override string ToStringInternal()
-            => string.Join(", ", GetItems().Take(7)) + (Rest is not null ? ", " + Rest.ToStringInternal() : string.Empty);
+        {
+            return string.Join(", ", GetItems().Take(7)) + (Rest is not null ? ", " + Rest.ToStringInternal() : string.Empty);
+        }
     }
 }

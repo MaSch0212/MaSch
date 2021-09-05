@@ -102,49 +102,94 @@ namespace MaSch.Core.Collections
         }
 
         /// <inheritdoc />
-        public virtual void Add(T item) => InternalList.Add(item);
+        public virtual void Add(T item)
+        {
+            InternalList.Add(item);
+        }
 
         /// <inheritdoc />
-        public virtual void Clear() => InternalList.Clear();
+        public virtual void Clear()
+        {
+            InternalList.Clear();
+        }
 
         /// <inheritdoc />
-        bool IList.Contains(object? value) => value is T t && Contains(t);
+        bool IList.Contains(object? value)
+        {
+            return value is T t && Contains(t);
+        }
 
         /// <inheritdoc />
-        public virtual bool Contains(T item) => InternalList.Contains(item);
+        public virtual bool Contains(T item)
+        {
+            return InternalList.Contains(item);
+        }
 
         /// <inheritdoc />
-        void ICollection.CopyTo(Array array, int index) => CopyTo(array, index);
+        void ICollection.CopyTo(Array array, int index)
+        {
+            CopyTo(array, index);
+        }
 
         /// <inheritdoc />
-        public virtual void CopyTo(T[] array, int arrayIndex) => InternalList.CopyTo(array, arrayIndex);
+        public virtual void CopyTo(T[] array, int arrayIndex)
+        {
+            InternalList.CopyTo(array, arrayIndex);
+        }
 
         /// <inheritdoc />
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
 
         /// <inheritdoc />
-        public virtual IEnumerator<T> GetEnumerator() => InternalList.GetEnumerator();
+        public virtual IEnumerator<T> GetEnumerator()
+        {
+            return InternalList.GetEnumerator();
+        }
 
         /// <inheritdoc />
-        int IList.IndexOf(object? value) => IndexOf((T)value!);
+        int IList.IndexOf(object? value)
+        {
+            return IndexOf((T)value!);
+        }
 
         /// <inheritdoc />
-        public virtual int IndexOf(T item) => InternalList.IndexOf(item);
+        public virtual int IndexOf(T item)
+        {
+            return InternalList.IndexOf(item);
+        }
 
         /// <inheritdoc />
-        void IList.Insert(int index, object? value) => Insert(index, (T)value!);
+        void IList.Insert(int index, object? value)
+        {
+            Insert(index, (T)value!);
+        }
 
         /// <inheritdoc />
-        public virtual void Insert(int index, T item) => InternalList.Insert(index, item);
+        public virtual void Insert(int index, T item)
+        {
+            InternalList.Insert(index, item);
+        }
 
         /// <inheritdoc />
-        void IList.Remove(object? value) => Remove((T)value!);
+        void IList.Remove(object? value)
+        {
+            _ = Remove((T)value!);
+        }
 
         /// <inheritdoc />
-        public virtual bool Remove(T item) => InternalList.Remove(item);
+        public virtual bool Remove(T item)
+        {
+            return InternalList.Remove(item);
+        }
 
         /// <inheritdoc />
-        public virtual void RemoveAt(int index) => InternalList.RemoveAt(index);
+        public virtual void RemoveAt(int index)
+        {
+            InternalList.RemoveAt(index);
+        }
 
         /// <summary>
         /// Copies the elements of the <see cref="T:System.Collections.ICollection" /> to an <see cref="T:System.Array" />, starting at a particular <see cref="T:System.Array" /> index.

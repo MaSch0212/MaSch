@@ -15,17 +15,17 @@ namespace MaSch.Presentation.Wpf.Common
     public class TypeTemplateSelector : DataTemplateSelector
     {
         /// <summary>
-        /// Gets or sets the data templates.
-        /// </summary>
-        public List<DataTemplate> DataTemplates { get; set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="TypeTemplateSelector"/> class.
         /// </summary>
         public TypeTemplateSelector()
         {
             DataTemplates = new List<DataTemplate>();
         }
+
+        /// <summary>
+        /// Gets or sets the data templates.
+        /// </summary>
+        public List<DataTemplate> DataTemplates { get; set; }
 
         /// <summary>
         /// When overridden in a derived class, returns a <see cref="T:System.Windows.DataTemplate" /> based on custom logic.

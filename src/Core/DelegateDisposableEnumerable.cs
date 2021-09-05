@@ -23,8 +23,8 @@ namespace MaSch.Core
         /// <param name="actionOnDispose">The action that is executed on dispose.</param>
         public DelegateDisposableEnumerable(IEnumerable<T> enumerable, Action actionOnDispose)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(actionOnDispose, nameof(actionOnDispose));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(actionOnDispose, nameof(actionOnDispose));
 
             _enumerable = enumerable;
             _actionOnDispose = actionOnDispose;
@@ -37,10 +37,16 @@ namespace MaSch.Core
         public event EventHandler<DisposeEventArgs>? Disposed;
 
         /// <inheritdoc/>
-        public IEnumerator<T> GetEnumerator() => _enumerable.GetEnumerator();
+        public IEnumerator<T> GetEnumerator()
+        {
+            return _enumerable.GetEnumerator();
+        }
 
         /// <inheritdoc/>
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_enumerable).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)_enumerable).GetEnumerator();
+        }
 
         /// <inheritdoc/>
         public void Dispose()
@@ -82,8 +88,8 @@ namespace MaSch.Core
         /// <param name="actionOnDispose">The action that is executed on dispose.</param>
         public DelegateOrderedDisposableEnumerable(IOrderedEnumerable<T> enumerable, Action actionOnDispose)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(actionOnDispose, nameof(actionOnDispose));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(actionOnDispose, nameof(actionOnDispose));
 
             _enumerable = enumerable;
             _actionOnDispose = actionOnDispose;
@@ -96,13 +102,22 @@ namespace MaSch.Core
         public event EventHandler<DisposeEventArgs>? Disposed;
 
         /// <inheritdoc/>
-        public IOrderedEnumerable<T> CreateOrderedEnumerable<TKey>(Func<T, TKey> keySelector, IComparer<TKey>? comparer, bool @descending) => _enumerable.CreateOrderedEnumerable(keySelector, comparer, @descending);
+        public IOrderedEnumerable<T> CreateOrderedEnumerable<TKey>(Func<T, TKey> keySelector, IComparer<TKey>? comparer, bool @descending)
+        {
+            return _enumerable.CreateOrderedEnumerable(keySelector, comparer, @descending);
+        }
 
         /// <inheritdoc/>
-        public IEnumerator<T> GetEnumerator() => _enumerable.GetEnumerator();
+        public IEnumerator<T> GetEnumerator()
+        {
+            return _enumerable.GetEnumerator();
+        }
 
         /// <inheritdoc/>
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_enumerable).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)_enumerable).GetEnumerator();
+        }
 
         /// <inheritdoc/>
         public void Dispose()

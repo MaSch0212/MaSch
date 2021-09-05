@@ -251,7 +251,7 @@ namespace MaSch.Console.Cli.Runtime
                         if (isList)
                         {
                             v ??= new List<object>();
-                            ((IList)v).Add(ctx.Args[ctx.ArgIndex]);
+                            _ = ((IList)v).Add(ctx.Args[ctx.ArgIndex]);
                         }
                         else
                         {
@@ -309,17 +309,34 @@ namespace MaSch.Console.Cli.Runtime
         }
 
         private bool GetIgnoreUnknownOptions(ICliCommandInfo? command)
-            => command == null ? _application.Options.IgnoreUnknownOptions : (command.ParserOptions.IgnoreUnknownOptions ?? GetIgnoreUnknownOptions(command.ParentCommand));
+        {
+            return command == null ? _application.Options.IgnoreUnknownOptions : (command.ParserOptions.IgnoreUnknownOptions ?? GetIgnoreUnknownOptions(command.ParentCommand));
+        }
+
         private bool GetIgnoreAdditionalValues(ICliCommandInfo? command)
-            => command == null ? _application.Options.IgnoreAdditionalValues : (command.ParserOptions.IgnoreAdditionalValues ?? GetIgnoreAdditionalValues(command.ParentCommand));
+        {
+            return command == null ? _application.Options.IgnoreAdditionalValues : (command.ParserOptions.IgnoreAdditionalValues ?? GetIgnoreAdditionalValues(command.ParentCommand));
+        }
+
         private bool GetProvideHelpCommand(ICliCommandInfo? command)
-            => command == null ? _application.Options.ProvideHelpCommand : (command.ParserOptions.ProvideHelpCommand ?? GetProvideHelpCommand(command.ParentCommand));
+        {
+            return command == null ? _application.Options.ProvideHelpCommand : (command.ParserOptions.ProvideHelpCommand ?? GetProvideHelpCommand(command.ParentCommand));
+        }
+
         private bool GetProvideVersionCommand(ICliCommandInfo? command)
-            => command == null ? _application.Options.ProvideVersionCommand : (command.ParserOptions.ProvideVersionCommand ?? GetProvideVersionCommand(command.ParentCommand));
+        {
+            return command == null ? _application.Options.ProvideVersionCommand : (command.ParserOptions.ProvideVersionCommand ?? GetProvideVersionCommand(command.ParentCommand));
+        }
+
         private bool GetProvideHelpOptions(ICliCommandInfo? command)
-            => command == null ? _application.Options.ProvideHelpOptions : (command.ParserOptions.ProvideHelpOptions ?? GetProvideHelpOptions(command.ParentCommand));
+        {
+            return command == null ? _application.Options.ProvideHelpOptions : (command.ParserOptions.ProvideHelpOptions ?? GetProvideHelpOptions(command.ParentCommand));
+        }
+
         private bool GetProvideVersionOptions(ICliCommandInfo? command)
-            => command == null ? _application.Options.ProvideVersionOptions : (command.ParserOptions.ProvideVersionOptions ?? GetProvideVersionOptions(command.ParentCommand));
+        {
+            return command == null ? _application.Options.ProvideVersionOptions : (command.ParserOptions.ProvideVersionOptions ?? GetProvideVersionOptions(command.ParentCommand));
+        }
 
         /// <summary>
         /// Exception that occurs when somethings fails during cli argument parsing.

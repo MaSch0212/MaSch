@@ -66,7 +66,7 @@ namespace MaSch.Core.Attributes
     /// <summary>
     /// When applied to a property inside an interface with the <see cref="ObservablePropertyDefinitionAttribute"/>, sets the access modifier of the generated property.
     /// </summary>
-    /// <seealso cref="System.Attribute" />
+    /// <seealso cref="Attribute" />
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
     [ExcludeFromCodeCoverage]
     public class ObservablePropertyAccessModifierAttribute : Attribute

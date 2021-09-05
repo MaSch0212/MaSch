@@ -26,6 +26,12 @@ namespace MaSch.Presentation.Wpf.Converter
     {
         private readonly Dictionary<string, IExpression> _storedExpressions = new();
 
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:Elements should be documented", Justification = "Private interfaces do not need to be documented.")]
+        private interface IExpression
+        {
+            decimal Eval(object[] args);
+        }
+
         /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -94,12 +100,6 @@ namespace MaSch.Presentation.Wpf.Converter
             }
 
             return result;
-        }
-
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:Elements should be documented", Justification = "Private interfaces do not need to be documented.")]
-        private interface IExpression
-        {
-            decimal Eval(object[] args);
         }
 
         private class Constant : IExpression

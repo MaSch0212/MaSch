@@ -5,7 +5,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Moq.Protected;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -33,74 +32,74 @@ namespace MaSch.Console.Cli.UnitTests
         public void Ctor_NullChecks()
         {
             var appMock = CreateAppMock(out _, out _, out _);
-            appMock.Protected().SetupGet<Type>("ExecutorType").Returns((Type?)null!);
-            appMock.Protected().SetupGet<Type>("GenericExecutorType").Returns(typeof(ICliExecutor<>));
+            _ = appMock.Protected().SetupGet<Type>("ExecutorType").Returns((Type?)null!);
+            _ = appMock.Protected().SetupGet<Type>("GenericExecutorType").Returns(typeof(ICliExecutor<>));
 
             var ex = Assert.ThrowsException<TargetInvocationException>(() => appMock.Object);
-            Assert.IsInstanceOfType<ArgumentNullException>(ex.InnerException);
+            _ = Assert.IsInstanceOfType<ArgumentNullException>(ex.InnerException);
 
-            appMock.Protected().SetupGet<Type>("ExecutorType").Returns(typeof(ICliExecutable));
-            appMock.Protected().SetupGet<Type>("GenericExecutorType").Returns((Type?)null!);
+            _ = appMock.Protected().SetupGet<Type>("ExecutorType").Returns(typeof(ICliExecutable));
+            _ = appMock.Protected().SetupGet<Type>("GenericExecutorType").Returns((Type?)null!);
             ex = Assert.ThrowsException<TargetInvocationException>(() => appMock.Object);
-            Assert.IsInstanceOfType<ArgumentNullException>(ex.InnerException);
+            _ = Assert.IsInstanceOfType<ArgumentNullException>(ex.InnerException);
         }
 
         [TestMethod]
         public void Ctor_WrongGenericExecutorType()
         {
             var appMock = CreateAppMock(out _, out _, out _);
-            appMock.Protected().SetupGet<Type>("ExecutorType").Returns(typeof(ICliExecutable));
-            appMock.Protected().SetupGet<Type>("GenericExecutorType").Returns(typeof(Action));
+            _ = appMock.Protected().SetupGet<Type>("ExecutorType").Returns(typeof(ICliExecutable));
+            _ = appMock.Protected().SetupGet<Type>("GenericExecutorType").Returns(typeof(Action));
 
             var ex = Assert.ThrowsException<TargetInvocationException>(() => appMock.Object);
-            Assert.IsInstanceOfType<ArgumentException>(ex.InnerException);
+            _ = Assert.IsInstanceOfType<ArgumentException>(ex.InnerException);
 
-            appMock.Protected().SetupGet<Type>("GenericExecutorType").Returns(typeof(Action<int, int>));
+            _ = appMock.Protected().SetupGet<Type>("GenericExecutorType").Returns(typeof(Action<int, int>));
             ex = Assert.ThrowsException<TargetInvocationException>(() => appMock.Object);
-            Assert.IsInstanceOfType<ArgumentException>(ex.InnerException);
+            _ = Assert.IsInstanceOfType<ArgumentException>(ex.InnerException);
         }
 
         [TestMethod]
         public void Ctor_WithOptions()
         {
-            var appMock = CreateAppMock(out _, out var oMock, out _);
-            appMock.Protected().SetupGet<Type>("ExecutorType").Returns(typeof(ICliExecutable));
-            appMock.Protected().SetupGet<Type>("GenericExecutorType").Returns(typeof(ICliExecutor<>));
+            var appMock = CreateAppMock(out _, out var ooptionsMock, out _);
+            _ = appMock.Protected().SetupGet<Type>("ExecutorType").Returns(typeof(ICliExecutable));
+            _ = appMock.Protected().SetupGet<Type>("GenericExecutorType").Returns(typeof(ICliExecutor<>));
 
             var app = appMock.Object;
 
             Assert.IsNotNull(app);
-            Assert.AreSame(oMock.Object, app.Options);
+            Assert.AreSame(ooptionsMock.Object, app.Options);
         }
 
         [TestMethod]
         public void Commands()
         {
             var appMock = CreateAppMock(out _, out _, out var commandsMock);
-            var rcMock = Mocks.Create<IReadOnlyCliCommandInfoCollection>();
-            commandsMock.Setup(x => x.AsReadOnly()).Returns(rcMock.Object).Verifiable(Verifiables, Times.Once());
+            var readOnlyCommandsMock = Mocks.Create<IReadOnlyCliCommandInfoCollection>();
+            _ = commandsMock.Setup(x => x.AsReadOnly()).Returns(readOnlyCommandsMock.Object).Verifiable(Verifiables, Times.Once());
 
             var commands1 = appMock.Object.Commands;
-            Assert.AreSame(rcMock.Object, commands1);
+            Assert.AreSame(readOnlyCommandsMock.Object, commands1);
 
             var commands2 = appMock.Object.Commands;
-            Assert.AreSame(rcMock.Object, commands2);
+            Assert.AreSame(readOnlyCommandsMock.Object, commands2);
         }
 
         [TestMethod]
         public void TryParseArguments_Success()
         {
-            var appMock = CreateAppMockForParse(out var spMock, out _, out _, out var parserMock, out _);
+            var appMock = CreateAppMockForParse(out var serviceProviderMock, out _, out _, out var parserMock, out _);
             var args = new[] { "blub" };
             var commandMock = Mocks.Create<ICliCommandInfo>();
             var execCtx = new CliExecutionContext(Mocks.Create<IServiceProvider>().Object, commandMock.Object);
             var optionsInstance = new object();
-            parserMock
+            _ = parserMock
                 .Setup(x => x.Parse(args))
                 .Returns(new CliArgumentParserResult(execCtx, optionsInstance))
                 .Verifiable(Verifiables, Times.Once());
 
-            var result = appMock.Object.TryParseArguments(spMock.Object, args, out var context, out var options, out var errorCode);
+            var result = appMock.Object.TryParseArguments(serviceProviderMock.Object, args, out var context, out var options, out var errorCode);
 
             Assert.IsTrue(result);
             Assert.AreSame(execCtx, context);
@@ -111,21 +110,21 @@ namespace MaSch.Console.Cli.UnitTests
         [TestMethod]
         public void TryParseArguments_Fail_HelpPage()
         {
-            var appMock = CreateAppMockForParse(out var spMock, out _, out _, out var parserMock, out var helpPageMock);
+            var appMock = CreateAppMockForParse(out var serviceProviderMock, out _, out _, out var parserMock, out var helpPageMock);
             var errors = new[] { new CliError(CliErrorType.VersionRequested) };
             var args = new[] { "blub" };
             var commandMock = Mocks.Create<ICliCommandInfo>();
             var optionsInstance = new object();
-            parserMock
+            _ = parserMock
                 .Setup(x => x.Parse(args))
                 .Returns(new CliArgumentParserResult(errors))
                 .Verifiable(Verifiables, Times.Once());
-            helpPageMock
+            _ = helpPageMock
                 .Setup(x => x.Write(errors))
                 .Returns(true)
                 .Verifiable(Verifiables, Times.Once());
 
-            var result = appMock.Object.TryParseArguments(spMock.Object, args, out var command, out var options, out var errorCode);
+            var result = appMock.Object.TryParseArguments(serviceProviderMock.Object, args, out var command, out var options, out var errorCode);
 
             Assert.IsFalse(result);
             Assert.IsNull(command);
@@ -136,22 +135,22 @@ namespace MaSch.Console.Cli.UnitTests
         [TestMethod]
         public void TryParseArguments_Fail_ParseError()
         {
-            var appMock = CreateAppMockForParse(out var spMock, out var oMock, out _, out var parserMock, out var helpPageMock);
+            var appMock = CreateAppMockForParse(out var serviceProviderMock, out var optionsMock, out _, out var parserMock, out var helpPageMock);
             var errors = new[] { new CliError("My custom error") };
             var args = new[] { "blub" };
             var commandMock = Mocks.Create<ICliCommandInfo>();
             var optionsInstance = new object();
-            parserMock
+            _ = parserMock
                 .Setup(x => x.Parse(args))
                 .Returns(new CliArgumentParserResult(errors))
                 .Verifiable(Verifiables, Times.Once());
-            helpPageMock
+            _ = helpPageMock
                 .Setup(x => x.Write(errors))
                 .Returns(false)
                 .Verifiable(Verifiables, Times.Once());
-            oMock.Setup(x => x.ParseErrorExitCode).Returns(4711);
+            _ = optionsMock.Setup(x => x.ParseErrorExitCode).Returns(4711);
 
-            var result = appMock.Object.TryParseArguments(spMock.Object, args, out var command, out var options, out var errorCode);
+            var result = appMock.Object.TryParseArguments(serviceProviderMock.Object, args, out var command, out var options, out var errorCode);
 
             Assert.IsFalse(result);
             Assert.IsNull(command);
@@ -160,15 +159,17 @@ namespace MaSch.Console.Cli.UnitTests
         }
 
         private Mock<CliApplicationBase> CreateAppMock(out Mock<IServiceProvider> serviceProviderMock, out Mock<ICliApplicationOptions> optionsMock, out Mock<ICliCommandInfoCollection> commandsMock)
-            => CreateAppMock<CliApplicationBase>(out serviceProviderMock, out optionsMock, out commandsMock);
+        {
+            return CreateAppMock<CliApplicationBase>(out serviceProviderMock, out optionsMock, out commandsMock);
+        }
 
         private Mock<TestCliApplicationBase> CreateAppMockForParse(out Mock<IServiceProvider> serviceProviderMock, out Mock<ICliApplicationOptions> optionsMock, out Mock<ICliCommandInfoCollection> commandsMock, out Mock<ICliArgumentParser> parserMock, out Mock<ICliHelpPage> helpPageMock)
         {
             var appMock = CreateAppMock<TestCliApplicationBase>(out serviceProviderMock, out optionsMock, out commandsMock);
             parserMock = Mocks.Create<ICliArgumentParser>();
             helpPageMock = Mocks.Create<ICliHelpPage>();
-            serviceProviderMock.Setup(x => x.GetService(typeof(ICliArgumentParser))).Returns(parserMock.Object);
-            serviceProviderMock.Setup(x => x.GetService(typeof(ICliHelpPage))).Returns(helpPageMock.Object);
+            _ = serviceProviderMock.Setup(x => x.GetService(typeof(ICliArgumentParser))).Returns(parserMock.Object);
+            _ = serviceProviderMock.Setup(x => x.GetService(typeof(ICliHelpPage))).Returns(helpPageMock.Object);
             return appMock;
         }
 
@@ -179,8 +180,8 @@ namespace MaSch.Console.Cli.UnitTests
             optionsMock = Mocks.Create<ICliApplicationOptions>();
             commandsMock = Mocks.Create<ICliCommandInfoCollection>();
             var appMock = Mocks.Create<T>(serviceProviderMock.Object, optionsMock.Object, commandsMock.Object);
-            appMock.Protected().SetupGet<Type>("ExecutorType").Returns(typeof(ICliExecutable));
-            appMock.Protected().SetupGet<Type>("GenericExecutorType").Returns(typeof(ICliExecutor<>));
+            _ = appMock.Protected().SetupGet<Type>("ExecutorType").Returns(typeof(ICliExecutable));
+            _ = appMock.Protected().SetupGet<Type>("GenericExecutorType").Returns(typeof(ICliExecutor<>));
             return appMock;
         }
 
@@ -192,7 +193,9 @@ namespace MaSch.Console.Cli.UnitTests
             }
 
             public new bool TryParseArguments(IServiceProvider serviceProvider, string[] args, [NotNullWhen(true)] out CliExecutionContext? context, [NotNullWhen(true)] out object? options, out int errorCode)
-                => base.TryParseArguments(serviceProvider, args, out context, out options, out errorCode);
+            {
+                return base.TryParseArguments(serviceProvider, args, out context, out options, out errorCode);
+            }
         }
     }
 
@@ -202,13 +205,13 @@ namespace MaSch.Console.Cli.UnitTests
         [TestMethod]
         public void Run_Success()
         {
-            var appMock = CreateAppMock(out var spMock, out _, out _, out var scopeMock, out var sspMock);
-            scopeMock.Setup(x => x.Dispose()).Verifiable(Verifiables, Times.Once());
+            var appMock = CreateAppMock(out var serviceProviderMock, out _, out _, out var scopeMock, out var sspMock);
+            _ = scopeMock.Setup(x => x.Dispose()).Verifiable(Verifiables, Times.Once());
             var args = new[] { "blub" };
             var commandMock = Mocks.Create<ICliCommandInfo>();
-            var execCtx = new CliExecutionContext(spMock.Object, commandMock.Object);
+            var execCtx = new CliExecutionContext(serviceProviderMock.Object, commandMock.Object);
             var options = new object();
-            appMock.Protected()
+            _ = appMock.Protected()
                 .Setup<bool>("TryParseArguments", sspMock.Object, args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
                 .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((IServiceProvider serviceProvider, string[] a, out CliExecutionContext? c, out object? o, out int e) =>
                 {
@@ -218,7 +221,7 @@ namespace MaSch.Console.Cli.UnitTests
                     return true;
                 }))
                 .Verifiable(Verifiables, Times.Once());
-            commandMock.Setup(x => x.Execute(execCtx, options)).Returns(4711).Verifiable(Verifiables, Times.Once());
+            _ = commandMock.Setup(x => x.Execute(execCtx, options)).Returns(4711).Verifiable(Verifiables, Times.Once());
 
             var result = appMock.Object.Run(args);
 
@@ -228,10 +231,10 @@ namespace MaSch.Console.Cli.UnitTests
         [TestMethod]
         public void Run_Fail()
         {
-            var appMock = CreateAppMock(out var spMock, out _, out _, out var scopeMock, out var sspMock);
-            scopeMock.Setup(x => x.Dispose()).Verifiable(Verifiables, Times.Once());
+            var appMock = CreateAppMock(out var serviceProviderMock, out _, out _, out var scopeMock, out var sspMock);
+            _ = scopeMock.Setup(x => x.Dispose()).Verifiable(Verifiables, Times.Once());
             var args = new[] { "blub" };
-            appMock.Protected()
+            _ = appMock.Protected()
                 .Setup<bool>("TryParseArguments", sspMock.Object, args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
                 .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((IServiceProvider serviceProvider, string[] a, out CliExecutionContext? c, out object? o, out int e) =>
                 {
@@ -262,11 +265,11 @@ namespace MaSch.Console.Cli.UnitTests
             serviceScopeMock = Mocks.Create<IServiceScope>();
             var scopeFactoryMock = Mocks.Create<IServiceScopeFactory>();
             var appMock = Mocks.Create<CliApplication>(serviceProviderMock.Object, optionsMock.Object, commandsMock.Object);
-            appMock.Protected().SetupGet<Type>("ExecutorType").CallBase();
-            appMock.Protected().SetupGet<Type>("GenericExecutorType").CallBase();
-            serviceProviderMock.Setup(x => x.GetService(typeof(IServiceScopeFactory))).Returns(scopeFactoryMock.Object);
-            scopeFactoryMock.Setup(x => x.CreateScope()).Returns(serviceScopeMock.Object);
-            serviceScopeMock.Setup(x => x.ServiceProvider).Returns(scopedServiceProviderMock.Object);
+            _ = appMock.Protected().SetupGet<Type>("ExecutorType").CallBase();
+            _ = appMock.Protected().SetupGet<Type>("GenericExecutorType").CallBase();
+            _ = serviceProviderMock.Setup(x => x.GetService(typeof(IServiceScopeFactory))).Returns(scopeFactoryMock.Object);
+            _ = scopeFactoryMock.Setup(x => x.CreateScope()).Returns(serviceScopeMock.Object);
+            _ = serviceScopeMock.Setup(x => x.ServiceProvider).Returns(scopedServiceProviderMock.Object);
             return appMock;
         }
     }
@@ -277,13 +280,13 @@ namespace MaSch.Console.Cli.UnitTests
         [TestMethod]
         public async Task RunAsync_Success()
         {
-            var appMock = CreateAppMock(out var spMock, out _, out _, out var scopeMock, out var sspMock);
-            scopeMock.Setup(x => x.Dispose()).Verifiable(Verifiables, Times.Once());
+            var appMock = CreateAppMock(out var serviceProviderMock, out _, out _, out var scopeMock, out var sspMock);
+            _ = scopeMock.Setup(x => x.Dispose()).Verifiable(Verifiables, Times.Once());
             var args = new[] { "blub" };
             var commandMock = Mocks.Create<ICliCommandInfo>();
-            var execCtx = new CliExecutionContext(spMock.Object, commandMock.Object);
+            var execCtx = new CliExecutionContext(serviceProviderMock.Object, commandMock.Object);
             var options = new object();
-            appMock.Protected()
+            _ = appMock.Protected()
                 .Setup<bool>("TryParseArguments", sspMock.Object, args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
                 .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((IServiceProvider serviceProvider, string[] a, out CliExecutionContext? c, out object? o, out int e) =>
                 {
@@ -293,7 +296,7 @@ namespace MaSch.Console.Cli.UnitTests
                     return true;
                 }))
                 .Verifiable(Verifiables, Times.Once());
-            commandMock.Setup(x => x.ExecuteAsync(execCtx, options)).Returns(Task.Delay(10).ContinueWith(t => 4711)).Verifiable(Verifiables, Times.Once());
+            _ = commandMock.Setup(x => x.ExecuteAsync(execCtx, options)).Returns(Task.Delay(10).ContinueWith(t => 4711)).Verifiable(Verifiables, Times.Once());
 
             var result = await appMock.Object.RunAsync(args);
 
@@ -303,10 +306,10 @@ namespace MaSch.Console.Cli.UnitTests
         [TestMethod]
         public async Task RunAsync_Fail()
         {
-            var appMock = CreateAppMock(out var spMock, out _, out _, out var scopeMock, out var sspMock);
-            scopeMock.Setup(x => x.Dispose()).Verifiable(Verifiables, Times.Once());
+            var appMock = CreateAppMock(out var serviceProviderMock, out _, out _, out var scopeMock, out var sspMock);
+            _ = scopeMock.Setup(x => x.Dispose()).Verifiable(Verifiables, Times.Once());
             var args = new[] { "blub" };
-            appMock.Protected()
+            _ = appMock.Protected()
                 .Setup<bool>("TryParseArguments", sspMock.Object, args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
                 .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((IServiceProvider serviceProvider, string[] a, out CliExecutionContext? c, out object? o, out int e) =>
                 {
@@ -337,11 +340,11 @@ namespace MaSch.Console.Cli.UnitTests
             serviceScopeMock = Mocks.Create<IServiceScope>();
             var scopeFactoryMock = Mocks.Create<IServiceScopeFactory>();
             var appMock = Mocks.Create<CliAsyncApplication>(serviceProviderMock.Object, optionsMock.Object, commandsMock.Object);
-            appMock.Protected().SetupGet<Type>("ExecutorType").CallBase();
-            appMock.Protected().SetupGet<Type>("GenericExecutorType").CallBase();
-            serviceProviderMock.Setup(x => x.GetService(typeof(IServiceScopeFactory))).Returns(scopeFactoryMock.Object);
-            scopeFactoryMock.Setup(x => x.CreateScope()).Returns(serviceScopeMock.Object);
-            serviceScopeMock.Setup(x => x.ServiceProvider).Returns(scopedServiceProviderMock.Object);
+            _ = appMock.Protected().SetupGet<Type>("ExecutorType").CallBase();
+            _ = appMock.Protected().SetupGet<Type>("GenericExecutorType").CallBase();
+            _ = serviceProviderMock.Setup(x => x.GetService(typeof(IServiceScopeFactory))).Returns(scopeFactoryMock.Object);
+            _ = scopeFactoryMock.Setup(x => x.CreateScope()).Returns(serviceScopeMock.Object);
+            _ = serviceScopeMock.Setup(x => x.ServiceProvider).Returns(scopedServiceProviderMock.Object);
             return appMock;
         }
     }

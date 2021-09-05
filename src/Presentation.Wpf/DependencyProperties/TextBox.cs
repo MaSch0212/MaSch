@@ -4,7 +4,7 @@ using Win = System.Windows.Controls;
 namespace MaSch.Presentation.Wpf.DependencyProperties
 {
     /// <summary>
-    /// Provides dependency properties for the <see cref="System.Windows.Controls.TextBox"/> control.
+    /// Provides dependency properties for the <see cref="Win.TextBox"/> control.
     /// </summary>
     public static class TextBox
     {

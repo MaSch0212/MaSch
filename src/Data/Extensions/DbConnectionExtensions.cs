@@ -18,7 +18,9 @@ namespace MaSch.Data.Extensions
         /// <param name="modifyCommandAction">A delegate with which the command can be modified before it gets returned.</param>
         /// <returns>Returns a new <see cref="IDbCommand"/> for this connection.</returns>
         public static IDbCommand CreateCommand(this IDbConnection connection, Action<IDbCommand>? modifyCommandAction)
-            => CreateCommandImpl(connection, string.Empty, null, null, null, modifyCommandAction);
+        {
+            return CreateCommandImpl(connection, string.Empty, null, null, null, modifyCommandAction);
+        }
 
         /// <summary>
         /// Creates a new <see cref="IDbCommand"/>.
@@ -28,7 +30,9 @@ namespace MaSch.Data.Extensions
         /// <param name="modifyCommandAction">A delegate with which the command can be modified before it gets returned.</param>
         /// <returns>Returns a new <see cref="IDbCommand"/> for this connection.</returns>
         public static IDbCommand CreateCommand(this IDbConnection connection, string commandText, Action<IDbCommand>? modifyCommandAction = null)
-            => CreateCommandImpl(connection, commandText, null, null, null, modifyCommandAction);
+        {
+            return CreateCommandImpl(connection, commandText, null, null, null, modifyCommandAction);
+        }
 
         /// <summary>
         /// Creates a new <see cref="IDbCommand"/>.
@@ -39,7 +43,9 @@ namespace MaSch.Data.Extensions
         /// <param name="modifyCommandAction">A delegate with which the command can be modified before it gets returned.</param>
         /// <returns>Returns a new <see cref="IDbCommand"/> for this connection.</returns>
         public static IDbCommand CreateCommand(this IDbConnection connection, string commandText, CommandType commandType, Action<IDbCommand>? modifyCommandAction = null)
-            => CreateCommandImpl(connection, commandText, null, commandType, null, modifyCommandAction);
+        {
+            return CreateCommandImpl(connection, commandText, null, commandType, null, modifyCommandAction);
+        }
 
         /// <summary>
         /// Creates a new <see cref="IDbCommand"/>.
@@ -50,7 +56,9 @@ namespace MaSch.Data.Extensions
         /// <param name="modifyCommandAction">A delegate with which the command can be modified before it gets returned.</param>
         /// <returns>Returns a new <see cref="IDbCommand"/> for this connection.</returns>
         public static IDbCommand CreateCommand(this IDbConnection connection, string commandText, int timeout, Action<IDbCommand>? modifyCommandAction = null)
-            => CreateCommandImpl(connection, commandText, null, null, timeout, modifyCommandAction);
+        {
+            return CreateCommandImpl(connection, commandText, null, null, timeout, modifyCommandAction);
+        }
 
         /// <summary>
         /// Creates a new <see cref="IDbCommand"/>.
@@ -62,7 +70,9 @@ namespace MaSch.Data.Extensions
         /// <param name="modifyCommandAction">A delegate with which the command can be modified before it gets returned.</param>
         /// <returns>Returns a new <see cref="IDbCommand"/> for this connection.</returns>
         public static IDbCommand CreateCommand(this IDbConnection connection, string commandText, CommandType commandType, int timeout, Action<IDbCommand>? modifyCommandAction = null)
-            => CreateCommandImpl(connection, commandText, null, commandType, timeout, modifyCommandAction);
+        {
+            return CreateCommandImpl(connection, commandText, null, commandType, timeout, modifyCommandAction);
+        }
 
         /// <summary>
         /// Creates a new <see cref="IDbCommand"/>.
@@ -73,7 +83,9 @@ namespace MaSch.Data.Extensions
         /// <param name="modifyCommandAction">A delegate with which the command can be modified before it gets returned.</param>
         /// <returns>Returns a new <see cref="IDbCommand"/> for this connection.</returns>
         public static IDbCommand CreateCommand(this IDbConnection connection, string commandText, Action<DbCommandParameterCollection>? addParametersAction, Action<IDbCommand>? modifyCommandAction = null)
-            => CreateCommandImpl(connection, commandText, addParametersAction, null, null, modifyCommandAction);
+        {
+            return CreateCommandImpl(connection, commandText, addParametersAction, null, null, modifyCommandAction);
+        }
 
         /// <summary>
         /// Creates a new <see cref="IDbCommand"/>.
@@ -85,7 +97,9 @@ namespace MaSch.Data.Extensions
         /// <param name="modifyCommandAction">A delegate with which the command can be modified before it gets returned.</param>
         /// <returns>Returns a new <see cref="IDbCommand"/> for this connection.</returns>
         public static IDbCommand CreateCommand(this IDbConnection connection, string commandText, Action<DbCommandParameterCollection>? addParametersAction, CommandType commandType, Action<IDbCommand>? modifyCommandAction = null)
-            => CreateCommandImpl(connection, commandText, addParametersAction, commandType, null, modifyCommandAction);
+        {
+            return CreateCommandImpl(connection, commandText, addParametersAction, commandType, null, modifyCommandAction);
+        }
 
         /// <summary>
         /// Creates a new <see cref="IDbCommand"/>.
@@ -97,7 +111,9 @@ namespace MaSch.Data.Extensions
         /// <param name="modifyCommandAction">A delegate with which the command can be modified before it gets returned.</param>
         /// <returns>Returns a new <see cref="IDbCommand"/> for this connection.</returns>
         public static IDbCommand CreateCommand(this IDbConnection connection, string commandText, Action<DbCommandParameterCollection>? addParametersAction, int timeout, Action<IDbCommand>? modifyCommandAction = null)
-            => CreateCommandImpl(connection, commandText, addParametersAction, null, timeout, modifyCommandAction);
+        {
+            return CreateCommandImpl(connection, commandText, addParametersAction, null, timeout, modifyCommandAction);
+        }
 
         /// <summary>
         /// Creates a new <see cref="IDbCommand"/>.
@@ -110,7 +126,9 @@ namespace MaSch.Data.Extensions
         /// <param name="modifyCommandAction">A delegate with which the command can be modified before it gets returned.</param>
         /// <returns>Returns a new <see cref="IDbCommand"/> for this connection.</returns>
         public static IDbCommand CreateCommand(this IDbConnection connection, string commandText, Action<DbCommandParameterCollection>? addParametersAction, CommandType commandType, int timeout, Action<IDbCommand>? modifyCommandAction = null)
-            => CreateCommandImpl(connection, commandText, addParametersAction, commandType, timeout, modifyCommandAction);
+        {
+            return CreateCommandImpl(connection, commandText, addParametersAction, commandType, timeout, modifyCommandAction);
+        }
 
         /// <summary>
         /// Opens the connection if it was not already opened.
@@ -164,7 +182,7 @@ namespace MaSch.Data.Extensions
             /// <param name="command">The command to which the parameters should be added.</param>
             public DbCommandParameterCollection(IDbCommand command)
             {
-                Guard.NotNull(command, nameof(command));
+                _ = Guard.NotNull(command, nameof(command));
                 Command = command;
             }
 
@@ -190,7 +208,7 @@ namespace MaSch.Data.Extensions
                 param.ParameterName = paramName;
                 param.Value = paramValue;
                 modifyParameterAction?.Invoke(param);
-                Command.Parameters.Add(param);
+                _ = Command.Parameters.Add(param);
 
                 return this;
             }

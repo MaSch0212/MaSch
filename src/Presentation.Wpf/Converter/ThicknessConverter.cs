@@ -44,27 +44,27 @@ namespace MaSch.Presentation.Wpf.Converter
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var (lf, tf, rf, bf) = GetFormulas(parameter);
-            var v = new List<object>();
+            var valuesList = new List<object>();
             if (ObjectExtensions.ConvertManager.TryConvert(value, CultureInfo.InvariantCulture, out double d))
             {
                 ConvertExpressions(ref lf, ref tf, ref rf, ref bf, string.Empty, 0);
-                v.Add(d);
+                valuesList.Add(d);
             }
             else if (value is Thickness t)
             {
                 ConvertExpressions(ref lf, ref tf, ref rf, ref bf, string.Empty, 0);
-                v.Add(t.Left, t.Top, t.Right, t.Bottom);
+                valuesList.Add(t.Left, t.Top, t.Right, t.Bottom);
             }
 
-            if (v.Count == 0)
+            if (valuesList.Count == 0)
                 return null;
 
-            var vArr = v.ToArray();
+            var valuesArray = valuesList.ToArray();
             return new Thickness(
-                (double)_mathConverter.Convert(vArr, typeof(double), lf, culture),
-                (double)_mathConverter.Convert(vArr, typeof(double), tf, culture),
-                (double)_mathConverter.Convert(vArr, typeof(double), rf, culture),
-                (double)_mathConverter.Convert(vArr, typeof(double), bf, culture));
+                (double)_mathConverter.Convert(valuesArray, typeof(double), lf, culture),
+                (double)_mathConverter.Convert(valuesArray, typeof(double), tf, culture),
+                (double)_mathConverter.Convert(valuesArray, typeof(double), rf, culture),
+                (double)_mathConverter.Convert(valuesArray, typeof(double), bf, culture));
         }
 
         /// <inheritdoc />
@@ -81,52 +81,34 @@ namespace MaSch.Presentation.Wpf.Converter
 
             var (lf, tf, rf, bf) = GetFormulas(parameter);
 
-            var v = new List<object>();
-            int rCount = 0;
+            var valuesList = new List<object>();
+            int count = 0;
             foreach (var p in values)
             {
                 if (ObjectExtensions.ConvertManager.TryConvert(p, CultureInfo.InvariantCulture, out double d))
                 {
-                    ConvertExpressions(ref lf, ref tf, ref rf, ref bf, (rCount++).ToString(), v.Count);
-                    v.Add(d);
+                    ConvertExpressions(ref lf, ref tf, ref rf, ref bf, (count++).ToString(), valuesList.Count);
+                    valuesList.Add(d);
                 }
                 else if (p is Thickness t)
                 {
-                    ConvertExpressions(ref lf, ref tf, ref rf, ref bf, (rCount++).ToString(), v.Count);
-                    v.Add(t.Left, t.Top, t.Right, t.Bottom);
+                    ConvertExpressions(ref lf, ref tf, ref rf, ref bf, (count++).ToString(), valuesList.Count);
+                    valuesList.Add(t.Left, t.Top, t.Right, t.Bottom);
                 }
             }
 
-            var vArr = v.ToArray();
+            var valuesArray = valuesList.ToArray();
             return new Thickness(
-                (double)_mathConverter.Convert(vArr, typeof(double), lf, culture),
-                (double)_mathConverter.Convert(vArr, typeof(double), tf, culture),
-                (double)_mathConverter.Convert(vArr, typeof(double), rf, culture),
-                (double)_mathConverter.Convert(vArr, typeof(double), bf, culture));
+                (double)_mathConverter.Convert(valuesArray, typeof(double), lf, culture),
+                (double)_mathConverter.Convert(valuesArray, typeof(double), tf, culture),
+                (double)_mathConverter.Convert(valuesArray, typeof(double), rf, culture),
+                (double)_mathConverter.Convert(valuesArray, typeof(double), bf, culture));
         }
 
         /// <inheritdoc />
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException();
-        }
-
-        private (string Left, string Top, string Right, string Bottom) GetFormulas(object parameter)
-        {
-            string lf = LeftFormula, tf = TopFormula, rf = RightFormula, bf = BottomFormula;
-            if (parameter is string f)
-            {
-                var fSplit = f.Split(';');
-                if (fSplit.Length == 4)
-                {
-                    lf = fSplit[0];
-                    tf = fSplit[1];
-                    rf = fSplit[2];
-                    bf = fSplit[3];
-                }
-            }
-
-            return (lf, tf, rf, bf);
         }
 
         private static void ConvertExpressions(ref string leftExpression, ref string topExpression, ref string rightExpression, ref string bottomExpression, string suffix, int startIndex)
@@ -145,6 +127,24 @@ namespace MaSch.Presentation.Wpf.Converter
                 .Replace("r" + suffix, $"{{{startIndex + 2}}}")
                 .Replace("b" + suffix, $"{{{startIndex + 3}}}")
                 .Replace("x" + suffix, $"{{{startIndex}}}");
+        }
+
+        private (string Left, string Top, string Right, string Bottom) GetFormulas(object parameter)
+        {
+            string lf = LeftFormula, tf = TopFormula, rf = RightFormula, bf = BottomFormula;
+            if (parameter is string formula)
+            {
+                var splitFormula = formula.Split(';');
+                if (splitFormula.Length == 4)
+                {
+                    lf = splitFormula[0];
+                    tf = splitFormula[1];
+                    rf = splitFormula[2];
+                    bf = splitFormula[3];
+                }
+            }
+
+            return (lf, tf, rf, bf);
         }
     }
 }

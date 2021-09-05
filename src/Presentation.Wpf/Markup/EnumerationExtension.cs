@@ -9,7 +9,7 @@ namespace MaSch.Presentation.Wpf.Markup
     /// <summary>
     /// A <see cref="MarkupExtension"/> that returns all elements in an enumeration.
     /// </summary>
-    /// <seealso cref="System.Windows.Markup.MarkupExtension" />
+    /// <seealso cref="MarkupExtension" />
     public class EnumerationExtension : MarkupExtension
     {
         private Type _enumType;
@@ -20,7 +20,7 @@ namespace MaSch.Presentation.Wpf.Markup
         /// <param name="enumType">Type of the enum.</param>
         public EnumerationExtension(Type enumType)
         {
-            Guard.NotNull(enumType, nameof(enumType));
+            _ = Guard.NotNull(enumType, nameof(enumType));
 
             _enumType = ValidateType(enumType);
         }
@@ -60,6 +60,16 @@ namespace MaSch.Presentation.Wpf.Markup
               }).ToArray();
         }
 
+        private static Type ValidateType(Type value)
+        {
+            var enumType = Nullable.GetUnderlyingType(value) ?? value;
+
+            if (!enumType.IsEnum)
+                throw new ArgumentException("Type must be an Enum.");
+
+            return enumType;
+        }
+
         private string? GetDescription(object enumValue)
         {
             var enumValueName = enumValue.ToString();
@@ -71,16 +81,6 @@ namespace MaSch.Presentation.Wpf.Markup
                 .FirstOrDefault() is DescriptionAttribute descriptionAttribute
               ? descriptionAttribute.Description
               : enumValueName;
-        }
-
-        private static Type ValidateType(Type value)
-        {
-            var enumType = Nullable.GetUnderlyingType(value) ?? value;
-
-            if (!enumType.IsEnum)
-                throw new ArgumentException("Type must be an Enum.");
-
-            return enumType;
         }
 
         /// <summary>

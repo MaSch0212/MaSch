@@ -16,10 +16,16 @@ namespace MaSch.Test.Assertion.UnitTests.TestHelper
             _disposable = disposable;
         }
 
-        public int Compare(T? x, T? y) => _comparer.Compare(x, y);
+        public int Compare(T? x, T? y)
+        {
+            return _comparer.Compare(x, y);
+        }
 
         [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP007:Don't dispose injected.", Justification = "This behavior is expected by the caller.")]
-        public void Dispose() => _disposable.Dispose();
+        public void Dispose()
+        {
+            _disposable.Dispose();
+        }
     }
 
     public sealed class DisposableEqualityComparer<T> : IEqualityComparer<T>, IDisposable
@@ -33,13 +39,22 @@ namespace MaSch.Test.Assertion.UnitTests.TestHelper
             _disposable = disposable;
         }
 
-        public bool Equals(T? x, T? y) => _comparer.Equals(x, y);
+        public bool Equals(T? x, T? y)
+        {
+            return _comparer.Equals(x, y);
+        }
 
         [ExcludeFromCodeCoverage]
-        public int GetHashCode([DisallowNull] T obj) => _comparer.GetHashCode(obj);
+        public int GetHashCode([DisallowNull] T obj)
+        {
+            return _comparer.GetHashCode(obj);
+        }
 
         [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP007:Don't dispose injected.", Justification = "This behavior is expected by the caller.")]
-        public void Dispose() => _disposable.Dispose();
+        public void Dispose()
+        {
+            _disposable.Dispose();
+        }
     }
 
     public sealed class DisposableEqualityComparer : IEqualityComparer, IDisposable
@@ -53,12 +68,21 @@ namespace MaSch.Test.Assertion.UnitTests.TestHelper
             _disposable = disposable;
         }
 
-        public new bool Equals(object? x, object? y) => _comparer.Equals(x, y);
+        public new bool Equals(object? x, object? y)
+        {
+            return _comparer.Equals(x, y);
+        }
 
         [ExcludeFromCodeCoverage]
-        public int GetHashCode(object obj) => _comparer.GetHashCode(obj);
+        public int GetHashCode(object obj)
+        {
+            return _comparer.GetHashCode(obj);
+        }
 
         [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP007:Don't dispose injected.", Justification = "This behavior is expected by the caller.")]
-        public void Dispose() => _disposable.Dispose();
+        public void Dispose()
+        {
+            _disposable.Dispose();
+        }
     }
 }

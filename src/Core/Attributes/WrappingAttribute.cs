@@ -6,7 +6,7 @@ namespace MaSch.Core.Attributes
     /// <summary>
     /// When applied to a class, the WrapperGenerator generator from MaSch.Generators will create wrapper members for the given type.
     /// </summary>
-    /// <seealso cref="System.Attribute" />
+    /// <seealso cref="Attribute" />
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
     [ExcludeFromCodeCoverage]
     public class WrappingAttribute : Attribute

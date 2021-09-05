@@ -38,7 +38,7 @@ namespace MaSch.Generators.Common
         /// <returns>Returns an <see cref="IDisposable"/> object, which closes the region when disposed.</returns>
         public IDisposable AddRegion(string regionName)
         {
-            AppendLine($"#region {regionName}");
+            _ = AppendLine($"#region {regionName}");
             return new CodeBlock(this, "#endregion", false);
         }
 
@@ -48,7 +48,9 @@ namespace MaSch.Generators.Common
         /// <param name="blockLine">The line before the code block.</param>
         /// <returns>Returns an <see cref="IDisposable"/> object, which closes the code block when disposed.</returns>
         public IDisposable AddBlock(string blockLine)
-            => AddBlock(blockLine, false);
+        {
+            return AddBlock(blockLine, false);
+        }
 
         /// <summary>
         /// Adds a new code block to the source file.
@@ -58,7 +60,7 @@ namespace MaSch.Generators.Common
         /// <returns>Returns an <see cref="IDisposable"/> object, which closes the code block when disposed.</returns>
         public IDisposable AddBlock(string blockLine, bool addSemicolon)
         {
-            AppendLine(blockLine);
+            _ = AppendLine(blockLine);
             return AddBlock(addSemicolon);
         }
 
@@ -67,7 +69,9 @@ namespace MaSch.Generators.Common
         /// </summary>
         /// <returns>Returns an <see cref="IDisposable"/> object, which closes the code block when disposed.</returns>
         public IDisposable AddBlock()
-            => AddBlock(false);
+        {
+            return AddBlock(false);
+        }
 
         /// <summary>
         /// Adds a new code block to the source file.
@@ -76,7 +80,7 @@ namespace MaSch.Generators.Common
         /// <returns>Returns an <see cref="IDisposable"/> object, which closes the code block when disposed.</returns>
         public IDisposable AddBlock(bool addSemicolon)
         {
-            AppendLine("{");
+            _ = AppendLine("{");
             _currentIndent++;
             return new CodeBlock(this, addSemicolon ? "};" : "}", true);
         }
@@ -85,14 +89,20 @@ namespace MaSch.Generators.Common
         /// Appends the default line terminator to the end of the current <see cref="SourceBuilder"/> object.
         /// </summary>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
-        public SourceBuilder AppendLine() => Append(Environment.NewLine);
+        public SourceBuilder AppendLine()
+        {
+            return Append(Environment.NewLine);
+        }
 
         /// <summary>
         /// Appends a copy of the specified string followed by the default line terminator to the end of the current <see cref="SourceBuilder"/> object.
         /// </summary>
         /// <param name="value">The string to append.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
-        public SourceBuilder AppendLine(string value) => Append(value + Environment.NewLine);
+        public SourceBuilder AppendLine(string value)
+        {
+            return Append(value + Environment.NewLine);
+        }
 
         /// <summary>
         /// Appends a copy of the specified string to this instance.
@@ -106,14 +116,14 @@ namespace MaSch.Generators.Common
             foreach (var line in lines.Take(lines.Length - 1))
             {
                 if (string.IsNullOrWhiteSpace(line))
-                    _builder.AppendLine();
+                    _ = _builder.AppendLine();
                 else
-                    _builder.Append(indent).AppendLine(line);
+                    _ = _builder.Append(indent).AppendLine(line);
             }
 
             if (lines.Length > 1 && !string.IsNullOrWhiteSpace(lines[^1]))
-                _builder.Append(indent);
-            _builder.Append(lines[^1]);
+                _ = _builder.Append(indent);
+            _ = _builder.Append(lines[^1]);
             return this;
         }
 
@@ -121,7 +131,10 @@ namespace MaSch.Generators.Common
         /// Converts the value of this instance to a System.String.
         /// </summary>
         /// <returns>A string whose value is the same as this instance.</returns>
-        public override string ToString() => _builder.ToString();
+        public override string ToString()
+        {
+            return _builder.ToString();
+        }
 
         private sealed class CodeBlock : IDisposable
         {
@@ -140,7 +153,7 @@ namespace MaSch.Generators.Common
             {
                 if (_changeIndent)
                     _builder._currentIndent--;
-                _builder.AppendLine(_endContent);
+                _ = _builder.AppendLine(_endContent);
             }
         }
     }

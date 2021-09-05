@@ -37,7 +37,9 @@ namespace MaSch.Data.Extensions
         /// When the enumerable is disposed, the <see cref="IDataReader"/> is disposed as well.
         /// </returns>
         public static IDisposableEnumerable<object[]> ToEnumerable(this IDataReader reader)
-            => reader.ToEnumerable(r => r.GetValues());
+        {
+            return reader.ToEnumerable(r => r.GetValues());
+        }
 
         /// <summary>
         /// Converts this <see cref="IDataReader"/> to an enumerable.
@@ -49,7 +51,9 @@ namespace MaSch.Data.Extensions
         /// When the enumerable is disposed, the <see cref="IDataReader"/> is disposed as well.
         /// </returns>
         public static IDisposableEnumerable<T?> ToEnumerable<T>(this IDataReader reader)
-            => reader.ToEnumerable(r => r.Get<T>(0));
+        {
+            return reader.ToEnumerable(r => r.Get<T>(0));
+        }
 
 #pragma warning disable SA1414 // Tuple types in signatures should have element names
         /// <summary>
@@ -63,7 +67,9 @@ namespace MaSch.Data.Extensions
         /// When the enumerable is disposed, the <see cref="IDataReader"/> is disposed as well.
         /// </returns>
         public static IDisposableEnumerable<(T1?, T2?)> ToEnumerable<T1, T2>(this IDataReader reader)
-            => reader.ToEnumerable(r => (r.Get<T1>(0), r.Get<T2>(1)));
+        {
+            return reader.ToEnumerable(r => (r.Get<T1>(0), r.Get<T2>(1)));
+        }
 
         /// <summary>
         /// Converts this <see cref="IDataReader"/> to an enumerable.
@@ -77,7 +83,9 @@ namespace MaSch.Data.Extensions
         /// When the enumerable is disposed, the <see cref="IDataReader"/> is disposed as well.
         /// </returns>
         public static IDisposableEnumerable<(T1?, T2?, T3?)> ToEnumerable<T1, T2, T3>(this IDataReader reader)
-            => reader.ToEnumerable(r => (r.Get<T1>(0), r.Get<T2>(1), r.Get<T3>(2)));
+        {
+            return reader.ToEnumerable(r => (r.Get<T1>(0), r.Get<T2>(1), r.Get<T3>(2)));
+        }
 
         /// <summary>
         /// Converts this <see cref="IDataReader"/> to an enumerable.
@@ -92,7 +100,9 @@ namespace MaSch.Data.Extensions
         /// When the enumerable is disposed, the <see cref="IDataReader"/> is disposed as well.
         /// </returns>
         public static IDisposableEnumerable<(T1?, T2?, T3?, T4?)> ToEnumerable<T1, T2, T3, T4>(this IDataReader reader)
-            => reader.ToEnumerable(r => (r.Get<T1>(0), r.Get<T2>(1), r.Get<T3>(2), r.Get<T4>(3)));
+        {
+            return reader.ToEnumerable(r => (r.Get<T1>(0), r.Get<T2>(1), r.Get<T3>(2), r.Get<T4>(3)));
+        }
 
         /// <summary>
         /// Converts this <see cref="IDataReader"/> to an enumerable.
@@ -108,7 +118,9 @@ namespace MaSch.Data.Extensions
         /// When the enumerable is disposed, the <see cref="IDataReader"/> is disposed as well.
         /// </returns>
         public static IDisposableEnumerable<(T1?, T2?, T3?, T4?, T5?)> ToEnumerable<T1, T2, T3, T4, T5>(this IDataReader reader)
-            => reader.ToEnumerable(r => (r.Get<T1>(0), r.Get<T2>(1), r.Get<T3>(2), r.Get<T4>(3), r.Get<T5>(4)));
+        {
+            return reader.ToEnumerable(r => (r.Get<T1>(0), r.Get<T2>(1), r.Get<T3>(2), r.Get<T4>(3), r.Get<T5>(4)));
+        }
 
         /// <summary>
         /// Converts this <see cref="IDataReader"/> to an enumerable.
@@ -125,7 +137,9 @@ namespace MaSch.Data.Extensions
         /// When the enumerable is disposed, the <see cref="IDataReader"/> is disposed as well.
         /// </returns>
         public static IDisposableEnumerable<(T1?, T2?, T3?, T4?, T5?, T6?)> ToEnumerable<T1, T2, T3, T4, T5, T6>(this IDataReader reader)
-            => reader.ToEnumerable(r => (r.Get<T1>(0), r.Get<T2>(1), r.Get<T3>(2), r.Get<T4>(3), r.Get<T5>(4), r.Get<T6>(5)));
+        {
+            return reader.ToEnumerable(r => (r.Get<T1>(0), r.Get<T2>(1), r.Get<T3>(2), r.Get<T4>(3), r.Get<T5>(4), r.Get<T6>(5)));
+        }
 
         /// <summary>
         /// Converts this <see cref="IDataReader"/> to an enumerable.
@@ -143,7 +157,9 @@ namespace MaSch.Data.Extensions
         /// When the enumerable is disposed, the <see cref="IDataReader"/> is disposed as well.
         /// </returns>
         public static IDisposableEnumerable<(T1?, T2?, T3?, T4?, T5?, T6?, T7?)> ToEnumerable<T1, T2, T3, T4, T5, T6, T7>(this IDataReader reader)
-            => reader.ToEnumerable(r => (r.Get<T1>(0), r.Get<T2>(1), r.Get<T3>(2), r.Get<T4>(3), r.Get<T5>(4), r.Get<T6>(5), r.Get<T7>(6)));
+        {
+            return reader.ToEnumerable(r => (r.Get<T1>(0), r.Get<T2>(1), r.Get<T3>(2), r.Get<T4>(3), r.Get<T5>(4), r.Get<T6>(5), r.Get<T7>(6)));
+        }
 #pragma warning restore SA1414 // Tuple types in signatures should have element names
 
         /// <summary>
@@ -157,7 +173,9 @@ namespace MaSch.Data.Extensions
         /// When the enumerable is disposed, the <see cref="IDataReader"/> is disposed as well.
         /// </returns>
         public static IDisposableEnumerable<T> ToEnumerable<T>(this IDataReader reader, Func<IDataReader, T> func)
-            => new DataReaderEnumerable<T>(reader, func);
+        {
+            return new DataReaderEnumerable<T>(reader, func);
+        }
 
         /// <summary>
         /// Gets the value of the specified column.
@@ -187,7 +205,9 @@ namespace MaSch.Data.Extensions
         /// <returns>The value of the column.</returns>
         /// <exception cref="InvalidCastException">The DBNull value cannot be converted.</exception>
         public static T? Get<T>(this IDataRecord record, string columnName)
-            => record.Get<T>(record.GetOrdinal(columnName));
+        {
+            return record.Get<T>(record.GetOrdinal(columnName));
+        }
 
         /// <summary>
         /// Gets the value of the specified column.
@@ -196,7 +216,9 @@ namespace MaSch.Data.Extensions
         /// <param name="columnId">The zero-based column ordinal.</param>
         /// <returns>The value of the column.</returns>
         public static object? Get(this IDataRecord record, int columnId)
-            => record.IsDBNull(columnId) ? default : record.GetValue(columnId);
+        {
+            return record.IsDBNull(columnId) ? default : record.GetValue(columnId);
+        }
 
         /// <summary>
         /// Gets the value of the specified column.
@@ -205,7 +227,9 @@ namespace MaSch.Data.Extensions
         /// <param name="columnName">Name of the column.</param>
         /// <returns>The value of the column.</returns>
         public static object? Get(this IDataRecord record, string columnName)
-            => record.Get(record.GetOrdinal(columnName));
+        {
+            return record.Get(record.GetOrdinal(columnName));
+        }
 
         /// <summary>
         /// Gets the values of all columns.
@@ -215,7 +239,7 @@ namespace MaSch.Data.Extensions
         public static object[] GetValues(this IDataRecord record)
         {
             var result = new object[record.FieldCount];
-            record.GetValues(result);
+            _ = record.GetValues(result);
             return result;
         }
 
@@ -231,8 +255,15 @@ namespace MaSch.Data.Extensions
             public event EventHandler<DisposeEventArgs>? Disposing;
             public event EventHandler<DisposeEventArgs>? Disposed;
 
-            public IEnumerator<T> GetEnumerator() => _enumerator;
-            IEnumerator IEnumerable.GetEnumerator() => _enumerator;
+            public IEnumerator<T> GetEnumerator()
+            {
+                return _enumerator;
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return _enumerator;
+            }
 
             public void Dispose()
             {
@@ -264,10 +295,16 @@ namespace MaSch.Data.Extensions
                 return result;
             }
 
-            public void Reset() => throw new NotSupportedException("This enumerable can only be iterated once.");
+            public void Reset()
+            {
+                throw new NotSupportedException("This enumerable can only be iterated once.");
+            }
 
             [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP007:Don't dispose injected.", Justification = "Makes sense in this case")]
-            public void Dispose() => _reader.Dispose();
+            public void Dispose()
+            {
+                _reader.Dispose();
+            }
         }
     }
 }

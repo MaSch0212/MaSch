@@ -17,14 +17,22 @@ namespace MaSch.Presentation.Wpf
     /// <summary>
     /// Default implementation of the <see cref="ITheme"/> interface.
     /// </summary>
-    /// <seealso cref="MaSch.Core.Observable.ObservableObject" />
-    /// <seealso cref="MaSch.Presentation.Wpf.ITheme" />
+    /// <seealso cref="ObservableObject" />
+    /// <seealso cref="ITheme" />
     [JsonConverter(typeof(NoJsonConverter))]
     public class Theme : ObservableObject, ITheme
     {
         private string? _name;
         private string? _description;
         private ObservableDictionary<string, IThemeValue> _values = null!;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Theme"/> class.
+        /// </summary>
+        public Theme()
+        {
+            Values = new ObservableDictionary<string, IThemeValue>();
+        }
 
         /// <inheritdoc/>
         public string? Name
@@ -46,7 +54,7 @@ namespace MaSch.Presentation.Wpf
             get => _values;
             set
             {
-                Guard.NotNull(value, nameof(value));
+                _ = Guard.NotNull(value, nameof(value));
 
                 if (_values != null)
                 {
@@ -61,33 +69,6 @@ namespace MaSch.Presentation.Wpf
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Theme"/> class.
-        /// </summary>
-        public Theme()
-        {
-            Values = new ObservableDictionary<string, IThemeValue>();
-        }
-
-        /// <inheritdoc/>
-        public void SaveToFile(string filePath)
-            => File.WriteAllText(filePath, ToJson());
-
-        /// <inheritdoc/>
-        public string ToJson()
-            => JsonConvert.SerializeObject(this, Formatting.Indented, new StringEnumConverter());
-
-        private void ValuesOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems != null)
-                e.NewItems.Cast<KeyValuePair<string, IThemeValue>>().ForEach(x => ValidateValue(x.Key, x.Value));
-        }
-
-        private void ValuesOnDictionaryItemChanged(object sender, DictionaryItemChangedEventArgs<string, IThemeValue> e)
-        {
-            ValidateValue(e.Key, e.NewValue);
-        }
-
-        /// <summary>
         /// Creates a <see cref="ITheme"/> from a json document.
         /// </summary>
         /// <param name="json">The json.</param>
@@ -97,7 +78,7 @@ namespace MaSch.Presentation.Wpf
         {
             json = ThemeJsonConverter.AddBaseUriToJson(json, baseUri);
             var theme = JsonConvert.DeserializeObject<ITheme>(json);
-            theme.Values.RemoveWhere(x => x.Value == null);
+            _ = theme.Values.RemoveWhere(x => x.Value == null);
             return theme;
         }
 
@@ -154,12 +135,35 @@ namespace MaSch.Presentation.Wpf
             return FromJson(ThemeJsonConverter.DownloadString(uri, null, out _), new Uri(uri, ".").ToString());
         }
 
+        /// <inheritdoc/>
+        public void SaveToFile(string filePath)
+        {
+            File.WriteAllText(filePath, ToJson());
+        }
+
+        /// <inheritdoc/>
+        public string ToJson()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented, new StringEnumConverter());
+        }
+
         private static void ValidateValue(string key, IThemeValue? value)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new InvalidOperationException("A theme value key cannot be empty.");
             if (value != null && key != value.Key)
                 value.Key = key;
+        }
+
+        private void ValuesOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems != null)
+                e.NewItems.Cast<KeyValuePair<string, IThemeValue>>().ForEach(x => ValidateValue(x.Key, x.Value));
+        }
+
+        private void ValuesOnDictionaryItemChanged(object sender, DictionaryItemChangedEventArgs<string, IThemeValue> e)
+        {
+            ValidateValue(e.Key, e.NewValue);
         }
     }
 }

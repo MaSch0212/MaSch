@@ -9,7 +9,7 @@ namespace MaSch.Test.Assertion.UnitTests
     [TestClass]
     public class CommonAssertionsTests
     {
-        private static MaSch.Test.Assertion.Assert AssertUnderTest => MaSch.Test.Assertion.Assert.Instance;
+        private static Assert AssertUnderTest => MaSch.Test.Assertion.Assert.Instance;
 
         #region IsTrue
 
@@ -541,13 +541,13 @@ namespace MaSch.Test.Assertion.UnitTests
         [TestMethod]
         public void IsInstanceOfType_Success_DerivedType()
         {
-            AssertUnderTest.IsInstanceOfType(AssertUnderTest, typeof(MaSch.Test.Assertion.AssertBase));
+            AssertUnderTest.IsInstanceOfType(AssertUnderTest, typeof(AssertBase));
         }
 
         [TestMethod]
         public void IsInstanceOfType_Fail_NullType()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsInstanceOfType("Test", null!));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsInstanceOfType("Test", null!));
         }
 
         [TestMethod]
@@ -593,7 +593,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             object? obj = AssertUnderTest;
 
-            var result = AssertUnderTest.IsInstanceOfType<MaSch.Test.Assertion.AssertBase>(obj);
+            var result = AssertUnderTest.IsInstanceOfType<AssertBase>(obj);
 
             MSAssert.AreSame(obj, result);
         }
@@ -645,7 +645,7 @@ namespace MaSch.Test.Assertion.UnitTests
         [TestMethod]
         public void IsNotInstanceOfType_Fail_NullType()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsNotInstanceOfType("Test", null!));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsNotInstanceOfType("Test", null!));
         }
 
         [TestMethod]
@@ -658,7 +658,7 @@ namespace MaSch.Test.Assertion.UnitTests
         [TestMethod]
         public void IsNotInstanceOfType_Fail_DerivedType()
         {
-            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotInstanceOfType(AssertUnderTest, typeof(MaSch.Test.Assertion.AssertBase)));
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotInstanceOfType(AssertUnderTest, typeof(AssertBase)));
             MSAssert.AreEqual("Assert.IsNotInstanceOfType failed. NotExpected:<MaSch.Test.Assertion.AssertBase>. Actual:<MaSch.Test.Assertion.Assert>.", ex.Message);
         }
 
@@ -672,7 +672,7 @@ namespace MaSch.Test.Assertion.UnitTests
         [TestMethod]
         public void IsNotInstanceOfType_Fail_DerivedType_WithMessage()
         {
-            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotInstanceOfType(AssertUnderTest, typeof(MaSch.Test.Assertion.AssertBase), "My test message"));
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotInstanceOfType(AssertUnderTest, typeof(AssertBase), "My test message"));
             MSAssert.AreEqual("Assert.IsNotInstanceOfType failed. NotExpected:<MaSch.Test.Assertion.AssertBase>. Actual:<MaSch.Test.Assertion.Assert>. My test message", ex.Message);
         }
 
@@ -698,7 +698,7 @@ namespace MaSch.Test.Assertion.UnitTests
         [TestMethod]
         public void IsNotInstanceOfTypeT_Fail_DerivedType()
         {
-            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotInstanceOfType<MaSch.Test.Assertion.AssertBase>(AssertUnderTest));
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotInstanceOfType<AssertBase>(AssertUnderTest));
             MSAssert.AreEqual("Assert.IsNotInstanceOfType failed. NotExpected:<MaSch.Test.Assertion.AssertBase>. Actual:<MaSch.Test.Assertion.Assert>.", ex.Message);
         }
 
@@ -712,7 +712,7 @@ namespace MaSch.Test.Assertion.UnitTests
         [TestMethod]
         public void IsNotInstanceOfTypeT_Fail_DerivedType_WithMessage()
         {
-            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotInstanceOfType<MaSch.Test.Assertion.AssertBase>(AssertUnderTest, "My test message"));
+            var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.IsNotInstanceOfType<AssertBase>(AssertUnderTest, "My test message"));
             MSAssert.AreEqual("Assert.IsNotInstanceOfType failed. NotExpected:<MaSch.Test.Assertion.AssertBase>. Actual:<MaSch.Test.Assertion.Assert>. My test message", ex.Message);
         }
 
@@ -743,7 +743,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mockEx = new InvalidOperationException("My test exception");
             var mock = new Mock<Action>();
-            mock.Setup(x => x()).Throws(mockEx);
+            _ = mock.Setup(x => x()).Throws(mockEx);
             var ex = AssertUnderTest.ThrowsException<InvalidOperationException>(() => mock.Object());
             MSAssert.AreSame(mockEx, ex);
         }
@@ -761,7 +761,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mock = new Mock<Action>();
             var exex = new ArgumentException();
-            mock.Setup(x => x()).Throws(exex);
+            _ = mock.Setup(x => x()).Throws(exex);
             var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<InvalidOperationException>(() => mock.Object()));
             MSAssert.AreEqual($"Assert.ThrowsException failed. ExpectedException:<InvalidOperationException>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>.", ex.Message);
         }
@@ -771,7 +771,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mock = new Mock<Action>();
             var exex = new ArgumentException();
-            mock.Setup(x => x()).Throws(exex);
+            _ = mock.Setup(x => x()).Throws(exex);
             var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<Exception>(() => mock.Object()));
             MSAssert.AreEqual($"Assert.ThrowsException failed. ExpectedException:<Exception>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>.", ex.Message);
         }
@@ -789,7 +789,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mock = new Mock<Action>();
             var exex = new ArgumentException();
-            mock.Setup(x => x()).Throws(exex);
+            _ = mock.Setup(x => x()).Throws(exex);
             var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<InvalidOperationException>(() => mock.Object(), "My test message"));
             MSAssert.AreEqual($"Assert.ThrowsException failed. ExpectedException:<InvalidOperationException>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>. My test message", ex.Message);
         }
@@ -799,7 +799,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mock = new Mock<Action>();
             var exex = new ArgumentException();
-            mock.Setup(x => x()).Throws(exex);
+            _ = mock.Setup(x => x()).Throws(exex);
             var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<Exception>(() => mock.Object(), "My test message"));
             MSAssert.AreEqual($"Assert.ThrowsException failed. ExpectedException:<Exception>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>. My test message", ex.Message);
         }
@@ -809,7 +809,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mockEx = new InvalidOperationException("My test exception");
             var mock = new Mock<Func<object?>>();
-            mock.Setup(x => x()).Throws(mockEx);
+            _ = mock.Setup(x => x()).Throws(mockEx);
             var ex = AssertUnderTest.ThrowsException<InvalidOperationException>(() => mock.Object());
             MSAssert.AreSame(mockEx, ex);
         }
@@ -818,7 +818,7 @@ namespace MaSch.Test.Assertion.UnitTests
         public void ThrowsException_Func_Fail_NoException()
         {
             var mock = new Mock<Func<object?>>();
-            mock.Setup(x => x()).Returns(null);
+            _ = mock.Setup(x => x()).Returns(null);
             var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<InvalidOperationException>(() => mock.Object()));
             MSAssert.AreEqual("Assert.ThrowsException failed. ExpectedException:<InvalidOperationException>. ActualException:<(null)>. ExceptionDetails:<(null)>.", ex.Message);
         }
@@ -828,7 +828,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mock = new Mock<Func<object?>>();
             var exex = new ArgumentException();
-            mock.Setup(x => x()).Throws(exex);
+            _ = mock.Setup(x => x()).Throws(exex);
             var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<InvalidOperationException>(() => mock.Object()));
             MSAssert.AreEqual($"Assert.ThrowsException failed. ExpectedException:<InvalidOperationException>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>.", ex.Message);
         }
@@ -838,7 +838,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mock = new Mock<Func<object?>>();
             var exex = new ArgumentException();
-            mock.Setup(x => x()).Throws(exex);
+            _ = mock.Setup(x => x()).Throws(exex);
             var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<Exception>(() => mock.Object()));
             MSAssert.AreEqual($"Assert.ThrowsException failed. ExpectedException:<Exception>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>.", ex.Message);
         }
@@ -847,7 +847,7 @@ namespace MaSch.Test.Assertion.UnitTests
         public void ThrowsException_Func_Fail_NoException_WithMessage()
         {
             var mock = new Mock<Func<object?>>();
-            mock.Setup(x => x()).Returns(null);
+            _ = mock.Setup(x => x()).Returns(null);
             var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<InvalidOperationException>(() => mock.Object(), "My test message"));
             MSAssert.AreEqual("Assert.ThrowsException failed. ExpectedException:<InvalidOperationException>. ActualException:<(null)>. ExceptionDetails:<(null)>. My test message", ex.Message);
         }
@@ -857,7 +857,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mock = new Mock<Func<object?>>();
             var exex = new ArgumentException();
-            mock.Setup(x => x()).Throws(exex);
+            _ = mock.Setup(x => x()).Throws(exex);
             var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<InvalidOperationException>(() => mock.Object(), "My test message"));
             MSAssert.AreEqual($"Assert.ThrowsException failed. ExpectedException:<InvalidOperationException>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>. My test message", ex.Message);
         }
@@ -867,7 +867,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mock = new Mock<Func<object?>>();
             var exex = new ArgumentException();
-            mock.Setup(x => x()).Throws(exex);
+            _ = mock.Setup(x => x()).Throws(exex);
             var ex = MSAssert.ThrowsException<AssertFailedException>(() => AssertUnderTest.ThrowsException<Exception>(() => mock.Object(), "My test message"));
             MSAssert.AreEqual($"Assert.ThrowsException failed. ExpectedException:<Exception>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>. My test message", ex.Message);
         }
@@ -881,7 +881,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mockEx = new InvalidOperationException("My test exception");
             var mock = new Mock<Func<Task>>();
-            mock.Setup(x => x()).Throws(mockEx);
+            _ = mock.Setup(x => x()).Throws(mockEx);
             var ex = await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object());
             MSAssert.AreSame(mockEx, ex);
         }
@@ -890,7 +890,7 @@ namespace MaSch.Test.Assertion.UnitTests
         public async Task ThrowsExceptionAsync_Action_Fail_NoException()
         {
             var mock = new Mock<Func<Task>>();
-            mock.Setup(x => x()).Returns(Task.CompletedTask);
+            _ = mock.Setup(x => x()).Returns(Task.CompletedTask);
             var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object()));
             MSAssert.AreEqual("Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<(null)>. ExceptionDetails:<(null)>.", ex.Message);
         }
@@ -900,7 +900,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mock = new Mock<Func<Task>>();
             var exex = new ArgumentException();
-            mock.Setup(x => x()).Throws(exex);
+            _ = mock.Setup(x => x()).Throws(exex);
             var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object()));
             MSAssert.AreEqual($"Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>.", ex.Message);
         }
@@ -910,7 +910,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mock = new Mock<Func<Task>>();
             var exex = new ArgumentException();
-            mock.Setup(x => x()).Throws(exex);
+            _ = mock.Setup(x => x()).Throws(exex);
             var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<Exception>(() => mock.Object()));
             MSAssert.AreEqual($"Assert.ThrowsExceptionAsync failed. ExpectedException:<Exception>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>.", ex.Message);
         }
@@ -919,7 +919,7 @@ namespace MaSch.Test.Assertion.UnitTests
         public async Task ThrowsExceptionAsync_Action_Fail_NoException_WithMessage()
         {
             var mock = new Mock<Func<Task>>();
-            mock.Setup(x => x()).Returns(Task.CompletedTask);
+            _ = mock.Setup(x => x()).Returns(Task.CompletedTask);
             var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object(), "My test message"));
             MSAssert.AreEqual("Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<(null)>. ExceptionDetails:<(null)>. My test message", ex.Message);
         }
@@ -929,7 +929,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mock = new Mock<Func<Task>>();
             var exex = new ArgumentException();
-            mock.Setup(x => x()).Throws(exex);
+            _ = mock.Setup(x => x()).Throws(exex);
             var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object(), "My test message"));
             MSAssert.AreEqual($"Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>. My test message", ex.Message);
         }
@@ -939,7 +939,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mock = new Mock<Func<Task>>();
             var exex = new ArgumentException();
-            mock.Setup(x => x()).Throws(exex);
+            _ = mock.Setup(x => x()).Throws(exex);
             var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<Exception>(() => mock.Object(), "My test message"));
             MSAssert.AreEqual($"Assert.ThrowsExceptionAsync failed. ExpectedException:<Exception>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>. My test message", ex.Message);
         }
@@ -949,7 +949,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mockEx = new InvalidOperationException("My test exception");
             var mock = new Mock<Func<Task<object?>>>();
-            mock.Setup(x => x()).Throws(mockEx);
+            _ = mock.Setup(x => x()).Throws(mockEx);
             var ex = await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object());
             MSAssert.AreSame(mockEx, ex);
         }
@@ -958,7 +958,7 @@ namespace MaSch.Test.Assertion.UnitTests
         public async Task ThrowsExceptionAsync_Func_Fail_NoException()
         {
             var mock = new Mock<Func<Task<object?>>>();
-            mock.Setup(x => x()).Returns(Task.FromResult<object?>(null));
+            _ = mock.Setup(x => x()).Returns(Task.FromResult<object?>(null));
             var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object()));
             MSAssert.AreEqual("Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<(null)>. ExceptionDetails:<(null)>.", ex.Message);
         }
@@ -968,7 +968,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mock = new Mock<Func<Task<object?>>>();
             var exex = new ArgumentException();
-            mock.Setup(x => x()).Throws(exex);
+            _ = mock.Setup(x => x()).Throws(exex);
             var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object()));
             MSAssert.AreEqual($"Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>.", ex.Message);
         }
@@ -978,7 +978,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mock = new Mock<Func<Task<object?>>>();
             var exex = new ArgumentException();
-            mock.Setup(x => x()).Throws(exex);
+            _ = mock.Setup(x => x()).Throws(exex);
             var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<Exception>(() => mock.Object()));
             MSAssert.AreEqual($"Assert.ThrowsExceptionAsync failed. ExpectedException:<Exception>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>.", ex.Message);
         }
@@ -987,7 +987,7 @@ namespace MaSch.Test.Assertion.UnitTests
         public async Task ThrowsExceptionAsync_Func_Fail_NoException_WithMessage()
         {
             var mock = new Mock<Func<Task<object?>>>();
-            mock.Setup(x => x()).Returns(Task.FromResult<object?>(null));
+            _ = mock.Setup(x => x()).Returns(Task.FromResult<object?>(null));
             var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object(), "My test message"));
             MSAssert.AreEqual("Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<(null)>. ExceptionDetails:<(null)>. My test message", ex.Message);
         }
@@ -997,7 +997,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mock = new Mock<Func<Task<object?>>>();
             var exex = new ArgumentException();
-            mock.Setup(x => x()).Throws(exex);
+            _ = mock.Setup(x => x()).Throws(exex);
             var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object(), "My test message"));
             MSAssert.AreEqual($"Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>. My test message", ex.Message);
         }
@@ -1007,7 +1007,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mock = new Mock<Func<Task<object?>>>();
             var exex = new ArgumentException();
-            mock.Setup(x => x()).Throws(exex);
+            _ = mock.Setup(x => x()).Throws(exex);
             var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<Exception>(() => mock.Object(), "My test message"));
             MSAssert.AreEqual($"Assert.ThrowsExceptionAsync failed. ExpectedException:<Exception>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>. My test message", ex.Message);
         }
@@ -1017,7 +1017,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mockEx = new InvalidOperationException("My test exception");
             var mock = new Mock<Func<Task<object?>>>();
-            mock.Setup(x => x()).Throws(mockEx);
+            _ = mock.Setup(x => x()).Throws(mockEx);
             var ex = await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object());
             MSAssert.AreSame(mockEx, ex);
         }
@@ -1026,7 +1026,7 @@ namespace MaSch.Test.Assertion.UnitTests
         public async Task ThrowsExceptionAsync_FuncObj_Fail_NoException()
         {
             var mock = new Mock<Func<Task<object?>>>();
-            mock.Setup(x => x()).Returns(Task.FromResult<object?>(null));
+            _ = mock.Setup(x => x()).Returns(Task.FromResult<object?>(null));
             var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object()));
             MSAssert.AreEqual("Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<(null)>. ExceptionDetails:<(null)>.", ex.Message);
         }
@@ -1036,7 +1036,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mock = new Mock<Func<Task<object?>>>();
             var exex = new ArgumentException();
-            mock.Setup(x => x()).Throws(exex);
+            _ = mock.Setup(x => x()).Throws(exex);
             var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object()));
             MSAssert.AreEqual($"Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>.", ex.Message);
         }
@@ -1046,7 +1046,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mock = new Mock<Func<Task<object?>>>();
             var exex = new ArgumentException();
-            mock.Setup(x => x()).Throws(exex);
+            _ = mock.Setup(x => x()).Throws(exex);
             var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<Exception>(() => mock.Object()));
             MSAssert.AreEqual($"Assert.ThrowsExceptionAsync failed. ExpectedException:<Exception>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>.", ex.Message);
         }
@@ -1055,7 +1055,7 @@ namespace MaSch.Test.Assertion.UnitTests
         public async Task ThrowsExceptionAsync_FuncObj_Fail_NoException_WithMessage()
         {
             var mock = new Mock<Func<Task<object?>>>();
-            mock.Setup(x => x()).Returns(Task.FromResult<object?>(null));
+            _ = mock.Setup(x => x()).Returns(Task.FromResult<object?>(null));
             var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object(), "My test message"));
             MSAssert.AreEqual("Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<(null)>. ExceptionDetails:<(null)>. My test message", ex.Message);
         }
@@ -1065,7 +1065,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mock = new Mock<Func<Task<object?>>>();
             var exex = new ArgumentException();
-            mock.Setup(x => x()).Throws(exex);
+            _ = mock.Setup(x => x()).Throws(exex);
             var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<InvalidOperationException>(() => mock.Object(), "My test message"));
             MSAssert.AreEqual($"Assert.ThrowsExceptionAsync failed. ExpectedException:<InvalidOperationException>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>. My test message", ex.Message);
         }
@@ -1075,7 +1075,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var mock = new Mock<Func<Task<object?>>>();
             var exex = new ArgumentException();
-            mock.Setup(x => x()).Throws(exex);
+            _ = mock.Setup(x => x()).Throws(exex);
             var ex = await MSAssert.ThrowsExceptionAsync<AssertFailedException>(async () => await AssertUnderTest.ThrowsExceptionAsync<Exception>(() => mock.Object(), "My test message"));
             MSAssert.AreEqual($"Assert.ThrowsExceptionAsync failed. ExpectedException:<Exception>. ActualException:<ArgumentException>. ExceptionDetails:<{exex}>. My test message", ex.Message);
         }

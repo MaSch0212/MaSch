@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Packaging;
 using System.Linq;
@@ -12,27 +13,45 @@ namespace MaSch.Presentation.Wpf.JsonConverters
     /// <summary>
     /// <see cref="JsonConverter"/> that is used to convert a <see cref="ITheme"/> to and from json.
     /// </summary>
-    /// <seealso cref="Newtonsoft.Json.JsonConverter{T}" />
+    /// <seealso cref="JsonConverter{T}" />
     public class ThemeJsonConverter : JsonConverter<ITheme>
     {
         private static readonly IWebRequestCreate PackRequestFactory = new PackWebRequestFactory();
+        [SuppressMessage("Blocker Bug", "S2930:\"IDisposables\" should be disposed", Justification = "Static")]
         private static readonly WebClient WebClient = new();
 
         /// <inheritdoc/>
         public override bool CanWrite => false;
 
+        /// <summary>
+        /// Adds the BaseUri property to a json document.
+        /// </summary>
+        /// <param name="json">The json.</param>
+        /// <param name="baseUri">The base URI.</param>
+        /// <returns>The json document with the attached BaseUri property.</returns>
+        public static string AddBaseUriToJson(string json, string baseUri)
+        {
+            if (JToken.Parse(json) is JObject obj)
+            {
+                obj.Add("BaseUri", new JValue(baseUri));
+                json = obj.ToString();
+            }
+
+            return json;
+        }
+
         /// <inheritdoc/>
         public override ITheme ReadJson(JsonReader reader, Type objectType, ITheme? existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            var jToken = JToken.ReadFrom(reader);
-            using var jReader = jToken.CreateReader();
-            var result = serializer.Deserialize<Theme>(jReader) ?? new Theme();
+            var token = JToken.ReadFrom(reader);
+            using var tokenReader = token.CreateReader();
+            var result = serializer.Deserialize<Theme>(tokenReader) ?? new Theme();
 
-            var mergedThemesToken = jToken["MergedThemes"];
+            var mergedThemesToken = token["MergedThemes"];
 
             if (mergedThemesToken is JArray mergedThemesArray)
             {
-                var baseUri = new Uri(jToken["BaseUri"] is JValue fpv ? (string)fpv.Value! : AppDomain.CurrentDomain.BaseDirectory);
+                var baseUri = new Uri(token["BaseUri"] is JValue fpv ? (string)fpv.Value! : AppDomain.CurrentDomain.BaseDirectory);
 
                 foreach (var item in mergedThemesArray.OfType<JValue>().Where(x => x.Type == JTokenType.String))
                 {
@@ -52,23 +71,6 @@ namespace MaSch.Presentation.Wpf.JsonConverters
         public override void WriteJson(JsonWriter writer, ITheme? value, JsonSerializer serializer)
         {
             throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Adds the BaseUri property to a json document.
-        /// </summary>
-        /// <param name="json">The json.</param>
-        /// <param name="baseUri">The base URI.</param>
-        /// <returns>The json document with the attached BaseUri property.</returns>
-        public static string AddBaseUriToJson(string json, string baseUri)
-        {
-            if (JToken.Parse(json) is JObject obj)
-            {
-                obj.Add("BaseUri", new JValue(baseUri));
-                json = obj.ToString();
-            }
-
-            return json;
         }
 
         /// <summary>

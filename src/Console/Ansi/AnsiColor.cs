@@ -63,7 +63,9 @@ namespace MaSch.Console.Ansi
         /// <param name="colorCode">The <see cref="AnsiColorCode"/> to use.</param>
         /// <returns>A <see cref="AnsiColor"/> instance that represents the <paramref name="colorCode"/>.</returns>
         public static AnsiColor FromColorCode(AnsiColorCode colorCode)
-            => new(Guard.NotUndefinedEnumMember(colorCode, nameof(colorCode)));
+        {
+            return new(Guard.NotUndefinedEnumMember(colorCode, nameof(colorCode)));
+        }
 
         /// <summary>
         /// Creates an <see cref="AnsiColor"/> using specified RGB values.
@@ -73,7 +75,9 @@ namespace MaSch.Console.Ansi
         /// <param name="blue">The blue channel (0-255).</param>
         /// <returns>A <see cref="AnsiColor"/> instance that represents the given RGB values.</returns>
         public static AnsiColor FromRgb(int red, int green, int blue)
-            => new(red, green, blue);
+        {
+            return new(red, green, blue);
+        }
 
         /// <summary>
         /// Creates an <see cref="AnsiColor"/> using a specified <see cref="Color"/> instance.
@@ -81,7 +85,9 @@ namespace MaSch.Console.Ansi
         /// <param name="color">The <see cref="Color"/> to use.</param>
         /// <returns>A <see cref="AnsiColor"/> instance that represents the <paramref name="color"/>.</returns>
         public static AnsiColor FromColor(Color color)
-            => new(color.R, color.G, color.B);
+        {
+            return new(color.R, color.G, color.B);
+        }
 
         /// <summary>
         /// Creates an <see cref="AnsiColor"/> using a specified <see cref="ConsoleColor"/>.
@@ -89,7 +95,8 @@ namespace MaSch.Console.Ansi
         /// <param name="color">The <see cref="ConsoleColor"/> to use.</param>
         /// <returns>A <see cref="AnsiColor"/> instance that represents the <paramref name="color"/>.</returns>
         public static AnsiColor FromConsoleColor(ConsoleColor color)
-            => new(color switch
+        {
+            return new(color switch
             {
                 ConsoleColor.Black => AnsiColorCode.Black,
                 ConsoleColor.DarkBlue => AnsiColorCode.DarkBlue,
@@ -109,6 +116,7 @@ namespace MaSch.Console.Ansi
                 ConsoleColor.White => AnsiColorCode.White,
                 _ => throw new ArgumentOutOfRangeException(nameof(color)),
             });
+        }
 
         /// <summary>
         /// Returns the string representation of the color represented by this struct.

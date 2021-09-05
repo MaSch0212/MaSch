@@ -46,11 +46,6 @@ namespace MaSch.Test
         public class Accessor
         {
             /// <summary>
-            /// Gets the builder that is accessed.
-            /// </summary>
-            protected SutBuilderBase Builder { get; }
-
-            /// <summary>
             /// Initializes a new instance of the <see cref="Accessor"/> class.
             /// </summary>
             /// <param name="builder">The builder that should be accessed.</param>
@@ -60,13 +55,20 @@ namespace MaSch.Test
             }
 
             /// <summary>
+            /// Gets the builder that is accessed.
+            /// </summary>
+            protected SutBuilderBase Builder { get; }
+
+            /// <summary>
             /// Gets the value for the given method.
             /// </summary>
             /// <typeparam name="T">The type of value.</typeparam>
             /// <param name="methodName">The method name.</param>
             /// <returns>The value for the given method.</returns>
             public T? Get<T>(string methodName)
-                => Builder._cache.GetValue<T>(methodName);
+            {
+                return Builder._cache.GetValue<T>(methodName);
+            }
 
             /// <summary>
             /// Tries to get the value for the given method.
@@ -76,7 +78,9 @@ namespace MaSch.Test
             /// <param name="value">The value.</param>
             /// <returns>A value indicating whether a value existed for the given method.</returns>
             public bool TryGet<T>(string methodName, out T? value)
-                => Builder._cache.TryGetValue<T>(out value, methodName);
+            {
+                return Builder._cache.TryGetValue(out value, methodName);
+            }
 
             /// <summary>
             /// Gets the values for the given method.
@@ -85,7 +89,9 @@ namespace MaSch.Test
             /// <param name="methodName">The method name.</param>
             /// <returns>The values for the given method.</returns>
             public IEnumerable<T> GetMany<T>(string methodName)
-                => Builder._cache.GetValue<IEnumerable<T>>(methodName) ?? Array.Empty<T>();
+            {
+                return Builder._cache.GetValue<IEnumerable<T>>(methodName) ?? Array.Empty<T>();
+            }
 
             /// <summary>
             /// Tries to get the values for the given method.
@@ -107,7 +113,9 @@ namespace MaSch.Test
             /// <param name="methodName">The method name.</param>
             /// <returns>A value indicating whether a value existed for the given method.</returns>
             public bool Has(string methodName)
-                => Builder._cache.HasValue(methodName);
+            {
+                return Builder._cache.HasValue(methodName);
+            }
         }
     }
 
@@ -141,7 +149,9 @@ namespace MaSch.Test
 #else
         protected override TBuilder Set<T>(T value, [CallerMemberName] string? methodName = null)
 #endif
-            => (TBuilder)base.Set(value, methodName);
+        {
+            return (TBuilder)base.Set(value, methodName);
+        }
 
         /// <summary>
         /// Adds a value to the values for the method that called this method.
@@ -155,6 +165,8 @@ namespace MaSch.Test
 #else
         protected override TBuilder Add<T>(T value, [CallerMemberName] string? methodName = null)
 #endif
-            => (TBuilder)base.Add(value, methodName);
+        {
+            return (TBuilder)base.Add(value, methodName);
+        }
     }
 }

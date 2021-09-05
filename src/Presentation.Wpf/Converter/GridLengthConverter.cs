@@ -9,7 +9,7 @@ namespace MaSch.Presentation.Wpf.Converter
     /// <summary>
     /// A <see cref="IValueConverter"/> that converts numbers to <see cref="GridLength"/> and back.
     /// </summary>
-    /// <seealso cref="System.Windows.Data.IValueConverter" />
+    /// <seealso cref="IValueConverter" />
     public class GridLengthConverter : IValueConverter
     {
         /// <inheritdoc />

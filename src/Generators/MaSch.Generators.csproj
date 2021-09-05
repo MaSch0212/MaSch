@@ -5,6 +5,7 @@
   <PropertyGroup>
     <!-- General Project info -->
     <TargetFramework>$(TfmNetStandard)</TargetFramework>
+    <DefineConstants>$(DefineConstants);MASCH_GENERATOR</DefineConstants>
 
     <!-- Output info -->
     <SignAssembly>true</SignAssembly>

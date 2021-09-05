@@ -8,7 +8,7 @@ namespace MaSch.Presentation.Wpf.Converter
     /// A <see cref="IValueConverter"/> that converts a <see cref="DateTime"/> into a string using the
     /// <see cref="DateTimeFormatInfo.ShortDatePattern"/> and <see cref="DateTimeFormatInfo.ShortTimePattern"/> from the current culture.
     /// </summary>
-    /// <seealso cref="System.Windows.Data.IValueConverter" />
+    /// <seealso cref="IValueConverter" />
     public class DateTimeToStringConverter : IValueConverter
     {
         /// <inheritdoc />

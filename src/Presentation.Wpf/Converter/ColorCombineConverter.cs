@@ -13,22 +13,6 @@ namespace MaSch.Presentation.Wpf.Converter
     /// <seealso cref="IMultiValueConverter" />
     public class ColorCombineConverter : IMultiValueConverter
     {
-        /// <inheritdoc />
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            var colors = values?.OfType<Color>().ToArray();
-            if (colors.IsNullOrEmpty())
-                return Colors.Transparent;
-
-            return colors.Aggregate(MixColors);
-        }
-
-        /// <inheritdoc />
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotSupportedException("Combined colors cannot be converted back!");
-        }
-
         /// <summary>
         /// Mixes the two specified colors.
         /// </summary>
@@ -58,6 +42,22 @@ namespace MaSch.Presentation.Wpf.Converter
                 var p2 = backAlpha / 255F;
                 return (byte)Math.Min(255, Math.Round((p1 + p2 - (p1 * p2)) * 255, 0));
             }
+        }
+
+        /// <inheritdoc />
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var colors = values?.OfType<Color>().ToArray();
+            if (colors.IsNullOrEmpty())
+                return Colors.Transparent;
+
+            return colors.Aggregate(MixColors);
+        }
+
+        /// <inheritdoc />
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException("Combined colors cannot be converted back!");
         }
     }
 }

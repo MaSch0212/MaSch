@@ -37,7 +37,7 @@ namespace MaSch.Core
         /// </returns>
         public virtual T? GetValue<T>([CallerMemberName] string key = "<Unknown>")
         {
-            Guard.NotNull(key, nameof(key));
+            _ = Guard.NotNull(key, nameof(key));
             lock (ObjectsLock)
                 return (T?)Objects[key];
         }
@@ -53,8 +53,8 @@ namespace MaSch.Core
         /// </returns>
         public virtual T? GetValue<T>(Func<T> valueGetter, [CallerMemberName] string key = "<Unknown>")
         {
-            Guard.NotNull(valueGetter, nameof(valueGetter));
-            Guard.NotNull(key, nameof(key));
+            _ = Guard.NotNull(valueGetter, nameof(valueGetter));
+            _ = Guard.NotNull(key, nameof(key));
 
             lock (ObjectsLock)
             {
@@ -75,8 +75,8 @@ namespace MaSch.Core
         /// </returns>
         public virtual async Task<T?> GetValueAsync<T>(Func<Task<T>> valueGetter, [CallerMemberName] string key = "<Unknown>")
         {
-            Guard.NotNull(valueGetter, nameof(valueGetter));
-            Guard.NotNull(key, nameof(key));
+            _ = Guard.NotNull(valueGetter, nameof(valueGetter));
+            _ = Guard.NotNull(key, nameof(key));
 
             Monitor.Enter(ObjectsLock);
             try
@@ -102,7 +102,7 @@ namespace MaSch.Core
         /// </returns>
         public virtual bool TryGetValue<T>([NotNullWhen(true)] out T? value, [CallerMemberName] string key = "<Unknown>")
         {
-            Guard.NotNull(key, nameof(key));
+            _ = Guard.NotNull(key, nameof(key));
 
             bool result;
             object? objValue;
@@ -128,7 +128,7 @@ namespace MaSch.Core
         /// </returns>
         public virtual bool HasValue([CallerMemberName] string key = "<Unknown>")
         {
-            Guard.NotNull(key, nameof(key));
+            _ = Guard.NotNull(key, nameof(key));
             lock (ObjectsLock)
                 return Objects.ContainsKey(key);
         }
@@ -139,9 +139,9 @@ namespace MaSch.Core
         /// <param name="key">The key for which the value should be removed.</param>
         public virtual void RemoveValue([CallerMemberName] string key = "<Unknown>")
         {
-            Guard.NotNull(key, nameof(key));
+            _ = Guard.NotNull(key, nameof(key));
             lock (ObjectsLock)
-                Objects.TryRemove(key);
+                _ = Objects.TryRemove(key);
         }
 
         /// <summary>
@@ -153,11 +153,11 @@ namespace MaSch.Core
         /// </remarks>
         public virtual void RemoveAndDisposeValue([CallerMemberName] string key = "<Unknown>")
         {
-            Guard.NotNull(key, nameof(key));
+            _ = Guard.NotNull(key, nameof(key));
 
             object? value;
             lock (ObjectsLock)
-                Objects.TryRemove(key, out value);
+                _ = Objects.TryRemove(key, out value);
 
             if (value is IDisposable disposableValue)
                 disposableValue.Dispose();
@@ -171,7 +171,7 @@ namespace MaSch.Core
         /// <param name="key">The key of the value to set.</param>
         public virtual void SetValue<T>(T value, [CallerMemberName] string key = "<Unknown>")
         {
-            Guard.NotNull(key, nameof(key));
+            _ = Guard.NotNull(key, nameof(key));
             lock (ObjectsLock)
                 Objects[key] = value;
         }

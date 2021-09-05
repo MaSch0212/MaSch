@@ -12,7 +12,7 @@ namespace MaSch.Presentation.Wpf.TemplateSelectors
     /// <summary>
     /// A <see cref="DataTemplateSelector"/> that select templates for a <see cref="ComboBox"/>.
     /// </summary>
-    /// <seealso cref="System.Windows.Controls.DataTemplateSelector" />
+    /// <seealso cref="DataTemplateSelector" />
     public class ComboBoxTemplateSelector : DataTemplateSelector
     {
         /// <summary>
@@ -64,7 +64,7 @@ namespace MaSch.Presentation.Wpf.TemplateSelectors
     /// <summary>
     /// A <see cref="MarkupExtension"/> that creates a <see cref="ComboBoxTemplateSelector"/>.
     /// </summary>
-    /// <seealso cref="System.Windows.Markup.MarkupExtension" />
+    /// <seealso cref="MarkupExtension" />
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Markup extension is related to the template selector.")]
     public class ComboBoxTemplateExtension : MarkupExtension
     {

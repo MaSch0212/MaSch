@@ -40,10 +40,10 @@ namespace MaSch.Generators
             if (assemblyAttributes.Any(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, debugGeneratorSymbol)))
                 LaunchDebuggerOnBuild();
 
-            context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.rootnamespace", out var globalNamespaceName);
-            context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.projectdir", out var projectDir);
-            context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.sqlqueryaccessorrootdir", out var rootDir);
-            context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.sqlqueryaccessorname", out var className);
+            _ = context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.rootnamespace", out var globalNamespaceName);
+            _ = context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.projectdir", out var projectDir);
+            _ = context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.sqlqueryaccessorrootdir", out var rootDir);
+            _ = context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.sqlqueryaccessorname", out var className);
 
             if (string.IsNullOrWhiteSpace(projectDir))
                 return;
@@ -119,20 +119,20 @@ namespace MaSch.Generators
                 foreach (var node in SubNodes)
                 {
                     if (!isFirst)
-                        builder.AppendLine();
+                        _ = builder.AppendLine();
                     node.Write(builder);
                     isFirst = false;
                 }
 
                 if (!isFirst)
-                    builder.AppendLine();
+                    _ = builder.AppendLine();
 
                 foreach (var file in Files)
                 {
                     var name = IllegalClassNameCharsRegex.Replace(Path.GetFileNameWithoutExtension(file.Path), "_");
                     if (int.TryParse(name[0].ToString(), out _))
                         name = "_" + name;
-                    builder.AppendLine($"internal static readonly string {name} = \"{StringCStyle(file.GetText().ToString())}\";");
+                    _ = builder.AppendLine($"internal static readonly string {name} = \"{StringCStyle(file.GetText().ToString())}\";");
                 }
             }
 

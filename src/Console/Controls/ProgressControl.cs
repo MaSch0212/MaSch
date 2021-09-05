@@ -219,7 +219,10 @@ namespace MaSch.Console.Controls
         /// Hides this control.
         /// </summary>
         /// <param name="setCursorToControlRoot">if set to <c>true</c> the cursor is set to the root of the control.</param>
-        public void Hide(bool setCursorToControlRoot) => Hide(setCursorToControlRoot, false);
+        public void Hide(bool setCursorToControlRoot)
+        {
+            Hide(setCursorToControlRoot, false);
+        }
 
         /// <summary>
         /// Hides this control.

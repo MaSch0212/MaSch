@@ -49,7 +49,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         public void Parse_NoCommand_WithDefaultCommand(bool nullArgs)
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            command.Setup(x => x.CommandType).Returns(typeof(DummyClass1)).Verifiable(Verifiables, Times.Once());
+            _ = command.Setup(x => x.CommandType).Returns(typeof(DummyClass1)).Verifiable(Verifiables, Times.Once());
             DefaultCommand = command.Object;
 
             var result = CallParse(nullArgs ? null! : Array.Empty<string>());
@@ -66,7 +66,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
                 new[] { "blub" },
                 values: new[] { value.Object },
                 optionsInstance: optionsInstance);
-            value.Setup(x => x.SetValue(optionsInstance, "blubbi")).Verifiable(Verifiables, Times.Once());
+            _ = value.Setup(x => x.SetValue(optionsInstance, "blubbi")).Verifiable(Verifiables, Times.Once());
             DefaultCommand = command.Object;
 
             var result = CallParse("blubbi");
@@ -259,7 +259,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         {
             var option = CreateCliCommandOptionMock<bool>(new[] { optionName });
             var command = CreateCliCommandMock<DummyClass1>(new[] { "blub" }, options: new[] { option.Object });
-            option.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), true)).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), true)).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
             AppOptions.ProvideHelpOptions = true;
             AppOptions.ProvideVersionOptions = true;
@@ -331,7 +331,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var option = CreateCliCommandOptionMock<bool>(new[] { optionName });
             var childCommand = CreateCliCommandMock<DummyClass2>(new[] { "blib" });
             var parentCommand = CreateCliCommandMock<DummyClass1>(new[] { "blub" }, options: new[] { option.Object }, childCommands: new[] { childCommand.Object });
-            option.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), true)).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), true)).Verifiable(Verifiables, Times.Once());
             Commands.Add(parentCommand.Object);
             AppOptions.ProvideHelpOptions = true;
             AppOptions.ProvideVersionOptions = true;
@@ -404,7 +404,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var option = CreateCliCommandOptionMock<bool>(new[] { optionName });
             var childCommand = CreateCliCommandMock<DummyClass2>(new[] { "blib" }, options: new[] { option.Object });
             var parentCommand = CreateCliCommandMock<DummyClass1>(new[] { "blub" }, childCommands: new[] { childCommand.Object });
-            option.Setup(x => x.SetValue(It.IsAny<DummyClass2>(), true)).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(It.IsAny<DummyClass2>(), true)).Verifiable(Verifiables, Times.Once());
             Commands.Add(parentCommand.Object);
             AppOptions.ProvideHelpOptions = true;
             AppOptions.ProvideVersionOptions = true;
@@ -475,7 +475,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         {
             var val1 = CreateCliCommandValueMock<string>(0);
             var command = CreateCliCommandMock<DummyClass1>(new[] { "blub" }, values: new[] { val1.Object });
-            val1.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), "blubbi")).Verifiable(Verifiables, Times.Once());
+            _ = val1.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), "blubbi")).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("blub", "blubbi");
@@ -489,7 +489,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var val1 = CreateCliCommandValueMock<string>(0);
             var childCommand = CreateCliCommandMock<DummyClass2>(new[] { "blib" }, values: new[] { val1.Object });
             var parentCommand = CreateCliCommandMock<DummyClass1>(new[] { "blub" }, childCommands: new[] { childCommand.Object });
-            val1.Setup(x => x.SetValue(It.IsAny<DummyClass2>(), "blubbi")).Verifiable(Verifiables, Times.Once());
+            _ = val1.Setup(x => x.SetValue(It.IsAny<DummyClass2>(), "blubbi")).Verifiable(Verifiables, Times.Once());
             Commands.Add(parentCommand.Object);
 
             var result = CallParse("blub", "blib", "blubbi");
@@ -505,7 +505,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var childCommand2 = CreateCliCommandMock<DummyClass3>(new[] { "blab" }, childCommands: new[] { childCommand3.Object });
             var childCommand1 = CreateCliCommandMock<DummyClass2>(new[] { "blib" }, childCommands: new[] { childCommand2.Object });
             var parentCommand = CreateCliCommandMock<DummyClass1>(new[] { "blub" }, childCommands: new[] { childCommand1.Object });
-            val1.Setup(x => x.SetValue(It.IsAny<DummyClass4>(), "blubbi")).Verifiable(Verifiables, Times.Once());
+            _ = val1.Setup(x => x.SetValue(It.IsAny<DummyClass4>(), "blubbi")).Verifiable(Verifiables, Times.Once());
             Commands.Add(parentCommand.Object);
 
             var result = CallParse("blub", "blib", "blab", "blob", "blubbi");
@@ -520,8 +520,8 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var val2 = CreateCliCommandValueMock<string>(1);
             var childCommand = CreateCliCommandMock<DummyClass2>(new[] { "blib" });
             var parentCommand = CreateCliCommandMock<DummyClass1>(new[] { "blub" }, values: new[] { val1.Object, val2.Object }, childCommands: new[] { childCommand.Object });
-            val1.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), "blubbi")).Verifiable(Verifiables, Times.Once());
-            val2.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), "blib")).Verifiable(Verifiables, Times.Once());
+            _ = val1.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), "blubbi")).Verifiable(Verifiables, Times.Once());
+            _ = val2.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), "blib")).Verifiable(Verifiables, Times.Once());
             Commands.Add(parentCommand.Object);
 
             var result = CallParse("blub", "blubbi", "blib");
@@ -540,8 +540,8 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
                 options: new[] { opt1.Object },
                 values: new[] { val1.Object },
                 childCommands: new[] { childCommand.Object });
-            opt1.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), "blubbi")).Verifiable(Verifiables, Times.Once());
-            val1.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), "blib")).Verifiable(Verifiables, Times.Once());
+            _ = opt1.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), "blubbi")).Verifiable(Verifiables, Times.Once());
+            _ = val1.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), "blib")).Verifiable(Verifiables, Times.Once());
             Commands.Add(parentCommand.Object);
 
             var result = CallParse("blub", "--blub", "blubbi", "blib");
@@ -555,7 +555,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var obj = new DummyClass1();
             var option = CreateCliCommandOptionMock<bool>(new[] { "my-bool" });
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option.Object }, optionsInstance: obj);
-            option.Setup(x => x.SetValue(obj, true)).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(obj, true)).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", "--my-bool");
@@ -569,7 +569,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var obj = new DummyClass1();
             var option = CreateCliCommandOptionMock<bool?>(new[] { "my-bool" });
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option.Object }, optionsInstance: obj);
-            option.Setup(x => x.SetValue(obj, true)).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(obj, true)).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", "--my-bool");
@@ -583,7 +583,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var obj = new DummyClass1();
             var option = CreateCliCommandOptionMock<bool>(new[] { "my-bool" });
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option.Object }, optionsInstance: obj);
-            option.Setup(x => x.SetValue(obj, "false")).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(obj, "false")).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", "--my-bool", "false");
@@ -597,7 +597,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var obj = new DummyClass1();
             var option = CreateCliCommandOptionMock<bool>(new[] { "my-bool" }, new char[] { 'b' });
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option.Object }, optionsInstance: obj);
-            option.Setup(x => x.SetValue(obj, true)).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(obj, true)).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", "-b");
@@ -611,7 +611,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var obj = new DummyClass1();
             var option = CreateCliCommandOptionMock<bool?>(new[] { "my-bool" }, new char[] { 'b' });
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option.Object }, optionsInstance: obj);
-            option.Setup(x => x.SetValue(obj, true)).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(obj, true)).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", "-b");
@@ -625,7 +625,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var obj = new DummyClass1();
             var option = CreateCliCommandOptionMock<bool>(new[] { "my-bool" }, new char[] { 'b' });
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option.Object }, optionsInstance: obj);
-            option.Setup(x => x.SetValue(obj, "false")).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(obj, "false")).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", "-b", "false");
@@ -640,8 +640,8 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var option1 = CreateCliCommandOptionMock<bool>(new[] { "my-bool1" }, new char[] { 'b' });
             var option2 = CreateCliCommandOptionMock<bool>(new[] { "my-bool2" }, new char[] { 'B' });
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option1.Object, option2.Object }, optionsInstance: obj);
-            option1.Setup(x => x.SetValue(obj, true)).Verifiable(Verifiables, Times.Once());
-            option2.Setup(x => x.SetValue(obj, true)).Verifiable(Verifiables, Times.Once());
+            _ = option1.Setup(x => x.SetValue(obj, true)).Verifiable(Verifiables, Times.Once());
+            _ = option2.Setup(x => x.SetValue(obj, true)).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", "-bB");
@@ -656,8 +656,8 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var option1 = CreateCliCommandOptionMock<bool?>(new[] { "my-bool1" }, new char[] { 'b' });
             var option2 = CreateCliCommandOptionMock<bool?>(new[] { "my-bool2" }, new char[] { 'B' });
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option1.Object, option2.Object }, optionsInstance: obj);
-            option1.Setup(x => x.SetValue(obj, true)).Verifiable(Verifiables, Times.Once());
-            option2.Setup(x => x.SetValue(obj, true)).Verifiable(Verifiables, Times.Once());
+            _ = option1.Setup(x => x.SetValue(obj, true)).Verifiable(Verifiables, Times.Once());
+            _ = option2.Setup(x => x.SetValue(obj, true)).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", "-bB");
@@ -671,7 +671,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var ex = new Exception();
             var option = CreateCliCommandOptionMock<object>(new[] { "my-option" });
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option.Object });
-            option.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), "my-option-value")).Throws(ex).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), "my-option-value")).Throws(ex).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", "--my-option", "my-option-value");
@@ -688,7 +688,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var ex = new Exception();
             var value = CreateCliCommandValueMock<object>(0);
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, values: new[] { value.Object });
-            value.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), "my-value")).Throws(ex).Verifiable(Verifiables, Times.Once());
+            _ = value.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), "my-value")).Throws(ex).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", "my-value");
@@ -704,7 +704,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         {
             var value = CreateCliCommandValueMock<object>(0);
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, values: new[] { value.Object });
-            value.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), "my-value")).Verifiable(Verifiables, Times.Once());
+            _ = value.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), "my-value")).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", "my-value", "my-second-value");
@@ -720,7 +720,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         {
             var value = CreateCliCommandValueMock<object>(0);
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, values: new[] { value.Object });
-            value.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), "my-value")).Verifiable(Verifiables, Times.Once());
+            _ = value.Setup(x => x.SetValue(It.IsAny<DummyClass1>(), "my-value")).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", "my-value", "my-second-value", "my-third-value");
@@ -737,7 +737,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var obj = new DummyClass1();
             var value = CreateCliCommandValueMock<object>(0);
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, values: new[] { value.Object }, optionsInstance: obj);
-            value.Setup(x => x.SetValue(obj, "my-value")).Verifiable(Verifiables, Times.Once());
+            _ = value.Setup(x => x.SetValue(obj, "my-value")).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
             AppOptions.IgnoreAdditionalValues = true;
 
@@ -757,7 +757,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
                 options: new[] { option.Object },
                 values: new[] { value.Object },
                 optionsInstance: obj);
-            value.Setup(x => x.SetValue(obj, "--my-option")).Verifiable(Verifiables, Times.Once());
+            _ = value.Setup(x => x.SetValue(obj, "--my-option")).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", "--", "--my-option");
@@ -837,7 +837,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var obj = new DummyClass1();
             var option = CreateCliCommandOptionMock<string>(new[] { "my-string" });
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option.Object }, optionsInstance: obj);
-            option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", optionName, "--my-string", "blub");
@@ -856,7 +856,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var obj = new DummyClass1();
             var option = CreateCliCommandOptionMock<string>(new[] { "my-string" });
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option.Object }, optionsInstance: obj);
-            option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", optionName, "my-value", "--my-string", "blub");
@@ -875,7 +875,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var obj = new DummyClass1();
             var option = CreateCliCommandOptionMock<string>(new[] { "my-string" });
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option.Object }, optionsInstance: obj);
-            option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
             AppOptions.IgnoreUnknownOptions = true;
 
@@ -892,7 +892,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var obj = new DummyClass1();
             var option = CreateCliCommandOptionMock<string>(new[] { "my-string" });
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option.Object }, optionsInstance: obj);
-            option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
             AppOptions.IgnoreUnknownOptions = true;
 
@@ -994,7 +994,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var obj = new DummyClass1();
             var option = CreateCliCommandOptionMock<string>(new[] { "my-string" });
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option.Object }, optionsInstance: obj);
-            option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", "--my-option1", "--my-option2", "--my-string", "blub");
@@ -1012,7 +1012,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var obj = new DummyClass1();
             var option = CreateCliCommandOptionMock<string>(new[] { "my-string" });
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option.Object }, optionsInstance: obj);
-            option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", "-Oo", "--my-string", "blub");
@@ -1030,7 +1030,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var obj = new DummyClass1();
             var option = CreateCliCommandOptionMock<string>(new[] { "my-string" });
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option.Object }, optionsInstance: obj);
-            option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", "--my-option1", "my-value", "--my-option2", "my-value", "--my-string", "blub");
@@ -1048,7 +1048,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var obj = new DummyClass1();
             var option = CreateCliCommandOptionMock<string>(new[] { "my-string" });
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option.Object }, optionsInstance: obj);
-            option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
             AppOptions.IgnoreUnknownOptions = true;
 
@@ -1063,7 +1063,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var obj = new DummyClass1();
             var option = CreateCliCommandOptionMock<string>(new[] { "my-string" });
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option.Object }, optionsInstance: obj);
-            option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
             AppOptions.IgnoreUnknownOptions = true;
 
@@ -1078,7 +1078,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var obj = new DummyClass1();
             var option = CreateCliCommandOptionMock<string>(new[] { "my-string" });
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option.Object }, optionsInstance: obj);
-            option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
             AppOptions.IgnoreUnknownOptions = true;
 
@@ -1114,7 +1114,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var obj = new DummyClass1();
             var option = CreateCliCommandOptionMock(listType, new[] { "my-list" }, defaultValue: Array.Empty<object>());
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, options: new[] { option.Object }, optionsInstance: obj);
-            option.Setup(x => x.SetValue(obj, new[] { "item1", "item2", "item3", "-" })).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(obj, new[] { "item1", "item2", "item3", "-" })).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", "--my-list", "item1", "item2", "item3", "-");
@@ -1133,7 +1133,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var obj = new DummyClass1();
             var value = CreateCliCommandValueMock(listType, 0, defaultValue: Array.Empty<object>());
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, values: new[] { value.Object }, optionsInstance: obj);
-            value.Setup(x => x.SetValue(obj, new[] { "item1", "item2", "item3", "-" })).Verifiable(Verifiables, Times.Once());
+            _ = value.Setup(x => x.SetValue(obj, new[] { "item1", "item2", "item3", "-" })).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", "item1", "item2", "item3", "-");
@@ -1153,10 +1153,10 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
                 values: new[] { value.Object },
                 optionsInstance: obj);
             object? currentValue = null;
-            value.Setup(x => x.SetValue(obj, It.IsAny<object?>())).Callback<object?, object?>((_, x) => currentValue = x);
-            value.Setup(x => x.GetValue(obj)).Returns<object?>(_ => currentValue);
-            value.Setup(x => x.SetValue(obj, new[] { "item1", "item2", "item3", "-" })).Verifiable(Verifiables, Times.Once());
-            option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
+            _ = value.Setup(x => x.SetValue(obj, It.IsAny<object?>())).Callback<object?, object?>((_, x) => currentValue = x);
+            _ = value.Setup(x => x.GetValue(obj)).Returns<object?>(_ => currentValue);
+            _ = value.Setup(x => x.SetValue(obj, new[] { "item1", "item2", "item3", "-" })).Verifiable(Verifiables, Times.Once());
+            _ = option.Setup(x => x.SetValue(obj, "blub")).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command", "item1", "item2", "--my-string", "blub", "item3", "-");
@@ -1204,7 +1204,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             var obj = new DummyClass1();
             var validator = Mocks.Create<ICliValidator<object>>();
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, optionsInstance: obj);
-            SetupValidation(validator, command.Object, obj, false, new[] { new CliError("My Error") }).Verifiable(Verifiables, Times.Once());
+            _ = SetupValidation(validator, command.Object, obj, false, new[] { new CliError("My Error") }).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
             Validators.Add(validator.Object);
 
@@ -1221,7 +1221,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         {
             var obj = Mocks.Create<ICliValidatable>();
             var command = CreateCliCommandMock<object>(new[] { "my-command" }, optionsInstance: obj.Object);
-            SetupValidation(obj, command.Object, false, new[] { new CliError("My Error") }).Verifiable(Verifiables, Times.Once());
+            _ = SetupValidation(obj, command.Object, false, new[] { new CliError("My Error") }).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command");
@@ -1237,7 +1237,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         {
             var obj = Mocks.Create<ICliValidatable>();
             var command = CreateCliCommandMock<object>(new[] { "my-command" }, optionsInstance: obj.Object);
-            SetupValidation(obj, command.Object, true, null).Verifiable(Verifiables, Times.Once());
+            _ = SetupValidation(obj, command.Object, true, null).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command");
@@ -1250,7 +1250,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         {
             var obj = new DummyClass1();
             var command = CreateCliCommandMock<DummyClass1>(new[] { "my-command" }, optionsInstance: obj);
-            SetupValidation(command.As<ICliValidator<object>>(), command.Object, obj, false, new[] { new CliError("My Error") }).Verifiable(Verifiables, Times.Once());
+            _ = SetupValidation(command.As<ICliValidator<object>>(), command.Object, obj, false, new[] { new CliError("My Error") }).Verifiable(Verifiables, Times.Once());
             Commands.Add(command.Object);
 
             var result = CallParse("my-command");
@@ -1262,32 +1262,34 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         }
 
         private CliArgumentParserResult CallParse(params string[] args)
-            => Parser.Parse(args);
+        {
+            return Parser.Parse(args);
+        }
 
         private Mock<ICliCommandInfoCollection> CreateCommandsMock(ICollection<ICliCommandInfo> commands)
         {
             var result = Mocks.Create<ICliCommandInfoCollection>();
-            result.Setup(x => x.GetEnumerator()).Returns(() => commands.GetEnumerator());
-            result.Setup(x => x.GetRootCommands()).Returns(() => commands.Where(x =>
-            {
-                try
-                {
-                    return x.ParentCommand == null;
-                }
-                catch (MockException)
-                {
-                    return true;
-                }
-            }));
-            result.Setup(x => x.DefaultCommand).Returns(() => DefaultCommand);
+            _ = result.Setup(x => x.GetEnumerator()).Returns(() => commands.GetEnumerator());
+            _ = result.Setup(x => x.GetRootCommands()).Returns(() => commands.Where(x =>
+              {
+                  try
+                  {
+                      return x.ParentCommand == null;
+                  }
+                  catch (MockException)
+                  {
+                      return true;
+                  }
+              }));
+            _ = result.Setup(x => x.DefaultCommand).Returns(() => DefaultCommand);
             return result;
         }
 
         private Mock<ICliApplicationBase> CreateApplicationMock()
         {
             var result = Mocks.Create<ICliApplicationBase>();
-            result.Setup(x => x.Commands).Returns(new CliCommandInfoCollection.ReadOnly(CommandsMock.Object));
-            result.Setup(x => x.Options).Returns(AppOptions);
+            _ = result.Setup(x => x.Commands).Returns(new CliCommandInfoCollection.ReadOnly(CommandsMock.Object));
+            _ = result.Setup(x => x.Options).Returns(AppOptions);
             return result;
         }
 
@@ -1299,18 +1301,18 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             ICliCommandInfo[]? childCommands = null)
         {
             var command = Mocks.Create<ICliCommandInfo>();
-            command.Setup(x => x.CommandType).Returns(typeof(TCommandType));
-            command.Setup(x => x.Aliases).Returns(aliases);
-            command.Setup(x => x.Options).Returns(options ?? Array.Empty<ICliCommandOptionInfo>());
-            command.Setup(x => x.Values).Returns(values ?? Array.Empty<ICliCommandValueInfo>());
-            command.Setup(x => x.ChildCommands).Returns(childCommands ?? Array.Empty<ICliCommandInfo>());
-            command.Setup(x => x.OptionsInstance).Returns(optionsInstance);
-            command.Setup(x => x.IsExecutable).Returns(true);
-            command.Setup(x => x.ParserOptions).Returns(new CliParserOptions());
-            command.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
-            SetupValidation(command.As<ICliValidator<object>>(), true, null);
+            _ = command.Setup(x => x.CommandType).Returns(typeof(TCommandType));
+            _ = command.Setup(x => x.Aliases).Returns(aliases);
+            _ = command.Setup(x => x.Options).Returns(options ?? Array.Empty<ICliCommandOptionInfo>());
+            _ = command.Setup(x => x.Values).Returns(values ?? Array.Empty<ICliCommandValueInfo>());
+            _ = command.Setup(x => x.ChildCommands).Returns(childCommands ?? Array.Empty<ICliCommandInfo>());
+            _ = command.Setup(x => x.OptionsInstance).Returns(optionsInstance);
+            _ = command.Setup(x => x.IsExecutable).Returns(true);
+            _ = command.Setup(x => x.ParserOptions).Returns(new CliParserOptions());
+            _ = command.Setup(x => x.ParentCommand).Returns((ICliCommandInfo?)null);
+            _ = SetupValidation(command.As<ICliValidator<object>>(), true, null);
             var instance = Activator.CreateInstance<TCommandType>();
-            ServiceProvider.Setup(x => x.GetService(typeof(TCommandType))).Returns(instance);
+            _ = ServiceProvider.Setup(x => x.GetService(typeof(TCommandType))).Returns(instance);
             return command;
         }
 
@@ -1320,7 +1322,9 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             TProperty? currentValue = default,
             TProperty? defaultValue = default,
             bool hasValue = false)
-            => CreateCliCommandValueMock(typeof(TProperty), order, isRequired, currentValue, defaultValue, hasValue);
+        {
+            return CreateCliCommandValueMock(typeof(TProperty), order, isRequired, currentValue, defaultValue, hasValue);
+        }
 
         private Mock<ICliCommandValueInfo> CreateCliCommandValueMock(
             Type propertyType,
@@ -1331,15 +1335,15 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             bool hasValue = false)
         {
             var value = Mocks.Create<ICliCommandValueInfo>();
-            value.Setup(x => x.Order).Returns(order);
-            value.Setup(x => x.PropertyType).Returns(propertyType);
-            value.Setup(x => x.IsRequired).Returns(isRequired);
-            value.Setup(x => x.DefaultValue).Returns(defaultValue);
-            value.Setup(x => x.Command).Returns(Mocks.Create<ICliCommandInfo>().Object);
-            value.Setup(x => x.SetDefaultValue(It.IsAny<object>()));
-            value.Setup(x => x.SetValue(It.IsAny<object>(), defaultValue));
-            value.Setup(x => x.GetValue(It.IsAny<object>())).Returns(currentValue);
-            value.Setup(x => x.HasValue(It.IsAny<object>())).Returns(hasValue);
+            _ = value.Setup(x => x.Order).Returns(order);
+            _ = value.Setup(x => x.PropertyType).Returns(propertyType);
+            _ = value.Setup(x => x.IsRequired).Returns(isRequired);
+            _ = value.Setup(x => x.DefaultValue).Returns(defaultValue);
+            _ = value.Setup(x => x.Command).Returns(Mocks.Create<ICliCommandInfo>().Object);
+            _ = value.Setup(x => x.SetDefaultValue(It.IsAny<object>()));
+            _ = value.Setup(x => x.SetValue(It.IsAny<object>(), defaultValue));
+            _ = value.Setup(x => x.GetValue(It.IsAny<object>())).Returns(currentValue);
+            _ = value.Setup(x => x.HasValue(It.IsAny<object>())).Returns(hasValue);
             return value;
         }
 
@@ -1350,7 +1354,9 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             TProperty? currentValue = default,
             TProperty? defaultValue = default,
             bool hasValue = false)
-            => CreateCliCommandOptionMock(typeof(TProperty), aliases, shortAliases, isRequired, currentValue, defaultValue, hasValue);
+        {
+            return CreateCliCommandOptionMock(typeof(TProperty), aliases, shortAliases, isRequired, currentValue, defaultValue, hasValue);
+        }
 
         private Mock<ICliCommandOptionInfo> CreateCliCommandOptionMock(
             Type propertyType,
@@ -1362,16 +1368,16 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
             bool hasValue = false)
         {
             var option = Mocks.Create<ICliCommandOptionInfo>();
-            option.Setup(x => x.Aliases).Returns(aliases);
-            option.Setup(x => x.ShortAliases).Returns(shortAliases ?? Array.Empty<char>());
-            option.Setup(x => x.PropertyType).Returns(propertyType);
-            option.Setup(x => x.IsRequired).Returns(isRequired);
-            option.Setup(x => x.DefaultValue).Returns(defaultValue);
-            option.Setup(x => x.Command).Returns(Mocks.Create<ICliCommandInfo>().Object);
-            option.Setup(x => x.SetDefaultValue(It.IsAny<object>()));
-            option.Setup(x => x.SetValue(It.IsAny<object>(), defaultValue));
-            option.Setup(x => x.GetValue(It.IsAny<object>())).Returns(currentValue);
-            option.Setup(x => x.HasValue(It.IsAny<object>())).Returns(hasValue);
+            _ = option.Setup(x => x.Aliases).Returns(aliases);
+            _ = option.Setup(x => x.ShortAliases).Returns(shortAliases ?? Array.Empty<char>());
+            _ = option.Setup(x => x.PropertyType).Returns(propertyType);
+            _ = option.Setup(x => x.IsRequired).Returns(isRequired);
+            _ = option.Setup(x => x.DefaultValue).Returns(defaultValue);
+            _ = option.Setup(x => x.Command).Returns(Mocks.Create<ICliCommandInfo>().Object);
+            _ = option.Setup(x => x.SetDefaultValue(It.IsAny<object>()));
+            _ = option.Setup(x => x.SetValue(It.IsAny<object>(), defaultValue));
+            _ = option.Setup(x => x.GetValue(It.IsAny<object>())).Returns(currentValue);
+            _ = option.Setup(x => x.HasValue(It.IsAny<object>())).Returns(hasValue);
             return option;
         }
 
@@ -1419,7 +1425,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         {
             Assert.IsTrue(result.Success, "Parse failed unexpectedly.");
             Assert.AreSame(expectedCommand, result.ExecutionContext!.Command, "Parse resulted in wrong command.");
-            Assert.IsInstanceOfType<TExpectedOptionsType>(result.Options, "Options returned from parse have unexpected type.");
+            _ = Assert.IsInstanceOfType<TExpectedOptionsType>(result.Options, "Options returned from parse have unexpected type.");
 
             if (expectedOptions is not null)
             {

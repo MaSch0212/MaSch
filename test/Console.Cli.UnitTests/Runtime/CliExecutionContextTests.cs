@@ -11,22 +11,22 @@ namespace MaSch.Console.Cli.UnitTests.Runtime
         [TestMethod]
         public void Ctor_NullChecks()
         {
-            var spMock = Mocks.Create<IServiceProvider>();
+            var serviceProviderMock = Mocks.Create<IServiceProvider>();
             var commandMock = Mocks.Create<ICliCommandInfo>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => new CliExecutionContext(null!, commandMock.Object));
-            Assert.ThrowsException<ArgumentNullException>(() => new CliExecutionContext(spMock.Object, null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => new CliExecutionContext(null!, commandMock.Object));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => new CliExecutionContext(serviceProviderMock.Object, null!));
         }
 
         [TestMethod]
         public void Ctor()
         {
-            var spMock = Mocks.Create<IServiceProvider>();
+            var serviceProviderMock = Mocks.Create<IServiceProvider>();
             var commandMock = Mocks.Create<ICliCommandInfo>();
 
-            var ctx = new CliExecutionContext(spMock.Object, commandMock.Object);
+            var ctx = new CliExecutionContext(serviceProviderMock.Object, commandMock.Object);
 
-            Assert.AreSame(spMock.Object, ctx.ServiceProvider);
+            Assert.AreSame(serviceProviderMock.Object, ctx.ServiceProvider);
             Assert.AreSame(commandMock.Object, ctx.Command);
         }
     }

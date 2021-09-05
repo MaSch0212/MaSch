@@ -51,7 +51,10 @@ namespace MaSch.Core
         /// <typeparam name="T">The type of the action result.</typeparam>
         /// <param name="waitAction">The wait action.</param>
         /// <returns>The result of the <paramref name="waitAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in time; otherwise, <see langword="default"/>.</returns>
-        public static T? WaitUntil<T>(Func<T> waitAction) => WaitUntil(x => waitAction(), DefaultOptions);
+        public static T? WaitUntil<T>(Func<T> waitAction)
+        {
+            return WaitUntil(x => waitAction(), DefaultOptions);
+        }
 
         /// <summary>
         /// Waits until the specified action returns a value other than <see langword="default"/> and throws no exceptions.
@@ -60,7 +63,10 @@ namespace MaSch.Core
         /// <param name="waitAction">The wait action.</param>
         /// <param name="timeout">The timeout for the wait.</param>
         /// <returns>The result of the <paramref name="waitAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in time; otherwise, <see langword="default"/>.</returns>
-        public static T? WaitUntil<T>(Func<T> waitAction, TimeSpan timeout) => WaitUntil(x => waitAction(), new WaiterOptions { Timeout = timeout });
+        public static T? WaitUntil<T>(Func<T> waitAction, TimeSpan timeout)
+        {
+            return WaitUntil(x => waitAction(), new WaiterOptions { Timeout = timeout });
+        }
 
         /// <summary>
         /// Waits until the specified action returns a value other than <see langword="default"/> and throws no exceptions.
@@ -69,7 +75,10 @@ namespace MaSch.Core
         /// <param name="waitAction">The wait action.</param>
         /// <param name="options">The wait options to use with the wait operation.</param>
         /// <returns>The result of the <paramref name="waitAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in time; otherwise, <see langword="default"/>.</returns>
-        public static T? WaitUntil<T>(Func<T> waitAction, WaiterOptions options) => WaitUntil(x => waitAction(), options);
+        public static T? WaitUntil<T>(Func<T> waitAction, WaiterOptions options)
+        {
+            return WaitUntil(x => waitAction(), options);
+        }
 
         /// <summary>
         /// Waits until the specified action returns a value other than <see langword="default"/> and throws no exceptions.
@@ -77,7 +86,10 @@ namespace MaSch.Core
         /// <typeparam name="T">The type of the action result.</typeparam>
         /// <param name="waitAction">The wait action.</param>
         /// <returns>The result of the <paramref name="waitAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in time; otherwise, <see langword="default"/>.</returns>
-        public static T? WaitUntil<T>(Func<WaitingState, T> waitAction) => WaitUntil(waitAction, DefaultOptions);
+        public static T? WaitUntil<T>(Func<WaitingState, T> waitAction)
+        {
+            return WaitUntil(waitAction, DefaultOptions);
+        }
 
         /// <summary>
         /// Waits until the specified action returns a value other than <see langword="default"/> and throws no exceptions.
@@ -86,7 +98,10 @@ namespace MaSch.Core
         /// <param name="waitAction">The wait action.</param>
         /// <param name="timeout">The timeout for the wait.</param>
         /// <returns>The result of the <paramref name="waitAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in time; otherwise, <see langword="default"/>.</returns>
-        public static T? WaitUntil<T>(Func<WaitingState, T> waitAction, TimeSpan timeout) => WaitUntil(waitAction, new WaiterOptions { Timeout = timeout });
+        public static T? WaitUntil<T>(Func<WaitingState, T> waitAction, TimeSpan timeout)
+        {
+            return WaitUntil(waitAction, new WaiterOptions { Timeout = timeout });
+        }
 
         /// <summary>
         /// Waits until the specified action returns a value other than <see langword="default"/> and throws no exceptions.
@@ -156,7 +171,10 @@ namespace MaSch.Core
         /// <typeparam name="T">The type of the action result.</typeparam>
         /// <param name="retryAction">The retry action.</param>
         /// <returns>The result of the <paramref name="retryAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in the specified execution limit; otherwise, <see langword="default"/>.</returns>
-        public static T? Retry<T>(Func<T> retryAction) => WaitUntil(x => retryAction(), DefaultRetryOptions);
+        public static T? Retry<T>(Func<T> retryAction)
+        {
+            return WaitUntil(x => retryAction(), DefaultRetryOptions);
+        }
 
         /// <summary>
         /// Retries the specified action until it returns a value other than <see langword="default"/> and throws no exceptions.
@@ -165,7 +183,10 @@ namespace MaSch.Core
         /// <param name="retryAction">The retry action.</param>
         /// <param name="maxCheckCount">The maximum number of retries.</param>
         /// <returns>The result of the <paramref name="retryAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in the specified execution limit; otherwise, <see langword="default"/>.</returns>
-        public static T? Retry<T>(Func<T> retryAction, int maxCheckCount) => WaitUntil(x => retryAction(), new RetryOptions { MaximumCheckCount = maxCheckCount });
+        public static T? Retry<T>(Func<T> retryAction, int maxCheckCount)
+        {
+            return WaitUntil(x => retryAction(), new RetryOptions { MaximumCheckCount = maxCheckCount });
+        }
 
         /// <summary>
         /// Retries the specified action until it returns a value other than <see langword="default"/> and throws no exceptions.
@@ -174,7 +195,10 @@ namespace MaSch.Core
         /// <param name="retryAction">The retry action.</param>
         /// <param name="options">The retry options to use with the retry operation.</param>
         /// <returns>The result of the <paramref name="retryAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in the specified execution limit; otherwise, <see langword="default"/>.</returns>
-        public static T? Retry<T>(Func<T> retryAction, RetryOptions options) => WaitUntil(x => retryAction(), options);
+        public static T? Retry<T>(Func<T> retryAction, RetryOptions options)
+        {
+            return WaitUntil(x => retryAction(), options);
+        }
 
         /// <summary>
         /// Retries the specified action until it returns a value other than <see langword="default"/> and throws no exceptions.
@@ -182,7 +206,10 @@ namespace MaSch.Core
         /// <typeparam name="T">The type of the action result.</typeparam>
         /// <param name="retryAction">The retry action.</param>
         /// <returns>The result of the <paramref name="retryAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in the specified execution limit; otherwise, <see langword="default"/>.</returns>
-        public static T? Retry<T>(Func<WaitingState, T> retryAction) => WaitUntil(retryAction, DefaultRetryOptions);
+        public static T? Retry<T>(Func<WaitingState, T> retryAction)
+        {
+            return WaitUntil(retryAction, DefaultRetryOptions);
+        }
 
         /// <summary>
         /// Retries the specified action until it returns a value other than <see langword="default"/> and throws no exceptions.
@@ -191,7 +218,10 @@ namespace MaSch.Core
         /// <param name="retryAction">The retry action.</param>
         /// <param name="maxCheckCount">The maximum number of retries.</param>
         /// <returns>The result of the <paramref name="retryAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in the specified execution limit; otherwise, <see langword="default"/>.</returns>
-        public static T? Retry<T>(Func<WaitingState, T> retryAction, int maxCheckCount) => WaitUntil(retryAction, new RetryOptions { MaximumCheckCount = maxCheckCount });
+        public static T? Retry<T>(Func<WaitingState, T> retryAction, int maxCheckCount)
+        {
+            return WaitUntil(retryAction, new RetryOptions { MaximumCheckCount = maxCheckCount });
+        }
 
         /// <summary>
         /// Retries the specified action until it returns a value other than <see langword="default"/> and throws no exceptions.
@@ -200,37 +230,20 @@ namespace MaSch.Core
         /// <param name="retryAction">The retry action.</param>
         /// <param name="options">The retry options to use with the retry operation.</param>
         /// <returns>The result of the <paramref name="retryAction"/> if it returned a value other than <see langword="default"/> and throws no exceptions in the specified execution limit; otherwise, <see langword="default"/>.</returns>
-        public static T? Retry<T>(Func<WaitingState, T> retryAction, RetryOptions options) => WaitUntil(retryAction, options);
+        public static T? Retry<T>(Func<WaitingState, T> retryAction, RetryOptions options)
+        {
+            return WaitUntil(retryAction, options);
+        }
 
         /// <summary>
         /// Retries the specified action until it throws no exceptions.
         /// </summary>
         /// <param name="retryAction">The retry action.</param>
         /// <returns><see langword="true"/> if the <paramref name="retryAction"/> throws no exceptions in the specified execution limit; otherwise, <see langword="false"/>.</returns>
-        public static bool Retry(Action retryAction) => WaitUntil(ToWaitAction(retryAction), DefaultRetryOptions);
-
-        /// <summary>
-        /// Retries the specified action until it throws no exceptions.
-        /// </summary>
-        /// <param name="retryAction">The retry action.</param>
-        /// <param name="maxCheckCount">The maximum number of retries.</param>
-        /// <returns><see langword="true"/> if the <paramref name="retryAction"/> throws no exceptions in the specified execution limit; otherwise, <see langword="false"/>.</returns>
-        public static bool Retry(Action retryAction, int maxCheckCount) => WaitUntil(ToWaitAction(retryAction), new RetryOptions { MaximumCheckCount = maxCheckCount });
-
-        /// <summary>
-        /// Retries the specified action until it throws no exceptions.
-        /// </summary>
-        /// <param name="retryAction">The retry action.</param>
-        /// <param name="options">The retry options to use with the retry operation.</param>
-        /// <returns><see langword="true"/> if the <paramref name="retryAction"/> throws no exceptions in the specified execution limit; otherwise, <see langword="false"/>.</returns>
-        public static bool Retry(Action retryAction, RetryOptions options) => WaitUntil(ToWaitAction(retryAction), options);
-
-        /// <summary>
-        /// Retries the specified action until it throws no exceptions.
-        /// </summary>
-        /// <param name="retryAction">The retry action.</param>
-        /// <returns><see langword="true"/> if the <paramref name="retryAction"/> throws no exceptions in the specified execution limit; otherwise, <see langword="false"/>.</returns>
-        public static bool Retry(Action<WaitingState> retryAction) => WaitUntil(ToWaitAction(retryAction), DefaultRetryOptions);
+        public static bool Retry(Action retryAction)
+        {
+            return WaitUntil(ToWaitAction(retryAction), DefaultRetryOptions);
+        }
 
         /// <summary>
         /// Retries the specified action until it throws no exceptions.
@@ -238,7 +251,10 @@ namespace MaSch.Core
         /// <param name="retryAction">The retry action.</param>
         /// <param name="maxCheckCount">The maximum number of retries.</param>
         /// <returns><see langword="true"/> if the <paramref name="retryAction"/> throws no exceptions in the specified execution limit; otherwise, <see langword="false"/>.</returns>
-        public static bool Retry(Action<WaitingState> retryAction, int maxCheckCount) => WaitUntil(ToWaitAction(retryAction), new RetryOptions { MaximumCheckCount = maxCheckCount });
+        public static bool Retry(Action retryAction, int maxCheckCount)
+        {
+            return WaitUntil(ToWaitAction(retryAction), new RetryOptions { MaximumCheckCount = maxCheckCount });
+        }
 
         /// <summary>
         /// Retries the specified action until it throws no exceptions.
@@ -246,7 +262,42 @@ namespace MaSch.Core
         /// <param name="retryAction">The retry action.</param>
         /// <param name="options">The retry options to use with the retry operation.</param>
         /// <returns><see langword="true"/> if the <paramref name="retryAction"/> throws no exceptions in the specified execution limit; otherwise, <see langword="false"/>.</returns>
-        public static bool Retry(Action<WaitingState> retryAction, RetryOptions options) => WaitUntil(ToWaitAction(retryAction), options);
+        public static bool Retry(Action retryAction, RetryOptions options)
+        {
+            return WaitUntil(ToWaitAction(retryAction), options);
+        }
+
+        /// <summary>
+        /// Retries the specified action until it throws no exceptions.
+        /// </summary>
+        /// <param name="retryAction">The retry action.</param>
+        /// <returns><see langword="true"/> if the <paramref name="retryAction"/> throws no exceptions in the specified execution limit; otherwise, <see langword="false"/>.</returns>
+        public static bool Retry(Action<WaitingState> retryAction)
+        {
+            return WaitUntil(ToWaitAction(retryAction), DefaultRetryOptions);
+        }
+
+        /// <summary>
+        /// Retries the specified action until it throws no exceptions.
+        /// </summary>
+        /// <param name="retryAction">The retry action.</param>
+        /// <param name="maxCheckCount">The maximum number of retries.</param>
+        /// <returns><see langword="true"/> if the <paramref name="retryAction"/> throws no exceptions in the specified execution limit; otherwise, <see langword="false"/>.</returns>
+        public static bool Retry(Action<WaitingState> retryAction, int maxCheckCount)
+        {
+            return WaitUntil(ToWaitAction(retryAction), new RetryOptions { MaximumCheckCount = maxCheckCount });
+        }
+
+        /// <summary>
+        /// Retries the specified action until it throws no exceptions.
+        /// </summary>
+        /// <param name="retryAction">The retry action.</param>
+        /// <param name="options">The retry options to use with the retry operation.</param>
+        /// <returns><see langword="true"/> if the <paramref name="retryAction"/> throws no exceptions in the specified execution limit; otherwise, <see langword="false"/>.</returns>
+        public static bool Retry(Action<WaitingState> retryAction, RetryOptions options)
+        {
+            return WaitUntil(ToWaitAction(retryAction), options);
+        }
 
         private static Func<WaitingState, bool> ToWaitAction(Action retryAction)
         {
@@ -375,13 +426,19 @@ namespace MaSch.Core
         public ILoggingService? LoggingService { get; set; }
 
         /// <inheritdoc />
-        object ICloneable.Clone() => MemberwiseClone();
+        object ICloneable.Clone()
+        {
+            return MemberwiseClone();
+        }
 
         /// <summary>
         /// Clones this instance.
         /// </summary>
         /// <returns>A clone of this instance.</returns>
-        public WaiterOptions Clone() => (WaiterOptions)MemberwiseClone();
+        public WaiterOptions Clone()
+        {
+            return (WaiterOptions)MemberwiseClone();
+        }
     }
 
     /// <summary>
@@ -475,7 +532,10 @@ namespace MaSch.Core
         /// <summary>
         /// Cancels this waiting operation.
         /// </summary>
-        public void Cancel() => IsCanceled = true;
+        public void Cancel()
+        {
+            IsCanceled = true;
+        }
     }
 
     /// <summary>

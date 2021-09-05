@@ -38,7 +38,7 @@ namespace MaSch.Core
         /// <returns>The same instance as <paramref name="value"/>.</returns>
         public static string NotNullOrEmpty([NotNull] string? value, string name)
         {
-            NotNull(value, name);
+            _ = NotNull(value, name);
             if (string.IsNullOrEmpty(value))
                 throw new ArgumentException("The parameter value cannot be empty.", name);
             return value;
@@ -56,7 +56,7 @@ namespace MaSch.Core
         public static T NotNullOrEmpty<T>([NotNull] T? collection, string name)
             where T : ICollection
         {
-            NotNull(collection, name);
+            _ = NotNull(collection, name);
             if (collection.Count == 0)
                 throw new ArgumentException("The parameter value cannot be empty.", name);
             return collection;
@@ -76,7 +76,7 @@ namespace MaSch.Core
         public static T? NotOutOfRange<T>(T? value, string name, T min, T max)
             where T : IComparable
         {
-            NotNull(value, name);
+            _ = NotNull(value, name);
             if (value.CompareTo(min) < 0 || value.CompareTo(max) > 0)
                 throw new ArgumentOutOfRangeException(name, $"The parameter value cannot be outside of the range <{min}> to <{max}>.");
             return value;
@@ -95,7 +95,7 @@ namespace MaSch.Core
         public static T? NotGreaterThan<T>(T? value, string name, T max)
             where T : IComparable
         {
-            NotNull(value, name);
+            _ = NotNull(value, name);
             if (value.CompareTo(max) > 0)
                 throw new ArgumentOutOfRangeException(name, $"The parameter value cannot be greater than <{max}>.");
             return value;
@@ -114,7 +114,7 @@ namespace MaSch.Core
         public static T? NotSmallerThan<T>(T? value, string name, T min)
             where T : IComparable
         {
-            NotNull(value, name);
+            _ = NotNull(value, name);
             if (value.CompareTo(min) < 0)
                 throw new ArgumentOutOfRangeException(name, $"The parameter value cannot be smaller than <{min}>.");
             return value;
@@ -129,7 +129,10 @@ namespace MaSch.Core
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="value"/> is not of type <typeparamref name="T"/>.</exception>
         /// <returns>Returns the <paramref name="value"/> cast to type <typeparamref name="T"/>.</returns>
-        public static T OfType<T>(object? value, string name) => OfType<T>(value, name, false)!;
+        public static T OfType<T>(object? value, string name)
+        {
+            return OfType<T>(value, name, false)!;
+        }
 
         /// <summary>
         /// Verifies that a value is of a specific type.
@@ -159,7 +162,10 @@ namespace MaSch.Core
         /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="value"/> is not of one of the allowed types.</exception>
         /// <returns>Returns the <paramref name="value"/>.</returns>
-        public static object OfType(object? value, string name, params Type[] allowedTypes) => OfType(value, name, false, allowedTypes)!;
+        public static object OfType(object? value, string name, params Type[] allowedTypes)
+        {
+            return OfType(value, name, false, allowedTypes)!;
+        }
 
         /// <summary>
         /// Verifies that a values type is in a list of types.
@@ -173,7 +179,7 @@ namespace MaSch.Core
         /// <returns>Returns the <paramref name="value"/>.</returns>
         public static object? OfType(object? value, string name, bool allowNull, params Type[] allowedTypes)
         {
-            NotNull(allowedTypes, nameof(allowedTypes));
+            _ = NotNull(allowedTypes, nameof(allowedTypes));
             if (allowedTypes.Length == 0)
                 throw new ArgumentException("At least one type needs to be provided.", nameof(allowedTypes));
 
@@ -203,7 +209,9 @@ namespace MaSch.Core
         /// <exception cref="ArgumentException">The <paramref name="value"/> does not equal to any values from <paramref name="allowedValues"/>.</exception>
         /// <returns>Returns the <paramref name="value"/>.</returns>
         public static T OneOf<T>(T value, string name, params T[] allowedValues)
-            => OneOf(value, name, EqualityComparer<T>.Default, allowedValues);
+        {
+            return OneOf(value, name, EqualityComparer<T>.Default, allowedValues);
+        }
 
         /// <summary>
         /// Verifies that a value equals one of the specified values.
@@ -232,7 +240,9 @@ namespace MaSch.Core
         /// <exception cref="ArgumentException">The <paramref name="value"/> equals to at least one value from <paramref name="disallowedValues"/>.</exception>
         /// <returns>Returns the <paramref name="value"/>.</returns>
         public static T NotOneOf<T>(T value, string name, params T[] disallowedValues)
-            => NotOneOf(value, name, EqualityComparer<T>.Default, disallowedValues);
+        {
+            return NotOneOf(value, name, EqualityComparer<T>.Default, disallowedValues);
+        }
 
         /// <summary>
         /// Verifies that a value does not equal any of the specified values.
@@ -262,7 +272,7 @@ namespace MaSch.Core
         public static T NotUndefinedEnumMember<T>(T value, string name)
             where T : Enum
         {
-            NotNull(value, name);
+            _ = NotNull(value, name);
             if (!Enum.IsDefined(typeof(T), value))
                 throw new ArgumentException($"The value \"{value}\" is not defined in the enum \"{typeof(T).Name}\".", name);
             return value;
@@ -279,7 +289,7 @@ namespace MaSch.Core
         public static T NotUndefinedFlagInEnumValue<T>(T value, string name)
             where T : Enum
         {
-            NotNull(value, name);
+            _ = NotNull(value, name);
 
             if (Equals(value, default(T)) && !Enum.IsDefined(typeof(T), default(T)!))
                 throw new ArgumentException($"The value \"{value}\" is not defined in the enum \"{typeof(T).Name}\".", name);

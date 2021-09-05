@@ -8,9 +8,9 @@ using Win = System.Windows.Controls;
 namespace MaSch.Presentation.Wpf.Controls
 {
     /// <summary>
-    /// Backing class for styles of the <see cref="System.Windows.Controls.ScrollViewer"/>.
+    /// Backing class for styles of the <see cref="Win.ScrollViewer"/>.
     /// </summary>
-    /// <seealso cref="System.Windows.ResourceDictionary" />
+    /// <seealso cref="ResourceDictionary" />
     /// <seealso cref="System.Windows.Markup.IComponentConnector" />
     /// <seealso cref="System.Windows.Markup.IStyleConnector" />
     public partial class ScrollViewer

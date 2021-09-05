@@ -6,31 +6,34 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Assert = MaSch.Test.Assertion.Assert;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
 namespace MaSch.Core.UnitTests
 {
     [TestClass]
-    public sealed class CacheTests : IDisposable
+    public sealed class CacheTests
     {
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private Cache _cache;
-        private Mock<Cache> _cacheMock;
 
         public TestContext TestContext { get; set; }
         public Assert Assert => Assert.Instance;
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         [TestInitialize]
         public void InitializeTest()
         {
-            _cacheMock = null!;
-            _cache?.Dispose();
             _cache = new Cache();
+        }
+
+        [TestCleanup]
+        public void CleanupTest()
+        {
+            _cache?.Dispose();
         }
 
         [TestMethod]
         public void GetValue_ParameterValidation()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => _cache.GetValue<object>(null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => _cache.GetValue<object>(null!));
         }
 
         [TestMethod]
@@ -56,21 +59,21 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void GetValue_MissingValue()
         {
-            Assert.ThrowsException<KeyNotFoundException>(() => _cache.GetValue<string>("MyKey"));
+            _ = Assert.ThrowsException<KeyNotFoundException>(() => _cache.GetValue<string>("MyKey"));
         }
 
         [TestMethod]
         public void GetValue_WrongType()
         {
             GetCacheDict().Add("MyKey", "Test123");
-            Assert.ThrowsException<InvalidCastException>(() => _cache.GetValue<int>("MyKey"));
+            _ = Assert.ThrowsException<InvalidCastException>(() => _cache.GetValue<int>("MyKey"));
         }
 
         [TestMethod]
         public void GetValue_WithFactory_ParameterValidation()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => _cache.GetValue<object>(null!, "MyTest"));
-            Assert.ThrowsException<ArgumentNullException>(() => _cache.GetValue(() => new object(), null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => _cache.GetValue<object>(null!, "MyTest"));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => _cache.GetValue(() => new object(), null!));
         }
 
         [TestMethod]
@@ -85,7 +88,7 @@ namespace MaSch.Core.UnitTests
         public void GetValue_WithFactory_WithKey_MissingValue()
         {
             var factoryMock = new Mock<Func<string>>();
-            factoryMock.Setup(x => x()).Returns("Test123");
+            _ = factoryMock.Setup(x => x()).Returns("Test123");
 
             var result = _cache.GetValue(factoryMock.Object, "MyKey");
 
@@ -99,7 +102,7 @@ namespace MaSch.Core.UnitTests
         public void GetValue_WithFactory_WithKey_ExistingValue()
         {
             var factoryMock = new Mock<Func<string>>();
-            factoryMock.Setup(x => x()).Returns("blub");
+            _ = factoryMock.Setup(x => x()).Returns("blub");
 
             GetCacheDict().Add("MyKey", "Test123");
 
@@ -113,14 +116,14 @@ namespace MaSch.Core.UnitTests
         public void GetValue_WithFactory_WithKey_ExistingValue_WrongType()
         {
             GetCacheDict().Add("MyKey", "Test123");
-            Assert.ThrowsException<InvalidCastException>(() => _cache.GetValue(() => 123, "MyKey"));
+            _ = Assert.ThrowsException<InvalidCastException>(() => _cache.GetValue(() => 123, "MyKey"));
         }
 
         [TestMethod]
         public async Task GetValueAsync_WithFactory_ParameterValidation()
         {
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => _cache.GetValueAsync<object>(null!, "MyTest"));
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => _cache.GetValueAsync(() => Task.FromResult(new object()), null!));
+            _ = await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => _cache.GetValueAsync<object>(null!, "MyTest"));
+            _ = await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => _cache.GetValueAsync(() => Task.FromResult(new object()), null!));
         }
 
         [TestMethod]
@@ -135,7 +138,7 @@ namespace MaSch.Core.UnitTests
         public async Task GetValueAsync_WithFactory_WithKey_MissingValue()
         {
             var factoryMock = new Mock<Func<Task<string>>>();
-            factoryMock.Setup(x => x()).Returns(Task.FromResult("Test123"));
+            _ = factoryMock.Setup(x => x()).Returns(Task.FromResult("Test123"));
 
             var result = await _cache.GetValueAsync(factoryMock.Object, "MyKey");
 
@@ -149,7 +152,7 @@ namespace MaSch.Core.UnitTests
         public async Task GetValueAsync_WithFactory_WithKey_ExistingValue()
         {
             var factoryMock = new Mock<Func<Task<string>>>();
-            factoryMock.Setup(x => x()).Returns(Task.FromResult("blub"));
+            _ = factoryMock.Setup(x => x()).Returns(Task.FromResult("blub"));
 
             GetCacheDict().Add("MyKey", "Test123");
 
@@ -163,13 +166,13 @@ namespace MaSch.Core.UnitTests
         public async Task GetValueAsync_WithFactory_WithKey_ExistingValue_WrongType()
         {
             GetCacheDict().Add("MyKey", "Test123");
-            await Assert.ThrowsExceptionAsync<InvalidCastException>(() => _cache.GetValueAsync(() => Task.FromResult(123), "MyKey"));
+            _ = await Assert.ThrowsExceptionAsync<InvalidCastException>(() => _cache.GetValueAsync(() => Task.FromResult(123), "MyKey"));
         }
 
         [TestMethod]
         public void TryGetValue_ParameterChecks()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => _cache.TryGetValue<object>(out _, null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => _cache.TryGetValue<object>(out _, null!));
         }
 
         [TestMethod]
@@ -217,7 +220,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void HasValue_ParameterChecks()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => _cache.HasValue(null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => _cache.HasValue(null!));
         }
 
         [TestMethod]
@@ -250,7 +253,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void RemoveValue_ParameterChecks()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => _cache.RemoveValue(null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => _cache.RemoveValue(null!));
         }
 
         [TestMethod]
@@ -285,7 +288,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void RemoveAndDisposeValue_ParameterChecks()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => _cache.RemoveAndDisposeValue(null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => _cache.RemoveAndDisposeValue(null!));
         }
 
         [TestMethod]
@@ -348,7 +351,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void SetValue_ParameterChecks()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => _cache.SetValue(new object(), null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => _cache.SetValue(new object(), null!));
         }
 
         [TestMethod]
@@ -415,11 +418,6 @@ namespace MaSch.Core.UnitTests
             Assert.AreEqual(0, dict.Count);
             disposableMock1.Verify(x => x.Dispose(), Times.Once());
             disposableMock2.Verify(x => x.Dispose(), Times.Once());
-        }
-
-        public void Dispose()
-        {
-            _cache?.Dispose();
         }
 
         private IDictionary<string, object?> GetCacheDict()

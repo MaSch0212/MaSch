@@ -14,10 +14,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void ThrowAssertError_NullNamePrefix()
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
-            mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns((string?)null);
-            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+            _ = mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            _ = mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns((string?)null);
+            _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
             mock.Object.ThrowAssertError(12, null);
 
@@ -28,10 +28,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void ThrowAssertError_NullMessage()
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
-            mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
-            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+            _ = mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            _ = mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
+            _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
             mock.Object.ThrowAssertError(12, null);
 
@@ -42,10 +42,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void ThrowAssertError_WithMessage()
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
-            mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
-            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+            _ = mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            _ = mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
+            _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
             mock.Object.ThrowAssertError(12, "My error message.");
 
@@ -56,10 +56,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void ThrowAssertError_GreaterStackFrames()
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
-            mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
-            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+            _ = mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            _ = mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
+            _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
             TestMethod();
 
@@ -75,19 +75,19 @@ namespace MaSch.Test.Assertion.UnitTests
         public void ThrowAssertError_NegativeStackFrames()
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
 
-            MSAssert.ThrowsException<ArgumentOutOfRangeException>(() => mock.Object.ThrowAssertError(-1, null));
+            _ = MSAssert.ThrowsException<ArgumentOutOfRangeException>(() => mock.Object.ThrowAssertError(-1, null));
         }
 
         [TestMethod]
         public void ThrowAssertError_TooLargeStackFrame()
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
-            mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
-            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+            _ = mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            _ = mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
+            _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
             mock.Object.ThrowAssertError(1000, "My error message.");
 
@@ -98,10 +98,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void ThrowAssertError_NullValuesArray()
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
-            mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
-            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+            _ = mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            _ = mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
+            _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
             mock.Object.ThrowAssertError(12, "My error message.", null);
 
@@ -112,10 +112,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void ThrowAssertError_NullValues()
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
-            mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
-            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+            _ = mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            _ = mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
+            _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
             mock.Object.ThrowAssertError(12, "My error message.", null, ("Test", 1), null);
 
@@ -126,10 +126,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void ThrowAssertError_WithValues()
         {
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
-            mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
-            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+            _ = mock.Setup(x => x.ThrowAssertError(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<(string, object?)?[]?>())).CallBase();
+            _ = mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
+            _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
             mock.Object.ThrowAssertError(12, "My error message.", ("blub", 456.123), ("test", "My test value"));
 
@@ -140,10 +140,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void RunAssertion_NoValues_Success()
         {
             var funcMock = new Mock<Func<bool>>(MockBehavior.Strict);
-            funcMock.Setup(x => x()).Returns(true);
+            _ = funcMock.Setup(x => x()).Returns(true);
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.RunAssertion(It.IsAny<string?>(), It.IsAny<Func<bool>>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)?>()));
+            _ = mock.Setup(x => x.RunAssertion(It.IsAny<string?>(), It.IsAny<Func<bool>>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)?>()));
 
             mock.Object.RunAssertion("My error message", funcMock.Object);
 
@@ -155,10 +155,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void RunAssertion_NoValues_Fail()
         {
             var funcMock = new Mock<Func<bool>>(MockBehavior.Strict);
-            funcMock.Setup(x => x()).Returns(false);
+            _ = funcMock.Setup(x => x()).Returns(false);
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.RunAssertion(It.IsAny<string?>(), It.IsAny<Func<bool>>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)?>()));
+            _ = mock.Setup(x => x.RunAssertion(It.IsAny<string?>(), It.IsAny<Func<bool>>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)?>()));
 
             mock.Object.RunAssertion("My error message", funcMock.Object);
 
@@ -170,10 +170,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void RunAssertion_WithActualValues_Success()
         {
             var funcMock = new Mock<Func<string, bool>>(MockBehavior.Strict);
-            funcMock.Setup(x => x("Str")).Returns(true);
+            _ = funcMock.Setup(x => x("Str")).Returns(true);
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.RunAssertion(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<Func<string, bool>>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)?>()));
+            _ = mock.Setup(x => x.RunAssertion(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<Func<string, bool>>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)?>()));
 
             mock.Object.RunAssertion("Str", "My error message", funcMock.Object);
 
@@ -185,10 +185,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void RunAssertion_WithActualValues_Fail()
         {
             var funcMock = new Mock<Func<string, bool>>(MockBehavior.Strict);
-            funcMock.Setup(x => x("Str")).Returns(false);
+            _ = funcMock.Setup(x => x("Str")).Returns(false);
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.RunAssertion(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<Func<string, bool>>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
+            _ = mock.Setup(x => x.RunAssertion(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<Func<string, bool>>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
 
             mock.Object.RunAssertion("Str", "My error message", funcMock.Object);
 
@@ -200,10 +200,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void RunAssertion_WithValues_Success()
         {
             var funcMock = new Mock<Func<string, int, bool>>(MockBehavior.Strict);
-            funcMock.Setup(x => x("Str", 4711)).Returns(true);
+            _ = funcMock.Setup(x => x("Str", 4711)).Returns(true);
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.RunAssertion(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<Func<string, int, bool>>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
+            _ = mock.Setup(x => x.RunAssertion(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<Func<string, int, bool>>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
 
             mock.Object.RunAssertion("Str", 4711, "My error message", funcMock.Object);
 
@@ -215,10 +215,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void RunAssertion_WithValues_Fail()
         {
             var funcMock = new Mock<Func<string, int, bool>>(MockBehavior.Strict);
-            funcMock.Setup(x => x("Str", 4711)).Returns(false);
+            _ = funcMock.Setup(x => x("Str", 4711)).Returns(false);
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.RunAssertion(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<Func<string, int, bool>>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
+            _ = mock.Setup(x => x.RunAssertion(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<Func<string, int, bool>>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
 
             mock.Object.RunAssertion("Str", 4711, "My error message", funcMock.Object);
 
@@ -230,10 +230,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void RunNegatedAssertion_NoValues_Success()
         {
             var funcMock = new Mock<Func<bool>>(MockBehavior.Strict);
-            funcMock.Setup(x => x()).Returns(false);
+            _ = funcMock.Setup(x => x()).Returns(false);
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.RunNegatedAssertion(It.IsAny<string?>(), It.IsAny<Func<bool>>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)?>()));
+            _ = mock.Setup(x => x.RunNegatedAssertion(It.IsAny<string?>(), It.IsAny<Func<bool>>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)?>()));
 
             mock.Object.RunNegatedAssertion("My error message", funcMock.Object);
 
@@ -245,10 +245,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void RunNegatedAssertion_NoValues_Fail()
         {
             var funcMock = new Mock<Func<bool>>(MockBehavior.Strict);
-            funcMock.Setup(x => x()).Returns(true);
+            _ = funcMock.Setup(x => x()).Returns(true);
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.RunNegatedAssertion(It.IsAny<string?>(), It.IsAny<Func<bool>>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)?>()));
+            _ = mock.Setup(x => x.RunNegatedAssertion(It.IsAny<string?>(), It.IsAny<Func<bool>>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(1, "My error message", Array.Empty<(string, object?)?>()));
 
             mock.Object.RunNegatedAssertion("My error message", funcMock.Object);
 
@@ -260,10 +260,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void RunNegatedAssertion_WithActualValues_Success()
         {
             var funcMock = new Mock<Func<string, bool>>(MockBehavior.Strict);
-            funcMock.Setup(x => x("Str")).Returns(false);
+            _ = funcMock.Setup(x => x("Str")).Returns(false);
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.RunNegatedAssertion(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<Func<string, bool>>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
+            _ = mock.Setup(x => x.RunNegatedAssertion(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<Func<string, bool>>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
 
             mock.Object.RunNegatedAssertion("Str", "My error message", funcMock.Object);
 
@@ -275,10 +275,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void RunNegatedAssertion_WithActualValues_Fail()
         {
             var funcMock = new Mock<Func<string, bool>>(MockBehavior.Strict);
-            funcMock.Setup(x => x("Str")).Returns(true);
+            _ = funcMock.Setup(x => x("Str")).Returns(true);
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.RunNegatedAssertion(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<Func<string, bool>>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
+            _ = mock.Setup(x => x.RunNegatedAssertion(It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<Func<string, bool>>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
 
             mock.Object.RunNegatedAssertion("Str", "My error message", funcMock.Object);
 
@@ -290,10 +290,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void RunNegatedAssertion_WithValues_Success()
         {
             var funcMock = new Mock<Func<string, int, bool>>(MockBehavior.Strict);
-            funcMock.Setup(x => x("Str", 4711)).Returns(false);
+            _ = funcMock.Setup(x => x("Str", 4711)).Returns(false);
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.RunNegatedAssertion(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<Func<string, int, bool>>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
+            _ = mock.Setup(x => x.RunNegatedAssertion(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<Func<string, int, bool>>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
 
             mock.Object.RunNegatedAssertion("Str", 4711, "My error message", funcMock.Object);
 
@@ -305,10 +305,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void RunNegatedAssertion_WithValues_Fail()
         {
             var funcMock = new Mock<Func<string, int, bool>>(MockBehavior.Strict);
-            funcMock.Setup(x => x("Str", 4711)).Returns(true);
+            _ = funcMock.Setup(x => x("Str", 4711)).Returns(true);
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.RunNegatedAssertion(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<Func<string, int, bool>>())).CallBase();
-            mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
+            _ = mock.Setup(x => x.RunNegatedAssertion(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<Func<string, int, bool>>())).CallBase();
+            _ = mock.Setup(x => x.ThrowAssertError(1, "My error message", It.IsAny<(string, object?)?[]?>()));
 
             mock.Object.RunNegatedAssertion("Str", 4711, "My error message", funcMock.Object);
 
@@ -320,10 +320,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void CatchAssertException_FuncT_Success()
         {
             var funcMock = new Mock<Func<string>>(MockBehavior.Strict);
-            funcMock.Setup(x => x()).Returns("MyTest");
+            _ = funcMock.Setup(x => x()).Returns("MyTest");
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.CatchAssertException(It.IsAny<Func<string>>())).CallBase();
-            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+            _ = mock.Setup(x => x.CatchAssertException(It.IsAny<Func<string>>())).CallBase();
+            _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
             var result = mock.Object.CatchAssertException(funcMock.Object);
 
@@ -336,10 +336,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void CatchAssertException_FuncT_Fail()
         {
             var funcMock = new Mock<Func<string>>(MockBehavior.Strict);
-            funcMock.Setup(x => x()).Throws(new AssertFailedException("This is a test"));
+            _ = funcMock.Setup(x => x()).Throws(new AssertFailedException("This is a test"));
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.CatchAssertException(It.IsAny<Func<string>>())).CallBase();
-            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+            _ = mock.Setup(x => x.CatchAssertException(It.IsAny<Func<string>>())).CallBase();
+            _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
             var result = mock.Object.CatchAssertException(funcMock.Object);
 
@@ -352,12 +352,12 @@ namespace MaSch.Test.Assertion.UnitTests
         public void CatchAssertException_FuncT_Fail_OtherException()
         {
             var funcMock = new Mock<Func<string>>(MockBehavior.Strict);
-            funcMock.Setup(x => x()).Throws(new InvalidOperationException("This is a test"));
+            _ = funcMock.Setup(x => x()).Throws(new InvalidOperationException("This is a test"));
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.CatchAssertException(It.IsAny<Func<string>>())).CallBase();
-            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+            _ = mock.Setup(x => x.CatchAssertException(It.IsAny<Func<string>>())).CallBase();
+            _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
-            MSAssert.ThrowsException<InvalidOperationException>(() => mock.Object.CatchAssertException(funcMock.Object));
+            _ = MSAssert.ThrowsException<InvalidOperationException>(() => mock.Object.CatchAssertException(funcMock.Object));
 
             funcMock.Verify(x => x(), Times.Once());
             mock.Protected().Verify("HandleFailedAssertion", Times.Never(), ItExpr.IsAny<string>());
@@ -367,10 +367,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public async Task CatchAssertException_FuncTaskT_Success()
         {
             var funcMock = new Mock<Func<Task<string>>>(MockBehavior.Strict);
-            funcMock.Setup(x => x()).Returns(Task.FromResult("MyTest"));
+            _ = funcMock.Setup(x => x()).Returns(Task.FromResult("MyTest"));
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.CatchAssertException(It.IsAny<Func<Task<string>>>())).CallBase();
-            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+            _ = mock.Setup(x => x.CatchAssertException(It.IsAny<Func<Task<string>>>())).CallBase();
+            _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
             var result = await mock.Object.CatchAssertException(funcMock.Object);
 
@@ -383,10 +383,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public async Task CatchAssertException_FuncTaskT_Fail()
         {
             var funcMock = new Mock<Func<Task<string>>>(MockBehavior.Strict);
-            funcMock.Setup(x => x()).Throws(new AssertFailedException("This is a test"));
+            _ = funcMock.Setup(x => x()).Throws(new AssertFailedException("This is a test"));
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.CatchAssertException(It.IsAny<Func<Task<string>>>())).CallBase();
-            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+            _ = mock.Setup(x => x.CatchAssertException(It.IsAny<Func<Task<string>>>())).CallBase();
+            _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
             var result = await mock.Object.CatchAssertException(funcMock.Object);
 
@@ -399,12 +399,12 @@ namespace MaSch.Test.Assertion.UnitTests
         public async Task CatchAssertException_FuncTaskT_Fail_OtherException()
         {
             var funcMock = new Mock<Func<Task<string>>>(MockBehavior.Strict);
-            funcMock.Setup(x => x()).Throws(new InvalidOperationException("This is a test"));
+            _ = funcMock.Setup(x => x()).Throws(new InvalidOperationException("This is a test"));
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.CatchAssertException(It.IsAny<Func<Task<string>>>())).CallBase();
-            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+            _ = mock.Setup(x => x.CatchAssertException(It.IsAny<Func<Task<string>>>())).CallBase();
+            _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
-            await MSAssert.ThrowsExceptionAsync<InvalidOperationException>(async () => await mock.Object.CatchAssertException(funcMock.Object));
+            _ = await MSAssert.ThrowsExceptionAsync<InvalidOperationException>(async () => await mock.Object.CatchAssertException(funcMock.Object));
 
             funcMock.Verify(x => x(), Times.Once());
             mock.Protected().Verify("HandleFailedAssertion", Times.Never(), ItExpr.IsAny<string>());
@@ -414,10 +414,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void CatchAssertException_Action_Success()
         {
             var actionMock = new Mock<Action>(MockBehavior.Strict);
-            actionMock.Setup(x => x());
+            _ = actionMock.Setup(x => x());
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.CatchAssertException(It.IsAny<Action>())).CallBase();
-            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+            _ = mock.Setup(x => x.CatchAssertException(It.IsAny<Action>())).CallBase();
+            _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
             mock.Object.CatchAssertException(actionMock.Object);
 
@@ -429,10 +429,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public void CatchAssertException_Action_Fail()
         {
             var actionMock = new Mock<Action>(MockBehavior.Strict);
-            actionMock.Setup(x => x()).Throws(new AssertFailedException("This is a test"));
+            _ = actionMock.Setup(x => x()).Throws(new AssertFailedException("This is a test"));
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.CatchAssertException(It.IsAny<Action>())).CallBase();
-            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+            _ = mock.Setup(x => x.CatchAssertException(It.IsAny<Action>())).CallBase();
+            _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
             mock.Object.CatchAssertException(actionMock.Object);
 
@@ -444,12 +444,12 @@ namespace MaSch.Test.Assertion.UnitTests
         public void CatchAssertException_Action_Fail_OtherException()
         {
             var actionMock = new Mock<Action>(MockBehavior.Strict);
-            actionMock.Setup(x => x()).Throws(new InvalidOperationException("This is a test"));
+            _ = actionMock.Setup(x => x()).Throws(new InvalidOperationException("This is a test"));
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.CatchAssertException(It.IsAny<Action>())).CallBase();
-            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+            _ = mock.Setup(x => x.CatchAssertException(It.IsAny<Action>())).CallBase();
+            _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
-            MSAssert.ThrowsException<InvalidOperationException>(() => mock.Object.CatchAssertException(actionMock.Object));
+            _ = MSAssert.ThrowsException<InvalidOperationException>(() => mock.Object.CatchAssertException(actionMock.Object));
 
             actionMock.Verify(x => x(), Times.Once());
             mock.Protected().Verify("HandleFailedAssertion", Times.Never(), ItExpr.IsAny<string>());
@@ -459,10 +459,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public async Task CatchAssertException_AsyncAction_Success()
         {
             var actionMock = new Mock<Func<Task>>(MockBehavior.Strict);
-            actionMock.Setup(x => x()).Returns(Task.CompletedTask);
+            _ = actionMock.Setup(x => x()).Returns(Task.CompletedTask);
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.CatchAssertException(It.IsAny<Func<Task>>())).CallBase();
-            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+            _ = mock.Setup(x => x.CatchAssertException(It.IsAny<Func<Task>>())).CallBase();
+            _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
             await mock.Object.CatchAssertException(actionMock.Object);
 
@@ -474,10 +474,10 @@ namespace MaSch.Test.Assertion.UnitTests
         public async Task CatchAssertException_AsyncAction_Fail()
         {
             var actionMock = new Mock<Func<Task>>(MockBehavior.Strict);
-            actionMock.Setup(x => x()).Throws(new AssertFailedException("This is a test"));
+            _ = actionMock.Setup(x => x()).Throws(new AssertFailedException("This is a test"));
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.CatchAssertException(It.IsAny<Func<Task>>())).CallBase();
-            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+            _ = mock.Setup(x => x.CatchAssertException(It.IsAny<Func<Task>>())).CallBase();
+            _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
             await mock.Object.CatchAssertException(actionMock.Object);
 
@@ -489,12 +489,12 @@ namespace MaSch.Test.Assertion.UnitTests
         public async Task CatchAssertException_AsyncAction_Fail_OtherException()
         {
             var actionMock = new Mock<Func<Task>>(MockBehavior.Strict);
-            actionMock.Setup(x => x()).Throws(new InvalidOperationException("This is a test"));
+            _ = actionMock.Setup(x => x()).Throws(new InvalidOperationException("This is a test"));
             var mock = new Mock<AssertBase>(MockBehavior.Strict);
-            mock.Setup(x => x.CatchAssertException(It.IsAny<Func<Task>>())).CallBase();
-            mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
+            _ = mock.Setup(x => x.CatchAssertException(It.IsAny<Func<Task>>())).CallBase();
+            _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
-            await MSAssert.ThrowsExceptionAsync<InvalidOperationException>(async () => await mock.Object.CatchAssertException(actionMock.Object));
+            _ = await MSAssert.ThrowsExceptionAsync<InvalidOperationException>(async () => await mock.Object.CatchAssertException(actionMock.Object));
 
             actionMock.Verify(x => x(), Times.Once());
             mock.Protected().Verify("HandleFailedAssertion", Times.Never(), ItExpr.IsAny<string>());

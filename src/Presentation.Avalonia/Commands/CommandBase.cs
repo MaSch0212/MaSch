@@ -12,22 +12,40 @@ namespace MaSch.Presentation.Avalonia.Commands
     public abstract class CommandBase : ICommand
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="CommandBase"/> class.
+        /// </summary>
+        protected CommandBase()
+        {
+        }
+
+        /// <summary>
         /// Occurs when changes occur that affect whether or not the command should execute.
         /// </summary>
         public event EventHandler? CanExecuteChanged;
+
+        /// <summary>
+        /// Gets a value indicating whether to ignore the result of the <see cref="CanExecute(object)"/> method.
+        /// </summary>
+        protected virtual bool IgnoreCanExecuteOnExecute => false;
 
         /// <summary>
         /// Checks if the Execute method can be executed.
         /// </summary>
         /// <param name="parameter">The parameter for the command. Is not used in this command, so it should be null.</param>
         /// <returns>true if the Execute method can be executed otherwise false.</returns>
-        public bool CanExecute(object? parameter) => CanExecute();
+        public bool CanExecute(object? parameter)
+        {
+            return CanExecute();
+        }
 
         /// <summary>
         /// Checks if the Execute method can be executed.
         /// </summary>
         /// <returns><c>true</c>.</returns>
-        public virtual bool CanExecute() => true;
+        public virtual bool CanExecute()
+        {
+            return true;
+        }
 
         /// <summary>
         /// Executes the command.
@@ -51,19 +69,7 @@ namespace MaSch.Presentation.Avalonia.Commands
         /// <param name="e">The event arguments for the event.</param>
         protected void RaiseCanExecuteChanged(object sender, EventArgs e)
         {
-            Dispatcher.UIThread.InvokeAsync(() => CanExecuteChanged?.Invoke(sender, e));
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether to ignore the result of the <see cref="CanExecute(object)"/> method.
-        /// </summary>
-        protected virtual bool IgnoreCanExecuteOnExecute => false;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CommandBase"/> class.
-        /// </summary>
-        protected CommandBase()
-        {
+            _ = Dispatcher.UIThread.InvokeAsync(() => CanExecuteChanged?.Invoke(sender, e));
         }
     }
 
@@ -75,23 +81,46 @@ namespace MaSch.Presentation.Avalonia.Commands
     public abstract class CommandBase<T> : ICommand
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="CommandBase{T}"/> class.
+        /// </summary>
+        protected CommandBase()
+        {
+        }
+
+        /// <summary>
         /// Occurs when changes occur that affect whether or not the command should execute.
         /// </summary>
         public event EventHandler? CanExecuteChanged;
 
         /// <summary>
-        /// Checks if the Execute method can be executed.
+        /// Gets a value indicating whether to ignore the result of the <see cref="CanExecute(object)"/> method.
         /// </summary>
-        /// <param name="parameter">The parameter for the command.</param>
-        /// <returns>true if the Execute method can be executed otherwise false.</returns>
-        public bool CanExecute(object? parameter) => CanExecute(GetParameterValue(parameter));
+        protected virtual bool IgnoreCanExecuteOnExecute => false;
+
+        /// <summary>
+        /// Gets a value indicating whether to throw an exception when the wrong parameter type is given.
+        /// </summary>
+        protected virtual bool ThrowExceptionOnWrongParamType => true;
 
         /// <summary>
         /// Checks if the Execute method can be executed.
         /// </summary>
         /// <param name="parameter">The parameter for the command.</param>
         /// <returns>true if the Execute method can be executed otherwise false.</returns>
-        public virtual bool CanExecute(T? parameter) => true;
+        public bool CanExecute(object? parameter)
+        {
+            return CanExecute(GetParameterValue(parameter));
+        }
+
+        /// <summary>
+        /// Checks if the Execute method can be executed.
+        /// </summary>
+        /// <param name="parameter">The parameter for the command.</param>
+        /// <returns>true if the Execute method can be executed otherwise false.</returns>
+        public virtual bool CanExecute(T? parameter)
+        {
+            return true;
+        }
 
         /// <summary>
         /// Executes the command.
@@ -99,9 +128,9 @@ namespace MaSch.Presentation.Avalonia.Commands
         /// <param name="parameter">The parameter for the command.</param>
         public void Execute(object? parameter)
         {
-            var tParam = GetParameterValue(parameter);
-            if (IgnoreCanExecuteOnExecute || CanExecute(tParam))
-                Execute(tParam);
+            var parameterValue = GetParameterValue(parameter);
+            if (IgnoreCanExecuteOnExecute || CanExecute(parameterValue))
+                Execute(parameterValue);
         }
 
         /// <summary>
@@ -117,31 +146,14 @@ namespace MaSch.Presentation.Avalonia.Commands
         /// <param name="e">The event arguments for the event.</param>
         protected void RaiseCanExecuteChanged(object sender, EventArgs e)
         {
-            Dispatcher.UIThread.InvokeAsync(() => CanExecuteChanged?.Invoke(sender, e));
+            _ = Dispatcher.UIThread.InvokeAsync(() => CanExecuteChanged?.Invoke(sender, e));
         }
-
-        /// <summary>
-        /// Gets a value indicating whether to ignore the result of the <see cref="CanExecute(object)"/> method.
-        /// </summary>
-        protected virtual bool IgnoreCanExecuteOnExecute => false;
-
-        /// <summary>
-        /// Gets a value indicating whether to throw an exception when the wrong parameter type is given.
-        /// </summary>
-        protected virtual bool ThrowExceptionOnWrongParamType => true;
 
         private T? GetParameterValue(object? parameter)
         {
             if (ThrowExceptionOnWrongParamType)
                 return (T?)parameter;
             return parameter?.GetType().IsCastableTo(typeof(T)) == true ? (T)parameter : default;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CommandBase{T}"/> class.
-        /// </summary>
-        protected CommandBase()
-        {
         }
     }
 }

@@ -104,7 +104,7 @@ namespace MaSch.Presentation.Wpf.Themes.UnitTests.ThemeValues
         public void SetRawValue_WrongType()
         {
             var value = new IconThemeValue();
-            Assert.ThrowsException<ArgumentException>(() => value.RawValue = "This should not succeed.");
+            _ = Assert.ThrowsException<ArgumentException>(() => value.RawValue = "This should not succeed.");
         }
 
         private void AssertReference(string keyName, object reference)
