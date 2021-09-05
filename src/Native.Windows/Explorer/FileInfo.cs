@@ -161,7 +161,7 @@ namespace MaSch.Native.Windows.Explorer
 
             _ = Shell32.SHGetImageList((int)size, ref guil, ref spiml);
             IntPtr hIcon = IntPtr.Zero;
-            _ = (spiml?.GetIcon(iImage, Shell32.IldTransparent | Shell32.IldImage, ref hIcon));
+            _ = spiml?.GetIcon(iImage, Shell32.IldTransparent | Shell32.IldImage, ref hIcon);
 
             return hIcon;
         }
