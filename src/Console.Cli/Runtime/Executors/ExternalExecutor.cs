@@ -13,8 +13,8 @@ namespace MaSch.Console.Cli.Runtime.Executors
     {
         public static ICliCommandExecutor GetExecutor(Type executorType, Type commandType, object? executorInstance)
         {
-            Guard.NotNull(executorType, nameof(executorType));
-            Guard.NotNull(commandType, nameof(commandType));
+            _ = Guard.NotNull(executorType, nameof(executorType));
+            _ = Guard.NotNull(commandType, nameof(commandType));
 
             var types = (from i in executorType.GetInterfaces()
                          where i.IsGenericType
@@ -36,8 +36,6 @@ namespace MaSch.Console.Cli.Runtime.Executors
         private readonly Type _executorType;
         private object? _executorInstance;
 
-        internal object? LastExecutorInstance { get; private set; }
-
         public ExternalExecutor(Type executorType, object? executorInstance)
         {
             _executorType = Guard.NotNull(executorType, nameof(executorType));
@@ -47,40 +45,42 @@ namespace MaSch.Console.Cli.Runtime.Executors
                 throw new ArgumentException($"The type {executorType.Name} needs to implement {typeof(ICliExecutor<T>).Name} and/or {typeof(ICliAsyncExecutor<T>).Name} for type {typeof(T).Name}.", nameof(executorType));
         }
 
+        internal object? LastExecutorInstance { get; private set; }
+
         public int Execute(CliExecutionContext context, object obj)
         {
-            Guard.NotNull(context, nameof(context));
-            Guard.NotNull(obj, nameof(obj));
-            var (ee, tObj) = PreExecute(context.ServiceProvider, obj);
-            LastExecutorInstance = ee;
+            _ = Guard.NotNull(context, nameof(context));
+            _ = Guard.NotNull(obj, nameof(obj));
+            var (executor, castedObject) = PreExecute(context.ServiceProvider, obj);
+            LastExecutorInstance = executor;
 
-            if (ee is ICliExecutor<T> executor)
-                return executor.ExecuteCommand(context, tObj);
-            else if (ee is ICliAsyncExecutor<T> asyncExecutor)
-                return asyncExecutor.ExecuteCommandAsync(context, tObj).GetAwaiter().GetResult();
+            if (executor is ICliExecutor<T> syncExecutor)
+                return syncExecutor.ExecuteCommand(context, castedObject);
+            else if (executor is ICliAsyncExecutor<T> asyncExecutor)
+                return asyncExecutor.ExecuteCommandAsync(context, castedObject).GetAwaiter().GetResult();
             else
                 throw new InvalidOperationException($"The type {_executorType.Name} needs to implement {typeof(ICliExecutor<T>).Name} and/or {typeof(ICliAsyncExecutor<T>).Name} for type {typeof(T).Name}.");
         }
 
         public async Task<int> ExecuteAsync(CliExecutionContext context, object obj)
         {
-            Guard.NotNull(context, nameof(context));
-            Guard.NotNull(obj, nameof(obj));
-            var (ee, tObj) = PreExecute(context.ServiceProvider, obj);
-            LastExecutorInstance = ee;
+            _ = Guard.NotNull(context, nameof(context));
+            _ = Guard.NotNull(obj, nameof(obj));
+            var (executor, castedObject) = PreExecute(context.ServiceProvider, obj);
+            LastExecutorInstance = executor;
 
-            if (ee is ICliAsyncExecutor<T> asyncExecutor)
-                return await asyncExecutor.ExecuteCommandAsync(context, tObj);
-            else if (ee is ICliExecutor<T> executor)
-                return executor.ExecuteCommand(context, tObj);
+            if (executor is ICliAsyncExecutor<T> asyncExecutor)
+                return await asyncExecutor.ExecuteCommandAsync(context, castedObject);
+            else if (executor is ICliExecutor<T> syncExecutor)
+                return syncExecutor.ExecuteCommand(context, castedObject);
             else
                 throw new InvalidOperationException($"The type {_executorType.Name} needs to implement {typeof(ICliExecutor<T>).Name} and/or {typeof(ICliAsyncExecutor<T>).Name} for type {typeof(T).Name}.");
         }
 
         public bool ValidateOptions(CliExecutionContext context, object parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors)
         {
-            Guard.NotNull(context, nameof(context));
-            Guard.OfType(parameters, nameof(parameters), false, typeof(T));
+            _ = Guard.NotNull(context, nameof(context));
+            _ = Guard.OfType(parameters, nameof(parameters), false, typeof(T));
             var ee = PreValidate(context.ServiceProvider);
             LastExecutorInstance = ee;
 
@@ -89,9 +89,9 @@ namespace MaSch.Console.Cli.Runtime.Executors
                          let baseType = i.GetGenericTypeDefinition()
                          where baseType == typeof(ICliValidator<>)
                          select i.GetGenericArguments()[0]).ToArray();
-            var pType = parameters.GetType();
-            var type = types.Contains(pType)
-                ? pType
+            var parametersType = parameters.GetType();
+            var type = types.Contains(parametersType)
+                ? parametersType
                 : types.FirstOrDefault(x => x.IsInstanceOfType(parameters));
             if (type != null)
             {
@@ -106,12 +106,12 @@ namespace MaSch.Console.Cli.Runtime.Executors
             return true;
         }
 
-        public (object Executor, T TObj) PreExecute(IServiceProvider serviceProvider, object obj)
+        public (object Executor, T CastedObject) PreExecute(IServiceProvider serviceProvider, object obj)
         {
-            if (obj is not T tObj)
+            if (obj is not T castedObject)
                 throw new ArgumentException($"The object needs to be an instance of class {typeof(T).Name}. (Actual: {obj.GetType().Name})", nameof(obj));
             var executor = PreValidate(serviceProvider);
-            return (executor, tObj);
+            return (executor, castedObject);
         }
 
         public object PreValidate(IServiceProvider serviceProvider)

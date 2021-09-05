@@ -15,6 +15,15 @@ namespace MaSch.Console.Controls
         private readonly IConsoleService _console;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="TableControl"/> class.
+        /// </summary>
+        /// <param name="console">The console to use.</param>
+        public TableControl(IConsoleService console)
+        {
+            _console = Guard.NotNull(console, nameof(console));
+        }
+
+        /// <summary>
         /// Gets or sets the width of this control.
         /// </summary>
         public int? Width { get; set; }
@@ -43,15 +52,6 @@ namespace MaSch.Console.Controls
         /// Gets or sets the margin.
         /// </summary>
         public Thickness Margin { get; set; } = new(0);
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TableControl"/> class.
-        /// </summary>
-        /// <param name="console">The console to use.</param>
-        public TableControl(IConsoleService console)
-        {
-            _console = Guard.NotNull(console, nameof(console));
-        }
 
         /// <summary>
         /// Renders this control.

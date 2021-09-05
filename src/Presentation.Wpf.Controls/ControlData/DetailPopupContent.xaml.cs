@@ -13,7 +13,7 @@ namespace MaSch.Presentation.Wpf.ControlData
     /// <summary>
     /// Content for a <see cref="DetailPopup"/>.
     /// </summary>
-    /// <seealso cref="System.Windows.Controls.Control" />
+    /// <seealso cref="Control" />
     [ContentProperty(nameof(PopupContent))]
     public class DetailPopupContent : Control
     {
@@ -59,6 +59,11 @@ namespace MaSch.Presentation.Wpf.ControlData
         private Path? _arrow;
         private FrameworkElement? _border;
 
+        static DetailPopupContent()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(DetailPopupContent), new FrameworkPropertyMetadata(typeof(DetailPopupContent)));
+        }
+
         /// <summary>
         /// Gets or sets the arrow position.
         /// </summary>
@@ -86,11 +91,6 @@ namespace MaSch.Presentation.Wpf.ControlData
             set => SetValue(PopupContentProperty, value);
         }
 
-        static DetailPopupContent()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(DetailPopupContent), new FrameworkPropertyMetadata(typeof(DetailPopupContent)));
-        }
-
         /// <inheritdoc />
         public override void OnApplyTemplate()
         {
@@ -100,6 +100,12 @@ namespace MaSch.Presentation.Wpf.ControlData
             _border = GetTemplateChild("PART_Border") as FrameworkElement ?? throw new KeyNotFoundException("Control could not be found: PART_Border");
 
             RefreshArrow();
+        }
+
+        private static void OnArrowChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            var owner = obj as DetailPopupContent;
+            owner?.RefreshArrow();
         }
 
         private void RefreshArrow()
@@ -145,12 +151,6 @@ namespace MaSch.Presentation.Wpf.ControlData
                 default:
                     throw new ArgumentOutOfRangeException($"The arrow position \"{ArrowPosition}\" is unknown.");
             }
-        }
-
-        private static void OnArrowChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
-        {
-            var owner = obj as DetailPopupContent;
-            owner?.RefreshArrow();
         }
     }
 }

@@ -9,12 +9,21 @@ namespace MaSch.Console.Controls
     /// <summary>
     /// Control for a <see cref="IConsoleService"/> with which the user can select an element out of a set of items.
     /// </summary>
-    public class SelectControl
+    public partial class SelectControl
     {
         private readonly IConsoleService _console;
         private int _selectedIndex = -1;
         private string? _selectedItem;
         private IList<string?>? _items;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SelectControl"/> class.
+        /// </summary>
+        /// <param name="console">The console to use.</param>
+        public SelectControl(IConsoleService console)
+        {
+            _console = Guard.NotNull(console, nameof(console));
+        }
 
         /// <summary>
         /// Gets or sets the selection mode to use.
@@ -74,25 +83,6 @@ namespace MaSch.Console.Controls
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SelectControl"/> class.
-        /// </summary>
-        /// <param name="console">The console to use.</param>
-        public SelectControl(IConsoleService console)
-        {
-            _console = Guard.NotNull(console, nameof(console));
-        }
-
-        /// <summary>
-        /// Requests the user to select an item.
-        /// </summary>
-        public void Show()
-        {
-            var result = Show(_console, SelectionMode, Label, SelectedIndex, Items);
-            _selectedIndex = result.Index;
-            _selectedItem = result.Value;
-        }
-
-        /// <summary>
         /// Requests the user to select an item.
         /// </summary>
         /// <param name="console">The console to use.</param>
@@ -102,7 +92,9 @@ namespace MaSch.Console.Controls
         /// <param name="items">The items from which the user can choose one.</param>
         /// <returns>The from the user selected item.</returns>
         public static Selection Show(IConsoleService console, OneSelectionMode mode, string? label, int startIndex, params string?[] items)
-            => Show(console, mode, label, startIndex, (IList<string?>?)items);
+        {
+            return Show(console, mode, label, startIndex, (IList<string?>?)items);
+        }
 
         /// <summary>
         /// Requests the user to select an item.
@@ -138,6 +130,16 @@ namespace MaSch.Console.Controls
                 result = ShowUpDown3(console, startIndex, items);
 
             return result;
+        }
+
+        /// <summary>
+        /// Requests the user to select an item.
+        /// </summary>
+        public void Show()
+        {
+            var result = Show(_console, SelectionMode, Label, SelectedIndex, Items);
+            _selectedIndex = result.Index;
+            _selectedItem = result.Value;
         }
 
         private static Selection ShowUpDown(IConsoleService console, int startIndex, IList<string?> data)
@@ -288,54 +290,6 @@ namespace MaSch.Console.Controls
 
             console.IsCursorVisible = true;
             return new Selection(index, data[index]);
-        }
-
-        /// <summary>
-        /// The selection mode for the <see cref="SelectControl"/>.
-        /// </summary>
-        public enum OneSelectionMode
-        {
-            /// <summary>
-            /// Displays one item at a time. The user can switch between the items using the up and down arrow keys.
-            /// </summary>
-            UpDown,
-
-            /// <summary>
-            /// Displays the items next to each other. The user can switch between the items using the left and right arrow keys.
-            /// </summary>
-            LeftRight,
-
-            /// <summary>
-            /// Displays a maximum of three items at a time. The user can switch between the items using the up and down arrow keys.
-            /// </summary>
-            UpDown3,
-        }
-
-        /// <summary>
-        /// Represents a user selection that has been made using the <see cref="SelectControl"/>.
-        /// </summary>
-        public struct Selection
-        {
-            /// <summary>
-            /// Gets or sets the index that has been selected.
-            /// </summary>
-            public int Index { get; set; }
-
-            /// <summary>
-            /// Gets or sets the value that has been selected.
-            /// </summary>
-            public string? Value { get; set; }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Selection"/> struct.
-            /// </summary>
-            /// <param name="index">The index that has been selected..</param>
-            /// <param name="value">The value that has been selected..</param>
-            public Selection(int index, string? value)
-            {
-                Index = index;
-                Value = value;
-            }
         }
     }
 }

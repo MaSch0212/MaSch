@@ -9,15 +9,6 @@ namespace MaSch.Presentation.Wpf.Win10
     public class Win10Icon : Icon
     {
         /// <summary>
-        /// Gets or sets the icon.
-        /// </summary>
-        public Win10IconCode Icon
-        {
-            get => Character == null ? 0 : Character.GetWin10IconCode();
-            set => Character = value.GetChar();
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Win10Icon"/> class.
         /// </summary>
         public Win10Icon()
@@ -32,7 +23,9 @@ namespace MaSch.Presentation.Wpf.Win10
         /// <param name="icon">The icon to use.</param>
         public Win10Icon(Win10IconCode icon)
             : this()
-            => Icon = icon;
+        {
+            Icon = icon;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Win10Icon"/> class.
@@ -41,7 +34,9 @@ namespace MaSch.Presentation.Wpf.Win10
         /// <param name="stretch">The stretch mode.</param>
         public Win10Icon(Win10IconCode icon, Stretch stretch)
             : this(icon)
-            => Stretch = stretch;
+        {
+            Stretch = stretch;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Win10Icon"/> class.
@@ -51,7 +46,9 @@ namespace MaSch.Presentation.Wpf.Win10
         /// <param name="fontSize">Size of the font.</param>
         public Win10Icon(Win10IconCode icon, Stretch stretch, double fontSize)
             : this(icon, stretch)
-            => FontSize = fontSize;
+        {
+            FontSize = fontSize;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Win10Icon"/> class.
@@ -66,6 +63,15 @@ namespace MaSch.Presentation.Wpf.Win10
                 Stretch = stretch.Value;
             if (fontSize.HasValue)
                 FontSize = fontSize.Value;
+        }
+
+        /// <summary>
+        /// Gets or sets the icon.
+        /// </summary>
+        public Win10IconCode Icon
+        {
+            get => Character == null ? 0 : Character.GetWin10IconCode();
+            set => Character = value.GetChar();
         }
     }
 }

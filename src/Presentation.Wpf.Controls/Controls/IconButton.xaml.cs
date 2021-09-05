@@ -4,9 +4,9 @@ using System.Windows.Controls;
 namespace MaSch.Presentation.Wpf.Controls
 {
     /// <summary>
-    /// Button that has an <see cref="MaSch.Presentation.Wpf.Icon"/> as content.
+    /// Button that has an <see cref="Wpf.Icon"/> as content.
     /// </summary>
-    /// <seealso cref="System.Windows.Controls.Button" />
+    /// <seealso cref="Button" />
     public class IconButton : Button
     {
         /// <summary>
@@ -39,6 +39,11 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(IconButton),
                 new PropertyMetadata(AnchorStyle.None));
 
+        static IconButton()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(IconButton), new FrameworkPropertyMetadata(typeof(IconButton)));
+        }
+
         /// <summary>
         /// Gets or sets the icon.
         /// </summary>
@@ -64,11 +69,6 @@ namespace MaSch.Presentation.Wpf.Controls
         {
             get { return (AnchorStyle)GetValue(ContentAnchorProperty); }
             set { SetValue(ContentAnchorProperty, value); }
-        }
-
-        static IconButton()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(IconButton), new FrameworkPropertyMetadata(typeof(IconButton)));
         }
     }
 }

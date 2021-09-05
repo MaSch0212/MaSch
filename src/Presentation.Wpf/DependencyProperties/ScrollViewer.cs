@@ -10,7 +10,7 @@ using Win = System.Windows.Controls;
 namespace MaSch.Presentation.Wpf.DependencyProperties
 {
     /// <summary>
-    /// Provides dependency properties for the <see cref="System.Windows.Controls.ScrollViewer"/> control.
+    /// Provides dependency properties for the <see cref="Win.ScrollViewer"/> control.
     /// </summary>
     public static class ScrollViewer
     {
@@ -161,7 +161,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
         /// <returns>The value of the <see cref="ScrollOnDragDropProperty"/>.</returns>
         public static bool GetScrollOnDragDrop(DependencyObject element)
         {
-            Guard.NotNull(element, nameof(element));
+            _ = Guard.NotNull(element, nameof(element));
             return (bool)element.GetValue(ScrollOnDragDropProperty);
         }
 
@@ -172,7 +172,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
         /// <param name="value">The value to set.</param>
         public static void SetScrollOnDragDrop(DependencyObject element, bool value)
         {
-            Guard.NotNull(element, nameof(element));
+            _ = Guard.NotNull(element, nameof(element));
             element.SetValue(ScrollOnDragDropProperty, value);
         }
 
@@ -330,13 +330,13 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
 
         private static void Subscribe(FrameworkElement container)
         {
-            Guard.NotNull(container, nameof(container));
+            _ = Guard.NotNull(container, nameof(container));
             container.PreviewDragOver += OnContainerPreviewDragOver;
         }
 
         private static void Unsubscribe(FrameworkElement container)
         {
-            Guard.NotNull(container, nameof(container));
+            _ = Guard.NotNull(container, nameof(container));
             container.PreviewDragOver -= OnContainerPreviewDragOver;
         }
 

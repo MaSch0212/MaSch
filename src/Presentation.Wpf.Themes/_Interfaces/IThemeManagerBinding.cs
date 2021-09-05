@@ -5,7 +5,7 @@ namespace MaSch.Presentation.Wpf
     /// <summary>
     /// Specifies a binding to a <see cref="IThemeValue"/> inside a <see cref="IThemeManager"/>.
     /// </summary>
-    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
+    /// <seealso cref="INotifyPropertyChanged" />
     public interface IThemeManagerBinding : INotifyPropertyChanged
     {
         /// <summary>

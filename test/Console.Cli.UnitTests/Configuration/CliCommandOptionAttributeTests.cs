@@ -11,13 +11,13 @@ namespace MaSch.Console.Cli.UnitTests.Configuration
         [TestMethod]
         public void Ctor_Name_Null()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new CliCommandOptionAttribute((string)null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => new CliCommandOptionAttribute((string)null!));
         }
 
         [TestMethod]
         public void Ctor_Name_Empty()
         {
-            Assert.ThrowsException<ArgumentException>(() => new CliCommandOptionAttribute(string.Empty));
+            _ = Assert.ThrowsException<ArgumentException>(() => new CliCommandOptionAttribute(string.Empty));
         }
 
         [TestMethod]
@@ -31,13 +31,13 @@ namespace MaSch.Console.Cli.UnitTests.Configuration
         [TestMethod]
         public void Ctor_ShortName_Name_Null()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new CliCommandOptionAttribute('b', null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => new CliCommandOptionAttribute('b', null!));
         }
 
         [TestMethod]
         public void Ctor_ShortName_Name_Empty()
         {
-            Assert.ThrowsException<ArgumentException>(() => new CliCommandOptionAttribute('b', string.Empty));
+            _ = Assert.ThrowsException<ArgumentException>(() => new CliCommandOptionAttribute('b', string.Empty));
         }
 
         [TestMethod]
@@ -52,7 +52,7 @@ namespace MaSch.Console.Cli.UnitTests.Configuration
         [TestMethod]
         public void Ctor_Names_NoNames()
         {
-            Assert.ThrowsException<ArgumentException>(() => new CliCommandOptionAttribute());
+            _ = Assert.ThrowsException<ArgumentException>(() => new CliCommandOptionAttribute());
         }
 
         [TestMethod]
@@ -67,7 +67,7 @@ namespace MaSch.Console.Cli.UnitTests.Configuration
         [TestMethod]
         public void Ctor_Names_NullsAndEmptyStrings()
         {
-            Assert.ThrowsException<ArgumentException>(() => new CliCommandOptionAttribute(null!, string.Empty, null!, string.Empty));
+            _ = Assert.ThrowsException<ArgumentException>(() => new CliCommandOptionAttribute(null!, string.Empty, null!, string.Empty));
         }
 
         [TestMethod]

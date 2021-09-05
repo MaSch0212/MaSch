@@ -14,8 +14,8 @@ namespace MaSch.Core.UnitTests
             var equalsFuncMock = new Mock<Func<object?, object?, bool>>();
             var getHashCodeFuncMock = new Mock<Func<object, int>>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => new DelegateEqualityComparer<object>(null!, getHashCodeFuncMock.Object));
-            Assert.ThrowsException<ArgumentNullException>(() => new DelegateEqualityComparer<object>(equalsFuncMock.Object, null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => new DelegateEqualityComparer<object>(null!, getHashCodeFuncMock.Object));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => new DelegateEqualityComparer<object>(equalsFuncMock.Object, null!));
         }
 
         [TestMethod]
@@ -25,7 +25,7 @@ namespace MaSch.Core.UnitTests
             var obj2 = new object();
             var equalsFuncMock = new Mock<Func<object?, object?, bool>>();
             var getHashCodeFuncMock = new Mock<Func<object, int>>();
-            equalsFuncMock.Setup(x => x(It.IsAny<object?>(), It.IsAny<object?>())).Returns(true);
+            _ = equalsFuncMock.Setup(x => x(It.IsAny<object?>(), It.IsAny<object?>())).Returns(true);
 
             var comparer = new DelegateEqualityComparer<object>(equalsFuncMock.Object, getHashCodeFuncMock.Object);
             var result = comparer.Equals(obj1, obj2);
@@ -41,7 +41,7 @@ namespace MaSch.Core.UnitTests
             var obj1 = new object();
             var equalsFuncMock = new Mock<Func<object?, object?, bool>>();
             var getHashCodeFuncMock = new Mock<Func<object, int>>();
-            getHashCodeFuncMock.Setup(x => x(It.IsAny<object>())).Returns(4711);
+            _ = getHashCodeFuncMock.Setup(x => x(It.IsAny<object>())).Returns(4711);
 
             var comparer = new DelegateEqualityComparer<object>(equalsFuncMock.Object, getHashCodeFuncMock.Object);
             var result = comparer.GetHashCode(obj1);

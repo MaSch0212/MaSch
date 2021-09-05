@@ -37,9 +37,9 @@ namespace MaSch.Generators
             if (shimsAttribute == null || shimsAttribute.ConstructorArguments.Length == 0)
                 return;
 
-            if (shimsAttribute.ConstructorArguments[0].Value is int iShims)
+            if (shimsAttribute.ConstructorArguments[0].Value is int shimsKey)
             {
-                var shims = (Shims)iShims;
+                var shims = (Shims)shimsKey;
                 if (shims.HasFlag(Shims.Records))
                     AddShim(Shims.Records, Resources.Records);
                 if (shims.HasFlag(Shims.IndexAndRange))

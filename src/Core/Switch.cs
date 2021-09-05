@@ -44,7 +44,10 @@ namespace MaSch.Core
             return this;
         }
 
-        public TTarget? GetResult() => _hasSource ? GetResult(_source!) : throw new InvalidOperationException("This switch statement has no source object.");
+        public TTarget? GetResult()
+        {
+            return _hasSource ? GetResult(_source!) : throw new InvalidOperationException("This switch statement has no source object.");
+        }
 
         public TTarget? GetResult(TSource source)
         {

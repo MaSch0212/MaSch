@@ -26,6 +26,34 @@ namespace MaSch.Core.Observable.Collections
     public class ObservableDictionary<TKey, TValue> : INotifyCollectionChanged, INotifyPropertyChanged, IDictionary<TKey, TValue>, IDictionary, IReadOnlyDictionary<TKey, TValue>
         where TKey : notnull
     {
+        private readonly Dictionary<TKey, TValue> _dictionary;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableDictionary{TKey, TValue}"/> class.
+        /// </summary>
+        public ObservableDictionary()
+        {
+            _dictionary = new Dictionary<TKey, TValue>();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableDictionary{TKey, TValue}"/> class.
+        /// </summary>
+        /// <param name="enumerable">The enumerable which contains the data to copy to this <see cref="ObservableDictionary{TKey, TValue}"/>.</param>
+        public ObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>> enumerable)
+        {
+            _dictionary = enumerable.ToDictionary(x => x.Key, x => x.Value);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableDictionary{TKey, TValue}"/> class.
+        /// </summary>
+        /// <param name="dictionary">The dictionary to wrap in this <see cref="ObservableDictionary{TKey, TValue}"/>.</param>
+        public ObservableDictionary(Dictionary<TKey, TValue> dictionary)
+        {
+            _dictionary = dictionary;
+        }
+
         /// <summary>
         /// Occurs when a dictionary item changed.
         /// </summary>
@@ -44,8 +72,6 @@ namespace MaSch.Core.Observable.Collections
         ///   <c>true</c> if this instance is notifying subscribers about property changes; otherwise, <c>false</c>.
         /// </value>
         public virtual bool IsNotifyEnabled { get; set; } = true;
-
-        private readonly Dictionary<TKey, TValue> _dictionary;
 
         /// <inheritdoc/>
         public ICollection<TKey> Keys => _dictionary.Keys;
@@ -83,37 +109,36 @@ namespace MaSch.Core.Observable.Collections
         /// <inheritdoc/>
         bool ICollection.IsSynchronized => ((ICollection)_dictionary).IsSynchronized;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableDictionary{TKey, TValue}"/> class.
-        /// </summary>
-        public ObservableDictionary()
+        /// <inheritdoc/>
+        public virtual TValue this[TKey key]
         {
-            _dictionary = new Dictionary<TKey, TValue>();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableDictionary{TKey, TValue}"/> class.
-        /// </summary>
-        /// <param name="enumerable">The enumerable which contains the data to copy to this <see cref="ObservableDictionary{TKey, TValue}"/>.</param>
-        public ObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>> enumerable)
-        {
-            _dictionary = enumerable.ToDictionary(x => x.Key, x => x.Value);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableDictionary{TKey, TValue}"/> class.
-        /// </summary>
-        /// <param name="dictionary">The dictionary to wrap in this <see cref="ObservableDictionary{TKey, TValue}"/>.</param>
-        public ObservableDictionary(Dictionary<TKey, TValue> dictionary)
-        {
-            _dictionary = dictionary;
+            get => _dictionary[key];
+            set
+            {
+                var oldValue = _dictionary.TryGetValue(key);
+                _dictionary[key] = value;
+                OnDictionaryItemChanged(key, oldValue, value);
+            }
         }
 
         /// <inheritdoc/>
-        public virtual void Add(TKey key, [AllowNull] TValue value) => ((ICollection<KeyValuePair<TKey, TValue>>)this).Add(new KeyValuePair<TKey, TValue>(key, value!));
+        object? IDictionary.this[object key]
+        {
+            get => this[(TKey)key];
+            set => this[(TKey)key] = (TValue)value!;
+        }
 
         /// <inheritdoc/>
-        void IDictionary.Add(object key, object? value) => ((ICollection<KeyValuePair<TKey, TValue>>)this).Add(new KeyValuePair<TKey, TValue>((TKey)key, (TValue)value!));
+        public virtual void Add(TKey key, [AllowNull] TValue value)
+        {
+            ((ICollection<KeyValuePair<TKey, TValue>>)this).Add(new KeyValuePair<TKey, TValue>(key, value!));
+        }
+
+        /// <inheritdoc/>
+        void IDictionary.Add(object key, object? value)
+        {
+            ((ICollection<KeyValuePair<TKey, TValue>>)this).Add(new KeyValuePair<TKey, TValue>((TKey)key, (TValue)value!));
+        }
 
         /// <inheritdoc/>
         void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
@@ -133,34 +158,64 @@ namespace MaSch.Core.Observable.Collections
         }
 
         /// <inheritdoc/>
-        bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item) => ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).Contains(item);
+        bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
+        {
+            return ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).Contains(item);
+        }
 
         /// <inheritdoc/>
-        bool IDictionary.Contains(object key) => ((IDictionary)_dictionary).Contains(key);
+        bool IDictionary.Contains(object key)
+        {
+            return ((IDictionary)_dictionary).Contains(key);
+        }
 
         /// <inheritdoc/>
-        public virtual bool ContainsKey(TKey key) => _dictionary.ContainsKey(key);
+        public virtual bool ContainsKey(TKey key)
+        {
+            return _dictionary.ContainsKey(key);
+        }
 
         /// <inheritdoc/>
-        void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) => ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).CopyTo(array, arrayIndex);
+        void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+        {
+            ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).CopyTo(array, arrayIndex);
+        }
 
         /// <inheritdoc/>
-        void ICollection.CopyTo(Array array, int index) => ((ICollection)_dictionary).CopyTo(array, index);
+        void ICollection.CopyTo(Array array, int index)
+        {
+            ((ICollection)_dictionary).CopyTo(array, index);
+        }
 
         /// <inheritdoc/>
-        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _dictionary.GetEnumerator();
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+        {
+            return _dictionary.GetEnumerator();
+        }
 
         /// <inheritdoc/>
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_dictionary).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)_dictionary).GetEnumerator();
+        }
 
         /// <inheritdoc/>
-        IDictionaryEnumerator IDictionary.GetEnumerator() => ((IDictionary)_dictionary).GetEnumerator();
+        IDictionaryEnumerator IDictionary.GetEnumerator()
+        {
+            return ((IDictionary)_dictionary).GetEnumerator();
+        }
 
         /// <inheritdoc/>
-        public virtual bool Remove(TKey key) => ((ICollection<KeyValuePair<TKey, TValue>>)this).Remove(_dictionary.FirstOrDefault(x => x.Key.Equals(key)));
+        public virtual bool Remove(TKey key)
+        {
+            return ((ICollection<KeyValuePair<TKey, TValue>>)this).Remove(_dictionary.FirstOrDefault(x => x.Key.Equals(key)));
+        }
 
         /// <inheritdoc/>
-        public void Remove(object key) => ((ICollection<KeyValuePair<TKey, TValue>>)this).Remove(_dictionary.FirstOrDefault(x => x.Key.Equals(key)));
+        public void Remove(object key)
+        {
+            _ = ((ICollection<KeyValuePair<TKey, TValue>>)this).Remove(_dictionary.FirstOrDefault(x => x.Key.Equals(key)));
+        }
 
         /// <inheritdoc/>
         bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
@@ -176,13 +231,9 @@ namespace MaSch.Core.Observable.Collections
         }
 
         /// <inheritdoc/>
-        public virtual bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value) => _dictionary.TryGetValue(key, out value);
-
-        private void CountChanged()
+        public virtual bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
-            OnPropertyChanged(nameof(Count));
-            OnPropertyChanged(nameof(Keys));
-            OnPropertyChanged(nameof(Values));
+            return _dictionary.TryGetValue(key, out value);
         }
 
         /// <summary>
@@ -220,82 +271,11 @@ namespace MaSch.Core.Observable.Collections
             }
         }
 
-        /// <inheritdoc/>
-        public virtual TValue this[TKey key]
+        private void CountChanged()
         {
-            get => _dictionary[key];
-            set
-            {
-                var oldValue = _dictionary.TryGetValue(key);
-                _dictionary[key] = value;
-                OnDictionaryItemChanged(key, oldValue, value);
-            }
-        }
-
-        /// <inheritdoc/>
-        object? IDictionary.this[object key]
-        {
-            get => this[(TKey)key];
-            set => this[(TKey)key] = (TValue)value!;
-        }
-    }
-
-    /// <summary>
-    /// The event handler delegate for the <see cref="ObservableDictionary{TKey, TValue}.DictionaryItemChanged"/> event.
-    /// </summary>
-    /// <typeparam name="TKey">The type of the key.</typeparam>
-    /// <typeparam name="TValue">The type of the value.</typeparam>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The <see cref="DictionaryItemChangedEventArgs{TKey, TValue}" /> instance containing the event data.</param>
-    public delegate void DictionaryItemChangedEventHandler<TKey, TValue>(object sender, DictionaryItemChangedEventArgs<TKey, TValue> e)
-        where TKey : notnull;
-
-    /// <summary>
-    /// The event data for the <see cref="DictionaryItemChangedEventHandler{TKey, TValue}"/> event handler.
-    /// </summary>
-    /// <typeparam name="TKey">The type of the key.</typeparam>
-    /// <typeparam name="TValue">The type of the value.</typeparam>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Event Args can be in same file.")]
-    public class DictionaryItemChangedEventArgs<TKey, TValue> : EventArgs
-        where TKey : notnull
-    {
-        /// <summary>
-        /// Gets the index of the item that changed.
-        /// </summary>
-        public int ItemIndex { get; }
-
-        /// <summary>
-        /// Gets the key of the item that changed.
-        /// </summary>
-        public TKey Key { get; }
-
-        /// <summary>
-        /// Gets the old value of the item that changed.
-        /// </summary>
-        [MaybeNull]
-        [AllowNull]
-        public TValue OldValue { get; }
-
-        /// <summary>
-        /// Gets the new value of the item that chanegd.
-        /// </summary>
-        [MaybeNull]
-        [AllowNull]
-        public TValue NewValue { get; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DictionaryItemChangedEventArgs{TKey,TValue}" /> class.
-        /// </summary>
-        /// <param name="itemIndex">The index of the item that changed.</param>
-        /// <param name="key">The key of the item that changed..</param>
-        /// <param name="oldValue">The old value of the item that changed.</param>
-        /// <param name="newValue">The new value of the item that chanegd.</param>
-        public DictionaryItemChangedEventArgs(int itemIndex, TKey key, [AllowNull] TValue oldValue, [AllowNull] TValue newValue)
-        {
-            ItemIndex = itemIndex;
-            Key = key;
-            OldValue = oldValue;
-            NewValue = newValue;
+            OnPropertyChanged(nameof(Count));
+            OnPropertyChanged(nameof(Keys));
+            OnPropertyChanged(nameof(Values));
         }
     }
 }

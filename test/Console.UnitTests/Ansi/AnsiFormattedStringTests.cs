@@ -38,18 +38,18 @@ namespace MaSch.Console.UnitTests.Ansi
         public void Indexer_Get_OutOfRange(bool withStyle, int index)
         {
             var s = new AnsiFormattedString();
-            s.Append("Test");
+            _ = s.Append("Test");
             if (withStyle)
-                s.ApplyStyle(0, 4, x => x.Bold());
+                _ = s.ApplyStyle(0, 4, x => x.Bold());
 
-            Assert.ThrowsException<IndexOutOfRangeException>(() => s[index]);
+            _ = Assert.ThrowsException<IndexOutOfRangeException>(() => s[index]);
         }
 
         [TestMethod]
         public void Indexer_Get_NoStyles()
         {
             var s = new AnsiFormattedString();
-            s.Append("Test");
+            _ = s.Append("Test");
 
             Assert.AreEqual('s', s[2]);
         }
@@ -58,7 +58,7 @@ namespace MaSch.Console.UnitTests.Ansi
         public void Indexer_Get_WithStyles()
         {
             var s = new AnsiFormattedString();
-            s.Append("Test", x => x.Bold());
+            _ = s.Append("Test", x => x.Bold());
 
             Assert.AreEqual('s', s[2]);
         }
@@ -71,18 +71,18 @@ namespace MaSch.Console.UnitTests.Ansi
         public void Indexer_Set_OutOfRange(bool withStyle, int index)
         {
             var s = new AnsiFormattedString();
-            s.Append("Test");
+            _ = s.Append("Test");
             if (withStyle)
-                s.ApplyStyle(0, 4, x => x.Bold());
+                _ = s.ApplyStyle(0, 4, x => x.Bold());
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => s[index] = '2');
+            _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => s[index] = '2');
         }
 
         [TestMethod]
         public void Indexer_Set_NoStyles()
         {
             var s = new AnsiFormattedString();
-            s.Append("Test");
+            _ = s.Append("Test");
 
             s[2] = '5';
 
@@ -94,7 +94,7 @@ namespace MaSch.Console.UnitTests.Ansi
         public void Indexer_Set_WithStyles()
         {
             var s = new AnsiFormattedString();
-            s.Append("Test", x => x.Bold());
+            _ = s.Append("Test", x => x.Bold());
 
             s[2] = '5';
 
@@ -106,7 +106,7 @@ namespace MaSch.Console.UnitTests.Ansi
         public void Length_Get_NoStyles()
         {
             var s = new AnsiFormattedString();
-            s.Append("Test");
+            _ = s.Append("Test");
 
             Assert.AreEqual(4, s.Length);
         }
@@ -115,7 +115,7 @@ namespace MaSch.Console.UnitTests.Ansi
         public void Length_Get_WithStyles()
         {
             var s = new AnsiFormattedString();
-            s.Append("Test", x => x.Bold());
+            _ = s.Append("Test", x => x.Bold());
 
             Assert.AreEqual(4, s.Length);
         }
@@ -124,7 +124,7 @@ namespace MaSch.Console.UnitTests.Ansi
         public void Length_Set()
         {
             var s = new AnsiFormattedString();
-            s.Append("Test");
+            _ = s.Append("Test");
 
             s.Length = 6;
 
@@ -136,7 +136,7 @@ namespace MaSch.Console.UnitTests.Ansi
         public void Length_Set_WithStyles_More()
         {
             var s = new AnsiFormattedString();
-            s.Append("Test", x => x.Bold());
+            _ = s.Append("Test", x => x.Bold());
 
             s.Length = 6;
 
@@ -148,11 +148,11 @@ namespace MaSch.Console.UnitTests.Ansi
         public void Length_Set_WithStyles_Less()
         {
             var s = new AnsiFormattedString();
-            s.Append("Test", x => x.Bold()).Append("Test", x => x.Italic()).AppendStyle(x => x.Overlined());
+            _ = s.Append("Test", x => x.Bold()).Append("Test", x => x.Italic()).AppendStyle(x => x.Overlined());
 
             s.Length = 4;
 
-            s.Append("Test123");
+            _ = s.Append("Test123");
 
             Assert.AreEqual("TestTest123", s.ToString(false));
             Assert.AreEqual("\u001b[0m\u001b[1mTest\u001b[22m\u001b[53mTest123\u001b[0m", s.ToString());
@@ -215,7 +215,7 @@ namespace MaSch.Console.UnitTests.Ansi
             var s = new AnsiFormattedString()
                 .Append("TestTestTest");
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => s.ApplyStyle(startIndex, length, x => x.Bold()));
+            _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => s.ApplyStyle(startIndex, length, x => x.Bold()));
         }
 
         [TestMethod]
@@ -229,12 +229,12 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(false, false, false)]
         public void Append_IFormattable_Null(bool formattableNull, bool providerNull, bool explicitNull)
         {
-            var fpMock = Mocks.Create<IFormatProvider>();
-            var provider = providerNull ? null : fpMock.Object;
-            var fMock = Mocks.Create<IFormattable>();
+            var formatProviderMock = Mocks.Create<IFormatProvider>();
+            var provider = providerNull ? null : formatProviderMock.Object;
+            var formattableMock = Mocks.Create<IFormattable>();
             if (!formattableNull)
-                fMock.Setup(x => x.ToString(null, provider)).Returns("blub").Verifiable(Verifiables, Times.Once());
-            var formattable = formattableNull ? null : fMock.Object;
+                _ = formattableMock.Setup(x => x.ToString(null, provider)).Returns("blub").Verifiable(Verifiables, Times.Once());
+            var formattable = formattableNull ? null : formattableMock.Object;
 
             var s = new AnsiFormattedString("Test");
             _ = explicitNull ? s.Append(formattable, provider, null) : s.Append(formattable, provider);

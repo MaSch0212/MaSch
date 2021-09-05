@@ -15,47 +15,16 @@ namespace MaSch.Presentation.Wpf
     /// <summary>
     /// Default implementation of the <see cref="IThemeManager"/> interface.
     /// </summary>
-    /// <seealso cref="MaSch.Presentation.Wpf.IThemeManager" />
+    /// <seealso cref="IThemeManager" />
     public class ThemeManager : IThemeManager
     {
-        private static IThemeManager? _defaultThemeManager;
-
         /// <summary>
         /// The prefix that is used to store theme values in the resource dictionary.
         /// </summary>
         public static readonly string ResourceDictionaryKeyPrefix = "ThemeManagerValue_";
 
-        /// <summary>
-        /// Gets the default theme manager.
-        /// </summary>
-        public static IThemeManager DefaultThemeManager
-            => _defaultThemeManager ??= new ThemeManager(Theme.FromDefaultTheme(DefaultTheme.Light));
-
+        private static IThemeManager? _defaultThemeManager;
         private IThemeManager? _parentThemeManager;
-
-        /// <inheritdoc/>
-        public event EventHandler<ThemeValueChangedEventArgs>? ThemeValueChanged;
-
-        /// <inheritdoc/>
-        public ITheme CurrentTheme { get; }
-
-        /// <inheritdoc/>
-        public IThemeManagerBindingFactory Bindings { get; }
-
-        /// <inheritdoc/>
-        public IThemeManager? ParentThemeManager
-        {
-            get => _parentThemeManager;
-            set
-            {
-                var removed = _parentThemeManager?.CurrentTheme.Values.Where(x => !CurrentTheme.Values.ContainsKey(x.Key)).Select(x => x.Value).ToArray();
-                var added = value?.CurrentTheme.Values.Where(x => !CurrentTheme.Values.ContainsKey(x.Key)).Select(x => x.Value).ToArray();
-                _parentThemeManager = value;
-
-                if (!removed.IsNullOrEmpty() || !added.IsNullOrEmpty())
-                    OnThemeValueChanged(ThemeValueChangedEventArgs.ForChange(added, removed, Array.Empty<IThemeValue>()));
-            }
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThemeManager" /> class.
@@ -90,7 +59,7 @@ namespace MaSch.Presentation.Wpf
         /// <param name="theme">The theme to use.</param>
         public ThemeManager(IThemeManager? parentThemeManager, ITheme theme)
         {
-            Guard.NotNull(theme, nameof(theme));
+            _ = Guard.NotNull(theme, nameof(theme));
 
             _parentThemeManager = parentThemeManager;
             CurrentTheme = theme;
@@ -104,12 +73,81 @@ namespace MaSch.Presentation.Wpf
         }
 
         /// <inheritdoc/>
+        public event EventHandler<ThemeValueChangedEventArgs>? ThemeValueChanged;
+
+        /// <summary>
+        /// Gets the default theme manager.
+        /// </summary>
+        public static IThemeManager DefaultThemeManager
+            => _defaultThemeManager ??= new ThemeManager(Theme.FromDefaultTheme(DefaultTheme.Light));
+
+        /// <inheritdoc/>
+        public ITheme CurrentTheme { get; }
+
+        /// <inheritdoc/>
+        public IThemeManagerBindingFactory Bindings { get; }
+
+        /// <inheritdoc/>
+        public IThemeManager? ParentThemeManager
+        {
+            get => _parentThemeManager;
+            set
+            {
+                var removed = _parentThemeManager?.CurrentTheme.Values.Where(x => !CurrentTheme.Values.ContainsKey(x.Key)).Select(x => x.Value).ToArray();
+                var added = value?.CurrentTheme.Values.Where(x => !CurrentTheme.Values.ContainsKey(x.Key)).Select(x => x.Value).ToArray();
+                _parentThemeManager = value;
+
+                if (!removed.IsNullOrEmpty() || !added.IsNullOrEmpty())
+                    OnThemeValueChanged(ThemeValueChangedEventArgs.ForChange(added, removed, Array.Empty<IThemeValue>()));
+            }
+        }
+
+        /// <inheritdoc/>
+        public object? this[string key]
+        {
+            get => GetValue(key)?.ValueBase;
+            set => SetValue(key, value);
+        }
+
+        /// <inheritdoc/>
+        public object? this[string key, string propertyName]
+        {
+            get => GetValue(key)?[propertyName];
+            set
+            {
+                if (CurrentTheme.Values.ContainsKey(key))
+                {
+                    var themeValue = GetValue(key);
+                    if (themeValue != null)
+                        themeValue[propertyName] = value;
+                }
+                else if (ParentThemeManager?.ContainsKey(key) == true)
+                {
+                    var newValue = (IThemeValue?)ParentThemeManager?.GetValue(key)?.Clone();
+                    if (newValue != null)
+                    {
+                        newValue[propertyName] = value;
+                        AddValue(key, newValue);
+                    }
+                }
+                else
+                {
+                    throw new KeyNotFoundException($"A theme value with the key \"{key}\" was not found.");
+                }
+            }
+        }
+
+        /// <inheritdoc/>
         public bool ContainsKey(string key)
-            => CurrentTheme.Values.ContainsKey(key) || ParentThemeManager?.ContainsKey(key) == true;
+        {
+            return CurrentTheme.Values.ContainsKey(key) || ParentThemeManager?.ContainsKey(key) == true;
+        }
 
         /// <inheritdoc/>
         public bool ContainsKey<T>(string key)
-            => (CurrentTheme.Values.TryGetValue(key, out var value) && value is IThemeValue<T>) || ParentThemeManager?.ContainsKey<T>(key) == true;
+        {
+            return (CurrentTheme.Values.TryGetValue(key, out var value) && value is IThemeValue<T>) || ParentThemeManager?.ContainsKey<T>(key) == true;
+        }
 
         /// <inheritdoc/>
         public IThemeValue? GetValue(string key)
@@ -123,14 +161,17 @@ namespace MaSch.Presentation.Wpf
         }
 
         /// <inheritdoc/>
-        public IThemeValue<T>? GetValue<T>(string key) => (IThemeValue<T>?)GetValue(key);
+        public IThemeValue<T>? GetValue<T>(string key)
+        {
+            return (IThemeValue<T>?)GetValue(key);
+        }
 
         /// <inheritdoc/>
         public void SetValue(string key, object? value)
         {
             if (value is null)
             {
-                CurrentTheme.Values.TryRemove(key);
+                _ = CurrentTheme.Values.TryRemove(key);
                 return;
             }
 
@@ -170,11 +211,15 @@ namespace MaSch.Presentation.Wpf
 
         /// <inheritdoc/>
         public void AddValue(string key, object? value)
-            => CurrentTheme.Values.Add(key, GetThemeValue(value));
+        {
+            CurrentTheme.Values.Add(key, GetThemeValue(value));
+        }
 
         /// <inheritdoc/>
         public void RemoveValue(string key)
-            => CurrentTheme.Values.TryRemove(key);
+        {
+            _ = CurrentTheme.Values.TryRemove(key);
+        }
 
         /// <inheritdoc/>
         public void LoadTheme(ITheme theme)
@@ -182,9 +227,9 @@ namespace MaSch.Presentation.Wpf
             var valuesToReplace = new List<IThemeValue>();
             foreach (var value in theme.Values)
             {
-                if (CurrentTheme.Values.TryGetValue(value.Key, out var eValue))
+                if (CurrentTheme.Values.TryGetValue(value.Key, out var equatableValue))
                 {
-                    if (!Equals(value.Value, eValue))
+                    if (!Equals(value.Value, equatableValue))
                         valuesToReplace.Add(value.Value);
                 }
                 else
@@ -201,45 +246,10 @@ namespace MaSch.Presentation.Wpf
             }
         }
 
-        /// <inheritdoc/>
-        public object? this[string key]
-        {
-            get => GetValue(key)?.ValueBase;
-            set => SetValue(key, value);
-        }
-
-        /// <inheritdoc/>
-        public object? this[string key, string propertyName]
-        {
-            get => GetValue(key)?[propertyName];
-            set
-            {
-                if (CurrentTheme.Values.ContainsKey(key))
-                {
-                    var themeValue = GetValue(key);
-                    if (themeValue != null)
-                        themeValue[propertyName] = value;
-                }
-                else if (ParentThemeManager?.ContainsKey(key) == true)
-                {
-                    var newValue = (IThemeValue?)ParentThemeManager?.GetValue(key)?.Clone();
-                    if (newValue != null)
-                    {
-                        newValue[propertyName] = value;
-                        AddValue(key, newValue);
-                    }
-                }
-                else
-                {
-                    throw new KeyNotFoundException($"A theme value with the key \"{key}\" was not found.");
-                }
-            }
-        }
-
         /// <summary>
-        /// Raises the <see cref="E:ThemeValueChanged" /> event.
+        /// Raises the <see cref="ThemeValueChanged" /> event.
         /// </summary>
-        /// <param name="args">The <see cref="MaSch.Presentation.Wpf.ThemeValueChangedEventArgs" /> instance containing the event data.</param>
+        /// <param name="args">The <see cref="ThemeValueChangedEventArgs" /> instance containing the event data.</param>
         protected virtual void OnThemeValueChanged(ThemeValueChangedEventArgs args)
         {
             ThemeValueChanged?.Invoke(this, args);
@@ -314,11 +324,11 @@ namespace MaSch.Presentation.Wpf
                     break;
 
                 case ThemeValueChangeType.Change:
-                    var cAdded = GetFilteredValues(e.AddedValues);
-                    var cRemoved = GetFilteredValues(e.RemovedValues);
-                    var cChanged = GetFilteredValues(e.ChangedValues);
-                    if (cAdded.Length > 0 || cRemoved.Length > 0 || cChanged.Length > 0)
-                        OnThemeValueChanged(ThemeValueChangedEventArgs.ForChange(cAdded, cRemoved, cChanged));
+                    var changeAdded = GetFilteredValues(e.AddedValues);
+                    var changeRemoved = GetFilteredValues(e.RemovedValues);
+                    var changeChanged = GetFilteredValues(e.ChangedValues);
+                    if (changeAdded.Length > 0 || changeRemoved.Length > 0 || changeChanged.Length > 0)
+                        OnThemeValueChanged(ThemeValueChangedEventArgs.ForChange(changeAdded, changeRemoved, changeChanged));
                     break;
 
                 case ThemeValueChangeType.Remove:

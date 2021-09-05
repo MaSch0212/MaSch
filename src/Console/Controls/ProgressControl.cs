@@ -41,6 +41,34 @@ namespace MaSch.Console.Controls
         private CancellationTokenSource? _renderCancellationSource;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ProgressControl" /> class.
+        /// </summary>
+        /// <param name="console">The console on which the progress should be shown.</param>
+        public ProgressControl(IConsoleService console)
+        {
+            _console = Guard.NotNull(console, nameof(console));
+
+            IndicatorChars = _console.IsFancyConsole
+                ? new[] { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
+                : new[] { "\\", "|", "/", "-" };
+
+            /* Other formats:
+             "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"
+             "▀", "■", "▄", "■", "▀", "■", "▄", "■", "▀", "■", "▄", "■"
+             "\\", "|", "/", "-", "\\", "|", "/", "-", "\\", "|", "/", "-"
+             "🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗", "🕘", "🕙", "🕚", "🕛"
+             */
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="ProgressControl"/> class.
+        /// </summary>
+        ~ProgressControl()
+        {
+            Dispose(false);
+        }
+
+        /// <summary>
         /// Gets a value indicating whether this control is visible.
         /// </summary>
         public bool IsVisible { get; private set; }
@@ -110,7 +138,19 @@ namespace MaSch.Console.Controls
         /// <summary>
         /// Gets the maximum text length that can be displayed in this control.
         /// </summary>
-        public int MaxStatusTextLength => (_currentWidth ?? (_console.BufferSize.Width - (_currentX ?? X) - 1)) - ProgressBarLeftMargin - 2 - ((_currentUseOneLineOnly ?? UseOneLineOnly) ? (_currentProgressBarWidth ?? ProgressBarWidth ?? ((_currentWidth!.Value - TotalProgressBarMarginAndPadding) / 2)) - ProgressBarRightMargin - 1 : 0);
+        public int MaxStatusTextLength
+        {
+            get
+            {
+                var x = _currentX ?? X;
+                var width = _currentWidth ?? (_console.BufferSize.Width - x - 1);
+                var useOneLineOnly = _currentUseOneLineOnly ?? UseOneLineOnly;
+                var progressBarWidth = _currentProgressBarWidth ?? ProgressBarWidth ?? (width - TotalProgressBarMarginAndPadding) / 2;
+
+                return width - ProgressBarLeftMargin - 2 -
+                    (useOneLineOnly ? progressBarWidth - ProgressBarRightMargin - 1 : 0);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the color of the status indicator.
@@ -141,34 +181,6 @@ namespace MaSch.Console.Controls
         /// Gets or sets the indicator characters that are used for the animation when status <see cref="ProgressControlStatus.Loading"/> is set.
         /// </summary>
         public string[] IndicatorChars { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ProgressControl" /> class.
-        /// </summary>
-        /// <param name="console">The console on which the progress should be shown.</param>
-        public ProgressControl(IConsoleService console)
-        {
-            _console = Guard.NotNull(console, nameof(console));
-
-            IndicatorChars = _console.IsFancyConsole
-                ? new[] { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
-                : new[] { "\\", "|", "/", "-" };
-
-            /* Other formats:
-             "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"
-             "▀", "■", "▄", "■", "▀", "■", "▄", "■", "▀", "■", "▄", "■"
-             "\\", "|", "/", "-", "\\", "|", "/", "-", "\\", "|", "/", "-"
-             "🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗", "🕘", "🕙", "🕚", "🕛"
-             */
-        }
-
-        /// <summary>
-        /// Finalizes an instance of the <see cref="ProgressControl"/> class.
-        /// </summary>
-        ~ProgressControl()
-        {
-            Dispose(false);
-        }
 
         /// <summary>
         /// Shows this control. Please make sure to reserve enough space in the console buffer before executing this method.
@@ -207,7 +219,10 @@ namespace MaSch.Console.Controls
         /// Hides this control.
         /// </summary>
         /// <param name="setCursorToControlRoot">if set to <c>true</c> the cursor is set to the root of the control.</param>
-        public void Hide(bool setCursorToControlRoot) => Hide(setCursorToControlRoot, false);
+        public void Hide(bool setCursorToControlRoot)
+        {
+            Hide(setCursorToControlRoot, false);
+        }
 
         /// <summary>
         /// Hides this control.
@@ -455,36 +470,5 @@ namespace MaSch.Console.Controls
                 _console.Write(new string('\n', ShowStatusText && !_currentUseOneLineOnly!.Value ? 2 : 1));
             }
         }
-    }
-
-    /// <summary>
-    /// Status for instances of the <see cref="ProgressControl"/> class.
-    /// </summary>
-    public enum ProgressControlStatus
-    {
-        /// <summary>
-        /// The action has not been started yet.
-        /// </summary>
-        NotStarted,
-
-        /// <summary>
-        /// The action is currently running.
-        /// </summary>
-        Loading,
-
-        /// <summary>
-        /// The action has been completed successfully.
-        /// </summary>
-        Succeeeded,
-
-        /// <summary>
-        /// The action has been partially completed successfully.
-        /// </summary>
-        PartiallySucceeded,
-
-        /// <summary>
-        /// The action failed.
-        /// </summary>
-        Failed,
     }
 }

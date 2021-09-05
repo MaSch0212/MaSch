@@ -12,6 +12,10 @@ namespace MaSch.Presentation.Wpf.ThemeValues
     /// </summary>
     public static class ThemeValueRegistry
     {
+        private static readonly IDictionary<string, Type> TypeEnumToTypeMapping;
+        private static readonly IDictionary<Type, string> TypeTypeToEnumMapping;
+        private static readonly IList<(string TypeName, Type Type, Type ThemeValueType)> TypeThemeValueMapping;
+
         static ThemeValueRegistry()
         {
             var defaultTypeMapping = new (string TypeName, Type Type, Type ThemeValueType)[]
@@ -34,23 +38,25 @@ namespace MaSch.Presentation.Wpf.ThemeValues
             TypeThemeValueMapping = defaultTypeMapping.ToList();
         }
 
-        private static readonly IDictionary<string, Type> TypeEnumToTypeMapping;
-        private static readonly IDictionary<Type, string> TypeTypeToEnumMapping;
-        private static readonly IList<(string TypeName, Type Type, Type ThemeValueType)> TypeThemeValueMapping;
-
         /// <summary>
         /// Gets the tuntime type of the value type.
         /// </summary>
         /// <param name="valueType">Type of the value.</param>
         /// <returns>The runtime type of the specified value type.</returns>
-        public static Type GetRuntimeValueType(string valueType) => TypeEnumToTypeMapping[valueType];
+        public static Type GetRuntimeValueType(string valueType)
+        {
+            return TypeEnumToTypeMapping[valueType];
+        }
 
         /// <summary>
         /// Gets the value type enum.
         /// </summary>
         /// <param name="valueType">Type of the value.</param>
         /// <returns>The name of the value type.</returns>
-        public static string GetValueTypeEnum(Type valueType) => TypeTypeToEnumMapping[valueType];
+        public static string GetValueTypeEnum(Type valueType)
+        {
+            return TypeTypeToEnumMapping[valueType];
+        }
 
         /// <summary>
         /// Gets the theme value type of the runtime type.
@@ -59,9 +65,11 @@ namespace MaSch.Presentation.Wpf.ThemeValues
         /// <returns>The type of the <see cref="IThemeValue"/> class.</returns>
         /// <exception cref="InvalidOperationException">The type \"{actualValueType.FullName}\" is currently not supported for Theming.</exception>
         public static Type GetThemeValueType(Type actualValueType)
-            => TypeThemeValueMapping.TryFirst(x => x.Type.IsAssignableFrom(actualValueType), out var map)
-                ? map.ThemeValueType
-                : throw new InvalidOperationException($"The type \"{actualValueType.FullName}\" is currently not supported for Theming.");
+        {
+            return TypeThemeValueMapping.TryFirst(x => x.Type.IsAssignableFrom(actualValueType), out var map)
+                           ? map.ThemeValueType
+                           : throw new InvalidOperationException($"The type \"{actualValueType.FullName}\" is currently not supported for Theming.");
+        }
 
         /// <summary>
         /// Registers a new mapping between runtime and theme value type..

@@ -10,7 +10,7 @@ namespace MaSch.Presentation.Wpf.Models
     /// <summary>
     /// Collection of <see cref="ThemeOverride"/>s.
     /// </summary>
-    /// <seealso cref="System.Collections.ObjectModel.ObservableCollection{T}" />
+    /// <seealso cref="ObservableCollection{T}" />
     public class ThemeOverrideCollection : ObservableCollection<ThemeOverride>
     {
         private readonly List<IThemeManager> _themeManagers = new();
@@ -50,23 +50,11 @@ namespace MaSch.Presentation.Wpf.Models
         /// <param name="themeManager">The theme manager.</param>
         public void UnregisterThemeManager(IThemeManager? themeManager)
         {
-            if (themeManager != null && themeManager != Wpf.ThemeManager.DefaultThemeManager)
+            if (themeManager != null && themeManager != ThemeManager.DefaultThemeManager)
             {
                 this.ForEach(x => RemoveOverride(themeManager, x));
-                _themeManagers.TryRemove(themeManager);
+                _ = _themeManagers.TryRemove(themeManager);
             }
-        }
-
-        private void AddOverride(IThemeManager themeManager, ThemeOverride @override)
-        {
-            @override.DependencyPropertyChanged += ThemeOverrideOnDependencyPropertyChanged;
-            themeManager.SetValue(@override.CustomKey, @override.Value);
-        }
-
-        private void RemoveOverride(IThemeManager themeManager, ThemeOverride @override)
-        {
-            @override.DependencyPropertyChanged -= ThemeOverrideOnDependencyPropertyChanged;
-            themeManager.RemoveValue(@override.CustomKey);
         }
 
         /// <inheritdoc/>
@@ -100,6 +88,18 @@ namespace MaSch.Presentation.Wpf.Models
             }
 
             base.OnCollectionChanged(e);
+        }
+
+        private void AddOverride(IThemeManager themeManager, ThemeOverride @override)
+        {
+            @override.DependencyPropertyChanged += ThemeOverrideOnDependencyPropertyChanged;
+            themeManager.SetValue(@override.CustomKey, @override.Value);
+        }
+
+        private void RemoveOverride(IThemeManager themeManager, ThemeOverride @override)
+        {
+            @override.DependencyPropertyChanged -= ThemeOverrideOnDependencyPropertyChanged;
+            themeManager.RemoveValue(@override.CustomKey);
         }
 
         private void ThemeOverrideOnDependencyPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)

@@ -10,23 +10,8 @@ namespace MaSch.Core.Lazy
     /// <seealso cref="AdvancedLazy{T1, T2}" />
     public class LazySize : AdvancedLazy<int, int>
     {
-        private bool _bSize;
-        private Size _iSize;
-
-        /// <summary>
-        /// Gets the width.
-        /// </summary>
-        public virtual int Width => Item1;
-
-        /// <summary>
-        /// Gets the height.
-        /// </summary>
-        public virtual int Height => Item2;
-
-        /// <summary>
-        /// Gets the size as <see cref="System.Drawing.Size"/>.
-        /// </summary>
-        public virtual Size Size => GetValue(ref _bSize, ref _iSize, () => new Size(Item1, Item2));
+        private bool _hasSize;
+        private Size _size;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LazySize"/> class.
@@ -49,83 +34,27 @@ namespace MaSch.Core.Lazy
         {
         }
 
-        /// <inheritdoc />
-        public override void ClearCache()
-        {
-            base.ClearCache();
-            _bSize = false;
-            _iSize = default;
-        }
-    }
-
-    /// <summary>
-    /// Represents a modifiable size that is lazily loaded.
-    /// </summary>
-    /// <seealso cref="ModifiableAdvancedLazy{T1, T2}" />
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Can be in same file.")]
-    public class ModifiableLazySize : ModifiableAdvancedLazy<int, int>
-    {
-        private bool _bSize;
-        private Size _iSize;
+        /// <summary>
+        /// Gets the width.
+        /// </summary>
+        public virtual int Width => Item1;
 
         /// <summary>
-        /// Gets or sets the width.
+        /// Gets the height.
         /// </summary>
-        public virtual int Width
-        {
-            get => Item1;
-            set => Item1 = value;
-        }
+        public virtual int Height => Item2;
 
         /// <summary>
-        /// Gets or sets the height.
+        /// Gets the size as <see cref="System.Drawing.Size"/>.
         /// </summary>
-        public virtual int Height
-        {
-            get => Item2;
-            set => Item2 = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the size as <see cref="System.Drawing.Size"/>.
-        /// </summary>
-        public virtual Size Size
-        {
-            get => GetValue(ref _bSize, ref _iSize, () => new Size(Item1, Item2));
-            set => SetValue(ref _bSize, ref _iSize, value, p => (Item1, Item2) = (p.Width, p.Height));
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModifiableLazySize"/> class.
-        /// </summary>
-        /// <param name="widthFactory">The factory for the width.</param>
-        /// <param name="widthCallback">The callback action that is called when the width changed.</param>
-        /// <param name="heightFactory">The factory for the height.</param>
-        /// <param name="heightCallback">The callback action that is called when the height changed.</param>
-        public ModifiableLazySize(Func<int> widthFactory, Action<int> widthCallback, Func<int> heightFactory, Action<int> heightCallback)
-            : base(widthFactory, widthCallback, heightFactory, heightCallback)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModifiableLazySize"/> class.
-        /// </summary>
-        /// <param name="widthFactory">The factory for the width.</param>
-        /// <param name="widthCallback">The callback action that is called when the width changed.</param>
-        /// <param name="heightFactory">The factory for the height.</param>
-        /// <param name="heightCallback">The callback action that is called when the height changed.</param>
-        /// <param name="useCaching">if set to <c>true</c> the first value returned by the factory function is cached.</param>
-        public ModifiableLazySize(Func<int> widthFactory, Action<int> widthCallback, Func<int> heightFactory, Action<int> heightCallback, bool useCaching)
-            : base(widthFactory, widthCallback, heightFactory, heightCallback, useCaching)
-        {
-        }
+        public virtual Size Size => GetValue(ref _hasSize, ref _size, () => new Size(Item1, Item2));
 
         /// <inheritdoc />
         public override void ClearCache()
         {
             base.ClearCache();
-            _bSize = false;
-            _iSize = default;
+            _hasSize = false;
+            _size = default;
         }
     }
 }

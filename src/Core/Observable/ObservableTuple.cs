@@ -19,7 +19,9 @@ namespace MaSch.Core.Observable
         /// <param name="item1">The first value.</param>
         /// <returns>An <see cref="ObservableTuple{T1}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1> Create<T1>(T1 item1)
-            => new(item1);
+        {
+            return new(item1);
+        }
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2}"/> of the specified values.
@@ -30,7 +32,9 @@ namespace MaSch.Core.Observable
         /// <param name="item2">The second value.</param>
         /// <returns>An <see cref="ObservableTuple{T1,T2}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2> Create<T1, T2>(T1 item1, T2 item2)
-            => new(item1, item2);
+        {
+            return new(item1, item2);
+        }
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2,T3}"/> of the specified values.
@@ -43,7 +47,9 @@ namespace MaSch.Core.Observable
         /// <param name="item3">The thrid value.</param>
         /// <returns>An <see cref="ObservableTuple{T1,T2,T3}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2, T3> Create<T1, T2, T3>(T1 item1, T2 item2, T3 item3)
-            => new(item1, item2, item3);
+        {
+            return new(item1, item2, item3);
+        }
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2,T3,T4}"/> of the specified values.
@@ -58,7 +64,9 @@ namespace MaSch.Core.Observable
         /// <param name="item4">The fourth value.</param>
         /// <returns>An <see cref="ObservableTuple{T1,T2,T3,T4}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2, T3, T4> Create<T1, T2, T3, T4>(T1 item1, T2 item2, T3 item3, T4 item4)
-            => new(item1, item2, item3, item4);
+        {
+            return new(item1, item2, item3, item4);
+        }
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2,T3,T4,T5}"/> of the specified values.
@@ -75,7 +83,9 @@ namespace MaSch.Core.Observable
         /// <param name="item5">The fifth value.</param>
         /// <returns>An <see cref="ObservableTuple{T1,T2,T3,T4,T5}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2, T3, T4, T5> Create<T1, T2, T3, T4, T5>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5)
-            => new(item1, item2, item3, item4, item5);
+        {
+            return new(item1, item2, item3, item4, item5);
+        }
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2,T3,T4,T5,T6}"/> of the specified values.
@@ -94,7 +104,9 @@ namespace MaSch.Core.Observable
         /// <param name="item6">The sixth value.</param>
         /// <returns>An <see cref="ObservableTuple{T1,T2,T3,T4,T5,T6}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2, T3, T4, T5, T6> Create<T1, T2, T3, T4, T5, T6>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6)
-            => new(item1, item2, item3, item4, item5, item6);
+        {
+            return new(item1, item2, item3, item4, item5, item6);
+        }
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2,T3,T4,T5,T6,T7}"/> of the specified values.
@@ -115,7 +127,9 @@ namespace MaSch.Core.Observable
         /// <param name="item7">The seventh value.</param>
         /// <returns>An <see cref="ObservableTuple{T1,T2,T3,T4,T5,T6,T7}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2, T3, T4, T5, T6, T7> Create<T1, T2, T3, T4, T5, T6, T7>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7)
-            => new(item1, item2, item3, item4, item5, item6, item7);
+        {
+            return new(item1, item2, item3, item4, item5, item6, item7);
+        }
 
         /// <summary>
         /// Creates a new <see cref="ObservableTuple{T1,T2,T3,T4,T5,T6,T7,TRest}"/> of the specified values.
@@ -139,7 +153,9 @@ namespace MaSch.Core.Observable
         /// <returns>An <see cref="ObservableTuple{T1,T2,T3,T4,T5,T6,T7,TRest}"/> that contains the specified values.</returns>
         public static ObservableTuple<T1, T2, T3, T4, T5, T6, T7, TRest> Create<T1, T2, T3, T4, T5, T6, T7, TRest>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7, TRest rest)
             where TRest : ObservableTupleBase
-            => new(item1, item2, item3, item4, item5, item6, item7, rest);
+        {
+            return new(item1, item2, item3, item4, item5, item6, item7, rest);
+        }
     }
 
     /// <summary>
@@ -150,24 +166,50 @@ namespace MaSch.Core.Observable
     /// <seealso cref="IComparable{T}" />
     public abstract class ObservableTupleBase : ObservableObject, IComparable, IComparable<ObservableTupleBase>
     {
+        public static bool operator ==(ObservableTupleBase a, ObservableTupleBase b)
+            => a?.Equals(b) == true;
+
+        public static bool operator !=(ObservableTupleBase a, ObservableTupleBase b)
+            => a?.Equals(b) != true;
+
+        public static bool operator <(ObservableTupleBase a, ObservableTupleBase b)
+            => (a is null ? Comparer<object>.Default.Compare(a, b) : a.CompareTo(b)) < 0;
+
+        public static bool operator <=(ObservableTupleBase a, ObservableTupleBase b)
+            => (a is null ? Comparer<object>.Default.Compare(a, b) : a.CompareTo(b)) <= 0;
+
+        public static bool operator >(ObservableTupleBase a, ObservableTupleBase b)
+            => (a is null ? Comparer<object>.Default.Compare(a, b) : a.CompareTo(b)) > 0;
+
+        public static bool operator >=(ObservableTupleBase a, ObservableTupleBase b)
+            => (a is null ? Comparer<object>.Default.Compare(a, b) : a.CompareTo(b)) >= 0;
+
         /// <summary>
         /// Gets an array of all items in the current <see cref="ObservableTupleBase"/>.
         /// </summary>
         /// <returns>All items in the current <see cref="ObservableTupleBase"/>.</returns>
         public object?[] GetItems()
-            => GetType().GetProperties().OrderBy(x => x.Name).Select(x => x.GetValue(this)).ToArray();
+        {
+            return GetType().GetProperties().OrderBy(x => x.Name).Select(x => x.GetValue(this)).ToArray();
+        }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-            => obj is ObservableTupleBase other && other.GetItems().SequenceEqual(GetItems());
+        {
+            return obj is ObservableTupleBase other && other.GetItems().SequenceEqual(GetItems());
+        }
 
         /// <inheritdoc/>
         public override int GetHashCode()
-            => CommonHelper.GetHashCode(GetItems());
+        {
+            return CommonHelper.GetHashCode(GetItems());
+        }
 
         /// <inheritdoc/>
         public int CompareTo(object? obj)
-            => obj is ObservableTupleBase other ? CompareTo(other) : 1;
+        {
+            return obj is ObservableTupleBase other ? CompareTo(other) : 1;
+        }
 
         /// <inheritdoc/>
         public int CompareTo(ObservableTupleBase? other)
@@ -175,12 +217,12 @@ namespace MaSch.Core.Observable
             if (other is null)
                 return Comparer<object>.Default.Compare(this, other);
 
-            var myItems = GetItems();
+            var thisItems = GetItems();
             var otherItems = other.GetItems();
 
-            for (int i = 0; i < Math.Min(myItems.Length, otherItems.Length); i++)
+            for (int i = 0; i < Math.Min(thisItems.Length, otherItems.Length); i++)
             {
-                var x = myItems[i];
+                var x = thisItems[i];
                 var y = otherItems[i];
                 int c;
                 if (x == null || y == null)
@@ -203,32 +245,18 @@ namespace MaSch.Core.Observable
 
         /// <inheritdoc/>
         public override string ToString()
-            => $"({ToStringInternal()})";
+        {
+            return $"({ToStringInternal()})";
+        }
 
         /// <summary>
         /// Converts this object to a string.
         /// </summary>
         /// <returns>A string representation of this instance.</returns>
         internal virtual string ToStringInternal()
-            => string.Join(", ", GetItems());
-
-        public static bool operator ==(ObservableTupleBase a, ObservableTupleBase b)
-            => a?.Equals(b) == true;
-
-        public static bool operator !=(ObservableTupleBase a, ObservableTupleBase b)
-            => a?.Equals(b) != true;
-
-        public static bool operator <(ObservableTupleBase a, ObservableTupleBase b)
-            => (a is null ? Comparer<object>.Default.Compare(a, b) : a.CompareTo(b)) < 0;
-
-        public static bool operator <=(ObservableTupleBase a, ObservableTupleBase b)
-            => (a is null ? Comparer<object>.Default.Compare(a, b) : a.CompareTo(b)) <= 0;
-
-        public static bool operator >(ObservableTupleBase a, ObservableTupleBase b)
-            => (a is null ? Comparer<object>.Default.Compare(a, b) : a.CompareTo(b)) > 0;
-
-        public static bool operator >=(ObservableTupleBase a, ObservableTupleBase b)
-            => (a is null ? Comparer<object>.Default.Compare(a, b) : a.CompareTo(b)) >= 0;
+        {
+            return string.Join(", ", GetItems());
+        }
     }
 
     /// <summary>
@@ -238,18 +266,6 @@ namespace MaSch.Core.Observable
     public class ObservableTuple<T1> : ObservableTupleBase
     {
         private T1? _item1;
-
-        /// <summary>
-        /// Gets or sets the first item.
-        /// </summary>
-        /// <value>
-        /// The first item.
-        /// </value>
-        public T1? Item1
-        {
-            get => _item1;
-            set => SetProperty(ref _item1, value);
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableTuple{T1}"/> class.
@@ -267,6 +283,18 @@ namespace MaSch.Core.Observable
         {
             _item1 = item1;
         }
+
+        /// <summary>
+        /// Gets or sets the first item.
+        /// </summary>
+        /// <value>
+        /// The first item.
+        /// </value>
+        public T1? Item1
+        {
+            get => _item1;
+            set => SetProperty(ref _item1, value);
+        }
     }
 
     /// <summary>
@@ -278,6 +306,25 @@ namespace MaSch.Core.Observable
     {
         private T1? _item1;
         private T2? _item2;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2}"/> class.
+        /// </summary>
+        public ObservableTuple()
+            : this(default, default)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2}"/> class.
+        /// </summary>
+        /// <param name="item1">The first item.</param>
+        /// <param name="item2">The second item.</param>
+        public ObservableTuple(T1? item1, T2? item2)
+        {
+            _item1 = item1;
+            _item2 = item2;
+        }
 
         /// <summary>
         /// Gets or sets the first item.
@@ -302,25 +349,6 @@ namespace MaSch.Core.Observable
             get => _item2;
             set => SetProperty(ref _item2, value);
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2}"/> class.
-        /// </summary>
-        public ObservableTuple()
-            : this(default, default)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2}"/> class.
-        /// </summary>
-        /// <param name="item1">The first item.</param>
-        /// <param name="item2">The second item.</param>
-        public ObservableTuple(T1? item1, T2? item2)
-        {
-            _item1 = item1;
-            _item2 = item2;
-        }
     }
 
     /// <summary>
@@ -334,6 +362,27 @@ namespace MaSch.Core.Observable
         private T1? _item1;
         private T2? _item2;
         private T3? _item3;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3}"/> class.
+        /// </summary>
+        public ObservableTuple()
+            : this(default, default, default)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3}"/> class.
+        /// </summary>
+        /// <param name="item1">The first item.</param>
+        /// <param name="item2">The second item.</param>
+        /// <param name="item3">The third item.</param>
+        public ObservableTuple(T1? item1, T2? item2, T3? item3)
+        {
+            _item1 = item1;
+            _item2 = item2;
+            _item3 = item3;
+        }
 
         /// <summary>
         /// Gets or sets the first item.
@@ -370,27 +419,6 @@ namespace MaSch.Core.Observable
             get => _item3;
             set => SetProperty(ref _item3, value);
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3}"/> class.
-        /// </summary>
-        public ObservableTuple()
-            : this(default, default, default)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3}"/> class.
-        /// </summary>
-        /// <param name="item1">The first item.</param>
-        /// <param name="item2">The second item.</param>
-        /// <param name="item3">The third item.</param>
-        public ObservableTuple(T1? item1, T2? item2, T3? item3)
-        {
-            _item1 = item1;
-            _item2 = item2;
-            _item3 = item3;
-        }
     }
 
     /// <summary>
@@ -406,6 +434,29 @@ namespace MaSch.Core.Observable
         private T2? _item2;
         private T3? _item3;
         private T4? _item4;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3, T4}"/> class.
+        /// </summary>
+        public ObservableTuple()
+            : this(default, default, default, default)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3, T4}"/> class.
+        /// </summary>
+        /// <param name="item1">The first item.</param>
+        /// <param name="item2">The second item.</param>
+        /// <param name="item3">The third item.</param>
+        /// <param name="item4">The fourth item.</param>
+        public ObservableTuple(T1? item1, T2? item2, T3? item3, T4? item4)
+        {
+            _item1 = item1;
+            _item2 = item2;
+            _item3 = item3;
+            _item4 = item4;
+        }
 
         /// <summary>
         /// Gets or sets the first item.
@@ -454,29 +505,6 @@ namespace MaSch.Core.Observable
             get => _item4;
             set => SetProperty(ref _item4, value);
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3, T4}"/> class.
-        /// </summary>
-        public ObservableTuple()
-            : this(default, default, default, default)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3, T4}"/> class.
-        /// </summary>
-        /// <param name="item1">The first item.</param>
-        /// <param name="item2">The second item.</param>
-        /// <param name="item3">The third item.</param>
-        /// <param name="item4">The fourth item.</param>
-        public ObservableTuple(T1? item1, T2? item2, T3? item3, T4? item4)
-        {
-            _item1 = item1;
-            _item2 = item2;
-            _item3 = item3;
-            _item4 = item4;
-        }
     }
 
     /// <summary>
@@ -494,6 +522,31 @@ namespace MaSch.Core.Observable
         private T3? _item3;
         private T4? _item4;
         private T5? _item5;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3, T4, T5}"/> class.
+        /// </summary>
+        public ObservableTuple()
+            : this(default, default, default, default, default)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3, T4, T5}"/> class.
+        /// </summary>
+        /// <param name="item1">The first item.</param>
+        /// <param name="item2">The second item.</param>
+        /// <param name="item3">The third item.</param>
+        /// <param name="item4">The fourth item.</param>
+        /// <param name="item5">The fifth item.</param>
+        public ObservableTuple(T1? item1, T2? item2, T3? item3, T4? item4, T5? item5)
+        {
+            _item1 = item1;
+            _item2 = item2;
+            _item3 = item3;
+            _item4 = item4;
+            _item5 = item5;
+        }
 
         /// <summary>
         /// Gets or sets the first item.
@@ -554,31 +607,6 @@ namespace MaSch.Core.Observable
             get => _item5;
             set => SetProperty(ref _item5, value);
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3, T4, T5}"/> class.
-        /// </summary>
-        public ObservableTuple()
-            : this(default, default, default, default, default)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3, T4, T5}"/> class.
-        /// </summary>
-        /// <param name="item1">The first item.</param>
-        /// <param name="item2">The second item.</param>
-        /// <param name="item3">The third item.</param>
-        /// <param name="item4">The fourth item.</param>
-        /// <param name="item5">The fifth item.</param>
-        public ObservableTuple(T1? item1, T2? item2, T3? item3, T4? item4, T5? item5)
-        {
-            _item1 = item1;
-            _item2 = item2;
-            _item3 = item3;
-            _item4 = item4;
-            _item5 = item5;
-        }
     }
 
     /// <summary>
@@ -598,6 +626,33 @@ namespace MaSch.Core.Observable
         private T4? _item4;
         private T5? _item5;
         private T6? _item6;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3, T4, T5, T6}"/> class.
+        /// </summary>
+        public ObservableTuple()
+            : this(default, default, default, default, default, default)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3, T4, T5, T6}"/> class.
+        /// </summary>
+        /// <param name="item1">The first item.</param>
+        /// <param name="item2">The second item.</param>
+        /// <param name="item3">The third item.</param>
+        /// <param name="item4">The fourth item.</param>
+        /// <param name="item5">The fifth item.</param>
+        /// <param name="item6">The sixth item.</param>
+        public ObservableTuple(T1? item1, T2? item2, T3? item3, T4? item4, T5? item5, T6? item6)
+        {
+            _item1 = item1;
+            _item2 = item2;
+            _item3 = item3;
+            _item4 = item4;
+            _item5 = item5;
+            _item6 = item6;
+        }
 
         /// <summary>
         /// Gets or sets the first item.
@@ -670,33 +725,6 @@ namespace MaSch.Core.Observable
             get => _item6;
             set => SetProperty(ref _item6, value);
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3, T4, T5, T6}"/> class.
-        /// </summary>
-        public ObservableTuple()
-            : this(default, default, default, default, default, default)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3, T4, T5, T6}"/> class.
-        /// </summary>
-        /// <param name="item1">The first item.</param>
-        /// <param name="item2">The second item.</param>
-        /// <param name="item3">The third item.</param>
-        /// <param name="item4">The fourth item.</param>
-        /// <param name="item5">The fifth item.</param>
-        /// <param name="item6">The sixth item.</param>
-        public ObservableTuple(T1? item1, T2? item2, T3? item3, T4? item4, T5? item5, T6? item6)
-        {
-            _item1 = item1;
-            _item2 = item2;
-            _item3 = item3;
-            _item4 = item4;
-            _item5 = item5;
-            _item6 = item6;
-        }
     }
 
     /// <summary>
@@ -718,6 +746,35 @@ namespace MaSch.Core.Observable
         private T5? _item5;
         private T6? _item6;
         private T7? _item7;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3, T4, T5, T6, T7}"/> class.
+        /// </summary>
+        public ObservableTuple()
+            : this(default, default, default, default, default, default, default)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3, T4, T5, T6, T7}"/> class.
+        /// </summary>
+        /// <param name="item1">The first item.</param>
+        /// <param name="item2">The second item.</param>
+        /// <param name="item3">The third item.</param>
+        /// <param name="item4">The fourth item.</param>
+        /// <param name="item5">The fifth item.</param>
+        /// <param name="item6">The sixth item.</param>
+        /// <param name="item7">The seventh item.</param>
+        public ObservableTuple(T1? item1, T2? item2, T3? item3, T4? item4, T5? item5, T6? item6, T7? item7)
+        {
+            _item1 = item1;
+            _item2 = item2;
+            _item3 = item3;
+            _item4 = item4;
+            _item5 = item5;
+            _item6 = item6;
+            _item7 = item7;
+        }
 
         /// <summary>
         /// Gets or sets the first item.
@@ -802,35 +859,6 @@ namespace MaSch.Core.Observable
             get => _item7;
             set => SetProperty(ref _item7, value);
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3, T4, T5, T6, T7}"/> class.
-        /// </summary>
-        public ObservableTuple()
-            : this(default, default, default, default, default, default, default)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3, T4, T5, T6, T7}"/> class.
-        /// </summary>
-        /// <param name="item1">The first item.</param>
-        /// <param name="item2">The second item.</param>
-        /// <param name="item3">The third item.</param>
-        /// <param name="item4">The fourth item.</param>
-        /// <param name="item5">The fifth item.</param>
-        /// <param name="item6">The sixth item.</param>
-        /// <param name="item7">The seventh item.</param>
-        public ObservableTuple(T1? item1, T2? item2, T3? item3, T4? item4, T5? item5, T6? item6, T7? item7)
-        {
-            _item1 = item1;
-            _item2 = item2;
-            _item3 = item3;
-            _item4 = item4;
-            _item5 = item5;
-            _item6 = item6;
-            _item7 = item7;
-        }
     }
 
     /// <summary>
@@ -855,6 +883,37 @@ namespace MaSch.Core.Observable
         private T6? _item6;
         private T7? _item7;
         private TRest? _rest;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3, T4, T5, T6, T7, TRest}"/> class.
+        /// </summary>
+        public ObservableTuple()
+            : this(default, default, default, default, default, default, default, default)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3, T4, T5, T6, T7, TRest}"/> class.
+        /// </summary>
+        /// <param name="item1">The first item.</param>
+        /// <param name="item2">The second item.</param>
+        /// <param name="item3">The third item.</param>
+        /// <param name="item4">The fourth item.</param>
+        /// <param name="item5">The fifth item.</param>
+        /// <param name="item6">The sixth item.</param>
+        /// <param name="item7">The seventh item.</param>
+        /// <param name="rest">The <see cref="ObservableTupleBase"/> that contains the rest of the values.</param>
+        public ObservableTuple(T1? item1, T2? item2, T3? item3, T4? item4, T5? item5, T6? item6, T7? item7, TRest? rest)
+        {
+            _item1 = item1;
+            _item2 = item2;
+            _item3 = item3;
+            _item4 = item4;
+            _item5 = item5;
+            _item6 = item6;
+            _item7 = item7;
+            _rest = rest;
+        }
 
         /// <summary>
         /// Gets or sets the first item.
@@ -952,39 +1011,10 @@ namespace MaSch.Core.Observable
             set => SetProperty(ref _rest, value);
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3, T4, T5, T6, T7, TRest}"/> class.
-        /// </summary>
-        public ObservableTuple()
-            : this(default, default, default, default, default, default, default, default)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableTuple{T1, T2, T3, T4, T5, T6, T7, TRest}"/> class.
-        /// </summary>
-        /// <param name="item1">The first item.</param>
-        /// <param name="item2">The second item.</param>
-        /// <param name="item3">The third item.</param>
-        /// <param name="item4">The fourth item.</param>
-        /// <param name="item5">The fifth item.</param>
-        /// <param name="item6">The sixth item.</param>
-        /// <param name="item7">The seventh item.</param>
-        /// <param name="rest">The <see cref="ObservableTupleBase"/> that contains the rest of the values.</param>
-        public ObservableTuple(T1? item1, T2? item2, T3? item3, T4? item4, T5? item5, T6? item6, T7? item7, TRest? rest)
-        {
-            _item1 = item1;
-            _item2 = item2;
-            _item3 = item3;
-            _item4 = item4;
-            _item5 = item5;
-            _item6 = item6;
-            _item7 = item7;
-            _rest = rest;
-        }
-
         /// <inheritdoc />
         internal override string ToStringInternal()
-            => string.Join(", ", GetItems().Take(7)) + (Rest is not null ? ", " + Rest.ToStringInternal() : string.Empty);
+        {
+            return string.Join(", ", GetItems().Take(7)) + (Rest is not null ? ", " + Rest.ToStringInternal() : string.Empty);
+        }
     }
 }

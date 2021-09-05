@@ -49,7 +49,7 @@ namespace MaSch.Presentation.Wpf.Behaviors
             {
                 var data = new DataObject();
                 data.SetData(dragObject.DataType, AssociatedObject.DataContext);
-                DragDrop.DoDragDrop(AssociatedObject, data, DragDropEffects.Move);
+                _ = DragDrop.DoDragDrop(AssociatedObject, data, DragDropEffects.Move);
             }
 
             _isMouseClicked = false;

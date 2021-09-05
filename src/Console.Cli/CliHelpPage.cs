@@ -15,16 +15,6 @@ namespace MaSch.Console.Cli
     public class CliHelpPage : ICliHelpPage
     {
         /// <summary>
-        /// Gets the application for which this help page has been created.
-        /// </summary>
-        protected ICliApplicationBase Application { get; }
-
-        /// <summary>
-        /// Gets the console service that is used to write help data.
-        /// </summary>
-        protected IConsoleService Console { get; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="CliHelpPage"/> class.
         /// </summary>
         /// <param name="application">The application for which this help page is created for.</param>
@@ -35,6 +25,16 @@ namespace MaSch.Console.Cli
             Console = Guard.NotNull(console, nameof(console));
         }
 
+        /// <summary>
+        /// Gets the application for which this help page has been created.
+        /// </summary>
+        protected ICliApplicationBase Application { get; }
+
+        /// <summary>
+        /// Gets the console service that is used to write help data.
+        /// </summary>
+        protected IConsoleService Console { get; }
+
         /// <inheritdoc/>
         public virtual bool Write(IEnumerable<CliError>? errors)
         {
@@ -42,15 +42,15 @@ namespace MaSch.Console.Cli
             if (errorList.Count == 0)
                 errorList.Add(new CliError(CliErrorType.Unknown));
 
-            if (errorList.TryFirst(x => x.Type == CliErrorType.HelpRequested, out var hError))
+            if (errorList.TryFirst(x => x.Type == CliErrorType.HelpRequested, out var helpError))
             {
-                var e = errorList.Where(x => x.IsError).Prepend(hError).ToArray();
+                var e = errorList.Where(x => x.IsError).Prepend(helpError).ToArray();
                 WriteHelpPage(e);
                 return true;
             }
-            else if (errorList.TryFirst(x => x.Type == CliErrorType.VersionRequested, out var vError))
+            else if (errorList.TryFirst(x => x.Type == CliErrorType.VersionRequested, out var versionError))
             {
-                var e = errorList.Where(x => x.IsError).Prepend(vError).ToArray();
+                var e = errorList.Where(x => x.IsError).Prepend(versionError).ToArray();
                 WriteVersionPage(e);
                 return true;
             }
@@ -59,6 +59,50 @@ namespace MaSch.Console.Cli
                 WriteHelpPage(errorList);
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Gets the correct display name from either the command, one of its parent commands or the application.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="app">The application.</param>
+        /// <returns>The first name found in the hierarchy.</returns>
+        protected static string? GetDisplayName(ICliCommandInfo? command, ICliApplicationBase app)
+        {
+            return command?.ParserOptions.Name ?? (command?.ParentCommand != null ? GetDisplayName(command.ParentCommand, app) : app.Options.Name);
+        }
+
+        /// <summary>
+        /// Gets the correct version from either the command, one of its parent commands or the application.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="app">The application.</param>
+        /// <returns>The first version found in the hierarchy.</returns>
+        protected static string? GetVersion(ICliCommandInfo? command, ICliApplicationBase app)
+        {
+            return command?.ParserOptions.Version ?? (command?.ParentCommand != null ? GetVersion(command.ParentCommand, app) : app.Options.Version);
+        }
+
+        /// <summary>
+        /// Gets the correct year from either the command, one of its parent commands or the application.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="app">The application.</param>
+        /// <returns>The first year found in the hierarchy.</returns>
+        protected static string? GetYear(ICliCommandInfo? command, ICliApplicationBase app)
+        {
+            return command?.ParserOptions.Year ?? (command?.ParentCommand != null ? GetYear(command.ParentCommand, app) : app.Options.Year);
+        }
+
+        /// <summary>
+        /// Gets the correct author from either the command, one of its parent commands or the application.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="app">The application.</param>
+        /// <returns>The first author found in the hierarchy.</returns>
+        protected static string? GetAuthor(ICliCommandInfo? command, ICliApplicationBase app)
+        {
+            return command?.ParserOptions.Author ?? (command?.ParentCommand != null ? GetAuthor(command.ParentCommand, app) : app.Options.Author);
         }
 
         /// <summary>
@@ -176,7 +220,7 @@ namespace MaSch.Console.Cli
             if (childCommands.Any())
             {
                 var childCommandRequired = error.AffectedCommand?.IsExecutable != true;
-                sb.Append(' ')
+                _ = sb.Append(' ')
                   .Append(childCommandRequired ? '<' : '[')
                   .Append("command")
                   .Append(childCommandRequired ? '>' : ']');
@@ -186,25 +230,25 @@ namespace MaSch.Console.Cli
             {
                 foreach (var value in error.AffectedCommand.Values.OrderBy(x => x.Order))
                 {
-                    sb.Append(' ')
+                    _ = sb.Append(' ')
                       .Append(value.IsRequired ? '<' : '[')
                       .Append(value.DisplayName);
 
                     if (typeof(IEnumerable).IsAssignableFrom(value.PropertyType) && value.PropertyType != typeof(string))
                     {
-                        sb.Append(" [")
+                        _ = sb.Append(" [")
                           .Append(value.DisplayName)
                           .Append("]...");
                     }
 
-                    sb.Append(value.IsRequired ? '>' : ']');
+                    _ = sb.Append(value.IsRequired ? '>' : ']');
                 }
             }
 
             if (error.AffectedCommand != null && error.AffectedCommand.Options.Any(x => !x.Hidden))
             {
                 var hasRequiredOption = error.AffectedCommand.Options.Any(x => x.IsRequired);
-                sb.Append(' ')
+                _ = sb.Append(' ')
                   .Append(hasRequiredOption ? '<' : '[')
                   .Append("options")
                   .Append(hasRequiredOption ? '>' : ']');
@@ -229,11 +273,11 @@ namespace MaSch.Console.Cli
                 if (cmd.ParentCommand != null)
                     AppendCommandName(cmd.ParentCommand);
                 if (cmd.ParserOptions.CliName != null)
-                    sb.Append($" {cmd.ParserOptions.CliName}");
+                    _ = sb.Append($" {cmd.ParserOptions.CliName}");
                 else if (cmd.Aliases.Count == 1)
-                    sb.Append($" {cmd.Name}");
+                    _ = sb.Append($" {cmd.Name}");
                 else
-                    sb.Append($" ({string.Join("|", cmd.Aliases)})");
+                    _ = sb.Append($" ({string.Join("|", cmd.Aliases)})");
             }
         }
 
@@ -445,43 +489,9 @@ namespace MaSch.Console.Cli
             return options.OrderBy(x => x.HelpOrder).ThenBy(x => x.ShortAliases.TryFirst(out var s) ? s.ToString() : x.Aliases[0]);
         }
 
-        /// <summary>
-        /// Gets the correct display name from either the command, one of its parent commands or the application.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="app">The application.</param>
-        /// <returns>The first name found in the hierarchy.</returns>
-        protected static string? GetDisplayName(ICliCommandInfo? command, ICliApplicationBase app)
-            => command?.ParserOptions.Name ?? (command?.ParentCommand != null ? GetDisplayName(command.ParentCommand, app) : app.Options.Name);
-
-        /// <summary>
-        /// Gets the correct version from either the command, one of its parent commands or the application.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="app">The application.</param>
-        /// <returns>The first version found in the hierarchy.</returns>
-        protected static string? GetVersion(ICliCommandInfo? command, ICliApplicationBase app)
-            => command?.ParserOptions.Version ?? (command?.ParentCommand != null ? GetVersion(command.ParentCommand, app) : app.Options.Version);
-
-        /// <summary>
-        /// Gets the correct year from either the command, one of its parent commands or the application.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="app">The application.</param>
-        /// <returns>The first year found in the hierarchy.</returns>
-        protected static string? GetYear(ICliCommandInfo? command, ICliApplicationBase app)
-            => command?.ParserOptions.Year ?? (command?.ParentCommand != null ? GetYear(command.ParentCommand, app) : app.Options.Year);
-
-        /// <summary>
-        /// Gets the correct author from either the command, one of its parent commands or the application.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="app">The application.</param>
-        /// <returns>The first author found in the hierarchy.</returns>
-        protected static string? GetAuthor(ICliCommandInfo? command, ICliApplicationBase app)
-            => command?.ParserOptions.Author ?? (command?.ParentCommand != null ? GetAuthor(command.ParentCommand, app) : app.Options.Author);
-
         private static string GetOptionName(ICliCommandOptionInfo option)
-            => string.Join(", ", option.ShortAliases.Select(y => $"-{y}").Concat(option.Aliases.Select(y => $"--{y}")));
+        {
+            return string.Join(", ", option.ShortAliases.Select(y => $"-{y}").Concat(option.Aliases.Select(y => $"--{y}")));
+        }
     }
 }

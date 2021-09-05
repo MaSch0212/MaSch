@@ -21,16 +21,6 @@ namespace MaSch.Presentation.Wpf.Attributes
             new();
 
         /// <summary>
-        /// Gets the name of the dependency property.
-        /// </summary>
-        public string PropertyName { get; }
-
-        /// <summary>
-        /// Gets the type in which the dependency property is defined in.
-        /// </summary>
-        public Type? OwnerType { get; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="NotifyDependencyPropertyChangedAttribute"/> class.
         /// </summary>
         /// <param name="propertyName">Name of the dependency property.</param>
@@ -51,13 +41,23 @@ namespace MaSch.Presentation.Wpf.Attributes
         }
 
         /// <summary>
+        /// Gets the name of the dependency property.
+        /// </summary>
+        public string PropertyName { get; }
+
+        /// <summary>
+        /// Gets the type in which the dependency property is defined in.
+        /// </summary>
+        public Type? OwnerType { get; }
+
+        /// <summary>
         /// Gets all defined <see cref="NotifyDependencyPropertyChangedAttribute"/> attributes from all property of an object.
         /// </summary>
         /// <param name="classObject">The object to retrieve the attributes from.</param>
         /// <returns>A <see cref="List{T}"/> of the <see cref="NotifyDependencyPropertyChangedAttribute"/> and the name of the property, the attribute is defined on.</returns>
         public static List<(string PropertyName, NotifyDependencyPropertyChangedAttribute Attribute)> GetAttributes(object classObject)
         {
-            Guard.NotNull(classObject, nameof(classObject));
+            _ = Guard.NotNull(classObject, nameof(classObject));
             var classType = classObject.GetType();
 
             List<(string PropertyName, NotifyDependencyPropertyChangedAttribute Attribute)> result;

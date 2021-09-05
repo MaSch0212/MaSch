@@ -14,22 +14,6 @@ namespace MaSch.Presentation.Wpf.Converter
             "Byte", "KB", "MB", "GB", "TB",
         };
 
-        /// <inheritdoc />
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            var (bytes, suffix) = Format(System.Convert.ToDouble(value));
-            return $"{bytes:0.00} {suffix}";
-        }
-
-        /// <inheritdoc />
-        public object? ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            var s = System.Convert.ToString(value)?.Split(' ');
-            if (s == null || s.Length < 2)
-                return null;
-            return double.Parse(s[0]) * Suffixes.ToList().IndexOf(s[1]);
-        }
-
         /// <summary>
         /// Formats the specified value to a byte representation.
         /// </summary>
@@ -45,6 +29,22 @@ namespace MaSch.Presentation.Wpf.Converter
             }
 
             return (value, Suffixes[i]);
+        }
+
+        /// <inheritdoc />
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            var (bytes, suffix) = Format(System.Convert.ToDouble(value));
+            return $"{bytes:0.00} {suffix}";
+        }
+
+        /// <inheritdoc />
+        public object? ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            var s = System.Convert.ToString(value)?.Split(' ');
+            if (s == null || s.Length < 2)
+                return null;
+            return double.Parse(s[0]) * Suffixes.ToList().IndexOf(s[1]);
         }
     }
 }

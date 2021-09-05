@@ -15,16 +15,6 @@ namespace MaSch.Presentation.Validation
     public class DelegateValidationAttribute : ValidationAttribute
     {
         /// <summary>
-        /// Gets the name of the method that is used for validation.
-        /// </summary>
-        public string MethodName { get; }
-
-        /// <summary>
-        /// Gets or sets the type in which the method defined by <see cref="MethodName"/> is located in.
-        /// </summary>
-        public Type? ContainingType { get; set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="DelegateValidationAttribute"/> class.
         /// </summary>
         /// <param name="methodName">
@@ -37,6 +27,16 @@ namespace MaSch.Presentation.Validation
         {
             MethodName = methodName;
         }
+
+        /// <summary>
+        /// Gets the name of the method that is used for validation.
+        /// </summary>
+        public string MethodName { get; }
+
+        /// <summary>
+        /// Gets or sets the type in which the method defined by <see cref="MethodName"/> is located in.
+        /// </summary>
+        public Type? ContainingType { get; set; }
 
         /// <inheritdoc />
         /// <exception cref="MissingMethodException">The method \"{MethodName}(object)\" could not be found.</exception>

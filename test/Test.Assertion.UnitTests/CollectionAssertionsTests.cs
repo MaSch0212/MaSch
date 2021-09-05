@@ -5,7 +5,6 @@ using Moq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using MSAssert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
@@ -14,14 +13,18 @@ namespace MaSch.Test.Assertion.UnitTests
     [TestClass]
     public class CollectionAssertionsTests
     {
-        private static MaSch.Test.Assertion.Assert AssertUnderTest => MaSch.Test.Assertion.Assert.Instance;
+        private interface ITestInterface
+        {
+        }
+
+        private static Assert AssertUnderTest => Assert.Instance;
 
         #region IsEmpty
 
         [TestMethod]
         public void IsEmpty_NullCollection()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsEmpty(null!));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsEmpty(null!));
         }
 
         [TestMethod]
@@ -74,7 +77,7 @@ namespace MaSch.Test.Assertion.UnitTests
         [TestMethod]
         public void IsNotEmpty_NullCollection()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsNotEmpty(null!));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsNotEmpty(null!));
         }
 
         [TestMethod]
@@ -631,7 +634,7 @@ namespace MaSch.Test.Assertion.UnitTests
         [TestMethod]
         public void AllItemsAreNotNull_NullCollection()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AllItemsAreNotNull(null!));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AllItemsAreNotNull(null!));
         }
 
         [TestMethod]
@@ -675,13 +678,13 @@ namespace MaSch.Test.Assertion.UnitTests
         [TestMethod]
         public void AllItemsAreUnique_NullCollection()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AllItemsAreUnique<string>(null!));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AllItemsAreUnique<string>(null!));
         }
 
         [TestMethod]
         public void AllItemsAreUnique_NullComparer()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AllItemsAreUnique(Array.Empty<string>(), (IEqualityComparer<string>)null!));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AllItemsAreUnique(Array.Empty<string>(), (IEqualityComparer<string>)null!));
         }
 
         [TestMethod]
@@ -824,19 +827,19 @@ namespace MaSch.Test.Assertion.UnitTests
         [TestMethod]
         public void IsSubsetOf_NullSubset()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsSubsetOf(null!, Array.Empty<string>()));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsSubsetOf(null!, Array.Empty<string>()));
         }
 
         [TestMethod]
         public void IsSubsetOf_NullSuperset()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsSubsetOf(Array.Empty<string>(), null!));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsSubsetOf(Array.Empty<string>(), null!));
         }
 
         [TestMethod]
         public void IsSubsetOf_NullComparer()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsSubsetOf(Array.Empty<string>(), Array.Empty<string>(), (IEqualityComparer<string>)null!));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsSubsetOf(Array.Empty<string>(), Array.Empty<string>(), (IEqualityComparer<string>)null!));
         }
 
         [TestMethod]
@@ -927,19 +930,19 @@ namespace MaSch.Test.Assertion.UnitTests
         [TestMethod]
         public void IsNotSubsetOf_NullSubset()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsNotSubsetOf(null!, Array.Empty<string>()));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsNotSubsetOf(null!, Array.Empty<string>()));
         }
 
         [TestMethod]
         public void IsNotSubsetOf_NullSuperset()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsNotSubsetOf(Array.Empty<string>(), null!));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsNotSubsetOf(Array.Empty<string>(), null!));
         }
 
         [TestMethod]
         public void IsNotSubsetOf_NullComparer()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsNotSubsetOf(Array.Empty<string>(), Array.Empty<string>(), (IEqualityComparer<string>)null!));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.IsNotSubsetOf(Array.Empty<string>(), Array.Empty<string>(), (IEqualityComparer<string>)null!));
         }
 
         [TestMethod]
@@ -992,19 +995,19 @@ namespace MaSch.Test.Assertion.UnitTests
         [TestMethod]
         public void AreCollectionsEquivalent_NullSubset()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsEquivalent(null!, Array.Empty<string>()));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsEquivalent(null!, Array.Empty<string>()));
         }
 
         [TestMethod]
         public void AreCollectionsEquivalent_NullSuperset()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsEquivalent(Array.Empty<string>(), null!));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsEquivalent(Array.Empty<string>(), null!));
         }
 
         [TestMethod]
         public void AreCollectionsEquivalent_NullComparer()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsEquivalent(Array.Empty<string>(), Array.Empty<string>(), (IEqualityComparer<string>)null!));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsEquivalent(Array.Empty<string>(), Array.Empty<string>(), (IEqualityComparer<string>)null!));
         }
 
         [TestMethod]
@@ -1129,19 +1132,19 @@ namespace MaSch.Test.Assertion.UnitTests
         [TestMethod]
         public void AreCollectionsNotEquivalent_NullSubset()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsNotEquivalent(null!, Array.Empty<string>()));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsNotEquivalent(null!, Array.Empty<string>()));
         }
 
         [TestMethod]
         public void AreCollectionsNotEquivalent_NullSuperset()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsNotEquivalent(Array.Empty<string>(), null!));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsNotEquivalent(Array.Empty<string>(), null!));
         }
 
         [TestMethod]
         public void AreCollectionsNotEquivalent_NullComparer()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsNotEquivalent(Array.Empty<string>(), Array.Empty<string>(), (IEqualityComparer<string>)null!));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsNotEquivalent(Array.Empty<string>(), Array.Empty<string>(), (IEqualityComparer<string>)null!));
         }
 
         [TestMethod]
@@ -1224,13 +1227,13 @@ namespace MaSch.Test.Assertion.UnitTests
         [TestMethod]
         public void AllItemsAreInstancesOfType_NullCollection()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AllItemsAreInstancesOfType(null!, typeof(string)));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AllItemsAreInstancesOfType(null!, typeof(string)));
         }
 
         [TestMethod]
         public void AllItemsAreInstancesOfType_NullExpectedType()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AllItemsAreInstancesOfType(Array.Empty<string>(), null!));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AllItemsAreInstancesOfType(Array.Empty<string>(), null!));
         }
 
         [TestMethod]
@@ -1278,19 +1281,19 @@ namespace MaSch.Test.Assertion.UnitTests
         [TestMethod]
         public void AreCollectionsEqual_NullExpected()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsEqual(null!, Array.Empty<string>()));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsEqual(null!, Array.Empty<string>()));
         }
 
         [TestMethod]
         public void AreCollectionsEqual_NullActual()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsEqual(Array.Empty<string>(), null!));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsEqual(Array.Empty<string>(), null!));
         }
 
         [TestMethod]
         public void AreCollectionsEqual_NullComparer()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsEqual(Array.Empty<string>(), Array.Empty<string>(), (IEqualityComparer<string>)null!));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsEqual(Array.Empty<string>(), Array.Empty<string>(), (IEqualityComparer<string>)null!));
         }
 
         [TestMethod]
@@ -1483,19 +1486,19 @@ namespace MaSch.Test.Assertion.UnitTests
         [TestMethod]
         public void AreCollectionsNotEqual_NullExpected()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsNotEqual(null!, Array.Empty<string>()));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsNotEqual(null!, Array.Empty<string>()));
         }
 
         [TestMethod]
         public void AreCollectionsNotEqual_NullActual()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsNotEqual(Array.Empty<string>(), null!));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsNotEqual(Array.Empty<string>(), null!));
         }
 
         [TestMethod]
         public void AreCollectionsNotEqual_NullComparer()
         {
-            MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsNotEqual(Array.Empty<string>(), Array.Empty<string>(), (IEqualityComparer<string>)null!));
+            _ = MSAssert.ThrowsException<ArgumentNullException>(() => AssertUnderTest.AreCollectionsNotEqual(Array.Empty<string>(), Array.Empty<string>(), (IEqualityComparer<string>)null!));
         }
 
         [TestMethod]
@@ -1531,7 +1534,6 @@ namespace MaSch.Test.Assertion.UnitTests
         }
 
         [TestMethod]
-        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Comparer calls should not be validated here.")]
         public void AreCollectionsNotEqual_WithComparer_Success_MismatchingItem()
         {
             var comparer = CreateEqualityComparerT(("Test", "Test"), ("blub", "Hello"), ("Hello", "blub"));
@@ -1539,7 +1541,6 @@ namespace MaSch.Test.Assertion.UnitTests
         }
 
         [TestMethod]
-        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Comparer calls should not be validated here.")]
         public void AreCollectionsNotEqual_WithComparer_Success_MissingItem()
         {
             var comparer = CreateEqualityComparerT(("Test", "Test"), ("Hello", "Hello"));
@@ -1547,7 +1548,6 @@ namespace MaSch.Test.Assertion.UnitTests
         }
 
         [TestMethod]
-        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Comparer calls should not be validated here.")]
         public void AreCollectionsNotEqual_WithComparer_Success_UnexpectedItem()
         {
             var comparer = CreateEqualityComparerT(("Test", "Test"), ("Hello", "Hello"));
@@ -1575,8 +1575,8 @@ namespace MaSch.Test.Assertion.UnitTests
         private static DisposableEqualityComparer<T> CreateEqualityComparerT<T>(params (T X, T Y)[] expectedCalls)
         {
             var comparerMock = new Mock<IEqualityComparer<T>>(MockBehavior.Strict);
-            comparerMock.Setup(m => m.GetHashCode(It.IsAny<T>()!)).Returns<T>(x => x!.GetHashCode());
-            comparerMock.Setup(m => m.Equals(It.IsAny<T?>(), It.IsAny<T?>())).Returns<T?, T?>((x, y) => Equals(x, y));
+            _ = comparerMock.Setup(m => m.GetHashCode(It.IsAny<T>()!)).Returns<T>(x => x!.GetHashCode());
+            _ = comparerMock.Setup(m => m.Equals(It.IsAny<T?>(), It.IsAny<T?>())).Returns<T?, T?>((x, y) => Equals(x, y));
 
             return new DisposableEqualityComparer<T>(
                 comparerMock.Object,
@@ -1589,12 +1589,15 @@ namespace MaSch.Test.Assertion.UnitTests
         }
 
         private static DisposableEqualityComparer<T> CreateEqualityComparerTForHash<T>(params T[] expectedHashCalls)
-            => CreateEqualityComparerTForHash(true, expectedHashCalls);
+        {
+            return CreateEqualityComparerTForHash(true, expectedHashCalls);
+        }
+
         private static DisposableEqualityComparer<T> CreateEqualityComparerTForHash<T>(bool matchExactCount, params T[] expectedHashCalls)
         {
             var comparerMock = new Mock<IEqualityComparer<T>>(MockBehavior.Strict);
-            comparerMock.Setup(m => m.GetHashCode(It.IsAny<T>()!)).Returns<T>(x => x!.GetHashCode());
-            comparerMock.Setup(m => m.Equals(It.IsAny<T?>(), It.IsAny<T?>())).Returns<T?, T?>((x, y) => Equals(x, y));
+            _ = comparerMock.Setup(m => m.GetHashCode(It.IsAny<T>()!)).Returns<T>(x => x!.GetHashCode());
+            _ = comparerMock.Setup(m => m.Equals(It.IsAny<T?>(), It.IsAny<T?>())).Returns<T?, T?>((x, y) => Equals(x, y));
 
             return new DisposableEqualityComparer<T>(
                 comparerMock.Object,
@@ -1609,8 +1612,8 @@ namespace MaSch.Test.Assertion.UnitTests
         private static DisposableEqualityComparer CreateEqualityComparer(params (object? X, object? Y)[] expectedCalls)
         {
             var comparerMock = new Mock<IEqualityComparer>(MockBehavior.Strict);
-            comparerMock.Setup(m => m.GetHashCode(It.IsAny<object>()!)).Returns<object?>(x => x!.GetHashCode());
-            comparerMock.Setup(m => m.Equals(It.IsAny<object?>(), It.IsAny<object?>())).Returns<object?, object?>((x, y) => Equals(x, y));
+            _ = comparerMock.Setup(m => m.GetHashCode(It.IsAny<object>()!)).Returns<object?>(x => x!.GetHashCode());
+            _ = comparerMock.Setup(m => m.Equals(It.IsAny<object?>(), It.IsAny<object?>())).Returns<object?, object?>((x, y) => Equals(x, y));
 
             return new DisposableEqualityComparer(
                 comparerMock.Object,
@@ -1626,7 +1629,7 @@ namespace MaSch.Test.Assertion.UnitTests
         {
             var funcMock = new Mock<Func<T1, T2, bool>>(MockBehavior.Strict);
             foreach (var (x, y, result) in calls)
-                funcMock.Setup(m => m(x, y)).Returns(result);
+                _ = funcMock.Setup(m => m(x, y)).Returns(result);
 
             return new DisposableWrapper<Func<T1, T2, bool>>(
                 funcMock.Object,
@@ -1636,10 +1639,6 @@ namespace MaSch.Test.Assertion.UnitTests
                     foreach (var (x, y, _) in calls)
                         funcMock.Verify(m => m(x, y), Times.Once());
                 }));
-        }
-
-        private interface ITestInterface
-        {
         }
 
         private class TestBaseClass : ITestInterface

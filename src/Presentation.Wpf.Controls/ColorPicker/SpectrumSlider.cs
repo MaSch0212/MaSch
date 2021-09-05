@@ -10,7 +10,7 @@ namespace MaSch.Presentation.Wpf.ColorPicker
     /// <summary>
     /// A control to select a color spectrum.
     /// </summary>
-    /// <seealso cref="System.Windows.Controls.Slider" />
+    /// <seealso cref="Slider" />
     public class SpectrumSlider : Slider
     {
         /// <summary>
@@ -22,6 +22,9 @@ namespace MaSch.Presentation.Wpf.ColorPicker
                 typeof(Color),
                 typeof(SpectrumSlider),
                 new PropertyMetadata(Colors.Red));
+
+        private const string SpectrumDisplayName = "PART_SpectrumDisplay";
+        private Rectangle? _spectrumDisplay;
 
         static SpectrumSlider()
         {
@@ -38,13 +41,22 @@ namespace MaSch.Presentation.Wpf.ColorPicker
         }
 
         /// <inheritdoc/>
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            _spectrumDisplay = GetTemplateChild(SpectrumDisplayName) as Rectangle ?? throw new InvalidOperationException($"Control with name \"{SpectrumDisplayName}\" was not found.");
+            UpdateColorSpectrum();
+            OnValueChanged(double.NaN, Value);
+        }
+
+        /// <inheritdoc/>
         protected override void OnPreviewMouseMove(MouseEventArgs e)
         {
             base.OnPreviewMouseMove(e);
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 if (Mouse.Captured == null)
-                    Mouse.Capture(this);
+                    _ = Mouse.Capture(this);
                 OnPreviewMouseLeftButtonDown(new MouseButtonEventArgs(e.MouseDevice, e.Timestamp, MouseButton.Left)
                 {
                     RoutedEvent = e.RoutedEvent,
@@ -52,17 +64,8 @@ namespace MaSch.Presentation.Wpf.ColorPicker
             }
             else if (Mouse.Captured != null)
             {
-                Mouse.Capture(null);
+                _ = Mouse.Capture(null);
             }
-        }
-
-        /// <inheritdoc/>
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            _spectrumDisplay = GetTemplateChild(SpectrumDisplayName) as Rectangle ?? throw new InvalidOperationException($"Control with name \"{SpectrumDisplayName}\" was not found.");
-            UpdateColorSpectrum();
-            OnValueChanged(double.NaN, Value);
         }
 
         /// <inheritdoc/>
@@ -102,8 +105,5 @@ namespace MaSch.Presentation.Wpf.ColorPicker
             pickerBrush.GradientStops[i - 1].Offset = 1.0;
             _spectrumDisplay!.Fill = pickerBrush;
         }
-
-        private const string SpectrumDisplayName = "PART_SpectrumDisplay";
-        private Rectangle? _spectrumDisplay;
     }
 }

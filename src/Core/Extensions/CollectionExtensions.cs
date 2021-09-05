@@ -18,7 +18,10 @@ namespace MaSch.Core.Extensions
         /// <param name="collection">The <see cref="ICollection{T}"/> to add the items to.</param>
         /// <param name="items">The objects to add to the <see cref="ICollection{T}"/>.</param>
         /// <exception cref="NotSupportedException"><see cref="ICollection{T}"/> is read-only.</exception>
-        public static void Add<T>(this ICollection<T> collection, params T[] items) => Add(collection, (IEnumerable<T>)items);
+        public static void Add<T>(this ICollection<T> collection, params T[] items)
+        {
+            Add(collection, (IEnumerable<T>)items);
+        }
 
         /// <summary>
         /// Adds items to the <see cref="ICollection{T}"/>.
@@ -29,8 +32,8 @@ namespace MaSch.Core.Extensions
         /// <exception cref="NotSupportedException"><see cref="ICollection{T}"/> is read-only.</exception>
         public static void Add<T>(this ICollection<T> collection, IEnumerable<T> items)
         {
-            Guard.NotNull(collection, nameof(collection));
-            Guard.NotNull(items, nameof(items));
+            _ = Guard.NotNull(collection, nameof(collection));
+            _ = Guard.NotNull(items, nameof(items));
 
             foreach (var item in items)
             {
@@ -47,8 +50,8 @@ namespace MaSch.Core.Extensions
         /// <exception cref="NotSupportedException"><see cref="ICollection{T}"/> is read-only.</exception>
         public static void Set<T>(this ICollection<T> collection, IEnumerable<T> items)
         {
-            Guard.NotNull(collection, nameof(collection));
-            Guard.NotNull(items, nameof(items));
+            _ = Guard.NotNull(collection, nameof(collection));
+            _ = Guard.NotNull(items, nameof(items));
 
             collection.Clear();
             collection.Add(items);
@@ -63,7 +66,7 @@ namespace MaSch.Core.Extensions
         /// <returns>Return true if the item was added; otherwise false.</returns>
         public static bool AddIfNotExists<T>(this ICollection<T> collection, T itemToAdd)
         {
-            Guard.NotNull(collection, nameof(collection));
+            _ = Guard.NotNull(collection, nameof(collection));
 
             return AddIfNotExistsImpl(collection, itemToAdd);
         }
@@ -77,21 +80,10 @@ namespace MaSch.Core.Extensions
         /// <returns>Return the count of added items.</returns>
         public static int AddIfNotExists<T>(this ICollection<T> collection, IEnumerable<T> items)
         {
-            Guard.NotNull(collection, nameof(collection));
-            Guard.NotNull(items, nameof(items));
+            _ = Guard.NotNull(collection, nameof(collection));
+            _ = Guard.NotNull(items, nameof(items));
 
             return items.Count(x => AddIfNotExistsImpl(collection, x));
-        }
-
-        private static bool AddIfNotExistsImpl<T>(ICollection<T> collection, T itemToAdd)
-        {
-            if (!collection.Contains(itemToAdd))
-            {
-                collection.Add(itemToAdd);
-                return true;
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -103,7 +95,7 @@ namespace MaSch.Core.Extensions
         /// <returns>Returns true if the item was removed; otherwise false.</returns>
         public static bool TryRemove<T>(this ICollection<T> collection, T itemToRemove)
         {
-            Guard.NotNull(collection, nameof(collection));
+            _ = Guard.NotNull(collection, nameof(collection));
 
             return TryRemoveImpl(collection, itemToRemove);
         }
@@ -118,35 +110,10 @@ namespace MaSch.Core.Extensions
         /// <returns>Returns true if the item was removed; otherwise false.</returns>
         public static bool TryRemove<T>(this ICollection<T> collection, T itemToRemove, IEqualityComparer<T> comparer)
         {
-            Guard.NotNull(collection, nameof(collection));
-            Guard.NotNull(comparer, nameof(comparer));
+            _ = Guard.NotNull(collection, nameof(collection));
+            _ = Guard.NotNull(comparer, nameof(comparer));
 
             return TryRemoveImpl(collection, itemToRemove, comparer);
-        }
-
-        private static bool TryRemoveImpl<T>(ICollection<T> collection, T itemToRemove)
-        {
-            if (collection.Contains(itemToRemove))
-            {
-                collection.Remove(itemToRemove);
-                return true;
-            }
-
-            return false;
-        }
-
-        private static bool TryRemoveImpl<T>(ICollection<T> collection, T itemToRemove, IEqualityComparer<T> comparer)
-        {
-            foreach (var element in collection)
-            {
-                if (comparer.Equals(element, itemToRemove))
-                {
-                    collection.Remove(element);
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -158,7 +125,7 @@ namespace MaSch.Core.Extensions
         /// <returns>Return the count of removed items.</returns>
         public static int Remove<T>(this ICollection<T> collection, IEnumerable<T> items)
         {
-            Guard.NotNull(collection, nameof(collection));
+            _ = Guard.NotNull(collection, nameof(collection));
 
             return items.Count(x => TryRemoveImpl(collection, x));
         }
@@ -173,8 +140,8 @@ namespace MaSch.Core.Extensions
         /// <returns>Return the count of removed items.</returns>
         public static int Remove<T>(this ICollection<T> collection, IEnumerable<T> items, IEqualityComparer<T> comparer)
         {
-            Guard.NotNull(collection, nameof(collection));
-            Guard.NotNull(comparer, nameof(comparer));
+            _ = Guard.NotNull(collection, nameof(collection));
+            _ = Guard.NotNull(comparer, nameof(comparer));
 
             return items.Count(x => TryRemoveImpl(collection, x, comparer));
         }
@@ -189,8 +156,8 @@ namespace MaSch.Core.Extensions
         [SuppressMessage("Major Code Smell", "S2971:\"IEnumerable\" LINQs should be simplified", Justification = "ToArray call is needed due to removal of elements in Count method.")]
         public static int RemoveWhere<T>(this ICollection<T> collection, Func<T, bool> condition)
         {
-            Guard.NotNull(collection, nameof(collection));
-            Guard.NotNull(condition, nameof(condition));
+            _ = Guard.NotNull(collection, nameof(collection));
+            _ = Guard.NotNull(condition, nameof(condition));
 
             return collection.Where(condition).ToArray().Count(x => TryRemoveImpl(collection, x));
         }
@@ -202,12 +169,48 @@ namespace MaSch.Core.Extensions
         /// <returns>Returns a <see cref="StringCollection"/> with the content of the <see cref="IEnumerable{T}"/>.</returns>
         public static StringCollection ToStringCollection(this IEnumerable<string> enumerable)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
 
             var result = new StringCollection();
             foreach (var i in enumerable)
-                result.Add(i);
+                _ = result.Add(i);
             return result;
+        }
+
+        private static bool AddIfNotExistsImpl<T>(ICollection<T> collection, T itemToAdd)
+        {
+            if (!collection.Contains(itemToAdd))
+            {
+                collection.Add(itemToAdd);
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool TryRemoveImpl<T>(ICollection<T> collection, T itemToRemove)
+        {
+            if (collection.Contains(itemToRemove))
+            {
+                _ = collection.Remove(itemToRemove);
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool TryRemoveImpl<T>(ICollection<T> collection, T itemToRemove, IEqualityComparer<T> comparer)
+        {
+            foreach (var element in collection)
+            {
+                if (comparer.Equals(element, itemToRemove))
+                {
+                    _ = collection.Remove(element);
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

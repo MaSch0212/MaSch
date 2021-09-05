@@ -23,6 +23,15 @@ namespace MaSch.Presentation.Wpf.Views
             DependencyProperty.Register("ExtraMessage", typeof(string), typeof(ExceptionDialog), new PropertyMetadata(null));
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ExceptionDialog"/> class.
+        /// </summary>
+        public ExceptionDialog()
+        {
+            InitializeComponent();
+            SystemSounds.Hand.Play();
+        }
+
+        /// <summary>
         /// Gets or sets the exception to show to the user.
         /// </summary>
         public Exception ExceptionToDisplay
@@ -41,25 +50,6 @@ namespace MaSch.Presentation.Wpf.Views
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExceptionDialog"/> class.
-        /// </summary>
-        public ExceptionDialog()
-        {
-            InitializeComponent();
-            SystemSounds.Hand.Play();
-        }
-
-        private void ToClipboardButton_Click(object sender, RoutedEventArgs e)
-        {
-            Clipboard.SetText(ExceptionToDisplay.ToString());
-        }
-
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
-
-        /// <summary>
         /// Handles an exception by showing it to a user.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -74,7 +64,10 @@ namespace MaSch.Presentation.Wpf.Views
         /// </summary>
         /// <param name="ex">The exception to handle.</param>
         /// <returns><c>true</c> if the exception has been handled; otherwise, <c>false</c>.</returns>
-        public static bool HandleException(Exception ex) => HandleException(null, ex);
+        public static bool HandleException(Exception ex)
+        {
+            return HandleException(null, ex);
+        }
 
         /// <summary>
         /// Handles an exception by showing it to a user.
@@ -87,19 +80,19 @@ namespace MaSch.Presentation.Wpf.Views
             try
             {
                 var wdw = new ExceptionDialog { ExceptionToDisplay = ex, ExtraMessage = extraMessage };
-                wdw.ShowDialog();
+                _ = wdw.ShowDialog();
             }
             catch
             {
                 try
                 {
-                    Wpf.MessageBox.Show(ex.ToString());
+                    _ = Wpf.MessageBox.Show(ex.ToString());
                 }
                 catch
                 {
                     try
                     {
-                        System.Windows.MessageBox.Show(ex.ToString());
+                        _ = System.Windows.MessageBox.Show(ex.ToString());
                     }
                     catch
                     {
@@ -109,6 +102,16 @@ namespace MaSch.Presentation.Wpf.Views
             }
 
             return true;
+        }
+
+        private void ToClipboardButton_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(ExceptionToDisplay.ToString());
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

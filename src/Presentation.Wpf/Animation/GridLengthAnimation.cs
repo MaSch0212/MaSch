@@ -12,8 +12,6 @@ namespace MaSch.Presentation.Wpf.Animation
     /// </remarks>
     public class GridLengthAnimation : AnimationTimeline
     {
-        private AnimationClock? _clock;
-
         /// <summary>
         /// Dependency property. Gets or sets the easing function to use for this animation.
         /// </summary>
@@ -37,6 +35,8 @@ namespace MaSch.Presentation.Wpf.Animation
         /// </summary>
         public static readonly DependencyProperty ToProperty =
             DependencyProperty.Register("To", typeof(GridLength), typeof(GridLengthAnimation));
+
+        private AnimationClock? _clock;
 
         /// <summary>
         /// Gets or sets the easing function to use for this animation.
@@ -85,28 +85,6 @@ namespace MaSch.Presentation.Wpf.Animation
         public override Type TargetPropertyType => typeof(GridLength);
 
         /// <summary>
-        /// Creates an instance of the animation object.
-        /// </summary>
-        /// <returns>Returns the instance of the <see cref="GridLengthAnimation"/>.</returns>
-        protected override Freezable CreateInstanceCore()
-        {
-            return new GridLengthAnimation();
-        }
-
-        /// <summary>
-        /// Registers to the completed event of the animation clock.
-        /// </summary>
-        /// <param name="clock">The animation clock to notify completion status.</param>
-        private void VerifyAnimationCompletedStatus(AnimationClock clock)
-        {
-            if (_clock == null)
-            {
-                _clock = clock;
-                _clock.Completed += (sender, e) => { IsCompleted = true; };
-            }
-        }
-
-        /// <summary>
         /// Animates the grid let set.
         /// </summary>
         /// <param name="defaultOriginValue">The original value to animate.</param>
@@ -140,6 +118,28 @@ namespace MaSch.Presentation.Wpf.Animation
                 return new GridLength(
                     (Ease(animationClock.CurrentProgress ?? 0) * (toVal - fromVal)) + fromVal,
                     From.IsStar ? GridUnitType.Star : GridUnitType.Pixel);
+            }
+        }
+
+        /// <summary>
+        /// Creates an instance of the animation object.
+        /// </summary>
+        /// <returns>Returns the instance of the <see cref="GridLengthAnimation"/>.</returns>
+        protected override Freezable CreateInstanceCore()
+        {
+            return new GridLengthAnimation();
+        }
+
+        /// <summary>
+        /// Registers to the completed event of the animation clock.
+        /// </summary>
+        /// <param name="clock">The animation clock to notify completion status.</param>
+        private void VerifyAnimationCompletedStatus(AnimationClock clock)
+        {
+            if (_clock == null)
+            {
+                _clock = clock;
+                _clock.Completed += (sender, e) => { IsCompleted = true; };
             }
         }
 

@@ -14,17 +14,6 @@ namespace MaSch.Console
         private readonly IConsoleService _console;
 
         /// <summary>
-        /// Gets or sets the commands that can be executed by the user.
-        /// </summary>
-        public List<Command> Commands { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is exiting.
-        /// If set to true, the main loop will be existed.
-        /// </summary>
-        public bool IsExiting { get; set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="CommandApplication"/> class.
         /// </summary>
         /// <param name="console">The console to output to and get input from.</param>
@@ -46,26 +35,15 @@ namespace MaSch.Console
         }
 
         /// <summary>
-        /// Appends the default commands to the <see cref="Commands"/> list. This method is executed by the constructor.
+        /// Gets or sets the commands that can be executed by the user.
         /// </summary>
-        protected virtual void AppendDefaultCommands()
-        {
-            Commands.Add(new Command
-            {
-                Action = ShowHelp,
-                Names = new string[] { "Help" },
-                Parameters = new Dictionary<string, string> { { "Command", "Shows the Description of the given command" } },
-                OptionalParameters = 1,
-                Description = "Lists all Parameters or shows details of a specific command.",
-            });
-            Commands.Add(new Command
-            {
-                Action = (s) => IsExiting = true,
-                Names = new string[] { "Exit", "Stop", "End" },
-                Parameters = new Dictionary<string, string>(),
-                Description = "Stops the Application.",
-            });
-        }
+        public List<Command> Commands { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is exiting.
+        /// If set to true, the main loop will be existed.
+        /// </summary>
+        public bool IsExiting { get; set; }
 
         /// <summary>
         /// Starts to execute the <see cref="CommandApplication"/>.
@@ -110,57 +88,6 @@ namespace MaSch.Console
             }
         }
 
-        private string[] GetFormattedInput(string? input)
-        {
-            string[] splitted = input?.Split(new string[] { " " }, StringSplitOptions.None) ?? Array.Empty<string>();
-            List<string> formatted = new();
-            int qmCount = 0;
-            var current = new StringBuilder();
-            foreach (var s in splitted)
-            {
-                if (s.StartsWith("\"") && s.EndsWith("\"") && qmCount == 0)
-                {
-                    if (s == "\"\"")
-                        formatted.Add(string.Empty);
-                    else
-                        formatted.Add(s[1..^1]);
-                }
-                else if (s.EndsWith("\""))
-                {
-                    current.Append(" " + s[0..^1]);
-                    if (qmCount == 0)
-                    {
-                        _console.WriteLine("The syntax is not valid!");
-                        return Array.Empty<string>();
-                    }
-                    else if (qmCount == 1)
-                    {
-                        qmCount = 0;
-                        formatted.Add(current.ToString());
-                    }
-                    else if (qmCount > 1)
-                    {
-                        qmCount--;
-                    }
-                }
-                else if (s.StartsWith("\"") && qmCount == 0)
-                {
-                    current.Clear().Append(s[1..]);
-                    qmCount = 1;
-                }
-                else if (qmCount > 0)
-                {
-                    current.Append(" " + s);
-                }
-                else
-                {
-                    formatted.Add(s);
-                }
-            }
-
-            return formatted.Where(x => !string.IsNullOrEmpty(x)).ToArray();
-        }
-
         /// <summary>
         /// Shows the help text for this instance of the <see cref="CommandApplication"/>.
         /// </summary>
@@ -201,10 +128,95 @@ namespace MaSch.Console
         }
 
         /// <summary>
+        /// Appends the default commands to the <see cref="Commands"/> list. This method is executed by the constructor.
+        /// </summary>
+        protected virtual void AppendDefaultCommands()
+        {
+            Commands.Add(new Command
+            {
+                Action = ShowHelp,
+                Names = new string[] { "Help" },
+                Parameters = new Dictionary<string, string> { { "Command", "Shows the Description of the given command" } },
+                OptionalParameters = 1,
+                Description = "Lists all Parameters or shows details of a specific command.",
+            });
+            Commands.Add(new Command
+            {
+                Action = (s) => IsExiting = true,
+                Names = new string[] { "Exit", "Stop", "End" },
+                Parameters = new Dictionary<string, string>(),
+                Description = "Stops the Application.",
+            });
+        }
+
+        private string[] GetFormattedInput(string? input)
+        {
+            string[] splitted = input?.Split(new string[] { " " }, StringSplitOptions.None) ?? Array.Empty<string>();
+            List<string> formatted = new();
+            int quotationMarksCount = 0;
+            var current = new StringBuilder();
+            foreach (var s in splitted)
+            {
+                if (s.StartsWith("\"") && s.EndsWith("\"") && quotationMarksCount == 0)
+                {
+                    if (s == "\"\"")
+                        formatted.Add(string.Empty);
+                    else
+                        formatted.Add(s[1..^1]);
+                }
+                else if (s.EndsWith("\""))
+                {
+                    _ = current.Append(" " + s[0..^1]);
+                    if (quotationMarksCount == 0)
+                    {
+                        _console.WriteLine("The syntax is not valid!");
+                        return Array.Empty<string>();
+                    }
+                    else if (quotationMarksCount == 1)
+                    {
+                        quotationMarksCount = 0;
+                        formatted.Add(current.ToString());
+                    }
+                    else if (quotationMarksCount > 1)
+                    {
+                        quotationMarksCount--;
+                    }
+                }
+                else if (s.StartsWith("\"") && quotationMarksCount == 0)
+                {
+                    _ = current.Clear().Append(s[1..]);
+                    quotationMarksCount = 1;
+                }
+                else if (quotationMarksCount > 0)
+                {
+                    _ = current.Append(" " + s);
+                }
+                else
+                {
+                    formatted.Add(s);
+                }
+            }
+
+            return formatted.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+        }
+
+        /// <summary>
         /// Represents a Command of a <see cref="CommandApplication"/>.
         /// </summary>
         public class Command
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Command" /> class.
+            /// </summary>
+            public Command()
+            {
+                Names = Array.Empty<string>();
+                Action = (s) => { };
+                Parameters = new Dictionary<string, string>();
+                Description = "Unknown Description";
+                OptionalParameters = 0;
+            }
+
             /// <summary>
             /// Gets or sets the names that can be used to execute this <see cref="Command"/>.
             /// </summary>
@@ -229,18 +241,6 @@ namespace MaSch.Console
             /// Gets or sets the number of optional parameters of the <see cref="Command"/>.
             /// </summary>
             public int OptionalParameters { get; set; }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Command" /> class.
-            /// </summary>
-            public Command()
-            {
-                Names = Array.Empty<string>();
-                Action = (s) => { };
-                Parameters = new Dictionary<string, string>();
-                Description = "Unknown Description";
-                OptionalParameters = 0;
-            }
         }
     }
 }

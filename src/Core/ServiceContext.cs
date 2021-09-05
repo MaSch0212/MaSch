@@ -23,12 +23,6 @@ namespace MaSch.Core
         private readonly Dictionary<(Type Type, string? Name), object> _services = new();
         private readonly Dictionary<Type, IDisposable> _views = new();
 
-        /// <inheritdoc/>
-        public event ServiceContextEventHandler? Changing;
-
-        /// <inheritdoc/>
-        public event ServiceContextEventHandler? Changed;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceContext" /> class.
         /// </summary>
@@ -37,18 +31,28 @@ namespace MaSch.Core
         }
 
         /// <inheritdoc/>
+        public event ServiceContextEventHandler? Changing;
+
+        /// <inheritdoc/>
+        public event ServiceContextEventHandler? Changed;
+
+        /// <inheritdoc/>
         IReadOnlyDictionary<(Type Type, string? Name), object> IServiceContext.GetAllServices()
-            => new ReadOnlyDictionary<(Type Type, string? Name), object>(_services);
+        {
+            return new ReadOnlyDictionary<(Type Type, string? Name), object>(_services);
+        }
 
         /// <inheritdoc/>
         IEnumerable<(string? Name, object Service)> IServiceContext.GetAllServices(Type serviceType)
-            => _services.Where(x => x.Key.Type == serviceType).Select(x => (x.Key.Name, x.Value));
+        {
+            return _services.Where(x => x.Key.Type == serviceType).Select(x => (x.Key.Name, x.Value));
+        }
 
         /// <inheritdoc/>
         /// <exception cref="ArgumentException"><paramref name="serviceInstance"/> is not an instance of type <paramref name="serviceType"/>.</exception>
         void IServiceContext.AddService(Type serviceType, object serviceInstance, string? name)
         {
-            Guard.OfType(serviceInstance, nameof(serviceInstance), serviceType);
+            _ = Guard.OfType(serviceInstance, nameof(serviceInstance), serviceType);
 
             var key = (serviceType, name);
             ServiceContextEventArgs eventArgs;
@@ -88,7 +92,7 @@ namespace MaSch.Core
             {
                 var eventArgs = new ServiceContextEventArgs(name, serviceType, _services[key], null, ServiceAction.Removed);
                 Changing?.Invoke(this, eventArgs);
-                _services.Remove(key);
+                _ = _services.Remove(key);
                 Changed?.Invoke(this, eventArgs);
             }
             else
@@ -143,17 +147,6 @@ namespace MaSch.Core
     /// <typeparam name="T">The type of services to manage.</typeparam>
     public sealed partial class ServiceContext<T> : IServiceContext<T>
     {
-        /// <inheritdoc/>
-        public event ServiceContextEventHandler<T>? Changing;
-
-        /// <inheritdoc/>
-        public event ServiceContextEventHandler<T>? Changed;
-
-        /// <summary>
-        /// Gets the <see cref="ServiceContext"/> that is wrapped by this <see cref="ServiceContext{T}"/>.
-        /// </summary>
-        public IServiceContext Context { get; }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceContext{T}" /> class.
         /// </summary>
@@ -166,29 +159,52 @@ namespace MaSch.Core
         }
 
         /// <inheritdoc/>
+        public event ServiceContextEventHandler<T>? Changing;
+
+        /// <inheritdoc/>
+        public event ServiceContextEventHandler<T>? Changed;
+
+        /// <summary>
+        /// Gets the <see cref="ServiceContext"/> that is wrapped by this <see cref="ServiceContext{T}"/>.
+        /// </summary>
+        public IServiceContext Context { get; }
+
+        /// <inheritdoc/>
         IEnumerable<(string? Name, T Service)> IServiceContext<T>.GetAllServices()
-            => Context.GetAllServices<T>();
+        {
+            return Context.GetAllServices<T>();
+        }
 
         /// <inheritdoc/>
         void IServiceContext<T>.AddService([DisallowNull] T serviceInstance, string? name)
-            => Context.AddService(serviceInstance, name);
+        {
+            Context.AddService(serviceInstance, name);
+        }
 
         /// <inheritdoc/>
         [return: NotNull]
         T IServiceContext<T>.GetService(string? name)
-            => Context.GetService<T>(name);
+        {
+            return Context.GetService<T>(name);
+        }
 
         /// <inheritdoc/>
         bool IServiceContext<T>.ContainsService(string? name)
-            => Context.ContainsService<T>(name);
+        {
+            return Context.ContainsService<T>(name);
+        }
 
         /// <inheritdoc/>
         void IServiceContext<T>.RemoveService(string? name)
-            => Context.RemoveService(typeof(T), name);
+        {
+            Context.RemoveService(typeof(T), name);
+        }
 
         /// <inheritdoc/>
         void IServiceContext<T>.Clear()
-            => Context.Clear<T>();
+        {
+            Context.Clear<T>();
+        }
 
         /// <inheritdoc/>
         public void Dispose()

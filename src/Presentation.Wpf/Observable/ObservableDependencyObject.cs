@@ -14,30 +14,13 @@ namespace MaSch.Presentation.Wpf.Observable
     /// <summary>
     /// Represents an observable dependency object.
     /// </summary>
-    /// <seealso cref="System.Windows.DependencyObject" />
-    /// <seealso cref="MaSch.Core.Observable.IObservableObject" />
+    /// <seealso cref="DependencyObject" />
+    /// <seealso cref="IObservableObject" />
     public class ObservableDependencyObject : DependencyObject, IObservableObject
     {
         private readonly Dictionary<string, NotifyPropertyChangedAttribute> _attributes;
         private readonly List<(string PropertyName, NotifyDependencyPropertyChangedAttribute Attribute)> _dependencyPropertyAttributes;
         private readonly ObservableObjectModule _module;
-
-        /// <inheritdoc/>
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        /// <summary>
-        /// Occurs when a dependency property changed.
-        /// </summary>
-        public event DependencyPropertyChangedEventHandler? DependencyPropertyChanged;
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is in design mode.
-        /// </summary>
-        protected bool IsInDesignMode => DesignerProperties.GetIsInDesignMode(new DependencyObject());
-
-        /// <inheritdoc/>
-        [XmlIgnore]
-        public virtual bool IsNotifyEnabled { get; set; } = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableDependencyObject"/> class.
@@ -48,6 +31,23 @@ namespace MaSch.Presentation.Wpf.Observable
             _attributes = NotifyPropertyChangedAttribute.InitializeAll(this);
             _dependencyPropertyAttributes = NotifyDependencyPropertyChangedAttribute.GetAttributes(this);
         }
+
+        /// <inheritdoc/>
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        /// <summary>
+        /// Occurs when a dependency property changed.
+        /// </summary>
+        public event DependencyPropertyChangedEventHandler? DependencyPropertyChanged;
+
+        /// <inheritdoc/>
+        [XmlIgnore]
+        public virtual bool IsNotifyEnabled { get; set; } = true;
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is in design mode.
+        /// </summary>
+        protected bool IsInDesignMode => DesignerProperties.GetIsInDesignMode(new DependencyObject());
 
         /// <inheritdoc/>
         public virtual void SetProperty<T>(ref T property, T value, [CallerMemberName] string propertyName = "")
@@ -80,6 +80,15 @@ namespace MaSch.Presentation.Wpf.Observable
             _module.NotifyCommandChanged(propertyName);
         }
 
+        /// <summary>
+        /// Gets a value indicating wether the <see cref="IsNotifyEnabled"/> property should be serialized.
+        /// </summary>
+        /// <returns><c>true</c> if the <see cref="IsNotifyEnabled"/> property should be serialized; otherwise, <c>false</c>.</returns>
+        public virtual bool ShouldSerializeIsNotifyEnabled()
+        {
+            return false;
+        }
+
         /// <inheritdoc/>
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
@@ -92,11 +101,5 @@ namespace MaSch.Presentation.Wpf.Observable
             foreach (var p in propertiesToNotify)
                 NotifyPropertyChanged(p);
         }
-
-        /// <summary>
-        /// Gets a value indicating wether the <see cref="IsNotifyEnabled"/> property should be serialized.
-        /// </summary>
-        /// <returns><c>true</c> if the <see cref="IsNotifyEnabled"/> property should be serialized; otherwise, <c>false</c>.</returns>
-        public virtual bool ShouldSerializeIsNotifyEnabled() => false;
     }
 }

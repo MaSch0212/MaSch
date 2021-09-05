@@ -30,6 +30,14 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(WindowButtons),
                 new PropertyMetadata(false));
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WindowButtons"/> class.
+        /// </summary>
+        public WindowButtons()
+        {
+            InitializeComponent();
+        }
+
         public event Action? CloseButtonClicked;
         public event Action? MaximizeButtonClicked;
         public event Action? MinimizeButtonClicked;
@@ -53,14 +61,6 @@ namespace MaSch.Presentation.Wpf.Controls
             set => SetValue(MaximizedProperty, value);
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WindowButtons"/> class.
-        /// </summary>
-        public WindowButtons()
-        {
-            InitializeComponent();
-        }
-
         public void SetWindowState(WindowState state)
         {
             switch (state)
@@ -78,12 +78,24 @@ namespace MaSch.Presentation.Wpf.Controls
             }
         }
 
-        private void CloseButton_Click(object sender, RoutedEventArgs e) => CloseButtonClicked?.Invoke();
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            CloseButtonClicked?.Invoke();
+        }
 
-        private void MinimizeButton_Click(object sender, RoutedEventArgs e) => MinimizeButtonClicked?.Invoke();
+        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            MinimizeButtonClicked?.Invoke();
+        }
 
-        private void MaximizeButton_Click(object sender, RoutedEventArgs e) => MaximizeButtonClicked?.Invoke();
+        private void MaximizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            MaximizeButtonClicked?.Invoke();
+        }
 
-        private void NormalizeButton_Click(object sender, RoutedEventArgs e) => NormalizeButtonClicked?.Invoke();
+        private void NormalizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            NormalizeButtonClicked?.Invoke();
+        }
     }
 }

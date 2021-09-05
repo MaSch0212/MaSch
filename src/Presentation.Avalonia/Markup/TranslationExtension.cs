@@ -16,21 +16,6 @@ namespace MaSch.Presentation.Avalonia.Markup
         private ITranslationManager? _translationManager;
 
         /// <summary>
-        /// Gets or sets the resource key.
-        /// </summary>
-        public string? ResourceKey { get; set; }
-
-        /// <summary>
-        /// Gets or sets the provider key.
-        /// </summary>
-        public string? ProviderKey { get; set; }
-
-        /// <summary>
-        /// Gets or sets the language.
-        /// </summary>
-        public CultureInfo? Language { get; set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="TranslationExtension"/> class.
         /// </summary>
         public TranslationExtension()
@@ -70,11 +55,20 @@ namespace MaSch.Presentation.Avalonia.Markup
             Language = language;
         }
 
-        private void TranslationManager_LanguageChanged(object sender, LanguageChangedEventArgs e)
-        {
-            if (Language == null)
-                UpdateValue(ProvideValueInternal(null));
-        }
+        /// <summary>
+        /// Gets or sets the resource key.
+        /// </summary>
+        public string? ResourceKey { get; set; }
+
+        /// <summary>
+        /// Gets or sets the provider key.
+        /// </summary>
+        public string? ProviderKey { get; set; }
+
+        /// <summary>
+        /// Gets or sets the language.
+        /// </summary>
+        public CultureInfo? Language { get; set; }
 
         /// <summary>
         /// Provides the value internal.
@@ -103,6 +97,12 @@ namespace MaSch.Presentation.Avalonia.Markup
             if (string.IsNullOrEmpty(ProviderKey))
                 return Language == null ? _translationManager.GetTranslation(ResourceKey) : _translationManager.GetTranslation(ResourceKey, Language);
             return Language == null ? _translationManager.GetTranslation(ResourceKey, ProviderKey) : _translationManager.GetTranslation(ResourceKey, ProviderKey, Language);
+        }
+
+        private void TranslationManager_LanguageChanged(object sender, LanguageChangedEventArgs e)
+        {
+            if (Language == null)
+                UpdateValue(ProvideValueInternal(null));
         }
     }
 }

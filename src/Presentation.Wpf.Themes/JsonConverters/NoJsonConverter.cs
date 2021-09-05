@@ -7,7 +7,7 @@ namespace MaSch.Presentation.Wpf.JsonConverters
     /// <see cref="JsonConverter"/> that when applied to a property uses the default converter by throwing <see cref="NotImplementedException"/> for each method.
     /// See https://stackoverflow.com/questions/39738714/selectively-use-default-json-converter/39739105#39739105.
     /// </summary>
-    /// <seealso cref="Newtonsoft.Json.JsonConverter" />
+    /// <seealso cref="JsonConverter" />
     public class NoJsonConverter : JsonConverter
     {
         /// <inheritdoc/>

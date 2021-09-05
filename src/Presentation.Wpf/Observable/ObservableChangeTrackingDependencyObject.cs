@@ -9,22 +9,10 @@ namespace MaSch.Presentation.Wpf.Observable
     /// <summary>
     /// Represents an observable dependency object that does change tracking.
     /// </summary>
-    /// <seealso cref="MaSch.Presentation.Wpf.Observable.ObservableDependencyObject" />
-    /// <seealso cref="MaSch.Core.Observable.Modules.IChangeTrackedObject" />
+    /// <seealso cref="ObservableDependencyObject" />
+    /// <seealso cref="IChangeTrackedObject" />
     public class ObservableChangeTrackingDependencyObject : ObservableDependencyObject, IChangeTrackedObject
     {
-        /// <inheritdoc />
-        [XmlIgnore]
-        public virtual IChangeTracker ChangeTracker { get; private set; }
-
-        /// <inheritdoc />
-        [XmlIgnore]
-        public bool HasChanges => ChangeTracker.HasChanges;
-
-        /// <inheritdoc />
-        [XmlIgnore]
-        public virtual bool ImplicitlyRecurse => true;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableChangeTrackingDependencyObject"/> class.
         /// </summary>
@@ -41,6 +29,18 @@ namespace MaSch.Presentation.Wpf.Observable
         {
             ChangeTracker = Guard.NotNull(changeTracker, nameof(changeTracker));
         }
+
+        /// <inheritdoc />
+        [XmlIgnore]
+        public virtual IChangeTracker ChangeTracker { get; private set; }
+
+        /// <inheritdoc />
+        [XmlIgnore]
+        public bool HasChanges => ChangeTracker.HasChanges;
+
+        /// <inheritdoc />
+        [XmlIgnore]
+        public virtual bool ImplicitlyRecurse => true;
 
         /// <summary>
         /// Tracks a change.
@@ -79,18 +79,27 @@ namespace MaSch.Presentation.Wpf.Observable
         /// Gets a value indicating wether the <see cref="ChangeTracker"/> property should be serialized.
         /// </summary>
         /// <returns><c>true</c> if the <see cref="ChangeTracker"/> property should be serialized; otherwise, <c>false</c>.</returns>
-        public virtual bool ShouldSerializeChangeTracker() => false;
+        public virtual bool ShouldSerializeChangeTracker()
+        {
+            return false;
+        }
 
         /// <summary>
         /// Gets a value indicating wether the <see cref="ChangeTracker"/> property should be serialized.
         /// </summary>
         /// <returns><c>true</c> if the <see cref="HasChanges"/> property should be serialized; otherwise, <c>false</c>.</returns>
-        public virtual bool ShouldSerializeHasChanges() => false;
+        public virtual bool ShouldSerializeHasChanges()
+        {
+            return false;
+        }
 
         /// <summary>
         /// Gets a value indicating wether the <see cref="ChangeTracker"/> property should be serialized.
         /// </summary>
         /// <returns><c>true</c> if the <see cref="ImplicitlyRecurse"/> property should be serialized; otherwise, <c>false</c>.</returns>
-        public virtual bool ShouldSerializeImplicitlyRecurse() => false;
+        public virtual bool ShouldSerializeImplicitlyRecurse()
+        {
+            return false;
+        }
     }
 }

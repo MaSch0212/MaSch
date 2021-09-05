@@ -16,6 +16,20 @@ namespace MaSch.Presentation.Wpf.Common
         private readonly Screen _screen;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="WpfScreen"/> class.
+        /// </summary>
+        /// <param name="screen">The screen.</param>
+        internal WpfScreen(Screen screen)
+        {
+            _screen = screen;
+        }
+
+        /// <summary>
+        /// Gets a <see cref="WpfScreen"/> that represents the primary monitor.
+        /// </summary>
+        public static WpfScreen Primary => new(Screen.PrimaryScreen);
+
+        /// <summary>
         /// Gets a value indicating whether the screen represented by this <see cref="WpfScreen"/> is the primary monitor.
         /// </summary>
         public bool IsPrimary => _screen.Primary;
@@ -36,22 +50,13 @@ namespace MaSch.Presentation.Wpf.Common
         public Rect WorkingArea => GetRect(_screen.WorkingArea);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WpfScreen"/> class.
-        /// </summary>
-        /// <param name="screen">The screen.</param>
-        internal WpfScreen(Screen screen) => _screen = screen;
-
-        /// <summary>
-        /// Gets a <see cref="WpfScreen"/> that represents the primary monitor.
-        /// </summary>
-        public static WpfScreen Primary => new(Screen.PrimaryScreen);
-
-        /// <summary>
         /// Gets instances of the <see cref="WpfScreen"/> class representing all available screens.
         /// </summary>
         /// <returns>A <see cref="IEnumerable{T}"/> cotaining <see cref="WpfScreen"/>s representing all available screens.</returns>
         public static IEnumerable<WpfScreen> AllScreens()
-            => Screen.AllScreens.Select(screen => new WpfScreen(screen));
+        {
+            return Screen.AllScreens.Select(screen => new WpfScreen(screen));
+        }
 
         /// <summary>
         /// Gets a <see cref="WpfScreen"/> that represents the screen, the given window is rendered on.

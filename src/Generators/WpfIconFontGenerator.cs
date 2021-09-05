@@ -69,7 +69,7 @@ namespace MaSch.Generators
 
                 var builder = new SourceBuilder();
 
-                builder.AppendLine("using MaSch.Presentation.Wpf;")
+                _ = builder.AppendLine("using MaSch.Presentation.Wpf;")
                        .AppendLine("using System;")
                        .AppendLine("using System.Collections.Generic;")
                        .AppendLine("using System.ComponentModel;")
@@ -83,37 +83,37 @@ namespace MaSch.Generators
                 {
                     CreatePartialIconClass(builder, context.Compilation.AssemblyName, typeSymbol.Name, fontName);
 
-                    builder.AppendLine();
+                    _ = builder.AppendLine();
 
                     CreateMarkupExtensionClass(builder, typeSymbol, defaultIconCode);
 
-                    builder.AppendLine();
+                    _ = builder.AppendLine();
 
                     using (builder.AddBlock($"internal static class {typeSymbol.Name}CodeCharMapper"))
                     {
                         using (builder.AddBlock($"private static readonly Dictionary<{typeSymbol.Name}Code, string> GeometryPaths = new Dictionary<{typeSymbol.Name}Code, string>", true))
                         {
                             foreach (var (name, path) in extraGeoms)
-                                builder.AppendLine($"[{typeSymbol.Name}Code.{name}] = \"{path}\",");
+                                _ = builder.AppendLine($"[{typeSymbol.Name}Code.{name}] = \"{path}\",");
                         }
 
-                        builder.AppendLine()
+                        _ = builder.AppendLine()
                                .AppendLine($"public static string GetChar(this {typeSymbol.Name}Code iconCode) => Encoding.UTF32.GetString(BitConverter.GetBytes((uint)iconCode));")
                                .AppendLine($"public static {typeSymbol.Name}Code Get{typeSymbol.Name}Code(this string s) => ({typeSymbol.Name}Code)BitConverter.ToUInt32(Encoding.UTF32.GetBytes(s), 0);")
                                .AppendLine($"public static bool IsGeometry(this {typeSymbol.Name}Code iconCode, out string geometryPath) => GeometryPaths.TryGetValue(iconCode, out geometryPath);");
                     }
 
-                    builder.AppendLine();
+                    _ = builder.AppendLine();
 
                     using (builder.AddBlock($"public enum {typeSymbol.Name}Code : uint"))
                     {
-                        builder.AppendLine("// Custom extra codes");
+                        _ = builder.AppendLine("// Custom extra codes");
                         for (int i = 0; i < extraGeoms.Length; i++)
-                            builder.AppendLine($"{extraGeoms[i].name} = 0x{Convert.ToString(i + extraIconIdStart.Value, 16).PadLeft(8, '0')}u,");
+                            _ = builder.AppendLine($"{extraGeoms[i].name} = 0x{Convert.ToString(i + extraIconIdStart.Value, 16).PadLeft(8, '0')}u,");
 
-                        builder.AppendLine().AppendLine("// Codes from CSS");
+                        _ = builder.AppendLine().AppendLine("// Codes from CSS");
                         foreach (var (name, code) in codes)
-                            builder.AppendLine($"{name} = 0x{code}u,");
+                            _ = builder.AppendLine($"{name} = 0x{code}u,");
                     }
                 }
 
@@ -125,54 +125,54 @@ namespace MaSch.Generators
         {
             using (builder.AddBlock($"partial class {typeName} : Icon"))
             {
-                builder.AppendLine($"/// <summary>The font family to use for the <see cref=\"{typeName}\"/> class.</summary>")
+                _ = builder.AppendLine($"/// <summary>The font family to use for the <see cref=\"{typeName}\"/> class.</summary>")
                        .AppendLine("public static readonly FontFamily FontFamily;")
                        .AppendLine();
                 using (builder.AddBlock($"static {typeName}()"))
                 {
                     using (builder.AddBlock("if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))"))
-                        builder.AppendLine($"FontFamily = new FontFamily(\"{fontName}\");");
+                        _ = builder.AppendLine($"FontFamily = new FontFamily(\"{fontName}\");");
                     using (builder.AddBlock("else"))
                     {
-                        builder.AppendLine("FontFamily = Application.Current != null")
+                        _ = builder.AppendLine("FontFamily = Application.Current != null")
                                .AppendLine($"    ? new FontFamily(new Uri(\"pack://application:,,,/{assemblyName};component/\"), \"./#{fontName}\")")
                                .AppendLine($"    : new FontFamily(\"{fontName}\");");
                     }
                 }
 
-                builder.AppendLine()
+                _ = builder.AppendLine()
                        .AppendLine("/// <summary>Gets or sets the icon.</summary>");
                 using (builder.AddBlock($"public {typeName}Code Icon"))
                 {
-                    builder.AppendLine($"get => Character == null ? 0 : Character.Get{typeName}Code();");
+                    _ = builder.AppendLine($"get => Character == null ? 0 : Character.Get{typeName}Code();");
                     using (builder.AddBlock("set"))
                     {
                         using (builder.AddBlock("if (value.IsGeometry(out var geom))"))
                         {
-                            builder.AppendLine("Character = null;")
+                            _ = builder.AppendLine("Character = null;")
                                    .AppendLine("Geometry = Geometry.Parse(geom);")
                                    .AppendLine("Type = SymbolType.Geometry;");
                         }
 
                         using (builder.AddBlock("else"))
                         {
-                            builder.AppendLine("Character = value.GetChar();")
+                            _ = builder.AppendLine("Character = value.GetChar();")
                                    .AppendLine("Geometry = null;")
                                    .AppendLine("Type = SymbolType.Character;");
                         }
                     }
                 }
 
-                builder.AppendLine()
+                _ = builder.AppendLine()
                        .AppendLine($"/// <summary>Initializes a new instance of the <see cref=\"{typeName}\"/> class.</summary>");
                 using (builder.AddBlock($"public {typeName}()"))
                 {
-                    builder.AppendLine("Font = FontFamily;")
+                    _ = builder.AppendLine("Font = FontFamily;")
                            .AppendLine("Type = SymbolType.Character;")
                            .AppendLine("SetTransform();");
                 }
 
-                builder.AppendLine()
+                _ = builder.AppendLine()
                        .AppendLine($"/// <summary>Initializes a new instance of the <see cref=\"{typeName}\"/> class.</summary>")
                        .AppendLine("/// <param name=\"icon\">The icon to use.</param>")
                        .AppendLine($"public {typeName}({typeName}Code icon) : this() => Icon = icon;")
@@ -195,25 +195,25 @@ namespace MaSch.Generators
                 using (builder.AddBlock($"public {typeName}({typeName}Code icon, Stretch? stretch, double? fontSize) : this(icon)"))
                 {
                     using (builder.AddBlock("if (stretch.HasValue)"))
-                        builder.AppendLine("Stretch = stretch.Value;");
+                        _ = builder.AppendLine("Stretch = stretch.Value;");
                     using (builder.AddBlock("if (fontSize.HasValue)"))
-                        builder.AppendLine("FontSize = fontSize.Value;");
+                        _ = builder.AppendLine("FontSize = fontSize.Value;");
                 }
 
-                builder.AppendLine()
+                _ = builder.AppendLine()
                        .AppendLine("partial void SetTransform();");
             }
         }
 
         private static void CreateMarkupExtensionClass(SourceBuilder builder, INamedTypeSymbol typeSymbol, uint? defaultIconCode)
         {
-            builder.AppendLine($"/// <summary>Markup extension that creates an <see cref=\"MaSch.Presentation.Wpf.Icon\"/> of type <see cref=\"{typeSymbol}\"/>.</summary>")
+            _ = builder.AppendLine($"/// <summary>Markup extension that creates an <see cref=\"MaSch.Presentation.Wpf.Icon\"/> of type <see cref=\"{typeSymbol}\"/>.</summary>")
                                        .AppendLine("/// <seealso cref=\"MarkupExtension\" />")
                                        .AppendLine("[MarkupExtensionReturnType(typeof(MaSch.Presentation.Wpf.Icon))]");
 
             using (builder.AddBlock($"public class {typeSymbol.Name}Extension : MarkupExtension"))
             {
-                builder.AppendLine("/// <summary>Gets or sets the icon.</summary>")
+                _ = builder.AppendLine("/// <summary>Gets or sets the icon.</summary>")
                        .AppendLine("[ConstructorArgument(\"icon\")]")
                        .AppendLine($"public {typeSymbol.Name}Code Icon {{ get; set; }}")
                        .AppendLine()
@@ -225,20 +225,20 @@ namespace MaSch.Generators
                        .AppendLine()
                        .AppendLine($"/// <summary>Initializes a new instance of the <see cref=\"{typeSymbol.Name}Extension\"/> class.</summary>");
                 using (builder.AddBlock($"public {typeSymbol.Name}Extension()"))
-                    builder.AppendLine($"Icon = ({typeSymbol.Name}Code){defaultIconCode ?? 0};");
-                builder.AppendLine()
+                    _ = builder.AppendLine($"Icon = ({typeSymbol.Name}Code){defaultIconCode ?? 0};");
+                _ = builder.AppendLine()
                        .AppendLine($"/// <summary>Initializes a new instance of the <see cref=\"{typeSymbol.Name}Extension\"/> class.</summary>")
                        .AppendLine("/// <param name=\"icon\">The icon to use.</param>");
                 using (builder.AddBlock($"public {typeSymbol.Name}Extension({typeSymbol.Name}Code icon)"))
-                    builder.AppendLine($"Icon = icon;");
-                builder.AppendLine()
+                    _ = builder.AppendLine($"Icon = icon;");
+                _ = builder.AppendLine()
                        .AppendLine("/// <inheritdoc />");
                 using (builder.AddBlock("public override object ProvideValue(IServiceProvider serviceProvider)"))
                 {
-                    builder.AppendLine("var pvt = serviceProvider.GetService(typeof(IProvideValueTarget)) as IProvideValueTarget;");
+                    _ = builder.AppendLine("var pvt = serviceProvider.GetService(typeof(IProvideValueTarget)) as IProvideValueTarget;");
                     using (builder.AddBlock("if (pvt?.TargetObject is Setter)"))
-                        builder.AppendLine("return this;");
-                    builder.AppendLine($"return new {typeSymbol.Name}(Icon, Stretch, FontSize);");
+                        _ = builder.AppendLine("return this;");
+                    _ = builder.AppendLine($"return new {typeSymbol.Name}(Icon, Stretch, FontSize);");
                 }
             }
         }
@@ -265,12 +265,12 @@ namespace MaSch.Generators
                 }
                 else if (nextUpper)
                 {
-                    result.Append(c.ToString().ToUpper());
+                    _ = result.Append(c.ToString().ToUpper());
                     nextUpper = false;
                 }
                 else
                 {
-                    result.Append(c.ToString().ToLower());
+                    _ = result.Append(c.ToString().ToLower());
                 }
             }
 

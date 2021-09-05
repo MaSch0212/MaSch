@@ -8,7 +8,7 @@ using System.Windows.Media;
 namespace MaSch.Presentation.Wpf.Win10
 {
     /// <summary>
-    /// Markup extension that creates an <see cref="Wpf.Icon"/> using a Windows 10 icon.
+    /// Markup extension that creates an <see cref="Icon"/> using a Windows 10 icon.
     /// </summary>
     /// <seealso cref="MarkupExtension" />
     [MarkupExtensionReturnType(typeof(Icon))]
@@ -18,22 +18,6 @@ namespace MaSch.Presentation.Wpf.Win10
         /// The font family to use for the <see cref="Win10IconExtension"/> class.
         /// </summary>
         public static readonly FontFamily FontFamily;
-
-        /// <summary>
-        /// Gets or sets the symbol.
-        /// </summary>
-        [ConstructorArgument("symbol")]
-        public Win10IconCode Symbol { get; set; }
-
-        /// <summary>
-        /// Gets or sets the size of the font.
-        /// </summary>
-        public double FontSize { get; set; } = 12;
-
-        /// <summary>
-        /// Gets or sets the stretch mode.
-        /// </summary>
-        public Stretch Stretch { get; set; } = Stretch.Uniform;
 
         [SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "Hardcoded URI to internal resource should be fine.")]
         static Win10IconExtension()
@@ -66,6 +50,22 @@ namespace MaSch.Presentation.Wpf.Win10
         {
             Symbol = symbol;
         }
+
+        /// <summary>
+        /// Gets or sets the symbol.
+        /// </summary>
+        [ConstructorArgument("symbol")]
+        public Win10IconCode Symbol { get; set; }
+
+        /// <summary>
+        /// Gets or sets the size of the font.
+        /// </summary>
+        public double FontSize { get; set; } = 12;
+
+        /// <summary>
+        /// Gets or sets the stretch mode.
+        /// </summary>
+        public Stretch Stretch { get; set; } = Stretch.Uniform;
 
         /// <inheritdoc />
         public override object ProvideValue(IServiceProvider serviceProvider)

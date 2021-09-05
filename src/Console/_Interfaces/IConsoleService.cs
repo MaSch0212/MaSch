@@ -12,6 +12,12 @@ namespace MaSch.Console
     public interface IConsoleService
     {
         /// <summary>
+        /// Occurs when the System.ConsoleModifiers.Control modifier key (Ctrl) and either the System.ConsoleKey.C
+        /// console key (C) or the Break key are pressed simultaneously (Ctrl+C or Ctrl+Break).
+        /// </summary>
+        event ConsoleCancelEventHandler CancelKeyPress;
+
+        /// <summary>
         /// Gets a value indicating whether this instance supports special characters like emojis.
         /// </summary>
         bool IsFancyConsole { get; }
@@ -148,12 +154,6 @@ namespace MaSch.Console
         /// Gets or sets the foreground color of the console.
         /// </summary>
         ConsoleColor ForegroundColor { get; set; }
-
-        /// <summary>
-        /// Occurs when the System.ConsoleModifiers.Control modifier key (Ctrl) and either the System.ConsoleKey.C
-        /// console key (C) or the Break key are pressed simultaneously (Ctrl+C or Ctrl+Break).
-        /// </summary>
-        event ConsoleCancelEventHandler CancelKeyPress;
 
         /// <summary>
         /// Plays the sound of a beep through the console speaker.

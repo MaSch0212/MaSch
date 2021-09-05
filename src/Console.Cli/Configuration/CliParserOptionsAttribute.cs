@@ -9,13 +9,6 @@ namespace MaSch.Console.Cli.Configuration
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false, Inherited = true)]
     public class CliParserOptionsAttribute : Attribute
     {
-        internal bool? IgnoreUnknownOptionsValue { get; private set; }
-        internal bool? IgnoreAdditionalValuesValue { get; private set; }
-        internal bool? ProvideHelpCommandValue { get; private set; }
-        internal bool? ProvideVersionCommandValue { get; private set; }
-        internal bool? ProvideHelpOptionsValue { get; private set; }
-        internal bool? ProvideVersionOptionsValue { get; private set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether unknown options should be ignored while parsing command line arguments.
         /// </summary>
@@ -69,5 +62,12 @@ namespace MaSch.Console.Cli.Configuration
             get => ProvideVersionOptionsValue ?? true;
             set => ProvideVersionOptionsValue = value;
         }
+
+        internal bool? IgnoreUnknownOptionsValue { get; private set; }
+        internal bool? IgnoreAdditionalValuesValue { get; private set; }
+        internal bool? ProvideHelpCommandValue { get; private set; }
+        internal bool? ProvideVersionCommandValue { get; private set; }
+        internal bool? ProvideHelpOptionsValue { get; private set; }
+        internal bool? ProvideVersionOptionsValue { get; private set; }
     }
 }

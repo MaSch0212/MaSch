@@ -21,10 +21,51 @@ namespace MaSch.Presentation.Wpf.Printing
     /// <summary>
     /// Represents a print task.
     /// </summary>
-    /// <seealso cref="MaSch.Core.Observable.ObservableObject" />
-    /// <seealso cref="System.IDisposable" />
+    /// <seealso cref="ObservableObject" />
+    /// <seealso cref="IDisposable" />
     public sealed class PrintTask : ObservableObject, IDisposable
     {
+        private int _totalPageCount;
+        private int _currentDocument;
+        private PrintTaskState _state = PrintTaskState.NotStarted;
+        private string _name = string.Empty;
+        private bool _isLandscape;
+        private DateTime _finishedTime;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PrintTask"/> class.
+        /// </summary>
+        public PrintTask()
+            : this(new object[0], (t, i, o) => null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PrintTask"/> class.
+        /// </summary>
+        /// <param name="data">The print data.</param>
+        /// <param name="createDocument">The create document function.</param>
+        public PrintTask(IEnumerable<object> data, CreateDocumentDelegate createDocument)
+        {
+            PrintData = data;
+            CreateDocumentFunction = createDocument;
+            Name = "Print task for application " + Assembly.GetEntryAssembly()?.GetName().Name;
+
+            CancelPrintCommand = new DelegateCommand(CanCancel, Cancel);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PrintTask"/> class.
+        /// </summary>
+        /// <param name="printQueue">The print queue.</param>
+        /// <param name="data">The print data.</param>
+        /// <param name="createDocument">The create document function.</param>
+        public PrintTask(PrintQueue printQueue, IEnumerable<object> data, CreateDocumentDelegate createDocument)
+            : this(data, createDocument)
+        {
+            PrintQueue = printQueue;
+        }
+
         /// <summary>
         /// Delegate to create elements to print.
         /// </summary>
@@ -33,13 +74,6 @@ namespace MaSch.Presentation.Wpf.Printing
         /// <param name="data">The data attached to the page.</param>
         /// <returns>The elements to print.</returns>
         public delegate FrameworkElement[]? CreateDocumentDelegate(PrintTask task, int page, object data);
-
-        private int _totalPageCount;
-        private int _currentDocument;
-        private PrintTaskState _state = PrintTaskState.NotStarted;
-        private string _name = string.Empty;
-        private bool _isLandscape;
-        private DateTime _finishedTime;
 
         /// <summary>
         /// Gets the total page count.
@@ -170,49 +204,6 @@ namespace MaSch.Presentation.Wpf.Printing
         public ICommand CancelPrintCommand { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PrintTask"/> class.
-        /// </summary>
-        public PrintTask()
-            : this(new object[0], (t, i, o) => null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PrintTask"/> class.
-        /// </summary>
-        /// <param name="data">The print data.</param>
-        /// <param name="createDocument">The create document function.</param>
-        public PrintTask(IEnumerable<object> data, CreateDocumentDelegate createDocument)
-        {
-            PrintData = data;
-            CreateDocumentFunction = createDocument;
-            Name = "Print task for application " + Assembly.GetEntryAssembly()?.GetName().Name;
-
-            CancelPrintCommand = new DelegateCommand(CanCancel, Cancel);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PrintTask"/> class.
-        /// </summary>
-        /// <param name="printQueue">The print queue.</param>
-        /// <param name="data">The print data.</param>
-        /// <param name="createDocument">The create document function.</param>
-        public PrintTask(PrintQueue printQueue, IEnumerable<object> data, CreateDocumentDelegate createDocument)
-            : this(data, createDocument)
-        {
-            PrintQueue = printQueue;
-        }
-
-        private bool CanCancel()
-        {
-            return State == PrintTaskState.NotStarted ||
-                State == PrintTaskState.Queued ||
-                State == PrintTaskState.Preparing ||
-                State == PrintTaskState.WaitingForPrint ||
-                State == PrintTaskState.Printing;
-        }
-
-        /// <summary>
         /// Cancels this <see cref="PrintTask"/>.
         /// </summary>
         public void Cancel()
@@ -258,7 +249,7 @@ namespace MaSch.Presentation.Wpf.Printing
         /// <param name="runId">The run identifier.</param>
         public void Start(int runId)
         {
-            RunAsync(runId).ConfigureAwait(false);
+            _ = RunAsync(runId).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -271,15 +262,15 @@ namespace MaSch.Presentation.Wpf.Printing
             Guard.NotNull(PrintQueue, nameof(PrintQueue));
             Guard.NotNull(PrintTicket, nameof(PrintTicket));
 
-            var pqServerName = PrintQueue.HostingPrintServer.Name;
-            var pqName = PrintQueue.Name;
+            var printQueueServerName = PrintQueue.HostingPrintServer.Name;
+            var printQueueName = PrintQueue.Name;
             var jobName = $"{Name} ({runId})";
 
             State = PrintTaskState.Preparing;
             var th = new Thread(() =>
             {
-                using var ps = new PrintServer(pqServerName);
-                using var pq = new PrintQueue(ps, pqName);
+                using var ps = new PrintServer(printQueueServerName);
+                using var pq = new PrintQueue(ps, printQueueName);
                 var document = new FixedDocument();
                 document.DocumentPaginator.PageSize = IsLandscape ? new Size(1142, 807) : new Size(807, 1142);
 
@@ -343,8 +334,8 @@ namespace MaSch.Presentation.Wpf.Printing
 
             await Task.Run(() =>
             {
-                using var ps = new PrintServer(pqServerName);
-                using var pq = new PrintQueue(ps, pqName);
+                using var ps = new PrintServer(printQueueServerName);
+                using var pq = new PrintQueue(ps, printQueueName);
                 PrintSystemJobInfo? p = null;
                 while (th.ThreadState == ThreadState.Running || th.ThreadState == ThreadState.WaitSleepJoin || (Progress < 100 && State != PrintTaskState.Cancelled) ||
                     State == PrintTaskState.Preparing || State == PrintTaskState.WaitingForPrint)
@@ -424,6 +415,15 @@ namespace MaSch.Presentation.Wpf.Printing
             PrintData = null!;
             PrintTicket = null;
             TempData = null!;
+        }
+
+        private bool CanCancel()
+        {
+            return State == PrintTaskState.NotStarted ||
+                State == PrintTaskState.Queued ||
+                State == PrintTaskState.Preparing ||
+                State == PrintTaskState.WaitingForPrint ||
+                State == PrintTaskState.Printing;
         }
     }
 }

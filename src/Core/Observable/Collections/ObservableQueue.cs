@@ -20,12 +20,6 @@ namespace MaSch.Core.Observable.Collections
     {
         private readonly Queue<T> _queue;
 
-        /// <inheritdoc/>
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        /// <inheritdoc/>
-        public event NotifyCollectionChangedEventHandler? CollectionChanged;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableQueue{T}"/> class that
         /// is empty and has the default initial capacity.
@@ -69,21 +63,15 @@ namespace MaSch.Core.Observable.Collections
         /// <exception cref="ArgumentNullException">the queue is null.</exception>
         public ObservableQueue(Queue<T> queue)
         {
-            Guard.NotNull(queue, nameof(queue));
+            _ = Guard.NotNull(queue, nameof(queue));
             _queue = queue;
         }
 
-        #region IEnumerable
+        /// <inheritdoc/>
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <inheritdoc/>
-        public IEnumerator<T> GetEnumerator() => _queue.GetEnumerator();
-
-        /// <inheritdoc/>
-        IEnumerator IEnumerable.GetEnumerator() => _queue.GetEnumerator();
-
-        #endregion
-
-        #region ICollection
+        public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
         /// <summary>
         /// Gets the number of elements contained in the <see cref="ObservableQueue{T}"/>.
@@ -107,6 +95,18 @@ namespace MaSch.Core.Observable.Collections
         /// <returns>An object that can be used to synchronize access to the <see cref="ICollection"/>.</returns>
         public object SyncRoot => ((ICollection)_queue).SyncRoot;
 
+        /// <inheritdoc/>
+        public IEnumerator<T> GetEnumerator()
+        {
+            return _queue.GetEnumerator();
+        }
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _queue.GetEnumerator();
+        }
+
         /// <summary>
         /// Copies the elements of the <see cref="ICollection"/> to an System.Array,
         /// starting at a particular System.Array index.
@@ -124,9 +124,10 @@ namespace MaSch.Core.Observable.Collections
         /// array.-or-The type of the source <see cref="ICollection"/> cannot be cast
         /// automatically to the type of the destination array.
         /// </exception>
-        public void CopyTo(Array array, int index) => ((ICollection)_queue).CopyTo(array, index);
-
-        #endregion
+        public void CopyTo(Array array, int index)
+        {
+            ((ICollection)_queue).CopyTo(array, index);
+        }
 
         /// <summary>
         /// Removes all objects from the <see cref="ObservableQueue{T}"/>.
@@ -146,7 +147,10 @@ namespace MaSch.Core.Observable.Collections
         /// be null for reference types.
         /// </param>
         /// <returns>true if item is found in the <see cref="ObservableQueue{T}"/>; otherwise, false.</returns>
-        public bool Contains(T item) => _queue.Contains(item);
+        public bool Contains(T item)
+        {
+            return _queue.Contains(item);
+        }
 
         /// <summary>
         /// Copies the <see cref="ObservableQueue{T}"/> elements to an existing one-dimensional
@@ -163,7 +167,10 @@ namespace MaSch.Core.Observable.Collections
         /// The number of elements in the source <see cref="ObservableQueue{T}"/> is greater
         /// than the available space from arrayIndex to the end of the destination array.
         /// </exception>
-        public void CopyTo(T[] array, int arrayIndex) => _queue.CopyTo(array, arrayIndex);
+        public void CopyTo(T[] array, int arrayIndex)
+        {
+            _queue.CopyTo(array, arrayIndex);
+        }
 
         /// <summary>
         /// Removes and returns the object at the beginning of the <see cref="ObservableQueue{T}"/>.
@@ -198,18 +205,27 @@ namespace MaSch.Core.Observable.Collections
         /// </summary>
         /// <returns>The object at the beginning of the <see cref="ObservableQueue{T}"/>.</returns>
         /// <exception cref="InvalidOperationException">The <see cref="ObservableQueue{T}"/> is empty.</exception>
-        public T Peek() => _queue.Peek();
+        public T Peek()
+        {
+            return _queue.Peek();
+        }
 
         /// <summary>
         /// Copies the <see cref="ObservableQueue{T}"/> elements to a new array.
         /// </summary>
         /// <returns>A new array containing elements copied from the <see cref="ObservableQueue{T}"/>.</returns>
-        public T[] ToArray() => _queue.ToArray();
+        public T[] ToArray()
+        {
+            return _queue.ToArray();
+        }
 
         /// <summary>
         /// Sets the capacity to the actual number of elements in the System.Collections.Generic.Queue`1,
         /// if that number is less than 90 percent of current capacity.
         /// </summary>
-        public void TrimExcess() => _queue.TrimExcess();
+        public void TrimExcess()
+        {
+            _queue.TrimExcess();
+        }
     }
 }

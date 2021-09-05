@@ -13,10 +13,10 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void Constructor_NullChecks()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new ActionOnDispose((Action)null!).Dispose());
+            _ = Assert.ThrowsException<ArgumentNullException>(() => new ActionOnDispose((Action)null!).Dispose());
             Assert.IsNotNull(new ActionOnDispose(() => { }));
 
-            Assert.ThrowsException<ArgumentNullException>(() => new ActionOnDispose((Action<TimeSpan>)null!).Dispose());
+            _ = Assert.ThrowsException<ArgumentNullException>(() => new ActionOnDispose((Action<TimeSpan>)null!).Dispose());
             Assert.IsNotNull(new ActionOnDispose((TimeSpan t) => { }));
         }
 
@@ -44,7 +44,7 @@ namespace MaSch.Core.UnitTests
             sw.Start();
             var obj = new ActionOnDispose(t =>
             {
-                Interlocked.Increment(ref callCount);
+                _ = Interlocked.Increment(ref callCount);
                 lastTimeSpan = t;
             });
 

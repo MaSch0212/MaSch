@@ -10,6 +10,19 @@ namespace MaSch.Console.Cli.Configuration
     public class CliCommandValueAttribute : Attribute
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="CliCommandValueAttribute"/> class.
+        /// </summary>
+        /// <param name="order">The order of the value. This is used when multiple values are provided for the command in which order they should appear in the command line arguments.</param>
+        /// <param name="displayName">The display name of this value. This is used when displaying the value list on the help page.</param>
+        public CliCommandValueAttribute(int order, string displayName)
+        {
+            _ = Guard.NotNullOrEmpty(displayName, nameof(displayName));
+
+            Order = order;
+            DisplayName = displayName;
+        }
+
+        /// <summary>
         /// Gets the display name of this value. This is used when displaying the value list on the help page.
         /// </summary>
         public string DisplayName { get; }
@@ -38,18 +51,5 @@ namespace MaSch.Console.Cli.Configuration
         /// Gets or sets a value indicating whether this value should be hidden from the help page.
         /// </summary>
         public bool Hidden { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CliCommandValueAttribute"/> class.
-        /// </summary>
-        /// <param name="order">The order of the value. This is used when multiple values are provided for the command in which order they should appear in the command line arguments.</param>
-        /// <param name="displayName">The display name of this value. This is used when displaying the value list on the help page.</param>
-        public CliCommandValueAttribute(int order, string displayName)
-        {
-            Guard.NotNullOrEmpty(displayName, nameof(displayName));
-
-            Order = order;
-            DisplayName = displayName;
-        }
     }
 }

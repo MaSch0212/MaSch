@@ -28,28 +28,52 @@ namespace MaSch.Presentation.Wpf.Commands
     public abstract class AsyncCommandBase : IAsyncCommand
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="AsyncCommandBase"/> class.
+        /// </summary>
+        /// <param name="subscribeRequerySuggested">if set to <c>true</c> the <see cref="CommandManager.RequerySuggested"/> event is subscribed.</param>
+        protected AsyncCommandBase(bool subscribeRequerySuggested = false)
+        {
+            if (subscribeRequerySuggested)
+                CommandManager.RequerySuggested += (s, e) => RaiseCanExecuteChanged(this, new EventArgs());
+        }
+
+        /// <summary>
         /// Occurs when changes occur that affect whether or not the command should execute.
         /// </summary>
         public event EventHandler? CanExecuteChanged;
+
+        /// <summary>
+        /// Gets a value indicating whether to ignore the result of the <see cref="CanExecute(object)"/> method.
+        /// </summary>
+        protected virtual bool IgnoreCanExecuteOnExecute => false;
 
         /// <summary>
         /// Checks if the Execute method can be executed.
         /// </summary>
         /// <param name="parameter">The parameter for the command. Is not used in this command, so it should be null.</param>
         /// <returns>true if the Execute method can be executed otherwise false.</returns>
-        public bool CanExecute(object? parameter) => CanExecute();
+        public bool CanExecute(object? parameter)
+        {
+            return CanExecute();
+        }
 
         /// <summary>
         /// Checks if the Execute method can be executed.
         /// </summary>
         /// <returns><c>true</c>.</returns>
-        public virtual bool CanExecute() => true;
+        public virtual bool CanExecute()
+        {
+            return true;
+        }
 
         /// <summary>
         /// Executes the command asynchronously.
         /// </summary>
         /// <param name="parameter">The parameter for the command. Is not used in this command, so it should be null.</param>
-        public async void Execute(object? parameter) => await ExecuteAsync(parameter);
+        public async void Execute(object? parameter)
+        {
+            await ExecuteAsync(parameter);
+        }
 
         /// <summary>
         /// Executes the command asynchronously.
@@ -62,7 +86,9 @@ namespace MaSch.Presentation.Wpf.Commands
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task ExecuteAsync()
-            => await ExecuteAsync(null);
+        {
+            await ExecuteAsync(null);
+        }
 
         /// <summary>
         /// Executes the command asynchronously (awaitable).
@@ -84,21 +110,6 @@ namespace MaSch.Presentation.Wpf.Commands
         {
             Application.Current?.Dispatcher?.Invoke(() => CanExecuteChanged?.Invoke(sender, e));
         }
-
-        /// <summary>
-        /// Gets a value indicating whether to ignore the result of the <see cref="CanExecute(object)"/> method.
-        /// </summary>
-        protected virtual bool IgnoreCanExecuteOnExecute => false;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncCommandBase"/> class.
-        /// </summary>
-        /// <param name="subscribeRequerySuggested">if set to <c>true</c> the <see cref="CommandManager.RequerySuggested"/> event is subscribed.</param>
-        protected AsyncCommandBase(bool subscribeRequerySuggested = false)
-        {
-            if (subscribeRequerySuggested)
-                CommandManager.RequerySuggested += (s, e) => RaiseCanExecuteChanged(this, new EventArgs());
-        }
     }
 
     /// <summary>
@@ -109,29 +120,58 @@ namespace MaSch.Presentation.Wpf.Commands
     public abstract class AsyncCommandBase<T> : IAsyncCommand
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="AsyncCommandBase{T}"/> class.
+        /// </summary>
+        /// <param name="subscribeRequerySuggested">if set to <c>true</c> the <see cref="CommandManager.RequerySuggested"/> event is subscribed.</param>
+        protected AsyncCommandBase(bool subscribeRequerySuggested = false)
+        {
+            if (subscribeRequerySuggested)
+                CommandManager.RequerySuggested += (s, e) => RaiseCanExecuteChanged(this, new EventArgs());
+        }
+
+        /// <summary>
         /// Occurs when changes occur that affect whether or not the command should execute.
         /// </summary>
         public event EventHandler? CanExecuteChanged;
 
         /// <summary>
-        /// Checks if the Execute method can be executed.
+        /// Gets a value indicating whether to ignore the result of the <see cref="CanExecute(object)"/> method.
         /// </summary>
-        /// <param name="parameter">The parameter for the command.</param>
-        /// <returns>true if the Execute method can be executed otherwise false.</returns>
-        public bool CanExecute(object? parameter) => CanExecute(GetParameterValue(parameter));
+        protected virtual bool IgnoreCanExecuteOnExecute => false;
+
+        /// <summary>
+        /// Gets a value indicating whether to throw an exception when the wrong parameter type is given.
+        /// </summary>
+        protected virtual bool ThrowExceptionOnWrongParamType => true;
 
         /// <summary>
         /// Checks if the Execute method can be executed.
         /// </summary>
         /// <param name="parameter">The parameter for the command.</param>
         /// <returns>true if the Execute method can be executed otherwise false.</returns>
-        public virtual bool CanExecute(T? parameter) => true;
+        public bool CanExecute(object? parameter)
+        {
+            return CanExecute(GetParameterValue(parameter));
+        }
+
+        /// <summary>
+        /// Checks if the Execute method can be executed.
+        /// </summary>
+        /// <param name="parameter">The parameter for the command.</param>
+        /// <returns>true if the Execute method can be executed otherwise false.</returns>
+        public virtual bool CanExecute(T? parameter)
+        {
+            return true;
+        }
 
         /// <summary>
         /// Executes the command asynchronously.
         /// </summary>
         /// <param name="parameter">The parameter for the command.</param>
-        public async void Execute(object? parameter) => await ExecuteAsync(parameter);
+        public async void Execute(object? parameter)
+        {
+            await ExecuteAsync(parameter);
+        }
 
         /// <summary>
         /// Executes the command asynchronously.
@@ -147,9 +187,9 @@ namespace MaSch.Presentation.Wpf.Commands
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task ExecuteAsync(object? parameter)
         {
-            var tParam = GetParameterValue(parameter);
-            if (IgnoreCanExecuteOnExecute || CanExecute(tParam))
-                await Execute(tParam);
+            var parameterValue = GetParameterValue(parameter);
+            if (IgnoreCanExecuteOnExecute || CanExecute(parameterValue))
+                await Execute(parameterValue);
         }
 
         /// <summary>
@@ -162,32 +202,12 @@ namespace MaSch.Presentation.Wpf.Commands
             Application.Current?.Dispatcher?.Invoke(() => CanExecuteChanged?.Invoke(sender, e));
         }
 
-        /// <summary>
-        /// Gets a value indicating whether to ignore the result of the <see cref="CanExecute(object)"/> method.
-        /// </summary>
-        protected virtual bool IgnoreCanExecuteOnExecute => false;
-
-        /// <summary>
-        /// Gets a value indicating whether to throw an exception when the wrong parameter type is given.
-        /// </summary>
-        protected virtual bool ThrowExceptionOnWrongParamType => true;
-
         private T? GetParameterValue(object? parameter)
         {
             if (ThrowExceptionOnWrongParamType)
                 return (T?)parameter;
             else
                 return parameter?.GetType().IsCastableTo(typeof(T)) == true ? (T)parameter : default;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncCommandBase{T}"/> class.
-        /// </summary>
-        /// <param name="subscribeRequerySuggested">if set to <c>true</c> the <see cref="CommandManager.RequerySuggested"/> event is subscribed.</param>
-        protected AsyncCommandBase(bool subscribeRequerySuggested = false)
-        {
-            if (subscribeRequerySuggested)
-                CommandManager.RequerySuggested += (s, e) => RaiseCanExecuteChanged(this, new EventArgs());
         }
     }
 }

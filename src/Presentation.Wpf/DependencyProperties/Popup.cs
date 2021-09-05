@@ -6,7 +6,7 @@ using Win = System.Windows.Controls.Primitives;
 namespace MaSch.Presentation.Wpf.DependencyProperties
 {
     /// <summary>
-    /// Provides dependency properties for the <see cref="System.Windows.Controls.Primitives.Popup"/> control.
+    /// Provides dependency properties for the <see cref="Win.Popup"/> control.
     /// </summary>
     public static class Popup
     {
@@ -29,76 +29,6 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                 typeof(double),
                 typeof(Popup),
                 new PropertyMetadata(0D, OnRelativeVerticalOffsetChanged));
-
-        private static void OnRelativeHorizontalOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            static void LocationChangedHandler(object? sender, EventArgs ea)
-            {
-                if (sender is not Win.Popup p)
-                    return;
-                var source = PresentationSource.CurrentSources.OfType<PresentationSource>().FirstOrDefault();
-                var scaleX = source?.CompositionTarget?.TransformToDevice.M11 ?? 1;
-                var pPos = p.Child.PointToScreen(new Point(0, 0));
-                if ((p.PlacementTarget ?? p.Parent) is not FrameworkElement pt)
-                    return;
-                var ptPos = pt.PointToScreen(new Point(0, 0));
-                var expectedXPos = p.Placement switch
-                {
-                    Win.PlacementMode.Bottom or Win.PlacementMode.Top => (ptPos.X / scaleX) + p.HorizontalOffset,
-                    Win.PlacementMode.Right => (ptPos.X / scaleX) + pt.ActualWidth + p.HorizontalOffset,
-                    Win.PlacementMode.Left => (ptPos.X / scaleX) - ((p.Child as FrameworkElement)?.ActualWidth ?? 0D) + p.HorizontalOffset,
-                    _ => throw new ArgumentOutOfRangeException($"The placement \"{p.Placement}\" is unknown."),
-                };
-                p.HorizontalOffset = Math.Abs((pPos.X / scaleX) - expectedXPos) < 1 ? GetRelativeHorizontalOffset(p) : -GetRelativeHorizontalOffset(p);
-            }
-
-            if (d is Win.Popup popup)
-            {
-                var newDefined = e.NewValue is double newV && Math.Abs(newV) >= 0.0001;
-                var oldDefined = e.OldValue is double oldV && Math.Abs(oldV) >= 0.0001;
-                if (!oldDefined && newDefined)
-                    popup.Opened += LocationChangedHandler;
-                if (oldDefined && !newDefined)
-                    popup.Opened -= LocationChangedHandler;
-                if (!newDefined)
-                    popup.HorizontalOffset = 0;
-            }
-        }
-
-        private static void OnRelativeVerticalOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            static void PopupOpenedHandler(object? sender, EventArgs ea)
-            {
-                if (sender is not Win.Popup p)
-                    return;
-                var source = PresentationSource.CurrentSources.OfType<PresentationSource>().FirstOrDefault();
-                var scaleY = source?.CompositionTarget?.TransformToDevice.M22 ?? 1;
-                var pPos = p.Child.PointToScreen(new Point(0, 0));
-                if ((p.PlacementTarget ?? p.Parent) is not FrameworkElement pt)
-                    return;
-                var ptPos = pt.PointToScreen(new Point(0, 0));
-                var expectedYPos = p.Placement switch
-                {
-                    Win.PlacementMode.Right or Win.PlacementMode.Left => (ptPos.Y / scaleY) + p.VerticalOffset,
-                    Win.PlacementMode.Bottom => (ptPos.Y / scaleY) + pt.ActualHeight + p.VerticalOffset,
-                    Win.PlacementMode.Top => (ptPos.Y / scaleY) - p.ActualWidth + p.VerticalOffset,
-                    _ => throw new ArgumentOutOfRangeException($"The placement \"{p.Placement}\" is unknown."),
-                };
-                p.VerticalOffset = Math.Abs((pPos.Y / scaleY) - expectedYPos) < 1 ? GetRelativeVerticalOffset(p) : -GetRelativeVerticalOffset(p);
-            }
-
-            if (d is Win.Popup popup)
-            {
-                var newDefined = e.NewValue is double newV && Math.Abs(newV) >= 0.0001;
-                var oldDefined = e.OldValue is double oldV && Math.Abs(oldV) >= 0.0001;
-                if (!oldDefined && newDefined)
-                    popup.Opened += PopupOpenedHandler;
-                if (oldDefined && !newDefined)
-                    popup.Opened -= PopupOpenedHandler;
-                if (!newDefined)
-                    popup.VerticalOffset = 0;
-            }
-        }
 
         /// <summary>
         /// Sets the value of the <see cref="RelativeHorizontalOffsetProperty"/>.
@@ -138,6 +68,76 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
         public static double GetRelativeVerticalOffset(DependencyObject obj)
         {
             return (double)obj.GetValue(RelativeVerticalOffsetProperty);
+        }
+
+        private static void OnRelativeHorizontalOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            static void LocationChangedHandler(object? sender, EventArgs ea)
+            {
+                if (sender is not Win.Popup popup)
+                    return;
+                var source = PresentationSource.CurrentSources.OfType<PresentationSource>().FirstOrDefault();
+                var scaleX = source?.CompositionTarget?.TransformToDevice.M11 ?? 1;
+                var popupPosition = popup.Child.PointToScreen(new Point(0, 0));
+                if ((popup.PlacementTarget ?? popup.Parent) is not FrameworkElement popupOrigin)
+                    return;
+                var popupOriginPosition = popupOrigin.PointToScreen(new Point(0, 0));
+                var expectedXPos = popup.Placement switch
+                {
+                    Win.PlacementMode.Bottom or Win.PlacementMode.Top => (popupOriginPosition.X / scaleX) + popup.HorizontalOffset,
+                    Win.PlacementMode.Right => (popupOriginPosition.X / scaleX) + popupOrigin.ActualWidth + popup.HorizontalOffset,
+                    Win.PlacementMode.Left => (popupOriginPosition.X / scaleX) - ((popup.Child as FrameworkElement)?.ActualWidth ?? 0D) + popup.HorizontalOffset,
+                    _ => throw new ArgumentOutOfRangeException($"The placement \"{popup.Placement}\" is unknown."),
+                };
+                popup.HorizontalOffset = Math.Abs((popupPosition.X / scaleX) - expectedXPos) < 1 ? GetRelativeHorizontalOffset(popup) : -GetRelativeHorizontalOffset(popup);
+            }
+
+            if (d is Win.Popup popup)
+            {
+                var newDefined = e.NewValue is double newV && Math.Abs(newV) >= 0.0001;
+                var oldDefined = e.OldValue is double oldV && Math.Abs(oldV) >= 0.0001;
+                if (!oldDefined && newDefined)
+                    popup.Opened += LocationChangedHandler;
+                if (oldDefined && !newDefined)
+                    popup.Opened -= LocationChangedHandler;
+                if (!newDefined)
+                    popup.HorizontalOffset = 0;
+            }
+        }
+
+        private static void OnRelativeVerticalOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            static void PopupOpenedHandler(object? sender, EventArgs ea)
+            {
+                if (sender is not Win.Popup popup)
+                    return;
+                var source = PresentationSource.CurrentSources.OfType<PresentationSource>().FirstOrDefault();
+                var scaleY = source?.CompositionTarget?.TransformToDevice.M22 ?? 1;
+                var popupPosition = popup.Child.PointToScreen(new Point(0, 0));
+                if ((popup.PlacementTarget ?? popup.Parent) is not FrameworkElement popupOrigin)
+                    return;
+                var popupOriginPosition = popupOrigin.PointToScreen(new Point(0, 0));
+                var expectedYPos = popup.Placement switch
+                {
+                    Win.PlacementMode.Right or Win.PlacementMode.Left => (popupOriginPosition.Y / scaleY) + popup.VerticalOffset,
+                    Win.PlacementMode.Bottom => (popupOriginPosition.Y / scaleY) + popupOrigin.ActualHeight + popup.VerticalOffset,
+                    Win.PlacementMode.Top => (popupOriginPosition.Y / scaleY) - popup.ActualWidth + popup.VerticalOffset,
+                    _ => throw new ArgumentOutOfRangeException($"The placement \"{popup.Placement}\" is unknown."),
+                };
+                popup.VerticalOffset = Math.Abs((popupPosition.Y / scaleY) - expectedYPos) < 1 ? GetRelativeVerticalOffset(popup) : -GetRelativeVerticalOffset(popup);
+            }
+
+            if (d is Win.Popup popup)
+            {
+                var newDefined = e.NewValue is double newV && Math.Abs(newV) >= 0.0001;
+                var oldDefined = e.OldValue is double oldV && Math.Abs(oldV) >= 0.0001;
+                if (!oldDefined && newDefined)
+                    popup.Opened += PopupOpenedHandler;
+                if (oldDefined && !newDefined)
+                    popup.Opened -= PopupOpenedHandler;
+                if (!newDefined)
+                    popup.VerticalOffset = 0;
+            }
         }
     }
 }

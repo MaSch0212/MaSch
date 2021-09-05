@@ -45,6 +45,19 @@ namespace MaSch.Presentation.Wpf.Extensions
             ShiftAwayFromTaskbar(window);
         }
 
+        /// <summary>
+        /// Shows the dialog asynchronously.
+        /// </summary>
+        /// <param name="self">The window to show.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static Task<bool?> ShowDialogAsync(this Window self)
+        {
+            _ = Guard.NotNull(self, nameof(self));
+            var completion = new TaskCompletionSource<bool?>();
+            _ = self.Dispatcher.BeginInvoke(new Action(() => completion.SetResult(self.ShowDialog())));
+            return completion.Task;
+        }
+
         private static void ShiftAwayFromTaskbar(Window window)
         {
             var taskBarLocation = GetTaskBarLocationPerScreen();
@@ -164,19 +177,6 @@ namespace MaSch.Presentation.Wpf.Extensions
             }
 
             return dockedRects;
-        }
-
-        /// <summary>
-        /// Shows the dialog asynchronously.
-        /// </summary>
-        /// <param name="self">The window to show.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static Task<bool?> ShowDialogAsync(this Window self)
-        {
-            Guard.NotNull(self, nameof(self));
-            var completion = new TaskCompletionSource<bool?>();
-            self.Dispatcher.BeginInvoke(new Action(() => completion.SetResult(self.ShowDialog())));
-            return completion.Task;
         }
     }
 }

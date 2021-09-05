@@ -13,7 +13,7 @@ namespace MaSch.Console.Ansi
     public sealed class AnsiFormattedString
     {
         private readonly StringBuilder _builder;
-        private readonly LinkedList<StyleRange> _styles = new LinkedList<StyleRange>();
+        private readonly LinkedList<StyleRange> _styles = new();
         private int _nextStyleId;
 
         /// <summary>
@@ -31,19 +31,6 @@ namespace MaSch.Console.Ansi
         public AnsiFormattedString(string? value)
         {
             _builder = new StringBuilder(value);
-        }
-
-        /// <summary>
-        /// Gets or sets the character at the specified character position in this instance.
-        /// </summary>
-        /// <param name="index">The position of the character.</param>
-        /// <returns>The Unicode character at position <paramref name="index"/>.</returns>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is outside the bounds of this instance while setting a character.</exception>
-        /// <exception cref="IndexOutOfRangeException"><paramref name="index"/> is outside the bounds of this instance while getting a character.</exception>
-        public char this[int index]
-        {
-            get => _builder[index];
-            set => _builder[index] = value;
         }
 
         /// <summary>
@@ -68,6 +55,19 @@ namespace MaSch.Console.Ansi
                 if (preLen > value)
                     OnRemove(value, preLen - value);
             }
+        }
+
+        /// <summary>
+        /// Gets or sets the character at the specified character position in this instance.
+        /// </summary>
+        /// <param name="index">The position of the character.</param>
+        /// <returns>The Unicode character at position <paramref name="index"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is outside the bounds of this instance while setting a character.</exception>
+        /// <exception cref="IndexOutOfRangeException"><paramref name="index"/> is outside the bounds of this instance while getting a character.</exception>
+        public char this[int index]
+        {
+            get => _builder[index];
+            set => _builder[index] = value;
         }
 
         /// <summary>
@@ -104,7 +104,9 @@ namespace MaSch.Console.Ansi
         /// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Append(IFormattable? value, IFormatProvider? formatProvider)
-            => Append(value, formatProvider, null);
+        {
+            return Append(value, formatProvider, null);
+        }
 
         /// <summary>
         /// Appends the string representation of a specified <see cref="IFormattable"/> with a specified style to this instance.
@@ -114,7 +116,9 @@ namespace MaSch.Console.Ansi
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Append(IFormattable? value, IFormatProvider? formatProvider, Action<AnsiStyle>? styleAction)
-            => CallInsert(Length, value?.ToString(null, formatProvider), (b, i, x) => b.Append(x), styleAction);
+        {
+            return CallInsert(Length, value?.ToString(null, formatProvider), (b, i, x) => b.Append(x), styleAction);
+        }
 
         /// <summary>
         /// Appends a copy of the specified string to this instance.
@@ -122,7 +126,9 @@ namespace MaSch.Console.Ansi
         /// <param name="value">The value to append.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Append(string? value)
-            => Append(value, null);
+        {
+            return Append(value, null);
+        }
 
         /// <summary>
         /// Appends a styled copy of the specified string to this instance.
@@ -131,7 +137,9 @@ namespace MaSch.Console.Ansi
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Append(string? value, Action<AnsiStyle>? styleAction)
-            => CallInsert(Length, value, (b, i, x) => b.Append(x), styleAction);
+        {
+            return CallInsert(Length, value, (b, i, x) => b.Append(x), styleAction);
+        }
 
         /// <summary>
         /// Appends a copy of a specified substring to this instance.
@@ -141,7 +149,9 @@ namespace MaSch.Console.Ansi
         /// <param name="count">The number of characters in <paramref name="value"/> to append.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Append(string? value, int startIndex, int count)
-            => Append(value, startIndex, count, null);
+        {
+            return Append(value, startIndex, count, null);
+        }
 
         /// <summary>
         /// Appends a styled copy of a specified substring to this instance.
@@ -152,7 +162,9 @@ namespace MaSch.Console.Ansi
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Append(string? value, int startIndex, int count, Action<AnsiStyle>? styleAction)
-            => CallInsert(Length, value, startIndex, count, (b, i, x, y, z) => b.Append(x, y, z), styleAction);
+        {
+            return CallInsert(Length, value, startIndex, count, (b, i, x, y, z) => b.Append(x, y, z), styleAction);
+        }
 
         /// <summary>
         /// Appends a copy of a substring within a specified string builder to this instance.
@@ -162,7 +174,9 @@ namespace MaSch.Console.Ansi
         /// <param name="count">The number of characters in <paramref name="value"/> to append.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Append(StringBuilder? value, int startIndex, int count)
-            => Append(value, startIndex, count, null);
+        {
+            return Append(value, startIndex, count, null);
+        }
 
         /// <summary>
         /// Appends a styled copy of a substring within a specified string builder to this instance.
@@ -173,11 +187,13 @@ namespace MaSch.Console.Ansi
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Append(StringBuilder? value, int startIndex, int count, Action<AnsiStyle>? styleAction)
+        {
 #if NETFRAMEWORK
-            => CallInsert(Length, value?.ToString(), startIndex, count, (b, i, x, y, z) => b.Append(x, y, z), styleAction);
+            return CallInsert(Length, value?.ToString(), startIndex, count, (b, i, x, y, z) => b.Append(x, y, z), styleAction);
 #else
-            => CallInsert(Length, value, startIndex, count, (b, i, x, y, z) => b.Append(x, y, z), styleAction);
+            return CallInsert(Length, value, startIndex, count, (b, i, x, y, z) => b.Append(x, y, z), styleAction);
 #endif
+        }
 
         /// <summary>
         /// Appends the string representation of a specified string builder to this instance.
@@ -185,7 +201,9 @@ namespace MaSch.Console.Ansi
         /// <param name="value">The string builder to append.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Append(StringBuilder? value)
-            => Append(value, null);
+        {
+            return Append(value, null);
+        }
 
         /// <summary>
         /// Appends the string representation of a specified string builder with a specified style to this instance.
@@ -194,7 +212,9 @@ namespace MaSch.Console.Ansi
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Append(StringBuilder? value, Action<AnsiStyle>? styleAction)
-            => CallInsert(Length, value, (b, i, x) => b.Append(x), styleAction);
+        {
+            return CallInsert(Length, value, (b, i, x) => b.Append(x), styleAction);
+        }
 
         /// <summary>
         /// Appends the string representation of a specified object to this instance.
@@ -202,7 +222,9 @@ namespace MaSch.Console.Ansi
         /// <param name="value">The value to append.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Append(object? value)
-            => Append(value, null);
+        {
+            return Append(value, null);
+        }
 
         /// <summary>
         /// Appends the string representation of a specified object with a specified style to this instance.
@@ -211,7 +233,9 @@ namespace MaSch.Console.Ansi
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Append(object? value, Action<AnsiStyle>? styleAction)
-            => CallInsert(Length, value, (b, i, x) => b.Append(x), styleAction);
+        {
+            return CallInsert(Length, value, (b, i, x) => b.Append(x), styleAction);
+        }
 
         /// <summary>
         /// Appends the string representation of a specified subarray of Unicode characters to this instance.
@@ -221,7 +245,9 @@ namespace MaSch.Console.Ansi
         /// <param name="count">The number of characters to append.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Append(char[]? value, int startIndex, int count)
-            => Append(value, startIndex, count, null);
+        {
+            return Append(value, startIndex, count, null);
+        }
 
         /// <summary>
         /// Appends the string representation of a specified subarray of Unicode characters with a specified style to this instance.
@@ -232,7 +258,9 @@ namespace MaSch.Console.Ansi
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Append(char[]? value, int startIndex, int count, Action<AnsiStyle>? styleAction)
-            => CallInsert(Length, value, startIndex, count, (b, i, x, y, z) => b.Append(x, y, z), styleAction);
+        {
+            return CallInsert(Length, value, startIndex, count, (b, i, x, y, z) => b.Append(x, y, z), styleAction);
+        }
 
         /// <summary>
         /// Appends the string representation of the Unicode characters in a specified array to this instance.
@@ -240,7 +268,9 @@ namespace MaSch.Console.Ansi
         /// <param name="value">The array of characters to append.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Append(char[]? value)
-            => Append(value, null);
+        {
+            return Append(value, null);
+        }
 
         /// <summary>
         /// Appends the string representation of the Unicode characters in a specified array with a specified style to this instance.
@@ -249,7 +279,9 @@ namespace MaSch.Console.Ansi
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Append(char[]? value, Action<AnsiStyle>? styleAction)
-            => CallInsert(Length, value, (b, i, x) => b.Append(x), styleAction);
+        {
+            return CallInsert(Length, value, (b, i, x) => b.Append(x), styleAction);
+        }
 
         /// <summary>
         /// Appends a specified number of copies of the string representation of a Unicode character to this instance.
@@ -258,7 +290,9 @@ namespace MaSch.Console.Ansi
         /// <param name="repeatCount">The number of times to append value.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Append(char value, int repeatCount)
-            => Append(value, repeatCount, null);
+        {
+            return Append(value, repeatCount, null);
+        }
 
         /// <summary>
         /// Appends a specified number of copies of the string representation of a Unicode character with a specified style to this instance.
@@ -268,7 +302,9 @@ namespace MaSch.Console.Ansi
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Append(char value, int repeatCount, Action<AnsiStyle>? styleAction)
-            => CallInsert(Length, value, repeatCount, (b, i, x, y) => b.Append(x, y), styleAction);
+        {
+            return CallInsert(Length, value, repeatCount, (b, i, x, y) => b.Append(x, y), styleAction);
+        }
 
         /// <summary>
         /// Appends the string representation of a specified System.Char object to this instance.
@@ -276,7 +312,9 @@ namespace MaSch.Console.Ansi
         /// <param name="value">The UTF-16-encoded code unit to append.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Append(char value)
-            => Append(value, null);
+        {
+            return Append(value, null);
+        }
 
         /// <summary>
         /// Appends the string representation of a specified System.Char object with a specified style to this instance.
@@ -285,7 +323,9 @@ namespace MaSch.Console.Ansi
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Append(char value, Action<AnsiStyle>? styleAction)
-            => CallInsert(Length, value, (b, i, x) => b.Append(x), styleAction);
+        {
+            return CallInsert(Length, value, (b, i, x) => b.Append(x), styleAction);
+        }
 
         /// <summary>
         /// Appends the string returned by processing a composite format string, which contains
@@ -296,7 +336,9 @@ namespace MaSch.Console.Ansi
         /// <param name="args">An array of objects to format.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString AppendFormat(string format, params object?[] args)
-            => AppendFormat((Action<AnsiStyle>?)null, format, args);
+        {
+            return AppendFormat((Action<AnsiStyle>?)null, format, args);
+        }
 
         /// <summary>
         /// Appends the string returned by processing a composite format string, which contains
@@ -308,7 +350,9 @@ namespace MaSch.Console.Ansi
         /// <param name="args">An array of objects to format.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString AppendFormat(Action<AnsiStyle>? styleAction, string format, params object?[] args)
-            => CallInsert(Length, format, args, (b, i, x, y) => b.AppendFormat(x, y), styleAction);
+        {
+            return CallInsert(Length, format, args, (b, i, x, y) => b.AppendFormat(x, y), styleAction);
+        }
 
         /// <summary>
         /// Appends the string returned by processing a composite format string, which contains
@@ -321,7 +365,9 @@ namespace MaSch.Console.Ansi
         /// <param name="args">An array of objects to format.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString AppendFormat(IFormatProvider? formatProvider, string format, params object?[] args)
-            => AppendFormat(formatProvider, null, format, args);
+        {
+            return AppendFormat(formatProvider, null, format, args);
+        }
 
         /// <summary>
         /// Appends the string returned by processing a composite format string, which contains
@@ -335,7 +381,9 @@ namespace MaSch.Console.Ansi
         /// <param name="args">An array of objects to format.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString AppendFormat(IFormatProvider? formatProvider, Action<AnsiStyle>? styleAction, string format, params object?[] args)
-            => CallInsert(Length, formatProvider, format, args, (b, i, x, y, z) => b.AppendFormat(x, y, z), styleAction);
+        {
+            return CallInsert(Length, formatProvider, format, args, (b, i, x, y, z) => b.AppendFormat(x, y, z), styleAction);
+        }
 
         /// <summary>
         /// Concatenates and appends the members of a collection, using the specified separator between each member.
@@ -345,7 +393,9 @@ namespace MaSch.Console.Ansi
         /// <param name="values">A collection that contains the objects to concatenate and append to the current instance of the string builder.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString AppendJoin<T>(string? separator, IEnumerable<T> values)
-            => AppendJoin(null, separator, values);
+        {
+            return AppendJoin(null, separator, values);
+        }
 
         /// <summary>
         /// Concatenates and appends the members of a collection, using the specified separator between each member with a specified style.
@@ -356,11 +406,13 @@ namespace MaSch.Console.Ansi
         /// <param name="values">A collection that contains the objects to concatenate and append to the current instance of the string builder.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString AppendJoin<T>(Action<AnsiStyle>? styleAction, string? separator, IEnumerable<T> values)
+        {
 #if NETFRAMEWORK
-            => CallInsert(Length, string.Join(separator, values), (b, i, x) => b.Append(x), styleAction);
+            return CallInsert(Length, string.Join(separator, values), (b, i, x) => b.Append(x), styleAction);
 #else
-            => CallInsert(Length, separator, values, (b, i, x, y) => b.AppendJoin(x, y), styleAction);
+            return CallInsert(Length, separator, values, (b, i, x, y) => b.AppendJoin(x, y), styleAction);
 #endif
+        }
 
         /// <summary>
         /// Concatenates the string representations of the elements in the provided array
@@ -371,7 +423,9 @@ namespace MaSch.Console.Ansi
         /// <param name="values">A collection that contains the objects to concatenate and append to the current instance of the string builder.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString AppendJoin(string? separator, params object?[] values)
-            => AppendJoin(null, separator, values);
+        {
+            return AppendJoin(null, separator, values);
+        }
 
         /// <summary>
         /// Concatenates the string representations of the elements in the provided array
@@ -383,11 +437,13 @@ namespace MaSch.Console.Ansi
         /// <param name="values">A collection that contains the objects to concatenate and append to the current instance of the string builder.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString AppendJoin(Action<AnsiStyle>? styleAction, string? separator, params object?[] values)
+        {
 #if NETFRAMEWORK
-            => CallInsert(Length, string.Join(separator, values), (b, i, x) => b.Append(x), styleAction);
+            return CallInsert(Length, string.Join(separator, values), (b, i, x) => b.Append(x), styleAction);
 #else
-            => CallInsert(Length, separator, values, (b, i, x, y) => b.AppendJoin(x, y), styleAction);
+            return CallInsert(Length, separator, values, (b, i, x, y) => b.AppendJoin(x, y), styleAction);
 #endif
+        }
 
         /// <summary>
         /// Appends a copy of the specified string followed by the default line terminator to this instance.
@@ -395,7 +451,9 @@ namespace MaSch.Console.Ansi
         /// <param name="value">The string to append.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString AppendLine(string? value)
-            => AppendLine(value, null);
+        {
+            return AppendLine(value, null);
+        }
 
         /// <summary>
         /// Appends a copy of the specified string followed by the default line terminator with a specified style to this instance.
@@ -404,7 +462,9 @@ namespace MaSch.Console.Ansi
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString AppendLine(string? value, Action<AnsiStyle>? styleAction)
-            => CallInsert(Length, value, (b, i, x) => b.AppendLine(x), styleAction);
+        {
+            return CallInsert(Length, value, (b, i, x) => b.AppendLine(x), styleAction);
+        }
 
         /// <summary>
         /// Appends the default line terminator to this instance.
@@ -424,7 +484,9 @@ namespace MaSch.Console.Ansi
         /// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Insert(int index, IFormattable? value, IFormatProvider formatProvider)
-            => Insert(index, value, formatProvider, null);
+        {
+            return Insert(index, value, formatProvider, null);
+        }
 
         /// <summary>
         /// Inserts the string representation of an object with a specified style into this instance at the specified character position.
@@ -435,7 +497,9 @@ namespace MaSch.Console.Ansi
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Insert(int index, IFormattable? value, IFormatProvider formatProvider, Action<AnsiStyle>? styleAction)
-            => CallInsert(index, value?.ToString(null, formatProvider), (b, i, x) => b.Insert(i, x), styleAction);
+        {
+            return CallInsert(index, value?.ToString(null, formatProvider), (b, i, x) => b.Insert(i, x), styleAction);
+        }
 
         /// <summary>
         /// Inserts a string into this instance at the specified character position.
@@ -444,7 +508,9 @@ namespace MaSch.Console.Ansi
         /// <param name="value">The string to insert.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Insert(int index, string? value)
-            => Insert(index, value, null);
+        {
+            return Insert(index, value, null);
+        }
 
         /// <summary>
         /// Inserts a string with a specified style into this instance at the specified character position.
@@ -454,7 +520,9 @@ namespace MaSch.Console.Ansi
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Insert(int index, string? value, Action<AnsiStyle>? styleAction)
-            => CallInsert(index, value, (b, i, x) => b.Insert(i, x), styleAction);
+        {
+            return CallInsert(index, value, (b, i, x) => b.Insert(i, x), styleAction);
+        }
 
         /// <summary>
         /// Inserts one or more copies of a specified string into this instance at the specified character position.
@@ -464,7 +532,9 @@ namespace MaSch.Console.Ansi
         /// <param name="count">The number of times to insert value.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Insert(int index, string? value, int count)
-            => Insert(index, value, count, null);
+        {
+            return Insert(index, value, count, null);
+        }
 
         /// <summary>
         /// Inserts one or more copies of a specified string with a specified style into this instance at the specified character position.
@@ -475,7 +545,9 @@ namespace MaSch.Console.Ansi
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Insert(int index, string? value, int count, Action<AnsiStyle>? styleAction)
-            => CallInsert(index, value, count, (b, i, x, y) => b.Insert(i, x, y), styleAction);
+        {
+            return CallInsert(index, value, count, (b, i, x, y) => b.Insert(i, x, y), styleAction);
+        }
 
         /// <summary>
         /// Inserts the string representation of an object into this instance at the specified character position.
@@ -484,7 +556,9 @@ namespace MaSch.Console.Ansi
         /// <param name="value">The object to insert, or null.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Insert(int index, object? value)
-            => Insert(index, value, null);
+        {
+            return Insert(index, value, null);
+        }
 
         /// <summary>
         /// Inserts the string representation of an object with a specified style into this instance at the specified character position.
@@ -494,7 +568,9 @@ namespace MaSch.Console.Ansi
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Insert(int index, object? value, Action<AnsiStyle>? styleAction)
-            => CallInsert(index, value, (b, i, x) => b.Insert(i, x), styleAction);
+        {
+            return CallInsert(index, value, (b, i, x) => b.Insert(i, x), styleAction);
+        }
 
         /// <summary>
         /// Inserts the string representation of a specified array of Unicode characters into this instance at the specified character position.
@@ -503,7 +579,9 @@ namespace MaSch.Console.Ansi
         /// <param name="value">The character array to insert.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Insert(int index, char[]? value)
-            => Insert(index, value, null);
+        {
+            return Insert(index, value, null);
+        }
 
         /// <summary>
         /// Inserts the string representation of a specified array of Unicode characters with a specified style into this instance at the specified character position.
@@ -513,7 +591,9 @@ namespace MaSch.Console.Ansi
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Insert(int index, char[]? value, Action<AnsiStyle>? styleAction)
-            => CallInsert(index, value, (b, i, x) => b.Insert(i, x), styleAction);
+        {
+            return CallInsert(index, value, (b, i, x) => b.Insert(i, x), styleAction);
+        }
 
         /// <summary>
         /// Inserts the string representation of a specified subarray of Unicode characters into this instance at the specified character position.
@@ -524,7 +604,9 @@ namespace MaSch.Console.Ansi
         /// <param name="charCount">The number of characters to insert.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Insert(int index, char[]? value, int startIndex, int charCount)
-            => Insert(index, value, startIndex, charCount, null);
+        {
+            return Insert(index, value, startIndex, charCount, null);
+        }
 
         /// <summary>
         /// Inserts the string representation of a specified subarray of Unicode characters with a specified style into this instance at the specified character position.
@@ -536,7 +618,9 @@ namespace MaSch.Console.Ansi
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Insert(int index, char[]? value, int startIndex, int charCount, Action<AnsiStyle>? styleAction)
-            => CallInsert(index, value, startIndex, charCount, (b, i, x, y, z) => b.Insert(i, x, y, z), styleAction);
+        {
+            return CallInsert(index, value, startIndex, charCount, (b, i, x, y, z) => b.Insert(i, x, y, z), styleAction);
+        }
 
         /// <summary>
         /// Inserts the string representation of a specified Unicode character into this instance at the specified character position.
@@ -545,7 +629,9 @@ namespace MaSch.Console.Ansi
         /// <param name="value">The value to insert.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Insert(int index, char value)
-            => Insert(index, value, null);
+        {
+            return Insert(index, value, null);
+        }
 
         /// <summary>
         /// Inserts the string representation of a specified Unicode character with a specified style into this instance at the specified character position.
@@ -555,7 +641,9 @@ namespace MaSch.Console.Ansi
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Insert(int index, char value, Action<AnsiStyle>? styleAction)
-            => CallInsert(index, value, (b, i, x) => b.Insert(i, x), styleAction);
+        {
+            return CallInsert(index, value, (b, i, x) => b.Insert(i, x), styleAction);
+        }
 
         /// <summary>
         /// Removes the specified range of characters from this instance.
@@ -604,7 +692,9 @@ namespace MaSch.Console.Ansi
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Replace(char oldChar, char newChar, Action<AnsiStyle>? styleAction)
-            => Replace(oldChar, newChar, 0, Length, styleAction);
+        {
+            return Replace(oldChar, newChar, 0, Length, styleAction);
+        }
 
         /// <summary>
         /// Replaces, within a substring of this instance, all occurrences of a specified character with another specified character and sets a specified style.
@@ -638,7 +728,9 @@ namespace MaSch.Console.Ansi
         /// <param name="newValue">The string that replaces oldValue, or null.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Replace(string oldValue, string? newValue)
-            => Replace(oldValue, newValue, 0, Length, null);
+        {
+            return Replace(oldValue, newValue, 0, Length, null);
+        }
 
         /// <summary>
         /// Replaces, within a substring of this instance, all occurrences of a specified string with another specified string.
@@ -649,7 +741,9 @@ namespace MaSch.Console.Ansi
         /// <param name="count">The length of the substring.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Replace(string oldValue, string? newValue, int startIndex, int count)
-            => Replace(oldValue, newValue, startIndex, count, null);
+        {
+            return Replace(oldValue, newValue, startIndex, count, null);
+        }
 
         /// <summary>
         /// Replaces all occurrences of a specified string in this instance with another specified string and sets a specified style.
@@ -659,7 +753,9 @@ namespace MaSch.Console.Ansi
         /// <param name="styleAction">The style builder delegate.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public AnsiFormattedString Replace(string oldValue, string? newValue, Action<AnsiStyle>? styleAction)
-            => Replace(oldValue, newValue, 0, Length, styleAction);
+        {
+            return Replace(oldValue, newValue, 0, Length, styleAction);
+        }
 
         /// <summary>
         /// Replaces, within a substring of this instance, all occurrences of a specified string with another specified string and sets a specified style.
@@ -818,7 +914,14 @@ namespace MaSch.Console.Ansi
         /// </summary>
         /// <returns>A <see cref="string"/> whose value is the same as this instance.</returns>
         public override string ToString()
-            => ToString(true);
+        {
+            return ToString(true);
+        }
+
+        private static AnsiTextStyle CombineStyles(AnsiTextStyle current, StyleRange style)
+        {
+            return (current ^ (style.Style.RemovedStyles & current)) | style.Style.AddedStyles;
+        }
 
         private void OnRemove(int startIndex, int length)
         {
@@ -892,18 +995,8 @@ namespace MaSch.Console.Ansi
             Guard.NotOutOfRange(length, nameof(length), 0, Length - startIndex);
         }
 
-        private static AnsiTextStyle CombineStyles(AnsiTextStyle current, StyleRange style)
-        {
-            return (current ^ (style.Style.RemovedStyles & current)) | style.Style.AddedStyles;
-        }
-
         private class StyleRange
         {
-            public int Id { get; set; }
-            public int Start { get; set; }
-            public int Length { get; set; }
-            public AnsiStyle Style { get; }
-
             public StyleRange(int id, int start, int length, AnsiStyle style)
             {
                 Id = id;
@@ -911,6 +1004,11 @@ namespace MaSch.Console.Ansi
                 Length = length;
                 Style = style;
             }
+
+            public int Id { get; set; }
+            public int Start { get; set; }
+            public int Length { get; set; }
+            public AnsiStyle Style { get; }
         }
 
         private sealed class StyleScope : IDisposable
@@ -949,7 +1047,7 @@ namespace MaSch.Console.Ansi
                 }
 
                 if (addLen > 0 && _styleAction is not null)
-                    _formattedString.ApplyStyleImpl(_index, addLen, _styleAction);
+                    _ = _formattedString.ApplyStyleImpl(_index, addLen, _styleAction);
             }
         }
     }

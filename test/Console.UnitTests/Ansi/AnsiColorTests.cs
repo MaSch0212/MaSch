@@ -32,7 +32,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow((AnsiColorCode)256)]
         public void FromColorCode_ArgumentException(AnsiColorCode color)
         {
-            Assert.ThrowsException<ArgumentException>(() => AnsiColor.FromColorCode(color));
+            _ = Assert.ThrowsException<ArgumentException>(() => AnsiColor.FromColorCode(color));
         }
 
         [TestMethod]
@@ -833,7 +833,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow(0, 0, 256)]
         public void FromRgb_ArgumentOutOfRangeException(int r, int g, int b)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiColor.FromRgb(r, g, b));
+            _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiColor.FromRgb(r, g, b));
         }
 
         [TestMethod]
@@ -901,7 +901,7 @@ namespace MaSch.Console.UnitTests.Ansi
         [DataRow((ConsoleColor)16)]
         public void FromConsoleColor_ArgumentOutOfRangeException(ConsoleColor color)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiColor.FromConsoleColor(color));
+            _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => AnsiColor.FromConsoleColor(color));
         }
 
         [TestMethod]

@@ -35,11 +35,6 @@ namespace MaSch.Presentation.Wpf.Commands
         private readonly List<IAsyncCommand> _commands;
 
         /// <summary>
-        /// Gets the commands to execute.
-        /// </summary>
-        public IReadOnlyCollection<IAsyncCommand> Commands => _commands.AsReadOnly();
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="AsyncCompositeCommand"/> class.
         /// </summary>
         public AsyncCompositeCommand()
@@ -66,12 +61,17 @@ namespace MaSch.Presentation.Wpf.Commands
         }
 
         /// <summary>
+        /// Gets the commands to execute.
+        /// </summary>
+        public IReadOnlyCollection<IAsyncCommand> Commands => _commands.AsReadOnly();
+
+        /// <summary>
         /// Adds a command to this <see cref="IAsyncCompositeCommand" />.
         /// </summary>
         /// <param name="command">The command to add.</param>
         public void AddCommand(IAsyncCommand command)
         {
-            _commands.AddIfNotExists(command);
+            _ = _commands.AddIfNotExists(command);
         }
 
         /// <summary>
@@ -97,11 +97,6 @@ namespace MaSch.Presentation.Wpf.Commands
         private readonly List<IAsyncCommand> _commands;
 
         /// <summary>
-        /// Gets the commands to execute.
-        /// </summary>
-        public IReadOnlyCollection<IAsyncCommand> Commands => _commands.AsReadOnly();
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="AsyncCompositeCommand{T}"/> class.
         /// </summary>
         public AsyncCompositeCommand()
@@ -128,12 +123,17 @@ namespace MaSch.Presentation.Wpf.Commands
         }
 
         /// <summary>
+        /// Gets the commands to execute.
+        /// </summary>
+        public IReadOnlyCollection<IAsyncCommand> Commands => _commands.AsReadOnly();
+
+        /// <summary>
         /// Adds a command to this <see cref="IAsyncCompositeCommand" />.
         /// </summary>
         /// <param name="command">The command to add.</param>
         public void AddCommand(IAsyncCommand command)
         {
-            _commands.AddIfNotExists(command);
+            _ = _commands.AddIfNotExists(command);
         }
 
         /// <summary>

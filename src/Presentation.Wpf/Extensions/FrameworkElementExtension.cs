@@ -56,7 +56,7 @@ namespace MaSch.Presentation.Wpf.Extensions
         /// <param name="onResourcesChanged">The delegate to use for the subscription.</param>
         public static void SubscribeResourcesChanged(this FrameworkElement element, EventHandler onResourcesChanged)
         {
-            ResourcesChangedEvent?.AddMethod?.Invoke(element, new object[] { onResourcesChanged });
+            _ = ResourcesChangedEvent?.AddMethod?.Invoke(element, new object[] { onResourcesChanged });
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace MaSch.Presentation.Wpf.Extensions
         /// <param name="onResourcesChanged">The delegate that has been subscribes earlier.</param>
         public static void UnsubscribeResourcesChanged(this FrameworkElement element, EventHandler onResourcesChanged)
         {
-            ResourcesChangedEvent?.RemoveMethod?.Invoke(element, new object[] { onResourcesChanged });
+            _ = ResourcesChangedEvent?.RemoveMethod?.Invoke(element, new object[] { onResourcesChanged });
         }
     }
 }

@@ -34,9 +34,9 @@ namespace MaSch.Test.UnitTests.Models
         public void Verify()
         {
             var mock1 = new Mock<IMockVerifiable>(MockBehavior.Strict);
-            mock1.Setup(x => x.Verify(Times.Once(), "My message"));
+            _ = mock1.Setup(x => x.Verify(Times.Once(), "My message"));
             var mock2 = new Mock<IMockVerifiable>(MockBehavior.Strict);
-            mock2.Setup(x => x.Verify(Times.Once(), "My message"));
+            _ = mock2.Setup(x => x.Verify(Times.Once(), "My message"));
 
             var collection = new MockVerifiableCollection(new[] { mock1.Object, mock2.Object });
             collection.Verify(Times.Once(), "My message");
@@ -49,9 +49,9 @@ namespace MaSch.Test.UnitTests.Models
         public void Dispose_()
         {
             var mock1 = new Mock<IMockVerifiable>(MockBehavior.Strict);
-            mock1.Setup(x => x.Dispose());
+            _ = mock1.Setup(x => x.Dispose());
             var mock2 = new Mock<IMockVerifiable>(MockBehavior.Strict);
-            mock2.Setup(x => x.Dispose());
+            _ = mock2.Setup(x => x.Dispose());
 
             var collection = new MockVerifiableCollection(new[] { mock1.Object, mock2.Object });
             ((IDisposable)collection).Dispose();

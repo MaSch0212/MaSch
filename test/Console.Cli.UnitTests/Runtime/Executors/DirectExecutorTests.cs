@@ -14,13 +14,13 @@ namespace MaSch.Console.Cli.UnitTests.Runtime.Executors
         [TestMethod]
         public void Ctor_NullChecks()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new DirectExecutor(null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => new DirectExecutor(null!));
         }
 
         [TestMethod]
         public void Ctor_WrongType()
         {
-            Assert.ThrowsException<ArgumentException>(() => new DirectExecutor(typeof(object)));
+            _ = Assert.ThrowsException<ArgumentException>(() => new DirectExecutor(typeof(object)));
         }
 
         [TestMethod]
@@ -31,9 +31,9 @@ namespace MaSch.Console.Cli.UnitTests.Runtime.Executors
         {
             var mock = Mocks.Create<object>();
             if (syncExecutor)
-                mock.As<ICliExecutable>();
+                _ = mock.As<ICliExecutable>();
             if (asyncExecutor)
-                mock.As<ICliAsyncExecutable>();
+                _ = mock.As<ICliAsyncExecutable>();
             var commandType = mock.Object.GetType();
 
             var executor = new DirectExecutor(commandType);
@@ -47,8 +47,8 @@ namespace MaSch.Console.Cli.UnitTests.Runtime.Executors
         {
             var sut = CreateSut<ICliExecutable>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => sut.Executor.Execute(sut.ExecutionContext, null!));
-            Assert.ThrowsException<ArgumentNullException>(() => sut.Executor.Execute(null!, new object()));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => sut.Executor.Execute(sut.ExecutionContext, null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => sut.Executor.Execute(null!, new object()));
         }
 
         [TestMethod]
@@ -56,11 +56,11 @@ namespace MaSch.Console.Cli.UnitTests.Runtime.Executors
         {
             var mock1 = Mocks.Create<ICliExecutable>();
             var mock2 = Mocks.Create<ICliExecutable>();
-            mock2.As<IDisposable>();
+            _ = mock2.As<IDisposable>();
 
             var sut = CreateSut(mock1);
 
-            Assert.ThrowsException<ArgumentException>(() => sut.Executor.Execute(sut.ExecutionContext, mock2.Object));
+            _ = Assert.ThrowsException<ArgumentException>(() => sut.Executor.Execute(sut.ExecutionContext, mock2.Object));
         }
 
         [TestMethod]
@@ -80,7 +80,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime.Executors
         public void Execute_SyncExecutor()
         {
             var sut = CreateSut<ICliExecutable>();
-            sut.ExecutableMock.Setup(x => x.ExecuteCommand(sut.ExecutionContext)).Returns(4711).Verifiable(Verifiables, Times.Once());
+            _ = sut.ExecutableMock.Setup(x => x.ExecuteCommand(sut.ExecutionContext)).Returns(4711).Verifiable(Verifiables, Times.Once());
 
             var result = sut.Executor.Execute(sut.ExecutionContext, sut.ExecutableMock.Object);
 
@@ -91,7 +91,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime.Executors
         public void Execute_AsyncExecutor()
         {
             var sut = CreateSut<ICliAsyncExecutable>();
-            sut.ExecutableMock.Setup(x => x.ExecuteCommandAsync(sut.ExecutionContext)).Returns(Task.Delay(10).ContinueWith(x => 4711)).Verifiable(Verifiables, Times.Once());
+            _ = sut.ExecutableMock.Setup(x => x.ExecuteCommandAsync(sut.ExecutionContext)).Returns(Task.Delay(10).ContinueWith(x => 4711)).Verifiable(Verifiables, Times.Once());
 
             var result = sut.Executor.Execute(sut.ExecutionContext, sut.ExecutableMock.Object);
 
@@ -103,8 +103,8 @@ namespace MaSch.Console.Cli.UnitTests.Runtime.Executors
         {
             Mock<ICliAsyncExecutable> asyncMock = null!;
             var sut = CreateSut<ICliExecutable>(action: x => asyncMock = x.As<ICliAsyncExecutable>());
-            sut.ExecutableMock.Setup(x => x.ExecuteCommand(sut.ExecutionContext)).Returns(4711).Verifiable(Verifiables, Times.Once());
-            asyncMock
+            _ = sut.ExecutableMock.Setup(x => x.ExecuteCommand(sut.ExecutionContext)).Returns(4711).Verifiable(Verifiables, Times.Once());
+            _ = asyncMock
                 .Setup(x => x.ExecuteCommandAsync(sut.ExecutionContext))
                 .Returns(Task.Delay(10).ContinueWith(x => 1337))
                 .Verifiable(Verifiables, Times.Never());
@@ -119,8 +119,8 @@ namespace MaSch.Console.Cli.UnitTests.Runtime.Executors
         {
             var sut = CreateSut<ICliAsyncExecutable>();
 
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => sut.Executor.ExecuteAsync(sut.ExecutionContext, null!));
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => sut.Executor.ExecuteAsync(null!, new object()));
+            _ = await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => sut.Executor.ExecuteAsync(sut.ExecutionContext, null!));
+            _ = await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => sut.Executor.ExecuteAsync(null!, new object()));
         }
 
         [TestMethod]
@@ -128,11 +128,11 @@ namespace MaSch.Console.Cli.UnitTests.Runtime.Executors
         {
             var mock1 = Mocks.Create<ICliAsyncExecutable>();
             var mock2 = Mocks.Create<ICliAsyncExecutable>();
-            mock2.As<IDisposable>();
+            _ = mock2.As<IDisposable>();
 
             var sut = CreateSut(mock1);
 
-            await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.Executor.ExecuteAsync(sut.ExecutionContext, mock2.Object));
+            _ = await Assert.ThrowsExceptionAsync<ArgumentException>(() => sut.Executor.ExecuteAsync(sut.ExecutionContext, mock2.Object));
         }
 
         [TestMethod]
@@ -152,7 +152,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime.Executors
         public async Task ExecuteAsync_SyncExecutor()
         {
             var sut = CreateSut<ICliExecutable>();
-            sut.ExecutableMock.Setup(x => x.ExecuteCommand(sut.ExecutionContext)).Returns(4711).Verifiable(Verifiables, Times.Once());
+            _ = sut.ExecutableMock.Setup(x => x.ExecuteCommand(sut.ExecutionContext)).Returns(4711).Verifiable(Verifiables, Times.Once());
 
             var result = await sut.Executor.ExecuteAsync(sut.ExecutionContext, sut.ExecutableMock.Object);
 
@@ -163,7 +163,7 @@ namespace MaSch.Console.Cli.UnitTests.Runtime.Executors
         public async Task ExecuteAsync_AsyncExecutor()
         {
             var sut = CreateSut<ICliAsyncExecutable>();
-            sut.ExecutableMock.Setup(x => x.ExecuteCommandAsync(sut.ExecutionContext)).Returns(Task.Delay(10).ContinueWith(x => 4711)).Verifiable(Verifiables, Times.Once());
+            _ = sut.ExecutableMock.Setup(x => x.ExecuteCommandAsync(sut.ExecutionContext)).Returns(Task.Delay(10).ContinueWith(x => 4711)).Verifiable(Verifiables, Times.Once());
 
             var result = await sut.Executor.ExecuteAsync(sut.ExecutionContext, sut.ExecutableMock.Object);
 
@@ -175,8 +175,8 @@ namespace MaSch.Console.Cli.UnitTests.Runtime.Executors
         {
             Mock<ICliAsyncExecutable> asyncMock = null!;
             var sut = CreateSut<ICliExecutable>(action: x => asyncMock = x.As<ICliAsyncExecutable>());
-            sut.ExecutableMock.Setup(x => x.ExecuteCommand(sut.ExecutionContext)).Returns(4711).Verifiable(Verifiables, Times.Never());
-            asyncMock
+            _ = sut.ExecutableMock.Setup(x => x.ExecuteCommand(sut.ExecutionContext)).Returns(4711).Verifiable(Verifiables, Times.Never());
+            _ = asyncMock
                 .Setup(x => x.ExecuteCommandAsync(sut.ExecutionContext))
                 .Returns(Task.Delay(10).ContinueWith(x => 1337))
                 .Verifiable(Verifiables, Times.Once());
@@ -189,14 +189,14 @@ namespace MaSch.Console.Cli.UnitTests.Runtime.Executors
         private DirectExecutorSut<TExecutable> CreateSut<TExecutable>(Mock<TExecutable>? executableMock = null, Action<Mock<TExecutable>>? action = null)
             where TExecutable : class, ICliExecutableBase
         {
-            var eMock = executableMock ?? Mocks.Create<TExecutable>();
-            action?.Invoke(eMock);
-            var cMock = Mocks.Create<ICliCommandInfo>();
-            var spMock = Mocks.Create<IServiceProvider>();
-            var execCtx = new CliExecutionContext(spMock.Object, cMock.Object);
-            var executor = new DirectExecutor(eMock.Object.GetType());
+            executableMock ??= Mocks.Create<TExecutable>();
+            action?.Invoke(executableMock);
+            var commandMock = Mocks.Create<ICliCommandInfo>();
+            var serviceProviderMock = Mocks.Create<IServiceProvider>();
+            var executionContext = new CliExecutionContext(serviceProviderMock.Object, commandMock.Object);
+            var executor = new DirectExecutor(executableMock.Object.GetType());
 
-            return new DirectExecutorSut<TExecutable>(executor, execCtx, spMock, cMock, eMock);
+            return new DirectExecutorSut<TExecutable>(executor, executionContext, serviceProviderMock, commandMock, executableMock);
         }
 
         private record DirectExecutorSut<TExecutable>(

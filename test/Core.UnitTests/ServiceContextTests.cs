@@ -25,8 +25,8 @@ namespace MaSch.Core.UnitTests
             var result = Context.GetAllServices();
 
             Assert.AreCollectionsEqual(ServiceDict, result);
-            Assert.ThrowsException<NotSupportedException>(() => ((IDictionary<(Type, string?), object>)result)[(typeof(string), null)] = "Hello");
-            Assert.ThrowsException<NotSupportedException>(() => ((IDictionary<(Type, string?), object>)result).Add((typeof(int), null), 2));
+            _ = Assert.ThrowsException<NotSupportedException>(() => ((IDictionary<(Type, string?), object>)result)[(typeof(string), null)] = "Hello");
+            _ = Assert.ThrowsException<NotSupportedException>(() => ((IDictionary<(Type, string?), object>)result).Add((typeof(int), null), 2));
         }
 
         [TestMethod]
@@ -50,13 +50,13 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void AddService_NullInstance()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => Context.AddService(typeof(object), (object?)null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => Context.AddService(typeof(object), (object?)null!));
         }
 
         [TestMethod]
         public void AddService_InstanceHasWrongType()
         {
-            Assert.ThrowsException<ArgumentException>(() => Context.AddService(typeof(string), 123));
+            _ = Assert.ThrowsException<ArgumentException>(() => Context.AddService(typeof(string), 123));
         }
 
         [TestMethod]
@@ -78,8 +78,8 @@ namespace MaSch.Core.UnitTests
             var changingHandlerMock = new Mock<ServiceContextEventHandler>(MockBehavior.Strict);
             var changedHandlerMock = new Mock<ServiceContextEventHandler>(MockBehavior.Strict);
             var expectedArgs = new ServiceContextEventArgs("MyName", typeof(string), null, "MyTest", ServiceAction.Added);
-            changingHandlerMock.Setup(x => x(Context, expectedArgs)).Verifiable(this, Times.Once(), "Changing event handler.");
-            changedHandlerMock.Setup(x => x(Context, expectedArgs)).Verifiable(this, Times.Once(), "Changed event handler.");
+            _ = changingHandlerMock.Setup(x => x(Context, expectedArgs)).Verifiable(this, Times.Once(), "Changing event handler.");
+            _ = changedHandlerMock.Setup(x => x(Context, expectedArgs)).Verifiable(this, Times.Once(), "Changed event handler.");
 
             Context.Changing += changingHandlerMock.Object;
             Context.Changed += changedHandlerMock.Object;
@@ -115,8 +115,8 @@ namespace MaSch.Core.UnitTests
             var changingHandlerMock = new Mock<ServiceContextEventHandler>(MockBehavior.Strict);
             var changedHandlerMock = new Mock<ServiceContextEventHandler>(MockBehavior.Strict);
             var expectedArgs = new ServiceContextEventArgs("MyName", typeof(string), "MyPreviousTest", "MyTest", ServiceAction.Changed);
-            changingHandlerMock.Setup(x => x(Context, expectedArgs)).Verifiable(this, Times.Once(), "Changing event handler.");
-            changedHandlerMock.Setup(x => x(Context, expectedArgs)).Verifiable(this, Times.Once(), "Changed event handler.");
+            _ = changingHandlerMock.Setup(x => x(Context, expectedArgs)).Verifiable(this, Times.Once(), "Changing event handler.");
+            _ = changedHandlerMock.Setup(x => x(Context, expectedArgs)).Verifiable(this, Times.Once(), "Changed event handler.");
 
             Context.Changing += changingHandlerMock.Object;
             Context.Changed += changedHandlerMock.Object;
@@ -135,7 +135,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void GetService_DoesNotExist()
         {
-            Assert.ThrowsException<KeyNotFoundException>(() => Context.GetService(typeof(string), "MyName"));
+            _ = Assert.ThrowsException<KeyNotFoundException>(() => Context.GetService(typeof(string), "MyName"));
         }
 
         [TestMethod]
@@ -152,7 +152,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void RemoveService_DoesNotExist()
         {
-            Assert.ThrowsException<KeyNotFoundException>(() => Context.RemoveService(typeof(string), "MyName"));
+            _ = Assert.ThrowsException<KeyNotFoundException>(() => Context.RemoveService(typeof(string), "MyName"));
         }
 
         [TestMethod]
@@ -177,8 +177,8 @@ namespace MaSch.Core.UnitTests
             var changingHandlerMock = new Mock<ServiceContextEventHandler>(MockBehavior.Strict);
             var changedHandlerMock = new Mock<ServiceContextEventHandler>(MockBehavior.Strict);
             var expectedArgs = new ServiceContextEventArgs("MyName", typeof(string), "MyPreviousTest", null, ServiceAction.Removed);
-            changingHandlerMock.Setup(x => x(Context, expectedArgs)).Verifiable(this, Times.Once(), "Changing event handler.");
-            changedHandlerMock.Setup(x => x(Context, expectedArgs)).Verifiable(this, Times.Once(), "Changed event handler.");
+            _ = changingHandlerMock.Setup(x => x(Context, expectedArgs)).Verifiable(this, Times.Once(), "Changing event handler.");
+            _ = changedHandlerMock.Setup(x => x(Context, expectedArgs)).Verifiable(this, Times.Once(), "Changed event handler.");
 
             Context.Changing += changingHandlerMock.Object;
             Context.Changed += changedHandlerMock.Object;
@@ -229,10 +229,10 @@ namespace MaSch.Core.UnitTests
             var changedHandlerMock = new Mock<ServiceContextEventHandler>(MockBehavior.Strict);
             var expectedArgs1 = new ServiceContextEventArgs("MyName", typeof(string), "MyPreviousTest", null, ServiceAction.Removed);
             var expectedArgs2 = new ServiceContextEventArgs("MyName", typeof(object), obj, null, ServiceAction.Removed);
-            changingHandlerMock.Setup(x => x(Context, expectedArgs1)).Verifiable(this, Times.Once(), "Changing event handler.");
-            changingHandlerMock.Setup(x => x(Context, expectedArgs2)).Verifiable(this, Times.Once(), "Changing event handler.");
-            changedHandlerMock.Setup(x => x(Context, expectedArgs1)).Verifiable(this, Times.Once(), "Changed event handler.");
-            changedHandlerMock.Setup(x => x(Context, expectedArgs2)).Verifiable(this, Times.Once(), "Changed event handler.");
+            _ = changingHandlerMock.Setup(x => x(Context, expectedArgs1)).Verifiable(this, Times.Once(), "Changing event handler.");
+            _ = changingHandlerMock.Setup(x => x(Context, expectedArgs2)).Verifiable(this, Times.Once(), "Changing event handler.");
+            _ = changedHandlerMock.Setup(x => x(Context, expectedArgs1)).Verifiable(this, Times.Once(), "Changed event handler.");
+            _ = changedHandlerMock.Setup(x => x(Context, expectedArgs2)).Verifiable(this, Times.Once(), "Changed event handler.");
 
             Context.Changing += changingHandlerMock.Object;
             Context.Changed += changedHandlerMock.Object;
@@ -290,8 +290,8 @@ namespace MaSch.Core.UnitTests
             var changingHandlerMock = new Mock<ServiceContextEventHandler>(MockBehavior.Strict);
             var changedHandlerMock = new Mock<ServiceContextEventHandler>(MockBehavior.Strict);
             var expectedArgs1 = new ServiceContextEventArgs("MyName", typeof(string), "MyPreviousTest", null, ServiceAction.Removed);
-            changingHandlerMock.Setup(x => x(Context, expectedArgs1)).Verifiable(this, Times.Once(), "Changing event handler.");
-            changedHandlerMock.Setup(x => x(Context, expectedArgs1)).Verifiable(this, Times.Once(), "Changed event handler.");
+            _ = changingHandlerMock.Setup(x => x(Context, expectedArgs1)).Verifiable(this, Times.Once(), "Changing event handler.");
+            _ = changedHandlerMock.Setup(x => x(Context, expectedArgs1)).Verifiable(this, Times.Once(), "Changed event handler.");
 
             Context.Changing += changingHandlerMock.Object;
             Context.Changed += changedHandlerMock.Object;
@@ -351,8 +351,8 @@ namespace MaSch.Core.UnitTests
         {
             var view = Context.GetView<string>();
 
-            var sView = Assert.IsInstanceOfType<ServiceContext<string>>(view);
-            Assert.AreSame(Context, sView.Context);
+            var castedView = Assert.IsInstanceOfType<ServiceContext<string>>(view);
+            Assert.AreSame(Context, castedView.Context);
             Assert.Contains(new KeyValuePair<Type, IDisposable>(typeof(string), view), ViewsDict);
         }
 
@@ -371,10 +371,10 @@ namespace MaSch.Core.UnitTests
         public void Dispose_()
         {
             var viewMock1 = new Mock<IServiceContext<string>>(MockBehavior.Strict);
-            viewMock1.Setup(x => x.Dispose()).Verifiable(this, Times.Once());
+            _ = viewMock1.Setup(x => x.Dispose()).Verifiable(this, Times.Once());
             ViewsDict.Add(typeof(string), viewMock1.Object);
             var viewMock2 = new Mock<IServiceContext<object>>(MockBehavior.Strict);
-            viewMock2.Setup(x => x.Dispose()).Verifiable(this, Times.Once());
+            _ = viewMock2.Setup(x => x.Dispose()).Verifiable(this, Times.Once());
             ViewsDict.Add(typeof(object), viewMock2.Object);
 
             ServiceDict.Add((typeof(string), null), "blub");
@@ -418,7 +418,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void GetAllServices()
         {
-            ContextMock
+            _ = ContextMock
                 .Setup(x => x.GetAllServices(typeof(string)))
                 .Returns(new (string?, object)[] { ("blub", "Test123"), ("zzz", "bar") })
                 .Verifiable(this, Times.Once());
@@ -431,7 +431,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void AddService()
         {
-            ContextMock.Setup(x => x.AddService(typeof(string), "MyTest", "MyName")).Verifiable(this, Times.Once());
+            _ = ContextMock.Setup(x => x.AddService(typeof(string), "MyTest", "MyName")).Verifiable(this, Times.Once());
 
             Context.AddService("MyTest", "MyName");
         }
@@ -439,7 +439,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void GetService()
         {
-            ContextMock.Setup(x => x.GetService(typeof(string), "MyName")).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = ContextMock.Setup(x => x.GetService(typeof(string), "MyName")).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = Context.GetService("MyName");
 
@@ -449,7 +449,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void ContainsService_True()
         {
-            ContextMock.Setup(x => x.ContainsService(typeof(string), "MyName")).Returns(true).Verifiable(this, Times.Once());
+            _ = ContextMock.Setup(x => x.ContainsService(typeof(string), "MyName")).Returns(true).Verifiable(this, Times.Once());
 
             Assert.IsTrue(Context.ContainsService("MyName"));
         }
@@ -457,7 +457,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void ContainsService_False()
         {
-            ContextMock.Setup(x => x.ContainsService(typeof(string), "MyName")).Returns(false).Verifiable(this, Times.Once());
+            _ = ContextMock.Setup(x => x.ContainsService(typeof(string), "MyName")).Returns(false).Verifiable(this, Times.Once());
 
             Assert.IsFalse(Context.ContainsService("MyName"));
         }
@@ -465,7 +465,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void RemoveService()
         {
-            ContextMock.Setup(x => x.RemoveService(typeof(string), "MyName")).Verifiable(this, Times.Once());
+            _ = ContextMock.Setup(x => x.RemoveService(typeof(string), "MyName")).Verifiable(this, Times.Once());
 
             Context.RemoveService("MyName");
         }
@@ -473,7 +473,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void Clear()
         {
-            ContextMock.Setup(x => x.Clear(typeof(string))).Verifiable(this, Times.Once());
+            _ = ContextMock.Setup(x => x.Clear(typeof(string))).Verifiable(this, Times.Once());
 
             Context.Clear();
         }
@@ -481,12 +481,12 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void Dispose_()
         {
-            ContextMock
+            _ = ContextMock
                 .SetupAdd(x => x.Changing += It.IsAny<ServiceContextEventHandler>())
                 .Callback<ServiceContextEventHandler>(
                     @event => ContextMock.SetupRemove(x => x.Changing -= @event).Verifiable(this, Times.Once(), "Changing event handler (remove)."))
                 .Verifiable(this, Times.Once(), "Changing event handler (add)");
-            ContextMock
+            _ = ContextMock
                 .SetupAdd(x => x.Changed += It.IsAny<ServiceContextEventHandler>())
                 .Callback<ServiceContextEventHandler>(
                     @event => ContextMock.SetupRemove(x => x.Changed -= @event).Verifiable(this, Times.Once(), "Changed event handler (remove)."))
@@ -496,7 +496,6 @@ namespace MaSch.Core.UnitTests
         }
 
         [TestMethod]
-        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Mock is verified, no need to dispose")]
         public void ChangingEvent_WrongType()
         {
             ServiceContextEventHandler? contextHandler = null;
@@ -513,7 +512,6 @@ namespace MaSch.Core.UnitTests
         }
 
         [TestMethod]
-        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Mock is verified, no need to dispose")]
         public void ChangingEvent_CorrectType()
         {
             ServiceContextEventHandler? contextHandler = null;
@@ -522,7 +520,7 @@ namespace MaSch.Core.UnitTests
                 .Callback<ServiceContextEventHandler>(@event => contextHandler = @event)
                 .Verifiable(Times.Once(), "Changing event handler (add)");
             var eventHandlerMock = new Mock<ServiceContextEventHandler<string>>(MockBehavior.Strict);
-            eventHandlerMock
+            _ = eventHandlerMock
                 .Setup(x => x(Context, new ServiceContextEventArgs<string>("MyName", "OldValue", "NewValue", ServiceAction.Changed)))
                 .Callback<object?, ServiceContextEventArgs<string>>((e, a) => Assert.AreEqual(typeof(string), a.Type))
                 .Verifiable(this, Times.Once());
@@ -534,7 +532,6 @@ namespace MaSch.Core.UnitTests
         }
 
         [TestMethod]
-        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Mock is verified, no need to dispose")]
         public void ChangingEvent_CorrectType_NullHandler()
         {
             ServiceContextEventHandler? contextHandler = null;
@@ -550,7 +547,6 @@ namespace MaSch.Core.UnitTests
         }
 
         [TestMethod]
-        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Mock is verified, no need to dispose")]
         public void ChangedEvent_WrongType()
         {
             ServiceContextEventHandler? contextHandler = null;
@@ -567,7 +563,6 @@ namespace MaSch.Core.UnitTests
         }
 
         [TestMethod]
-        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Mock is verified, no need to dispose")]
         public void ChangedEvent_CorrectType()
         {
             ServiceContextEventHandler? contextHandler = null;
@@ -576,7 +571,7 @@ namespace MaSch.Core.UnitTests
                 .Callback<ServiceContextEventHandler>(@event => contextHandler = @event)
                 .Verifiable(Times.Once(), "Changed event handler (add)");
             var eventHandlerMock = new Mock<ServiceContextEventHandler<string>>(MockBehavior.Strict);
-            eventHandlerMock
+            _ = eventHandlerMock
                 .Setup(x => x(Context, new ServiceContextEventArgs<string>("MyName", "OldValue", "NewValue", ServiceAction.Changed)))
                 .Callback<object?, ServiceContextEventArgs<string>>((e, a) => Assert.AreEqual(typeof(string), a.Type))
                 .Verifiable(this, Times.Once());
@@ -588,7 +583,6 @@ namespace MaSch.Core.UnitTests
         }
 
         [TestMethod]
-        [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "Mock is verified, no need to dispose")]
         public void ChangedEvent_CorrectType_NullHandler()
         {
             ServiceContextEventHandler? contextHandler = null;
@@ -606,8 +600,8 @@ namespace MaSch.Core.UnitTests
         private static Mock<IServiceContext> CreateContextMock()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.SetupAdd(x => x.Changing += It.IsAny<ServiceContextEventHandler>());
-            mock.SetupAdd(x => x.Changed += It.IsAny<ServiceContextEventHandler>());
+            _ = mock.SetupAdd(x => x.Changing += It.IsAny<ServiceContextEventHandler>());
+            _ = mock.SetupAdd(x => x.Changed += It.IsAny<ServiceContextEventHandler>());
             return mock;
         }
     }
@@ -616,11 +610,6 @@ namespace MaSch.Core.UnitTests
     public class ServiceContextStaticTests : TestClassBase
     {
         private static readonly FieldInfo InstanceField = typeof(ServiceContext).GetField("_instance", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)!;
-
-        protected override void OnCleanupTest()
-        {
-            ClearMockInstance();
-        }
 
         [TestMethod]
         public void Instance_NonExistingInstance()
@@ -656,7 +645,7 @@ namespace MaSch.Core.UnitTests
         {
             var mock = SetMockInstance();
             var dict = new Mock<IReadOnlyDictionary<(Type, string?), object>>();
-            mock.Setup(x => x.GetAllServices()).Returns(dict.Object).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetAllServices()).Returns(dict.Object).Verifiable(this, Times.Once());
 
             var result = ServiceContext.GetAllServices();
 
@@ -666,7 +655,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void GetAllServicesT()
         {
-            SetMockInstance()
+            _ = SetMockInstance()
                 .Setup(x => x.GetAllServices(typeof(string)))
                 .Returns(new (string?, object)[] { ("blub", "Test123"), ("zzz", "bar") })
                 .Verifiable(this, Times.Once());
@@ -680,7 +669,7 @@ namespace MaSch.Core.UnitTests
         public void GetAllServices_WithServiceType()
         {
             var list = new Mock<IEnumerable<(string?, object)>>();
-            SetMockInstance().Setup(x => x.GetAllServices(typeof(string))).Returns(list.Object).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.GetAllServices(typeof(string))).Returns(list.Object).Verifiable(this, Times.Once());
 
             var result = ServiceContext.GetAllServices(typeof(string));
 
@@ -690,7 +679,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void AddServiceT()
         {
-            SetMockInstance().Setup(x => x.AddService(typeof(string), "MyTest", null)).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.AddService(typeof(string), "MyTest", null)).Verifiable(this, Times.Once());
 
             ServiceContext.AddService("MyTest");
         }
@@ -698,7 +687,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void AddServiceT_WithName()
         {
-            SetMockInstance().Setup(x => x.AddService(typeof(string), "MyTest", "blub")).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.AddService(typeof(string), "MyTest", "blub")).Verifiable(this, Times.Once());
 
             ServiceContext.AddService("MyTest", "blub");
         }
@@ -706,7 +695,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void AddService()
         {
-            SetMockInstance().Setup(x => x.AddService(typeof(string), "MyTest", null)).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.AddService(typeof(string), "MyTest", null)).Verifiable(this, Times.Once());
 
             ServiceContext.AddService(typeof(string), (object)"MyTest");
         }
@@ -714,7 +703,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void AddService_WithName()
         {
-            SetMockInstance().Setup(x => x.AddService(typeof(string), "MyTest", "blub")).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.AddService(typeof(string), "MyTest", "blub")).Verifiable(this, Times.Once());
 
             ServiceContext.AddService(typeof(string), "MyTest", "blub");
         }
@@ -722,7 +711,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void GetServiceTOut()
         {
-            SetMockInstance().Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
 
             ServiceContext.GetService(out string result);
 
@@ -732,7 +721,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void GetServiceTOut_WithName()
         {
-            SetMockInstance().Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
 
             ServiceContext.GetService(out string result, "blub");
 
@@ -742,7 +731,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void GetServiceT()
         {
-            SetMockInstance().Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContext.GetService<string>();
 
@@ -752,7 +741,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void GetServiceT_WithName()
         {
-            SetMockInstance().Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContext.GetService<string>("blub");
 
@@ -762,7 +751,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void GetService()
         {
-            SetMockInstance().Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContext.GetService(typeof(string));
 
@@ -772,7 +761,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void GetService_WithName()
         {
-            SetMockInstance().Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContext.GetService(typeof(string), "blub");
 
@@ -783,8 +772,8 @@ namespace MaSch.Core.UnitTests
         public void TryGetServiceTOut_Found()
         {
             var mock = SetMockInstance();
-            mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
 
             var success = ServiceContext.TryGetService<string>(out var result);
 
@@ -795,7 +784,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void TryGetServiceTOut_NotFound()
         {
-            SetMockInstance().Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
 
             var success = ServiceContext.TryGetService<string>(out var result);
 
@@ -807,8 +796,8 @@ namespace MaSch.Core.UnitTests
         public void TryGetServiceTOut_Found_WithName()
         {
             var mock = SetMockInstance();
-            mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
 
             var success = ServiceContext.TryGetService<string>(out var result, "blub");
 
@@ -819,7 +808,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void TryGetServiceTOut_NotFound_WithName()
         {
-            SetMockInstance().Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
 
             var success = ServiceContext.TryGetService<string>(out var result, "blub");
 
@@ -831,8 +820,8 @@ namespace MaSch.Core.UnitTests
         public void TryGetServiceT_Found()
         {
             var mock = SetMockInstance();
-            mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContext.TryGetService<string>();
 
@@ -842,7 +831,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void TryGetServiceT_NotFound()
         {
-            SetMockInstance().Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
 
             var result = ServiceContext.TryGetService<string>();
 
@@ -853,8 +842,8 @@ namespace MaSch.Core.UnitTests
         public void TryGetServiceT_Found_WithName()
         {
             var mock = SetMockInstance();
-            mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContext.TryGetService<string>("blub");
 
@@ -864,7 +853,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void TryGetServiceT_NotFound_WithName()
         {
-            SetMockInstance().Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
 
             var result = ServiceContext.TryGetService<string>("blub");
 
@@ -875,8 +864,8 @@ namespace MaSch.Core.UnitTests
         public void TryGetService_Found()
         {
             var mock = SetMockInstance();
-            mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContext.TryGetService(typeof(string));
 
@@ -886,7 +875,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void TryGetService_NotFound()
         {
-            SetMockInstance().Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
 
             var result = ServiceContext.TryGetService(typeof(string));
 
@@ -897,8 +886,8 @@ namespace MaSch.Core.UnitTests
         public void TryGetService_Found_WithName()
         {
             var mock = SetMockInstance();
-            mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContext.TryGetService(typeof(string), "blub");
 
@@ -908,7 +897,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void TryGetService_NotFound_WithName()
         {
-            SetMockInstance().Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
 
             var result = ServiceContext.TryGetService(typeof(string), "blub");
 
@@ -918,7 +907,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void RemoveServiceT()
         {
-            SetMockInstance().Setup(x => x.RemoveService(typeof(string), null)).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.RemoveService(typeof(string), null)).Verifiable(this, Times.Once());
 
             ServiceContext.RemoveService<string>();
         }
@@ -926,7 +915,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void RemoveServiceT_WithName()
         {
-            SetMockInstance().Setup(x => x.RemoveService(typeof(string), "blub")).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.RemoveService(typeof(string), "blub")).Verifiable(this, Times.Once());
 
             ServiceContext.RemoveService<string>("blub");
         }
@@ -934,7 +923,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void RemoveService()
         {
-            SetMockInstance().Setup(x => x.RemoveService(typeof(string), null)).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.RemoveService(typeof(string), null)).Verifiable(this, Times.Once());
 
             ServiceContext.RemoveService(typeof(string));
         }
@@ -942,7 +931,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void RemoveService_WithName()
         {
-            SetMockInstance().Setup(x => x.RemoveService(typeof(string), "blub")).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.RemoveService(typeof(string), "blub")).Verifiable(this, Times.Once());
 
             ServiceContext.RemoveService(typeof(string), "blub");
         }
@@ -951,8 +940,8 @@ namespace MaSch.Core.UnitTests
         public void TryRemoveServiceT_Found()
         {
             var mock = SetMockInstance();
-            mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.RemoveService(typeof(string), null)).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.RemoveService(typeof(string), null)).Verifiable(this, Times.Once());
 
             ServiceContext.TryRemoveService<string>();
         }
@@ -960,7 +949,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void TryRemoveServiceT_NotFound()
         {
-            SetMockInstance().Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
 
             ServiceContext.TryRemoveService<string>();
         }
@@ -969,8 +958,8 @@ namespace MaSch.Core.UnitTests
         public void TryRemoveServiceT_Found_WithName()
         {
             var mock = SetMockInstance();
-            mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.RemoveService(typeof(string), "blub")).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.RemoveService(typeof(string), "blub")).Verifiable(this, Times.Once());
 
             ServiceContext.TryRemoveService<string>("blub");
         }
@@ -978,7 +967,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void TryRemoveServiceT_NotFound_WithName()
         {
-            SetMockInstance().Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
 
             ServiceContext.TryRemoveService<string>("blub");
         }
@@ -987,8 +976,8 @@ namespace MaSch.Core.UnitTests
         public void TryRemoveService_Found()
         {
             var mock = SetMockInstance();
-            mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.RemoveService(typeof(string), null)).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.RemoveService(typeof(string), null)).Verifiable(this, Times.Once());
 
             ServiceContext.TryRemoveService(typeof(string));
         }
@@ -996,7 +985,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void TryRemoveService_NotFound()
         {
-            SetMockInstance().Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
 
             ServiceContext.TryRemoveService(typeof(string));
         }
@@ -1005,8 +994,8 @@ namespace MaSch.Core.UnitTests
         public void TryRemoveService_Found_WithName()
         {
             var mock = SetMockInstance();
-            mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.RemoveService(typeof(string), "blub")).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.RemoveService(typeof(string), "blub")).Verifiable(this, Times.Once());
 
             ServiceContext.TryRemoveService(typeof(string), "blub");
         }
@@ -1014,7 +1003,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void TryRemoveService_NotFound_WithName()
         {
-            SetMockInstance().Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
 
             ServiceContext.TryRemoveService(typeof(string), "blub");
         }
@@ -1022,7 +1011,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void ContainsServiceT_True()
         {
-            SetMockInstance().Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
 
             Assert.IsTrue(ServiceContext.ContainsService<string>());
         }
@@ -1030,7 +1019,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void ContainsServiceT_False()
         {
-            SetMockInstance().Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
 
             Assert.IsFalse(ServiceContext.ContainsService<string>());
         }
@@ -1038,7 +1027,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void ContainsServiceT_WithName_True()
         {
-            SetMockInstance().Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
 
             Assert.IsTrue(ServiceContext.ContainsService<string>("blub"));
         }
@@ -1046,7 +1035,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void ContainsServiceT_WithName_False()
         {
-            SetMockInstance().Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
 
             Assert.IsFalse(ServiceContext.ContainsService<string>("blub"));
         }
@@ -1054,7 +1043,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void ContainsService_True()
         {
-            SetMockInstance().Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
 
             Assert.IsTrue(ServiceContext.ContainsService(typeof(string)));
         }
@@ -1062,7 +1051,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void ContainsService_false()
         {
-            SetMockInstance().Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
 
             Assert.IsFalse(ServiceContext.ContainsService(typeof(string)));
         }
@@ -1070,7 +1059,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void ContainsService_WithName_True()
         {
-            SetMockInstance().Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
 
             Assert.IsTrue(ServiceContext.ContainsService(typeof(string), "blub"));
         }
@@ -1078,7 +1067,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void ContainsService_WithName_False()
         {
-            SetMockInstance().Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
 
             Assert.IsFalse(ServiceContext.ContainsService(typeof(string), "blub"));
         }
@@ -1086,7 +1075,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void Clear()
         {
-            SetMockInstance().Setup(x => x.Clear(null)).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.Clear(null)).Verifiable(this, Times.Once());
 
             ServiceContext.Clear();
         }
@@ -1094,7 +1083,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void ClearT()
         {
-            SetMockInstance().Setup(x => x.Clear(typeof(string))).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.Clear(typeof(string))).Verifiable(this, Times.Once());
 
             ServiceContext.Clear<string>();
         }
@@ -1102,7 +1091,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void Clear_WithType()
         {
-            SetMockInstance().Setup(x => x.Clear(typeof(string))).Verifiable(this, Times.Once());
+            _ = SetMockInstance().Setup(x => x.Clear(typeof(string))).Verifiable(this, Times.Once());
 
             ServiceContext.Clear(typeof(string));
         }
@@ -1118,20 +1107,20 @@ namespace MaSch.Core.UnitTests
         {
             InstanceField.SetValue(null, null);
         }
+
+        protected override void OnCleanupTest()
+        {
+            ClearMockInstance();
+        }
     }
 
     [TestClass]
     public class ServiceContextTStaticTests : TestClassBase
     {
-        protected override void OnCleanupTest()
-        {
-            ServiceContextStaticTests.ClearMockInstance();
-        }
-
         [TestMethod]
         public void GetAllServices()
         {
-            SetMockInstance<string>()
+            _ = SetMockInstance<string>()
                 .Setup(x => x.GetAllServices())
                 .Returns(new (string?, string)[] { ("blub", "Test123"), ("zzz", "bar") })
                 .Verifiable(this, Times.Once());
@@ -1144,7 +1133,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void AddService()
         {
-            SetMockInstance<string>().Setup(x => x.AddService("MyTest", null)).Verifiable(this, Times.Once());
+            _ = SetMockInstance<string>().Setup(x => x.AddService("MyTest", null)).Verifiable(this, Times.Once());
 
             ServiceContext<string>.AddService("MyTest");
         }
@@ -1152,7 +1141,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void AddService_WithName()
         {
-            SetMockInstance<string>().Setup(x => x.AddService("MyTest", "blub")).Verifiable(this, Times.Once());
+            _ = SetMockInstance<string>().Setup(x => x.AddService("MyTest", "blub")).Verifiable(this, Times.Once());
 
             ServiceContext<string>.AddService("MyTest", "blub");
         }
@@ -1160,7 +1149,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void GetServiceOut()
         {
-            SetMockInstance<string>().Setup(x => x.GetService(null)).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = SetMockInstance<string>().Setup(x => x.GetService(null)).Returns("MyTest").Verifiable(this, Times.Once());
 
             ServiceContext<string>.GetService(out var result);
 
@@ -1170,7 +1159,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void GetServiceOut_WithName()
         {
-            SetMockInstance<string>().Setup(x => x.GetService("blub")).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = SetMockInstance<string>().Setup(x => x.GetService("blub")).Returns("MyTest").Verifiable(this, Times.Once());
 
             ServiceContext<string>.GetService(out var result, "blub");
 
@@ -1180,7 +1169,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void GetService()
         {
-            SetMockInstance<string>().Setup(x => x.GetService(null)).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = SetMockInstance<string>().Setup(x => x.GetService(null)).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContext<string>.GetService();
 
@@ -1190,7 +1179,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void GetService_WithName()
         {
-            SetMockInstance<string>().Setup(x => x.GetService("blub")).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = SetMockInstance<string>().Setup(x => x.GetService("blub")).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContext<string>.GetService("blub");
 
@@ -1201,8 +1190,8 @@ namespace MaSch.Core.UnitTests
         public void TryGetServiceOut_Found()
         {
             var mock = SetMockInstance<string>();
-            mock.Setup(x => x.ContainsService(null)).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.GetService(null)).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(null)).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(null)).Returns("MyTest").Verifiable(this, Times.Once());
 
             var success = ServiceContext<string>.TryGetService(out var result);
 
@@ -1214,7 +1203,7 @@ namespace MaSch.Core.UnitTests
         public void TryGetServiceOut_NotFound()
         {
             var mock = SetMockInstance<string>();
-            mock.Setup(x => x.ContainsService(null)).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(null)).Returns(false).Verifiable(this, Times.Once());
 
             var success = ServiceContext<string>.TryGetService(out var result);
 
@@ -1226,8 +1215,8 @@ namespace MaSch.Core.UnitTests
         public void TryGetServiceOut_Found_WithName()
         {
             var mock = SetMockInstance<string>();
-            mock.Setup(x => x.ContainsService("blub")).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.GetService("blub")).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService("blub")).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService("blub")).Returns("MyTest").Verifiable(this, Times.Once());
 
             var success = ServiceContext<string>.TryGetService(out var result, "blub");
 
@@ -1239,7 +1228,7 @@ namespace MaSch.Core.UnitTests
         public void TryGetServiceOut_NotFound_WithName()
         {
             var mock = SetMockInstance<string>();
-            mock.Setup(x => x.ContainsService("blub")).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService("blub")).Returns(false).Verifiable(this, Times.Once());
 
             var success = ServiceContext<string>.TryGetService(out var result, "blub");
 
@@ -1251,8 +1240,8 @@ namespace MaSch.Core.UnitTests
         public void TryGetService_Found()
         {
             var mock = SetMockInstance<string>();
-            mock.Setup(x => x.ContainsService(null)).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.GetService(null)).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(null)).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(null)).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContext<string>.TryGetService();
 
@@ -1263,7 +1252,7 @@ namespace MaSch.Core.UnitTests
         public void TryGetService_NotFound()
         {
             var mock = SetMockInstance<string>();
-            mock.Setup(x => x.ContainsService(null)).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(null)).Returns(false).Verifiable(this, Times.Once());
 
             var result = ServiceContext<string>.TryGetService();
 
@@ -1274,8 +1263,8 @@ namespace MaSch.Core.UnitTests
         public void TryGetService_Found_WithName()
         {
             var mock = SetMockInstance<string>();
-            mock.Setup(x => x.ContainsService("blub")).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.GetService("blub")).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService("blub")).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService("blub")).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContext<string>.TryGetService("blub");
 
@@ -1286,7 +1275,7 @@ namespace MaSch.Core.UnitTests
         public void TryGetService_NotFound_WithName()
         {
             var mock = SetMockInstance<string>();
-            mock.Setup(x => x.ContainsService("blub")).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService("blub")).Returns(false).Verifiable(this, Times.Once());
 
             var result = ServiceContext<string>.TryGetService("blub");
 
@@ -1296,7 +1285,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void RemoveService()
         {
-            SetMockInstance<string>().Setup(x => x.RemoveService(null)).Verifiable(this, Times.Once());
+            _ = SetMockInstance<string>().Setup(x => x.RemoveService(null)).Verifiable(this, Times.Once());
 
             ServiceContext<string>.RemoveService();
         }
@@ -1304,7 +1293,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void RemoveService_WithName()
         {
-            SetMockInstance<string>().Setup(x => x.RemoveService("blub")).Verifiable(this, Times.Once());
+            _ = SetMockInstance<string>().Setup(x => x.RemoveService("blub")).Verifiable(this, Times.Once());
 
             ServiceContext<string>.RemoveService("blub");
         }
@@ -1313,8 +1302,8 @@ namespace MaSch.Core.UnitTests
         public void TryRemoveService_Found()
         {
             var mock = SetMockInstance<string>();
-            mock.Setup(x => x.ContainsService(null)).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.RemoveService(null)).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(null)).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.RemoveService(null)).Verifiable(this, Times.Once());
 
             ServiceContext<string>.TryRemoveService();
         }
@@ -1323,7 +1312,7 @@ namespace MaSch.Core.UnitTests
         public void TryRemoveService_NotFound()
         {
             var mock = SetMockInstance<string>();
-            mock.Setup(x => x.ContainsService(null)).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(null)).Returns(false).Verifiable(this, Times.Once());
 
             ServiceContext<string>.TryRemoveService();
         }
@@ -1332,8 +1321,8 @@ namespace MaSch.Core.UnitTests
         public void TryRemoveService_Found_WithName()
         {
             var mock = SetMockInstance<string>();
-            mock.Setup(x => x.ContainsService("blub")).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.RemoveService("blub")).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService("blub")).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.RemoveService("blub")).Verifiable(this, Times.Once());
 
             ServiceContext<string>.TryRemoveService("blub");
         }
@@ -1342,7 +1331,7 @@ namespace MaSch.Core.UnitTests
         public void TryRemoveService_NotFound_WithName()
         {
             var mock = SetMockInstance<string>();
-            mock.Setup(x => x.ContainsService("blub")).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService("blub")).Returns(false).Verifiable(this, Times.Once());
 
             ServiceContext<string>.TryRemoveService("blub");
         }
@@ -1350,7 +1339,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void ContainsService_True()
         {
-            SetMockInstance<string>().Setup(x => x.ContainsService(null)).Returns(true).Verifiable(this, Times.Once());
+            _ = SetMockInstance<string>().Setup(x => x.ContainsService(null)).Returns(true).Verifiable(this, Times.Once());
 
             Assert.IsTrue(ServiceContext<string>.ContainsService());
         }
@@ -1358,7 +1347,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void ContainsService_False()
         {
-            SetMockInstance<string>().Setup(x => x.ContainsService(null)).Returns(false).Verifiable(this, Times.Once());
+            _ = SetMockInstance<string>().Setup(x => x.ContainsService(null)).Returns(false).Verifiable(this, Times.Once());
 
             Assert.IsFalse(ServiceContext<string>.ContainsService());
         }
@@ -1366,7 +1355,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void ContainsService_True_WithName()
         {
-            SetMockInstance<string>().Setup(x => x.ContainsService("blub")).Returns(true).Verifiable(this, Times.Once());
+            _ = SetMockInstance<string>().Setup(x => x.ContainsService("blub")).Returns(true).Verifiable(this, Times.Once());
 
             Assert.IsTrue(ServiceContext<string>.ContainsService("blub"));
         }
@@ -1374,7 +1363,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void ContainsService_False_WithName()
         {
-            SetMockInstance<string>().Setup(x => x.ContainsService("blub")).Returns(false).Verifiable(this, Times.Once());
+            _ = SetMockInstance<string>().Setup(x => x.ContainsService("blub")).Returns(false).Verifiable(this, Times.Once());
 
             Assert.IsFalse(ServiceContext<string>.ContainsService("blub"));
         }
@@ -1382,7 +1371,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void Clear()
         {
-            SetMockInstance<string>().Setup(x => x.Clear()).Verifiable(this, Times.Once());
+            _ = SetMockInstance<string>().Setup(x => x.Clear()).Verifiable(this, Times.Once());
 
             ServiceContext<string>.Clear();
         }
@@ -1392,9 +1381,14 @@ namespace MaSch.Core.UnitTests
             var mock = new Mock<IServiceContext<T>>(MockBehavior.Strict);
 
             var nonGenericInstanceMock = ServiceContextStaticTests.SetMockInstance();
-            nonGenericInstanceMock.Setup(x => x.GetView<T>()).Returns(mock.Object);
+            _ = nonGenericInstanceMock.Setup(x => x.GetView<T>()).Returns(mock.Object);
 
             return mock;
+        }
+
+        protected override void OnCleanupTest()
+        {
+            ServiceContextStaticTests.ClearMockInstance();
         }
     }
 
@@ -1407,7 +1401,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_GetAllServicesT()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.GetAllServices(typeof(string)))
+            _ = mock.Setup(x => x.GetAllServices(typeof(string)))
                 .Returns(new (string?, object)[] { ("blub", "Test123"), ("zzz", "bar") })
                 .Verifiable(this, Times.Once());
 
@@ -1420,7 +1414,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_AddService()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.AddService(typeof(string), "MyTest", null)).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.AddService(typeof(string), "MyTest", null)).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.AddService(mock.Object, typeof(string), (object)"MyTest");
         }
@@ -1429,7 +1423,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_AddServiceT()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.AddService(typeof(string), "MyTest", null)).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.AddService(typeof(string), "MyTest", null)).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.AddService(mock.Object, "MyTest");
         }
@@ -1438,7 +1432,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_AddServiceT_WithName()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.AddService(typeof(string), "MyTest", "blub")).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.AddService(typeof(string), "MyTest", "blub")).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.AddService(mock.Object, "MyTest", "blub");
         }
@@ -1447,7 +1441,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_GetService()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContextExtensions.GetService(mock.Object, typeof(string));
 
@@ -1458,7 +1452,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_GetServiceTOut()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
 
             ServiceContextExtensions.GetService<string>(mock.Object, out var result);
 
@@ -1469,7 +1463,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_GetServiceTOut_Withname()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
 
             ServiceContextExtensions.GetService<string>(mock.Object, out var result, "blub");
 
@@ -1480,7 +1474,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_GetServiceT()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContextExtensions.GetService<string>(mock.Object);
 
@@ -1491,7 +1485,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_GetServiceT_Withname()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContextExtensions.GetService<string>(mock.Object, "blub");
 
@@ -1502,8 +1496,8 @@ namespace MaSch.Core.UnitTests
         public void ISC_TryGetServiceTOut_Found()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
 
             var success = ServiceContextExtensions.TryGetService<string>(mock.Object, out var result);
 
@@ -1515,7 +1509,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_TryGetServiceTOut_NotFound()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
 
             var success = ServiceContextExtensions.TryGetService<string>(mock.Object, out var result);
 
@@ -1527,8 +1521,8 @@ namespace MaSch.Core.UnitTests
         public void ISC_TryGetServiceTOut_Found_WithName()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
 
             var success = ServiceContextExtensions.TryGetService<string>(mock.Object, out var result, "blub");
 
@@ -1540,7 +1534,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_TryGetServiceTOut_NotFound_WithName()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
 
             var success = ServiceContextExtensions.TryGetService<string>(mock.Object, out var result, "blub");
 
@@ -1552,8 +1546,8 @@ namespace MaSch.Core.UnitTests
         public void ISC_TryGetServiceT_Found()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContextExtensions.TryGetService<string>(mock.Object);
 
@@ -1564,7 +1558,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_TryGetServiceT_NotFound()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
 
             var result = ServiceContextExtensions.TryGetService<string>(mock.Object);
 
@@ -1575,8 +1569,8 @@ namespace MaSch.Core.UnitTests
         public void ISC_TryGetServiceT_Found_WithName()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContextExtensions.TryGetService<string>(mock.Object, "blub");
 
@@ -1587,7 +1581,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_TryGetServiceT_NotFound_WithName()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
 
             var result = ServiceContextExtensions.TryGetService<string>(mock.Object, "blub");
 
@@ -1598,8 +1592,8 @@ namespace MaSch.Core.UnitTests
         public void ISC_TryGetService_Found()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContextExtensions.TryGetService(mock.Object, typeof(string));
 
@@ -1610,7 +1604,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_TryGetService_NotFound()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
 
             var result = ServiceContextExtensions.TryGetService(mock.Object, typeof(string));
 
@@ -1621,8 +1615,8 @@ namespace MaSch.Core.UnitTests
         public void ISC_TryGetService_Found_WithName()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(typeof(string), "blub")).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContextExtensions.TryGetService(mock.Object, typeof(string), "blub");
 
@@ -1633,7 +1627,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_TryGetService_NotFound_WithName()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
 
             var result = ServiceContextExtensions.TryGetService(mock.Object, typeof(string), "blub");
 
@@ -1644,7 +1638,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_ContainsServiceT_True()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
 
             Assert.IsTrue(ServiceContextExtensions.ContainsService<string>(mock.Object));
         }
@@ -1653,7 +1647,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_ContainsServiceT_False()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
 
             Assert.IsFalse(ServiceContextExtensions.ContainsService<string>(mock.Object));
         }
@@ -1662,7 +1656,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_ContainsServiceT_WithName_True()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
 
             Assert.IsTrue(ServiceContextExtensions.ContainsService<string>(mock.Object, "blub"));
         }
@@ -1671,7 +1665,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_ContainsServiceT_WithName_False()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
 
             Assert.IsFalse(ServiceContextExtensions.ContainsService<string>(mock.Object, "blub"));
         }
@@ -1680,7 +1674,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_ContainsService_True()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
 
             Assert.IsTrue(ServiceContextExtensions.ContainsService(mock.Object, typeof(string)));
         }
@@ -1689,7 +1683,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_ContainsService_false()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
 
             Assert.IsFalse(ServiceContextExtensions.ContainsService(mock.Object, typeof(string)));
         }
@@ -1698,7 +1692,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_RemoveService()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.RemoveService(typeof(string), null)).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.RemoveService(typeof(string), null)).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.RemoveService(mock.Object, typeof(string));
         }
@@ -1707,7 +1701,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_RemoveServiceT()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.RemoveService(typeof(string), null)).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.RemoveService(typeof(string), null)).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.RemoveService<string>(mock.Object);
         }
@@ -1716,7 +1710,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_RemoveServiceT_WithName()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.RemoveService(typeof(string), "blub")).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.RemoveService(typeof(string), "blub")).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.RemoveService<string>(mock.Object, "blub");
         }
@@ -1725,8 +1719,8 @@ namespace MaSch.Core.UnitTests
         public void TryRemoveServiceT_Found()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.RemoveService(typeof(string), null)).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.RemoveService(typeof(string), null)).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.TryRemoveService<string>(mock.Object);
         }
@@ -1735,7 +1729,7 @@ namespace MaSch.Core.UnitTests
         public void TryRemoveServiceT_NotFound()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.TryRemoveService<string>(mock.Object);
         }
@@ -1744,8 +1738,8 @@ namespace MaSch.Core.UnitTests
         public void TryRemoveServiceT_Found_WithName()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.RemoveService(typeof(string), "blub")).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.RemoveService(typeof(string), "blub")).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.TryRemoveService<string>(mock.Object, "blub");
         }
@@ -1754,7 +1748,7 @@ namespace MaSch.Core.UnitTests
         public void TryRemoveServiceT_NotFound_WithName()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.TryRemoveService<string>(mock.Object, "blub");
         }
@@ -1763,8 +1757,8 @@ namespace MaSch.Core.UnitTests
         public void TryRemoveService_Found()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.RemoveService(typeof(string), null)).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.RemoveService(typeof(string), null)).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.TryRemoveService(mock.Object, typeof(string));
         }
@@ -1773,7 +1767,7 @@ namespace MaSch.Core.UnitTests
         public void TryRemoveService_NotFound()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), null)).Returns(false).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.TryRemoveService(mock.Object, typeof(string));
         }
@@ -1782,8 +1776,8 @@ namespace MaSch.Core.UnitTests
         public void TryRemoveService_Found_WithName()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.RemoveService(typeof(string), "blub")).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.RemoveService(typeof(string), "blub")).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.TryRemoveService(mock.Object, typeof(string), "blub");
         }
@@ -1792,7 +1786,7 @@ namespace MaSch.Core.UnitTests
         public void TryRemoveService_NotFound_WithName()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(typeof(string), "blub")).Returns(false).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.TryRemoveService(mock.Object, typeof(string), "blub");
         }
@@ -1801,7 +1795,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_Clear()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.Clear(null)).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.Clear(null)).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.Clear(mock.Object);
         }
@@ -1810,7 +1804,7 @@ namespace MaSch.Core.UnitTests
         public void ISC_ClearT()
         {
             var mock = new Mock<IServiceContext>(MockBehavior.Strict);
-            mock.Setup(x => x.Clear(typeof(string))).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.Clear(typeof(string))).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.Clear<string>(mock.Object);
         }
@@ -1823,7 +1817,7 @@ namespace MaSch.Core.UnitTests
         public void ISCT_AddService()
         {
             var mock = new Mock<IServiceContext<string>>(MockBehavior.Strict);
-            mock.Setup(x => x.AddService("MyTest", null)).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.AddService("MyTest", null)).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.AddService(mock.Object, "MyTest");
         }
@@ -1832,7 +1826,7 @@ namespace MaSch.Core.UnitTests
         public void ISCT_GetService()
         {
             var mock = new Mock<IServiceContext<string>>(MockBehavior.Strict);
-            mock.Setup(x => x.GetService(null)).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(null)).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContextExtensions.GetService(mock.Object);
 
@@ -1843,7 +1837,7 @@ namespace MaSch.Core.UnitTests
         public void ISCT_GetServiceOut()
         {
             var mock = new Mock<IServiceContext<string>>(MockBehavior.Strict);
-            mock.Setup(x => x.GetService(null)).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(null)).Returns("MyTest").Verifiable(this, Times.Once());
 
             ServiceContextExtensions.GetService(mock.Object, out var result);
 
@@ -1854,7 +1848,7 @@ namespace MaSch.Core.UnitTests
         public void ISCT_GetServiceOut_WithName()
         {
             var mock = new Mock<IServiceContext<string>>(MockBehavior.Strict);
-            mock.Setup(x => x.GetService("blub")).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService("blub")).Returns("MyTest").Verifiable(this, Times.Once());
 
             ServiceContextExtensions.GetService(mock.Object, out var result, "blub");
 
@@ -1865,8 +1859,8 @@ namespace MaSch.Core.UnitTests
         public void ISCT_TryGetServiceOut_Found()
         {
             var mock = new Mock<IServiceContext<string>>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(null)).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.GetService(null)).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(null)).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(null)).Returns("MyTest").Verifiable(this, Times.Once());
 
             var success = ServiceContextExtensions.TryGetService(mock.Object, out var result);
 
@@ -1878,7 +1872,7 @@ namespace MaSch.Core.UnitTests
         public void ISCT_TryGetServiceOut_NotFound()
         {
             var mock = new Mock<IServiceContext<string>>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(null)).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(null)).Returns(false).Verifiable(this, Times.Once());
 
             var success = ServiceContextExtensions.TryGetService(mock.Object, out var result);
 
@@ -1890,8 +1884,8 @@ namespace MaSch.Core.UnitTests
         public void ISCT_TryGetServiceOut_Found_WithName()
         {
             var mock = new Mock<IServiceContext<string>>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService("blub")).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.GetService("blub")).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService("blub")).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService("blub")).Returns("MyTest").Verifiable(this, Times.Once());
 
             var success = ServiceContextExtensions.TryGetService(mock.Object, out var result, "blub");
 
@@ -1903,7 +1897,7 @@ namespace MaSch.Core.UnitTests
         public void ISCT_TryGetServiceOut_NotFound_WithName()
         {
             var mock = new Mock<IServiceContext<string>>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService("blub")).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService("blub")).Returns(false).Verifiable(this, Times.Once());
 
             var success = ServiceContextExtensions.TryGetService(mock.Object, out var result, "blub");
 
@@ -1915,8 +1909,8 @@ namespace MaSch.Core.UnitTests
         public void ISCT_TryGetService_Found()
         {
             var mock = new Mock<IServiceContext<string>>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(null)).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.GetService(null)).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(null)).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService(null)).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContextExtensions.TryGetService(mock.Object);
 
@@ -1927,7 +1921,7 @@ namespace MaSch.Core.UnitTests
         public void ISCT_TryGetService_NotFound()
         {
             var mock = new Mock<IServiceContext<string>>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(null)).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(null)).Returns(false).Verifiable(this, Times.Once());
 
             var result = ServiceContextExtensions.TryGetService(mock.Object);
 
@@ -1938,8 +1932,8 @@ namespace MaSch.Core.UnitTests
         public void ISCT_TryGetService_Found_WithName()
         {
             var mock = new Mock<IServiceContext<string>>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService("blub")).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.GetService("blub")).Returns("MyTest").Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService("blub")).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.GetService("blub")).Returns("MyTest").Verifiable(this, Times.Once());
 
             var result = ServiceContextExtensions.TryGetService(mock.Object, "blub");
 
@@ -1950,7 +1944,7 @@ namespace MaSch.Core.UnitTests
         public void ISCT_TryGetService_NotFound_WithName()
         {
             var mock = new Mock<IServiceContext<string>>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService("blub")).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService("blub")).Returns(false).Verifiable(this, Times.Once());
 
             var result = ServiceContextExtensions.TryGetService(mock.Object, "blub");
 
@@ -1961,7 +1955,7 @@ namespace MaSch.Core.UnitTests
         public void ISCT_RemoveService()
         {
             var mock = new Mock<IServiceContext<string>>(MockBehavior.Strict);
-            mock.Setup(x => x.RemoveService(null)).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.RemoveService(null)).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.RemoveService(mock.Object);
         }
@@ -1970,8 +1964,8 @@ namespace MaSch.Core.UnitTests
         public void ISCT_TryRemoveService_Found()
         {
             var mock = new Mock<IServiceContext<string>>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(null)).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.RemoveService(null)).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(null)).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.RemoveService(null)).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.TryRemoveService(mock.Object);
         }
@@ -1980,7 +1974,7 @@ namespace MaSch.Core.UnitTests
         public void ISCT_TryRemoveService_NotFound()
         {
             var mock = new Mock<IServiceContext<string>>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(null)).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(null)).Returns(false).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.TryRemoveService(mock.Object);
         }
@@ -1989,8 +1983,8 @@ namespace MaSch.Core.UnitTests
         public void ISCT_TryRemoveService_Found_WithName()
         {
             var mock = new Mock<IServiceContext<string>>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService("blub")).Returns(true).Verifiable(this, Times.Once());
-            mock.Setup(x => x.RemoveService("blub")).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService("blub")).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.RemoveService("blub")).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.TryRemoveService(mock.Object, "blub");
         }
@@ -1999,7 +1993,7 @@ namespace MaSch.Core.UnitTests
         public void ISCT_TryRemoveService_NotFound_WithName()
         {
             var mock = new Mock<IServiceContext<string>>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService("blub")).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService("blub")).Returns(false).Verifiable(this, Times.Once());
 
             ServiceContextExtensions.TryRemoveService(mock.Object, "blub");
         }
@@ -2008,7 +2002,7 @@ namespace MaSch.Core.UnitTests
         public void ISCT_ContainsService_True()
         {
             var mock = new Mock<IServiceContext<string>>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(null)).Returns(true).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(null)).Returns(true).Verifiable(this, Times.Once());
 
             Assert.IsTrue(ServiceContextExtensions.ContainsService(mock.Object));
         }
@@ -2017,7 +2011,7 @@ namespace MaSch.Core.UnitTests
         public void ISCT_ContainsService_False()
         {
             var mock = new Mock<IServiceContext<string>>(MockBehavior.Strict);
-            mock.Setup(x => x.ContainsService(null)).Returns(false).Verifiable(this, Times.Once());
+            _ = mock.Setup(x => x.ContainsService(null)).Returns(false).Verifiable(this, Times.Once());
 
             Assert.IsFalse(ServiceContextExtensions.ContainsService(mock.Object));
         }

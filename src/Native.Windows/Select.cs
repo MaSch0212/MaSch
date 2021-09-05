@@ -45,19 +45,19 @@ namespace MaSch.Native.Windows
         public DialogResult ShowVistaDialog(IWin32Window owner)
         {
             var frm = (NativeMethods.IFileDialog)new NativeMethods.FileOpenDialogRCW();
-            frm.GetOptions(out uint options);
+            _ = frm.GetOptions(out uint options);
             options |= NativeMethods.FOS_PICKFOLDERS |
                        NativeMethods.FOS_FORCEFILESYSTEM |
                        NativeMethods.FOS_NOVALIDATE |
                        NativeMethods.FOS_NOTESTFILECREATE |
                        NativeMethods.FOS_DONTADDTORECENT;
-            frm.SetOptions(options);
+            _ = frm.SetOptions(options);
             if (InitialFolder != null)
             {
                 var riid = new Guid("43826D1E-E718-42EE-BC55-A1E261C37BFE"); // IShellItem
                 if (NativeMethods.SHCreateItemFromParsingName(InitialFolder, IntPtr.Zero, ref riid, out var directoryShellItem) == NativeMethods.S_OK)
                 {
-                    frm.SetFolder(directoryShellItem);
+                    _ = frm.SetFolder(directoryShellItem);
                 }
             }
 
@@ -156,11 +156,6 @@ namespace MaSch.Native.Windows
 
         #region COM
 
-        [ComImport, ClassInterface(ClassInterfaceType.None), TypeLibType(TypeLibTypeFlags.FCanCreate), Guid("DC1C5A9C-E88A-4DDE-A5A1-60F82A20AEF7")]
-        internal class FileOpenDialogRCW
-        {
-        }
-
         [ComImport, Guid("42F85136-DB7E-439C-85F1-E4075D135FC8"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         internal interface IFileDialog
         {
@@ -258,9 +253,14 @@ namespace MaSch.Native.Windows
             uint Compare([In, MarshalAs(UnmanagedType.Interface)] IShellItem psi, [In] uint hint, out int piOrder);
         }
 
-        #endregion
-
         [DllImport("shell32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern int SHCreateItemFromParsingName([MarshalAs(UnmanagedType.LPWStr)] string pszPath, IntPtr pbc, ref Guid riid, [MarshalAs(UnmanagedType.Interface)] out IShellItem ppv);
+
+        [ComImport, ClassInterface(ClassInterfaceType.None), TypeLibType(TypeLibTypeFlags.FCanCreate), Guid("DC1C5A9C-E88A-4DDE-A5A1-60F82A20AEF7")]
+        internal class FileOpenDialogRCW
+        {
+        }
+
+        #endregion
     }
 }

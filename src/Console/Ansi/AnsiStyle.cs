@@ -14,6 +14,13 @@ namespace MaSch.Console.Ansi
         private AnsiColor? _background;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="AnsiStyle"/> class.
+        /// </summary>
+        public AnsiStyle()
+        {
+        }
+
+        /// <summary>
         /// Gets the styles that should be used for this style.
         /// </summary>
         public AnsiTextStyle AddedStyles => _addedStyles;
@@ -34,20 +41,13 @@ namespace MaSch.Console.Ansi
         public AnsiColor? BackgroundColor => _background;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AnsiStyle"/> class.
-        /// </summary>
-        public AnsiStyle()
-        {
-        }
-
-        /// <summary>
         /// Adds the information to this <see cref="AnsiStyle"/> instance that the specified styles should be used.
         /// </summary>
         /// <param name="styles">The styles to use.</param>
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
         public AnsiStyle WithStyles(AnsiTextStyle styles)
         {
-            Guard.NotUndefinedFlagInEnumValue(styles, nameof(styles));
+            _ = Guard.NotUndefinedFlagInEnumValue(styles, nameof(styles));
             _addedStyles |= styles;
             _removedStyles ^= styles & _removedStyles;
             return this;
@@ -60,7 +60,7 @@ namespace MaSch.Console.Ansi
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
         public AnsiStyle WithoutStyles(AnsiTextStyle styles)
         {
-            Guard.NotUndefinedFlagInEnumValue(styles, nameof(styles));
+            _ = Guard.NotUndefinedFlagInEnumValue(styles, nameof(styles));
             _addedStyles ^= styles & _addedStyles;
             _removedStyles |= styles;
             return this;
@@ -73,7 +73,7 @@ namespace MaSch.Console.Ansi
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
         public AnsiStyle OverrideStyles(AnsiTextStyle exactStyles)
         {
-            Guard.NotUndefinedFlagInEnumValue(exactStyles, nameof(exactStyles));
+            _ = Guard.NotUndefinedFlagInEnumValue(exactStyles, nameof(exactStyles));
             _addedStyles = exactStyles;
             _removedStyles = AnsiTextStyle.All ^ AnsiTextStyle.Invert ^ exactStyles;
             return this;
@@ -83,91 +83,136 @@ namespace MaSch.Console.Ansi
         /// Adds the information to this <see cref="AnsiStyle"/> instance that text should be bold.
         /// </summary>
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
-        public AnsiStyle Bold() => WithStyles(AnsiTextStyle.Bold);
+        public AnsiStyle Bold()
+        {
+            return WithStyles(AnsiTextStyle.Bold);
+        }
 
         /// <summary>
         /// Adds the information to this <see cref="AnsiStyle"/> instance that text should be fainted, dimmed or have decreased intensity.
         /// </summary>
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
-        public AnsiStyle Faint() => WithStyles(AnsiTextStyle.Faint);
+        public AnsiStyle Faint()
+        {
+            return WithStyles(AnsiTextStyle.Faint);
+        }
 
         /// <summary>
         /// Adds the information to this <see cref="AnsiStyle"/> instance that text should be italic.
         /// </summary>
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
-        public AnsiStyle Italic() => WithStyles(AnsiTextStyle.Italic);
+        public AnsiStyle Italic()
+        {
+            return WithStyles(AnsiTextStyle.Italic);
+        }
 
         /// <summary>
         /// Adds the information to this <see cref="AnsiStyle"/> instance that text should be underlined.
         /// </summary>
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
-        public AnsiStyle Underlined() => WithStyles(AnsiTextStyle.Underline);
+        public AnsiStyle Underlined()
+        {
+            return WithStyles(AnsiTextStyle.Underline);
+        }
 
         /// <summary>
         /// Adds the information to this <see cref="AnsiStyle"/> instance that text should blink.
         /// </summary>
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
-        public AnsiStyle Blinking() => WithStyles(AnsiTextStyle.Blink);
+        public AnsiStyle Blinking()
+        {
+            return WithStyles(AnsiTextStyle.Blink);
+        }
 
         /// <summary>
         /// Adds the information to this <see cref="AnsiStyle"/> instance that foreground and background colors should be swapped.
         /// </summary>
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
-        public AnsiStyle Inverted() => WithStyles(AnsiTextStyle.Invert);
+        public AnsiStyle Inverted()
+        {
+            return WithStyles(AnsiTextStyle.Invert);
+        }
 
         /// <summary>
         /// Adds the information to this <see cref="AnsiStyle"/> instance that text should be crossed-out.
         /// </summary>
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
-        public AnsiStyle CrossedOut() => WithStyles(AnsiTextStyle.CrossedOut);
+        public AnsiStyle CrossedOut()
+        {
+            return WithStyles(AnsiTextStyle.CrossedOut);
+        }
 
         /// <summary>
         /// Adds the information to this <see cref="AnsiStyle"/> instance that text should be doubly underlined.
         /// </summary>
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
-        public AnsiStyle DoublyUnderlined() => WithStyles(AnsiTextStyle.DoublyUnderlined);
+        public AnsiStyle DoublyUnderlined()
+        {
+            return WithStyles(AnsiTextStyle.DoublyUnderlined);
+        }
 
         /// <summary>
         /// Adds the information to this <see cref="AnsiStyle"/> instance that text should be overlined.
         /// </summary>
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
-        public AnsiStyle Overlined() => WithStyles(AnsiTextStyle.Overlined);
+        public AnsiStyle Overlined()
+        {
+            return WithStyles(AnsiTextStyle.Overlined);
+        }
 
         /// <summary>
         /// Adds the information to this <see cref="AnsiStyle"/> instance that text should not be bold, fainted, dimmed or have decreased intensity.
         /// </summary>
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
-        public AnsiStyle NotBoldOrFaint() => WithoutStyles(AnsiTextStyle.Bold | AnsiTextStyle.Faint);
+        public AnsiStyle NotBoldOrFaint()
+        {
+            return WithoutStyles(AnsiTextStyle.Bold | AnsiTextStyle.Faint);
+        }
 
         /// <summary>
         /// Adds the information to this <see cref="AnsiStyle"/> instance that text should not be italic.
         /// </summary>
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
-        public AnsiStyle NotItalic() => WithoutStyles(AnsiTextStyle.Italic);
+        public AnsiStyle NotItalic()
+        {
+            return WithoutStyles(AnsiTextStyle.Italic);
+        }
 
         /// <summary>
         /// Adds the information to this <see cref="AnsiStyle"/> instance that text should not be underlined.
         /// </summary>
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
-        public AnsiStyle NotUnderlined() => WithoutStyles(AnsiTextStyle.Underline | AnsiTextStyle.DoublyUnderlined);
+        public AnsiStyle NotUnderlined()
+        {
+            return WithoutStyles(AnsiTextStyle.Underline | AnsiTextStyle.DoublyUnderlined);
+        }
 
         /// <summary>
         /// Adds the information to this <see cref="AnsiStyle"/> instance that text should not blink.
         /// </summary>
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
-        public AnsiStyle NotBlinking() => WithoutStyles(AnsiTextStyle.Blink);
+        public AnsiStyle NotBlinking()
+        {
+            return WithoutStyles(AnsiTextStyle.Blink);
+        }
 
         /// <summary>
         /// Adds the information to this <see cref="AnsiStyle"/> instance that text should not be crossed-out.
         /// </summary>
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
-        public AnsiStyle NotCrossedOut() => WithoutStyles(AnsiTextStyle.CrossedOut);
+        public AnsiStyle NotCrossedOut()
+        {
+            return WithoutStyles(AnsiTextStyle.CrossedOut);
+        }
 
         /// <summary>
         /// Adds the information to this <see cref="AnsiStyle"/> instance that text should not be overlined.
         /// </summary>
         /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
-        public AnsiStyle NotOverlined() => WithoutStyles(AnsiTextStyle.Overlined);
+        public AnsiStyle NotOverlined()
+        {
+            return WithoutStyles(AnsiTextStyle.Overlined);
+        }
 
         /// <summary>
         /// Adds the information to this <see cref="AnsiStyle"/> instance that text should have the specified foreground color.
@@ -199,13 +244,13 @@ namespace MaSch.Console.Ansi
         {
             var result = new StringBuilder();
             if (RemovedStyles != AnsiTextStyle.None)
-                result.Append(AnsiEscapeUtility.GetRemoveStyle(RemovedStyles));
+                _ = result.Append(AnsiEscapeUtility.GetRemoveStyle(RemovedStyles));
             if (AddedStyles != AnsiTextStyle.None)
-                result.Append(AnsiEscapeUtility.GetAddStyle(AddedStyles));
+                _ = result.Append(AnsiEscapeUtility.GetAddStyle(AddedStyles));
             if (ForegroundColor.HasValue)
-                result.Append(ForegroundColor.Value.ForegroundSequence);
+                _ = result.Append(ForegroundColor.Value.ForegroundSequence);
             if (BackgroundColor.HasValue)
-                result.Append(BackgroundColor.Value.BackgroundSequence);
+                _ = result.Append(BackgroundColor.Value.BackgroundSequence);
             return result.ToString();
         }
     }

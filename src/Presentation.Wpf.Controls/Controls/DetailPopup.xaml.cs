@@ -8,7 +8,7 @@ namespace MaSch.Presentation.Wpf.Controls
     /// <summary>
     /// Popup that is used to show details for a different control.
     /// </summary>
-    /// <seealso cref="System.Windows.Controls.Primitives.Popup" />
+    /// <seealso cref="Popup" />
     public class DetailPopup : Popup
     {
         /// <summary>

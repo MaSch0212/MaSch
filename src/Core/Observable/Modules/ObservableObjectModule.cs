@@ -30,6 +30,49 @@ namespace MaSch.Core.Observable.Modules
             _propertyDependencies = FillCache(_objectType);
         }
 
+        /// <summary>
+        /// Notifies the subscribers that a command has changed.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <exception cref="ArgumentException">A property with the name <paramref name="propertyName"/> does not exist in the object. - <paramref name="propertyName"/>.</exception>
+        public void NotifyCommandChanged(string propertyName)
+        {
+            var property = _objectType.GetProperty(propertyName);
+            if (property == null)
+                throw new ArgumentException($"A property with the name {propertyName} does not exist in {_objectType.FullName}.", nameof(propertyName));
+            var propertyValue = property.GetValue(_observableObject);
+            if (propertyValue != null)
+            {
+                var method = propertyValue.GetType().GetMethod("RaiseCanExecuteChanged", Type.EmptyTypes);
+                if (method != null)
+                    _ = method.Invoke(propertyValue, null);
+            }
+        }
+
+        /// <summary>
+        /// Notifies the subscribers about changes in dependent properties.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        public void NotifyDependentProperties(string propertyName)
+        {
+            if (_propertyDependencies.ContainsKey(propertyName))
+            {
+                foreach (var p in _propertyDependencies[propertyName])
+                {
+                    var split = p.Split(':');
+                    if (split.Length > 1)
+                    {
+                        if (split[0] == "command")
+                            NotifyCommandChanged(split[1]);
+                    }
+                    else
+                    {
+                        _observableObject.NotifyPropertyChanged(p);
+                    }
+                }
+            }
+        }
+
         private static Dictionary<string, List<string>> FillCache(Type type)
         {
             lock (FillCacheLock)
@@ -60,49 +103,6 @@ namespace MaSch.Core.Observable.Modules
                 }
 
                 return PropertyDependencyCache[type];
-            }
-        }
-
-        /// <summary>
-        /// Notifies the subscribers that a command has changed.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        /// <exception cref="ArgumentException">A property with the name <paramref name="propertyName"/> does not exist in the object. - <paramref name="propertyName"/>.</exception>
-        public void NotifyCommandChanged(string propertyName)
-        {
-            var property = _objectType.GetProperty(propertyName);
-            if (property == null)
-                throw new ArgumentException($"A property with the name {propertyName} does not exist in {_objectType.FullName}.", nameof(propertyName));
-            var propertyValue = property.GetValue(_observableObject);
-            if (propertyValue != null)
-            {
-                var method = propertyValue.GetType().GetMethod("RaiseCanExecuteChanged", Type.EmptyTypes);
-                if (method != null)
-                    method.Invoke(propertyValue, null);
-            }
-        }
-
-        /// <summary>
-        /// Notifies the subscribers about changes in dependent properties.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        public void NotifyDependentProperties(string propertyName)
-        {
-            if (_propertyDependencies.ContainsKey(propertyName))
-            {
-                foreach (var p in _propertyDependencies[propertyName])
-                {
-                    var split = p.Split(':');
-                    if (split.Length > 1)
-                    {
-                        if (split[0] == "command")
-                            NotifyCommandChanged(split[1]);
-                    }
-                    else
-                    {
-                        _observableObject.NotifyPropertyChanged(p);
-                    }
-                }
             }
         }
     }

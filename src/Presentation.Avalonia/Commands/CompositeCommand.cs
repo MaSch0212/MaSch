@@ -9,7 +9,7 @@ namespace MaSch.Presentation.Avalonia.Commands
     /// <summary>
     /// Defines a composite command.
     /// </summary>
-    /// <seealso cref="System.Windows.Input.ICommand" />
+    /// <seealso cref="ICommand" />
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Does not make sense in this case.")]
     public interface ICompositeCommand : ICommand
     {
@@ -35,11 +35,6 @@ namespace MaSch.Presentation.Avalonia.Commands
         private readonly List<ICommand> _commands;
 
         /// <summary>
-        /// Gets the commands to execute.
-        /// </summary>
-        public IReadOnlyCollection<ICommand> Commands => _commands.AsReadOnly();
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="CompositeCommand"/> class.
         /// </summary>
         public CompositeCommand()
@@ -66,12 +61,17 @@ namespace MaSch.Presentation.Avalonia.Commands
         }
 
         /// <summary>
+        /// Gets the commands to execute.
+        /// </summary>
+        public IReadOnlyCollection<ICommand> Commands => _commands.AsReadOnly();
+
+        /// <summary>
         /// Adds a command to this <see cref="ICompositeCommand" />.
         /// </summary>
         /// <param name="command">The command to add.</param>
         public void AddCommand(ICommand command)
         {
-            _commands.AddIfNotExists(command);
+            _ = _commands.AddIfNotExists(command);
         }
 
         /// <summary>
@@ -95,11 +95,6 @@ namespace MaSch.Presentation.Avalonia.Commands
         private readonly List<ICommand> _commands;
 
         /// <summary>
-        /// Gets the commands to execute.
-        /// </summary>
-        public IReadOnlyCollection<ICommand> Commands => _commands.AsReadOnly();
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="CompositeCommand{T}"/> class.
         /// </summary>
         public CompositeCommand()
@@ -126,12 +121,17 @@ namespace MaSch.Presentation.Avalonia.Commands
         }
 
         /// <summary>
+        /// Gets the commands to execute.
+        /// </summary>
+        public IReadOnlyCollection<ICommand> Commands => _commands.AsReadOnly();
+
+        /// <summary>
         /// Adds a command to this <see cref="ICompositeCommand" />.
         /// </summary>
         /// <param name="command">The command to add.</param>
         public void AddCommand(ICommand command)
         {
-            _commands.AddIfNotExists(command);
+            _ = _commands.AddIfNotExists(command);
         }
 
         /// <summary>

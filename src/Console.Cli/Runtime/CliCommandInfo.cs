@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 namespace MaSch.Console.Cli.Runtime
 {
     /// <inheritdoc/>
-    [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "False positive.")]
     public class CliCommandInfo : ICliCommandInfo
     {
         private static readonly Regex IllegalNameCharactersRegex = new(@"[\p{Cc}\s]", RegexOptions.Compiled);
@@ -25,52 +24,6 @@ namespace MaSch.Console.Cli.Runtime
         private readonly ICliCommandExecutor? _executor;
         private readonly Cache _cache = new();
 
-        /// <inheritdoc/>
-        public CliCommandAttribute Attribute { get; }
-
-        /// <inheritdoc/>
-        public Type CommandType { get; }
-
-        /// <inheritdoc/>
-        public object? OptionsInstance { get; }
-
-        /// <inheritdoc/>
-        public string Name => Attribute.Name;
-
-        /// <inheritdoc/>
-        public IReadOnlyList<string> Aliases => Attribute.Aliases;
-
-        /// <inheritdoc/>
-        public bool IsDefault => Attribute.IsDefault;
-
-        /// <inheritdoc/>
-        public string? HelpText => Attribute.HelpText;
-
-        /// <inheritdoc/>
-        public int Order => Attribute.HelpOrder;
-
-        /// <inheritdoc/>
-        public bool IsExecutable => _executor != null;
-
-        /// <inheritdoc/>
-        public CliParserOptions ParserOptions { get; }
-
-        /// <inheritdoc/>
-        public bool Hidden => Attribute.Hidden;
-
-        /// <inheritdoc/>
-        public ICliCommandInfo? ParentCommand { get; private set; }
-
-        /// <inheritdoc/>
-        public IReadOnlyList<ICliCommandInfo> ChildCommands => _cache.GetValue(() => _childCommands.AsReadOnly())!;
-
-        /// <inheritdoc/>
-        public IReadOnlyList<ICliCommandOptionInfo> Options => _cache.GetValue(() => _options.AsReadOnly())!;
-
-        /// <inheritdoc/>
-        public IReadOnlyList<ICliCommandValueInfo> Values => _cache.GetValue(() => _values.AsReadOnly())!;
-
-        [SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "False positive.")]
         internal CliCommandInfo(Type commandType, Type? executorType, object? optionsInstance, object? executorFunc, object? executorInstance)
         {
             CommandType = Guard.NotNull(commandType, nameof(commandType));
@@ -120,6 +73,51 @@ namespace MaSch.Console.Cli.Runtime
         }
 
         /// <inheritdoc/>
+        public CliCommandAttribute Attribute { get; }
+
+        /// <inheritdoc/>
+        public Type CommandType { get; }
+
+        /// <inheritdoc/>
+        public object? OptionsInstance { get; }
+
+        /// <inheritdoc/>
+        public string Name => Attribute.Name;
+
+        /// <inheritdoc/>
+        public IReadOnlyList<string> Aliases => Attribute.Aliases;
+
+        /// <inheritdoc/>
+        public bool IsDefault => Attribute.IsDefault;
+
+        /// <inheritdoc/>
+        public string? HelpText => Attribute.HelpText;
+
+        /// <inheritdoc/>
+        public int Order => Attribute.HelpOrder;
+
+        /// <inheritdoc/>
+        public bool IsExecutable => _executor != null;
+
+        /// <inheritdoc/>
+        public CliParserOptions ParserOptions { get; }
+
+        /// <inheritdoc/>
+        public bool Hidden => Attribute.Hidden;
+
+        /// <inheritdoc/>
+        public ICliCommandInfo? ParentCommand { get; private set; }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<ICliCommandInfo> ChildCommands => _cache.GetValue(() => _childCommands.AsReadOnly())!;
+
+        /// <inheritdoc/>
+        public IReadOnlyList<ICliCommandOptionInfo> Options => _cache.GetValue(() => _options.AsReadOnly())!;
+
+        /// <inheritdoc/>
+        public IReadOnlyList<ICliCommandValueInfo> Values => _cache.GetValue(() => _values.AsReadOnly())!;
+
+        /// <inheritdoc/>
         public bool ValidateOptions(CliExecutionContext context, object parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors)
         {
             if (_executor == null)
@@ -161,16 +159,9 @@ namespace MaSch.Console.Cli.Runtime
         /// <inheritdoc/>
         public void RemoveChildCommand(ICliCommandInfo childCommand)
         {
-            _childCommands.Remove(childCommand);
+            _ = _childCommands.Remove(childCommand);
             if (childCommand.ParentCommand == this && childCommand is CliCommandInfo cc)
                 cc.ParentCommand = null;
-        }
-
-        private void ValidateExecutionContext(CliExecutionContext context)
-        {
-            Guard.NotNull(context, nameof(context));
-            if (context.Command != this)
-                throw new ArgumentException("The context contains the wrong command. Its instance needs to match this instance of the ICliCommandInfo.");
         }
 
         private static CliParserOptions GetParserOptions(Type type)
@@ -215,6 +206,13 @@ namespace MaSch.Console.Cli.Runtime
             }
 
             return result;
+        }
+
+        private void ValidateExecutionContext(CliExecutionContext context)
+        {
+            _ = Guard.NotNull(context, nameof(context));
+            if (context.Command != this)
+                throw new ArgumentException("The context contains the wrong command. Its instance needs to match this instance of the ICliCommandInfo.");
         }
     }
 }

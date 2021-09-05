@@ -124,6 +124,21 @@ namespace MaSch.Presentation.Wpf.Controls
         private Border? _controlBorder;
         private TextBlock? _currentSpeed;
 
+        static ProgressBar()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(ProgressBar), new FrameworkPropertyMetadata(typeof(ProgressBar)));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProgressBar"/> class.
+        /// </summary>
+        public ProgressBar()
+        {
+            _points = new List<Point>();
+            _lastValueSet = DateTime.MinValue;
+            _ghraphStateStoryboard = new Storyboard();
+        }
+
         /// <summary>
         /// Gets or sets a value indicating whether the progress bar should show a graph.
         /// </summary>
@@ -205,21 +220,6 @@ namespace MaSch.Presentation.Wpf.Controls
             set => SetValue(CurrentSpeedForegroundBrushProperty, value);
         }
 
-        static ProgressBar()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(ProgressBar), new FrameworkPropertyMetadata(typeof(ProgressBar)));
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ProgressBar"/> class.
-        /// </summary>
-        public ProgressBar()
-        {
-            _points = new List<Point>();
-            _lastValueSet = DateTime.MinValue;
-            _ghraphStateStoryboard = new Storyboard();
-        }
-
         /// <summary>
         /// Sets the progress of the ProgressBar. The progres have to be greater than the current progress.
         /// </summary>
@@ -249,6 +249,223 @@ namespace MaSch.Presentation.Wpf.Controls
             if (GraphMode)
             {
                 RefreshGraph();
+            }
+        }
+
+        /// <summary>
+        /// Refreshes the graph in the graph-mode. This method is called at the end of the SetProgress-Method and when the GraphMode is set to true.
+        /// </summary>
+        public void RefreshGraph()
+        {
+            if (_points.Count == 0)
+                return;
+
+            // create smoothed points
+            var smoothedPoints = Algo1(_points);
+            double maxDispValue = smoothedPoints.Max(x => x.Y), minDispValue = smoothedPoints.Min(x => x.Y);
+
+            // Set the current value
+            if ((DateTime.Now - _lastValueSet).TotalSeconds >= 0.2)
+            {
+                CurrentSpeed = maxDispValue - smoothedPoints.Last().Y;
+                try
+                {
+                    _currentSpeed!.Text = string.Format(CurrentSpeedFormat, CurrentSpeed);
+                }
+                catch (Exception)
+                {
+                    _currentSpeed!.Text = "Format-Error";
+                }
+
+                _lastValueSet = DateTime.Now;
+            }
+
+            var allHeight = maxDispValue - minDispValue;
+            double hu = 0.2, hd = 1 - hu; // Percent-values of the height of the graph and the border on top
+            var upperSpace = allHeight / hd * hu; // Space at the top of the graph to the upper border
+
+            for (var i = 0; i < smoothedPoints.Count; i++)
+                smoothedPoints[i] = new Point(smoothedPoints[i].X, smoothedPoints[i].Y - minDispValue + upperSpace);
+
+            // draw graph
+            if (_graphPath != null)
+            {
+                var streamGeo = new StreamGeometry();
+                using var ctx = streamGeo.Open();
+                ctx.BeginFigure(new Point(0, allHeight + upperSpace), true, false);
+                ctx.LineTo(new Point(0, 0), true, false);
+                ctx.LineTo(new Point(0, allHeight + upperSpace), true, false);
+                if (smoothedPoints.Count > 0)
+                    ctx.LineTo(smoothedPoints[0], true, false);
+                for (var i = 1; i < smoothedPoints.Count - 1; i++)
+                {
+                    Point p1 = GetPointBetween(smoothedPoints[i - 1], smoothedPoints[i]),
+                        p2 = smoothedPoints[i],
+                        p3 = GetPointBetween(smoothedPoints[i], smoothedPoints[i + 1]);
+                    ctx.BezierTo(p1, p2, p3, true, false);
+                }
+
+                if (smoothedPoints.Count > 1)
+                    ctx.LineTo(smoothedPoints.Last(), true, false);
+                ctx.LineTo(new Point(Value, allHeight + upperSpace), true, false);
+                ctx.LineTo(new Point(Maximum, allHeight + upperSpace), true, false);
+                ctx.Close();
+                _graphPath.Data = streamGeo;
+            }
+
+            // set line to right position
+            if (Math.Abs(maxDispValue) > 0 && !double.IsNaN(maxDispValue) && _line != null)
+                _line.Margin = new Thickness(0, 0, 0, hd * ActualHeight * (((allHeight + upperSpace) - smoothedPoints.Last().Y) / allHeight));
+        }
+
+        /// <summary>
+        /// Sets the ProgressBar to the start-state.
+        /// </summary>
+        public void ResetProgressBar()
+        {
+            Value = 0;
+            if (_graphPath != null)
+                _graphPath.Data = null;
+            _maxValue = 0;
+            _points?.Clear();
+            _lastValueSet = DateTime.MinValue;
+            RefreshGraph();
+        }
+
+        /// <inheritdoc />
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            InitializeTemplateChilds();
+            if (_indicatorLeft != null && _indicatorRight != null)
+            {
+                ValueChanged += (s, e) =>
+                {
+                    var percent = Value / Maximum;
+                    _indicatorLeft.Width = new GridLength(percent, GridUnitType.Star);
+                    _indicatorRight.Width = new GridLength(1D - percent, GridUnitType.Star);
+                };
+                _indicatorLeft.Width = new GridLength(Value / Maximum, GridUnitType.Star);
+                _indicatorRight.Width = new GridLength(1D - (Value / Maximum), GridUnitType.Star);
+            }
+
+            if (GraphMode)
+            {
+                if (_graphIndicator != null)
+                    _graphIndicator.Opacity = 1;
+                if (_normalIndicator != null)
+                    _normalIndicator.Opacity = 0;
+                if (_normalIndeterminate != null)
+                    _normalIndeterminate.Opacity = 0;
+                if (_graphIndeterminate != null)
+                    _graphIndeterminate.Opacity = 0.5;
+                if (_controlBorder != null)
+                    _controlBorder.Opacity = 1;
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void OnMaximumChanged(double oldMaximum, double newMaximum)
+        {
+            base.OnMaximumChanged(oldMaximum, newMaximum);
+            if (_indicatorLeft != null && _indicatorRight != null)
+            {
+                var percent = Value / Maximum;
+                _indicatorLeft.Width = new GridLength(percent, GridUnitType.Star);
+                _indicatorRight.Width = new GridLength(1D - percent, GridUnitType.Star);
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void OnMinimumChanged(double oldMinimum, double newMinimum)
+        {
+            base.OnMinimumChanged(oldMinimum, newMinimum);
+            if (_indicatorLeft != null && _indicatorRight != null)
+            {
+                var percent = Value / Maximum;
+                _indicatorLeft.Width = new GridLength(percent, GridUnitType.Star);
+                _indicatorRight.Width = new GridLength(1D - percent, GridUnitType.Star);
+            }
+        }
+
+        /// <summary>
+        /// Determindes if the given storyboard is not running an animation.
+        /// </summary>
+        /// <param name="storyboard">the storyboard to check.</param>
+        /// <returns>true if the storyboard is not running an animation/false if the storyboard is running an animation.</returns>
+        private static bool IsStoryboardStopped(Storyboard storyboard)
+        {
+            try
+            {
+                return storyboard.GetCurrentState() == ClockState.Stopped;
+            }
+            catch (Exception)
+            {
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Creates a point between one point and another.
+        /// </summary>
+        /// <param name="p1">the first point.</param>
+        /// <param name="p2">the second point.</param>
+        /// <returns>the point between the first point and the second point.</returns>
+        private static Point GetPointBetween(Point p1, Point p2)
+        {
+            return new Point(p1.X + ((p2.X - p1.X) / 2), p1.Y + ((p2.Y - p1.Y) / 2));
+        }
+
+        /// <summary>
+        /// Is called when the GraphMode changes. Animates to the graph-view or to the normal-view depending on the GraphMode value.
+        /// </summary>
+        /// <param name="obj">the ModernUIProgressBar object.</param>
+        /// <param name="e">the DependencyPropertyChangedEventArgs for the change.</param>
+        private static void GraphModeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            bool? oldVal = e.OldValue as bool?, newVal = e.NewValue as bool?;
+            if (newVal != oldVal && obj is ProgressBar progBar)
+            {
+                if (newVal == true)
+                {
+                    progBar.AnimationToGraphBar();
+                }
+                else
+                {
+                    progBar.AnimationToNormalBar();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Is called when the NormalBarHeight changes. Animates to the new normal-bar size if the animation is running else the height is set to the normal-bar size.
+        /// </summary>
+        /// <param name="obj">the ModernUIProgressBar object.</param>
+        /// <param name="e">the DependencyPropertyChangedEventArgs for the change.</param>
+        private static void NormalBarHeightChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            if (obj is ProgressBar progBar && !progBar.GraphMode)
+            {
+                if (IsStoryboardStopped(progBar._ghraphStateStoryboard))
+                    progBar.Height = (double)e.NewValue;
+                else
+                    progBar.AnimationToNormalBar();
+            }
+        }
+
+        /// <summary>
+        /// Is called when the GraphBarHeight changes. Animates to the new graph-bar size if the animation is running else the height is set to the graph-bar size.
+        /// </summary>
+        /// <param name="obj">the ModernUIProgressBar object.</param>
+        /// <param name="e">the DependencyPropertyChangedEventArgs for the change.</param>
+        private static void GraphBarHeightChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            if (obj is ProgressBar progBar && progBar.GraphMode)
+            {
+                if (IsStoryboardStopped(progBar._ghraphStateStoryboard))
+                    progBar.Height = (double)e.NewValue;
+                else
+                    progBar.AnimationToGraphBar();
             }
         }
 
@@ -386,142 +603,6 @@ namespace MaSch.Presentation.Wpf.Controls
         }
 
         /// <summary>
-        /// Refreshes the graph in the graph-mode. This method is called at the end of the SetProgress-Method and when the GraphMode is set to true.
-        /// </summary>
-        public void RefreshGraph()
-        {
-            if (_points.Count == 0)
-                return;
-
-            // create smoothed points
-            var smoothedPoints = Algo1(_points);
-            double maxDispValue = smoothedPoints.Max(x => x.Y), minDispValue = smoothedPoints.Min(x => x.Y);
-
-            // Set the current value
-            if ((DateTime.Now - _lastValueSet).TotalSeconds >= 0.2)
-            {
-                CurrentSpeed = maxDispValue - smoothedPoints.Last().Y;
-                try
-                {
-                    _currentSpeed!.Text = string.Format(CurrentSpeedFormat, CurrentSpeed);
-                }
-                catch (Exception)
-                {
-                    _currentSpeed!.Text = "Format-Error";
-                }
-
-                _lastValueSet = DateTime.Now;
-            }
-
-            var allHeight = maxDispValue - minDispValue;
-            double hu = 0.2, hd = 1 - hu; // Percent-values of the height of the graph and the border on top
-            var upSpace = allHeight / hd * hu; // Space at the top of the graph to the upper border
-
-            for (var i = 0; i < smoothedPoints.Count; i++)
-                smoothedPoints[i] = new Point(smoothedPoints[i].X, smoothedPoints[i].Y - minDispValue + upSpace);
-
-            // draw graph
-            if (_graphPath != null)
-            {
-                var streamGeo = new StreamGeometry();
-                using var ctx = streamGeo.Open();
-                ctx.BeginFigure(new Point(0, allHeight + upSpace), true, false);
-                ctx.LineTo(new Point(0, 0), true, false);
-                ctx.LineTo(new Point(0, allHeight + upSpace), true, false);
-                if (smoothedPoints.Count > 0)
-                    ctx.LineTo(smoothedPoints[0], true, false);
-                for (var i = 1; i < smoothedPoints.Count - 1; i++)
-                {
-                    Point p1 = GetPointBetween(smoothedPoints[i - 1], smoothedPoints[i]),
-                        p2 = smoothedPoints[i],
-                        p3 = GetPointBetween(smoothedPoints[i], smoothedPoints[i + 1]);
-                    ctx.BezierTo(p1, p2, p3, true, false);
-                }
-
-                if (smoothedPoints.Count > 1)
-                    ctx.LineTo(smoothedPoints.Last(), true, false);
-                ctx.LineTo(new Point(Value, allHeight + upSpace), true, false);
-                ctx.LineTo(new Point(Maximum, allHeight + upSpace), true, false);
-                ctx.Close();
-                _graphPath.Data = streamGeo;
-            }
-
-            // set line to right position
-            if (Math.Abs(maxDispValue) > 0 && !double.IsNaN(maxDispValue) && _line != null)
-                _line.Margin = new Thickness(0, 0, 0, hd * ActualHeight * (((allHeight + upSpace) - smoothedPoints.Last().Y) / allHeight));
-        }
-
-        /// <summary>
-        /// Sets the ProgressBar to the start-state.
-        /// </summary>
-        public void ResetProgressBar()
-        {
-            Value = 0;
-            if (_graphPath != null)
-                _graphPath.Data = null;
-            _maxValue = 0;
-            _points?.Clear();
-            _lastValueSet = DateTime.MinValue;
-            RefreshGraph();
-        }
-
-        /// <inheritdoc />
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            InitializeTemplateChilds();
-            if (_indicatorLeft != null && _indicatorRight != null)
-            {
-                ValueChanged += (s, e) =>
-                {
-                    var percent = Value / Maximum;
-                    _indicatorLeft.Width = new GridLength(percent, GridUnitType.Star);
-                    _indicatorRight.Width = new GridLength(1D - percent, GridUnitType.Star);
-                };
-                _indicatorLeft.Width = new GridLength(Value / Maximum, GridUnitType.Star);
-                _indicatorRight.Width = new GridLength(1D - (Value / Maximum), GridUnitType.Star);
-            }
-
-            if (GraphMode)
-            {
-                if (_graphIndicator != null)
-                    _graphIndicator.Opacity = 1;
-                if (_normalIndicator != null)
-                    _normalIndicator.Opacity = 0;
-                if (_normalIndeterminate != null)
-                    _normalIndeterminate.Opacity = 0;
-                if (_graphIndeterminate != null)
-                    _graphIndeterminate.Opacity = 0.5;
-                if (_controlBorder != null)
-                    _controlBorder.Opacity = 1;
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void OnMaximumChanged(double oldMaximum, double newMaximum)
-        {
-            base.OnMaximumChanged(oldMaximum, newMaximum);
-            if (_indicatorLeft != null && _indicatorRight != null)
-            {
-                var percent = Value / Maximum;
-                _indicatorLeft.Width = new GridLength(percent, GridUnitType.Star);
-                _indicatorRight.Width = new GridLength(1D - percent, GridUnitType.Star);
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void OnMinimumChanged(double oldMinimum, double newMinimum)
-        {
-            base.OnMinimumChanged(oldMinimum, newMinimum);
-            if (_indicatorLeft != null && _indicatorRight != null)
-            {
-                var percent = Value / Maximum;
-                _indicatorLeft.Width = new GridLength(percent, GridUnitType.Star);
-                _indicatorRight.Width = new GridLength(1D - percent, GridUnitType.Star);
-            }
-        }
-
-        /// <summary>
         /// initializes the template-childs variables.
         /// </summary>
         private void InitializeTemplateChilds()
@@ -540,23 +621,6 @@ namespace MaSch.Presentation.Wpf.Controls
         }
 
         /// <summary>
-        /// Determindes if the given storyboard is not running an animation.
-        /// </summary>
-        /// <param name="storyboard">the storyboard to check.</param>
-        /// <returns>true if the storyboard is not running an animation/false if the storyboard is running an animation.</returns>
-        private static bool IsStoryboardStopped(Storyboard storyboard)
-        {
-            try
-            {
-                return storyboard.GetCurrentState() == ClockState.Stopped;
-            }
-            catch (Exception)
-            {
-                return true;
-            }
-        }
-
-        /// <summary>
         /// Starts the animation to the graph-view. If the animation to the normal-view is running, this animation will be stopped.
         /// </summary>
         private void AnimationToGraphBar()
@@ -568,13 +632,13 @@ namespace MaSch.Presentation.Wpf.Controls
 
             _ghraphStateStoryboard.Stop();
             _ghraphStateStoryboard = new Storyboard { Duration = new Duration(TimeSpan.FromSeconds(0.4)) };
-            var daBigger = new DoubleAnimation(GraphBarHeight, new Duration(TimeSpan.FromSeconds(0.4)))
+            var heightAnimation = new DoubleAnimation(GraphBarHeight, new Duration(TimeSpan.FromSeconds(0.4)))
             {
                 EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut },
             };
-            Storyboard.SetTarget(daBigger, this);
-            Storyboard.SetTargetProperty(daBigger, new PropertyPath(HeightProperty));
-            _ghraphStateStoryboard.Children.Add(daBigger);
+            Storyboard.SetTarget(heightAnimation, this);
+            Storyboard.SetTargetProperty(heightAnimation, new PropertyPath(HeightProperty));
+            _ghraphStateStoryboard.Children.Add(heightAnimation);
 
             if (_graphIndicator != null)
                 AnimationHelper.AddOpacityAnimationToStoryboard(_ghraphStateStoryboard, 1, TimeSpan.FromSeconds(0.4), _graphIndicator, TimeSpan.Zero);
@@ -600,13 +664,13 @@ namespace MaSch.Presentation.Wpf.Controls
 
             _ghraphStateStoryboard.Stop();
             _ghraphStateStoryboard = new Storyboard { Duration = new Duration(TimeSpan.FromSeconds(0.4)) };
-            var daSmaller = new DoubleAnimation(NormalBarHeight, new Duration(TimeSpan.FromSeconds(0.4)))
+            var heightAnimation = new DoubleAnimation(NormalBarHeight, new Duration(TimeSpan.FromSeconds(0.4)))
             {
                 EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut },
             };
-            Storyboard.SetTarget(daSmaller, this);
-            Storyboard.SetTargetProperty(daSmaller, new PropertyPath(HeightProperty));
-            _ghraphStateStoryboard.Children.Add(daSmaller);
+            Storyboard.SetTarget(heightAnimation, this);
+            Storyboard.SetTargetProperty(heightAnimation, new PropertyPath(HeightProperty));
+            _ghraphStateStoryboard.Children.Add(heightAnimation);
 
             if (_graphIndicator != null)
                 AnimationHelper.AddOpacityAnimationToStoryboard(_ghraphStateStoryboard, 0, TimeSpan.FromSeconds(0.4), _graphIndicator, TimeSpan.Zero);
@@ -620,70 +684,6 @@ namespace MaSch.Presentation.Wpf.Controls
                 AnimationHelper.AddOpacityAnimationToStoryboard(_ghraphStateStoryboard, 0, TimeSpan.FromSeconds(0.4), _controlBorder, TimeSpan.Zero);
 
             _ghraphStateStoryboard.Begin();
-        }
-
-        /// <summary>
-        /// Creates a point between one point and another.
-        /// </summary>
-        /// <param name="p1">the first point.</param>
-        /// <param name="p2">the second point.</param>
-        /// <returns>the point between the first point and the second point.</returns>
-        private static Point GetPointBetween(Point p1, Point p2)
-        {
-            return new Point(p1.X + ((p2.X - p1.X) / 2), p1.Y + ((p2.Y - p1.Y) / 2));
-        }
-
-        /// <summary>
-        /// Is called when the GraphMode changes. Animates to the graph-view or to the normal-view depending on the GraphMode value.
-        /// </summary>
-        /// <param name="obj">the ModernUIProgressBar object.</param>
-        /// <param name="e">the DependencyPropertyChangedEventArgs for the change.</param>
-        private static void GraphModeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
-        {
-            bool? oldVal = e.OldValue as bool?, newVal = e.NewValue as bool?;
-            if (newVal != oldVal && obj is ProgressBar progBar)
-            {
-                if (newVal == true)
-                {
-                    progBar.AnimationToGraphBar();
-                }
-                else
-                {
-                    progBar.AnimationToNormalBar();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Is called when the NormalBarHeight changes. Animates to the new normal-bar size if the animation is running else the height is set to the normal-bar size.
-        /// </summary>
-        /// <param name="obj">the ModernUIProgressBar object.</param>
-        /// <param name="e">the DependencyPropertyChangedEventArgs for the change.</param>
-        private static void NormalBarHeightChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
-        {
-            if (obj is ProgressBar progBar && !progBar.GraphMode)
-            {
-                if (IsStoryboardStopped(progBar._ghraphStateStoryboard))
-                    progBar.Height = (double)e.NewValue;
-                else
-                    progBar.AnimationToNormalBar();
-            }
-        }
-
-        /// <summary>
-        /// Is called when the GraphBarHeight changes. Animates to the new graph-bar size if the animation is running else the height is set to the graph-bar size.
-        /// </summary>
-        /// <param name="obj">the ModernUIProgressBar object.</param>
-        /// <param name="e">the DependencyPropertyChangedEventArgs for the change.</param>
-        private static void GraphBarHeightChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
-        {
-            if (obj is ProgressBar progBar && progBar.GraphMode)
-            {
-                if (IsStoryboardStopped(progBar._ghraphStateStoryboard))
-                    progBar.Height = (double)e.NewValue;
-                else
-                    progBar.AnimationToGraphBar();
-            }
         }
     }
 }

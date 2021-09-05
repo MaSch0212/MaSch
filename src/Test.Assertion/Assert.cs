@@ -11,9 +11,13 @@ namespace MaSch.Test.Assertion
     /// A collection of helper classes to test various conditions within unit tests.
     /// If the condition being tested is not met, an <see cref="AssertFailedException"/> is thrown.
     /// </summary>
-    /// <seealso cref="MaSch.Test.Assertion.AssertBase" />
+    /// <seealso cref="AssertBase" />
     public class Assert : AssertBase
     {
+        private Assert()
+        {
+        }
+
         /// <summary>
         /// Gets the singleton instance of the <see cref="Assert"/>.
         /// </summary>
@@ -35,10 +39,6 @@ namespace MaSch.Test.Assertion
 
         /// <inheritdoc/>
         protected override string? AssertNamePrefix { get; } = "Assert";
-
-        private Assert()
-        {
-        }
 
         /// <inheritdoc/>
         [DoesNotReturn]

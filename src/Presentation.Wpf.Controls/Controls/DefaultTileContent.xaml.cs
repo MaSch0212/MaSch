@@ -8,7 +8,7 @@ namespace MaSch.Presentation.Wpf.Controls
     /// <summary>
     /// Control to display default content for a <see cref="Tile"/>.
     /// </summary>
-    /// <seealso cref="System.Windows.Controls.Control" />
+    /// <seealso cref="Control" />
     public class DefaultTileContent : Control
     {
         /// <summary>
@@ -61,14 +61,22 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(DefaultTileContent),
                 new PropertyMetadata(null));
 
+        private Control? _innerBorder;
+        private Control? _title;
+        private bool _isInitialized;
+
         static DefaultTileContent()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DefaultTileContent), new FrameworkPropertyMetadata(typeof(DefaultTileContent)));
         }
 
-        private Control? _innerBorder;
-        private Control? _title;
-        private bool _isInitialized;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultTileContent"/> class.
+        /// </summary>
+        public DefaultTileContent()
+        {
+            OnPropertyChanged(new DependencyPropertyChangedEventArgs(BackgroundProperty, null, null));
+        }
 
         /// <summary>
         /// Gets or sets the image of the tile.
@@ -113,14 +121,6 @@ namespace MaSch.Presentation.Wpf.Controls
         {
             get => (FrameworkElement)GetValue(TileSymbolControlProperty);
             set => SetValue(TileSymbolControlProperty, value);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultTileContent"/> class.
-        /// </summary>
-        public DefaultTileContent()
-        {
-            OnPropertyChanged(new DependencyPropertyChangedEventArgs(BackgroundProperty, null, null));
         }
 
         /// <inheritdoc />

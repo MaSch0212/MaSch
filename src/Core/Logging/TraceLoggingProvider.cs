@@ -12,7 +12,9 @@ namespace MaSch.Core.Logging
     {
         /// <inheritdoc/>
         public void Log(LogType logType, string? message)
-            => Log(logType, message, null);
+        {
+            Log(logType, message, null);
+        }
 
         /// <inheritdoc/>
         public void Log(LogType logType, string? message, Exception? exception)

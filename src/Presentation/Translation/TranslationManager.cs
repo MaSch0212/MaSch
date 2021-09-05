@@ -12,37 +12,8 @@ namespace MaSch.Presentation.Translation
     /// </summary>
     public class TranslationManager : ITranslationManager
     {
-        /// <summary>
-        /// Occurs when the current language has changed.
-        /// </summary>
-        public event LanguageChangedEventHandler? LanguageChanged;
-
         private readonly IDictionary<string, ITranslationProvider> _registeredProviders;
         private CultureInfo? _currentLanguage;
-
-        /// <summary>
-        /// Gets the provider key of the default provider.
-        /// </summary>
-        public string DefaultProviderKey => "(default)";
-
-        /// <summary>
-        /// Gets or sets the current language. Default is the CultureInfo.CurrentUICulture. Set to null to use CultureInfo.CurrentUICulture.
-        /// </summary>
-        /// <value>
-        /// The current language.
-        /// </value>
-        public CultureInfo CurrentLanguage
-        {
-            get => _currentLanguage ?? CultureInfo.CurrentUICulture;
-            set
-            {
-                if (Equals(_currentLanguage, value))
-                    return;
-                var oldLang = _currentLanguage;
-                _currentLanguage = value;
-                LanguageChanged?.Invoke(this, new LanguageChangedEventArgs(oldLang, CurrentLanguage));
-            }
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TranslationManager"/> class.
@@ -86,13 +57,42 @@ namespace MaSch.Presentation.Translation
         }
 
         /// <summary>
+        /// Occurs when the current language has changed.
+        /// </summary>
+        public event LanguageChangedEventHandler? LanguageChanged;
+
+        /// <summary>
+        /// Gets the provider key of the default provider.
+        /// </summary>
+        public string DefaultProviderKey => "(default)";
+
+        /// <summary>
+        /// Gets or sets the current language. Default is the CultureInfo.CurrentUICulture. Set to null to use CultureInfo.CurrentUICulture.
+        /// </summary>
+        /// <value>
+        /// The current language.
+        /// </value>
+        public CultureInfo CurrentLanguage
+        {
+            get => _currentLanguage ?? CultureInfo.CurrentUICulture;
+            set
+            {
+                if (Equals(_currentLanguage, value))
+                    return;
+                var oldLang = _currentLanguage;
+                _currentLanguage = value;
+                LanguageChanged?.Invoke(this, new LanguageChangedEventArgs(oldLang, CurrentLanguage));
+            }
+        }
+
+        /// <summary>
         /// Registers a new translation provider.
         /// </summary>
         /// <param name="provider">The provider to register.</param>
         /// <param name="providerKey">The provider key used to register the provider.</param>
         public void RegisterTranslationProvider(ITranslationProvider provider, string providerKey)
         {
-            Guard.NotNull(provider, nameof(provider));
+            _ = Guard.NotNull(provider, nameof(provider));
             _registeredProviders.Add(providerKey, provider);
         }
 
@@ -100,7 +100,10 @@ namespace MaSch.Presentation.Translation
         /// Registers the default translation provider.
         /// </summary>
         /// <param name="provider">The provider to register as default provider.</param>
-        public void RegisterDefaultTranslationProvider(ITranslationProvider provider) => RegisterTranslationProvider(provider, DefaultProviderKey);
+        public void RegisterDefaultTranslationProvider(ITranslationProvider provider)
+        {
+            RegisterTranslationProvider(provider, DefaultProviderKey);
+        }
 
         /// <summary>
         /// Translates a resource key with the default provider into the current language.
@@ -108,7 +111,9 @@ namespace MaSch.Presentation.Translation
         /// <param name="resourceKey">The resource key to translate.</param>
         /// <returns>Returns the translated representation of the resource key with the default provider in the current language.</returns>
         public string GetTranslation(string resourceKey)
-            => GetTranslation(resourceKey, DefaultProviderKey, CurrentLanguage);
+        {
+            return GetTranslation(resourceKey, DefaultProviderKey, CurrentLanguage);
+        }
 
         /// <summary>
         /// Translates a resource key with the default provider into a given language.
@@ -117,7 +122,9 @@ namespace MaSch.Presentation.Translation
         /// <param name="language">The language in which the resource key is translated in.</param>
         /// <returns>Returns the translated representation of the resource key with the default provider in the given language.</returns>
         public string GetTranslation(string resourceKey, CultureInfo language)
-            => GetTranslation(resourceKey, DefaultProviderKey, language);
+        {
+            return GetTranslation(resourceKey, DefaultProviderKey, language);
+        }
 
         /// <summary>
         /// Translates a resource key with a given provider into the current language.
@@ -126,7 +133,9 @@ namespace MaSch.Presentation.Translation
         /// <param name="providerKey">The provider that is used for translation.</param>
         /// <returns>Returns the translated representation of the resource key with the given provider in the current language.</returns>
         public string GetTranslation(string resourceKey, string providerKey)
-            => GetTranslation(resourceKey, providerKey, CurrentLanguage);
+        {
+            return GetTranslation(resourceKey, providerKey, CurrentLanguage);
+        }
 
         /// <summary>
         /// Translates a resource key with a given provider into a given language.
@@ -148,7 +157,9 @@ namespace MaSch.Presentation.Translation
         /// <param name="resourceKeys">The resource keys to translate.</param>
         /// <returns>Returns the translated representations of the resource keys with the default provider in the current language.</returns>
         public IReadOnlyDictionary<string, string> GetTranslations(IEnumerable<string> resourceKeys)
-            => GetTranslations(resourceKeys, DefaultProviderKey, CurrentLanguage);
+        {
+            return GetTranslations(resourceKeys, DefaultProviderKey, CurrentLanguage);
+        }
 
         /// <summary>
         /// Translates multiple resource keys with the default provider into a given language.
@@ -157,7 +168,9 @@ namespace MaSch.Presentation.Translation
         /// <param name="language">The language in which the resource keys are translated in.</param>
         /// <returns>Returns the translated representations of the resource keys with the default provider in the given language.</returns>
         public IReadOnlyDictionary<string, string> GetTranslations(IEnumerable<string> resourceKeys, CultureInfo language)
-            => GetTranslations(resourceKeys, DefaultProviderKey, language);
+        {
+            return GetTranslations(resourceKeys, DefaultProviderKey, language);
+        }
 
         /// <summary>
         /// Translates multiple resource keys with a given provider into the current language.
@@ -166,7 +179,9 @@ namespace MaSch.Presentation.Translation
         /// <param name="providerKey">The provider that is used for translation.</param>
         /// <returns>Returns the translated representations of the resource keys with the given provider in the current language.</returns>
         public IReadOnlyDictionary<string, string> GetTranslations(IEnumerable<string> resourceKeys, string providerKey)
-            => GetTranslations(resourceKeys, providerKey, CurrentLanguage);
+        {
+            return GetTranslations(resourceKeys, providerKey, CurrentLanguage);
+        }
 
         /// <summary>
         /// Translates multiple resource keys with a given provider into a given language.
@@ -188,7 +203,9 @@ namespace MaSch.Presentation.Translation
         /// <param name="language">The language in which the resource keys are translated in.</param>
         /// <returns>Returns the translated representations of all resource keys of the default provider in the given language.</returns>
         public IReadOnlyDictionary<string, string> GetAllTranslations(CultureInfo language)
-            => GetAllTranslations(DefaultProviderKey, language);
+        {
+            return GetAllTranslations(DefaultProviderKey, language);
+        }
 
         /// <summary>
         /// Translates all resource keys of a given provider into the current language.
@@ -196,7 +213,9 @@ namespace MaSch.Presentation.Translation
         /// <param name="providerKey">The provider that is used for translation.</param>
         /// <returns>Returns the translated representations of all resource keys of the given provider in the current language.</returns>
         public IReadOnlyDictionary<string, string> GetAllTranslations(string providerKey)
-            => GetAllTranslations(providerKey, CurrentLanguage);
+        {
+            return GetAllTranslations(providerKey, CurrentLanguage);
+        }
 
         /// <summary>
         /// Translates all resource keys of a given provider into a given language.
@@ -217,7 +236,9 @@ namespace MaSch.Presentation.Translation
         /// <param name="resourceKey">The resource key.</param>
         /// <returns>Returns true if the translated representation of the resource key exists with the default provider in the current language. Otherwise false.</returns>
         public bool IsTranslationDefined(string resourceKey)
-            => IsTranslationDefined(resourceKey, DefaultProviderKey, CurrentLanguage);
+        {
+            return IsTranslationDefined(resourceKey, DefaultProviderKey, CurrentLanguage);
+        }
 
         /// <summary>
         /// Checks if a translation of the given resource key exists in the given language of the default provider.
@@ -226,7 +247,9 @@ namespace MaSch.Presentation.Translation
         /// <param name="language">The language.</param>
         /// <returns>Returns true if the translated representation of the resource key exists with the default provider in the given language. Otherwise false.</returns>
         public bool IsTranslationDefined(string resourceKey, CultureInfo language)
-            => IsTranslationDefined(resourceKey, DefaultProviderKey, language);
+        {
+            return IsTranslationDefined(resourceKey, DefaultProviderKey, language);
+        }
 
         /// <summary>
         /// Checks if a translation of the given resource key exists in the current language of the provider with the given key.
@@ -235,7 +258,9 @@ namespace MaSch.Presentation.Translation
         /// <param name="providerKey">The provider.</param>
         /// <returns>Returns true if the translated representation of the resource key exists ith the given provider in the current language. Otherwise false.</returns>
         public bool IsTranslationDefined(string resourceKey, string providerKey)
-            => IsTranslationDefined(resourceKey, providerKey, CurrentLanguage);
+        {
+            return IsTranslationDefined(resourceKey, providerKey, CurrentLanguage);
+        }
 
         /// <summary>
         /// Checks if a translation of the given resource key exists in the given language of the provider with the given key.
@@ -256,7 +281,9 @@ namespace MaSch.Presentation.Translation
         /// </summary>
         /// <returns>Returns a list of languages that at least have one translation.</returns>
         public IEnumerable<CultureInfo> GetAvailableLanguages()
-            => _registeredProviders.SelectMany(x => x.Value.GetAvailableLanguages()).Select(x => x.LCID).Distinct().Select(CultureInfo.GetCultureInfo);
+        {
+            return _registeredProviders.SelectMany(x => x.Value.GetAvailableLanguages()).Select(x => x.LCID).Distinct().Select(CultureInfo.GetCultureInfo);
+        }
 
         /// <summary>
         /// Looks for all languages for that at least one translation is available in the given provider.

@@ -22,18 +22,18 @@ namespace MaSch.Core.Helper
                     try
                     {
                         var assembly = Assembly.Load("CommonServiceLocator");
-                        var slType = assembly.GetType("CommonServiceLocator.ServiceLocator", true, true) ?? throw new Exception("ServiceLocator type not found.");
+                        var serviceLocatorType = assembly.GetType("CommonServiceLocator.ServiceLocator", true, true) ?? throw new Exception("ServiceLocator type not found.");
                         _currentServiceLocator =
-                            slType.GetProperty("Current", BindingFlags.Static | BindingFlags.Public)?.GetValue(null);
+                            serviceLocatorType.GetProperty("Current", BindingFlags.Static | BindingFlags.Public)?.GetValue(null);
                     }
                     catch (Exception)
                     {
                         try
                         {
                             var assembly = Assembly.Load("Microsoft.Practices.ServiceLocation");
-                            var slType = assembly.GetType("Microsoft.Practices.ServiceLocation.ServiceLocator", true, true) ?? throw new Exception("ServiceLocator type not found.");
+                            var serviceLocatorType = assembly.GetType("Microsoft.Practices.ServiceLocation.ServiceLocator", true, true) ?? throw new Exception("ServiceLocator type not found.");
                             _currentServiceLocator =
-                                slType.GetProperty("Current", BindingFlags.Static | BindingFlags.Public)?.GetValue(null);
+                                serviceLocatorType.GetProperty("Current", BindingFlags.Static | BindingFlags.Public)?.GetValue(null);
                         }
                         catch (Exception)
                         {
@@ -57,8 +57,8 @@ namespace MaSch.Core.Helper
             if (CurrentServiceLocator == null)
                 return ServiceContext.Instance.TryGetService<T>();
             var method = CurrentServiceLocator.GetType().GetMethod("GetInstance", Type.EmptyTypes) ?? throw new InvalidOperationException("GetInstance method not found in ServiceLocator.");
-            var gMethod = method.MakeGenericMethod(typeof(T));
-            return (T?)gMethod.Invoke(CurrentServiceLocator, null);
+            var genericMethod = method.MakeGenericMethod(typeof(T));
+            return (T?)genericMethod.Invoke(CurrentServiceLocator, null);
         }
 
         /// <summary>
@@ -73,8 +73,8 @@ namespace MaSch.Core.Helper
             if (CurrentServiceLocator == null)
                 return ServiceContext.Instance.TryGetService<T>();
             var method = CurrentServiceLocator.GetType().GetMethod("GetInstance", new[] { typeof(string) }) ?? throw new InvalidOperationException("GetInstance method not found in ServiceLocator.");
-            var gMethod = method.MakeGenericMethod(typeof(T));
-            return (T?)gMethod.Invoke(CurrentServiceLocator, new object[] { key });
+            var genericMethod = method.MakeGenericMethod(typeof(T));
+            return (T?)genericMethod.Invoke(CurrentServiceLocator, new object[] { key });
         }
     }
 }

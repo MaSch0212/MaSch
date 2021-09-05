@@ -42,8 +42,29 @@ namespace MaSch.Core.Converters
             _priority = priority;
         }
 
+        /// <summary>
+        /// Registers a custom function which determines if a source type can be converted to a target type.
+        /// </summary>
+        /// <param name="sourceType">The source type.</param>
+        /// <param name="canConvertFunc">The function that determines wether a convertion is possible.</param>
+        public static void AddCanConvertFunction(Type sourceType, Func<Type, bool> canConvertFunc)
+        {
+            _ = Guard.NotNull(sourceType, nameof(sourceType));
+            _ = Guard.NotNull(canConvertFunc, nameof(canConvertFunc));
+            if (!CanConvertFunctions.TryGetValue(sourceType, out var functions))
+            {
+                functions = new List<Func<Type, bool>>();
+                CanConvertFunctions.Add(sourceType, functions);
+            }
+
+            functions.Add(canConvertFunc);
+        }
+
         /// <inheritdoc />
-        public int GetPriority(Type? sourceType, Type targetType) => _priority;
+        public int GetPriority(Type? sourceType, Type targetType)
+        {
+            return _priority;
+        }
 
         /// <inheritdoc />
         public bool CanConvert(Type? sourceType, Type targetType, IObjectConvertManager convertManager)
@@ -78,24 +99,6 @@ namespace MaSch.Core.Converters
             if (obj == null)
                 throw new InvalidCastException("The object to convert cannot be null.");
             return ((IConvertible)obj).ToType(targetType, formatProvider);
-        }
-
-        /// <summary>
-        /// Registers a custom function which determines if a source type can be converted to a target type.
-        /// </summary>
-        /// <param name="sourceType">The source type.</param>
-        /// <param name="canConvertFunc">The function that determines wether a convertion is possible.</param>
-        public static void AddCanConvertFunction(Type sourceType, Func<Type, bool> canConvertFunc)
-        {
-            Guard.NotNull(sourceType, nameof(sourceType));
-            Guard.NotNull(canConvertFunc, nameof(canConvertFunc));
-            if (!CanConvertFunctions.TryGetValue(sourceType, out var functions))
-            {
-                functions = new List<Func<Type, bool>>();
-                CanConvertFunctions.Add(sourceType, functions);
-            }
-
-            functions.Add(canConvertFunc);
         }
     }
 }

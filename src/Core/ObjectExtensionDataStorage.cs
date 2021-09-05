@@ -20,7 +20,7 @@ namespace MaSch.Core
         {
             get
             {
-                Guard.NotNull(dataObject, nameof(dataObject));
+                _ = Guard.NotNull(dataObject, nameof(dataObject));
                 if (_dataStore.TryGetValue(dataObject, out var data))
                     return data;
                 data = new();
@@ -43,7 +43,9 @@ namespace MaSch.Core
             }
 
             public int GetHashCode([DisallowNull] object obj)
-                => obj is EquatableWeakReference r ? r.GetHashCode() : obj.GetInitialHashCode();
+            {
+                return obj is EquatableWeakReference r ? r.GetHashCode() : obj.GetInitialHashCode();
+            }
         }
     }
 }

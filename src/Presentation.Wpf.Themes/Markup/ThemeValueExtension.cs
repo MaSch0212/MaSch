@@ -12,12 +12,39 @@ namespace MaSch.Presentation.Wpf.Markup
     /// <summary>
     /// Binding that is used to reference theme values.
     /// </summary>
-    /// <seealso cref="System.Windows.Data.Binding" />
+    /// <seealso cref="Binding" />
     public class ThemeValueExtension : Binding
     {
         private string? _customKey;
         private string? _propertyName;
         private int _ancestorLevel = 0;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThemeValueExtension"/> class.
+        /// </summary>
+        public ThemeValueExtension()
+        {
+            RelativeSource = new RelativeSource(RelativeSourceMode.Self);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThemeValueExtension"/> class.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        public ThemeValueExtension(ThemeKey key)
+            : this(key.ToString())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThemeValueExtension"/> class.
+        /// </summary>
+        /// <param name="customKey">The custom key.</param>
+        public ThemeValueExtension(string customKey)
+            : this()
+        {
+            CustomKey = customKey;
+        }
 
         /// <summary>
         /// Gets or sets the key.
@@ -67,33 +94,6 @@ namespace MaSch.Presentation.Wpf.Markup
                 _ancestorLevel = value;
                 RebuildPropertyPath();
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ThemeValueExtension"/> class.
-        /// </summary>
-        public ThemeValueExtension()
-        {
-            RelativeSource = new RelativeSource(RelativeSourceMode.Self);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ThemeValueExtension"/> class.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        public ThemeValueExtension(ThemeKey key)
-            : this(key.ToString())
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ThemeValueExtension"/> class.
-        /// </summary>
-        /// <param name="customKey">The custom key.</param>
-        public ThemeValueExtension(string customKey)
-            : this()
-        {
-            CustomKey = customKey;
         }
 
         private void RebuildPropertyPath()

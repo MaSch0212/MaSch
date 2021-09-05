@@ -26,7 +26,7 @@ namespace MaSch.Core.Extensions
         /// <returns><see langword="true"/> if <paramref name="obj"/> is contained in <paramref name="list"/>; otherwise <see langword="false"/>.</returns>
         public static bool In<T>(this T obj, IEnumerable<T> list)
         {
-            Guard.NotNull(list, nameof(list));
+            _ = Guard.NotNull(list, nameof(list));
             return list.Contains(obj);
         }
 
@@ -52,8 +52,8 @@ namespace MaSch.Core.Extensions
         /// <returns><see langword="true"/> if <paramref name="obj"/> is contained in <paramref name="list"/>; otherwise <see langword="false"/>.</returns>
         public static bool In<T>(this T obj, IEnumerable<T> list, IEqualityComparer<T> equalityComparer)
         {
-            Guard.NotNull(list, nameof(list));
-            Guard.NotNull(equalityComparer, nameof(equalityComparer));
+            _ = Guard.NotNull(list, nameof(list));
+            _ = Guard.NotNull(equalityComparer, nameof(equalityComparer));
             return list.Contains(obj, equalityComparer);
         }
 
@@ -65,7 +65,9 @@ namespace MaSch.Core.Extensions
         /// <param name="source">The object to convert to <typeparamref name="TTarget"/>.</param>
         /// <returns>The converted <paramref name="source"/> to <typeparamref name="TTarget"/>.</returns>
         public static TTarget? ConvertTo<TSource, TTarget>(this TSource source)
-            => ConvertManager.Convert<TSource, TTarget>(source);
+        {
+            return ConvertManager.Convert<TSource, TTarget>(source);
+        }
 
         /// <summary>
         /// Converts this object to the specified type.
@@ -76,7 +78,9 @@ namespace MaSch.Core.Extensions
         /// <param name="formatProvider">The <see cref="IFormatProvider"/> to use for conversion.</param>
         /// <returns>The converted <paramref name="source"/> to <typeparamref name="TTarget"/>.</returns>
         public static TTarget? ConvertTo<TSource, TTarget>(this TSource source, IFormatProvider formatProvider)
-            => ConvertManager.Convert<TSource, TTarget>(source, Guard.NotNull(formatProvider, nameof(formatProvider)));
+        {
+            return ConvertManager.Convert<TSource, TTarget>(source, Guard.NotNull(formatProvider, nameof(formatProvider)));
+        }
 
         /// <summary>
         /// Converts this object to the specified type.
@@ -85,7 +89,9 @@ namespace MaSch.Core.Extensions
         /// <param name="obj">The object to convert to <typeparamref name="T"/>.</param>
         /// <returns>The converted <paramref name="obj"/> to <typeparamref name="T"/>.</returns>
         public static T? ConvertTo<T>(this object? obj)
-            => ConvertManager.Convert<T>(obj);
+        {
+            return ConvertManager.Convert<T>(obj);
+        }
 
         /// <summary>
         /// Converts this object to the specified type.
@@ -95,7 +101,9 @@ namespace MaSch.Core.Extensions
         /// <param name="formatProvider">The <see cref="IFormatProvider"/> to use for conversion.</param>
         /// <returns>The converted <paramref name="obj"/> to <typeparamref name="T"/>.</returns>
         public static T? ConvertTo<T>(this object? obj, IFormatProvider formatProvider)
-            => ConvertManager.Convert<T>(obj, Guard.NotNull(formatProvider, nameof(formatProvider)));
+        {
+            return ConvertManager.Convert<T>(obj, Guard.NotNull(formatProvider, nameof(formatProvider)));
+        }
 
         /// <summary>
         /// Converts this object to the specified type.
@@ -104,7 +112,9 @@ namespace MaSch.Core.Extensions
         /// <param name="targetType">The type to which <paramref name="obj"/> should be converted to.</param>
         /// <returns>The converted <paramref name="obj"/> to <paramref name="targetType"/>.</returns>
         public static object? ConvertTo(this object? obj, Type targetType)
-            => ConvertManager.Convert(obj, Guard.NotNull(targetType, nameof(targetType)));
+        {
+            return ConvertManager.Convert(obj, Guard.NotNull(targetType, nameof(targetType)));
+        }
 
         /// <summary>
         /// Converts this object to the specified type.
@@ -114,7 +124,9 @@ namespace MaSch.Core.Extensions
         /// <param name="formatProvider">The <see cref="IFormatProvider"/> to use for conversion.</param>
         /// <returns>The converted <paramref name="obj"/> to <paramref name="targetType"/>.</returns>
         public static object? ConvertTo(this object? obj, Type targetType, IFormatProvider formatProvider)
-            => ConvertManager.Convert(obj, Guard.NotNull(targetType, nameof(targetType)), Guard.NotNull(formatProvider, nameof(formatProvider)));
+        {
+            return ConvertManager.Convert(obj, Guard.NotNull(targetType, nameof(targetType)), Guard.NotNull(formatProvider, nameof(formatProvider)));
+        }
 
         /// <summary>
         /// Casts this object to the specified type.
@@ -152,7 +164,9 @@ namespace MaSch.Core.Extensions
         [Obsolete("Use the switch statement from C# 8 instead.")]
         public static Switch<TSource, TTarget> Switch<TSource, TTarget>(this TSource source)
             where TSource : notnull
-            => new(source);
+        {
+            return new(source);
+        }
 
         /// <summary>
         /// Tries to clone an object.
@@ -163,7 +177,9 @@ namespace MaSch.Core.Extensions
         [return: MaybeNull]
         public static T CloneIfPossible<T>(this T obj)
             where T : class?
-            => TryClone(obj, out var clone) ? clone : obj;
+        {
+            return TryClone(obj, out var clone) ? clone : obj;
+        }
 
         /// <summary>
         /// Tries to clone an object.
@@ -199,7 +215,7 @@ namespace MaSch.Core.Extensions
         /// <returns>A string that represents the current object formatted using the invariant culture.</returns>
         public static string ToInvariantString(this object obj)
         {
-            Guard.NotNull(obj, nameof(obj));
+            _ = Guard.NotNull(obj, nameof(obj));
             return FormattableString.Invariant($"{obj}");
         }
 
@@ -209,6 +225,8 @@ namespace MaSch.Core.Extensions
         /// <param name="obj">The object to get the hash from.</param>
         /// <returns>The initial hash code of <paramref name="obj"/> (reference hash).</returns>
         public static int GetInitialHashCode(this object obj)
-            => RuntimeHelpers.GetHashCode(obj);
+        {
+            return RuntimeHelpers.GetHashCode(obj);
+        }
     }
 }

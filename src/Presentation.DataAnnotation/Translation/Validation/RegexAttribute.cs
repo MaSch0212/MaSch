@@ -12,14 +12,6 @@ namespace MaSch.Presentation.Translation.Validation
     public class RegexAttribute : TranslatableValidationAttribute
     {
         /// <summary>
-        /// Gets the regular expression to use for validation.
-        /// </summary>
-        /// <value>
-        /// The regular expression that is used for validation.
-        /// </value>
-        public Regex Regex { get; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="RegexAttribute"/> class.
         /// </summary>
         /// <param name="regexPattern">The regular expression pattern to use for validation.</param>
@@ -39,6 +31,14 @@ namespace MaSch.Presentation.Translation.Validation
         }
 
         /// <summary>
+        /// Gets the regular expression to use for validation.
+        /// </summary>
+        /// <value>
+        /// The regular expression that is used for validation.
+        /// </value>
+        public Regex Regex { get; }
+
+        /// <summary>
         /// Validates the specified value by using the regular expression defined in <see cref="Regex"/>.
         /// </summary>
         /// <param name="value">The value to validate.</param>
@@ -48,9 +48,9 @@ namespace MaSch.Presentation.Translation.Validation
         /// </returns>
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            if (value is not string sValue)
+            if (value is not string stringValue)
                 return ValidationResult.Success;
-            return Regex.IsMatch(sValue) ? ValidationResult.Success : new ValidationResult(GetTranslatedErrorMessage());
+            return Regex.IsMatch(stringValue) ? ValidationResult.Success : new ValidationResult(GetTranslatedErrorMessage());
         }
     }
 }

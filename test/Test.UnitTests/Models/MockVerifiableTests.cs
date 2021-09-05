@@ -27,7 +27,7 @@ namespace MaSch.Test.UnitTests.Models
         [TestMethod]
         public void Ctor_ActionNull()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => ((IDisposable)new MockVerifiable(null!)).Dispose());
+            _ = Assert.ThrowsException<ArgumentNullException>(() => ((IDisposable)new MockVerifiable(null!)).Dispose());
         }
 
         [TestMethod]
@@ -43,7 +43,7 @@ namespace MaSch.Test.UnitTests.Models
         [TestMethod]
         public void Ctor_ActionNull_Times()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => ((IDisposable)new MockVerifiable(null!, Times.Once())).Dispose());
+            _ = Assert.ThrowsException<ArgumentNullException>(() => ((IDisposable)new MockVerifiable(null!, Times.Once())).Dispose());
         }
 
         [TestMethod]
@@ -59,7 +59,7 @@ namespace MaSch.Test.UnitTests.Models
         [TestMethod]
         public void Ctor_ActionNull_Times_Message()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => ((IDisposable)new MockVerifiable(null!, Times.Once(), "My message")).Dispose());
+            _ = Assert.ThrowsException<ArgumentNullException>(() => ((IDisposable)new MockVerifiable(null!, Times.Once(), "My message")).Dispose());
         }
 
         [TestMethod]
@@ -76,7 +76,7 @@ namespace MaSch.Test.UnitTests.Models
         public void Verify()
         {
             var actionMock = new Mock<MockVerification>(MockBehavior.Strict);
-            actionMock.Setup(x => x(Times.Once(), "My message"));
+            _ = actionMock.Setup(x => x(Times.Once(), "My message"));
             using var verifiable = new MockVerifiable(actionMock.Object, Times.Once(), "My message");
 
             verifiable.Verify(null, null);
@@ -88,7 +88,7 @@ namespace MaSch.Test.UnitTests.Models
         public void Verify_WithTimes()
         {
             var actionMock = new Mock<MockVerification>(MockBehavior.Strict);
-            actionMock.Setup(x => x(Times.Never(), "My message"));
+            _ = actionMock.Setup(x => x(Times.Never(), "My message"));
             var verifiable = new MockVerifiable(actionMock.Object, Times.Once(), "My message");
 
             verifiable.Verify(Times.Never(), null);
@@ -100,7 +100,7 @@ namespace MaSch.Test.UnitTests.Models
         public void Verify_WithMessage()
         {
             var actionMock = new Mock<MockVerification>(MockBehavior.Strict);
-            actionMock.Setup(x => x(Times.Once(), "blub"));
+            _ = actionMock.Setup(x => x(Times.Once(), "blub"));
             var verifiable = new MockVerifiable(actionMock.Object, Times.Once(), "My message");
 
             verifiable.Verify(null, "blub");
@@ -112,7 +112,7 @@ namespace MaSch.Test.UnitTests.Models
         public void Dispose_()
         {
             var actionMock = new Mock<MockVerification>(MockBehavior.Strict);
-            actionMock.Setup(x => x(Times.Once(), "My message"));
+            _ = actionMock.Setup(x => x(Times.Once(), "My message"));
             var verifiable = new MockVerifiable(actionMock.Object, Times.Once(), "My message");
 
             ((IDisposable)verifiable).Dispose();

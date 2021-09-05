@@ -11,11 +11,43 @@ namespace MaSch.Core.Lazy
     /// <typeparam name="T1">The type of the first element.</typeparam>
     public class ModifiableAdvancedLazy<T1>
     {
-        private readonly Func<T1> _i1Factory;
-        private readonly Action<T1> _i1Callback;
+        private readonly Func<T1> _value1Factory;
+        private readonly Action<T1> _value1Callback;
 
-        private bool _b1;
-        private T1? _i1;
+        private bool _hasValue1;
+        private T1? _value1;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ModifiableAdvancedLazy{T1}"/> class.
+        /// </summary>
+        /// <param name="value1Factory">The factory for the first item.</param>
+        /// <param name="value1Callback">The callback action that is called when the first item changed.</param>
+        public ModifiableAdvancedLazy(Func<T1> value1Factory, Action<T1> value1Callback)
+            : this(value1Factory, value1Callback, true)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ModifiableAdvancedLazy{T1}"/> class.
+        /// </summary>
+        /// <param name="value1Factory">The factory for the first item.</param>
+        /// <param name="value1Callback">The callback action that is called when the first item changed.</param>
+        /// <param name="useCaching">if set to <c>true</c> the first value returned by the factory function is cached.</param>
+        public ModifiableAdvancedLazy(Func<T1> value1Factory, Action<T1> value1Callback, bool useCaching)
+        {
+            _value1Factory = Guard.NotNull(value1Factory, nameof(value1Factory));
+            _value1Callback = Guard.NotNull(value1Callback, nameof(value1Callback));
+            UseCaching = useCaching;
+        }
+
+        /// <summary>
+        /// Gets or sets the first item.
+        /// </summary>
+        public T1 Item1
+        {
+            get => GetValue(ref _hasValue1, ref _value1, _value1Factory);
+            set => SetValue(ref _hasValue1, ref _value1, value, _value1Callback);
+        }
 
         /// <summary>
         /// Gets a value indicating whether the first value returned by the factory function should be cached.
@@ -23,62 +55,30 @@ namespace MaSch.Core.Lazy
         protected bool UseCaching { get; }
 
         /// <summary>
-        /// Gets or sets the first item.
-        /// </summary>
-        public T1 Item1
-        {
-            get => GetValue(ref _b1, ref _i1, _i1Factory);
-            set => SetValue(ref _b1, ref _i1, value, _i1Callback);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModifiableAdvancedLazy{T1}"/> class.
-        /// </summary>
-        /// <param name="i1Factory">The factory for the first item.</param>
-        /// <param name="i1Callback">The callback action that is called when the first item changed.</param>
-        public ModifiableAdvancedLazy(Func<T1> i1Factory, Action<T1> i1Callback)
-            : this(i1Factory, i1Callback, true)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModifiableAdvancedLazy{T1}"/> class.
-        /// </summary>
-        /// <param name="i1Factory">The factory for the first item.</param>
-        /// <param name="i1Callback">The callback action that is called when the first item changed.</param>
-        /// <param name="useCaching">if set to <c>true</c> the first value returned by the factory function is cached.</param>
-        public ModifiableAdvancedLazy(Func<T1> i1Factory, Action<T1> i1Callback, bool useCaching)
-        {
-            _i1Factory = Guard.NotNull(i1Factory, nameof(i1Factory));
-            _i1Callback = Guard.NotNull(i1Callback, nameof(i1Callback));
-            UseCaching = useCaching;
-        }
-
-        /// <summary>
         /// Clears the cache.
         /// </summary>
         public virtual void ClearCache()
         {
-            _b1 = false;
-            _i1 = default;
+            _hasValue1 = false;
+            _value1 = default;
         }
 
         /// <summary>
         /// Gets the specific value using the factory.
         /// </summary>
         /// <typeparam name="T">The type of the value to get.</typeparam>
-        /// <param name="bField">The field that indicates whether the value is cached.</param>
-        /// <param name="vField">The value field.</param>
+        /// <param name="hasValueField">The field that indicates whether the value is cached.</param>
+        /// <param name="valueField">The value field.</param>
         /// <param name="factory">The factory.</param>
         /// <returns>The created or cached value.</returns>
-        protected T GetValue<T>(ref bool bField, ref T? vField, Func<T> factory)
+        protected T GetValue<T>(ref bool hasValueField, ref T? valueField, Func<T> factory)
         {
             if (UseCaching)
             {
-                if (!bField)
-                    vField = factory();
-                bField = true;
-                return vField!;
+                if (!hasValueField)
+                    valueField = factory();
+                hasValueField = true;
+                return valueField!;
             }
 
             return factory();
@@ -88,17 +88,17 @@ namespace MaSch.Core.Lazy
         /// Sets the specific value.
         /// </summary>
         /// <typeparam name="T">The type of the value to set.</typeparam>
-        /// <param name="bField">The field that indicates whether the value is cached.</param>
-        /// <param name="vField">The value field.</param>
+        /// <param name="hasValueField">The field that indicates whether the value is cached.</param>
+        /// <param name="valueField">The value field.</param>
         /// <param name="value">The value.</param>
         /// <param name="callback">The callback.</param>
-        protected void SetValue<T>(ref bool bField, ref T? vField, T value, Action<T> callback)
+        protected void SetValue<T>(ref bool hasValueField, ref T? valueField, T value, Action<T> callback)
         {
             if (UseCaching)
             {
-                bField = true;
-                vField = value;
-                callback(vField);
+                hasValueField = true;
+                valueField = value;
+                callback(valueField);
             }
             else
             {
@@ -115,54 +115,54 @@ namespace MaSch.Core.Lazy
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic representation can be in same file.")]
     public class ModifiableAdvancedLazy<T1, T2> : ModifiableAdvancedLazy<T1>
     {
-        private readonly Func<T2> _i2Factory;
-        private readonly Action<T2> _i2Callback;
+        private readonly Func<T2> _value2Factory;
+        private readonly Action<T2> _value2Callback;
 
-        private bool _b2;
-        private T2? _i2;
+        private bool _hasValue2;
+        private T2? _value2;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ModifiableAdvancedLazy{T1, T2}"/> class.
+        /// </summary>
+        /// <param name="value1Factory">The factory for the first item.</param>
+        /// <param name="value1Callback">The callback action that is called when the first item changed.</param>
+        /// <param name="value2Factory">The factory for the second item.</param>
+        /// <param name="value2Callback">The callback action that is called when the second item changed.</param>
+        public ModifiableAdvancedLazy(Func<T1> value1Factory, Action<T1> value1Callback, Func<T2> value2Factory, Action<T2> value2Callback)
+            : this(value1Factory, value1Callback, value2Factory, value2Callback, true)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ModifiableAdvancedLazy{T1, T2}"/> class.
+        /// </summary>
+        /// <param name="value1Factory">The factory for the first item.</param>
+        /// <param name="value1Callback">The callback action that is called when the first item changed.</param>
+        /// <param name="value2Factory">The factory for the second item.</param>
+        /// <param name="value2Callback">The callback action that is called when the second item changed.</param>
+        /// <param name="useCaching">if set to <c>true</c> the first value returned by the factory function is cached.</param>
+        public ModifiableAdvancedLazy(Func<T1> value1Factory, Action<T1> value1Callback, Func<T2> value2Factory, Action<T2> value2Callback, bool useCaching)
+            : base(value1Factory, value1Callback, useCaching)
+        {
+            _value2Factory = Guard.NotNull(value2Factory, nameof(value2Factory));
+            _value2Callback = Guard.NotNull(value2Callback, nameof(value2Callback));
+        }
 
         /// <summary>
         /// Gets or sets the second item.
         /// </summary>
         public T2 Item2
         {
-            get => GetValue(ref _b2, ref _i2, _i2Factory);
-            set => SetValue(ref _b2, ref _i2, value, _i2Callback);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModifiableAdvancedLazy{T1, T2}"/> class.
-        /// </summary>
-        /// <param name="i1Factory">The factory for the first item.</param>
-        /// <param name="i1Callback">The callback action that is called when the first item changed.</param>
-        /// <param name="i2Factory">The factory for the second item.</param>
-        /// <param name="i2Callback">The callback action that is called when the second item changed.</param>
-        public ModifiableAdvancedLazy(Func<T1> i1Factory, Action<T1> i1Callback, Func<T2> i2Factory, Action<T2> i2Callback)
-            : this(i1Factory, i1Callback, i2Factory, i2Callback, true)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModifiableAdvancedLazy{T1, T2}"/> class.
-        /// </summary>
-        /// <param name="i1Factory">The factory for the first item.</param>
-        /// <param name="i1Callback">The callback action that is called when the first item changed.</param>
-        /// <param name="i2Factory">The factory for the second item.</param>
-        /// <param name="i2Callback">The callback action that is called when the second item changed.</param>
-        /// <param name="useCaching">if set to <c>true</c> the first value returned by the factory function is cached.</param>
-        public ModifiableAdvancedLazy(Func<T1> i1Factory, Action<T1> i1Callback, Func<T2> i2Factory, Action<T2> i2Callback, bool useCaching)
-            : base(i1Factory, i1Callback, useCaching)
-        {
-            _i2Factory = Guard.NotNull(i2Factory, nameof(i2Factory));
-            _i2Callback = Guard.NotNull(i2Callback, nameof(i2Callback));
+            get => GetValue(ref _hasValue2, ref _value2, _value2Factory);
+            set => SetValue(ref _hasValue2, ref _value2, value, _value2Callback);
         }
 
         /// <inheritdoc />
         public override void ClearCache()
         {
             base.ClearCache();
-            _b2 = false;
-            _i2 = default;
+            _hasValue2 = false;
+            _value2 = default;
         }
     }
 
@@ -175,58 +175,58 @@ namespace MaSch.Core.Lazy
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic representation can be in same file.")]
     public class ModifiableAdvancedLazy<T1, T2, T3> : ModifiableAdvancedLazy<T1, T2>
     {
-        private readonly Func<T3> _i3Factory;
-        private readonly Action<T3> _i3Callback;
+        private readonly Func<T3> _value3Factory;
+        private readonly Action<T3> _value3Callback;
 
-        private bool _b3;
-        private T3? _i3;
+        private bool _hasValue3;
+        private T3? _value3;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ModifiableAdvancedLazy{T1, T2, T3}"/> class.
+        /// </summary>
+        /// <param name="value1Factory">The factory for the first item.</param>
+        /// <param name="value1Callback">The callback action that is called when the first item changed.</param>
+        /// <param name="value2Factory">The factory for the second item.</param>
+        /// <param name="value2Callback">The callback action that is called when the second item changed.</param>
+        /// <param name="value3Factory">The factory for the third item.</param>
+        /// <param name="value3Callback">The callback action that is called when the third item changed.</param>
+        public ModifiableAdvancedLazy(Func<T1> value1Factory, Action<T1> value1Callback, Func<T2> value2Factory, Action<T2> value2Callback, Func<T3> value3Factory, Action<T3> value3Callback)
+            : this(value1Factory, value1Callback, value2Factory, value2Callback, value3Factory, value3Callback, true)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ModifiableAdvancedLazy{T1, T2, T3}"/> class.
+        /// </summary>
+        /// <param name="value1Factory">The factory for the first item.</param>
+        /// <param name="value1Callback">The callback action that is called when the first item changed.</param>
+        /// <param name="value2Factory">The factory for the second item.</param>
+        /// <param name="value2Callback">The callback action that is called when the second item changed.</param>
+        /// <param name="value3Factory">The factory for the third item.</param>
+        /// <param name="value3Callback">The callback action that is called when the third item changed.</param>
+        /// <param name="useCaching">if set to <c>true</c> the first value returned by the factory function is cached.</param>
+        public ModifiableAdvancedLazy(Func<T1> value1Factory, Action<T1> value1Callback, Func<T2> value2Factory, Action<T2> value2Callback, Func<T3> value3Factory, Action<T3> value3Callback, bool useCaching)
+            : base(value1Factory, value1Callback, value2Factory, value2Callback, useCaching)
+        {
+            _value3Factory = Guard.NotNull(value3Factory, nameof(value3Factory));
+            _value3Callback = Guard.NotNull(value3Callback, nameof(value3Callback));
+        }
 
         /// <summary>
         /// Gets or sets the third item.
         /// </summary>
         public T3 Item3
         {
-            get => GetValue(ref _b3, ref _i3, _i3Factory);
-            set => SetValue(ref _b3, ref _i3, value, _i3Callback);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModifiableAdvancedLazy{T1, T2, T3}"/> class.
-        /// </summary>
-        /// <param name="i1Factory">The factory for the first item.</param>
-        /// <param name="i1Callback">The callback action that is called when the first item changed.</param>
-        /// <param name="i2Factory">The factory for the second item.</param>
-        /// <param name="i2Callback">The callback action that is called when the second item changed.</param>
-        /// <param name="i3Factory">The factory for the third item.</param>
-        /// <param name="i3Callback">The callback action that is called when the third item changed.</param>
-        public ModifiableAdvancedLazy(Func<T1> i1Factory, Action<T1> i1Callback, Func<T2> i2Factory, Action<T2> i2Callback, Func<T3> i3Factory, Action<T3> i3Callback)
-            : this(i1Factory, i1Callback, i2Factory, i2Callback, i3Factory, i3Callback, true)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModifiableAdvancedLazy{T1, T2, T3}"/> class.
-        /// </summary>
-        /// <param name="i1Factory">The factory for the first item.</param>
-        /// <param name="i1Callback">The callback action that is called when the first item changed.</param>
-        /// <param name="i2Factory">The factory for the second item.</param>
-        /// <param name="i2Callback">The callback action that is called when the second item changed.</param>
-        /// <param name="i3Factory">The factory for the third item.</param>
-        /// <param name="i3Callback">The callback action that is called when the third item changed.</param>
-        /// <param name="useCaching">if set to <c>true</c> the first value returned by the factory function is cached.</param>
-        public ModifiableAdvancedLazy(Func<T1> i1Factory, Action<T1> i1Callback, Func<T2> i2Factory, Action<T2> i2Callback, Func<T3> i3Factory, Action<T3> i3Callback, bool useCaching)
-            : base(i1Factory, i1Callback, i2Factory, i2Callback, useCaching)
-        {
-            _i3Factory = Guard.NotNull(i3Factory, nameof(i3Factory));
-            _i3Callback = Guard.NotNull(i3Callback, nameof(i3Callback));
+            get => GetValue(ref _hasValue3, ref _value3, _value3Factory);
+            set => SetValue(ref _hasValue3, ref _value3, value, _value3Callback);
         }
 
         /// <inheritdoc />
         public override void ClearCache()
         {
             base.ClearCache();
-            _b3 = false;
-            _i3 = default;
+            _hasValue3 = false;
+            _value3 = default;
         }
     }
 
@@ -240,62 +240,62 @@ namespace MaSch.Core.Lazy
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic representation can be in same file.")]
     public class ModifiableAdvancedLazy<T1, T2, T3, T4> : ModifiableAdvancedLazy<T1, T2, T3>
     {
-        private readonly Func<T4> _i4Factory;
-        private readonly Action<T4> _i4Callback;
+        private readonly Func<T4> _value4Factory;
+        private readonly Action<T4> _value4Callback;
 
-        private bool _b4;
-        private T4? _i4;
+        private bool _hasValue4;
+        private T4? _value4;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ModifiableAdvancedLazy{T1, T2, T3, T4}"/> class.
+        /// </summary>
+        /// <param name="value1Factory">The factory for the first item.</param>
+        /// <param name="value1Callback">The callback action that is called when the first item changed.</param>
+        /// <param name="value2Factory">The factory for the second item.</param>
+        /// <param name="value2Callback">The callback action that is called when the second item changed.</param>
+        /// <param name="value3Factory">The factory for the third item.</param>
+        /// <param name="value3Callback">The callback action that is called when the third item changed.</param>
+        /// <param name="value4Factory">The factory for the fourth item.</param>
+        /// <param name="value4Callback">The callback action that is called when the fourth item changed.</param>
+        public ModifiableAdvancedLazy(Func<T1> value1Factory, Action<T1> value1Callback, Func<T2> value2Factory, Action<T2> value2Callback, Func<T3> value3Factory, Action<T3> value3Callback, Func<T4> value4Factory, Action<T4> value4Callback)
+            : this(value1Factory, value1Callback, value2Factory, value2Callback, value3Factory, value3Callback, value4Factory, value4Callback, true)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ModifiableAdvancedLazy{T1, T2, T3, T4}"/> class.
+        /// </summary>
+        /// <param name="value1Factory">The factory for the first item.</param>
+        /// <param name="value1Callback">The callback action that is called when the first item changed.</param>
+        /// <param name="value2Factory">The factory for the second item.</param>
+        /// <param name="value2Callback">The callback action that is called when the second item changed.</param>
+        /// <param name="value3Factory">The factory for the third item.</param>
+        /// <param name="value3Callback">The callback action that is called when the third item changed.</param>
+        /// <param name="value4Factory">The factory for the fourth item.</param>
+        /// <param name="value4Callback">The callback action that is called when the fourth item changed.</param>
+        /// <param name="useCaching">if set to <c>true</c> the first value returned by the factory function is cached.</param>
+        public ModifiableAdvancedLazy(Func<T1> value1Factory, Action<T1> value1Callback, Func<T2> value2Factory, Action<T2> value2Callback, Func<T3> value3Factory, Action<T3> value3Callback, Func<T4> value4Factory, Action<T4> value4Callback, bool useCaching)
+            : base(value1Factory, value1Callback, value2Factory, value2Callback, value3Factory, value3Callback, useCaching)
+        {
+            _value4Factory = Guard.NotNull(value4Factory, nameof(value4Factory));
+            _value4Callback = Guard.NotNull(value4Callback, nameof(value4Callback));
+        }
 
         /// <summary>
         /// Gets or sets the fourth item.
         /// </summary>
         public T4 Item4
         {
-            get => GetValue(ref _b4, ref _i4, _i4Factory);
-            set => SetValue(ref _b4, ref _i4, value, _i4Callback);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModifiableAdvancedLazy{T1, T2, T3, T4}"/> class.
-        /// </summary>
-        /// <param name="i1Factory">The factory for the first item.</param>
-        /// <param name="i1Callback">The callback action that is called when the first item changed.</param>
-        /// <param name="i2Factory">The factory for the second item.</param>
-        /// <param name="i2Callback">The callback action that is called when the second item changed.</param>
-        /// <param name="i3Factory">The factory for the third item.</param>
-        /// <param name="i3Callback">The callback action that is called when the third item changed.</param>
-        /// <param name="i4Factory">The factory for the fourth item.</param>
-        /// <param name="i4Callback">The callback action that is called when the fourth item changed.</param>
-        public ModifiableAdvancedLazy(Func<T1> i1Factory, Action<T1> i1Callback, Func<T2> i2Factory, Action<T2> i2Callback, Func<T3> i3Factory, Action<T3> i3Callback, Func<T4> i4Factory, Action<T4> i4Callback)
-            : this(i1Factory, i1Callback, i2Factory, i2Callback, i3Factory, i3Callback, i4Factory, i4Callback, true)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModifiableAdvancedLazy{T1, T2, T3, T4}"/> class.
-        /// </summary>
-        /// <param name="i1Factory">The factory for the first item.</param>
-        /// <param name="i1Callback">The callback action that is called when the first item changed.</param>
-        /// <param name="i2Factory">The factory for the second item.</param>
-        /// <param name="i2Callback">The callback action that is called when the second item changed.</param>
-        /// <param name="i3Factory">The factory for the third item.</param>
-        /// <param name="i3Callback">The callback action that is called when the third item changed.</param>
-        /// <param name="i4Factory">The factory for the fourth item.</param>
-        /// <param name="i4Callback">The callback action that is called when the fourth item changed.</param>
-        /// <param name="useCaching">if set to <c>true</c> the first value returned by the factory function is cached.</param>
-        public ModifiableAdvancedLazy(Func<T1> i1Factory, Action<T1> i1Callback, Func<T2> i2Factory, Action<T2> i2Callback, Func<T3> i3Factory, Action<T3> i3Callback, Func<T4> i4Factory, Action<T4> i4Callback, bool useCaching)
-            : base(i1Factory, i1Callback, i2Factory, i2Callback, i3Factory, i3Callback, useCaching)
-        {
-            _i4Factory = Guard.NotNull(i4Factory, nameof(i4Factory));
-            _i4Callback = Guard.NotNull(i4Callback, nameof(i4Callback));
+            get => GetValue(ref _hasValue4, ref _value4, _value4Factory);
+            set => SetValue(ref _hasValue4, ref _value4, value, _value4Callback);
         }
 
         /// <inheritdoc />
         public override void ClearCache()
         {
             base.ClearCache();
-            _b4 = false;
-            _i4 = default;
+            _hasValue4 = false;
+            _value4 = default;
         }
     }
 }

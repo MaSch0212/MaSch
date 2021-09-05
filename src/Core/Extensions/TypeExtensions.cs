@@ -33,10 +33,8 @@ namespace MaSch.Core.Extensions
             [typeof(decimal)] = "decimal",
         };
 
-        #region IsCastableTo: Copied from http://stackoverflow.com/questions/2119441/check-if-types-are-castable-subclasses
-
         /// <summary>
-        /// Checks if this type can be casted implicitly or explicitly to the given type.
+        /// Checks if this type can be casted implicitly or explicitly to the given type. See <see href="http://stackoverflow.com/questions/2119441/check-if-types-are-castable-subclasses"/>.
         /// </summary>
         /// <param name="from">The type which is casted.</param>
         /// <param name="to">The type to which the object should be casted.</param>
@@ -44,62 +42,13 @@ namespace MaSch.Core.Extensions
         /// <returns>true if this type is castable to the given type, otherwise false.</returns>
         public static bool IsCastableTo(this Type from, Type to, bool implicitly = false)
         {
-            Guard.NotNull(from, nameof(from));
-            Guard.NotNull(to, nameof(to));
+            _ = Guard.NotNull(from, nameof(from));
+            _ = Guard.NotNull(to, nameof(to));
             return to.IsAssignableFrom(from) || from.HasCastDefined(to, implicitly);
         }
 
-        private static bool HasCastDefined(this Type from, Type to, bool implicitly)
-        {
-            Guard.NotNull(from, nameof(from));
-            Guard.NotNull(to, nameof(to));
-            if ((from.IsPrimitive || from.IsEnum) && (to.IsPrimitive || to.IsEnum))
-            {
-                if (!implicitly)
-                    return from == to || (from != typeof(bool) && to != typeof(bool));
-
-                Type[][] typeHierarchy =
-                {
-                    new[] { typeof(byte),  typeof(sbyte), typeof(char) },
-                    new[] { typeof(short), typeof(ushort) },
-                    new[] { typeof(int), typeof(uint) },
-                    new[] { typeof(long), typeof(ulong) },
-                    new[] { typeof(float) },
-                    new[] { typeof(double) },
-                };
-                var lowerTypes = Enumerable.Empty<Type>();
-                foreach (var types in typeHierarchy)
-                {
-                    if (types.Any(t => t == to))
-                        return lowerTypes.Any(t => t == from);
-                    lowerTypes = lowerTypes.Concat(types);
-                }
-
-                return false;   // IntPtr, UIntPtr, Enum, Boolean
-            }
-
-            return IsCastDefined(to, m => m.GetParameters()[0].ParameterType, _ => from, implicitly, false)
-                || IsCastDefined(from, _ => to, m => m.ReturnType, implicitly, true);
-        }
-
-        private static bool IsCastDefined(IReflect type, Func<MethodInfo, Type> baseType, Func<MethodInfo, Type> derivedType, bool implicitly, bool lookInBase)
-        {
-            Guard.NotNull(type, nameof(type));
-            Guard.NotNull(baseType, nameof(baseType));
-            Guard.NotNull(derivedType, nameof(derivedType));
-            var bindinFlags = BindingFlags.Public | BindingFlags.Static
-                            | (lookInBase ? BindingFlags.FlattenHierarchy : BindingFlags.DeclaredOnly);
-            return type.GetMethods(bindinFlags).Any(
-                m => (m.Name == "op_Implicit" || (!implicitly && m.Name == "op_Explicit"))
-                    && baseType(m).IsAssignableFrom(derivedType(m)));
-        }
-
-        #endregion
-
-        #region IsOverriding & IsHiding: Copied from https://stackoverflow.com/questions/5746447/determine-whether-a-c-sharp-method-has-keyword-override-using-reflection
-
         /// <summary>
-        /// Determines whether this method is overriding some method from a base class.
+        /// Determines whether this method is overriding some method from a base class. See <see href="https://stackoverflow.com/questions/5746447/determine-whether-a-c-sharp-method-has-keyword-override-using-reflection"/>.
         /// </summary>
         /// <param name="methodInfo">The method to check.</param>
         /// <returns>
@@ -107,12 +56,12 @@ namespace MaSch.Core.Extensions
         /// </returns>
         public static bool IsOverriding(this MethodInfo methodInfo)
         {
-            Guard.NotNull(methodInfo, nameof(methodInfo));
+            _ = Guard.NotNull(methodInfo, nameof(methodInfo));
             return methodInfo.DeclaringType != methodInfo.GetBaseDefinition().DeclaringType;
         }
 
         /// <summary>
-        /// Determines whether this property is overriding some property from a base class.
+        /// Determines whether this property is overriding some property from a base class. See <see href="https://stackoverflow.com/questions/5746447/determine-whether-a-c-sharp-method-has-keyword-override-using-reflection"/>.
         /// </summary>
         /// <param name="propertyInfo">The property to check.</param>
         /// <returns>
@@ -121,12 +70,12 @@ namespace MaSch.Core.Extensions
         /// <exception cref="ArgumentException">The property does not have a setter nor a getter. - <paramref name="propertyInfo"/>.</exception>
         public static bool IsOverriding(this PropertyInfo propertyInfo)
         {
-            Guard.NotNull(propertyInfo, nameof(propertyInfo));
+            _ = Guard.NotNull(propertyInfo, nameof(propertyInfo));
             return IsOverriding(propertyInfo.GetMethod ?? propertyInfo.SetMethod ?? throw new ArgumentException($"The property does not have a setter nor a getter.", nameof(propertyInfo)));
         }
 
         /// <summary>
-        /// Determines whether this event is overriding some event from a base class.
+        /// Determines whether this event is overriding some event from a base class. See <see href="https://stackoverflow.com/questions/5746447/determine-whether-a-c-sharp-method-has-keyword-override-using-reflection"/>.
         /// </summary>
         /// <param name="eventInfo">The event to check.</param>
         /// <returns>
@@ -135,12 +84,12 @@ namespace MaSch.Core.Extensions
         /// <exception cref="ArgumentException">The event does not have an add method nor a remove method. - <paramref name="eventInfo"/>.</exception>
         public static bool IsOverriding(this EventInfo eventInfo)
         {
-            Guard.NotNull(eventInfo, nameof(eventInfo));
+            _ = Guard.NotNull(eventInfo, nameof(eventInfo));
             return IsOverriding(eventInfo.AddMethod ?? eventInfo.RemoveMethod ?? throw new ArgumentException($"The event does not have an add method nor a remove method.", nameof(eventInfo)));
         }
 
         /// <summary>
-        /// Determines whether this method is hiding some method from a base class.
+        /// Determines whether this method is hiding some method from a base class. See <see href="https://stackoverflow.com/questions/5746447/determine-whether-a-c-sharp-method-has-keyword-override-using-reflection"/>.
         /// </summary>
         /// <param name="methodInfo">The method to check.</param>
         /// <returns>
@@ -148,7 +97,7 @@ namespace MaSch.Core.Extensions
         /// </returns>
         public static bool IsHiding(this MethodInfo methodInfo)
         {
-            Guard.NotNull(methodInfo, nameof(methodInfo));
+            _ = Guard.NotNull(methodInfo, nameof(methodInfo));
             if (methodInfo.DeclaringType != methodInfo.GetBaseDefinition().DeclaringType)
                 return false;
 
@@ -158,27 +107,27 @@ namespace MaSch.Core.Extensions
 
             MethodInfo? hiddenBaseMethodInfo = null;
             var methods = baseType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Static);
-            foreach (var mi in methods)
+            foreach (var method in methods)
             {
-                if (mi.Name == methodInfo.Name)
+                if (method.Name == methodInfo.Name)
                 {
-                    var miParams = mi.GetParameters();
+                    var methodParams = method.GetParameters();
                     var methodInfoParams = methodInfo.GetParameters();
-                    if (miParams.Length == methodInfoParams.Length)
+                    if (methodParams.Length == methodInfoParams.Length)
                     {
                         var i = 0;
-                        for (; i < miParams.Length; i++)
+                        for (; i < methodParams.Length; i++)
                         {
-                            if (miParams[i].ParameterType != methodInfoParams[i].ParameterType
-                                || (miParams[i].Attributes ^ methodInfoParams[i].Attributes).HasFlag(ParameterAttributes.Out))
+                            if (methodParams[i].ParameterType != methodInfoParams[i].ParameterType
+                                || (methodParams[i].Attributes ^ methodInfoParams[i].Attributes).HasFlag(ParameterAttributes.Out))
                             {
                                 break;
                             }
                         }
 
-                        if (i == miParams.Length)
+                        if (i == methodParams.Length)
                         {
-                            hiddenBaseMethodInfo = mi;
+                            hiddenBaseMethodInfo = method;
                             break;
                         }
                     }
@@ -189,7 +138,7 @@ namespace MaSch.Core.Extensions
         }
 
         /// <summary>
-        /// Determines whether this property is hiding some property from a base class.
+        /// Determines whether this property is hiding some property from a base class. See <see href="https://stackoverflow.com/questions/5746447/determine-whether-a-c-sharp-method-has-keyword-override-using-reflection"/>.
         /// </summary>
         /// <param name="propertyInfo">The property to check.</param>
         /// <returns>
@@ -198,12 +147,12 @@ namespace MaSch.Core.Extensions
         /// <exception cref="ArgumentException">The property does not have a setter nor a getter. - <paramref name="propertyInfo"/>.</exception>
         public static bool IsHiding(this PropertyInfo propertyInfo)
         {
-            Guard.NotNull(propertyInfo, nameof(propertyInfo));
+            _ = Guard.NotNull(propertyInfo, nameof(propertyInfo));
             return IsHiding(propertyInfo.GetMethod ?? propertyInfo.SetMethod ?? throw new ArgumentException($"The property does not have a setter nor a getter.", nameof(propertyInfo)));
         }
 
         /// <summary>
-        /// Determines whether this event is hiding some event from a base class.
+        /// Determines whether this event is hiding some event from a base class. See <see href="https://stackoverflow.com/questions/5746447/determine-whether-a-c-sharp-method-has-keyword-override-using-reflection"/>.
         /// </summary>
         /// <param name="eventInfo">The event to check.</param>
         /// <returns>
@@ -212,12 +161,12 @@ namespace MaSch.Core.Extensions
         /// <exception cref="ArgumentException">The event does not have an add method nor a remove method. - <paramref name="eventInfo"/>.</exception>
         public static bool IsHiding(this EventInfo eventInfo)
         {
-            Guard.NotNull(eventInfo, nameof(eventInfo));
+            _ = Guard.NotNull(eventInfo, nameof(eventInfo));
             return IsHiding(eventInfo.AddMethod ?? eventInfo.RemoveMethod ?? throw new ArgumentException($"The event does not have an add method nor a remove method.", nameof(eventInfo)));
         }
 
         /// <summary>
-        /// Determines whether this field is hiding some field from a base class.
+        /// Determines whether this field is hiding some field from a base class. See <see href="https://stackoverflow.com/questions/5746447/determine-whether-a-c-sharp-method-has-keyword-override-using-reflection"/>.
         /// </summary>
         /// <param name="fieldInfo">The field to check.</param>
         /// <returns>
@@ -225,7 +174,7 @@ namespace MaSch.Core.Extensions
         /// </returns>
         public static bool IsHiding(this FieldInfo fieldInfo)
         {
-            Guard.NotNull(fieldInfo, nameof(fieldInfo));
+            _ = Guard.NotNull(fieldInfo, nameof(fieldInfo));
             var baseType = fieldInfo.DeclaringType?.BaseType;
             if (baseType == null)
                 return false;
@@ -233,8 +182,6 @@ namespace MaSch.Core.Extensions
             var hiddenBaseFieldInfo = baseType.GetField(fieldInfo.Name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Static);
             return hiddenBaseFieldInfo != null && !hiddenBaseFieldInfo.IsPrivate;
         }
-
-        #endregion
 
         /// <summary>
         /// Determines whether this method is hidden in the specified type.
@@ -246,29 +193,29 @@ namespace MaSch.Core.Extensions
         /// </returns>
         public static bool IsHiddenInType(this MethodInfo methodInfo, Type type)
         {
-            Guard.NotNull(methodInfo, nameof(methodInfo));
-            Guard.NotNull(type, nameof(type));
+            _ = Guard.NotNull(methodInfo, nameof(methodInfo));
+            _ = Guard.NotNull(type, nameof(type));
 
             var methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Static);
-            foreach (var mi in methods)
+            foreach (var method in methods)
             {
-                if (mi.Name == methodInfo.Name && mi != methodInfo && methodInfo.DeclaringType?.IsAssignableFrom(mi.DeclaringType) == true)
+                if (method.Name == methodInfo.Name && method != methodInfo && methodInfo.DeclaringType?.IsAssignableFrom(method.DeclaringType) == true)
                 {
-                    var miParams = mi.GetParameters();
+                    var methodParams = method.GetParameters();
                     var methodInfoParams = methodInfo.GetParameters();
-                    if (miParams.Length == methodInfoParams.Length)
+                    if (methodParams.Length == methodInfoParams.Length)
                     {
                         var i = 0;
-                        for (; i < miParams.Length; i++)
+                        for (; i < methodParams.Length; i++)
                         {
-                            if (miParams[i].ParameterType != methodInfoParams[i].ParameterType
-                                || (miParams[i].Attributes ^ methodInfoParams[i].Attributes).HasFlag(ParameterAttributes.Out))
+                            if (methodParams[i].ParameterType != methodInfoParams[i].ParameterType
+                                || (methodParams[i].Attributes ^ methodInfoParams[i].Attributes).HasFlag(ParameterAttributes.Out))
                             {
                                 break;
                             }
                         }
 
-                        if (i == miParams.Length)
+                        if (i == methodParams.Length)
                             return true;
                     }
                 }
@@ -288,8 +235,8 @@ namespace MaSch.Core.Extensions
         /// <exception cref="ArgumentException">The property does not have a setter nor a getter. - <paramref name="propertyInfo"/>.</exception>
         public static bool IsHiddenInType(this PropertyInfo propertyInfo, Type type)
         {
-            Guard.NotNull(propertyInfo, nameof(propertyInfo));
-            Guard.NotNull(type, nameof(type));
+            _ = Guard.NotNull(propertyInfo, nameof(propertyInfo));
+            _ = Guard.NotNull(type, nameof(type));
             return IsHiddenInType(propertyInfo.GetMethod ?? propertyInfo.SetMethod ?? throw new ArgumentException($"The property does not have a setter nor a getter.", nameof(propertyInfo)), type);
         }
 
@@ -304,8 +251,8 @@ namespace MaSch.Core.Extensions
         /// <exception cref="ArgumentException">The event does not have an add method nor a remove method. - <paramref name="eventInfo"/>.</exception>
         public static bool IsHiddenInType(this EventInfo eventInfo, Type type)
         {
-            Guard.NotNull(eventInfo, nameof(eventInfo));
-            Guard.NotNull(type, nameof(type));
+            _ = Guard.NotNull(eventInfo, nameof(eventInfo));
+            _ = Guard.NotNull(type, nameof(type));
             return IsHiddenInType(eventInfo.AddMethod ?? eventInfo.RemoveMethod ?? throw new ArgumentException($"The event does not have an add method nor a remove method.", nameof(eventInfo)), type);
         }
 
@@ -319,8 +266,8 @@ namespace MaSch.Core.Extensions
         /// </returns>
         public static bool IsHiddenInType(this FieldInfo fieldInfo, Type type)
         {
-            Guard.NotNull(fieldInfo, nameof(fieldInfo));
-            Guard.NotNull(type, nameof(type));
+            _ = Guard.NotNull(fieldInfo, nameof(fieldInfo));
+            _ = Guard.NotNull(type, nameof(type));
 
             return type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Static)
                 .Any(x => x.Name == fieldInfo.Name && x != fieldInfo && fieldInfo.DeclaringType?.IsAssignableFrom(x.DeclaringType) == true);
@@ -337,8 +284,8 @@ namespace MaSch.Core.Extensions
         [SuppressMessage("ReflectionAnalyzers.SystemReflection", "REFL045:These flags are insufficient to match any members.", Justification = "False positive.")]
         public static MethodInfo? GetMethodRecursive(this Type? t, string name, BindingFlags bindingFlags, params Type[] types)
         {
-            Guard.NotNullOrEmpty(name, nameof(name));
-            Guard.NotNull(types, nameof(types));
+            _ = Guard.NotNullOrEmpty(name, nameof(name));
+            _ = Guard.NotNull(types, nameof(types));
             var currentType = t;
             MethodInfo? result = null;
             while (result == null && currentType != null)
@@ -359,8 +306,8 @@ namespace MaSch.Core.Extensions
         /// <returns>A combined <see cref="IEnumerable{T}"/> of all results of <paramref name="func"/>.</returns>
         public static IEnumerable<T> QueryTypesRecursive<T>(this Type t, Func<Type, IEnumerable<T>> func)
         {
-            Guard.NotNull(t, nameof(t));
-            Guard.NotNull(func, nameof(func));
+            _ = Guard.NotNull(t, nameof(t));
+            _ = Guard.NotNull(func, nameof(func));
             var result = func(t);
             if (t.BaseType != null)
                 result = result.Concat(QueryTypesRecursive(t.BaseType, func));
@@ -375,7 +322,7 @@ namespace MaSch.Core.Extensions
         /// <returns>The name of the type <paramref name="t"/> with any generic information.</returns>
         public static string GetTypeNameWithoutGenericArtiy(this Type t)
         {
-            Guard.NotNull(t, nameof(t));
+            _ = Guard.NotNull(t, nameof(t));
             string name = t.Name;
             int index = name.IndexOf('`');
             return index == -1 ? name : name.Substring(0, index);
@@ -388,7 +335,7 @@ namespace MaSch.Core.Extensions
         /// <returns>The default value of <paramref name="type"/>.</returns>
         public static object? GetDefault(this Type type)
         {
-            Guard.NotNull(type, nameof(type));
+            _ = Guard.NotNull(type, nameof(type));
             if (type.IsValueType)
             {
                 return Activator.CreateInstance(type);
@@ -403,7 +350,9 @@ namespace MaSch.Core.Extensions
         /// <param name="type">The type.</param>
         /// <returns>If <see cref="Type.IsByRef"/> is <c>true</c> the result of the <see cref="Type.GetElementType()"/> method is returned; otherwise, the value of <paramref name="type"/>.</returns>
         public static Type GetElementTypeOrSelf(this Type type)
-            => type.IsByRef ? type.GetElementType() ?? type : type;
+        {
+            return type.IsByRef ? type.GetElementType() ?? type : type;
+        }
 
         /// <summary>
         /// Gets the C# representation of this type.
@@ -411,7 +360,9 @@ namespace MaSch.Core.Extensions
         /// <param name="type">The type to get the C# representation of.</param>
         /// <returns>The C# representation of <paramref name="type"/>.</returns>
         public static string? GetCSharpRepresentation(this Type? type)
-            => GetCSharpRepresentation(type, false, true);
+        {
+            return GetCSharpRepresentation(type, false, true);
+        }
 
         /// <summary>
         /// Gets the C# representation of this type.
@@ -420,7 +371,9 @@ namespace MaSch.Core.Extensions
         /// <param name="forceGlobal">Determines wether to force the global notation.</param>
         /// <returns>The C# representation of <paramref name="type"/>.</returns>
         public static string? GetCSharpRepresentation(this Type? type, bool forceGlobal)
-            => GetCSharpRepresentation(type, forceGlobal, true);
+        {
+            return GetCSharpRepresentation(type, forceGlobal, true);
+        }
 
         /// <summary>
         /// Gets the C# representation of this type.
@@ -446,8 +399,8 @@ namespace MaSch.Core.Extensions
                 realType = realType.GetGenericTypeDefinition();
 
             string result;
-            if (_specialTypeCSharpRepresentations.TryGetValue(realType, out string? sRep))
-                result = sRep;
+            if (_specialTypeCSharpRepresentations.TryGetValue(realType, out string? csharpRepresentation))
+                result = csharpRepresentation;
             else
                 result = (forceGlobal && !realType.IsGenericParameter ? "global::" : string.Empty) + realType.FullName;
 
@@ -493,6 +446,51 @@ namespace MaSch.Core.Extensions
             {
                 yield return @interface;
             }
+        }
+
+        private static bool HasCastDefined(this Type from, Type to, bool implicitly)
+        {
+            _ = Guard.NotNull(from, nameof(from));
+            _ = Guard.NotNull(to, nameof(to));
+            if ((from.IsPrimitive || from.IsEnum) && (to.IsPrimitive || to.IsEnum))
+            {
+                if (!implicitly)
+                    return from == to || (from != typeof(bool) && to != typeof(bool));
+
+                Type[][] typeHierarchy =
+                {
+                    new[] { typeof(byte),  typeof(sbyte), typeof(char) },
+                    new[] { typeof(short), typeof(ushort) },
+                    new[] { typeof(int), typeof(uint) },
+                    new[] { typeof(long), typeof(ulong) },
+                    new[] { typeof(float) },
+                    new[] { typeof(double) },
+                };
+                var lowerTypes = Enumerable.Empty<Type>();
+                foreach (var types in typeHierarchy)
+                {
+                    if (types.Any(t => t == to))
+                        return lowerTypes.Any(t => t == from);
+                    lowerTypes = lowerTypes.Concat(types);
+                }
+
+                return false;   // IntPtr, UIntPtr, Enum, Boolean
+            }
+
+            return IsCastDefined(to, m => m.GetParameters()[0].ParameterType, _ => from, implicitly, false)
+                || IsCastDefined(from, _ => to, m => m.ReturnType, implicitly, true);
+        }
+
+        private static bool IsCastDefined(IReflect type, Func<MethodInfo, Type> baseType, Func<MethodInfo, Type> derivedType, bool implicitly, bool lookInBase)
+        {
+            _ = Guard.NotNull(type, nameof(type));
+            _ = Guard.NotNull(baseType, nameof(baseType));
+            _ = Guard.NotNull(derivedType, nameof(derivedType));
+            var bindinFlags = BindingFlags.Public | BindingFlags.Static
+                            | (lookInBase ? BindingFlags.FlattenHierarchy : BindingFlags.DeclaredOnly);
+            return type.GetMethods(bindinFlags).Any(
+                m => (m.Name == "op_Implicit" || (!implicitly && m.Name == "op_Explicit"))
+                    && baseType(m).IsAssignableFrom(derivedType(m)));
         }
     }
 }

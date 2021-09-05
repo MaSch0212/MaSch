@@ -97,8 +97,8 @@ namespace MaSch.Core.UnitTests
         {
             var formatProvider = new Mock<IFormatProvider>(MockBehavior.Strict);
 
-            Assert.ThrowsException<ArgumentNullException>(() => Manager.Convert(new object(), typeof(object), null!, formatProvider.Object));
-            Assert.ThrowsException<ArgumentNullException>(() => Manager.Convert(new object(), typeof(object), typeof(int), null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => Manager.Convert(new object(), typeof(object), null!, formatProvider.Object));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => Manager.Convert(new object(), typeof(object), typeof(int), null!));
         }
 
         [TestMethod]
@@ -106,7 +106,7 @@ namespace MaSch.Core.UnitTests
         {
             var formatProvider = new Mock<IFormatProvider>(MockBehavior.Strict);
 
-            Assert.ThrowsException<ArgumentException>(() => Manager.Convert(null, typeof(bool), typeof(int), formatProvider.Object));
+            _ = Assert.ThrowsException<ArgumentException>(() => Manager.Convert(null, typeof(bool), typeof(int), formatProvider.Object));
         }
 
         [TestMethod]
@@ -114,7 +114,7 @@ namespace MaSch.Core.UnitTests
         {
             var formatProvider = new Mock<IFormatProvider>(MockBehavior.Strict);
 
-            Assert.ThrowsException<ArgumentException>(() => Manager.Convert(new object(), typeof(string), typeof(int), formatProvider.Object));
+            _ = Assert.ThrowsException<ArgumentException>(() => Manager.Convert(new object(), typeof(string), typeof(int), formatProvider.Object));
         }
 
         [TestMethod]
@@ -124,7 +124,7 @@ namespace MaSch.Core.UnitTests
             var converter = CreateConverterMock(null, typeof(int), false, 0, null);
             GetManagerConverterList().Add(converter.Object);
 
-            Assert.ThrowsException<InvalidCastException>(() => Manager.Convert(null, null, typeof(int), formatProvider.Object));
+            _ = Assert.ThrowsException<InvalidCastException>(() => Manager.Convert(null, null, typeof(int), formatProvider.Object));
 
             converter.Verify(x => x.CanConvert(null, typeof(int), Manager), Times.Once());
         }
@@ -136,7 +136,7 @@ namespace MaSch.Core.UnitTests
             var converter = CreateConverterMock(typeof(string), typeof(int), false, 0, null);
             GetManagerConverterList().Add(converter.Object);
 
-            Assert.ThrowsException<InvalidCastException>(() => Manager.Convert("Test", null, typeof(int), formatProvider.Object));
+            _ = Assert.ThrowsException<InvalidCastException>(() => Manager.Convert("Test", null, typeof(int), formatProvider.Object));
 
             converter.Verify(x => x.CanConvert(typeof(string), typeof(int), Manager), Times.Once());
         }
@@ -146,7 +146,7 @@ namespace MaSch.Core.UnitTests
         {
             var formatProvider = new Mock<IFormatProvider>(MockBehavior.Strict);
             var converter = CreateConverterMock(null, typeof(int), true, 0, 4711);
-            converter.Setup(x => x.CanConvert(typeof(string), typeof(int), It.IsAny<IObjectConvertManager>())).Returns(false);
+            _ = converter.Setup(x => x.CanConvert(typeof(string), typeof(int), It.IsAny<IObjectConvertManager>())).Returns(false);
             GetManagerConverterList().Add(converter.Object);
 
             var result = Manager.Convert(null, typeof(string), typeof(int), formatProvider.Object);
@@ -177,7 +177,7 @@ namespace MaSch.Core.UnitTests
             var guid = Guid.NewGuid().ToString();
             var formatProvider = new Mock<IFormatProvider>(MockBehavior.Strict);
             var converter = CreateConverterMock(typeof(string), typeof(int), true, 0, 4711);
-            converter
+            _ = converter
                 .Setup(x => x.Convert(It.IsAny<object?>(), typeof(string), typeof(int), It.IsAny<IObjectConvertManager>(), It.IsAny<IFormatProvider>()))
                 .Returns<object?, Type, Type, IObjectConvertManager, IFormatProvider>((a, b, c, d, e) => throw new Exception(guid));
             GetManagerConverterList().Add(converter.Object);
@@ -241,7 +241,7 @@ namespace MaSch.Core.UnitTests
             var formatProvider = new Mock<IFormatProvider>(MockBehavior.Strict);
             var converter1 = CreateConverterMock(typeof(string), typeof(int), true, 0, 1337);
             var converter2 = CreateConverterMock(typeof(string), typeof(int), true, 0, 4711);
-            converter1.Setup(x => x.CanConvert(typeof(string), typeof(int), It.IsAny<IObjectConvertManager>())).Throws(new Exception());
+            _ = converter1.Setup(x => x.CanConvert(typeof(string), typeof(int), It.IsAny<IObjectConvertManager>())).Throws(new Exception());
             GetManagerConverterList().Add(converter1.Object, converter2.Object);
 
             var result = Manager.Convert("Test", typeof(string), typeof(int), formatProvider.Object);
@@ -257,7 +257,7 @@ namespace MaSch.Core.UnitTests
             var formatProvider = new Mock<IFormatProvider>(MockBehavior.Strict);
             var converter1 = CreateConverterMock(typeof(string), typeof(int), true, 0, 1337);
             var converter2 = CreateConverterMock(typeof(string), typeof(int), true, int.MinValue + 1, 4711);
-            converter1.Setup(x => x.GetPriority(typeof(string), typeof(int))).Throws(new Exception());
+            _ = converter1.Setup(x => x.GetPriority(typeof(string), typeof(int))).Throws(new Exception());
             GetManagerConverterList().Add(converter1.Object, converter2.Object);
 
             var result = Manager.Convert("Test", typeof(string), typeof(int), formatProvider.Object);
@@ -270,7 +270,7 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void RegisterConverter_ParameterChecks()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => Manager.RegisterConverter(null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => Manager.RegisterConverter(null!));
         }
 
         [TestMethod]
@@ -284,30 +284,30 @@ namespace MaSch.Core.UnitTests
             Assert.AreSame(converterMock.Object, Manager.ObjectConverters.ElementAt(0));
         }
 
-        private List<IObjectConverter> GetManagerConverterList()
-        {
-            var field = typeof(ObjectConvertManager).GetField("_objectConverters", BindingFlags.Instance | BindingFlags.NonPublic);
-            return (List<IObjectConverter>)field!.GetValue(Manager)!;
-        }
-
         private static Mock<IObjectConverter> CreateConverterCanConvertMock<TSource, TTarget>(bool result)
         {
             var mock = new Mock<IObjectConverter>(MockBehavior.Strict);
-            mock.Setup(x => x.CanConvert(typeof(TSource), typeof(TTarget), It.IsAny<IObjectConvertManager>())).Returns(result);
+            _ = mock.Setup(x => x.CanConvert(typeof(TSource), typeof(TTarget), It.IsAny<IObjectConvertManager>())).Returns(result);
             return mock;
         }
 
         private static Mock<IObjectConverter> CreateConverterMock(Type? source, Type target, bool canConvert, int priority, object? result)
         {
             var mock = new Mock<IObjectConverter>(MockBehavior.Strict);
-            mock.Setup(x => x.CanConvert(source, target, It.IsAny<IObjectConvertManager>())).Returns(canConvert);
+            _ = mock.Setup(x => x.CanConvert(source, target, It.IsAny<IObjectConvertManager>())).Returns(canConvert);
             if (canConvert)
             {
-                mock.Setup(x => x.GetPriority(source, target)).Returns(priority);
-                mock.Setup(x => x.Convert(It.IsAny<object?>(), source, target, It.IsAny<IObjectConvertManager>(), It.IsAny<IFormatProvider>())).Returns(result);
+                _ = mock.Setup(x => x.GetPriority(source, target)).Returns(priority);
+                _ = mock.Setup(x => x.Convert(It.IsAny<object?>(), source, target, It.IsAny<IObjectConvertManager>(), It.IsAny<IFormatProvider>())).Returns(result);
             }
 
             return mock;
+        }
+
+        private List<IObjectConverter> GetManagerConverterList()
+        {
+            var field = typeof(ObjectConvertManager).GetField("_objectConverters", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            return (List<IObjectConverter>)field!.GetValue(Manager)!;
         }
     }
 
@@ -337,7 +337,7 @@ namespace MaSch.Core.UnitTests
         public void CanConvertT2()
         {
             var managerMock = new Mock<IObjectConvertManager>(MockBehavior.Strict);
-            managerMock.Setup(x => x.CanConvert(It.IsAny<Type>(), It.IsAny<Type>())).Returns(true);
+            _ = managerMock.Setup(x => x.CanConvert(It.IsAny<Type>(), It.IsAny<Type>())).Returns(true);
 
             var result = ObjectConvertManagerExtensions.CanConvert<string, int>(managerMock.Object);
 

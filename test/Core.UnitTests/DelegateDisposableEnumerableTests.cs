@@ -15,8 +15,8 @@ namespace MaSch.Core.UnitTests
         [TestMethod]
         public void Constructor_ParameterChecks()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new DelegateDisposableEnumerable<object>(null!, () => { }).Dispose());
-            Assert.ThrowsException<ArgumentNullException>(() => new DelegateDisposableEnumerable<object>(Array.Empty<object>(), null!).Dispose());
+            _ = Assert.ThrowsException<ArgumentNullException>(() => new DelegateDisposableEnumerable<object>(null!, () => { }).Dispose());
+            _ = Assert.ThrowsException<ArgumentNullException>(() => new DelegateDisposableEnumerable<object>(Array.Empty<object>(), null!).Dispose());
         }
 
         [TestMethod]
@@ -26,7 +26,7 @@ namespace MaSch.Core.UnitTests
             var actionMock = new Mock<Action>();
             var enumeratorMock = new Mock<IEnumerator<string>>(MockBehavior.Strict);
             var enumerableMock = new Mock<IEnumerable<string>>(MockBehavior.Strict);
-            enumerableMock.Setup(x => x.GetEnumerator()).Returns(enumeratorMock.Object);
+            _ = enumerableMock.Setup(x => x.GetEnumerator()).Returns(enumeratorMock.Object);
 
             var dde = new DelegateDisposableEnumerable<string>(enumerableMock.Object, actionMock.Object);
 
@@ -43,7 +43,7 @@ namespace MaSch.Core.UnitTests
             var actionMock = new Mock<Action>();
             var enumeratorMock = new Mock<IEnumerator>(MockBehavior.Strict);
             var enumerableMock = new Mock<IEnumerable<string>>(MockBehavior.Strict);
-            enumerableMock.As<IEnumerable>().Setup(x => x.GetEnumerator()).Returns(enumeratorMock.Object);
+            _ = enumerableMock.As<IEnumerable>().Setup(x => x.GetEnumerator()).Returns(enumeratorMock.Object);
 
             using var dde = new DelegateDisposableEnumerable<string>(enumerableMock.Object, actionMock.Object);
 
@@ -63,19 +63,19 @@ namespace MaSch.Core.UnitTests
             var disposedMock = new Mock<EventHandler<DisposeEventArgs>>();
             var actionMock = new Mock<Action>();
             var enumerableMock = new Mock<IEnumerable<string>>(MockBehavior.Strict);
-            disposingMock.Setup(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()))
+            _ = disposingMock.Setup(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()))
                 .Callback(() =>
                 {
                     actionMock.Verify(x => x(), Times.Never());
                     disposedMock.Verify(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()), Times.Never());
                 });
-            actionMock.Setup(x => x())
+            _ = actionMock.Setup(x => x())
                 .Callback(() =>
                 {
                     disposingMock.Verify(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()), Times.Once());
                     disposedMock.Verify(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()), Times.Never());
                 });
-            disposedMock.Setup(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()))
+            _ = disposedMock.Setup(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()))
                 .Callback(() =>
                 {
                     actionMock.Verify(x => x(), Times.Once());
@@ -139,8 +139,8 @@ namespace MaSch.Core.UnitTests
         {
             var enumerableMock = new Mock<IOrderedEnumerable<object>>(MockBehavior.Strict);
 
-            Assert.ThrowsException<ArgumentNullException>(() => new DelegateOrderedDisposableEnumerable<object>(null!, () => { }).Dispose());
-            Assert.ThrowsException<ArgumentNullException>(() => new DelegateOrderedDisposableEnumerable<object>(enumerableMock.Object, null!).Dispose());
+            _ = Assert.ThrowsException<ArgumentNullException>(() => new DelegateOrderedDisposableEnumerable<object>(null!, () => { }).Dispose());
+            _ = Assert.ThrowsException<ArgumentNullException>(() => new DelegateOrderedDisposableEnumerable<object>(enumerableMock.Object, null!).Dispose());
         }
 
         [TestMethod]
@@ -151,7 +151,7 @@ namespace MaSch.Core.UnitTests
             var comparerMock = new Mock<IComparer<int>>(MockBehavior.Strict);
             var resultEnumerableMock = new Mock<IOrderedEnumerable<string>>(MockBehavior.Strict);
             var enumerableMock = new Mock<IOrderedEnumerable<string>>(MockBehavior.Strict);
-            enumerableMock.Setup(x => x.CreateOrderedEnumerable(It.IsAny<Func<string, int>>(), It.IsAny<IComparer<int>>(), It.IsAny<bool>())).Returns(resultEnumerableMock.Object);
+            _ = enumerableMock.Setup(x => x.CreateOrderedEnumerable(It.IsAny<Func<string, int>>(), It.IsAny<IComparer<int>>(), It.IsAny<bool>())).Returns(resultEnumerableMock.Object);
 
             using var dde = new DelegateOrderedDisposableEnumerable<string>(enumerableMock.Object, actionMock.Object);
 
@@ -169,7 +169,7 @@ namespace MaSch.Core.UnitTests
             var actionMock = new Mock<Action>();
             var enumeratorMock = new Mock<IEnumerator<string>>(MockBehavior.Strict);
             var enumerableMock = new Mock<IOrderedEnumerable<string>>(MockBehavior.Strict);
-            enumerableMock.Setup(x => x.GetEnumerator()).Returns(enumeratorMock.Object);
+            _ = enumerableMock.Setup(x => x.GetEnumerator()).Returns(enumeratorMock.Object);
 
             var dde = new DelegateOrderedDisposableEnumerable<string>(enumerableMock.Object, actionMock.Object);
 
@@ -186,7 +186,7 @@ namespace MaSch.Core.UnitTests
             var actionMock = new Mock<Action>();
             var enumeratorMock = new Mock<IEnumerator>(MockBehavior.Strict);
             var enumerableMock = new Mock<IOrderedEnumerable<string>>(MockBehavior.Strict);
-            enumerableMock.As<IEnumerable>().Setup(x => x.GetEnumerator()).Returns(enumeratorMock.Object);
+            _ = enumerableMock.As<IEnumerable>().Setup(x => x.GetEnumerator()).Returns(enumeratorMock.Object);
 
             using var dde = new DelegateOrderedDisposableEnumerable<string>(enumerableMock.Object, actionMock.Object);
 
@@ -206,19 +206,19 @@ namespace MaSch.Core.UnitTests
             var disposedMock = new Mock<EventHandler<DisposeEventArgs>>();
             var actionMock = new Mock<Action>();
             var enumerableMock = new Mock<IOrderedEnumerable<string>>(MockBehavior.Strict);
-            disposingMock.Setup(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()))
+            _ = disposingMock.Setup(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()))
                 .Callback(() =>
                 {
                     actionMock.Verify(x => x(), Times.Never());
                     disposedMock.Verify(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()), Times.Never());
                 });
-            actionMock.Setup(x => x())
+            _ = actionMock.Setup(x => x())
                 .Callback(() =>
                 {
                     disposingMock.Verify(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()), Times.Once());
                     disposedMock.Verify(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()), Times.Never());
                 });
-            disposedMock.Setup(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()))
+            _ = disposedMock.Setup(x => x(It.IsAny<object?>(), It.IsAny<DisposeEventArgs>()))
                 .Callback(() =>
                 {
                     actionMock.Verify(x => x(), Times.Once());

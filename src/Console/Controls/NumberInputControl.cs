@@ -13,6 +13,15 @@ namespace MaSch.Console.Controls
         private readonly IConsoleService _console;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="NumberInputControl"/> class.
+        /// </summary>
+        /// <param name="console">The console that is used to request input.</param>
+        public NumberInputControl(IConsoleService console)
+        {
+            _console = Guard.NotNull(console, nameof(console));
+        }
+
+        /// <summary>
         /// Gets or sets the minimum value that is allowed.
         /// </summary>
         public double Minimum { get; set; } = double.MinValue;
@@ -33,27 +42,14 @@ namespace MaSch.Console.Controls
         public bool IsDecimal { get; set; } = false;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NumberInputControl"/> class.
-        /// </summary>
-        /// <param name="console">The console that is used to request input.</param>
-        public NumberInputControl(IConsoleService console)
-        {
-            _console = Guard.NotNull(console, nameof(console));
-        }
-
-        /// <summary>
-        /// Requests a number from the user.
-        /// </summary>
-        public void Show()
-            => Value = ShowInternal(_console, Value, Minimum, Maximum, IsDecimal);
-
-        /// <summary>
         /// Requests a number from the user.
         /// </summary>
         /// <param name="console">The console that is used to request input.</param>
         /// <returns>The typed in value by the user.</returns>
         public static double Show(IConsoleService console)
-            => ShowInternal(console, null, double.MinValue, double.MaxValue, false);
+        {
+            return ShowInternal(console, null, double.MinValue, double.MaxValue, false);
+        }
 
         /// <summary>
         /// Requests a number from the user.
@@ -63,7 +59,9 @@ namespace MaSch.Console.Controls
         /// <param name="max">The maximum allowed value.</param>
         /// <returns>The typed in value by the user.</returns>
         public static double Show(IConsoleService console, double min, double max)
-            => ShowInternal(console, null, min, max, false);
+        {
+            return ShowInternal(console, null, min, max, false);
+        }
 
         /// <summary>
         /// Requests a number from the user.
@@ -72,7 +70,9 @@ namespace MaSch.Console.Controls
         /// <param name="value">The value the user can edit.</param>
         /// <returns>The typed in value by the user.</returns>
         public static double Show(IConsoleService console, double value)
-            => ShowInternal(console, value, double.MinValue, double.MaxValue, false);
+        {
+            return ShowInternal(console, value, double.MinValue, double.MaxValue, false);
+        }
 
         /// <summary>
         /// Requests a number from the user.
@@ -83,7 +83,9 @@ namespace MaSch.Console.Controls
         /// <param name="max">The maximum allowed value.</param>
         /// <returns>The typed in value by the user.</returns>
         public static double Show(IConsoleService console, double value, double min, double max)
-            => ShowInternal(console, value, min, max, false);
+        {
+            return ShowInternal(console, value, min, max, false);
+        }
 
         /// <summary>
         /// Requests a number from the user.
@@ -95,7 +97,17 @@ namespace MaSch.Console.Controls
         /// <param name="isDecimal">if set to <c>true</c> the user can input decimal numbers.</param>
         /// <returns>The typed in value by the user.</returns>
         public static double Show(IConsoleService console, double value, double min, double max, bool isDecimal)
-            => ShowInternal(console, value, min, max, isDecimal);
+        {
+            return ShowInternal(console, value, min, max, isDecimal);
+        }
+
+        /// <summary>
+        /// Requests a number from the user.
+        /// </summary>
+        public void Show()
+        {
+            Value = ShowInternal(_console, Value, Minimum, Maximum, IsDecimal);
+        }
 
         private static double ShowInternal(IConsoleService console, double? value, double min, double max, bool isDecimal)
         {
@@ -108,32 +120,32 @@ namespace MaSch.Console.Controls
             string temp = string.Empty;
             var pos = console.CursorPosition.Point;
             var bs = console.BufferSize;
-            int lLeft = pos.X;
-            int lTop = pos.Y;
+            int left = pos.X;
+            int top = pos.Y;
             int strPos;
             ConsoleKeyInfo key;
             var numberStyle = isDecimal ? NumberStyles.Float : NumberStyles.Integer;
 
             do
             {
-                if (lLeft >= bs.Width)
+                if (left >= bs.Width)
                 {
-                    lLeft = 0;
-                    lTop++;
+                    left = 0;
+                    top++;
                 }
-                else if (lLeft < 0)
+                else if (left < 0)
                 {
-                    lLeft = bs.Width - 1;
-                    lTop--;
+                    left = bs.Width - 1;
+                    top--;
                 }
 
                 console.CursorPosition.Point = pos;
                 console.Write(new string(' ', temp.Length + 1));
                 console.CursorPosition.Point = pos;
                 console.Write(result);
-                console.CursorPosition.Point = new Point(lLeft, lTop);
+                console.CursorPosition.Point = new Point(left, top);
                 key = console.ReadKey(true);
-                strPos = ((lTop - pos.Y) * bs.Width) + (lLeft - pos.X);
+                strPos = ((top - pos.Y) * bs.Width) + (left - pos.X);
                 temp = result;
                 if (key.Key == ConsoleKey.Backspace && strPos > 0)
                 {
@@ -142,15 +154,15 @@ namespace MaSch.Console.Controls
                 else if (key.Key == ConsoleKey.Delete && strPos < temp.Length)
                 {
                     temp = temp.Remove(strPos, 1);
-                    lLeft++;
+                    left++;
                 }
                 else if (key.Key == ConsoleKey.RightArrow && strPos < temp.Length - 1)
                 {
-                    lLeft++;
+                    left++;
                 }
                 else if (key.Key == ConsoleKey.LeftArrow && strPos > 0)
                 {
-                    lLeft--;
+                    left--;
                 }
                 else
                 {
@@ -163,18 +175,18 @@ namespace MaSch.Console.Controls
                         temp = min.ToString();
                     if (tmp1 > max)
                         temp = max.ToString();
-                    lLeft += temp.Length - result.Length;
+                    left += temp.Length - result.Length;
                     result = temp;
                 }
                 else if (temp == "-" || temp == string.Empty)
                 {
-                    lLeft += temp.Length - result.Length;
+                    left += temp.Length - result.Length;
                     result = temp;
                 }
             }
             while (key.Key != ConsoleKey.Enter);
 
-            console.CursorPosition.Point = new Point(0, lTop + 1);
+            console.CursorPosition.Point = new Point(0, top + 1);
             return double.TryParse(result, numberStyle, culture, out var tmp) ? tmp : min;
         }
     }

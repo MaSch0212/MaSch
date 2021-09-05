@@ -1,6 +1,7 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:MaSch.Presentation.Wpf.ControlData">
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:MaSch.Presentation.Wpf.ControlData">
 
     <Style TargetType="{x:Type local:DetailPopupContent}">
         <Setter Property="BorderBrush" Value="{DynamicResource MaSchCommon_NormalBorderBrush}" />
@@ -13,18 +14,20 @@
             <Setter.Value>
                 <ControlTemplate TargetType="local:DetailPopupContent">
                     <Grid>
-                        <Border x:Name="PART_Border"
-                                Padding="{TemplateBinding Padding}"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                SnapsToDevicePixels="True">
+                        <Border
+                            x:Name="PART_Border"
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True">
                             <ContentPresenter Content="{TemplateBinding PopupContent}" />
                         </Border>
-                        <Path x:Name="PART_Arrow"
-                              Fill="{TemplateBinding Background}"
-                              Stretch="Fill"
-                              Stroke="{TemplateBinding BorderBrush}" />
+                        <Path
+                            x:Name="PART_Arrow"
+                            Fill="{TemplateBinding Background}"
+                            Stretch="Fill"
+                            Stroke="{TemplateBinding BorderBrush}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

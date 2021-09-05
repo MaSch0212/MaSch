@@ -9,51 +9,6 @@ namespace MaSch.Console.Cli
     public class CliError
     {
         /// <summary>
-        /// Gets the error type.
-        /// </summary>
-        public CliErrorType Type { get; }
-
-        /// <summary>
-        /// Gets the affected command.
-        /// </summary>
-        public ICliCommandInfo? AffectedCommand { get; }
-
-        /// <summary>
-        /// Gets the affected option.
-        /// </summary>
-        public ICliCommandOptionInfo? AffectedOption { get; }
-
-        /// <summary>
-        /// Gets the affected value.
-        /// </summary>
-        public ICliCommandValueInfo? AffectedValue { get; }
-
-        /// <summary>
-        /// Gets the custom error message.
-        /// </summary>
-        public string? CustomErrorMessage { get; }
-
-        /// <summary>
-        /// Gets the affected command name.
-        /// </summary>
-        public string? CommandName { get; init; }
-
-        /// <summary>
-        /// Gets the affected option name.
-        /// </summary>
-        public string? OptionName { get; init; }
-
-        /// <summary>
-        /// Gets the exception that lead to this <see cref="CliError"/>.
-        /// </summary>
-        public Exception? Exception { get; init; }
-
-        /// <summary>
-        /// Gets a value indicating whether this is an actual error.
-        /// </summary>
-        public bool IsError => Type != CliErrorType.VersionRequested && Type != CliErrorType.HelpRequested;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="CliError"/> class.
         /// </summary>
         /// <param name="type">The error type.</param>
@@ -141,81 +96,50 @@ namespace MaSch.Console.Cli
         {
             AffectedValue = affectedValue;
         }
-    }
-
-    /// <summary>
-    /// Represents an error type for the <see cref="CliError"/> class.
-    /// </summary>
-    public enum CliErrorType
-    {
-        /// <summary>
-        /// Unknown error.
-        /// </summary>
-        Unknown,
 
         /// <summary>
-        /// Custom error. More information are provided via the <see cref="CliError.CustomErrorMessage"/> property.
+        /// Gets the error type.
         /// </summary>
-        Custom,
+        public CliErrorType Type { get; }
 
         /// <summary>
-        /// Version has been requested.
+        /// Gets the affected command.
         /// </summary>
-        VersionRequested,
+        public ICliCommandInfo? AffectedCommand { get; }
 
         /// <summary>
-        /// Help has been requested.
+        /// Gets the affected option.
         /// </summary>
-        HelpRequested,
+        public ICliCommandOptionInfo? AffectedOption { get; }
 
         /// <summary>
-        /// The given command is unknown. The unknown command name is provided via the <see cref="CliError.CommandName"/> property.
+        /// Gets the affected value.
         /// </summary>
-        UnknownCommand,
+        public ICliCommandValueInfo? AffectedValue { get; }
 
         /// <summary>
-        /// The given option is unknwon. The unknown option name is provided via the <see cref="CliError.OptionName"/> property.
+        /// Gets the custom error message.
         /// </summary>
-        UnknownOption,
+        public string? CustomErrorMessage { get; }
 
         /// <summary>
-        /// The given value is unknown. In other words: Too many values have been provided.
+        /// Gets the affected command name.
         /// </summary>
-        UnknownValue,
+        public string? CommandName { get; init; }
 
         /// <summary>
-        /// No executable command has been provided.
+        /// Gets the affected option name.
         /// </summary>
-        MissingCommand,
+        public string? OptionName { get; init; }
 
         /// <summary>
-        /// A required option is missing.
+        /// Gets the exception that lead to this <see cref="CliError"/>.
         /// </summary>
-        MissingOption,
+        public Exception? Exception { get; init; }
 
         /// <summary>
-        /// A value is missing for a command.
+        /// Gets a value indicating whether this is an actual error.
         /// </summary>
-        MissingOptionValue,
-
-        /// <summary>
-        /// A required value is missing. In other words: Too few values have been provided.
-        /// </summary>
-        MissingValue,
-
-        /// <summary>
-        /// An option value has the wrong format.
-        /// </summary>
-        WrongOptionFormat,
-
-        /// <summary>
-        /// A value has the wrong format.
-        /// </summary>
-        WrongValueFormat,
-
-        /// <summary>
-        /// The given command is not executable.
-        /// </summary>
-        CommandNotExecutable,
+        public bool IsError => Type != CliErrorType.VersionRequested && Type != CliErrorType.HelpRequested;
     }
 }

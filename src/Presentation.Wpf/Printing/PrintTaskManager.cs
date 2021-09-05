@@ -10,13 +10,23 @@ namespace MaSch.Presentation.Wpf.Printing
     /// <summary>
     /// Manages <see cref="PrintTask"/>s.
     /// </summary>
-    /// <seealso cref="MaSch.Core.Observable.ObservableObject" />
+    /// <seealso cref="ObservableObject" />
     public class PrintTaskManager : ObservableObject
     {
         private int _nextJobId = 1;
 
         private Task? _printerTask;
         private PrintTask? _currentlyPrinting;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PrintTaskManager"/> class.
+        /// </summary>
+        public PrintTaskManager()
+        {
+            PrintHistory = new ObservableCollection<PrintTask>();
+            PrintTaskQueue = new ObservableQueue<PrintTask>();
+            PrintTaskQueue.PropertyChanged += PrintTaskQueue_PropertyChanged;
+        }
 
         /// <summary>
         /// Gets the currently executed <see cref="PrintTask"/>.
@@ -38,23 +48,13 @@ namespace MaSch.Presentation.Wpf.Printing
         public ObservableQueue<PrintTask> PrintTaskQueue { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PrintTaskManager"/> class.
-        /// </summary>
-        public PrintTaskManager()
-        {
-            PrintHistory = new ObservableCollection<PrintTask>();
-            PrintTaskQueue = new ObservableQueue<PrintTask>();
-            PrintTaskQueue.PropertyChanged += PrintTaskQueue_PropertyChanged;
-        }
-
-        /// <summary>
         /// Queues the new <see cref="PrintTask"/>.
         /// </summary>
         /// <param name="task">The print task.</param>
         /// <exception cref="InvalidOperationException">Only a task in the state NotStarted can be queued.</exception>
         public void QueueNewTask(PrintTask task)
         {
-            Guard.NotNull(task, nameof(task));
+            _ = Guard.NotNull(task, nameof(task));
             if (task.State != PrintTaskState.NotStarted)
                 throw new InvalidOperationException("Only a task in the state NotStarted can be queued.");
             task.State = PrintTaskState.Queued;

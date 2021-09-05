@@ -10,7 +10,7 @@ namespace MaSch.Presentation.Wpf.ThemeValues
     /// <summary>
     /// <see cref="IThemeValue"/> representing <see cref="bool"/> values.
     /// </summary>
-    /// <seealso cref="MaSch.Presentation.Wpf.ThemeValues.ThemeValueBase{T}" />
+    /// <seealso cref="ThemeValueBase{T}" />
     public class BooleanThemeValue : ThemeValueBase<bool>
     {
         /// <inheritdoc/>
@@ -21,19 +21,30 @@ namespace MaSch.Presentation.Wpf.ThemeValues
             set => base.RawValue = Guard.OfType(value, nameof(value), typeof(ThemeValueReference), typeof(bool));
         }
 
+        public static implicit operator bool(BooleanThemeValue themeValue)
+        {
+            return themeValue.Value;
+        }
+
         /// <summary>
         /// Creates a new <see cref="BooleanThemeValue"/>.
         /// </summary>
         /// <param name="value">The value to use.</param>
         /// <returns>The created <see cref="IThemeValue"/>.</returns>
-        public static BooleanThemeValue Create(bool value) => CreateInternal(value);
+        public static BooleanThemeValue Create(bool value)
+        {
+            return CreateInternal(value);
+        }
 
         /// <summary>
         /// Creates a new <see cref="BooleanThemeValue"/>.
         /// </summary>
         /// <param name="valueRef">The value reference.</param>
         /// <returns>The created <see cref="IThemeValue"/>.</returns>
-        public static BooleanThemeValue Create(ThemeValueReference valueRef) => CreateInternal(valueRef);
+        public static BooleanThemeValue Create(ThemeValueReference valueRef)
+        {
+            return CreateInternal(valueRef);
+        }
 
         private static BooleanThemeValue CreateInternal(object value)
         {
@@ -42,7 +53,5 @@ namespace MaSch.Presentation.Wpf.ThemeValues
                 RawValue = value,
             };
         }
-
-        public static implicit operator bool(BooleanThemeValue themeValue) => themeValue.Value;
     }
 }

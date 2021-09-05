@@ -32,30 +32,6 @@ namespace MaSch.Presentation.Wpf.Common
         public WindowState WindowState { get; set; }
 
         /// <summary>
-        /// Applies the stored information from this <see cref="WindowPosition"/> to a window.
-        /// </summary>
-        /// <param name="window">The window to apply the information to.</param>
-        /// <param name="disableMinimize">if set to <c>true</c> the window will not be minized even if the <see cref="WindowState"/> pproperty is defined as <see cref="WindowState.Minimized"/>.</param>
-        public void ApplyToWindow(Window window, bool disableMinimize = true)
-        {
-            if (window.WindowState == WindowState.Maximized)
-                window.WindowState = WindowState.Normal;
-
-            if (WindowState != WindowState.Maximized)
-            {
-                if (Size.Width > 0)
-                    window.Width = Size.Width;
-                if (Size.Height > 0)
-                    window.Height = Size.Height;
-            }
-
-            window.Left = Position.X;
-            window.Top = Position.Y;
-            if (!disableMinimize || WindowState != WindowState.Minimized)
-                window.WindowState = WindowState;
-        }
-
-        /// <summary>
         /// Retrieves information from a <see cref="Window"/> object and stores these into a new instance of the <see cref="WindowPosition"/> class.
         /// </summary>
         /// <param name="window">The window to retrieve the information from.</param>
@@ -116,6 +92,30 @@ namespace MaSch.Presentation.Wpf.Common
             var pos = positions.FirstOrDefault(x => x.WindowClassName == targetWindow.GetType().FullName);
             pos?.ApplyToWindow(targetWindow, disableMinimize);
             return pos != null;
+        }
+
+        /// <summary>
+        /// Applies the stored information from this <see cref="WindowPosition"/> to a window.
+        /// </summary>
+        /// <param name="window">The window to apply the information to.</param>
+        /// <param name="disableMinimize">if set to <c>true</c> the window will not be minized even if the <see cref="WindowState"/> pproperty is defined as <see cref="WindowState.Minimized"/>.</param>
+        public void ApplyToWindow(Window window, bool disableMinimize = true)
+        {
+            if (window.WindowState == WindowState.Maximized)
+                window.WindowState = WindowState.Normal;
+
+            if (WindowState != WindowState.Maximized)
+            {
+                if (Size.Width > 0)
+                    window.Width = Size.Width;
+                if (Size.Height > 0)
+                    window.Height = Size.Height;
+            }
+
+            window.Left = Position.X;
+            window.Top = Position.Y;
+            if (!disableMinimize || WindowState != WindowState.Minimized)
+                window.WindowState = WindowState;
         }
     }
 }

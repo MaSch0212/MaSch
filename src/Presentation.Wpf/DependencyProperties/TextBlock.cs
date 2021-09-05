@@ -8,7 +8,7 @@ using Win = System.Windows.Controls;
 namespace MaSch.Presentation.Wpf.DependencyProperties
 {
     /// <summary>
-    /// Provides dependency properties for the <see cref="System.Windows.Controls.TextBlock"/> control.
+    /// Provides dependency properties for the <see cref="Win.TextBlock"/> control.
     /// </summary>
     public static class TextBlock
     {
@@ -57,7 +57,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                         if (ea.OldItems != null)
                         {
                             for (int i = 0; i < ea.OldItems.Count; i++)
-                                tb.Inlines.Remove(tb.Inlines.ElementAt(ea.OldStartingIndex));
+                                _ = tb.Inlines.Remove(tb.Inlines.ElementAt(ea.OldStartingIndex));
                         }
 
                         Inline? current = null;

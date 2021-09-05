@@ -56,7 +56,10 @@ namespace MaSch.Presentation.Avalonia.Commands
         /// <summary>
         /// Raises the CanExecuteChanged Event. So the UI gets notified that the CanExecute method could changed its return value.
         /// </summary>
-        public void RaiseCanExecuteChanged() => RaiseCanExecuteChanged(this, new EventArgs());
+        public void RaiseCanExecuteChanged()
+        {
+            RaiseCanExecuteChanged(this, new EventArgs());
+        }
     }
 
     /// <summary>
@@ -93,6 +96,11 @@ namespace MaSch.Presentation.Avalonia.Commands
         }
 
         /// <summary>
+        /// Gets a value indicating whether to throw an exception when the wrong parameter type is given.
+        /// </summary>
+        protected override bool ThrowExceptionOnWrongParamType { get; }
+
+        /// <summary>
         /// Checks if the Execute method can be executed.
         /// </summary>
         /// <param name="parameter">The parameter for the command.</param>
@@ -116,11 +124,9 @@ namespace MaSch.Presentation.Avalonia.Commands
         /// <summary>
         /// Raises the CanExecuteChanged Event. So the UI gets notified that the CanExecute method could changed its return value.
         /// </summary>
-        public void RaiseCanExecuteChanged() => RaiseCanExecuteChanged(this, new EventArgs());
-
-        /// <summary>
-        /// Gets a value indicating whether to throw an exception when the wrong parameter type is given.
-        /// </summary>
-        protected override bool ThrowExceptionOnWrongParamType { get; }
+        public void RaiseCanExecuteChanged()
+        {
+            RaiseCanExecuteChanged(this, new EventArgs());
+        }
     }
 }

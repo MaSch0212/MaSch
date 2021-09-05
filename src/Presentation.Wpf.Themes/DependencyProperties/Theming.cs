@@ -32,6 +32,46 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                 typeof(Theming),
                 new UIPropertyMetadata(ThemeOverridesPropertyChanged));
 
+        /// <summary>
+        /// Sets the value of the <see cref="ThemeManagerProperty"/>.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="value">The value.</param>
+        public static void SetThemeManager(DependencyObject element, IThemeManager value)
+        {
+            element.SetValue(ThemeManagerProperty, value);
+        }
+
+        /// <summary>
+        /// Gets the value of the <see cref="ThemeManagerProperty"/>.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns>The value of the <see cref="ThemeManagerProperty"/>.</returns>
+        public static IThemeManager GetThemeManager(DependencyObject element)
+        {
+            return (IThemeManager)element.GetValue(ThemeManagerProperty);
+        }
+
+        /// <summary>
+        /// Sets the value of the <see cref="ThemeOverridesProperty"/>.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="value">The value.</param>
+        public static void SetThemeOverrides(DependencyObject element, ThemeOverrideCollection value)
+        {
+            element.SetValue(ThemeOverridesProperty, value);
+        }
+
+        /// <summary>
+        /// Gets the value of the <see cref="ThemeOverridesProperty"/>.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns>The value of the <see cref="ThemeOverridesProperty"/>.</returns>
+        public static ThemeOverrideCollection GetThemeOverrides(DependencyObject element)
+        {
+            return (ThemeOverrideCollection)element.GetValue(ThemeOverridesProperty);
+        }
+
         private static void ThemeOverridesPropertyChanged(DependencyObject source, DependencyPropertyChangedEventArgs e)
         {
             var newValue = e.NewValue as ThemeOverrideCollection;
@@ -87,37 +127,5 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                 }
             }
         }
-
-        /// <summary>
-        /// Sets the value of the <see cref="ThemeManagerProperty"/>.
-        /// </summary>
-        /// <param name="element">The element.</param>
-        /// <param name="value">The value.</param>
-        public static void SetThemeManager(DependencyObject element, IThemeManager value)
-            => element.SetValue(ThemeManagerProperty, value);
-
-        /// <summary>
-        /// Gets the value of the <see cref="ThemeManagerProperty"/>.
-        /// </summary>
-        /// <param name="element">The element.</param>
-        /// <returns>The value of the <see cref="ThemeManagerProperty"/>.</returns>
-        public static IThemeManager GetThemeManager(DependencyObject element)
-            => (IThemeManager)element.GetValue(ThemeManagerProperty);
-
-        /// <summary>
-        /// Sets the value of the <see cref="ThemeOverridesProperty"/>.
-        /// </summary>
-        /// <param name="element">The element.</param>
-        /// <param name="value">The value.</param>
-        public static void SetThemeOverrides(DependencyObject element, ThemeOverrideCollection value)
-            => element.SetValue(ThemeOverridesProperty, value);
-
-        /// <summary>
-        /// Gets the value of the <see cref="ThemeOverridesProperty"/>.
-        /// </summary>
-        /// <param name="element">The element.</param>
-        /// <returns>The value of the <see cref="ThemeOverridesProperty"/>.</returns>
-        public static ThemeOverrideCollection GetThemeOverrides(DependencyObject element)
-            => (ThemeOverrideCollection)element.GetValue(ThemeOverridesProperty);
     }
 }

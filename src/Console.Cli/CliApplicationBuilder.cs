@@ -27,6 +27,27 @@ namespace MaSch.Console.Cli
         private ICliCommandFactory? _commandFactory;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="CliApplicationBuilderBase{TApplication, TBuilder}"/> class.
+        /// </summary>
+        protected CliApplicationBuilderBase()
+            : this(new ServiceCollection(), new CliCommandInfoCollection(), new CliApplicationOptions())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CliApplicationBuilderBase{TApplication, TBuilder}"/> class.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <param name="commands">The commands.</param>
+        /// <param name="options">The options.</param>
+        protected CliApplicationBuilderBase(IServiceCollection services, ICliCommandInfoCollection commands, CliApplicationOptions options)
+        {
+            Services = services;
+            Commands = commands;
+            Options = options;
+        }
+
+        /// <summary>
         /// Gets the command factory to use when creating commands.
         /// </summary>
         public ICliCommandFactory CommandFactory
@@ -63,27 +84,6 @@ namespace MaSch.Console.Cli
         /// Gets the options.
         /// </summary>
         protected CliApplicationOptions Options { get; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CliApplicationBuilderBase{TApplication, TBuilder}"/> class.
-        /// </summary>
-        protected CliApplicationBuilderBase()
-            : this(new ServiceCollection(), new CliCommandInfoCollection(), new CliApplicationOptions())
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CliApplicationBuilderBase{TApplication, TBuilder}"/> class.
-        /// </summary>
-        /// <param name="services">The services.</param>
-        /// <param name="commands">The commands.</param>
-        /// <param name="options">The options.</param>
-        protected CliApplicationBuilderBase(IServiceCollection services, ICliCommandInfoCollection commands, CliApplicationOptions options)
-        {
-            Services = services;
-            Commands = commands;
-            Options = options;
-        }
 
         /// <summary>
         /// Adds a <see cref="ICliCommandInfo"/> to the final application.
@@ -227,10 +227,10 @@ namespace MaSch.Console.Cli
                 Services.TryAddSingleton(_commandFactory);
             else
                 Services.TryAddSingleton<ICliCommandFactory, CliCommandFactory>();
-            Services.AddSingleton<ICliApplicationBase>(x => result.Value);
+            _ = Services.AddSingleton<ICliApplicationBase>(x => result.Value);
 
             // Add common validators
-            Services.AddSingleton<ICliValidator<object>, RequiredValidator>();
+            _ = Services.AddSingleton<ICliValidator<object>, RequiredValidator>();
 
             return result.Value;
         }
@@ -263,7 +263,9 @@ namespace MaSch.Console.Cli
         /// <typeparam name="T">The type to add.</typeparam>
         /// <param name="instance">The instance to use.</param>
         protected void AddTypeToServices<T>(T? instance)
-            => AddTypeToServices(typeof(T), instance);
+        {
+            AddTypeToServices(typeof(T), instance);
+        }
     }
 
     /// <summary>
@@ -296,7 +298,9 @@ namespace MaSch.Console.Cli
         /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
         public new CliApplicationBuilder WithCommand(ICliCommandInfo command)
-            => base.WithCommand(command);
+        {
+            return base.WithCommand(command);
+        }
 
         /// <summary>
         /// Adds a <see cref="ICliCommandInfo"/> created from an executable command type to the final application.
@@ -305,7 +309,9 @@ namespace MaSch.Console.Cli
         /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
         public new CliApplicationBuilder WithCommand(Type commandType)
-            => base.WithCommand(commandType);
+        {
+            return base.WithCommand(commandType);
+        }
 
         /// <summary>
         /// Adds a <see cref="ICliCommandInfo"/> created from an executable command type to the final application.
@@ -315,7 +321,9 @@ namespace MaSch.Console.Cli
         /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
         public new CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance)
-            => base.WithCommand(commandType, optionsInstance);
+        {
+            return base.WithCommand(commandType, optionsInstance);
+        }
 
         /// <summary>
         /// Adds a <see cref="ICliCommandInfo"/> created from a command and executor type to the final application.
@@ -325,7 +333,9 @@ namespace MaSch.Console.Cli
         /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
         public new CliApplicationBuilder WithCommand(Type commandType, Type? executorType)
-            => base.WithCommand(commandType, executorType);
+        {
+            return base.WithCommand(commandType, executorType);
+        }
 
         /// <summary>
         /// Adds a <see cref="ICliCommandInfo"/> created from a command and executor type to the final application.
@@ -336,7 +346,9 @@ namespace MaSch.Console.Cli
         /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
         public new CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType)
-            => base.WithCommand(commandType, optionsInstance, executorType);
+        {
+            return base.WithCommand(commandType, optionsInstance, executorType);
+        }
 
         /// <summary>
         /// Adds a <see cref="ICliCommandInfo"/> created from a command and executor type to the final application.
@@ -347,7 +359,9 @@ namespace MaSch.Console.Cli
         /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
         public new CliApplicationBuilder WithCommand(Type commandType, Type? executorType, object? executorInstance)
-            => base.WithCommand(commandType, executorType, executorInstance);
+        {
+            return base.WithCommand(commandType, executorType, executorInstance);
+        }
 
         /// <summary>
         /// Adds a <see cref="ICliCommandInfo"/> created from a command and executor type to the final application.
@@ -359,7 +373,9 @@ namespace MaSch.Console.Cli
         /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
         public new CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType, object? executorInstance)
-            => base.WithCommand(commandType, optionsInstance, executorType, executorInstance);
+        {
+            return base.WithCommand(commandType, optionsInstance, executorType, executorInstance);
+        }
 
         /// <summary>
         /// Adds a <see cref="ICliCommandInfo"/> created from a command type and an executor function to the final application.
@@ -411,7 +427,7 @@ namespace MaSch.Console.Cli
         public CliApplicationBuilder WithCommand<TCommand>(TCommand optionsInstance, Func<CliExecutionContext, TCommand, int> executorFunction)
         {
             Commands.Add(CommandFactory.Create(optionsInstance, executorFunction));
-            AddTypeToServices<TCommand>(optionsInstance);
+            AddTypeToServices(optionsInstance);
             return this;
         }
 
@@ -436,7 +452,7 @@ namespace MaSch.Console.Cli
         public CliApplicationBuilder WithCommand<TCommand>(TCommand optionsInstance)
         {
             Commands.Add(CommandFactory.Create(optionsInstance));
-            AddTypeToServices<TCommand>(optionsInstance);
+            AddTypeToServices(optionsInstance);
             return this;
         }
 
@@ -467,7 +483,7 @@ namespace MaSch.Console.Cli
         {
             Commands.Add(CommandFactory.Create<TCommand, TExecutor>(executorInstance));
             AddTypeToServices<TCommand>(default);
-            AddTypeToServices<TExecutor>(executorInstance);
+            AddTypeToServices(executorInstance);
             return this;
         }
 
@@ -482,7 +498,7 @@ namespace MaSch.Console.Cli
             where TExecutor : ICliExecutor<TCommand>
         {
             Commands.Add(CommandFactory.Create<TCommand, TExecutor>(optionsInstance));
-            AddTypeToServices<TCommand>(optionsInstance);
+            AddTypeToServices(optionsInstance);
             AddTypeToServices<TExecutor>(default);
             return this;
         }
@@ -499,8 +515,8 @@ namespace MaSch.Console.Cli
             where TExecutor : ICliExecutor<TCommand>
         {
             Commands.Add(CommandFactory.Create(optionsInstance, executorInstance));
-            AddTypeToServices<TCommand>(optionsInstance);
-            AddTypeToServices<TExecutor>(executorInstance);
+            AddTypeToServices(optionsInstance);
+            AddTypeToServices(executorInstance);
             return this;
         }
 
@@ -509,8 +525,8 @@ namespace MaSch.Console.Cli
         {
             var result = new Lazy<CliApplication>(() => new CliApplication(Services.BuildServiceProvider(), Options, Commands));
 
-            Services.AddSingleton<ICliApplication>(x => result.Value);
-            Services.AddSingleton(x => result.Value);
+            _ = Services.AddSingleton<ICliApplication>(x => result.Value);
+            _ = Services.AddSingleton(x => result.Value);
 
             return result.Value;
         }
@@ -546,7 +562,9 @@ namespace MaSch.Console.Cli
         /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
         public new CliAsyncApplicationBuilder WithCommand(ICliCommandInfo command)
-            => base.WithCommand(command);
+        {
+            return base.WithCommand(command);
+        }
 
         /// <summary>
         /// Adds a <see cref="ICliCommandInfo"/> created from an executable command type to the final application.
@@ -555,7 +573,9 @@ namespace MaSch.Console.Cli
         /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
         public new CliAsyncApplicationBuilder WithCommand(Type commandType)
-            => base.WithCommand(commandType);
+        {
+            return base.WithCommand(commandType);
+        }
 
         /// <summary>
         /// Adds a <see cref="ICliCommandInfo"/> created from an executable command type to the final application.
@@ -565,7 +585,9 @@ namespace MaSch.Console.Cli
         /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
         public new CliAsyncApplicationBuilder WithCommand(Type commandType, object? optionsInstance)
-            => base.WithCommand(commandType, optionsInstance);
+        {
+            return base.WithCommand(commandType, optionsInstance);
+        }
 
         /// <summary>
         /// Adds a <see cref="ICliCommandInfo"/> created from a command and executor type to the final application.
@@ -575,7 +597,9 @@ namespace MaSch.Console.Cli
         /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
         public new CliAsyncApplicationBuilder WithCommand(Type commandType, Type? executorType)
-            => base.WithCommand(commandType, executorType);
+        {
+            return base.WithCommand(commandType, executorType);
+        }
 
         /// <summary>
         /// Adds a <see cref="ICliCommandInfo"/> created from a command and executor type to the final application.
@@ -586,7 +610,9 @@ namespace MaSch.Console.Cli
         /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
         public new CliAsyncApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType)
-            => base.WithCommand(commandType, optionsInstance, executorType);
+        {
+            return base.WithCommand(commandType, optionsInstance, executorType);
+        }
 
         /// <summary>
         /// Adds a <see cref="ICliCommandInfo"/> created from a command and executor type to the final application.
@@ -597,7 +623,9 @@ namespace MaSch.Console.Cli
         /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
         public new CliAsyncApplicationBuilder WithCommand(Type commandType, Type? executorType, object? executorInstance)
-            => base.WithCommand(commandType, executorType, executorInstance);
+        {
+            return base.WithCommand(commandType, executorType, executorInstance);
+        }
 
         /// <summary>
         /// Adds a <see cref="ICliCommandInfo"/> created from a command and executor type to the final application.
@@ -609,7 +637,9 @@ namespace MaSch.Console.Cli
         /// <returns>Self reference to this builder.</returns>
         [ExcludeFromCodeCoverage]
         public new CliAsyncApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType, object? executorInstance)
-            => base.WithCommand(commandType, optionsInstance, executorType, executorInstance);
+        {
+            return base.WithCommand(commandType, optionsInstance, executorType, executorInstance);
+        }
 
         /// <summary>
         /// Adds a <see cref="ICliCommandInfo"/> created from a command type and an executor function to the final application.
@@ -661,7 +691,7 @@ namespace MaSch.Console.Cli
         public CliAsyncApplicationBuilder WithCommand<TCommand>(TCommand optionsInstance, Func<CliExecutionContext, TCommand, Task<int>> executorFunction)
         {
             Commands.Add(CommandFactory.Create(optionsInstance, executorFunction));
-            AddTypeToServices<TCommand>(optionsInstance);
+            AddTypeToServices(optionsInstance);
             return this;
         }
 
@@ -686,7 +716,7 @@ namespace MaSch.Console.Cli
         public CliAsyncApplicationBuilder WithCommand<TCommand>(TCommand optionsInstance)
         {
             Commands.Add(CommandFactory.Create(optionsInstance));
-            AddTypeToServices<TCommand>(optionsInstance);
+            AddTypeToServices(optionsInstance);
             return this;
         }
 
@@ -717,7 +747,7 @@ namespace MaSch.Console.Cli
         {
             Commands.Add(CommandFactory.Create<TCommand, TExecutor>(executorInstance));
             AddTypeToServices<TCommand>(default);
-            AddTypeToServices<TExecutor>(executorInstance);
+            AddTypeToServices(executorInstance);
             return this;
         }
 
@@ -732,7 +762,7 @@ namespace MaSch.Console.Cli
             where TExecutor : ICliAsyncExecutor<TCommand>
         {
             Commands.Add(CommandFactory.Create<TCommand, TExecutor>(optionsInstance));
-            AddTypeToServices<TCommand>(optionsInstance);
+            AddTypeToServices(optionsInstance);
             AddTypeToServices<TExecutor>(default);
             return this;
         }
@@ -749,8 +779,8 @@ namespace MaSch.Console.Cli
             where TExecutor : ICliAsyncExecutor<TCommand>
         {
             Commands.Add(CommandFactory.Create(optionsInstance, executorInstance));
-            AddTypeToServices<TCommand>(optionsInstance);
-            AddTypeToServices<TExecutor>(executorInstance);
+            AddTypeToServices(optionsInstance);
+            AddTypeToServices(executorInstance);
             return this;
         }
 
@@ -759,8 +789,8 @@ namespace MaSch.Console.Cli
         {
             var result = new Lazy<CliAsyncApplication>(() => new CliAsyncApplication(Services.BuildServiceProvider(), Options, Commands));
 
-            Services.AddSingleton<ICliAsyncApplication>(x => result.Value);
-            Services.AddSingleton(x => result.Value);
+            _ = Services.AddSingleton<ICliAsyncApplication>(x => result.Value);
+            _ = Services.AddSingleton(x => result.Value);
 
             return result.Value;
         }

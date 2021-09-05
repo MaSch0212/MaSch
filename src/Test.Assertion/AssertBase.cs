@@ -30,7 +30,9 @@ namespace MaSch.Test.Assertion
         /// <param name="values">The values.</param>
         [DoesNotReturn]
         public virtual void ThrowAssertError(string? message, params (string Name, object? Value)?[]? values)
-            => ThrowAssertError(1, message, values);
+        {
+            ThrowAssertError(1, message, values);
+        }
 
         /// <summary>
         /// Throws an error that an assertion failed.
@@ -56,14 +58,14 @@ namespace MaSch.Test.Assertion
         public virtual void ThrowAssertError(string? assertMethodName, string? message, params (string Name, object? Value)?[]? values)
         {
             var builder = new StringBuilder();
-            builder.Append(AssertNamePrefix)
+            _ = builder.Append(AssertNamePrefix)
                    .Append(AssertNamePrefix == null ? string.Empty : ".")
                    .Append(assertMethodName ?? "<unknown>")
                    .Append(" failed.");
 
             foreach (var (name, value) in values?.Where(x => x.HasValue).Select(x => x!.Value) ?? Array.Empty<(string, object?)>())
             {
-                builder.Append(' ')
+                _ = builder.Append(' ')
                        .Append(name)
                        .Append(":<")
                        .Append(FormatObject(value, 0))
@@ -71,7 +73,7 @@ namespace MaSch.Test.Assertion
             }
 
             if (!string.IsNullOrWhiteSpace(message))
-                builder.Append(' ').Append(message);
+                _ = builder.Append(' ').Append(message);
 
             HandleFailedAssertion(builder.ToString());
         }
@@ -253,16 +255,16 @@ namespace MaSch.Test.Assertion
             {
                 if (!isFirst)
                 {
-                    result.Append(',');
+                    _ = result.Append(',');
                 }
 
-                result.AppendLine().Append('\t', indentation).Append(FormatObject(item, indentation));
+                _ = result.AppendLine().Append('\t', indentation).Append(FormatObject(item, indentation));
                 isFirst = false;
             }
 
             if (!isFirst)
-                result.AppendLine();
-            result.Append('\t', indentation - 1).Append(']');
+                _ = result.AppendLine();
+            _ = result.Append('\t', indentation - 1).Append(']');
             return result.ToString();
         }
     }

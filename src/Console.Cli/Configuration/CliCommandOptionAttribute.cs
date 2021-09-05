@@ -11,6 +11,44 @@ namespace MaSch.Console.Cli.Configuration
     public class CliCommandOptionAttribute : Attribute
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="CliCommandOptionAttribute"/> class.
+        /// </summary>
+        /// <param name="name">The name of this option.</param>
+        public CliCommandOptionAttribute(string name)
+            : this(null, new[] { Guard.NotNullOrEmpty(name, nameof(name)) })
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CliCommandOptionAttribute"/> class.
+        /// </summary>
+        /// <param name="shortName">The short name of this option.</param>
+        /// <param name="name">The name of this option.</param>
+        public CliCommandOptionAttribute(char shortName, string name)
+            : this(new[] { shortName }, new[] { Guard.NotNullOrEmpty(name, nameof(name)) })
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CliCommandOptionAttribute"/> class.
+        /// </summary>
+        /// <param name="names">The names of this option. Can be either of type <see cref="string"/> to provide names or <see cref="char"/> to provde short names.</param>
+        public CliCommandOptionAttribute(params object[] names)
+            : this(
+                  Guard.NotNull(names, nameof(names)).Where(x => x != null).OfType<char>().Distinct().ToArray(),
+                  names.Where(x => x != null).OfType<string>().Where(x => !string.IsNullOrEmpty(x)).Distinct(StringComparer.OrdinalIgnoreCase).ToArray())
+        {
+        }
+
+        private CliCommandOptionAttribute(char[]? shortAliases, string[] aliases)
+        {
+            _ = Guard.NotNullOrEmpty(aliases, nameof(aliases));
+
+            ShortAliases = shortAliases ?? Array.Empty<char>();
+            Aliases = aliases;
+        }
+
+        /// <summary>
         /// Gets the short name of this option.
         /// </summary>
         public char? ShortName => ShortAliases.Length > 0 ? ShortAliases[0] : null;
@@ -54,43 +92,5 @@ namespace MaSch.Console.Cli.Configuration
         /// Gets or sets a value indicating whether this option should be hidden from the help page.
         /// </summary>
         public bool Hidden { get; set; }
-
-        private CliCommandOptionAttribute(char[]? shortAliases, string[] aliases)
-        {
-            Guard.NotNullOrEmpty(aliases, nameof(aliases));
-
-            ShortAliases = shortAliases ?? Array.Empty<char>();
-            Aliases = aliases;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CliCommandOptionAttribute"/> class.
-        /// </summary>
-        /// <param name="name">The name of this option.</param>
-        public CliCommandOptionAttribute(string name)
-            : this(null, new[] { Guard.NotNullOrEmpty(name, nameof(name)) })
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CliCommandOptionAttribute"/> class.
-        /// </summary>
-        /// <param name="shortName">The short name of this option.</param>
-        /// <param name="name">The name of this option.</param>
-        public CliCommandOptionAttribute(char shortName, string name)
-            : this(new[] { shortName }, new[] { Guard.NotNullOrEmpty(name, nameof(name)) })
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CliCommandOptionAttribute"/> class.
-        /// </summary>
-        /// <param name="names">The names of this option. Can be either of type <see cref="string"/> to provide names or <see cref="char"/> to provde short names.</param>
-        public CliCommandOptionAttribute(params object[] names)
-            : this(
-                  Guard.NotNull(names, nameof(names)).Where(x => x != null).OfType<char>().Distinct().ToArray(),
-                  names.Where(x => x != null).OfType<string>().Where(x => !string.IsNullOrEmpty(x)).Distinct(StringComparer.OrdinalIgnoreCase).ToArray())
-        {
-        }
     }
 }

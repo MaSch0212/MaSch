@@ -1,6 +1,8 @@
 ﻿using System;
 
+#if MASCH_GENERATOR
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+#endif
 
 namespace MaSch.Core.Attributes
 {
@@ -41,7 +43,7 @@ namespace MaSch.Core.Attributes
     }
 
     /// <summary>
-    /// Specifies which shims should be generated. This is used by the <see cref="MaSch.Core.Attributes.ShimsAttribute"/>.
+    /// Specifies which shims should be generated. This is used by the <see cref="ShimsAttribute"/>.
     /// </summary>
     [Flags]
     public enum Shims

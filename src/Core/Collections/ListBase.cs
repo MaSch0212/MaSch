@@ -14,16 +14,6 @@ namespace MaSch.Core.Collections
     public abstract class ListBase<T> : IList<T>, IReadOnlyList<T>, IList
     {
         /// <summary>
-        /// Gets the default value for the <see cref="SyncRoot"/> property.
-        /// </summary>
-        protected object DefaultSyncRoot { get; }
-
-        /// <summary>
-        /// Gets or sets the internal list.
-        /// </summary>
-        protected IList<T> InternalList { get; set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ListBase{T}"/> class.
         /// </summary>
         /// <param name="internalList">The internal list.</param>
@@ -42,6 +32,54 @@ namespace MaSch.Core.Collections
         }
 
         /// <inheritdoc />
+        public virtual int Count => InternalList.Count;
+
+        /// <inheritdoc />
+        bool IList.IsReadOnly => IsReadOnly;
+
+        /// <inheritdoc />
+        bool ICollection<T>.IsReadOnly => IsReadOnly;
+
+        /// <inheritdoc />
+        bool IList.IsFixedSize => IsFixedSize;
+
+        /// <inheritdoc />
+        bool ICollection.IsSynchronized => IsSynchronized;
+
+        /// <inheritdoc />
+        object ICollection.SyncRoot => SyncRoot;
+
+        /// <summary>
+        /// Gets the default value for the <see cref="SyncRoot"/> property.
+        /// </summary>
+        protected object DefaultSyncRoot { get; }
+
+        /// <summary>
+        /// Gets or sets the internal list.
+        /// </summary>
+        protected IList<T> InternalList { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether the System.Collections.IList is read-only.
+        /// </summary>
+        protected virtual bool IsReadOnly => InternalList.IsReadOnly;
+
+        /// <summary>
+        /// Gets a value indicating whether the System.Collections.IList has a fixed size.
+        /// </summary>
+        protected virtual bool IsFixedSize => (InternalList as IList)?.IsFixedSize ?? false;
+
+        /// <summary>
+        /// Gets a value indicating whether access to the System.Collections.ICollection is synchronized (thread safe).
+        /// </summary>
+        protected virtual bool IsSynchronized => (InternalList as ICollection)?.IsSynchronized ?? false;
+
+        /// <summary>
+        /// Gets an object that can be used to synchronize access to the System.Collections.ICollection.
+        /// </summary>
+        protected virtual object SyncRoot => DefaultSyncRoot;
+
+        /// <inheritdoc />
         public virtual T this[int index]
         {
             get => InternalList[index];
@@ -56,62 +94,102 @@ namespace MaSch.Core.Collections
         }
 
         /// <inheritdoc />
-        public virtual int Count => InternalList.Count;
-
-        /// <summary>
-        /// Gets a value indicating whether the System.Collections.IList is read-only.
-        /// </summary>
-        protected virtual bool IsReadOnly => InternalList.IsReadOnly;
-
-        /// <inheritdoc />
-        bool IList.IsReadOnly => IsReadOnly;
-
-        /// <inheritdoc />
-        bool ICollection<T>.IsReadOnly => IsReadOnly;
-
-        /// <summary>
-        /// Gets a value indicating whether the System.Collections.IList has a fixed size.
-        /// </summary>
-        protected virtual bool IsFixedSize => (InternalList as IList)?.IsFixedSize ?? false;
-
-        /// <inheritdoc />
-        bool IList.IsFixedSize => IsFixedSize;
-
-        /// <summary>
-        /// Gets a value indicating whether access to the System.Collections.ICollection is synchronized (thread safe).
-        /// </summary>
-        protected virtual bool IsSynchronized => (InternalList as ICollection)?.IsSynchronized ?? false;
-
-        /// <inheritdoc />
-        bool ICollection.IsSynchronized => IsSynchronized;
-
-        /// <summary>
-        /// Gets an object that can be used to synchronize access to the System.Collections.ICollection.
-        /// </summary>
-        protected virtual object SyncRoot => DefaultSyncRoot;
-
-        /// <inheritdoc />
-        object ICollection.SyncRoot => SyncRoot;
-
-        /// <inheritdoc />
         int IList.Add(object? value)
         {
-            var tValue = (T)value!;
-            Add(tValue);
-            return IndexOf(tValue);
+            var castedValue = (T)value!;
+            Add(castedValue);
+            return IndexOf(castedValue);
         }
 
         /// <inheritdoc />
-        public virtual void Add(T item) => InternalList.Add(item);
+        public virtual void Add(T item)
+        {
+            InternalList.Add(item);
+        }
 
         /// <inheritdoc />
-        public virtual void Clear() => InternalList.Clear();
+        public virtual void Clear()
+        {
+            InternalList.Clear();
+        }
 
         /// <inheritdoc />
-        bool IList.Contains(object? value) => value is T t && Contains(t);
+        bool IList.Contains(object? value)
+        {
+            return value is T t && Contains(t);
+        }
 
         /// <inheritdoc />
-        public virtual bool Contains(T item) => InternalList.Contains(item);
+        public virtual bool Contains(T item)
+        {
+            return InternalList.Contains(item);
+        }
+
+        /// <inheritdoc />
+        void ICollection.CopyTo(Array array, int index)
+        {
+            CopyTo(array, index);
+        }
+
+        /// <inheritdoc />
+        public virtual void CopyTo(T[] array, int arrayIndex)
+        {
+            InternalList.CopyTo(array, arrayIndex);
+        }
+
+        /// <inheritdoc />
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        /// <inheritdoc />
+        public virtual IEnumerator<T> GetEnumerator()
+        {
+            return InternalList.GetEnumerator();
+        }
+
+        /// <inheritdoc />
+        int IList.IndexOf(object? value)
+        {
+            return IndexOf((T)value!);
+        }
+
+        /// <inheritdoc />
+        public virtual int IndexOf(T item)
+        {
+            return InternalList.IndexOf(item);
+        }
+
+        /// <inheritdoc />
+        void IList.Insert(int index, object? value)
+        {
+            Insert(index, (T)value!);
+        }
+
+        /// <inheritdoc />
+        public virtual void Insert(int index, T item)
+        {
+            InternalList.Insert(index, item);
+        }
+
+        /// <inheritdoc />
+        void IList.Remove(object? value)
+        {
+            _ = Remove((T)value!);
+        }
+
+        /// <inheritdoc />
+        public virtual bool Remove(T item)
+        {
+            return InternalList.Remove(item);
+        }
+
+        /// <inheritdoc />
+        public virtual void RemoveAt(int index)
+        {
+            InternalList.RemoveAt(index);
+        }
 
         /// <summary>
         /// Copies the elements of the <see cref="T:System.Collections.ICollection" /> to an <see cref="T:System.Array" />, starting at a particular <see cref="T:System.Array" /> index.
@@ -125,38 +203,5 @@ namespace MaSch.Core.Collections
             else
                 throw new NotImplementedException();
         }
-
-        /// <inheritdoc />
-        void ICollection.CopyTo(Array array, int index) => CopyTo(array, index);
-
-        /// <inheritdoc />
-        public virtual void CopyTo(T[] array, int arrayIndex) => InternalList.CopyTo(array, arrayIndex);
-
-        /// <inheritdoc />
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        /// <inheritdoc />
-        public virtual IEnumerator<T> GetEnumerator() => InternalList.GetEnumerator();
-
-        /// <inheritdoc />
-        int IList.IndexOf(object? value) => IndexOf((T)value!);
-
-        /// <inheritdoc />
-        public virtual int IndexOf(T item) => InternalList.IndexOf(item);
-
-        /// <inheritdoc />
-        void IList.Insert(int index, object? value) => Insert(index, (T)value!);
-
-        /// <inheritdoc />
-        public virtual void Insert(int index, T item) => InternalList.Insert(index, item);
-
-        /// <inheritdoc />
-        void IList.Remove(object? value) => Remove((T)value!);
-
-        /// <inheritdoc />
-        public virtual bool Remove(T item) => InternalList.Remove(item);
-
-        /// <inheritdoc />
-        public virtual void RemoveAt(int index) => InternalList.RemoveAt(index);
     }
 }

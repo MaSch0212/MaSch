@@ -14,18 +14,18 @@ namespace MaSch.Presentation.Avalonia.Common
     public class TypeTemplateSelector : IDataTemplate
     {
         /// <summary>
-        /// Gets or sets the data templates.
-        /// </summary>
-        [Content]
-        public List<DataTemplate> DataTemplates { get; set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="TypeTemplateSelector"/> class.
         /// </summary>
         public TypeTemplateSelector()
         {
             DataTemplates = new List<DataTemplate>();
         }
+
+        /// <summary>
+        /// Gets or sets the data templates.
+        /// </summary>
+        [Content]
+        public List<DataTemplate> DataTemplates { get; set; }
 
         /// <inheritdoc/>
         public bool Match(object data)

@@ -13,7 +13,7 @@ namespace MaSch.Presentation.Wpf.Controls
     /// <summary>
     /// Content presenter that can transition between contents using an animation.
     /// </summary>
-    /// <seealso cref="System.Windows.Controls.ContentControl" />
+    /// <seealso cref="ContentControl" />
     public class TransitionContentPresenter : ContentControl
     {
         /// <summary>
@@ -76,16 +76,21 @@ namespace MaSch.Presentation.Wpf.Controls
                 typeof(TransitionContentPresenter),
                 new PropertyMetadata(null));
 
-        /// <summary>
-        /// Occurs when the content changed.
-        /// </summary>
-        public event DependencyPropertyChangedEventHandler? ContentChanged;
-
         private int _currentlyActive;
         private Storyboard? _lastStoryboard;
         private ContentPresenter? _content1;
         private ContentPresenter? _content2;
         private Grid? _contentGrid;
+
+        static TransitionContentPresenter()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(TransitionContentPresenter), new FrameworkPropertyMetadata(typeof(TransitionContentPresenter)));
+        }
+
+        /// <summary>
+        /// Occurs when the content changed.
+        /// </summary>
+        public event DependencyPropertyChangedEventHandler? ContentChanged;
 
         /// <summary>
         /// Gets or sets the animation for transitioning content into view.
@@ -139,11 +144,6 @@ namespace MaSch.Presentation.Wpf.Controls
         {
             get => (IEasingFunction)GetValue(EasingFunctionProperty);
             set => SetValue(EasingFunctionProperty, value);
-        }
-
-        static TransitionContentPresenter()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(TransitionContentPresenter), new FrameworkPropertyMetadata(typeof(TransitionContentPresenter)));
         }
 
         /// <inheritdoc/>
@@ -396,143 +396,19 @@ namespace MaSch.Presentation.Wpf.Controls
         private static ObjectAnimationUsingKeyFrames CreateObjectAnimation(Duration duration, object? value, double percent, DependencyObject target, DependencyProperty property)
         {
             var result = new ObjectAnimationUsingKeyFrames { Duration = duration };
-            result.KeyFrames.Add(new DiscreteObjectKeyFrame(value, KeyTime.FromPercent(percent)));
-            result.SetTarget(target, property);
+            _ = result.KeyFrames.Add(new DiscreteObjectKeyFrame(value, KeyTime.FromPercent(percent)));
+            _ = result.SetTarget(target, property);
             return result;
         }
 
         private static DoubleAnimationUsingKeyFrames CreateDoubleAnimation(double from, double to, TimeSpan beginTime, Duration duration, IEasingFunction easing)
         {
             var result = new DoubleAnimationUsingKeyFrames { Duration = duration + beginTime };
-            result.KeyFrames.Add(new EasingDoubleKeyFrame(from, KeyTime.FromPercent(0), easing));
+            _ = result.KeyFrames.Add(new EasingDoubleKeyFrame(from, KeyTime.FromPercent(0), easing));
             if (beginTime > TimeSpan.Zero)
-                result.KeyFrames.Add(new EasingDoubleKeyFrame(from, KeyTime.FromPercent(0.5), easing));
-            result.KeyFrames.Add(new EasingDoubleKeyFrame(to, KeyTime.FromPercent(1), easing));
+                _ = result.KeyFrames.Add(new EasingDoubleKeyFrame(from, KeyTime.FromPercent(0.5), easing));
+            _ = result.KeyFrames.Add(new EasingDoubleKeyFrame(to, KeyTime.FromPercent(1), easing));
             return result;
         }
-    }
-
-    /// <summary>
-    /// Specifies the transitions to use to fade in content. Multiple can be used at the same time.
-    /// </summary>
-    [Flags]
-    public enum TransitionInType
-    {
-        /// <summary>
-        /// No animation is used.
-        /// </summary>
-        None = 0b0,
-
-        /// <summary>
-        /// The Opacity is animated.
-        /// </summary>
-        Fade = 0b1,
-
-        /// <summary>
-        /// A blur effect is added and animated.
-        /// </summary>
-        Blur = 0b10,
-
-        /// <summary>
-        /// The control starts very zoomed in and animates to normal size.
-        /// </summary>
-        ZoomFromUser = 0b100,
-
-        /// <summary>
-        /// The control starts very zoomed out and animates to normal size.
-        /// </summary>
-        ZoomToUser = 0b1000,
-
-        /// <summary>
-        /// The control moves from the left side into view.
-        /// </summary>
-        SlideInFromLeft = 0b1_0000_0000,
-
-        /// <summary>
-        /// The control moves from the top side into view.
-        /// </summary>
-        SlideInFromTop = 0b10_0000_0000,
-
-        /// <summary>
-        /// The control moves from the right side into view.
-        /// </summary>
-        SlideInFromRight = 0b100_0000_0000,
-
-        /// <summary>
-        /// The control moves from the bottom side into view.
-        /// </summary>
-        SlideInFromBottom = 0b1000_0000_0000,
-
-        /// <summary>
-        /// When used in combination with a slide transition, the control starts only move half of the size.
-        /// </summary>
-        SlideOnlyHalf = 0b1_0000_0000_0000,
-
-        /// <summary>
-        /// When used in combination with a slide transition, the control starts only move a quater of the size.
-        /// </summary>
-        SlideOnlyQuater = 0b10_0000_0000_0000,
-    }
-
-    /// <summary>
-    /// Specifies the transitions to use to fade out content. Multiple can be used at the same time.
-    /// </summary>
-    [Flags]
-    public enum TransitionOutType
-    {
-        /// <summary>
-        /// No animation is used.
-        /// </summary>
-        None = 0b0,
-
-        /// <summary>
-        /// The Opacity is animated.
-        /// </summary>
-        Fade = 0b1,
-
-        /// <summary>
-        /// A blur effect is added and animated.
-        /// </summary>
-        Blur = 0b10,
-
-        /// <summary>
-        /// The control animates to zoom in.
-        /// </summary>
-        ZoomFromUser = 0b100,
-
-        /// <summary>
-        /// The control animates to zoom out.
-        /// </summary>
-        ZoomToUser = 0b1000,
-
-        /// <summary>
-        /// The control moves to the left side out of view.
-        /// </summary>
-        SlideOutToLeft = 0b1_0000_0000,
-
-        /// <summary>
-        /// The control moves to the top side out of view.
-        /// </summary>
-        SlideOutToTop = 0b10_0000_0000,
-
-        /// <summary>
-        /// The control moves to the right side out of view.
-        /// </summary>
-        SlideOutToRight = 0b100_0000_0000,
-
-        /// <summary>
-        /// The control moves to the bottom side out of view.
-        /// </summary>
-        SlideOutToBottom = 0b1000_0000_0000,
-
-        /// <summary>
-        /// When used in combination with a slide transition, the control starts only move half of the size.
-        /// </summary>
-        SlideOnlyHalf = 0b1_0000_0000_0000,
-
-        /// <summary>
-        /// When used in combination with a slide transition, the control starts only move a quater of the size.
-        /// </summary>
-        SlideOnlyQuater = 0b10_0000_0000_0000,
     }
 }

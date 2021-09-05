@@ -9,16 +9,6 @@ namespace MaSch.Console.Cli.Runtime
     public class CliExecutionContext
     {
         /// <summary>
-        /// Gets the service provider for this context.
-        /// </summary>
-        public IServiceProvider ServiceProvider { get; }
-
-        /// <summary>
-        /// Gets the command information.
-        /// </summary>
-        public ICliCommandInfo Command { get; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="CliExecutionContext"/> class.
         /// </summary>
         /// <param name="serviceProvider">The service provider for the context.</param>
@@ -28,5 +18,15 @@ namespace MaSch.Console.Cli.Runtime
             ServiceProvider = Guard.NotNull(serviceProvider, nameof(serviceProvider));
             Command = Guard.NotNull(command, nameof(command));
         }
+
+        /// <summary>
+        /// Gets the service provider for this context.
+        /// </summary>
+        public IServiceProvider ServiceProvider { get; }
+
+        /// <summary>
+        /// Gets the command information.
+        /// </summary>
+        public ICliCommandInfo Command { get; }
     }
 }

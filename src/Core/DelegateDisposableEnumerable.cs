@@ -13,12 +13,6 @@ namespace MaSch.Core
     /// <seealso cref="IDisposableEnumerable{T}" />
     public class DelegateDisposableEnumerable<T> : IDisposableEnumerable<T>
     {
-        /// <inheritdoc/>
-        public event EventHandler<DisposeEventArgs>? Disposing;
-
-        /// <inheritdoc/>
-        public event EventHandler<DisposeEventArgs>? Disposed;
-
         private readonly IEnumerable<T> _enumerable;
         private readonly Action _actionOnDispose;
 
@@ -29,18 +23,30 @@ namespace MaSch.Core
         /// <param name="actionOnDispose">The action that is executed on dispose.</param>
         public DelegateDisposableEnumerable(IEnumerable<T> enumerable, Action actionOnDispose)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(actionOnDispose, nameof(actionOnDispose));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(actionOnDispose, nameof(actionOnDispose));
 
             _enumerable = enumerable;
             _actionOnDispose = actionOnDispose;
         }
 
         /// <inheritdoc/>
-        public IEnumerator<T> GetEnumerator() => _enumerable.GetEnumerator();
+        public event EventHandler<DisposeEventArgs>? Disposing;
 
         /// <inheritdoc/>
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_enumerable).GetEnumerator();
+        public event EventHandler<DisposeEventArgs>? Disposed;
+
+        /// <inheritdoc/>
+        public IEnumerator<T> GetEnumerator()
+        {
+            return _enumerable.GetEnumerator();
+        }
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)_enumerable).GetEnumerator();
+        }
 
         /// <inheritdoc/>
         public void Dispose()
@@ -72,12 +78,6 @@ namespace MaSch.Core
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Can be in same file.")]
     public class DelegateOrderedDisposableEnumerable<T> : IOrderedDisposableEnumerable<T>
     {
-        /// <inheritdoc/>
-        public event EventHandler<DisposeEventArgs>? Disposing;
-
-        /// <inheritdoc/>
-        public event EventHandler<DisposeEventArgs>? Disposed;
-
         private readonly IOrderedEnumerable<T> _enumerable;
         private readonly Action _actionOnDispose;
 
@@ -88,21 +88,36 @@ namespace MaSch.Core
         /// <param name="actionOnDispose">The action that is executed on dispose.</param>
         public DelegateOrderedDisposableEnumerable(IOrderedEnumerable<T> enumerable, Action actionOnDispose)
         {
-            Guard.NotNull(enumerable, nameof(enumerable));
-            Guard.NotNull(actionOnDispose, nameof(actionOnDispose));
+            _ = Guard.NotNull(enumerable, nameof(enumerable));
+            _ = Guard.NotNull(actionOnDispose, nameof(actionOnDispose));
 
             _enumerable = enumerable;
             _actionOnDispose = actionOnDispose;
         }
 
         /// <inheritdoc/>
-        public IOrderedEnumerable<T> CreateOrderedEnumerable<TKey>(Func<T, TKey> keySelector, IComparer<TKey>? comparer, bool @descending) => _enumerable.CreateOrderedEnumerable(keySelector, comparer, @descending);
+        public event EventHandler<DisposeEventArgs>? Disposing;
 
         /// <inheritdoc/>
-        public IEnumerator<T> GetEnumerator() => _enumerable.GetEnumerator();
+        public event EventHandler<DisposeEventArgs>? Disposed;
 
         /// <inheritdoc/>
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_enumerable).GetEnumerator();
+        public IOrderedEnumerable<T> CreateOrderedEnumerable<TKey>(Func<T, TKey> keySelector, IComparer<TKey>? comparer, bool @descending)
+        {
+            return _enumerable.CreateOrderedEnumerable(keySelector, comparer, @descending);
+        }
+
+        /// <inheritdoc/>
+        public IEnumerator<T> GetEnumerator()
+        {
+            return _enumerable.GetEnumerator();
+        }
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)_enumerable).GetEnumerator();
+        }
 
         /// <inheritdoc/>
         public void Dispose()

@@ -18,12 +18,6 @@ namespace MaSch.Core.Observable.Modules
         private readonly IDictionary<string, IEnumerable<ValidationResult>> _errors;
         private readonly object _dataErrorObject;
 
-        /// <inheritdoc />
-        public bool HasErrors => _errors.Count > 0;
-
-        /// <inheritdoc />
-        public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DataErrorHandler"/> class.
         /// </summary>
@@ -34,6 +28,12 @@ namespace MaSch.Core.Observable.Modules
             _properties = dataErrorObject.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
             _dataErrorObject = dataErrorObject;
         }
+
+        /// <inheritdoc />
+        public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
+
+        /// <inheritdoc />
+        public bool HasErrors => _errors.Count > 0;
 
         /// <inheritdoc />
         public IDictionary<string, IEnumerable> GetErrors()
@@ -53,7 +53,7 @@ namespace MaSch.Core.Observable.Modules
             var property = _properties.FirstOrDefault(x => x.Name == propertyName);
             if (property == null)
                 throw new ArgumentException($"A public property with the name \"{propertyName}\" could not be found", nameof(propertyName));
-            CheckForError(property, value);
+            _ = CheckForError(property, value);
         }
 
         /// <inheritdoc />
@@ -61,7 +61,7 @@ namespace MaSch.Core.Observable.Modules
         {
             foreach (var propertyInfo in _properties)
             {
-                CheckForError(propertyInfo, propertyInfo.GetValue(_dataErrorObject));
+                _ = CheckForError(propertyInfo, propertyInfo.GetValue(_dataErrorObject));
             }
 
             return HasErrors;
@@ -77,7 +77,10 @@ namespace MaSch.Core.Observable.Modules
         }
 
         /// <inheritdoc />
-        public bool IsPropertyExistant(string? propertyName) => _properties.Any(x => x.Name == propertyName);
+        public bool IsPropertyExistant(string? propertyName)
+        {
+            return _properties.Any(x => x.Name == propertyName);
+        }
 
         private bool CheckForError(PropertyInfo property, object? value)
         {
@@ -92,7 +95,7 @@ namespace MaSch.Core.Observable.Modules
             var wasValid = !_errors.ContainsKey(property.Name);
             var notify = true;
             if (isValid && !wasValid)
-                _errors.Remove(property.Name);
+                _ = _errors.Remove(property.Name);
             else if (!isValid && wasValid)
                 _errors.Add(property.Name, results);
             else if (!isValid)

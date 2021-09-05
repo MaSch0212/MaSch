@@ -8,7 +8,7 @@ namespace MaSch.Presentation.Wpf.Markup
     /// <summary>
     /// A <see cref="MarkupExtension"/> that provides the value of a Binding in a static resource.
     /// </summary>
-    /// <seealso cref="System.Windows.StaticResourceExtension" />
+    /// <seealso cref="StaticResourceExtension" />
     public class BindingResourceExtension : StaticResourceExtension
     {
         /// <summary>

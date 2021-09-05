@@ -26,13 +26,11 @@ namespace MaSch.Presentation.Wpf.Commands
             DependencyProperty.Register("Commands", typeof(ObservableCollection<CommandGroupItem>), typeof(CommandGroup), new PropertyMetadata(null, OnCommandsChanged));
 
         /// <summary>
-        /// Gets or sets the commands inside this group.
+        /// Initializes a new instance of the <see cref="CommandGroup"/> class.
         /// </summary>
-        [Bindable(true)]
-        public ObservableCollection<CommandGroupItem> Commands
+        public CommandGroup()
         {
-            get => (ObservableCollection<CommandGroupItem>)GetValue(CommandsProperty);
-            set => SetValue(CommandsProperty, value);
+            Commands = new ObservableCollection<CommandGroupItem>();
         }
 
         /// <summary>
@@ -41,11 +39,13 @@ namespace MaSch.Presentation.Wpf.Commands
         public event EventHandler? CanExecuteChanged;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandGroup"/> class.
+        /// Gets or sets the commands inside this group.
         /// </summary>
-        public CommandGroup()
+        [Bindable(true)]
+        public ObservableCollection<CommandGroupItem> Commands
         {
-            Commands = new ObservableCollection<CommandGroupItem>();
+            get => (ObservableCollection<CommandGroupItem>)GetValue(CommandsProperty);
+            set => SetValue(CommandsProperty, value);
         }
 
         /// <summary>
@@ -79,6 +79,28 @@ namespace MaSch.Presentation.Wpf.Commands
             foreach (var command in Commands.Where(x => x.Command != null))
             {
                 command.Execute();
+            }
+        }
+
+        private static void OnCommandsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            if (obj is CommandGroup command)
+            {
+                if (e.OldValue is ObservableCollection<CommandGroupItem> oldList)
+                {
+                    oldList.CollectionChanged -= command.Commands_CollectionChanged;
+                    oldList.Where(x => x.Command != null).ForEach(x => x.Command.CanExecuteChanged -= command.RaiseCanExecuteChanged);
+                    oldList.ForEach(x => x.CommandChanged -= command.CommandEventHandler);
+                }
+
+                if (e.NewValue is ObservableCollection<CommandGroupItem> newList)
+                {
+                    newList.CollectionChanged += command.Commands_CollectionChanged;
+                    newList.Where(x => x.Command != null).ForEach(x => x.Command.CanExecuteChanged += command.RaiseCanExecuteChanged);
+                    newList.ForEach(x => x.CommandChanged += command.CommandEventHandler);
+                }
+
+                command.RaiseCanExecuteChanged(command, new EventArgs());
             }
         }
 
@@ -118,28 +140,6 @@ namespace MaSch.Presentation.Wpf.Commands
             }
 
             RaiseCanExecuteChanged(this, new EventArgs());
-        }
-
-        private static void OnCommandsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
-        {
-            if (obj is CommandGroup command)
-            {
-                if (e.OldValue is ObservableCollection<CommandGroupItem> oldList)
-                {
-                    oldList.CollectionChanged -= command.Commands_CollectionChanged;
-                    oldList.Where(x => x.Command != null).ForEach(x => x.Command.CanExecuteChanged -= command.RaiseCanExecuteChanged);
-                    oldList.ForEach(x => x.CommandChanged -= command.CommandEventHandler);
-                }
-
-                if (e.NewValue is ObservableCollection<CommandGroupItem> newList)
-                {
-                    newList.CollectionChanged += command.Commands_CollectionChanged;
-                    newList.Where(x => x.Command != null).ForEach(x => x.Command.CanExecuteChanged += command.RaiseCanExecuteChanged);
-                    newList.ForEach(x => x.CommandChanged += command.CommandEventHandler);
-                }
-
-                command.RaiseCanExecuteChanged(command, new EventArgs());
-            }
         }
     }
 }

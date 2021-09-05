@@ -3,7 +3,7 @@
     /// <summary>
     /// Default implementation of the <see cref="IThemeManagerBindingFactory"/>.
     /// </summary>
-    /// <seealso cref="MaSch.Presentation.Wpf.IThemeManagerBindingFactory" />
+    /// <seealso cref="IThemeManagerBindingFactory" />
     public class ThemeManagerBindingFactory : IThemeManagerBindingFactory
     {
         private readonly IThemeManager _themeManager;

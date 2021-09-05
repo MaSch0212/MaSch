@@ -5,7 +5,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
     /// <summary>
     /// Base class for items in a <see cref="SplitView"/>.
     /// </summary>
-    /// <seealso cref="System.Windows.DependencyObject" />
+    /// <seealso cref="DependencyObject" />
     public class SplitViewItemBase : DependencyObject
     {
         /// <summary>

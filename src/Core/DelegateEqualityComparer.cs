@@ -20,17 +20,23 @@ namespace MaSch.Core
         /// <param name="getHashCodeFunc">The get hash code function.</param>
         public DelegateEqualityComparer(Func<T?, T?, bool> equalsFunc, Func<T, int> getHashCodeFunc)
         {
-            Guard.NotNull(equalsFunc, nameof(equalsFunc));
-            Guard.NotNull(getHashCodeFunc, nameof(getHashCodeFunc));
+            _ = Guard.NotNull(equalsFunc, nameof(equalsFunc));
+            _ = Guard.NotNull(getHashCodeFunc, nameof(getHashCodeFunc));
 
             _equalsFunc = equalsFunc;
             _getHashCodeFunc = getHashCodeFunc;
         }
 
         /// <inheritdoc/>
-        public bool Equals(T? x, T? y) => _equalsFunc(x, y);
+        public bool Equals(T? x, T? y)
+        {
+            return _equalsFunc(x, y);
+        }
 
         /// <inheritdoc/>
-        public int GetHashCode(T obj) => _getHashCodeFunc(obj);
+        public int GetHashCode(T obj)
+        {
+            return _getHashCodeFunc(obj);
+        }
     }
 }

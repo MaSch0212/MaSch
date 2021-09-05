@@ -129,6 +129,19 @@ namespace MaSch.Presentation.Wpf.Controls
         private bool _update = true;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ColorPickerControl"/> class.
+        /// </summary>
+        public ColorPickerControl()
+        {
+            InitializeComponent();
+            ColorDetail.PreviewMouseLeftButtonUp += (s, e) => Mouse.Capture(null);
+            ColorDetail.PreviewMouseLeftButtonDown += ColorDetail_MouseLeftButtonDown;
+            ColorDetail.PreviewMouseMove += ColorDetail_PreviewMouseMove;
+            ColorDetail.SizeChanged += ColorDetail_SizeChanged;
+            ColorSlider.ValueChanged += ColorSlider_ValueChanged;
+        }
+
+        /// <summary>
         /// Occurs when the selected color changed.
         /// </summary>
         public event EventHandler<Color>? SelectedColorChanged;
@@ -230,122 +243,6 @@ namespace MaSch.Presentation.Wpf.Controls
         {
             get => GetValue(IsMiniViewProperty) as bool? ?? false;
             set => SetValue(IsMiniViewProperty, value);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ColorPickerControl"/> class.
-        /// </summary>
-        public ColorPickerControl()
-        {
-            InitializeComponent();
-            ColorDetail.PreviewMouseLeftButtonUp += (s, e) => Mouse.Capture(null);
-            ColorDetail.PreviewMouseLeftButtonDown += ColorDetail_MouseLeftButtonDown;
-            ColorDetail.PreviewMouseMove += ColorDetail_PreviewMouseMove;
-            ColorDetail.SizeChanged += ColorDetail_SizeChanged;
-            ColorSlider.ValueChanged += ColorSlider_ValueChanged;
-        }
-
-        private void ColorSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (_colorPosition.HasValue)
-            {
-                ColorSlider.SelectedColor = ColorUtilities.ConvertHsvToRgb(360 - ColorSlider.Value, 1, 1);
-                DetermineColor(_colorPosition.Value);
-            }
-        }
-
-        private void ColorDetail_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (e.PreviousSize != Size.Empty &&
-                Math.Abs(e.PreviousSize.Width) > 0 && Math.Abs(e.PreviousSize.Height) > 0)
-            {
-                var widthDifference = e.NewSize.Width / e.PreviousSize.Width;
-                var heightDifference = e.NewSize.Height / e.PreviousSize.Height;
-                MarkTransform.X *= widthDifference;
-                MarkTransform.Y *= heightDifference;
-            }
-            else if (_colorPosition != null)
-            {
-                MarkTransform.X = ((Point)_colorPosition).X * e.NewSize.Width;
-                MarkTransform.Y = ((Point)_colorPosition).Y * e.NewSize.Height;
-            }
-        }
-
-        private void ColorDetail_PreviewMouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                var p = e.GetPosition(ColorDetail);
-                UpdateMarkerPosition(p);
-                Mouse.Synchronize();
-                Mouse.Capture(ColorDetail);
-            }
-        }
-
-        private void ColorDetail_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            e.Handled = true;
-            var p = e.GetPosition(ColorDetail);
-            UpdateMarkerPosition(p);
-            Mouse.Capture(ColorDetail);
-        }
-
-        private void UpdateMarkerPosition(Point p)
-        {
-            var maxWidth = ColorDetail.ActualWidth;
-            var maxHeight = ColorDetail.ActualHeight;
-
-            if (p.X > maxWidth)
-                p.X = maxWidth;
-            else if (p.X < 0)
-                p.X = 0;
-            if (p.Y > maxHeight)
-                p.Y = maxHeight;
-            else if (p.Y < 0)
-                p.Y = 0;
-            MarkTransform.X = p.X;
-            MarkTransform.Y = p.Y;
-            p.X /= maxWidth;
-            p.Y /= maxHeight;
-            _colorPosition = p;
-            DetermineColor(p);
-        }
-
-        private void UpdateMarkerPosition(Color theColor)
-        {
-            var hsv = ColorUtilities.ConvertRgbToHsv(theColor.R, theColor.G, theColor.B);
-            if (hsv.S > 0)
-                ColorSlider.Value = hsv.H;
-            var p = new Point(hsv.S, 1 - hsv.V);
-            _colorPosition = p;
-            p.X *= ColorDetail.ActualWidth;
-            p.Y *= ColorDetail.ActualHeight;
-            MarkTransform.X = p.X;
-            MarkTransform.Y = p.Y;
-        }
-
-        private void DetermineColor(Point p)
-        {
-            var hsv = new HsvColor(360 - ColorSlider.Value, 1, 1)
-            {
-                S = p.X,
-                V = 1 - p.Y,
-            };
-            _color = ColorUtilities.ConvertHsvToRgb(hsv.H, hsv.S, hsv.V);
-            _color.ScA = ScA;
-            if (_update)
-                SelectedColor = _color;
-        }
-
-        private void ModernUITextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            if (sender is System.Windows.Controls.TextBox tbx)
-            {
-                var previewText = tbx.Text.Substring(0, tbx.SelectionStart) + e.Text +
-                    tbx.Text.Substring(tbx.SelectionStart + tbx.SelectionLength, tbx.Text.Length - tbx.SelectionStart - tbx.SelectionLength);
-                if (!Regex.IsMatch(previewText, "\\A\\#[0-9a-fA-F]*\\Z"))
-                    e.Handled = true;
-            }
         }
 
         private static void OnSelectedColorChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
@@ -462,6 +359,109 @@ namespace MaSch.Presentation.Wpf.Controls
             {
                 owner._color.ScB = (float)e.NewValue;
                 owner.SelectedColor = owner._color;
+            }
+        }
+
+        private void ColorSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (_colorPosition.HasValue)
+            {
+                ColorSlider.SelectedColor = ColorUtilities.ConvertHsvToRgb(360 - ColorSlider.Value, 1, 1);
+                DetermineColor(_colorPosition.Value);
+            }
+        }
+
+        private void ColorDetail_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (e.PreviousSize != Size.Empty &&
+                Math.Abs(e.PreviousSize.Width) > 0 && Math.Abs(e.PreviousSize.Height) > 0)
+            {
+                var widthDifference = e.NewSize.Width / e.PreviousSize.Width;
+                var heightDifference = e.NewSize.Height / e.PreviousSize.Height;
+                MarkTransform.X *= widthDifference;
+                MarkTransform.Y *= heightDifference;
+            }
+            else if (_colorPosition != null)
+            {
+                MarkTransform.X = ((Point)_colorPosition).X * e.NewSize.Width;
+                MarkTransform.Y = ((Point)_colorPosition).Y * e.NewSize.Height;
+            }
+        }
+
+        private void ColorDetail_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                var p = e.GetPosition(ColorDetail);
+                UpdateMarkerPosition(p);
+                Mouse.Synchronize();
+                _ = Mouse.Capture(ColorDetail);
+            }
+        }
+
+        private void ColorDetail_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+            var p = e.GetPosition(ColorDetail);
+            UpdateMarkerPosition(p);
+            _ = Mouse.Capture(ColorDetail);
+        }
+
+        private void UpdateMarkerPosition(Point p)
+        {
+            var maxWidth = ColorDetail.ActualWidth;
+            var maxHeight = ColorDetail.ActualHeight;
+
+            if (p.X > maxWidth)
+                p.X = maxWidth;
+            else if (p.X < 0)
+                p.X = 0;
+            if (p.Y > maxHeight)
+                p.Y = maxHeight;
+            else if (p.Y < 0)
+                p.Y = 0;
+            MarkTransform.X = p.X;
+            MarkTransform.Y = p.Y;
+            p.X /= maxWidth;
+            p.Y /= maxHeight;
+            _colorPosition = p;
+            DetermineColor(p);
+        }
+
+        private void UpdateMarkerPosition(Color theColor)
+        {
+            var hsv = ColorUtilities.ConvertRgbToHsv(theColor.R, theColor.G, theColor.B);
+            if (hsv.S > 0)
+                ColorSlider.Value = hsv.H;
+            var p = new Point(hsv.S, 1 - hsv.V);
+            _colorPosition = p;
+            p.X *= ColorDetail.ActualWidth;
+            p.Y *= ColorDetail.ActualHeight;
+            MarkTransform.X = p.X;
+            MarkTransform.Y = p.Y;
+        }
+
+        private void DetermineColor(Point p)
+        {
+            var hsv = new HsvColor(360 - ColorSlider.Value, 1, 1)
+            {
+                S = p.X,
+                V = 1 - p.Y,
+            };
+            _color = ColorUtilities.ConvertHsvToRgb(hsv.H, hsv.S, hsv.V);
+            _color.ScA = ScA;
+            if (_update)
+                SelectedColor = _color;
+        }
+
+        private void ModernUITextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (sender is System.Windows.Controls.TextBox tbx)
+            {
+                var previewText = tbx.Text.Substring(0, tbx.SelectionStart) + e.Text +
+                    tbx.Text.Substring(tbx.SelectionStart + tbx.SelectionLength, tbx.Text.Length - tbx.SelectionStart - tbx.SelectionLength);
+                if (!Regex.IsMatch(previewText, "\\A\\#[0-9a-fA-F]*\\Z"))
+                    e.Handled = true;
             }
         }
     }

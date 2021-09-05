@@ -12,7 +12,7 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
     /// <summary>
     /// <see cref="SplitViewContent"/> with additional features.
     /// </summary>
-    /// <seealso cref="MaSch.Presentation.Wpf.Views.SplitView.SplitViewContent" />
+    /// <seealso cref="SplitViewContent" />
     public class ExtendedSplitViewContent : SplitViewContent
     {
         /// <summary>
@@ -179,6 +179,21 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
         private IconPresenter? _messageIcon;
         private TextBlock? _messageText;
 
+        static ExtendedSplitViewContent()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(ExtendedSplitViewContent), new FrameworkPropertyMetadata(typeof(ExtendedSplitViewContent)));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExtendedSplitViewContent"/> class.
+        /// </summary>
+        public ExtendedSplitViewContent()
+        {
+            _ = BindingOperations.SetBinding(this, IsLoadingProperty, new Binding(nameof(SplitViewContentViewModel.IsLoading)));
+            _ = BindingOperations.SetBinding(this, LoadingTextProperty, new Binding(nameof(SplitViewContentViewModel.LoadingText)));
+            DataContextChanged += OnDataContextChanged;
+        }
+
         /// <summary>
         /// Gets or sets the success message icon.
         /// </summary>
@@ -323,21 +338,6 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             set => SetValue(LoadingTextProperty, value);
         }
 
-        static ExtendedSplitViewContent()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(ExtendedSplitViewContent), new FrameworkPropertyMetadata(typeof(ExtendedSplitViewContent)));
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ExtendedSplitViewContent"/> class.
-        /// </summary>
-        public ExtendedSplitViewContent()
-        {
-            BindingOperations.SetBinding(this, IsLoadingProperty, new Binding(nameof(SplitViewContentViewModel.IsLoading)));
-            BindingOperations.SetBinding(this, LoadingTextProperty, new Binding(nameof(SplitViewContentViewModel.LoadingText)));
-            DataContextChanged += OnDataContextChanged;
-        }
-
         /// <inheritdoc/>
         public override void OnApplyTemplate()
         {
@@ -345,25 +345,12 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             _messageIcon = GetTemplateChild("PART_MessageIcon") as IconPresenter;
             _messageText = GetTemplateChild("PART_MessageText") as TextBlock;
             var rootElement = GetTemplateChild("PART_Root") as FrameworkElement;
-            Guard.NotNull(_messageIcon, nameof(_messageIcon));
-            Guard.NotNull(_messageText, nameof(_messageText));
-            Guard.NotNull(rootElement, nameof(rootElement));
+            _ = Guard.NotNull(_messageIcon, nameof(_messageIcon));
+            _ = Guard.NotNull(_messageText, nameof(_messageText));
+            _ = Guard.NotNull(rootElement, nameof(rootElement));
 
             _showMessageStoryboard = rootElement.Resources["ShowMessageStoryboard"] as Storyboard;
-            Guard.NotNull(_showMessageStoryboard, nameof(_showMessageStoryboard));
-        }
-
-        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (e.OldValue is SplitViewContentViewModel ovm)
-                ovm.NewMessage -= ViewModel_NewMessage;
-            if (e.NewValue is SplitViewContentViewModel nvm)
-                nvm.NewMessage += ViewModel_NewMessage;
-        }
-
-        private void ViewModel_NewMessage(object? sender, Tuple<string, MessageType> e)
-        {
-            NotifyNewMessage(e.Item1, e.Item2);
+            _ = Guard.NotNull(_showMessageStoryboard, nameof(_showMessageStoryboard));
         }
 
         /// <summary>
@@ -399,6 +386,19 @@ namespace MaSch.Presentation.Wpf.Views.SplitView
             _messageText.Text = message;
 
             _showMessageStoryboard!.Begin();
+        }
+
+        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.OldValue is SplitViewContentViewModel ovm)
+                ovm.NewMessage -= ViewModel_NewMessage;
+            if (e.NewValue is SplitViewContentViewModel nvm)
+                nvm.NewMessage += ViewModel_NewMessage;
+        }
+
+        private void ViewModel_NewMessage(object? sender, Tuple<string, MessageType> e)
+        {
+            NotifyNewMessage(e.Item1, e.Item2);
         }
     }
 }

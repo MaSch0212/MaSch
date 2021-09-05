@@ -15,17 +15,17 @@ namespace MaSch.Core
         private readonly List<IObjectConverter> _objectConverters;
 
         /// <summary>
-        /// Gets the registered object converters.
-        /// </summary>
-        internal IReadOnlyCollection<IObjectConverter> ObjectConverters => _objectConverters.AsReadOnly();
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ObjectConvertManager"/> class.
         /// </summary>
         public ObjectConvertManager()
         {
             _objectConverters = new List<IObjectConverter>();
         }
+
+        /// <summary>
+        /// Gets the registered object converters.
+        /// </summary>
+        internal IReadOnlyCollection<IObjectConverter> ObjectConverters => _objectConverters.AsReadOnly();
 
         /// <inheritdoc/>
         public virtual bool CanConvert(Type? sourceType, Type targetType)
@@ -38,8 +38,8 @@ namespace MaSch.Core
         /// <inheritdoc/>
         public virtual object? Convert(object? objectToConvert, Type? sourceType, Type targetType, IFormatProvider formatProvider)
         {
-            Guard.NotNull(targetType, nameof(targetType));
-            Guard.NotNull(formatProvider, nameof(formatProvider));
+            _ = Guard.NotNull(targetType, nameof(targetType));
+            _ = Guard.NotNull(formatProvider, nameof(formatProvider));
 
             if (objectToConvert == null && sourceType?.IsClass == false)
                 throw new ArgumentException("The object cannot be null, because the sourceType is not nullable.");
@@ -81,20 +81,8 @@ namespace MaSch.Core
         /// <inheritdoc/>
         public virtual void RegisterConverter(IObjectConverter converter)
         {
-            Guard.NotNull(converter, nameof(converter));
+            _ = Guard.NotNull(converter, nameof(converter));
             _objectConverters.Add(converter);
-        }
-
-        private bool CanConvertWithConverter(IObjectConverter converter, Type? sourceType, Type targetType)
-        {
-            try
-            {
-                return converter.CanConvert(sourceType, targetType, this);
-            }
-            catch
-            {
-                return false;
-            }
         }
 
         private static int GetPriorityForConverter(IObjectConverter converter, Type? sourceType, Type targetType)
@@ -106,6 +94,18 @@ namespace MaSch.Core
             catch
             {
                 return int.MinValue;
+            }
+        }
+
+        private bool CanConvertWithConverter(IObjectConverter converter, Type? sourceType, Type targetType)
+        {
+            try
+            {
+                return converter.CanConvert(sourceType, targetType, this);
+            }
+            catch
+            {
+                return false;
             }
         }
     }

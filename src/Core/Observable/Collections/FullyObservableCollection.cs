@@ -1,10 +1,8 @@
 ﻿using MaSch.Core.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace MaSch.Core.Observable.Collections
@@ -17,11 +15,6 @@ namespace MaSch.Core.Observable.Collections
     public class FullyObservableCollection<T> : ObservableCollection<T>
         where T : INotifyPropertyChanged
     {
-        /// <summary>
-        /// Occurs when a property of a item has changed.
-        /// </summary>
-        public event CollectionItemPropertyChangedEventHandler? CollectionItemPropertyChanged;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FullyObservableCollection{T}"/> class.
         /// </summary>
@@ -51,14 +44,10 @@ namespace MaSch.Core.Observable.Collections
                 item.PropertyChanged += Item_PropertyChanged;
         }
 
-        private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            if (sender is T t)
-            {
-                var eventArgs = new CollectionItemPropertyChangedEventArgs(IndexOf(t), sender, e.PropertyName);
-                OnCollectionItemPropertyChanged(eventArgs);
-            }
-        }
+        /// <summary>
+        /// Occurs when a property of a item has changed.
+        /// </summary>
+        public event CollectionItemPropertyChangedEventHandler? CollectionItemPropertyChanged;
 
         /// <summary>
         /// Raises the <see cref="CollectionItemPropertyChanged" /> event.
@@ -93,57 +82,14 @@ namespace MaSch.Core.Observable.Collections
             this.ForEach(x => x.PropertyChanged -= Item_PropertyChanged);
             base.ClearItems();
         }
-    }
 
-    /// <summary>
-    /// The event handler delegate for the <see cref="FullyObservableCollection{T}.CollectionItemPropertyChanged"/> event.
-    /// </summary>
-    /// <param name="sender">The sender of the event.</param>
-    /// <param name="e">The <see cref="CollectionItemPropertyChangedEventArgs"/> instance containing the event data.</param>
-    public delegate void CollectionItemPropertyChangedEventHandler(object? sender, CollectionItemPropertyChangedEventArgs e);
-
-    /// <summary>
-    /// The event data for the <see cref="CollectionChangeEventHandler"/> event handler.
-    /// </summary>
-    /// <seealso cref="EventArgs" />
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Event Args can be in same file.")]
-    public class CollectionItemPropertyChangedEventArgs : EventArgs
-    {
-        /// <summary>
-        /// Gets the index of the item that changed.
-        /// </summary>
-        /// <value>
-        /// The index of the item that changed.
-        /// </value>
-        public int ItemIndex { get; }
-
-        /// <summary>
-        /// Gets the item that changes.
-        /// </summary>
-        /// <value>
-        /// The item that changed.
-        /// </value>
-        public object Item { get; }
-
-        /// <summary>
-        /// Gets the name of the property that changed.
-        /// </summary>
-        /// <value>
-        /// The name of the property that changed.
-        /// </value>
-        public string? PropertyName { get; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CollectionItemPropertyChangedEventArgs"/> class.
-        /// </summary>
-        /// <param name="itemIndex">Index of the item that changed.</param>
-        /// <param name="item">The item that changed.</param>
-        /// <param name="propertyName">Name of the property that changed.</param>
-        public CollectionItemPropertyChangedEventArgs(int itemIndex, object item, string? propertyName)
+        private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            ItemIndex = itemIndex;
-            Item = item;
-            PropertyName = propertyName;
+            if (sender is T t)
+            {
+                var eventArgs = new CollectionItemPropertyChangedEventArgs(IndexOf(t), sender, e.PropertyName);
+                OnCollectionItemPropertyChanged(eventArgs);
+            }
         }
     }
 }

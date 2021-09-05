@@ -41,7 +41,9 @@ namespace MaSch.Core.Extensions
         /// <param name="byteCount">The number of bytes to randomize. The resulting string will be double that size.</param>
         /// <returns>A string with a length double the size of <paramref name="byteCount"/> that contains random hexadecimal numbers.</returns>
         public static string NextHexString(this Random random, int byteCount)
-            => NextBytes(random, byteCount).ToHexString();
+        {
+            return NextBytes(random, byteCount).ToHexString();
+        }
 
         /// <summary>
         /// Generates a random hexadecimal string using a cryptographically strong random number generator.
@@ -50,7 +52,9 @@ namespace MaSch.Core.Extensions
         /// <param name="byteCount">The number of bytes to randomize. The resulting string will be double that size.</param>
         /// <returns>A string with a length double the size of <paramref name="byteCount"/> that contains random hexadecimal numbers.</returns>
         public static string GetHexString(this RandomNumberGenerator random, int byteCount)
-            => GetBytes(random, byteCount).ToHexString();
+        {
+            return GetBytes(random, byteCount).ToHexString();
+        }
 
         /// <summary>
         /// Returns an <see cref="Array"/> of random hexadecimal <see cref="char"/>s.
@@ -59,7 +63,9 @@ namespace MaSch.Core.Extensions
         /// <param name="byteCount">The number of bytes to randomize. The resulting array will be double that size.</param>
         /// <returns>An <see cref="Array"/> of <see cref="char"/>s with a length double the size of <paramref name="byteCount"/> that contains random hexadecimal numbers.</returns>
         public static char[] NextHexChars(this Random random, int byteCount)
-            => NextBytes(random, byteCount).ToHexChars();
+        {
+            return NextBytes(random, byteCount).ToHexChars();
+        }
 
         /// <summary>
         /// Generates an <see cref="Array"/> of random hexadecimal <see cref="char"/>s using a cryptographically strong random number generator.
@@ -68,6 +74,8 @@ namespace MaSch.Core.Extensions
         /// <param name="byteCount">The number of bytes to randomize. The resulting array will be double that size.</param>
         /// <returns>An <see cref="Array"/> of <see cref="char"/>s with a length double the size of <paramref name="byteCount"/> that contains random hexadecimal numbers.</returns>
         public static char[] GetHexChars(this RandomNumberGenerator random, int byteCount)
-            => GetBytes(random, byteCount).ToHexChars();
+        {
+            return GetBytes(random, byteCount).ToHexChars();
+        }
     }
 }

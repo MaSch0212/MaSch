@@ -39,7 +39,9 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
         /// <param name="element">The element to set the value to.</param>
         /// <param name="value">The value to set.</param>
         public static void SetIsSubscribedToSelectionChanged(DependencyObject element, bool value)
-            => element.SetValue(IsSubscribedToSelectionChangedProperty, value);
+        {
+            element.SetValue(IsSubscribedToSelectionChangedProperty, value);
+        }
 
         /// <summary>
         /// Gets the value of the <see cref="IsSubscribedToSelectionChangedProperty"/>.
@@ -47,7 +49,9 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
         /// <param name="element">The element to get the value from.</param>
         /// <returns>The value of the <see cref="IsSubscribedToSelectionChangedProperty"/>.</returns>
         public static bool GetIsSubscribedToSelectionChanged(DependencyObject element)
-            => (bool)element.GetValue(IsSubscribedToSelectionChangedProperty);
+        {
+            return (bool)element.GetValue(IsSubscribedToSelectionChangedProperty);
+        }
 
         /// <summary>
         /// Sets the value of the <see cref="SelectedItemsProperty"/>.
@@ -55,7 +59,9 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
         /// <param name="element">The element to set the value to.</param>
         /// <param name="value">The value to set.</param>
         public static void SetSelectedItems(DependencyObject element, IList value)
-            => element.SetValue(SelectedItemsProperty, value);
+        {
+            element.SetValue(SelectedItemsProperty, value);
+        }
 
         /// <summary>
         /// Gets the value of the <see cref="SelectedItemsProperty"/>.
@@ -63,7 +69,9 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
         /// <param name="element">The element to get the value from.</param>
         /// <returns>The value of the <see cref="SelectedItemsProperty"/>.</returns>
         public static IList GetSelectedItems(DependencyObject element)
-            => (IList)element.GetValue(SelectedItemsProperty);
+        {
+            return (IList)element.GetValue(SelectedItemsProperty);
+        }
 
         /// <summary>
         /// Attaches a list or observable collection to the grid or listbox, syncing both lists (one way sync for simple lists).
@@ -126,14 +134,14 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                     listBox.SelectedItems.Clear();
                     foreach (var ob in obs)
                     {
-                        listBox.SelectedItems.Add(ob);
+                        _ = listBox.SelectedItems.Add(ob);
                     }
                 }
                 else
                 {
                     foreach (var ob in listBox.SelectedItems)
                     {
-                        obs.Add(ob);
+                        _ = obs.Add(ob);
                     }
                 }
 
@@ -148,14 +156,14 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                     grid.SelectedItems.Clear();
                     foreach (var ob in obs)
                     {
-                        grid.SelectedItems.Add(ob);
+                        _ = grid.SelectedItems.Add(ob);
                     }
                 }
                 else
                 {
                     foreach (var ob in grid.SelectedItems)
                     {
-                        obs.Add(ob);
+                        _ = obs.Add(ob);
                     }
                 }
 
@@ -183,7 +191,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
             foreach (var oldItem in e.RemovedItems)
                 items.Remove(oldItem);
             foreach (var newItem in e.AddedItems)
-                items.Add(newItem);
+                _ = items.Add(newItem);
             if (col != null)
                 col.CollectionChanged += OnCollectionChanged;
         }
@@ -215,7 +223,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                     if (e.NewItems != null)
                     {
                         foreach (var newItem in e.NewItems)
-                            listbox.SelectedItems.Add(newItem);
+                            _ = listbox.SelectedItems.Add(newItem);
                     }
                 }
 
@@ -240,7 +248,7 @@ namespace MaSch.Presentation.Wpf.DependencyProperties
                     if (e.NewItems != null)
                     {
                         foreach (var newItem in e.NewItems)
-                            grid.SelectedItems.Add(newItem);
+                            _ = grid.SelectedItems.Add(newItem);
                     }
                 }
 

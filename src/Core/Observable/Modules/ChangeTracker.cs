@@ -26,6 +26,25 @@ namespace MaSch.Core.Observable.Modules
 
         #endregion
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ChangeTracker"/> class.
+        /// </summary>
+        /// <param name="trackedObjectType">Type of the tracked object.</param>
+        /// <param name="implicitlyRecurse">If set to <c>true</c> change tracking for <see cref="IChangeTrackedObject"/> properties is used recursively.</param>
+        public ChangeTracker(Type trackedObjectType, bool implicitlyRecurse)
+        {
+            ImplicitlyRecurse = implicitlyRecurse;
+            _trackedObjectType = trackedObjectType;
+            _hasChangesExtension = b => b;
+        }
+
+        #region Events
+
+        /// <inheritdoc/>
+        public event EventHandler? HasChangesChanged;
+
+        #endregion
+
         #region Properties
 
         /// <summary>
@@ -55,22 +74,7 @@ namespace MaSch.Core.Observable.Modules
             }
         }
 
-        /// <inheritdoc/>
-        public event EventHandler? HasChangesChanged;
-
         #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ChangeTracker"/> class.
-        /// </summary>
-        /// <param name="trackedObjectType">Type of the tracked object.</param>
-        /// <param name="implicitlyRecurse">If set to <c>true</c> change tracking for <see cref="IChangeTrackedObject"/> properties is used recursively.</param>
-        public ChangeTracker(Type trackedObjectType, bool implicitlyRecurse)
-        {
-            ImplicitlyRecurse = implicitlyRecurse;
-            _trackedObjectType = trackedObjectType;
-            _hasChangesExtension = b => b;
-        }
 
         #region Public Methods
 
@@ -134,7 +138,7 @@ namespace MaSch.Core.Observable.Modules
         public void ResetChangeTracking()
         {
             _baseValues.ForEach(x => x.Value.Reset());
-            RemoveFixedChangeInternal();
+            _ = RemoveFixedChangeInternal();
             EvaluateHasChangesChanged();
         }
 
@@ -170,7 +174,7 @@ namespace MaSch.Core.Observable.Modules
         {
             if (_baseValues.ContainsKey(FixedChangeKey))
             {
-                _baseValues.Remove(FixedChangeKey);
+                _ = _baseValues.Remove(FixedChangeKey);
                 return true;
             }
 
@@ -188,18 +192,24 @@ namespace MaSch.Core.Observable.Modules
             private object? _currentValue;
             private object? _baseValue;
 
+            public ChangeTrackingEntry(IChangeTracker owner, bool recurse)
+            {
+                _owner = owner ?? throw new ArgumentNullException(nameof(owner));
+                _recurse = recurse;
+            }
+
             public bool HasChanged
             {
                 get
                 {
                     if (IsFixed)
                         return true;
-                    if (BaseValue is IEnumerable<object> bvList && CurrentValue is IEnumerable<object> cvList)
+                    if (BaseValue is IEnumerable<object> baseValueList && CurrentValue is IEnumerable<object> currentValueList)
                     {
-                        var cvArray = cvList as object[] ?? cvList.ToArray();
-                        if (!bvList.SequenceEqual(cvArray))
+                        var currentValueArray = currentValueList as object[] ?? currentValueList.ToArray();
+                        if (!baseValueList.SequenceEqual(currentValueArray))
                             return true;
-                        var ictChange = _recurse && cvArray.OfType<IChangeTrackedObject>().Any(x => x.HasChanges);
+                        var ictChange = _recurse && currentValueArray.OfType<IChangeTrackedObject>().Any(x => x.HasChanges);
                         return ictChange;
                     }
                     else
@@ -246,24 +256,18 @@ namespace MaSch.Core.Observable.Modules
 
             public bool IsFixed { get; set; }
 
-            private void CurrentValue_HasChangesChanged(object? sender, EventArgs e)
-            {
-                _owner.EvaluateHasChangesChanged();
-            }
-
-            public ChangeTrackingEntry(IChangeTracker owner, bool recurse)
-            {
-                _owner = owner ?? throw new ArgumentNullException(nameof(owner));
-                _recurse = recurse;
-            }
-
             public void Reset()
             {
-                if (CurrentValue is IEnumerable<object> cvList && _recurse)
-                    cvList.OfType<IChangeTrackedObject>().ForEach(x => x.ResetChangeTracking());
+                if (CurrentValue is IEnumerable<object> currentValueList && _recurse)
+                    currentValueList.OfType<IChangeTrackedObject>().ForEach(x => x.ResetChangeTracking());
                 if (CurrentValue is IChangeTrackedObject cto && _recurse)
                     cto.ResetChangeTracking();
                 BaseValue = CurrentValue;
+            }
+
+            private void CurrentValue_HasChangesChanged(object? sender, EventArgs e)
+            {
+                _owner.EvaluateHasChangesChanged();
             }
         }
 

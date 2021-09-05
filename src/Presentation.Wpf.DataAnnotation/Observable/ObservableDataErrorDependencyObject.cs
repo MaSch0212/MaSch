@@ -11,11 +11,20 @@ namespace MaSch.Presentation.Wpf.Observable
     /// <summary>
     /// Represents an observable dependency object that also handles errors.
     /// </summary>
-    /// <seealso cref="MaSch.Presentation.Wpf.Observable.ObservableDependencyObject" />
-    /// <seealso cref="System.ComponentModel.INotifyDataErrorInfo" />
+    /// <seealso cref="ObservableDependencyObject" />
+    /// <seealso cref="INotifyDataErrorInfo" />
     public class ObservableDataErrorDependencyObject : ObservableDependencyObject, IDataErrorObject
     {
         private readonly DataErrorHandler _dataErrorHandler;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableDataErrorDependencyObject"/> class.
+        /// </summary>
+        public ObservableDataErrorDependencyObject()
+        {
+            _dataErrorHandler = new DataErrorHandler(this);
+            _dataErrorHandler.ErrorsChanged += (s, e) => NotifyPropertyChanged(nameof(HasErrors));
+        }
 
         /// <inheritdoc />
         public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged
@@ -27,15 +36,6 @@ namespace MaSch.Presentation.Wpf.Observable
         /// <inheritdoc />
         [XmlIgnore]
         public bool HasErrors => _dataErrorHandler.HasErrors;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableDataErrorDependencyObject"/> class.
-        /// </summary>
-        public ObservableDataErrorDependencyObject()
-        {
-            _dataErrorHandler = new DataErrorHandler(this);
-            _dataErrorHandler.ErrorsChanged += (s, e) => NotifyPropertyChanged(nameof(HasErrors));
-        }
 
         /// <inheritdoc />
         public override void SetProperty<T>(ref T property, T value, [CallerMemberName] string propertyName = "")
@@ -49,25 +49,40 @@ namespace MaSch.Presentation.Wpf.Observable
         {
             base.NotifyPropertyChanged(propertyName, notifyDependencies);
             if (_dataErrorHandler.IsPropertyExistant(propertyName))
-                _dataErrorHandler.CheckForError(propertyName);
+                _ = _dataErrorHandler.CheckForError(propertyName);
         }
 
         /// <inheritdoc />
-        public IDictionary<string, IEnumerable> GetErrors() => _dataErrorHandler.GetErrors();
+        public IDictionary<string, IEnumerable> GetErrors()
+        {
+            return _dataErrorHandler.GetErrors();
+        }
 
         /// <inheritdoc />
-        public IEnumerable GetErrors(string? propertyName) => _dataErrorHandler.GetErrors(propertyName);
+        public IEnumerable GetErrors(string? propertyName)
+        {
+            return _dataErrorHandler.GetErrors(propertyName);
+        }
 
         /// <inheritdoc />
-        public bool CheckForErrors() => _dataErrorHandler.CheckForErrors();
+        public bool CheckForErrors()
+        {
+            return _dataErrorHandler.CheckForErrors();
+        }
 
         /// <inheritdoc />
-        public bool CheckForError(string? propertyName) => _dataErrorHandler.CheckForError(propertyName);
+        public bool CheckForError(string? propertyName)
+        {
+            return _dataErrorHandler.CheckForError(propertyName);
+        }
 
         /// <summary>
         /// Gets a value indicating wether the <see cref="HasErrors"/> property should be serialized.
         /// </summary>
         /// <returns><c>true</c> if the <see cref="HasErrors"/> property should be serialized; otherwise, <c>false</c>.</returns>
-        public virtual bool ShouldSerializeHasErrors() => false;
+        public virtual bool ShouldSerializeHasErrors()
+        {
+            return false;
+        }
     }
 }

@@ -8,17 +8,11 @@ namespace MaSch.Presentation.Wpf.JsonConverters
     /// <summary>
     /// <see cref="JsonConverter"/> that is used to convert <see cref="IThemeValue"/> to and from json.
     /// </summary>
-    /// <seealso cref="Newtonsoft.Json.JsonConverter{T}" />
+    /// <seealso cref="JsonConverter{T}" />
     public class ThemeValueJsonConverter : JsonConverter<IThemeValue>
     {
         private bool _canWrite = true;
         private bool _canRead;
-
-        /// <inheritdoc/>
-        public override bool CanWrite => _canWrite;
-
-        /// <inheritdoc/>
-        public override bool CanRead => _canRead;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThemeValueJsonConverter"/> class.
@@ -38,6 +32,12 @@ namespace MaSch.Presentation.Wpf.JsonConverters
         }
 
         /// <inheritdoc/>
+        public override bool CanWrite => _canWrite;
+
+        /// <inheritdoc/>
+        public override bool CanRead => _canRead;
+
+        /// <inheritdoc/>
         public override void WriteJson(JsonWriter writer, IThemeValue? value, JsonSerializer serializer)
         {
             _canWrite = false;
@@ -49,10 +49,10 @@ namespace MaSch.Presentation.Wpf.JsonConverters
                     return;
                 }
 
-                var jObject = JObject.FromObject(value, serializer);
+                var jsonObject = JObject.FromObject(value, serializer);
                 var type = ThemeValueRegistry.GetValueTypeEnum(value.GetType());
-                jObject.AddFirst(new JProperty("Type", type));
-                jObject.WriteTo(writer);
+                jsonObject.AddFirst(new JProperty("Type", type));
+                jsonObject.WriteTo(writer);
             }
             finally
             {
@@ -66,13 +66,13 @@ namespace MaSch.Presentation.Wpf.JsonConverters
             _canRead = false;
             try
             {
-                var jToken = JToken.ReadFrom(reader);
-                if (jToken.Type == JTokenType.Null)
+                var token = JToken.ReadFrom(reader);
+                if (token.Type == JTokenType.Null)
                     return null!;
 
-                var type = jToken.Value<string>("Type");
+                var type = token.Value<string>("Type");
                 var runtimeType = ThemeValueRegistry.GetRuntimeValueType(type);
-                return (IThemeValue)jToken.ToObject(runtimeType, serializer)!;
+                return (IThemeValue)token.ToObject(runtimeType, serializer)!;
             }
             finally
             {

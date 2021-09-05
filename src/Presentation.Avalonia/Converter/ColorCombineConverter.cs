@@ -14,16 +14,6 @@ namespace MaSch.Presentation.Avalonia.Converter
     /// <seealso cref="IMultiValueConverter" />
     public class ColorCombineConverter : IMultiValueConverter
     {
-        /// <inheritdoc />
-        public object Convert(IList<object> values, Type targetType, object parameter, CultureInfo culture)
-        {
-            var colors = values?.OfType<Color>().ToArray();
-            if (colors.IsNullOrEmpty())
-                return Colors.Transparent;
-
-            return colors.Aggregate(MixColors);
-        }
-
         /// <summary>
         /// Mixes the two specified colors.
         /// </summary>
@@ -53,6 +43,16 @@ namespace MaSch.Presentation.Avalonia.Converter
                 var p2 = backAlpha / 255F;
                 return (byte)Math.Min(255, Math.Round((p1 + p2 - (p1 * p2)) * 255, 0));
             }
+        }
+
+        /// <inheritdoc />
+        public object Convert(IList<object> values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var colors = values?.OfType<Color>().ToArray();
+            if (colors.IsNullOrEmpty())
+                return Colors.Transparent;
+
+            return colors.Aggregate(MixColors);
         }
     }
 }

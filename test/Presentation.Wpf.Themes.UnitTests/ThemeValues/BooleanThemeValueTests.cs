@@ -66,7 +66,7 @@ namespace MaSch.Presentation.Wpf.Themes.UnitTests.ThemeValues
         public void SetRawValue_WrongType()
         {
             var value = new BooleanThemeValue();
-            Assert.ThrowsException<ArgumentException>(() => value.RawValue = "This should not succeed.");
+            _ = Assert.ThrowsException<ArgumentException>(() => value.RawValue = "This should not succeed.");
         }
     }
 }

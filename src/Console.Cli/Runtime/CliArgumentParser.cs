@@ -68,18 +68,18 @@ namespace MaSch.Console.Cli.Runtime
 
         private void ValidateOptions(CommandParserContext ctx)
         {
-            IEnumerable<CliError>? vErrors;
+            IEnumerable<CliError>? validationErrors;
             foreach (var validator in _validators)
             {
-                if (!validator.ValidateOptions(ctx.ExecutionContext, ctx.OptionsObj, out vErrors))
-                    ctx.Errors.Add(vErrors);
+                if (!validator.ValidateOptions(ctx.ExecutionContext, ctx.OptionsObj, out validationErrors))
+                    ctx.Errors.Add(validationErrors);
             }
 
-            if (ctx.OptionsObj is ICliValidatable validatable && !validatable.ValidateOptions(ctx.ExecutionContext, out vErrors))
-                ctx.Errors.Add(vErrors);
+            if (ctx.OptionsObj is ICliValidatable validatable && !validatable.ValidateOptions(ctx.ExecutionContext, out validationErrors))
+                ctx.Errors.Add(validationErrors);
 
-            if (!ctx.Command.ValidateOptions(ctx.ExecutionContext, ctx.OptionsObj, out vErrors))
-                ctx.Errors.Add(vErrors);
+            if (!ctx.Command.ValidateOptions(ctx.ExecutionContext, ctx.OptionsObj, out validationErrors))
+                ctx.Errors.Add(validationErrors);
         }
 
         private bool TryParseCommandInfo(string[] args, ICliCommandInfo? baseCommand, [NotNullWhen(true)] out ICliCommandInfo? command, out ICliCommandInfo? commandForHelp, out int commandArgIndex)
@@ -251,7 +251,7 @@ namespace MaSch.Console.Cli.Runtime
                         if (isList)
                         {
                             v ??= new List<object>();
-                            ((IList)v).Add(ctx.Args[ctx.ArgIndex]);
+                            _ = ((IList)v).Add(ctx.Args[ctx.ArgIndex]);
                         }
                         else
                         {
@@ -309,31 +309,67 @@ namespace MaSch.Console.Cli.Runtime
         }
 
         private bool GetIgnoreUnknownOptions(ICliCommandInfo? command)
-            => command == null ? _application.Options.IgnoreUnknownOptions : (command.ParserOptions.IgnoreUnknownOptions ?? GetIgnoreUnknownOptions(command.ParentCommand));
-        private bool GetIgnoreAdditionalValues(ICliCommandInfo? command)
-            => command == null ? _application.Options.IgnoreAdditionalValues : (command.ParserOptions.IgnoreAdditionalValues ?? GetIgnoreAdditionalValues(command.ParentCommand));
-        private bool GetProvideHelpCommand(ICliCommandInfo? command)
-            => command == null ? _application.Options.ProvideHelpCommand : (command.ParserOptions.ProvideHelpCommand ?? GetProvideHelpCommand(command.ParentCommand));
-        private bool GetProvideVersionCommand(ICliCommandInfo? command)
-            => command == null ? _application.Options.ProvideVersionCommand : (command.ParserOptions.ProvideVersionCommand ?? GetProvideVersionCommand(command.ParentCommand));
-        private bool GetProvideHelpOptions(ICliCommandInfo? command)
-            => command == null ? _application.Options.ProvideHelpOptions : (command.ParserOptions.ProvideHelpOptions ?? GetProvideHelpOptions(command.ParentCommand));
-        private bool GetProvideVersionOptions(ICliCommandInfo? command)
-            => command == null ? _application.Options.ProvideVersionOptions : (command.ParserOptions.ProvideVersionOptions ?? GetProvideVersionOptions(command.ParentCommand));
-
-        [SuppressMessage("Critical Code Smell", "S3871:Exception types should be \"public\"", Justification = "This exception is always catched, so no need to make it public.")]
-        private class CliErrorException : Exception
         {
-            public IEnumerable<CliError> Errors { get; }
+            return command == null ? _application.Options.IgnoreUnknownOptions : (command.ParserOptions.IgnoreUnknownOptions ?? GetIgnoreUnknownOptions(command.ParentCommand));
+        }
 
+        private bool GetIgnoreAdditionalValues(ICliCommandInfo? command)
+        {
+            return command == null ? _application.Options.IgnoreAdditionalValues : (command.ParserOptions.IgnoreAdditionalValues ?? GetIgnoreAdditionalValues(command.ParentCommand));
+        }
+
+        private bool GetProvideHelpCommand(ICliCommandInfo? command)
+        {
+            return command == null ? _application.Options.ProvideHelpCommand : (command.ParserOptions.ProvideHelpCommand ?? GetProvideHelpCommand(command.ParentCommand));
+        }
+
+        private bool GetProvideVersionCommand(ICliCommandInfo? command)
+        {
+            return command == null ? _application.Options.ProvideVersionCommand : (command.ParserOptions.ProvideVersionCommand ?? GetProvideVersionCommand(command.ParentCommand));
+        }
+
+        private bool GetProvideHelpOptions(ICliCommandInfo? command)
+        {
+            return command == null ? _application.Options.ProvideHelpOptions : (command.ParserOptions.ProvideHelpOptions ?? GetProvideHelpOptions(command.ParentCommand));
+        }
+
+        private bool GetProvideVersionOptions(ICliCommandInfo? command)
+        {
+            return command == null ? _application.Options.ProvideVersionOptions : (command.ParserOptions.ProvideVersionOptions ?? GetProvideVersionOptions(command.ParentCommand));
+        }
+
+        /// <summary>
+        /// Exception that occurs when somethings fails during cli argument parsing.
+        /// </summary>
+        [SuppressMessage("Major Code Smell", "S3925:\"ISerializable\" should be implemented correctly", Justification = "No need for serialization")]
+        public class CliErrorException : Exception
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="CliErrorException"/> class.
+            /// </summary>
+            /// <param name="errors">The errors that lead to this exception.</param>
             public CliErrorException(IEnumerable<CliError> errors)
             {
                 Errors = errors;
             }
+
+            /// <summary>
+            /// Gets the errors that lead to this exception.
+            /// </summary>
+            public IEnumerable<CliError> Errors { get; }
         }
 
         private class CommandParserContext
         {
+            public CommandParserContext(IList<string> args, IServiceProvider serviceProvider, ICliCommandInfo command, IList<CliError> errors)
+            {
+                Args = args;
+                Command = command;
+                OptionsObj = CreateOptionsWithDefaultValues(serviceProvider, command);
+                Errors = errors;
+                ExecutionContext = new CliExecutionContext(serviceProvider, command);
+            }
+
             public IList<string> Args { get; }
             public ICliCommandInfo Command { get; }
             public object OptionsObj { get; }
@@ -344,15 +380,6 @@ namespace MaSch.Console.Cli.Runtime
             public bool IgnoreNextValues { get; set; }
             public int CurrentValueIndex { get; set; }
             public bool AreOptionsEscaped { get; set; }
-
-            public CommandParserContext(IList<string> args, IServiceProvider serviceProvider, ICliCommandInfo command, IList<CliError> errors)
-            {
-                Args = args;
-                Command = command;
-                OptionsObj = CreateOptionsWithDefaultValues(serviceProvider, command);
-                Errors = errors;
-                ExecutionContext = new CliExecutionContext(serviceProvider, command);
-            }
 
             private static object CreateOptionsWithDefaultValues(IServiceProvider serviceProvider, ICliCommandInfo command)
             {

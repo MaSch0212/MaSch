@@ -15,17 +15,6 @@ namespace MaSch.Core.Collections
         private T[] _array;
 
         /// <summary>
-        /// Gets the internal array.
-        /// </summary>
-        public T[] InternalArray => _array;
-
-        /// <inheritdoc />
-        public int Count { get; private set; }
-
-        /// <inheritdoc />
-        public bool IsReadOnly => false;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ResizableArray{T}"/> class.
         /// </summary>
         /// <param name="initialCapacity">The starting capacity of the array. Default is 4.</param>
@@ -40,9 +29,35 @@ namespace MaSch.Core.Collections
         /// <param name="array">The array to wrap.</param>
         public ResizableArray(T[] array)
         {
-            Guard.NotNull(array, nameof(array));
+            _ = Guard.NotNull(array, nameof(array));
 
             _array = array;
+        }
+
+        /// <summary>
+        /// Gets the internal array.
+        /// </summary>
+        public T[] InternalArray => _array;
+
+        /// <inheritdoc />
+        public int Count { get; private set; }
+
+        /// <inheritdoc />
+        public bool IsReadOnly => false;
+
+        /// <inheritdoc />
+        public T this[int index]
+        {
+            get
+            {
+                _ = Guard.NotOutOfRange(index, nameof(index), 0, Count - 1);
+                return _array[index];
+            }
+            set
+            {
+                _ = Guard.NotOutOfRange(index, nameof(index), 0, Count - 1);
+                _array[index] = value;
+            }
         }
 
         /// <summary>
@@ -52,8 +67,6 @@ namespace MaSch.Core.Collections
         {
             Array.Resize(ref _array, Count);
         }
-
-        #region IList<T> Members
 
         /// <inheritdoc />
         public void Add(T item)
@@ -117,7 +130,7 @@ namespace MaSch.Core.Collections
         /// <inheritdoc />
         public void Insert(int index, T item)
         {
-            Guard.NotOutOfRange(index, nameof(index), 0, Count);
+            _ = Guard.NotOutOfRange(index, nameof(index), 0, Count);
             if (Count == _array.Length)
             {
                 Array.Resize(ref _array, _array.Length * 2);
@@ -131,27 +144,10 @@ namespace MaSch.Core.Collections
         /// <inheritdoc />
         public void RemoveAt(int index)
         {
-            Guard.NotOutOfRange(index, nameof(index), 0, Count - 1);
+            _ = Guard.NotOutOfRange(index, nameof(index), 0, Count - 1);
             for (int i = index; i < Count - 1; i++)
                 _array[i] = _array[i + 1];
             _array[Count - 1] = default!;
         }
-
-        /// <inheritdoc />
-        public T this[int index]
-        {
-            get
-            {
-                Guard.NotOutOfRange(index, nameof(index), 0, Count - 1);
-                return _array[index];
-            }
-            set
-            {
-                Guard.NotOutOfRange(index, nameof(index), 0, Count - 1);
-                _array[index] = value;
-            }
-        }
-
-        #endregion
     }
 }

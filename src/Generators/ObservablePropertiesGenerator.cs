@@ -55,7 +55,7 @@ namespace MaSch.Generators
 
                 var builder = new SourceBuilder();
 
-                builder.AppendLine($"#nullable {nullableProperty}")
+                _ = builder.AppendLine($"#nullable {nullableProperty}")
                        .AppendLine()
                        .AppendLine("using System.Diagnostics.CodeAnalysis;")
                        .AppendLine();
@@ -70,18 +70,18 @@ namespace MaSch.Generators
                         var propertyName = propInfo.Name;
 
                         if (!isFirst)
-                            builder.AppendLine();
+                            _ = builder.AppendLine();
                         isFirst = false;
 
-                        builder.AppendLine($"private {propInfo.Type.ToDisplayString(UsageFormat)} {fieldName};");
+                        _ = builder.AppendLine($"private {propInfo.Type.ToDisplayString(UsageFormat)} {fieldName};");
 
                         var xmlDoc = propInfo.GetFormattedDocumentationCommentXml();
                         if (xmlDoc != null)
-                            builder.AppendLine(xmlDoc);
+                            _ = builder.AppendLine(xmlDoc);
 
                         foreach (var attribute in propInfo.GetAllAttributes())
                         {
-                            builder.AppendLine($"[{Regex.Replace(attribute.ToString(), @"[\{\}]", string.Empty)}]");
+                            _ = builder.AppendLine($"[{Regex.Replace(attribute.ToString(), @"[\{\}]", string.Empty)}]");
                         }
 
                         var accessModifierAttr = accessModifierAttributeSymbol == null ? null : propInfo.GetAttributes().FirstOrDefault(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, accessModifierAttributeSymbol));
@@ -90,37 +90,37 @@ namespace MaSch.Generators
                         string getterModifier = string.Empty;
                         if (accessModifierAttr != null)
                         {
-                            var iAccessModifier = accessModifierAttr.ConstructorArguments.FirstOrDefault().Value as int? ?? (int)AccessModifier.Public;
-                            accessModifier = GetAccessModifier((AccessModifier)iAccessModifier);
+                            var accessModifierKey = accessModifierAttr.ConstructorArguments.FirstOrDefault().Value as int? ?? (int)AccessModifier.Public;
+                            accessModifier = GetAccessModifier((AccessModifier)accessModifierKey);
                             if (accessModifierAttr.NamedArguments.FirstOrDefault(x => x.Key == "IsVirtual").Value.Value as bool? ?? false)
                                 accessModifier += " virtual";
 
-                            if (accessModifierAttr.NamedArguments.FirstOrDefault(x => x.Key == "SetModifier").Value.Value is int iSetterModifier && iSetterModifier != iAccessModifier)
-                                setterModifier = GetAccessModifier((AccessModifier)iSetterModifier) + " ";
+                            if (accessModifierAttr.NamedArguments.FirstOrDefault(x => x.Key == "SetModifier").Value.Value is int setterModifierKey && setterModifierKey != accessModifierKey)
+                                setterModifier = GetAccessModifier((AccessModifier)setterModifierKey) + " ";
 
-                            if (accessModifierAttr.NamedArguments.FirstOrDefault(x => x.Key == "GetModifier").Value.Value is int iGetterModifier && iGetterModifier != iAccessModifier)
-                                getterModifier = GetAccessModifier((AccessModifier)iGetterModifier) + " ";
+                            if (accessModifierAttr.NamedArguments.FirstOrDefault(x => x.Key == "GetModifier").Value.Value is int getterModifierKey && getterModifierKey != accessModifierKey)
+                                getterModifier = GetAccessModifier((AccessModifier)getterModifierKey) + " ";
                         }
 
                         using (builder.AddBlock($"{accessModifier} {propInfo.Type.ToDisplayString(UsageFormat)} {propertyName}"))
                         {
                             using (builder.AddBlock($"{getterModifier}get"))
                             {
-                                builder.AppendLine($"var result = {fieldName};")
+                                _ = builder.AppendLine($"var result = {fieldName};")
                                        .AppendLine($"OnGet{propertyName}(ref result);")
                                        .AppendLine("return result;");
                             }
 
                             using (builder.AddBlock($"{setterModifier}set"))
                             {
-                                builder.AppendLine($"var previous = {fieldName};")
+                                _ = builder.AppendLine($"var previous = {fieldName};")
                                        .AppendLine($"On{propertyName}Changing(previous, ref value);")
                                        .AppendLine($"SetProperty(ref {fieldName}, value);")
                                        .AppendLine($"On{propertyName}Changed(previous, value);");
                             }
                         }
 
-                        builder.AppendLine($"[SuppressMessage(\"Style\", \"IDE0060:Remove unused parameter\", Justification = \"Partial Method!\")]")
+                        _ = builder.AppendLine($"[SuppressMessage(\"Style\", \"IDE0060:Remove unused parameter\", Justification = \"Partial Method!\")]")
                                .AppendLine($"partial void OnGet{propertyName}(ref {propInfo.Type.ToDisplayString(UsageFormat)} value);")
                                .AppendLine($"[SuppressMessage(\"Style\", \"IDE0060:Remove unused parameter\", Justification = \"Partial Method!\")]")
                                .AppendLine($"partial void On{propertyName}Changing({propInfo.Type.ToDisplayString(UsageFormat)} previous, ref {propInfo.Type.ToDisplayString(UsageFormat)} value);")

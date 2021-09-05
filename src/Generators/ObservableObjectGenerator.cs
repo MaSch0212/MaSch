@@ -13,6 +13,13 @@ namespace MaSch.Generators
     [Generator]
     public class ObservableObjectGenerator : ISourceGenerator
     {
+        private enum InterfaceType
+        {
+            None,
+            ObservableObject,
+            NotifyPropertyChanged,
+        }
+
         /// <inheritdoc />
         public void Initialize(GeneratorInitializationContext context)
         {
@@ -59,7 +66,7 @@ namespace MaSch.Generators
                 {
                     if (interfaceType == InterfaceType.ObservableObject)
                     {
-                        builder.AppendLine("private System.Collections.Generic.Dictionary<string, MaSch.Core.Attributes.NotifyPropertyChangedAttribute> __attributes;")
+                        _ = builder.AppendLine("private System.Collections.Generic.Dictionary<string, MaSch.Core.Attributes.NotifyPropertyChangedAttribute> __attributes;")
                                .AppendLine("private MaSch.Core.Observable.Modules.ObservableObjectModule __module;")
                                .AppendLine()
                                .AppendLine("private System.Collections.Generic.Dictionary<string, MaSch.Core.Attributes.NotifyPropertyChangedAttribute> _attributes => __attributes ??= MaSch.Core.Attributes.NotifyPropertyChangedAttribute.InitializeAll(this);")
@@ -67,20 +74,20 @@ namespace MaSch.Generators
                                .AppendLine();
                     }
 
-                    builder.AppendLine("/// <inheritdoc/>")
+                    _ = builder.AppendLine("/// <inheritdoc/>")
                            .AppendLine("public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;")
                            .AppendLine();
 
                     if (interfaceType == InterfaceType.ObservableObject)
                     {
-                        builder.AppendLine("/// <inheritdoc/>")
+                        _ = builder.AppendLine("/// <inheritdoc/>")
                                .AppendLine("public virtual bool IsNotifyEnabled { get; set; } = true;")
                                .AppendLine()
                                .AppendLine("/// <inheritdoc/>");
                     }
                     else
                     {
-                        builder.AppendLine("/// <summary>Sets the specified property and notifies subscribers about the change.</summary>")
+                        _ = builder.AppendLine("/// <summary>Sets the specified property and notifies subscribers about the change.</summary>")
                                .AppendLine("/// <typeparam name=\"T\">The type of the property to set.</typeparam>")
                                .AppendLine("/// <param name=\"property\">The property backing field.</param>")
                                .AppendLine("/// <param name=\"value\">The value to set.</param>")
@@ -92,57 +99,50 @@ namespace MaSch.Generators
                         if (interfaceType == InterfaceType.ObservableObject)
                         {
                             using (builder.AddBlock("if (_attributes.ContainsKey(propertyName))"))
-                                builder.AppendLine("_attributes[propertyName].UnsubscribeEvent(this);");
-                            builder.AppendLine("property = value;")
+                                _ = builder.AppendLine("_attributes[propertyName].UnsubscribeEvent(this);");
+                            _ = builder.AppendLine("property = value;")
                                    .AppendLine("NotifyPropertyChanged(propertyName);");
                             using (builder.AddBlock("if (_attributes.ContainsKey(propertyName))"))
-                                builder.AppendLine("_attributes[propertyName].SubscribeEvent(this);");
+                                _ = builder.AppendLine("_attributes[propertyName].SubscribeEvent(this);");
                         }
                         else
                         {
-                            builder.AppendLine("property = value;")
+                            _ = builder.AppendLine("property = value;")
                                    .AppendLine("OnPropertyChanged(propertyName);");
                         }
                     }
 
-                    builder.AppendLine();
+                    _ = builder.AppendLine();
                     if (interfaceType == InterfaceType.ObservableObject)
                     {
-                        builder.AppendLine("/// <inheritdoc/>");
+                        _ = builder.AppendLine("/// <inheritdoc/>");
                         using (builder.AddBlock("public virtual void NotifyPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = \"\", bool notifyDependencies = true)"))
                         {
                             using (builder.AddBlock("if (IsNotifyEnabled)"))
                             {
-                                builder.AppendLine("PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));");
+                                _ = builder.AppendLine("PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));");
                                 using (builder.AddBlock("if (notifyDependencies)"))
-                                    builder.AppendLine("_module.NotifyDependentProperties(propertyName);");
+                                    _ = builder.AppendLine("_module.NotifyDependentProperties(propertyName);");
                             }
                         }
 
-                        builder.AppendLine()
+                        _ = builder.AppendLine()
                                .AppendLine("/// <inheritdoc/>");
                         using (builder.AddBlock("public virtual void NotifyCommandChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = \"\")"))
                         {
                             using (builder.AddBlock("if (IsNotifyEnabled)"))
-                                builder.AppendLine("_module.NotifyCommandChanged(propertyName);");
+                                _ = builder.AppendLine("_module.NotifyCommandChanged(propertyName);");
                         }
                     }
                     else
                     {
                         using (builder.AddBlock("protected virtual void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)"))
-                            builder.AppendLine("PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));");
+                            _ = builder.AppendLine("PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));");
                     }
                 }
 
                 context.AddSource(typeSymbol, builder, nameof(ObservableObjectGenerator));
             }
-        }
-
-        private enum InterfaceType
-        {
-            None,
-            ObservableObject,
-            NotifyPropertyChanged,
         }
     }
 }

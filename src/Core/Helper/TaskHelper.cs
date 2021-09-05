@@ -18,7 +18,7 @@ namespace MaSch.Core.Helper
         [SupportedOSPlatform("windows")]
         public static Task RunSta(Action action)
         {
-            Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(action, nameof(action));
             var tcs = new TaskCompletionSource<bool>();
             var thread = new Thread(() =>
             {
@@ -46,7 +46,7 @@ namespace MaSch.Core.Helper
         [SupportedOSPlatform("windows")]
         public static Task<T> RunSta<T>(Func<T> func)
         {
-            Guard.NotNull(func, nameof(func));
+            _ = Guard.NotNull(func, nameof(func));
             var tcs = new TaskCompletionSource<T>();
             var thread = new Thread(() =>
             {

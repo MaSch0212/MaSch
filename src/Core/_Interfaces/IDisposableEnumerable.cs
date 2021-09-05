@@ -50,14 +50,9 @@ namespace MaSch.Core
     /// <summary>
     /// Event arguments for events related to <see cref="IDisposable.Dispose"/>.
     /// </summary>
-    /// <seealso cref="System.EventArgs" />
+    /// <seealso cref="EventArgs" />
     public class DisposeEventArgs : EventArgs
     {
-        /// <summary>
-        /// Gets a value indicating whether the object that sent this event is disposing.
-        /// </summary>
-        public bool IsDisposing { get; }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DisposeEventArgs"/> class.
         /// </summary>
@@ -66,5 +61,10 @@ namespace MaSch.Core
         {
             IsDisposing = isDisposing;
         }
+
+        /// <summary>
+        /// Gets a value indicating whether the object that sent this event is disposing.
+        /// </summary>
+        public bool IsDisposing { get; }
     }
 }

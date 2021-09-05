@@ -40,7 +40,9 @@ namespace MaSch.Core.Helper
         /// A combined hash code for the <paramref name="values"/>, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
         public static int GetHashCode(IEnumerable<object>? values)
-            => GetHashCode(values?.ToArray());
+        {
+            return GetHashCode(values?.ToArray());
+        }
 
         /// <summary>
         /// Merges the specified objects (includes flattening nested lists).
@@ -52,7 +54,9 @@ namespace MaSch.Core.Helper
         ///     An element is not of type <typeparamref name="T"/> or any <see cref="IEnumerable"/>.
         /// </exception>
         public static IEnumerable<T?> Merge<T>(params object?[] objects)
-            => Merge<T>(false, objects);
+        {
+            return Merge<T>(false, objects);
+        }
 
         /// <summary>
         /// Merges the specified objects (includes flattening nested lists).
@@ -66,7 +70,7 @@ namespace MaSch.Core.Helper
         /// </exception>
         public static IEnumerable<T?> Merge<T>(bool ignoreInvalidObjects, params object?[] objects)
         {
-            Guard.NotNull(objects, nameof(objects));
+            _ = Guard.NotNull(objects, nameof(objects));
             foreach (var o in objects)
             {
                 if (Equals(o, default(T)))
@@ -77,9 +81,9 @@ namespace MaSch.Core.Helper
                 {
                     yield return t;
                 }
-                else if (o is IEnumerable tList)
+                else if (o is IEnumerable enumerable)
                 {
-                    foreach (var item in Merge<T>(tList.OfType<object>().ToArray()))
+                    foreach (var item in Merge<T>(enumerable.OfType<object>().ToArray()))
                         yield return item;
                 }
                 else if (!ignoreInvalidObjects)

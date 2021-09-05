@@ -8,13 +8,6 @@ namespace MaSch.Native.Windows.Explorer.Taskbar
     {
         private const string ClassName = "Shell_TrayWnd";
 
-        public Rectangle Bounds { get; }
-        public TaskbarPosition Position { get; }
-        public System.Drawing.Point Location { get; }
-        public Size Size { get; }
-        public bool AlwaysOnTop { get; }
-        public bool AutoHide { get; }
-
         public Taskbar()
         {
             var taskBarHandle = User32.FindWindow(ClassName, null);
@@ -39,5 +32,12 @@ namespace MaSch.Native.Windows.Explorer.Taskbar
             AlwaysOnTop = (state & AppBarState.AlwaysOnTop) == AppBarState.AlwaysOnTop;
             AutoHide = (state & AppBarState.Autohide) == AppBarState.Autohide;
         }
+
+        public Rectangle Bounds { get; }
+        public TaskbarPosition Position { get; }
+        public System.Drawing.Point Location { get; }
+        public Size Size { get; }
+        public bool AlwaysOnTop { get; }
+        public bool AutoHide { get; }
     }
 }

@@ -17,6 +17,15 @@ namespace MaSch.Console.Controls
         private readonly IConsoleService _console;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="TextBlockControl"/> class.
+        /// </summary>
+        /// <param name="console">The console to use.</param>
+        public TextBlockControl(IConsoleService console)
+        {
+            _console = Guard.NotNull(console, nameof(console));
+        }
+
+        /// <summary>
         /// Gets the default value for the <see cref="NonWrappingChars"/> property value.
         /// </summary>
         public static IReadOnlyList<char> DefaultNonWrappingChars => new ReadOnlyCollection<char>(new[] { '(', ')', '[', ']', '{', '}', '<', '>', '|', ',', '.' });
@@ -82,15 +91,6 @@ namespace MaSch.Console.Controls
         public IList<char> NonWrappingChars { get; set; } = DefaultNonWrappingChars.ToList();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TextBlockControl"/> class.
-        /// </summary>
-        /// <param name="console">The console to use.</param>
-        public TextBlockControl(IConsoleService console)
-        {
-            _console = Guard.NotNull(console, nameof(console));
-        }
-
-        /// <summary>
         /// Renders this control.
         /// </summary>
         public void Render()
@@ -119,12 +119,6 @@ namespace MaSch.Console.Controls
         {
             var maxWidth = ActualWidth;
             RenderLineImpl(AlignText(TrimText(line, maxWidth, TextEllipsis), maxWidth, TextAlignment, isLastLine));
-        }
-
-        private void RenderLineImpl(string line)
-        {
-            _console.CursorPosition.X = X;
-            _console.WriteWithColor(line, ForegroundColor ?? _console.ForegroundColor, BackgroundColor ?? _console.BackgroundColor);
         }
 
         /// <summary>
@@ -238,15 +232,15 @@ namespace MaSch.Console.Controls
 
                 while (startMatches.Any() && endMatches.Any())
                 {
-                    var iS = startMatches.Peek().Index;
-                    var iE = text.Length - (endMatches.Peek().Index + endMatches.Peek().Length);
-                    cycle.AddLast(((iS < iE ? endMatches : startMatches).Pop(), 1));
+                    var startindex = startMatches.Peek().Index;
+                    var endIndex = text.Length - (endMatches.Peek().Index + endMatches.Peek().Length);
+                    _ = cycle.AddLast(((startindex < endIndex ? endMatches : startMatches).Pop(), 1));
                 }
 
                 while (endMatches.Count > 0)
-                    cycle.AddLast((endMatches.Pop(), 1));
+                    _ = cycle.AddLast((endMatches.Pop(), 1));
                 while (startMatches.Count > 0)
-                    cycle.AddLast((startMatches.Pop(), 1));
+                    _ = cycle.AddLast((startMatches.Pop(), 1));
 
                 var current = cycle.First;
                 for (int i = 0; i < maxLength - text.Length; i++)
@@ -259,11 +253,11 @@ namespace MaSch.Console.Controls
                 int lastIndex = 0;
                 foreach ((Match match, int count) in cycle.OrderBy(x => x.Match.Index))
                 {
-                    result.Append(text[lastIndex..match.Index]).Append(new string(' ', count));
+                    _ = result.Append(text[lastIndex..match.Index]).Append(new string(' ', count));
                     lastIndex = match.Index + match.Length;
                 }
 
-                result.Append(text[lastIndex..]);
+                _ = result.Append(text[lastIndex..]);
                 return result.ToString();
             }
         }
@@ -389,108 +383,26 @@ namespace MaSch.Console.Controls
                 string? end = null;
                 while (startMatches.Any() && endMatches.Any())
                 {
-                    var iS = startMatches.Peek().Index;
-                    var iE = text.Length - (endMatches.Peek().Index + endMatches.Peek().Length);
-                    if (iS + iE <= maxLength - 3)
+                    var startIndex = startMatches.Peek().Index;
+                    var endIndex = text.Length - (endMatches.Peek().Index + endMatches.Peek().Length);
+                    if (startIndex + endIndex <= maxLength - 3)
                     {
-                        start = text[..iS];
-                        end = text[^iE..];
+                        start = text[..startIndex];
+                        end = text[^endIndex..];
                         break;
                     }
 
-                    (iS < iE ? endMatches : startMatches).Pop();
+                    _ = (startIndex < endIndex ? endMatches : startMatches).Pop();
                 }
 
                 return start == null && end == null ? TrimEndWords(text, maxLength) : start + "..." + end;
             }
         }
-    }
 
-    /// <summary>
-    /// Text wrapping mode that is used by the <see cref="TextBlockControl"/>.
-    /// </summary>
-    public enum TextWrap
-    {
-        /// <summary>
-        /// The text is not wrapped across multiple lines.
-        /// </summary>
-        NoWrap,
-
-        /// <summary>
-        /// The text is wrapped across multiple lines. The wrapping can happen in the middle of words.
-        /// </summary>
-        CharacterWrap,
-
-        /// <summary>
-        /// The text is wrapped across multiple lines. The wrapping will not happen in the middle of words.
-        /// </summary>
-        WordWrap,
-    }
-
-    /// <summary>
-    /// Text ellipsis mode that is used by the <see cref="TextBlockControl"/>.
-    /// </summary>
-    public enum TextEllipsis
-    {
-        /// <summary>
-        /// The text is cut at the end without any ellipsis (e.g.: "Lorem ipsum dolo").
-        /// </summary>
-        None,
-
-        /// <summary>
-        /// The text is cut at the end. The last three visible characters are replaced by "..." (e.g.: "Lorem ipsum d...").
-        /// </summary>
-        EndCharacter,
-
-        /// <summary>
-        /// The text is cut at the start. The first three visible characters are replaced by "..." (e.g.: "...olor sit amet").
-        /// </summary>
-        StartCharacter,
-
-        /// <summary>
-        /// The text is cut at the center. The most center visible characters are replaced by "..." (e.g.: "Lorem ip...sit amet").
-        /// </summary>
-        CenterCharacter,
-
-        /// <summary>
-        /// The text is cut at the end of the last word that still fits. "..." is appended at the end of the text (e.g.: "Lorem ipsum...").
-        /// </summary>
-        EndWord,
-
-        /// <summary>
-        /// The text is cut at the start of the first word that still fits. "..." is prepended at the start of the text (e.g.: "...sit amet").
-        /// </summary>
-        StartWord,
-
-        /// <summary>
-        /// The text is cut at the center without cutting though words. "..." is added to the center of the text (e.g.: "Lorem...sit amet").
-        /// </summary>
-        CenterWord,
-    }
-
-    /// <summary>
-    /// Text alignment mode that is used by the <see cref="TextBlockControl"/>.
-    /// </summary>
-    public enum TextAlignment
-    {
-        /// <summary>
-        /// Aligns the text to the left.
-        /// </summary>
-        Left,
-
-        /// <summary>
-        /// Align the text to the center.
-        /// </summary>
-        Center,
-
-        /// <summary>
-        /// Align the text to the right.
-        /// </summary>
-        Right,
-
-        /// <summary>
-        /// Align the text to the left and right. Additional space is filled in spaces between words.
-        /// </summary>
-        Block,
+        private void RenderLineImpl(string line)
+        {
+            _console.CursorPosition.X = X;
+            _console.WriteWithColor(line, ForegroundColor ?? _console.ForegroundColor, BackgroundColor ?? _console.BackgroundColor);
+        }
     }
 }

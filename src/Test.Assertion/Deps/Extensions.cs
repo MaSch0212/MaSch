@@ -13,7 +13,9 @@
         ///   <c>true</c> if the value parameter occurs within this string, or if value is the empty string (""); otherwise, <c>false</c>.
         /// </returns>
         public static bool Contains(this string s, string value, System.StringComparison comparisonType)
-            => s.IndexOf(value, comparisonType) >= 0;
+        {
+            return s.IndexOf(value, comparisonType) >= 0;
+        }
 #endif
     }
 }

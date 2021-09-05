@@ -19,10 +19,10 @@ namespace MaSch.Core.Extensions
         public static void DoAndDispose<TDisposable>(this TDisposable disposable, Action<TDisposable> action)
             where TDisposable : IDisposable
         {
-            Guard.NotNull(disposable, nameof(disposable));
+            _ = Guard.NotNull(disposable, nameof(disposable));
             using (disposable)
             {
-                Guard.NotNull(action, nameof(action));
+                _ = Guard.NotNull(action, nameof(action));
                 action(disposable);
             }
         }
@@ -39,7 +39,9 @@ namespace MaSch.Core.Extensions
         /// <returns>The first element of the function result.</returns>
         public static TResult DoAndDispose<TDisposable, TResult, TOut1>(this TDisposable disposable, Func<TDisposable, (TResult Result, TOut1 Out1)> function, out TOut1 out1)
             where TDisposable : IDisposable
-            => disposable.DoAndDispose(function).ExpandOut(out out1);
+        {
+            return disposable.DoAndDispose(function).ExpandOut(out out1);
+        }
 
         /// <summary>
         /// Executes a function on the <see cref="IDisposable"/> as disposes it afterwards.
@@ -55,7 +57,9 @@ namespace MaSch.Core.Extensions
         /// <returns>The first element of the function result.</returns>
         public static TResult DoAndDispose<TDisposable, TResult, TOut1, TOut2>(this TDisposable disposable, Func<TDisposable, (TResult Result, TOut1 Out1, TOut2 Out2)> function, out TOut1 out1, out TOut2 out2)
             where TDisposable : IDisposable
-            => disposable.DoAndDispose(function).ExpandOut(out out1, out out2);
+        {
+            return disposable.DoAndDispose(function).ExpandOut(out out1, out out2);
+        }
 
         /// <summary>
         /// Executes a function on the <see cref="IDisposable"/> as disposes it afterwards.
@@ -73,7 +77,9 @@ namespace MaSch.Core.Extensions
         /// <returns>The first element of the function result.</returns>
         public static TResult DoAndDispose<TDisposable, TResult, TOut1, TOut2, TOut3>(this TDisposable disposable, Func<TDisposable, (TResult Result, TOut1 Out1, TOut2 Out2, TOut3 Out3)> function, out TOut1 out1, out TOut2 out2, out TOut3 out3)
             where TDisposable : IDisposable
-            => disposable.DoAndDispose(function).ExpandOut(out out1, out out2, out out3);
+        {
+            return disposable.DoAndDispose(function).ExpandOut(out out1, out out2, out out3);
+        }
 
         /// <summary>
         /// Executes a function on the <see cref="IDisposable"/> as disposes it afterwards.
@@ -93,7 +99,9 @@ namespace MaSch.Core.Extensions
         /// <returns>The first element of the function result.</returns>
         public static TResult DoAndDispose<TDisposable, TResult, TOut1, TOut2, TOut3, TOut4>(this TDisposable disposable, Func<TDisposable, (TResult Result, TOut1 Out1, TOut2 Out2, TOut3 Out3, TOut4 Out4)> function, out TOut1 out1, out TOut2 out2, out TOut3 out3, out TOut4 out4)
             where TDisposable : IDisposable
-            => disposable.DoAndDispose(function).ExpandOut(out out1, out out2, out out3, out out4);
+        {
+            return disposable.DoAndDispose(function).ExpandOut(out out1, out out2, out out3, out out4);
+        }
 
         /// <summary>
         /// Executes a function on the <see cref="IDisposable"/> as disposes it afterwards.
@@ -115,7 +123,9 @@ namespace MaSch.Core.Extensions
         /// <returns>The first element of the function result.</returns>
         public static TResult DoAndDispose<TDisposable, TResult, TOut1, TOut2, TOut3, TOut4, TOut5>(this TDisposable disposable, Func<TDisposable, (TResult Result, TOut1 Out1, TOut2 Out2, TOut3 Out3, TOut4 Out4, TOut5 Out5)> function, out TOut1 out1, out TOut2 out2, out TOut3 out3, out TOut4 out4, out TOut5 out5)
             where TDisposable : IDisposable
-            => disposable.DoAndDispose(function).ExpandOut(out out1, out out2, out out3, out out4, out out5);
+        {
+            return disposable.DoAndDispose(function).ExpandOut(out out1, out out2, out out3, out out4, out out5);
+        }
 
         /// <summary>
         /// Executes a function on the <see cref="IDisposable"/> as disposes it afterwards.
@@ -139,7 +149,9 @@ namespace MaSch.Core.Extensions
         /// <returns>The first element of the function result.</returns>
         public static TResult DoAndDispose<TDisposable, TResult, TOut1, TOut2, TOut3, TOut4, TOut5, TOut6>(this TDisposable disposable, Func<TDisposable, (TResult Result, TOut1 Out1, TOut2 Out2, TOut3 Out3, TOut4 Ou4, TOut5 Ou5, TOut6 Out6)> function, out TOut1 out1, out TOut2 out2, out TOut3 out3, out TOut4 out4, out TOut5 out5, out TOut6 out6)
             where TDisposable : IDisposable
-            => disposable.DoAndDispose(function).ExpandOut(out out1, out out2, out out3, out out4, out out5, out out6);
+        {
+            return disposable.DoAndDispose(function).ExpandOut(out out1, out out2, out out3, out out4, out out5, out out6);
+        }
 
         /// <summary>
         /// Executes a function on the <see cref="IDisposable"/> as disposes it afterwards.
@@ -153,10 +165,10 @@ namespace MaSch.Core.Extensions
         public static TResult DoAndDispose<TDisposable, TResult>(this TDisposable disposable, Func<TDisposable, TResult> function)
             where TDisposable : IDisposable
         {
-            Guard.NotNull(disposable, nameof(disposable));
+            _ = Guard.NotNull(disposable, nameof(disposable));
             using (disposable)
             {
-                Guard.NotNull(function, nameof(function));
+                _ = Guard.NotNull(function, nameof(function));
                 return function(disposable);
             }
         }
@@ -172,10 +184,10 @@ namespace MaSch.Core.Extensions
         public static async Task DoAndDisposeAsync<TDisposable>(this TDisposable disposable, Func<TDisposable, Task> action)
             where TDisposable : IDisposable
         {
-            Guard.NotNull(disposable, nameof(disposable));
+            _ = Guard.NotNull(disposable, nameof(disposable));
             using (disposable)
             {
-                Guard.NotNull(action, nameof(action));
+                _ = Guard.NotNull(action, nameof(action));
                 await action(disposable);
             }
         }
@@ -192,10 +204,10 @@ namespace MaSch.Core.Extensions
         public static async Task<TResult> DoAndDisposeAsync<TDisposable, TResult>(this TDisposable disposable, Func<TDisposable, Task<TResult>> function)
             where TDisposable : IDisposable
         {
-            Guard.NotNull(disposable, nameof(disposable));
+            _ = Guard.NotNull(disposable, nameof(disposable));
             using (disposable)
             {
-                Guard.NotNull(function, nameof(function));
+                _ = Guard.NotNull(function, nameof(function));
                 return await function(disposable);
             }
         }

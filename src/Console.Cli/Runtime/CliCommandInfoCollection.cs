@@ -14,16 +14,6 @@ namespace MaSch.Console.Cli.Runtime
         private readonly Dictionary<Type, ICliCommandInfo> _allCommands = new();
         private readonly List<ICliCommandInfo> _rootCommands = new();
 
-        /// <inheritdoc/>
-        public ICliCommandInfo? DefaultCommand { get; private set; }
-
-        /// <inheritdoc/>
-        public int Count => _allCommands.Count;
-
-        /// <inheritdoc/>
-        [ExcludeFromCodeCoverage]
-        public bool IsReadOnly => false;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="CliCommandInfoCollection"/> class.
         /// </summary>
@@ -42,9 +32,19 @@ namespace MaSch.Console.Cli.Runtime
         }
 
         /// <inheritdoc/>
+        public ICliCommandInfo? DefaultCommand { get; private set; }
+
+        /// <inheritdoc/>
+        public int Count => _allCommands.Count;
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
+        public bool IsReadOnly => false;
+
+        /// <inheritdoc/>
         public void Add(ICliCommandInfo item)
         {
-            Guard.NotNull(item, nameof(item));
+            _ = Guard.NotNull(item, nameof(item));
 
             if (item.CommandType == null || item.Attribute == null)
                 throw new ArgumentException("The given command has to have a CommandType.");
@@ -70,14 +70,14 @@ namespace MaSch.Console.Cli.Runtime
         /// <inheritdoc/>
         public bool Remove(ICliCommandInfo item)
         {
-            Guard.NotNull(item, nameof(item));
+            _ = Guard.NotNull(item, nameof(item));
 
             if (item.CommandType == null || !_allCommands.TryGetValue(item.CommandType, out var ei) || ei != item)
                 return false;
 
             foreach (var child in item.ChildCommands.ToArray())
             {
-                Remove(child);
+                _ = Remove(child);
             }
 
             var parent = item.ParentCommand ?? (item.Attribute.ParentCommand != null && _allCommands.TryGetValue(item.Attribute.ParentCommand, out var p) ? p : null);
@@ -85,8 +85,8 @@ namespace MaSch.Console.Cli.Runtime
                 parent.RemoveChildCommand(item);
 
             if (_rootCommands.Contains(item))
-                _rootCommands.Remove(item);
-            _allCommands.Remove(item.CommandType);
+                _ = _rootCommands.Remove(item);
+            _ = _allCommands.Remove(item.CommandType);
             return true;
         }
 
@@ -94,28 +94,44 @@ namespace MaSch.Console.Cli.Runtime
         public void Clear()
         {
             foreach (var item in _allCommands.Values.ToArray())
-                Remove(item);
+                _ = Remove(item);
         }
 
         /// <inheritdoc/>
         public bool Contains(ICliCommandInfo item)
-            => item?.CommandType != null && _allCommands.TryGetValue(item.CommandType, out var ei) && ei == item;
+        {
+            return item?.CommandType != null && _allCommands.TryGetValue(item.CommandType, out var ei) && ei == item;
+        }
 
         /// <inheritdoc/>
-        public void CopyTo(ICliCommandInfo[] array, int arrayIndex) => _allCommands.Values.CopyTo(array, arrayIndex);
+        public void CopyTo(ICliCommandInfo[] array, int arrayIndex)
+        {
+            _allCommands.Values.CopyTo(array, arrayIndex);
+        }
 
         /// <inheritdoc/>
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
 
         /// <inheritdoc/>
-        public IEnumerator<ICliCommandInfo> GetEnumerator() => _allCommands.Values.GetEnumerator();
+        public IEnumerator<ICliCommandInfo> GetEnumerator()
+        {
+            return _allCommands.Values.GetEnumerator();
+        }
 
         /// <inheritdoc/>
         public IEnumerable<ICliCommandInfo> GetRootCommands()
-            => _rootCommands.AsEnumerable();
+        {
+            return _rootCommands.AsEnumerable();
+        }
 
         /// <inheritdoc/>
-        public IReadOnlyCliCommandInfoCollection AsReadOnly() => new ReadOnly(this);
+        public IReadOnlyCliCommandInfoCollection AsReadOnly()
+        {
+            return new ReadOnly(this);
+        }
 
         private void ValidateCommand(ICliCommandInfo command, ICliCommandInfo? parentCommand)
         {
@@ -155,13 +171,22 @@ namespace MaSch.Console.Cli.Runtime
             public int Count => _collection.Count;
 
             /// <inheritdoc/>
-            public IEnumerator<ICliCommandInfo> GetEnumerator() => _collection.GetEnumerator();
+            public IEnumerator<ICliCommandInfo> GetEnumerator()
+            {
+                return _collection.GetEnumerator();
+            }
 
             /// <inheritdoc/>
-            IEnumerator IEnumerable.GetEnumerator() => _collection.GetEnumerator();
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return _collection.GetEnumerator();
+            }
 
             /// <inheritdoc/>
-            public IEnumerable<ICliCommandInfo> GetRootCommands() => _collection.GetRootCommands();
+            public IEnumerable<ICliCommandInfo> GetRootCommands()
+            {
+                return _collection.GetRootCommands();
+            }
         }
     }
 }
