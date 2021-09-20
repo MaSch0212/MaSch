@@ -3,6 +3,7 @@ trigger:
     include:
     - build
     - src
+    - test
 
 pool:
   vmImage: 'windows-2019'
