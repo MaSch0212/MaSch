@@ -81,8 +81,6 @@ namespace MaSch.Test
 #endif
         public void CleanupTest()
         {
-            OnCleanupTest();
-
 #if MSTEST
             bool shouldVerify = TestContext.CurrentTestOutcome == UnitTestOutcome.Passed || TestContext.CurrentTestOutcome == UnitTestOutcome.Inconclusive;
 #else
@@ -92,6 +90,8 @@ namespace MaSch.Test
             if (shouldVerify)
                 Verifiables.Verify();
             Verifiables.Clear();
+
+            OnCleanupTest();
 
             if (CleanupCacheAfterTest)
                 Cache.Clear();

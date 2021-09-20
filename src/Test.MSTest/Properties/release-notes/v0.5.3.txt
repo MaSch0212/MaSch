@@ -1,0 +1,1 @@
+﻿- Fixed order in which to cleanup test in TestClassBase. Now the verify of mocks happens before the OnCleanupTest.
