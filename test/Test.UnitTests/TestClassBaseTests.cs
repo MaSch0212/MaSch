@@ -86,7 +86,7 @@ namespace MaSch.Test.UnitTests
             var mock = CreateTestClassMock(false);
             _ = mock.Protected().SetupGet<bool>("CleanupCacheAfterTest").Returns(false);
             _ = mock.SetupGet(x => x.Verifiables).Returns(verifiables);
-            using var v1 = mock.Protected().Setup("OnCleanupTest").Callback(() => Assert.AreEqual(1, verifiables.Count)).Verifiable(Times.Once());
+            using var v1 = mock.Protected().Setup("OnCleanupTest").Verifiable(Times.Once());
 
             mock.Object.CleanupTest();
 
@@ -104,7 +104,7 @@ namespace MaSch.Test.UnitTests
             _ = testContextMock.Setup(x => x.CurrentTestOutcome).Returns(UnitTestOutcome.Failed);
             _ = mock.Protected().SetupGet<bool>("CleanupCacheAfterTest").Returns(false);
             _ = mock.SetupGet(x => x.Verifiables).Returns(verifiables);
-            using var v1 = mock.Protected().Setup("OnCleanupTest").Callback(() => Assert.AreEqual(1, verifiables.Count)).Verifiable(Times.Once());
+            using var v1 = mock.Protected().Setup("OnCleanupTest").Verifiable(Times.Once());
 
             mock.Object.CleanupTest();
 
