@@ -14,7 +14,7 @@
 
     <!-- Package Info -->
     <Description>Contains common supporting code for .NET applications.</Description>
-    <Version>0.1.4</Version>
+    <Version>0.1.5</Version>
     <PackageTags>masch core common dataannotation annotation observable</PackageTags>
   </PropertyGroup>
 

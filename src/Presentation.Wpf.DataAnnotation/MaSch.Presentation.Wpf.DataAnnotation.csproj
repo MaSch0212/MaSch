@@ -15,7 +15,7 @@
 
     <!-- Package Info -->
     <Description>Contains supporting code for .NET WPF applications.</Description>
-    <Version>0.1.2</Version>
+    <Version>0.1.3</Version>
     <PackageTags>masch presentation ui frontend wpf dataannotation annotation</PackageTags>
   </PropertyGroup>
 

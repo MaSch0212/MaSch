@@ -71,10 +71,11 @@ namespace MaSch.Core.Logging
                 if (Directory.Exists(_directoryPath))
                 {
                     var files = Directory.GetFiles(_directoryPath, "*", SearchOption.TopDirectoryOnly);
-                    _currentFileNumber = (from x in files
-                                          let match = Regex.Match(x, $@"\\{Regex.Escape(_fileName)}\.(?<id>[0-9]+)\.log\Z")
-                                          where match.Success
-                                          select int.Parse(match.Groups["id"].Value)).Max();
+                    var fileNumbers = (from x in files
+                                       let match = Regex.Match(x, $@"\\{Regex.Escape(_fileName)}\.(?<id>[0-9]+)\.log\Z")
+                                       where match.Success
+                                       select int.Parse(match.Groups["id"].Value)).ToArray();
+                    _currentFileNumber = fileNumbers.Length > 0 ? fileNumbers.Max() : 0;
                 }
                 else
                 {

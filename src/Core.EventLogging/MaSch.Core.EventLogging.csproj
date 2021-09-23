@@ -14,7 +14,7 @@
 
     <!-- Package Info -->
     <Description>Contains a logging provider for windows Event Logging.</Description>
-    <Version>0.1.4</Version>
+    <Version>0.1.5</Version>
     <PackageTags>masch generator sourcegenerator wrapper observable wpf</PackageTags>
   </PropertyGroup>
 

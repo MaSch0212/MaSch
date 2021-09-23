@@ -14,7 +14,7 @@
 
     <!-- Package Info -->
     <Description>Contains Assertion logic for tests independent of the test framework.</Description>
-    <Version>0.5.2</Version>
+    <Version>0.5.3</Version>
     <PackageTags>masch test</PackageTags>
   </PropertyGroup>
 

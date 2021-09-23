@@ -1,0 +1,4 @@
+﻿- Added utilities to work with ANSI control sequences.
+    - AnsiEscapeUtility: Create ANSI control sequences
+    - AnsiFormattedString: Create a formatted string with ANSI control sequences with an API like the StringBuilder
+- Updated dependencies.

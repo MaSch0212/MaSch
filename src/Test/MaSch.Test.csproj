@@ -14,7 +14,7 @@
 
     <!-- Package Info -->
     <Description>Contains some supporting code for Unit Tests.</Description>
-    <Version>0.5.3</Version>
+    <Version>0.5.4</Version>
     <PackageTags>masch test</PackageTags>
 
     <DoesNotReturnAttribute>DoesNotReturnAttribute</DoesNotReturnAttribute>
