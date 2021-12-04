@@ -29,4 +29,8 @@
     <ProjectReference Include="$(GitSourceDir)Presentation/MaSch.Presentation.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Using Include="MaSch.Core.Extensions"/>
+  </ItemGroup>
+
 </Project>

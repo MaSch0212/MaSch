@@ -28,7 +28,11 @@
     <ProjectReference Include="$(GitSourceDir)Presentation.Wpf/MaSch.Presentation.Wpf.csproj" />
     <ProjectReference Include="$(GitSourceDir)Presentation/MaSch.Presentation.csproj" />
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <Using Include="MaSch.Core.Extensions"/>
+  </ItemGroup>
+
   <ItemGroup>
     <Compile Update="Views\SplitView\ExtendedSplitViewContent.cs">
       <DependentUpon>ExtendedSplitViewContent.xaml</DependentUpon>

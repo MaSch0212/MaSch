@@ -20,5 +20,9 @@
     <ProjectReference Include="$(GitSourceDir)Presentation.Wpf/MaSch.Presentation.Wpf.csproj" />
     <ProjectReference Include="$(GitSourceDir)Presentation/MaSch.Presentation.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Newtonsoft.Json"/>
+  </ItemGroup>
   
 </Project>

@@ -24,4 +24,8 @@
     <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Using Include="MaSch.Core.Extensions"/>
+  </ItemGroup>
+
 </Project>

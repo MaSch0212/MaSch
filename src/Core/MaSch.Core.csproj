@@ -19,5 +19,9 @@
   </PropertyGroup>
 
   <Import Project="$(GitBuildDir)MaSch.props" />
+
+  <ItemGroup>
+    <Using Include="MaSch.Core.Extensions" />
+  </ItemGroup>
   
 </Project>

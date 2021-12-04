@@ -1,58 +1,56 @@
 ﻿using MaSch.Core;
 using MaSch.Presentation.Wpf.JsonConverters;
 using MaSch.Presentation.Wpf.Models;
-using Newtonsoft.Json;
 using System.Windows.Media;
 
 #nullable disable
 
-namespace MaSch.Presentation.Wpf.ThemeValues
+namespace MaSch.Presentation.Wpf.ThemeValues;
+
+/// <summary>
+/// <see cref="IThemeValue"/> representing <see cref="ImageSource"/> values.
+/// </summary>
+/// <seealso cref="ThemeValueBase{T}" />
+public class ImageSourceThemeValue : ThemeValueBase<ImageSource>
 {
-    /// <summary>
-    /// <see cref="IThemeValue"/> representing <see cref="ImageSource"/> values.
-    /// </summary>
-    /// <seealso cref="ThemeValueBase{T}" />
-    public class ImageSourceThemeValue : ThemeValueBase<ImageSource>
+    /// <inheritdoc/>
+    [JsonConverter(typeof(ThemeValuePropertyJsonConverter<ImageSource>))]
+    public override object RawValue
     {
-        /// <inheritdoc/>
-        [JsonConverter(typeof(ThemeValuePropertyJsonConverter<ImageSource>))]
-        public override object RawValue
-        {
-            get => base.RawValue;
-            set => base.RawValue = Guard.OfType(value, nameof(value), typeof(ThemeValueReference), typeof(ImageSource));
-        }
+        get => base.RawValue;
+        set => base.RawValue = Guard.OfType(value, nameof(value), typeof(ThemeValueReference), typeof(ImageSource));
+    }
 
-        public static implicit operator ImageSource(ImageSourceThemeValue themeValue)
-        {
-            return themeValue.Value;
-        }
+    public static implicit operator ImageSource(ImageSourceThemeValue themeValue)
+    {
+        return themeValue.Value;
+    }
 
-        /// <summary>
-        /// Creates a new <see cref="ImageSourceThemeValue"/>.
-        /// </summary>
-        /// <param name="value">The value to use.</param>
-        /// <returns>The created <see cref="IThemeValue"/>.</returns>
-        public static ImageSourceThemeValue Create(ImageSource value)
-        {
-            return CreateInternal(value);
-        }
+    /// <summary>
+    /// Creates a new <see cref="ImageSourceThemeValue"/>.
+    /// </summary>
+    /// <param name="value">The value to use.</param>
+    /// <returns>The created <see cref="IThemeValue"/>.</returns>
+    public static ImageSourceThemeValue Create(ImageSource value)
+    {
+        return CreateInternal(value);
+    }
 
-        /// <summary>
-        /// Creates a new <see cref="ImageSourceThemeValue"/>.
-        /// </summary>
-        /// <param name="valueRef">The value reference.</param>
-        /// <returns>The created <see cref="IThemeValue"/>.</returns>
-        public static ImageSourceThemeValue Create(ThemeValueReference valueRef)
-        {
-            return CreateInternal(valueRef);
-        }
+    /// <summary>
+    /// Creates a new <see cref="ImageSourceThemeValue"/>.
+    /// </summary>
+    /// <param name="valueRef">The value reference.</param>
+    /// <returns>The created <see cref="IThemeValue"/>.</returns>
+    public static ImageSourceThemeValue Create(ThemeValueReference valueRef)
+    {
+        return CreateInternal(valueRef);
+    }
 
-        private static ImageSourceThemeValue CreateInternal(object value)
+    private static ImageSourceThemeValue CreateInternal(object value)
+    {
+        return new ImageSourceThemeValue
         {
-            return new ImageSourceThemeValue
-            {
-                RawValue = value,
-            };
-        }
+            RawValue = value,
+        };
     }
 }

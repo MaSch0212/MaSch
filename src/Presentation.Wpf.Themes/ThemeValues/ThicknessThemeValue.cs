@@ -1,58 +1,56 @@
 ﻿using MaSch.Core;
 using MaSch.Presentation.Wpf.JsonConverters;
 using MaSch.Presentation.Wpf.Models;
-using Newtonsoft.Json;
 using System.Windows;
 
 #nullable disable
 
-namespace MaSch.Presentation.Wpf.ThemeValues
+namespace MaSch.Presentation.Wpf.ThemeValues;
+
+/// <summary>
+/// <see cref="IThemeValue"/> representing <see cref="Thickness"/> values.
+/// </summary>
+/// <seealso cref="ThemeValueBase{T}" />
+public class ThicknessThemeValue : ThemeValueBase<Thickness>
 {
-    /// <summary>
-    /// <see cref="IThemeValue"/> representing <see cref="Thickness"/> values.
-    /// </summary>
-    /// <seealso cref="ThemeValueBase{T}" />
-    public class ThicknessThemeValue : ThemeValueBase<Thickness>
+    /// <inheritdoc/>
+    [JsonConverter(typeof(ThemeValuePropertyJsonConverter<Thickness>))]
+    public override object RawValue
     {
-        /// <inheritdoc/>
-        [JsonConverter(typeof(ThemeValuePropertyJsonConverter<Thickness>))]
-        public override object RawValue
-        {
-            get => base.RawValue;
-            set => base.RawValue = Guard.OfType(value, nameof(value), typeof(ThemeValueReference), typeof(Thickness));
-        }
+        get => base.RawValue;
+        set => base.RawValue = Guard.OfType(value, nameof(value), typeof(ThemeValueReference), typeof(Thickness));
+    }
 
-        public static implicit operator Thickness(ThicknessThemeValue themeValue)
-        {
-            return themeValue.Value;
-        }
+    public static implicit operator Thickness(ThicknessThemeValue themeValue)
+    {
+        return themeValue.Value;
+    }
 
-        /// <summary>
-        /// Creates a new <see cref="ThicknessThemeValue"/>.
-        /// </summary>
-        /// <param name="value">The value to use.</param>
-        /// <returns>The created <see cref="IThemeValue"/>.</returns>
-        public static ThicknessThemeValue Create(Thickness value)
-        {
-            return CreateInternal(value);
-        }
+    /// <summary>
+    /// Creates a new <see cref="ThicknessThemeValue"/>.
+    /// </summary>
+    /// <param name="value">The value to use.</param>
+    /// <returns>The created <see cref="IThemeValue"/>.</returns>
+    public static ThicknessThemeValue Create(Thickness value)
+    {
+        return CreateInternal(value);
+    }
 
-        /// <summary>
-        /// Creates a new <see cref="ThicknessThemeValue"/>.
-        /// </summary>
-        /// <param name="valueRef">The value reference.</param>
-        /// <returns>The created <see cref="IThemeValue"/>.</returns>
-        public static ThicknessThemeValue Create(ThemeValueReference valueRef)
-        {
-            return CreateInternal(valueRef);
-        }
+    /// <summary>
+    /// Creates a new <see cref="ThicknessThemeValue"/>.
+    /// </summary>
+    /// <param name="valueRef">The value reference.</param>
+    /// <returns>The created <see cref="IThemeValue"/>.</returns>
+    public static ThicknessThemeValue Create(ThemeValueReference valueRef)
+    {
+        return CreateInternal(valueRef);
+    }
 
-        private static ThicknessThemeValue CreateInternal(object value)
+    private static ThicknessThemeValue CreateInternal(object value)
+    {
+        return new ThicknessThemeValue
         {
-            return new ThicknessThemeValue
-            {
-                RawValue = value,
-            };
-        }
+            RawValue = value,
+        };
     }
 }

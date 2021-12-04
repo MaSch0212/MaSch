@@ -26,4 +26,8 @@
     <ProjectReference Include="$(GitSourceDir)Presentation.Wpf/MaSch.Presentation.Wpf.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Using Include="MaSch.Core.Extensions"/>
+  </ItemGroup>
+
 </Project>

@@ -1,21 +1,20 @@
 ﻿using System.ComponentModel;
 
-namespace MaSch.Presentation.Wpf
+namespace MaSch.Presentation.Wpf;
+
+/// <summary>
+/// Specifies a binding to a <see cref="IThemeValue"/> inside a <see cref="IThemeManager"/>.
+/// </summary>
+/// <seealso cref="INotifyPropertyChanged" />
+public interface IThemeManagerBinding : INotifyPropertyChanged
 {
     /// <summary>
-    /// Specifies a binding to a <see cref="IThemeValue"/> inside a <see cref="IThemeManager"/>.
+    /// Gets the key to bind to.
     /// </summary>
-    /// <seealso cref="INotifyPropertyChanged" />
-    public interface IThemeManagerBinding : INotifyPropertyChanged
-    {
-        /// <summary>
-        /// Gets the key to bind to.
-        /// </summary>
-        string Key { get; }
+    string Key { get; }
 
-        /// <summary>
-        /// Gets the value to bind to.
-        /// </summary>
-        IThemeValue? Value { get; }
-    }
+    /// <summary>
+    /// Gets the value to bind to.
+    /// </summary>
+    IThemeValue? Value { get; }
 }

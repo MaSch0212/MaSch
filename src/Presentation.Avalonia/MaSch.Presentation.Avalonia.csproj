@@ -36,5 +36,9 @@
     <PackageReference Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="MaSch.Core.Extensions"/>
+  </ItemGroup>
   
 </Project>

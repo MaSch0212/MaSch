@@ -1,16 +1,14 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
-namespace MaSch.Native.Windows
+namespace MaSch.Native.Windows;
+
+public interface ISelect : IDisposable
 {
-    public interface ISelect : IDisposable
-    {
-        string? InitialFolder { get; set; }
-        string? DefaultFolder { get; set; }
-        string? Folder { get; set; }
-        DialogResult ShowDialog();
-        DialogResult ShowDialog(IWin32Window owner);
-        DialogResult ShowVistaDialog(IWin32Window owner);
-        DialogResult ShowLegacyDialog(IWin32Window owner);
-    }
+    string? InitialFolder { get; set; }
+    string? DefaultFolder { get; set; }
+    string? Folder { get; set; }
+    DialogResult ShowDialog();
+    DialogResult ShowDialog(IWin32Window owner);
+    DialogResult ShowVistaDialog(IWin32Window owner);
+    DialogResult ShowLegacyDialog(IWin32Window owner);
 }

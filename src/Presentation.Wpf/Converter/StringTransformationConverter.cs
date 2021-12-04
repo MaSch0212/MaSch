@@ -1,41 +1,38 @@
-﻿using System;
-using System.Globalization;
-using System.Windows.Data;
+﻿using System.Windows.Data;
 
-namespace MaSch.Presentation.Wpf.Converter
+namespace MaSch.Presentation.Wpf.Converter;
+
+/// <summary>
+/// A <see cref="IValueConverter"/> that transforms a string.
+/// </summary>
+/// <seealso cref="IValueConverter" />
+public class StringTransformationConverter : IValueConverter
 {
     /// <summary>
-    /// A <see cref="IValueConverter"/> that transforms a string.
+    /// Gets or sets a value indicating whether the string should be converted to upper case characters.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
-    public class StringTransformationConverter : IValueConverter
+    public bool ToUpper { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the string should be converted to lower case characters.
+    /// </summary>
+    public bool ToLower { get; set; }
+
+    /// <inheritdoc />
+    public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Gets or sets a value indicating whether the string should be converted to upper case characters.
-        /// </summary>
-        public bool ToUpper { get; set; }
+        if (value == null)
+            return null;
+        if (ToUpper)
+            return value.ToString()?.ToUpper();
+        if (ToLower)
+            return value.ToString()?.ToLower();
+        return value.ToString();
+    }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the string should be converted to lower case characters.
-        /// </summary>
-        public bool ToLower { get; set; }
-
-        /// <inheritdoc />
-        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value == null)
-                return null;
-            if (ToUpper)
-                return value.ToString()?.ToUpper();
-            if (ToLower)
-                return value.ToString()?.ToLower();
-            return value.ToString();
-        }
-
-        /// <inheritdoc />
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotSupportedException();
-        }
+    /// <inheritdoc />
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotSupportedException();
     }
 }

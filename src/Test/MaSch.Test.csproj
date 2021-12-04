@@ -31,4 +31,10 @@
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Using Include="Moq"/>
+    <Using Include="Moq.Language"/>
+    <Using Include="Moq.Protected"/>
+  </ItemGroup>
+
 </Project>

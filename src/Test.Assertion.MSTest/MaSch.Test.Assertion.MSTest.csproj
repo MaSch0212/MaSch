@@ -34,4 +34,8 @@
     <PackageReference Include="MSTest.TestFramework" Version="$(MsTestVersion)" />
   </ItemGroup>
   
+  <ItemGroup>
+    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting"/>
+  </ItemGroup>
+  
 </Project>

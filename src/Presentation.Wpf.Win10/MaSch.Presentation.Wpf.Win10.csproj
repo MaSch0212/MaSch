@@ -28,5 +28,9 @@
   <ItemGroup>
     <Resource Include="SEGMDL2.TTF" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="MaSch.Core.Extensions"/>
+  </ItemGroup>
   
 </Project>

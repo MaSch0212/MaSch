@@ -1,11 +1,10 @@
-﻿namespace MaSch.Native.Windows.Explorer.Taskbar
+﻿namespace MaSch.Native.Windows.Explorer.Taskbar;
+
+public enum TaskbarPosition
 {
-    public enum TaskbarPosition
-    {
-        Unknown = -1,
-        Left,
-        Top,
-        Right,
-        Bottom,
-    }
+    Unknown = -1,
+    Left,
+    Top,
+    Right,
+    Bottom,
 }

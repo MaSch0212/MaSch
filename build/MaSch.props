@@ -3,6 +3,7 @@
   <!-- Imports -->
   <Import Project="$(MSBuildThisFileDirectory)MaSch.Constants.props" Condition=" $(MaSchConstantsImported) != 'true' " />
   <Import Project="$(MSBuildThisFileDirectory)../src/Generators/MaSch.Generators.targets" Condition=" $(UseMaSchGenerators) == 'true' " />
+  <Import Project="$(MSBuildThisFileDirectory)GlobalUsings.props" Condition=" $(MaSchGlobalUsingsImported) != 'true' " />
   
   
   <!-- Common properties -->

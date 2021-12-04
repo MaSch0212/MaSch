@@ -1,132 +1,127 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
+﻿namespace MaSch.Presentation.Avalonia.Commands;
 
-namespace MaSch.Presentation.Avalonia.Commands
+/// <summary>
+/// Represents na asynchronous command without parameters which behavior is given by delegates.
+/// </summary>
+public class AsyncDelegateCommand : AsyncCommandBase
 {
+    private readonly Func<bool>? _canExecute;
+    private readonly Func<Task> _execute;
+
     /// <summary>
-    /// Represents na asynchronous command without parameters which behavior is given by delegates.
+    /// Initializes a new instance of the <see cref="AsyncDelegateCommand"/> class with the given execute behavior without parameters.
     /// </summary>
-    public class AsyncDelegateCommand : AsyncCommandBase
+    /// <param name="execute">The asynchronous execute behavior.</param>
+    public AsyncDelegateCommand(Func<Task> execute)
     {
-        private readonly Func<bool>? _canExecute;
-        private readonly Func<Task> _execute;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncDelegateCommand"/> class with the given execute behavior without parameters.
-        /// </summary>
-        /// <param name="execute">The asynchronous execute behavior.</param>
-        public AsyncDelegateCommand(Func<Task> execute)
-        {
-            _execute = execute;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncDelegateCommand"/> class with the given execute behavior without parameters with a validation check.
-        /// </summary>
-        /// <param name="canExecute">The validation check.</param>
-        /// <param name="execute">The asynchronous execute behavior.</param>
-        public AsyncDelegateCommand(Func<bool> canExecute, Func<Task> execute)
-            : this(execute)
-        {
-            _canExecute = canExecute;
-        }
-
-        /// <summary>
-        /// Checks if the Execute method can be executed.
-        /// </summary>
-        /// <returns>true if the Execute method can be executed otherwise false.</returns>
-        public override bool CanExecute()
-        {
-            if (_canExecute != null)
-                return _canExecute();
-            return base.CanExecute();
-        }
-
-        /// <summary>
-        /// Executes the command asynchronously.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public override async Task Execute()
-        {
-            if (_execute != null)
-                await _execute();
-        }
-
-        /// <summary>
-        /// Raises the CanExecuteChanged Event. So the UI gets notified that the CanExecute method could changed its return value.
-        /// </summary>
-        public void RaiseCanExecuteChanged()
-        {
-            RaiseCanExecuteChanged(this, new EventArgs());
-        }
+        _execute = execute;
     }
 
     /// <summary>
-    /// Represents an asynchronous command with parameters which behavior is given by delegates.
+    /// Initializes a new instance of the <see cref="AsyncDelegateCommand"/> class with the given execute behavior without parameters with a validation check.
     /// </summary>
-    /// <typeparam name="T">The parameter type for this <see cref="IAsyncCommand"/>.</typeparam>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic representation can be in same file.")]
-    public class AsyncDelegateCommand<T> : AsyncCommandBase<T>
+    /// <param name="canExecute">The validation check.</param>
+    /// <param name="execute">The asynchronous execute behavior.</param>
+    public AsyncDelegateCommand(Func<bool> canExecute, Func<Task> execute)
+        : this(execute)
     {
-        private readonly Func<T?, bool>? _canExecute;
-        private readonly Func<T?, Task> _execute;
+        _canExecute = canExecute;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncDelegateCommand{T}"/> class with the given execute behavior with parameters.
-        /// </summary>
-        /// <param name="execute">The asynchronous execute behavior.</param>
-        /// <param name="throwOnWrongParamType">Determines if an exception should be thrown if a wrong parameter type is passed to the <see cref="Execute"/> or <see cref="CanExecute"/> method.</param>
-        public AsyncDelegateCommand(Func<T?, Task> execute, bool throwOnWrongParamType = true)
-        {
-            _execute = execute;
-            ThrowExceptionOnWrongParamType = throwOnWrongParamType;
-        }
+    /// <summary>
+    /// Checks if the Execute method can be executed.
+    /// </summary>
+    /// <returns>true if the Execute method can be executed otherwise false.</returns>
+    public override bool CanExecute()
+    {
+        if (_canExecute != null)
+            return _canExecute();
+        return base.CanExecute();
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncDelegateCommand{T}"/> class with the given execute behavior with parameters with a validation check.
-        /// </summary>
-        /// <param name="canExecute">The validation check.</param>
-        /// <param name="execute">The asynchronous execute behavior.</param>
-        /// <param name="throwOnWrongParamType">Determines if an exception should be thrown if a wrong parameter type is passed to the <see cref="Execute"/> or <see cref="CanExecute"/> method.</param>
-        public AsyncDelegateCommand(Func<T?, bool> canExecute, Func<T?, Task> execute, bool throwOnWrongParamType = true)
-            : this(execute, throwOnWrongParamType)
-        {
-            _canExecute = canExecute;
-        }
+    /// <summary>
+    /// Executes the command asynchronously.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override async Task Execute()
+    {
+        if (_execute != null)
+            await _execute();
+    }
 
-        /// <summary>
-        /// Gets a value indicating whether to throw an exception when the wrong parameter type is given.
-        /// </summary>
-        protected override bool ThrowExceptionOnWrongParamType { get; }
+    /// <summary>
+    /// Raises the CanExecuteChanged Event. So the UI gets notified that the CanExecute method could changed its return value.
+    /// </summary>
+    public void RaiseCanExecuteChanged()
+    {
+        RaiseCanExecuteChanged(this, new EventArgs());
+    }
+}
 
-        /// <summary>
-        /// Checks if the Execute method can be executed.
-        /// </summary>
-        /// <param name="parameter">The parameter for the command.</param>
-        /// <returns>true if the Execute method can be executed otherwise false.</returns>
-        public override bool CanExecute(T? parameter)
-        {
-            return _canExecute?.Invoke(parameter) ?? base.CanExecute(parameter);
-        }
+/// <summary>
+/// Represents an asynchronous command with parameters which behavior is given by delegates.
+/// </summary>
+/// <typeparam name="T">The parameter type for this <see cref="IAsyncCommand"/>.</typeparam>
+[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic representation can be in same file.")]
+public class AsyncDelegateCommand<T> : AsyncCommandBase<T>
+{
+    private readonly Func<T?, bool>? _canExecute;
+    private readonly Func<T?, Task> _execute;
 
-        /// <summary>
-        /// Executes the command asynchronously.
-        /// </summary>
-        /// <param name="parameter">The parameter for the command.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public override async Task Execute(T? parameter)
-        {
-            if (_execute != null)
-                await _execute(parameter);
-        }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncDelegateCommand{T}"/> class with the given execute behavior with parameters.
+    /// </summary>
+    /// <param name="execute">The asynchronous execute behavior.</param>
+    /// <param name="throwOnWrongParamType">Determines if an exception should be thrown if a wrong parameter type is passed to the <see cref="Execute"/> or <see cref="CanExecute"/> method.</param>
+    public AsyncDelegateCommand(Func<T?, Task> execute, bool throwOnWrongParamType = true)
+    {
+        _execute = execute;
+        ThrowExceptionOnWrongParamType = throwOnWrongParamType;
+    }
 
-        /// <summary>
-        /// Raises the CanExecuteChanged Event. So the UI gets notified that the CanExecute method could changed its return value.
-        /// </summary>
-        public void RaiseCanExecuteChanged()
-        {
-            RaiseCanExecuteChanged(this, new EventArgs());
-        }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncDelegateCommand{T}"/> class with the given execute behavior with parameters with a validation check.
+    /// </summary>
+    /// <param name="canExecute">The validation check.</param>
+    /// <param name="execute">The asynchronous execute behavior.</param>
+    /// <param name="throwOnWrongParamType">Determines if an exception should be thrown if a wrong parameter type is passed to the <see cref="Execute"/> or <see cref="CanExecute"/> method.</param>
+    public AsyncDelegateCommand(Func<T?, bool> canExecute, Func<T?, Task> execute, bool throwOnWrongParamType = true)
+        : this(execute, throwOnWrongParamType)
+    {
+        _canExecute = canExecute;
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether to throw an exception when the wrong parameter type is given.
+    /// </summary>
+    protected override bool ThrowExceptionOnWrongParamType { get; }
+
+    /// <summary>
+    /// Checks if the Execute method can be executed.
+    /// </summary>
+    /// <param name="parameter">The parameter for the command.</param>
+    /// <returns>true if the Execute method can be executed otherwise false.</returns>
+    public override bool CanExecute(T? parameter)
+    {
+        return _canExecute?.Invoke(parameter) ?? base.CanExecute(parameter);
+    }
+
+    /// <summary>
+    /// Executes the command asynchronously.
+    /// </summary>
+    /// <param name="parameter">The parameter for the command.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public override async Task Execute(T? parameter)
+    {
+        if (_execute != null)
+            await _execute(parameter);
+    }
+
+    /// <summary>
+    /// Raises the CanExecuteChanged Event. So the UI gets notified that the CanExecute method could changed its return value.
+    /// </summary>
+    public void RaiseCanExecuteChanged()
+    {
+        RaiseCanExecuteChanged(this, new EventArgs());
     }
 }

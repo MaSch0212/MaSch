@@ -1,17 +1,16 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace MaSch.Presentation.Wpf.Controls
+namespace MaSch.Presentation.Wpf.Controls;
+
+/// <summary>
+/// Check box that is displayed like a switch.
+/// </summary>
+/// <seealso cref="CheckBox" />
+public class Switch : CheckBox
 {
-    /// <summary>
-    /// Check box that is displayed like a switch.
-    /// </summary>
-    /// <seealso cref="CheckBox" />
-    public class Switch : CheckBox
+    static Switch()
     {
-        static Switch()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(Switch), new FrameworkPropertyMetadata(typeof(Switch)));
-        }
+        DefaultStyleKeyProperty.OverrideMetadata(typeof(Switch), new FrameworkPropertyMetadata(typeof(Switch)));
     }
 }

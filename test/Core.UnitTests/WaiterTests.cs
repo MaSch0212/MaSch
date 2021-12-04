@@ -1,6 +1,5 @@
-﻿namespace MaSch.Core.UnitTests
+﻿namespace MaSch.Core.UnitTests;
+
+public class WaiterTests
 {
-    public class WaiterTests
-    {
-    }
 }

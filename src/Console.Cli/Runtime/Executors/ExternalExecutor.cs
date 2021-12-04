@@ -1,127 +1,121 @@
 ﻿using MaSch.Console.Cli.Internal;
 using MaSch.Core;
 using MaSch.Core.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace MaSch.Console.Cli.Runtime.Executors
+namespace MaSch.Console.Cli.Runtime.Executors;
+
+internal static class ExternalExecutor
 {
-    internal static class ExternalExecutor
+    public static ICliCommandExecutor GetExecutor(Type executorType, Type commandType, object? executorInstance)
     {
-        public static ICliCommandExecutor GetExecutor(Type executorType, Type commandType, object? executorInstance)
-        {
-            _ = Guard.NotNull(executorType, nameof(executorType));
-            _ = Guard.NotNull(commandType, nameof(commandType));
+        _ = Guard.NotNull(executorType, nameof(executorType));
+        _ = Guard.NotNull(commandType, nameof(commandType));
 
-            var types = (from i in executorType.GetInterfaces()
-                         where i.IsGenericType
-                         let baseType = i.GetGenericTypeDefinition()
-                         where baseType.In(typeof(ICliExecutor<>), typeof(ICliAsyncExecutor<>))
-                         select i.GetGenericArguments()[0]).ToArray();
-            var type = types.Contains(commandType)
-                ? commandType
-                : types.FirstOrDefault(x => x.IsAssignableFrom(commandType));
-            if (type == null)
-                throw new ArgumentException($"The type {executorType.Name} needs to implement {typeof(ICliExecutor<>).Name} and/or {typeof(ICliAsyncExecutor<>).Name} for type {commandType.Name}.", nameof(executorType));
-            return (ICliCommandExecutor)Activator.CreateInstance(typeof(ExternalExecutor<>).MakeGenericType(type), executorType, executorInstance)!;
-        }
+        var types = (from i in executorType.GetInterfaces()
+                     where i.IsGenericType
+                     let baseType = i.GetGenericTypeDefinition()
+                     where baseType.In(typeof(ICliExecutor<>), typeof(ICliAsyncExecutor<>))
+                     select i.GetGenericArguments()[0]).ToArray();
+        var type = types.Contains(commandType)
+            ? commandType
+            : types.FirstOrDefault(x => x.IsAssignableFrom(commandType));
+        if (type == null)
+            throw new ArgumentException($"The type {executorType.Name} needs to implement {typeof(ICliExecutor<>).Name} and/or {typeof(ICliAsyncExecutor<>).Name} for type {commandType.Name}.", nameof(executorType));
+        return (ICliCommandExecutor)Activator.CreateInstance(typeof(ExternalExecutor<>).MakeGenericType(type), executorType, executorInstance)!;
+    }
+}
+
+[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic counterpart to ExternalExecutor.")]
+internal class ExternalExecutor<T> : ICliCommandExecutor
+{
+    private readonly Type _executorType;
+    private object? _executorInstance;
+
+    public ExternalExecutor(Type executorType, object? executorInstance)
+    {
+        _executorType = Guard.NotNull(executorType, nameof(executorType));
+        _executorInstance = Guard.OfType(executorInstance, nameof(executorInstance), true, executorType);
+
+        if (!typeof(ICliExecutor<T>).IsAssignableFrom(executorType) && !typeof(ICliAsyncExecutor<T>).IsAssignableFrom(executorType))
+            throw new ArgumentException($"The type {executorType.Name} needs to implement {typeof(ICliExecutor<T>).Name} and/or {typeof(ICliAsyncExecutor<T>).Name} for type {typeof(T).Name}.", nameof(executorType));
     }
 
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic counterpart to ExternalExecutor.")]
-    internal class ExternalExecutor<T> : ICliCommandExecutor
+    internal object? LastExecutorInstance { get; private set; }
+
+    public int Execute(CliExecutionContext context, object obj)
     {
-        private readonly Type _executorType;
-        private object? _executorInstance;
+        _ = Guard.NotNull(context, nameof(context));
+        _ = Guard.NotNull(obj, nameof(obj));
+        var (executor, castedObject) = PreExecute(context.ServiceProvider, obj);
+        LastExecutorInstance = executor;
 
-        public ExternalExecutor(Type executorType, object? executorInstance)
+        if (executor is ICliExecutor<T> syncExecutor)
+            return syncExecutor.ExecuteCommand(context, castedObject);
+        else if (executor is ICliAsyncExecutor<T> asyncExecutor)
+            return asyncExecutor.ExecuteCommandAsync(context, castedObject).GetAwaiter().GetResult();
+        else
+            throw new InvalidOperationException($"The type {_executorType.Name} needs to implement {typeof(ICliExecutor<T>).Name} and/or {typeof(ICliAsyncExecutor<T>).Name} for type {typeof(T).Name}.");
+    }
+
+    public async Task<int> ExecuteAsync(CliExecutionContext context, object obj)
+    {
+        _ = Guard.NotNull(context, nameof(context));
+        _ = Guard.NotNull(obj, nameof(obj));
+        var (executor, castedObject) = PreExecute(context.ServiceProvider, obj);
+        LastExecutorInstance = executor;
+
+        if (executor is ICliAsyncExecutor<T> asyncExecutor)
+            return await asyncExecutor.ExecuteCommandAsync(context, castedObject);
+        else if (executor is ICliExecutor<T> syncExecutor)
+            return syncExecutor.ExecuteCommand(context, castedObject);
+        else
+            throw new InvalidOperationException($"The type {_executorType.Name} needs to implement {typeof(ICliExecutor<T>).Name} and/or {typeof(ICliAsyncExecutor<T>).Name} for type {typeof(T).Name}.");
+    }
+
+    public bool ValidateOptions(CliExecutionContext context, object parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors)
+    {
+        _ = Guard.NotNull(context, nameof(context));
+        _ = Guard.OfType(parameters, nameof(parameters), false, typeof(T));
+        var ee = PreValidate(context.ServiceProvider);
+        LastExecutorInstance = ee;
+
+        var types = (from i in ee.GetType().GetInterfaces()
+                     where i.IsGenericType
+                     let baseType = i.GetGenericTypeDefinition()
+                     where baseType == typeof(ICliValidator<>)
+                     select i.GetGenericArguments()[0]).ToArray();
+        var parametersType = parameters.GetType();
+        var type = types.Contains(parametersType)
+            ? parametersType
+            : types.FirstOrDefault(x => x.IsInstanceOfType(parameters));
+        if (type != null)
         {
-            _executorType = Guard.NotNull(executorType, nameof(executorType));
-            _executorInstance = Guard.OfType(executorInstance, nameof(executorInstance), true, executorType);
-
-            if (!typeof(ICliExecutor<T>).IsAssignableFrom(executorType) && !typeof(ICliAsyncExecutor<T>).IsAssignableFrom(executorType))
-                throw new ArgumentException($"The type {executorType.Name} needs to implement {typeof(ICliExecutor<T>).Name} and/or {typeof(ICliAsyncExecutor<T>).Name} for type {typeof(T).Name}.", nameof(executorType));
+            var validateMethod = typeof(ICliValidator<>).MakeGenericType(type).GetMethod(nameof(ICliValidator<object>.ValidateOptions))!;
+            var p = new object?[] { context, parameters, null };
+            var r = (bool)validateMethod.Invoke(ee, p)!;
+            errors = p[2] as IEnumerable<CliError>;
+            return r;
         }
 
-        internal object? LastExecutorInstance { get; private set; }
+        errors = null;
+        return true;
+    }
 
-        public int Execute(CliExecutionContext context, object obj)
-        {
-            _ = Guard.NotNull(context, nameof(context));
-            _ = Guard.NotNull(obj, nameof(obj));
-            var (executor, castedObject) = PreExecute(context.ServiceProvider, obj);
-            LastExecutorInstance = executor;
+    public (object Executor, T CastedObject) PreExecute(IServiceProvider serviceProvider, object obj)
+    {
+        if (obj is not T castedObject)
+            throw new ArgumentException($"The object needs to be an instance of class {typeof(T).Name}. (Actual: {obj.GetType().Name})", nameof(obj));
+        var executor = PreValidate(serviceProvider);
+        return (executor, castedObject);
+    }
 
-            if (executor is ICliExecutor<T> syncExecutor)
-                return syncExecutor.ExecuteCommand(context, castedObject);
-            else if (executor is ICliAsyncExecutor<T> asyncExecutor)
-                return asyncExecutor.ExecuteCommandAsync(context, castedObject).GetAwaiter().GetResult();
-            else
-                throw new InvalidOperationException($"The type {_executorType.Name} needs to implement {typeof(ICliExecutor<T>).Name} and/or {typeof(ICliAsyncExecutor<T>).Name} for type {typeof(T).Name}.");
-        }
+    public object PreValidate(IServiceProvider serviceProvider)
+    {
+        var executor = _executorInstance
+            ?? serviceProvider.GetService(_executorType);
 
-        public async Task<int> ExecuteAsync(CliExecutionContext context, object obj)
-        {
-            _ = Guard.NotNull(context, nameof(context));
-            _ = Guard.NotNull(obj, nameof(obj));
-            var (executor, castedObject) = PreExecute(context.ServiceProvider, obj);
-            LastExecutorInstance = executor;
-
-            if (executor is ICliAsyncExecutor<T> asyncExecutor)
-                return await asyncExecutor.ExecuteCommandAsync(context, castedObject);
-            else if (executor is ICliExecutor<T> syncExecutor)
-                return syncExecutor.ExecuteCommand(context, castedObject);
-            else
-                throw new InvalidOperationException($"The type {_executorType.Name} needs to implement {typeof(ICliExecutor<T>).Name} and/or {typeof(ICliAsyncExecutor<T>).Name} for type {typeof(T).Name}.");
-        }
-
-        public bool ValidateOptions(CliExecutionContext context, object parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors)
-        {
-            _ = Guard.NotNull(context, nameof(context));
-            _ = Guard.OfType(parameters, nameof(parameters), false, typeof(T));
-            var ee = PreValidate(context.ServiceProvider);
-            LastExecutorInstance = ee;
-
-            var types = (from i in ee.GetType().GetInterfaces()
-                         where i.IsGenericType
-                         let baseType = i.GetGenericTypeDefinition()
-                         where baseType == typeof(ICliValidator<>)
-                         select i.GetGenericArguments()[0]).ToArray();
-            var parametersType = parameters.GetType();
-            var type = types.Contains(parametersType)
-                ? parametersType
-                : types.FirstOrDefault(x => x.IsInstanceOfType(parameters));
-            if (type != null)
-            {
-                var validateMethod = typeof(ICliValidator<>).MakeGenericType(type).GetMethod(nameof(ICliValidator<object>.ValidateOptions))!;
-                var p = new object?[] { context, parameters, null };
-                var r = (bool)validateMethod.Invoke(ee, p)!;
-                errors = p[2] as IEnumerable<CliError>;
-                return r;
-            }
-
-            errors = null;
-            return true;
-        }
-
-        public (object Executor, T CastedObject) PreExecute(IServiceProvider serviceProvider, object obj)
-        {
-            if (obj is not T castedObject)
-                throw new ArgumentException($"The object needs to be an instance of class {typeof(T).Name}. (Actual: {obj.GetType().Name})", nameof(obj));
-            var executor = PreValidate(serviceProvider);
-            return (executor, castedObject);
-        }
-
-        public object PreValidate(IServiceProvider serviceProvider)
-        {
-            var executor = _executorInstance
-                ?? serviceProvider.GetService(_executorType);
-
-            if (executor is null)
-                executor = _executorInstance = Activator.CreateInstance(_executorType)!; // CreateInstance only returns null for Nullable<> (see https://github.com/dotnet/coreclr/pull/23774#discussion_r354785674)
-            return executor;
-        }
+        if (executor is null)
+            executor = _executorInstance = Activator.CreateInstance(_executorType)!; // CreateInstance only returns null for Nullable<> (see https://github.com/dotnet/coreclr/pull/23774#discussion_r354785674)
+        return executor;
     }
 }

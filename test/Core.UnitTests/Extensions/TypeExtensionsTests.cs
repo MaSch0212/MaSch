@@ -1,18 +1,14 @@
 ﻿using MaSch.Core.Extensions;
-using MaSch.Test;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 
-namespace MaSch.Core.UnitTests.Extensions
+namespace MaSch.Core.UnitTests.Extensions;
+
+[TestClass]
+public class TypeExtensionsTests : TestClassBase
 {
-    [TestClass]
-    public class TypeExtensionsTests : TestClassBase
+    [TestMethod]
+    public void IsCastableTo_ExplicitValueTypes_False()
     {
-        [TestMethod]
-        public void IsCastableTo_ExplicitValueTypes_False()
-        {
-            var typeCasts = new List<Tuple<Type, Type>>()
+        var typeCasts = new List<Tuple<Type, Type>>()
             {
                 new Tuple<Type, Type>(typeof(string), typeof(byte)),
                 new Tuple<Type, Type>(typeof(string), typeof(short)),
@@ -23,28 +19,27 @@ namespace MaSch.Core.UnitTests.Extensions
                 new Tuple<Type, Type>(typeof(string), typeof(decimal)),
             };
 
-            foreach (var typeCast in typeCasts)
-            {
-                Assert.IsFalse(typeCast.Item1.IsCastableTo(typeCast.Item2));
-            }
-        }
-
-        [TestMethod]
-        public void IsCastableTo_ExplicitValueTypes_True()
+        foreach (var typeCast in typeCasts)
         {
-            Assert.IsTrue(typeof(double).IsCastableTo(typeof(int)));
+            Assert.IsFalse(typeCast.Item1.IsCastableTo(typeCast.Item2));
         }
+    }
 
-        [TestMethod]
-        public void IsCastableTo_ImplicitValueTypes_False()
-        {
-            Assert.IsFalse(typeof(double).IsCastableTo(typeof(int), true));
-        }
+    [TestMethod]
+    public void IsCastableTo_ExplicitValueTypes_True()
+    {
+        Assert.IsTrue(typeof(double).IsCastableTo(typeof(int)));
+    }
 
-        [TestMethod]
-        public void IsCastableTo_ImplicitValueTypes_True()
-        {
-            Assert.IsTrue(typeof(int).IsCastableTo(typeof(double), true));
-        }
+    [TestMethod]
+    public void IsCastableTo_ImplicitValueTypes_False()
+    {
+        Assert.IsFalse(typeof(double).IsCastableTo(typeof(int), true));
+    }
+
+    [TestMethod]
+    public void IsCastableTo_ImplicitValueTypes_True()
+    {
+        Assert.IsTrue(typeof(int).IsCastableTo(typeof(double), true));
     }
 }

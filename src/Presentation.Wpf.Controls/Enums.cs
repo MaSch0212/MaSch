@@ -1,71 +1,70 @@
 ﻿#pragma warning disable SA1649 // File name should match first type name
 
-namespace MaSch.Presentation.Wpf
+namespace MaSch.Presentation.Wpf;
+
+/// <summary>
+/// Specifies to wich side something is anchored.
+/// </summary>
+public enum AnchorStyle
 {
     /// <summary>
-    /// Specifies to wich side something is anchored.
+    /// Not anchored.
     /// </summary>
-    public enum AnchorStyle
-    {
-        /// <summary>
-        /// Not anchored.
-        /// </summary>
-        None = 0,
-
-        /// <summary>
-        /// Anchored to the left.
-        /// </summary>
-        Left = 1,
-
-        /// <summary>
-        /// Anchored to the top.
-        /// </summary>
-        Top = 2,
-
-        /// <summary>
-        /// Anchored to the right.
-        /// </summary>
-        Right = 3,
-
-        /// <summary>
-        /// Anchored to the bottom.
-        /// </summary>
-        Bottom = 4,
-    }
+    None = 0,
 
     /// <summary>
-    /// Specifies the type of status to display.
+    /// Anchored to the left.
     /// </summary>
-    public enum StatusType
-    {
-        /// <summary>
-        /// Displays no messsage.
-        /// </summary>
-        None,
+    Left = 1,
 
-        /// <summary>
-        /// Displays loading messsage.
-        /// </summary>
-        Loading,
+    /// <summary>
+    /// Anchored to the top.
+    /// </summary>
+    Top = 2,
 
-        /// <summary>
-        /// Displays an informational messsage.
-        /// </summary>
-        Information,
+    /// <summary>
+    /// Anchored to the right.
+    /// </summary>
+    Right = 3,
 
-        /// <summary>
-        /// Displays a successful message.
-        /// </summary>
-        Success,
+    /// <summary>
+    /// Anchored to the bottom.
+    /// </summary>
+    Bottom = 4,
+}
 
-        /// <summary>
-        /// Displays a warning message.
-        /// </summary>
-        Warning,
+/// <summary>
+/// Specifies the type of status to display.
+/// </summary>
+public enum StatusType
+{
+    /// <summary>
+    /// Displays no messsage.
+    /// </summary>
+    None,
 
-        /// <summary>
-        /// Displays an error message.
-        /// </summary>
-        Error,
-    }
+    /// <summary>
+    /// Displays loading messsage.
+    /// </summary>
+    Loading,
+
+    /// <summary>
+    /// Displays an informational messsage.
+    /// </summary>
+    Information,
+
+    /// <summary>
+    /// Displays a successful message.
+    /// </summary>
+    Success,
+
+    /// <summary>
+    /// Displays a warning message.
+    /// </summary>
+    Warning,
+
+    /// <summary>
+    /// Displays an error message.
+    /// </summary>
+    Error,
 }

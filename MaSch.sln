@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28922.388
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaSch.Core", "src\Core\MaSch.Core.csproj", "{9CCAC5C5-7DF2-48A8-B6BA-9B726CA53E17}"
 EndProject
@@ -47,6 +47,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{703BC87F-2F71-454A-93BA-014D78DF88C2}"
 	ProjectSection(SolutionItems) = preProject
 		build\build.yml = build\build.yml
+		build\GlobalUsings.props = build\GlobalUsings.props
 		build\MaSch.Constants.props = build\MaSch.Constants.props
 		build\MaSch.props = build\MaSch.props
 		build\MaSch.ruleset = build\MaSch.ruleset

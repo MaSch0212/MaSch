@@ -41,6 +41,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Using Include="MaSch.Core.Extensions"/>
+    <Using Include="Newtonsoft.Json"/>
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Themes\Base\Theme.json" />
     <Resource Include="Themes\Dark\DefaultWindowIcon.ico" />
     <Resource Include="Themes\Dark\Theme.json" />

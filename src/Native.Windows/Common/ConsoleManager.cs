@@ -1,78 +1,72 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
+﻿namespace MaSch.Native.Windows.Common;
 
-namespace MaSch.Native.Windows.Common
+public static class ConsoleManager
 {
-    public static class ConsoleManager
+    public static bool HasConsole
     {
-        public static bool HasConsole
+        get { return Kernel32.GetConsoleWindow() != IntPtr.Zero; }
+    }
+
+    /// <summary>
+    /// Creates a new console instance if the process is not attached to a console already.
+    /// </summary>
+    public static void Show()
+    {
+        if (!HasConsole)
         {
-            get { return Kernel32.GetConsoleWindow() != IntPtr.Zero; }
+            _ = Kernel32.AllocConsole();
+            InvalidateOutAndError();
         }
+    }
 
-        /// <summary>
-        /// Creates a new console instance if the process is not attached to a console already.
-        /// </summary>
-        public static void Show()
+    /// <summary>
+    /// If the process has a console attached to it, it will be detached and no longer visible. Writing to the System.Console is still possible, but no output will be shown.
+    /// </summary>
+    public static void Hide()
+    {
+        if (HasConsole)
         {
-            if (!HasConsole)
-            {
-                _ = Kernel32.AllocConsole();
-                InvalidateOutAndError();
-            }
+            SetOutAndErrorNull();
+            _ = Kernel32.FreeConsole();
         }
+    }
 
-        /// <summary>
-        /// If the process has a console attached to it, it will be detached and no longer visible. Writing to the System.Console is still possible, but no output will be shown.
-        /// </summary>
-        public static void Hide()
+    public static void Toggle()
+    {
+        if (HasConsole)
         {
-            if (HasConsole)
-            {
-                SetOutAndErrorNull();
-                _ = Kernel32.FreeConsole();
-            }
+            Hide();
         }
-
-        public static void Toggle()
+        else
         {
-            if (HasConsole)
-            {
-                Hide();
-            }
-            else
-            {
-                Show();
-            }
+            Show();
         }
+    }
 
-        internal static void InvalidateOutAndError()
-        {
-            Type type = typeof(Console);
+    internal static void InvalidateOutAndError()
+    {
+        Type type = typeof(Console);
 
-            var @out = type.GetField("_out", BindingFlags.Static | BindingFlags.NonPublic);
+        var @out = type.GetField("_out", BindingFlags.Static | BindingFlags.NonPublic);
 
-            var error = type.GetField("_error", BindingFlags.Static | BindingFlags.NonPublic);
+        var error = type.GetField("_error", BindingFlags.Static | BindingFlags.NonPublic);
 
-            var initializeStdOutError = type.GetMethod("InitializeStdOutError", BindingFlags.Static | BindingFlags.NonPublic);
+        var initializeStdOutError = type.GetMethod("InitializeStdOutError", BindingFlags.Static | BindingFlags.NonPublic);
 
-            Debug.Assert(@out != null);
-            Debug.Assert(error != null);
+        Debug.Assert(@out != null);
+        Debug.Assert(error != null);
 
-            Debug.Assert(initializeStdOutError != null);
+        Debug.Assert(initializeStdOutError != null);
 
-            @out.SetValue(null, null);
-            error.SetValue(null, null);
+        @out.SetValue(null, null);
+        error.SetValue(null, null);
 
-            _ = initializeStdOutError.Invoke(null, new object[] { true });
-        }
+        _ = initializeStdOutError.Invoke(null, new object[] { true });
+    }
 
-        internal static void SetOutAndErrorNull()
-        {
-            Console.SetOut(TextWriter.Null);
-            Console.SetError(TextWriter.Null);
-        }
+    internal static void SetOutAndErrorNull()
+    {
+        Console.SetOut(TextWriter.Null);
+        Console.SetError(TextWriter.Null);
     }
 }

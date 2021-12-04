@@ -31,5 +31,9 @@
     <Reference Include="ReachFramework" />
     <Reference Include="System.Printing" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="MaSch.Core.Extensions"/>
+  </ItemGroup>
   
 </Project>

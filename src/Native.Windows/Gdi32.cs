@@ -1,11 +1,9 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
-namespace MaSch.Native.Windows
+namespace MaSch.Native.Windows;
+
+public static class Gdi32
 {
-    public static class Gdi32
-    {
-        [DllImport("gdi32.dll", SetLastError = true)]
-        public static extern bool DeleteObject(IntPtr hObject);
-    }
+    [DllImport("gdi32.dll", SetLastError = true)]
+    public static extern bool DeleteObject(IntPtr hObject);
 }

@@ -1,82 +1,79 @@
 ﻿using MaSch.Core.Attributes;
 using MaSch.Core.Observable.Modules;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
 
-namespace MaSch.Core.Observable
+namespace MaSch.Core.Observable;
+
+/// <summary>
+/// Represents an observable class.
+/// </summary>
+/// <seealso cref="IObservableObject" />
+public abstract class ObservableObject : IObservableObject
 {
+    private readonly Dictionary<string, NotifyPropertyChangedAttribute> _attributes;
+    private readonly ObservableObjectModule _module;
+
     /// <summary>
-    /// Represents an observable class.
+    /// Initializes a new instance of the <see cref="ObservableObject"/> class.
     /// </summary>
-    /// <seealso cref="IObservableObject" />
-    public abstract class ObservableObject : IObservableObject
+    protected ObservableObject()
     {
-        private readonly Dictionary<string, NotifyPropertyChangedAttribute> _attributes;
-        private readonly ObservableObjectModule _module;
+        _module = new ObservableObjectModule(this);
+        _attributes = NotifyPropertyChangedAttribute.InitializeAll(this);
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableObject"/> class.
-        /// </summary>
-        protected ObservableObject()
+    /// <inheritdoc/>
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// <inheritdoc/>
+    [XmlIgnore]
+    public virtual bool IsNotifyEnabled { get; set; } = true;
+
+    /// <inheritdoc/>
+    public virtual void SetProperty<T>(ref T property, T value, [CallerMemberName] string propertyName = "")
+    {
+        if (IsNotifyEnabled && _attributes.ContainsKey(propertyName))
         {
-            _module = new ObservableObjectModule(this);
-            _attributes = NotifyPropertyChangedAttribute.InitializeAll(this);
+            _attributes[propertyName].UnsubscribeEvent(this);
         }
 
-        /// <inheritdoc/>
-        public event PropertyChangedEventHandler? PropertyChanged;
+        property = value;
 
-        /// <inheritdoc/>
-        [XmlIgnore]
-        public virtual bool IsNotifyEnabled { get; set; } = true;
-
-        /// <inheritdoc/>
-        public virtual void SetProperty<T>(ref T property, T value, [CallerMemberName] string propertyName = "")
+        if (IsNotifyEnabled)
         {
-            if (IsNotifyEnabled && _attributes.ContainsKey(propertyName))
-            {
-                _attributes[propertyName].UnsubscribeEvent(this);
-            }
-
-            property = value;
-
-            if (IsNotifyEnabled)
-            {
-                NotifyPropertyChanged(propertyName);
-                if (_attributes.ContainsKey(propertyName))
-                    _attributes[propertyName].SubscribeEvent(this);
-            }
+            NotifyPropertyChanged(propertyName);
+            if (_attributes.ContainsKey(propertyName))
+                _attributes[propertyName].SubscribeEvent(this);
         }
+    }
 
-        /// <inheritdoc/>
-        public virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = "", bool notifyDependencies = true)
-        {
-            if (!IsNotifyEnabled)
-                return;
+    /// <inheritdoc/>
+    public virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = "", bool notifyDependencies = true)
+    {
+        if (!IsNotifyEnabled)
+            return;
 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            if (notifyDependencies)
-                _module.NotifyDependentProperties(propertyName);
-        }
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        if (notifyDependencies)
+            _module.NotifyDependentProperties(propertyName);
+    }
 
-        /// <inheritdoc/>
-        public virtual void NotifyCommandChanged([CallerMemberName] string propertyName = "")
-        {
-            if (!IsNotifyEnabled)
-                return;
+    /// <inheritdoc/>
+    public virtual void NotifyCommandChanged([CallerMemberName] string propertyName = "")
+    {
+        if (!IsNotifyEnabled)
+            return;
 
-            _module.NotifyCommandChanged(propertyName);
-        }
+        _module.NotifyCommandChanged(propertyName);
+    }
 
-        /// <summary>
-        /// Gets a value indicating wether the <see cref="IsNotifyEnabled"/> property should be serialized.
-        /// </summary>
-        /// <returns><c>true</c> if the <see cref="IsNotifyEnabled"/> property should be serialized; otherwise, <c>false</c>.</returns>
-        public virtual bool ShouldSerializeIsNotifyEnabled()
-        {
-            return false;
-        }
+    /// <summary>
+    /// Gets a value indicating wether the <see cref="IsNotifyEnabled"/> property should be serialized.
+    /// </summary>
+    /// <returns><c>true</c> if the <see cref="IsNotifyEnabled"/> property should be serialized; otherwise, <c>false</c>.</returns>
+    public virtual bool ShouldSerializeIsNotifyEnabled()
+    {
+        return false;
     }
 }

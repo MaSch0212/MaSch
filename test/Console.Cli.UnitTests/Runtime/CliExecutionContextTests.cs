@@ -1,33 +1,29 @@
 ﻿using MaSch.Console.Cli.Runtime;
-using MaSch.Test;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
-namespace MaSch.Console.Cli.UnitTests.Runtime
+namespace MaSch.Console.Cli.UnitTests.Runtime;
+
+[TestClass]
+public class CliExecutionContextTests : TestClassBase
 {
-    [TestClass]
-    public class CliExecutionContextTests : TestClassBase
+    [TestMethod]
+    public void Ctor_NullChecks()
     {
-        [TestMethod]
-        public void Ctor_NullChecks()
-        {
-            var serviceProviderMock = Mocks.Create<IServiceProvider>();
-            var commandMock = Mocks.Create<ICliCommandInfo>();
+        var serviceProviderMock = Mocks.Create<IServiceProvider>();
+        var commandMock = Mocks.Create<ICliCommandInfo>();
 
-            _ = Assert.ThrowsException<ArgumentNullException>(() => new CliExecutionContext(null!, commandMock.Object));
-            _ = Assert.ThrowsException<ArgumentNullException>(() => new CliExecutionContext(serviceProviderMock.Object, null!));
-        }
+        _ = Assert.ThrowsException<ArgumentNullException>(() => new CliExecutionContext(null!, commandMock.Object));
+        _ = Assert.ThrowsException<ArgumentNullException>(() => new CliExecutionContext(serviceProviderMock.Object, null!));
+    }
 
-        [TestMethod]
-        public void Ctor()
-        {
-            var serviceProviderMock = Mocks.Create<IServiceProvider>();
-            var commandMock = Mocks.Create<ICliCommandInfo>();
+    [TestMethod]
+    public void Ctor()
+    {
+        var serviceProviderMock = Mocks.Create<IServiceProvider>();
+        var commandMock = Mocks.Create<ICliCommandInfo>();
 
-            var ctx = new CliExecutionContext(serviceProviderMock.Object, commandMock.Object);
+        var ctx = new CliExecutionContext(serviceProviderMock.Object, commandMock.Object);
 
-            Assert.AreSame(serviceProviderMock.Object, ctx.ServiceProvider);
-            Assert.AreSame(commandMock.Object, ctx.Command);
-        }
+        Assert.AreSame(serviceProviderMock.Object, ctx.ServiceProvider);
+        Assert.AreSame(commandMock.Object, ctx.Command);
     }
 }

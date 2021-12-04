@@ -35,6 +35,10 @@
     <ProjectReference Include="$(GitSourceDir)Presentation.Wpf/MaSch.Presentation.Wpf.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Using Include="MaSch.Core.Extensions"/>
+  </ItemGroup>
+
   <Target Name="InstallMdiFont" BeforeTargets="DispatchToInnerBuilds">
     <MakeDir Directories="$(NpmTempDir)" />
     <Exec Command="npm install @mdi/font@5.9.55" WorkingDirectory="$(NpmTempDir)" />

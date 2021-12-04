@@ -1,14 +1,13 @@
-﻿namespace MaSch.Presentation.Translation
+﻿namespace MaSch.Presentation.Translation;
+
+/// <summary>
+/// Represents a <see cref="ITranslationProvider"/> that is named.
+/// </summary>
+/// <seealso cref="ITranslationProvider" />
+public interface INamedTranslationProvider : ITranslationProvider
 {
     /// <summary>
-    /// Represents a <see cref="ITranslationProvider"/> that is named.
+    /// Gets the key for this provider.
     /// </summary>
-    /// <seealso cref="ITranslationProvider" />
-    public interface INamedTranslationProvider : ITranslationProvider
-    {
-        /// <summary>
-        /// Gets the key for this provider.
-        /// </summary>
-        string ProviderKey { get; }
-    }
+    string ProviderKey { get; }
 }
