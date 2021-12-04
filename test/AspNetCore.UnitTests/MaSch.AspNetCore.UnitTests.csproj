@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../build/MaSch.Constants.props" />
+
+  <PropertyGroup>
+    <!-- General Project info -->
+    <TargetFrameworks>$(TfmNetCore)</TargetFrameworks>
+    <IsTestProject>true</IsTestProject>
+
+    <!-- Output info -->
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+
+  <Import Project="$(GitBuildDir)MaSch.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="$(GitSourceDir)AspNetCore/MaSch.AspNetCore.csproj" />
+  </ItemGroup>
+
+</Project>
