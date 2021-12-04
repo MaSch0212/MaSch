@@ -70,14 +70,14 @@ public abstract class TestClassBase : IDisposable
 #if MSTEST
     [TestCleanup]
 #else
-        [SuppressMessage("Major Code Smell", "S2589:Boolean expressions should not be gratuitous", Justification = "Needed for MSTest support.")]
+    [SuppressMessage("Major Code Smell", "S2589:Boolean expressions should not be gratuitous", Justification = "Needed for MSTest support.")]
 #endif
     public void CleanupTest()
     {
 #if MSTEST
         bool shouldVerify = TestContext.CurrentTestOutcome == UnitTestOutcome.Passed || TestContext.CurrentTestOutcome == UnitTestOutcome.Inconclusive;
 #else
-            bool shouldVerify = true;
+        bool shouldVerify = true;
 #endif
 
         if (shouldVerify)
