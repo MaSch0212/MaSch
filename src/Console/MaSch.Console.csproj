@@ -14,7 +14,7 @@
 
     <!-- Package Info -->
     <Description>Contains supporting code for console applications.</Description>
-    <Version>0.3.0</Version>
+    <Version>0.3.1</Version>
     <PackageTags>masch console terminal commandline controls</PackageTags>
   </PropertyGroup>
 

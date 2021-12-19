@@ -77,7 +77,7 @@ public partial class TextBlockControl
     /// <summary>
     /// Gets the actual width that this control uses.
     /// </summary>
-    public int ActualWidth => Math.Min(Width ?? 10000, _console.BufferSize.Width - X - 1);
+    public int ActualWidth => Math.Min(Width ?? int.MaxValue, _console.BufferSize.Width - X - 1);
 
     /// <summary>
     /// Gets or sets a list of characters that should prevent to beeing wrapped.

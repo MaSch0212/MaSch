@@ -1,0 +1,1 @@
+﻿- Added fallback for "BufferSize", "WindowSize" and "WindowPosition" to "ConsoleService" whenever the output is redirected to not throw an exception.

@@ -11,6 +11,17 @@ namespace MaSch.Console;
 /// <seealso cref="IConsoleService" />
 public class ConsoleService : IConsoleService
 {
+    private int _fallbackBufferWidth = 1000;
+    private int _fallbackBufferHeight = 1000;
+    private int _fallbackWindowWidth = 1000;
+    private int _fallbackWindowHeight = 1000;
+    private int _fallbackWindowLeft = 0;
+    private int _fallbackWindowTop = 0;
+
+    private ConsoleSize? _bufferSize;
+    private ConsoleSize? _windowSize;
+    private ConsolePoint? _windowPosition;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ConsoleService"/> class.
     /// </summary>
@@ -48,18 +59,90 @@ public class ConsoleService : IConsoleService
 
     /// <inheritdoc />
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "This is already verified by the ConsoleSize class.")]
-    public ConsoleSize BufferSize { get; } = new ConsoleSize(() => C.BufferWidth, x => C.BufferWidth = x, () => C.BufferHeight, x => C.BufferHeight = x, false);
+    public ConsoleSize BufferSize
+    {
+        get
+        {
+            return _bufferSize ??=
+                new ConsoleSize(
+                    widthFactory: () => IsOutputRedirected ? _fallbackBufferWidth : C.BufferWidth,
+                    widthCallback: x =>
+                    {
+                        if (IsOutputRedirected)
+                            _fallbackBufferWidth = x;
+                        else
+                            C.BufferWidth = x;
+                    },
+                    heightFactory: () => IsOutputRedirected ? _fallbackBufferHeight : C.BufferHeight,
+                    heightCallback: x =>
+                    {
+                        if (IsOutputRedirected)
+                            _fallbackBufferHeight = x;
+                        else
+                            C.BufferHeight = x;
+                    },
+                    useCaching: false);
+       }
+    }
 
     /// <inheritdoc />
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "This is already verified by the ConsoleSize class.")]
-    public ConsoleSize WindowSize { get; } = new ConsoleSize(() => C.WindowWidth, x => C.WindowWidth = x, () => C.WindowHeight, x => C.WindowHeight = x, false);
+    public ConsoleSize WindowSize
+    {
+        get
+        {
+            return _windowSize ??=
+                new ConsoleSize(
+                    widthFactory: () => IsOutputRedirected ? _fallbackWindowWidth : C.WindowWidth,
+                    widthCallback: x =>
+                    {
+                        if (IsOutputRedirected)
+                            _fallbackWindowWidth = x;
+                        else
+                            C.WindowWidth = x;
+                    },
+                    heightFactory: () => IsOutputRedirected ? _fallbackWindowHeight : C.WindowHeight,
+                    heightCallback: x =>
+                    {
+                        if (IsOutputRedirected)
+                            _fallbackWindowHeight = x;
+                        else
+                            C.WindowHeight = x;
+                    },
+                    useCaching: false);
+        }
+    }
 
     /// <inheritdoc />
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "This is already verified by the ConsolePoint class.")]
-    public ConsolePoint WindowPosition { get; } = new ConsolePoint(() => C.WindowLeft, x => C.WindowLeft = x, () => C.WindowTop, x => C.WindowTop = x, false);
+    public ConsolePoint WindowPosition
+    {
+        get
+        {
+            return _windowPosition ??=
+                new ConsolePoint(
+                    xFactory: () => IsOutputRedirected ? _fallbackWindowLeft : C.WindowLeft,
+                    xCallback: x =>
+                    {
+                        if (IsOutputRedirected)
+                            _fallbackWindowLeft = x;
+                        else
+                            C.WindowLeft = x;
+                    },
+                    yFactory: () => IsOutputRedirected ? _fallbackWindowTop : C.WindowTop,
+                    yCallback: x =>
+                    {
+                        if (IsOutputRedirected)
+                            _fallbackWindowTop = x;
+                        else
+                            C.WindowTop = x;
+                    },
+                    useCaching: false);
+        }
+    }
 
     /// <inheritdoc />
-    public LazySize LargestWindowSize { get; } = new LazySize(() => C.LargestWindowWidth, () => C.LargestWindowHeight, false);
+    public LazySize LargestWindowSize { get; } = new LazySize(() => C.IsOutputRedirected ? int.MaxValue : C.LargestWindowWidth, () => C.IsOutputRedirected ? int.MaxValue : C.LargestWindowHeight, false);
 
     /// <inheritdoc />
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "False positive for some reason...")]
