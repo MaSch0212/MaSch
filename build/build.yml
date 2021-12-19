@@ -12,11 +12,6 @@ steps:
 - checkout: self
   clean: true
   persistCredentials: true
-- task: UseDotNet@2
-  displayName: "\U0001F4BF Install .NET SDK"
-  inputs:
-    packageType: 'sdk'
-    version: '6.x'
 
 - script: dotnet nuget locals all --clear
   displayName: "\U0001F4A3 Cleanup NuGet"
