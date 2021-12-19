@@ -214,13 +214,15 @@ public abstract class CliApplicationBuilderBase<TApplication, TBuilder>
 
         // Add common services
         Services.TryAddSingleton<IConsoleService, ConsoleService>();
-        Services.TryAddSingleton<ICliArgumentParser, CliArgumentParser>();
         Services.TryAddSingleton<ICliHelpPage, CliHelpPage>();
         if (_commandFactory != null)
             Services.TryAddSingleton(_commandFactory);
         else
             Services.TryAddSingleton<ICliCommandFactory, CliCommandFactory>();
         _ = Services.AddSingleton<ICliApplicationBase>(x => result.Value);
+
+        Services.TryAddScoped<ICliOptionsProvider, CliOptionsProvider>();
+        Services.TryAddScoped<ICliArgumentParser, CliArgumentParser>();
 
         // Add common validators
         _ = Services.AddSingleton<ICliValidator<object>, RequiredValidator>();

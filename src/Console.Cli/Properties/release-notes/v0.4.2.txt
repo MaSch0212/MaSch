@@ -1,0 +1,2 @@
+﻿- Added a scoped service "ICliOptionsProvider" with which the current options in an application can be retrieved from.
+- Made "ICliArgumentParser" a scoped service to correctly set the scoped service provider in the "CliExecutionContext."

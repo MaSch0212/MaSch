@@ -197,12 +197,16 @@ public class CliApplicationTests : TestClassBase
     [TestMethod]
     public void Run_Success()
     {
+        var optionsProviderMock = new Mock<ICliOptionsProvider>(MockBehavior.Strict);
+        var optionsProviderSettableMock = optionsProviderMock.As<ICliOptionsProvider.ISettable>();
         var appMock = CreateAppMock(out var serviceProviderMock, out _, out _, out var scopeMock, out var sspMock);
+        _ = sspMock.Setup(x => x.GetService(typeof(ICliOptionsProvider))).Returns(optionsProviderMock.Object);
         _ = scopeMock.Setup(x => x.Dispose()).Verifiable(Verifiables, Times.Once());
         var args = new[] { "blub" };
         var commandMock = Mocks.Create<ICliCommandInfo>();
         var execCtx = new CliExecutionContext(serviceProviderMock.Object, commandMock.Object);
         var options = new object();
+        _ = optionsProviderSettableMock.Setup(x => x.SetOptions(options)).Verifiable(Verifiables, Times.Once());
         _ = appMock.Protected()
             .Setup<bool>("TryParseArguments", sspMock.Object, args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
             .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((IServiceProvider serviceProvider, string[] a, out CliExecutionContext? c, out object? o, out int e) =>
@@ -272,12 +276,16 @@ public class CliAsyncApplicationTests : TestClassBase
     [TestMethod]
     public async Task RunAsync_Success()
     {
+        var optionsProviderMock = new Mock<ICliOptionsProvider>(MockBehavior.Strict);
+        var optionsProviderSettableMock = optionsProviderMock.As<ICliOptionsProvider.ISettable>();
         var appMock = CreateAppMock(out var serviceProviderMock, out _, out _, out var scopeMock, out var sspMock);
+        _ = sspMock.Setup(x => x.GetService(typeof(ICliOptionsProvider))).Returns(optionsProviderMock.Object);
         _ = scopeMock.Setup(x => x.Dispose()).Verifiable(Verifiables, Times.Once());
         var args = new[] { "blub" };
         var commandMock = Mocks.Create<ICliCommandInfo>();
         var execCtx = new CliExecutionContext(serviceProviderMock.Object, commandMock.Object);
         var options = new object();
+        _ = optionsProviderSettableMock.Setup(x => x.SetOptions(options)).Verifiable(Verifiables, Times.Once());
         _ = appMock.Protected()
             .Setup<bool>("TryParseArguments", sspMock.Object, args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
             .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((IServiceProvider serviceProvider, string[] a, out CliExecutionContext? c, out object? o, out int e) =>

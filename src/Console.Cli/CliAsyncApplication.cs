@@ -30,7 +30,11 @@ public class CliAsyncApplication : CliApplicationBase, ICliAsyncApplication
     {
         using var scope = ServiceProvider.CreateScope();
         if (TryParseArguments(scope.ServiceProvider, args, out var context, out var options, out int errorCode))
+        {
+            SetOptionsToProvider(scope.ServiceProvider, options);
             return await context.Command.ExecuteAsync(context, options);
+        }
+
         return errorCode;
     }
 }

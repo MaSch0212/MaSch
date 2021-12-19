@@ -50,6 +50,20 @@ public abstract class CliApplicationBase : ICliApplicationBase
     protected abstract Type GenericExecutorType { get; }
 
     /// <summary>
+    /// Sets the given options object to the <see cref="ICliOptionsProvider"/> provided in the given service provider.
+    /// </summary>
+    /// <param name="serviceProvider">The service provider from which to retrieve the <see cref="ICliOptionsProvider"/> instance.</param>
+    /// <param name="options">The options object to set.</param>
+    /// <exception cref="InvalidOperationException">The <see cref="ICliOptionsProvider"/> implementation needs to implement the <see cref="ICliOptionsProvider.ISettable"/> interface.</exception>
+    protected static void SetOptionsToProvider(IServiceProvider serviceProvider, object? options)
+    {
+        var provider = serviceProvider.GetRequiredService<ICliOptionsProvider>();
+        if (provider is not ICliOptionsProvider.ISettable settable)
+            throw new InvalidOperationException($"The type \"{provider.GetType().FullName}\" needs to implement the \"{typeof(ICliOptionsProvider.ISettable).FullName}\" interface.");
+        settable.SetOptions(options);
+    }
+
+    /// <summary>
     /// Tries to parse specified command line arguments.
     /// </summary>
     /// <param name="serviceProvider">The service provider to use.</param>

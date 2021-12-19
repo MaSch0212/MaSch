@@ -196,6 +196,7 @@ public class CliApplicationBuilderBaseTests : TestClassBase
         _ = ServiceCollectionMock.Setup(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(ICliCommandFactory)))).Verifiable(Verifiables, Times.Once());
         _ = ServiceCollectionMock.Setup(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(ICliApplicationBase)))).Verifiable(Verifiables, Times.Once());
         _ = ServiceCollectionMock.Setup(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(ICliValidator<object>)))).Verifiable(Verifiables, Times.Once());
+        _ = ServiceCollectionMock.Setup(x => x.Add(It.Is<ServiceDescriptor>(y => y.ServiceType == typeof(ICliOptionsProvider)))).Verifiable(Verifiables, Times.Once());
         _ = BuilderMock.Protected().Setup<ICliApplicationBase>("OnBuild").Returns(app.Object);
 
         var a = Builder.Build();

@@ -30,7 +30,11 @@ public class CliApplication : CliApplicationBase, ICliApplication
     {
         using var scope = ServiceProvider.CreateScope();
         if (TryParseArguments(scope.ServiceProvider, args, out var context, out var options, out int errorCode))
+        {
+            SetOptionsToProvider(scope.ServiceProvider, options);
             return context.Command.Execute(context, options);
+        }
+
         return errorCode;
     }
 }
