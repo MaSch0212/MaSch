@@ -16,7 +16,7 @@
 
     <!-- Package Info -->
     <Description>Contains Assertion logic for tests written with MSTest.</Description>
-    <Version>0.5.3</Version>
+    <Version>0.5.5</Version>
     <PackageTags>masch test mstest</PackageTags>
   </PropertyGroup>
 
