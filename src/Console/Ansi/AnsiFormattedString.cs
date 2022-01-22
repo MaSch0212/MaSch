@@ -6,8 +6,10 @@ namespace MaSch.Console.Ansi;
 /// <summary>
 /// Represents a mutable string of characters with ANSI styling. This class cannot be inherited.
 /// </summary>
-public sealed class AnsiFormattedString
+public sealed class AnsiFormattedString : ICloneable
 {
+    private static readonly Regex TrimRegex = new(@"[^\s].*[^\s]", RegexOptions.Compiled | RegexOptions.Singleline);
+
     private readonly StringBuilder _builder;
     private readonly LinkedList<StyleRange> _styles = new();
     private int _nextStyleId;
@@ -793,6 +795,121 @@ public sealed class AnsiFormattedString
     }
 
     /// <summary>
+    /// Retrieves a formatted substring from this instance. The substring starts at a specified character position and continues to the end of the string.
+    /// </summary>
+    /// <param name="startIndex">The zero-based starting character position of a substring in this instance.</param>
+    /// <returns>A formatted string that is equivalent to the substring that begins at <paramref name="startIndex"/> in this instance, or an empty string if <paramref name="startIndex"/> is equal to the length of this instance.</returns>
+    public AnsiFormattedString Substring(int startIndex)
+    {
+        return Substring(startIndex, Length - startIndex);
+    }
+
+    /// <summary>
+    /// Retrieves a formatted substring from this instance. The substring starts at a specified character position and has a specified length.
+    /// </summary>
+    /// <param name="startIndex">The zero-based starting character position of a substring in this instance.</param>
+    /// <param name="length">The number of characters in the substring.</param>
+    /// <returns>A formatted string that is equivalent to the substring of length <paramref name="length"/> that begins at <paramref name="startIndex"/> in this instance, or an empty string if <paramref name="startIndex"/> is equal to the length of this instance and <paramref name="length"/> is zero.</returns>
+    public AnsiFormattedString Substring(int startIndex, int length)
+    {
+        Guard.NotOutOfRange(startIndex, nameof(startIndex), 0, Length);
+        Guard.NotOutOfRange(length, nameof(length), 0, Length - startIndex);
+
+        var result = new AnsiFormattedString(_builder.ToString(startIndex, length));
+        foreach (var styleRange in _styles)
+        {
+            if (styleRange.Start >= startIndex + length || styleRange.Start + styleRange.Length < startIndex)
+                continue;
+
+            var rangeStart = Math.Max(styleRange.Start - startIndex, 0);
+            var rangeLength = styleRange.Length - Math.Min(styleRange.Start - startIndex, 0);
+            if (rangeLength > length)
+                rangeLength = int.MaxValue - rangeStart;
+
+            result._styles.Add(
+                new StyleRange(
+                    result._nextStyleId++,
+                    rangeStart,
+                    rangeLength,
+                    styleRange.Style.Clone()));
+        }
+
+        return result;
+    }
+
+    public AnsiFormattedString[] Split(string seperator, StringSplitOptions stringSplitOptions)
+    {
+        Guard.NotNullOrEmpty(seperator, nameof(seperator));
+
+        var result = new List<AnsiFormattedString?>();
+        int lastIndex = -1;
+        while (true)
+        {
+            var index = _builder.IndexOf(seperator, lastIndex + 1, false);
+            if (lastIndex >= 0 && (index > 0 || (index == 0 && !stringSplitOptions.HasFlag(StringSplitOptions.RemoveEmptyEntries))))
+            {
+                result.Add(Substring(lastIndex, index - lastIndex, stringSplitOptions));
+            }
+
+            if (index < 0)
+            {
+                if (lastIndex < 0)
+                    result.Add(Clone());
+                else
+                    result.Add(Substring(lastIndex, Length - lastIndex, stringSplitOptions));
+                break;
+            }
+
+            lastIndex = index;
+        }
+
+        return result.WhereNotNull().ToArray();
+
+        AnsiFormattedString? Substring(int index, int count, StringSplitOptions stringSplitOptions)
+        {
+            if (stringSplitOptions.HasFlag(StringSplitOptions.TrimEntries))
+            {
+                var match = TrimRegex.Match(_builder.ToString(index, count));
+                if (match.Length == 0 && stringSplitOptions.HasFlag(StringSplitOptions.RemoveEmptyEntries))
+                    return null;
+                return this.Substring(index + match.Index, match.Length);
+            }
+
+            if (count == 0 && stringSplitOptions.HasFlag(StringSplitOptions.RemoveEmptyEntries))
+                return null;
+            return this.Substring(index, count);
+        }
+    }
+
+    public AnsiFormattedString Trim()
+    {
+        return Trim(true, true);
+    }
+
+    public AnsiFormattedString TrimStart()
+    {
+        return Trim(true, false);
+    }
+
+    public AnsiFormattedString TrimEnd()
+    {
+        return Trim(false, true);
+    }
+
+    private AnsiFormattedString Trim(bool start, bool end)
+    {
+        var match = TrimRegex.Match(_builder.ToString());
+        if (!match.Success)
+            return Remove(0, Length);
+        var endIndex = match.Index + match.Length;
+        if (end && endIndex < Length - 1)
+            Remove(endIndex, Length - endIndex);
+        if (start)
+            Remove(0, match.Index);
+        return this;
+    }
+
+    /// <summary>
     /// Removes all characters and styles from the current <see cref="AnsiFormattedString"/> instance.
     /// </summary>
     public void Clear()
@@ -914,6 +1031,24 @@ public sealed class AnsiFormattedString
         return ToString(true);
     }
 
+    /// <summary>
+    /// Clones this instance.
+    /// </summary>
+    /// <returns>Cloned instance.</returns>
+    object ICloneable.Clone() => Clone();
+
+    /// <summary>
+    /// Clones this instance.
+    /// </summary>
+    /// <returns>Cloned instance.</returns>
+    public AnsiFormattedString Clone()
+    {
+        var clone = new AnsiFormattedString(_builder.ToString());
+        clone._nextStyleId = _nextStyleId;
+        clone._styles.Add(_styles);
+        return clone;
+    }
+
     private static AnsiTextStyle CombineStyles(AnsiTextStyle current, StyleRange style)
     {
         return (current ^ (style.Style.RemovedStyles & current)) | style.Style.AddedStyles;
@@ -991,7 +1126,7 @@ public sealed class AnsiFormattedString
         Guard.NotOutOfRange(length, nameof(length), 0, Length - startIndex);
     }
 
-    private sealed class StyleRange
+    private sealed class StyleRange : ICloneable
     {
         public StyleRange(int id, int start, int length, AnsiStyle style)
         {
@@ -1005,6 +1140,21 @@ public sealed class AnsiFormattedString
         public int Start { get; set; }
         public int Length { get; set; }
         public AnsiStyle Style { get; }
+
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns>Cloned instance.</returns>
+        object ICloneable.Clone() => Clone();
+
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns>Cloned instance.</returns>
+        public StyleRange Clone()
+        {
+            return new StyleRange(Id, Start, Length, Style.Clone());
+        }
     }
 
     private sealed class StyleScope : IDisposable

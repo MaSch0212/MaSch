@@ -1,4 +1,5 @@
-﻿using MaSch.Core;
+﻿using MaSch.Console.Ansi;
+using MaSch.Core;
 using MaSch.Core.Extensions;
 
 namespace MaSch.Console.Controls;
@@ -17,6 +18,7 @@ public partial class TextBlockControl
     public TextBlockControl(IConsoleService console)
     {
         _console = Guard.NotNull(console, nameof(console));
+        FormattedText = new AnsiFormattedString();
     }
 
     /// <summary>
@@ -62,7 +64,16 @@ public partial class TextBlockControl
     /// <summary>
     /// Gets or sets the text to display.
     /// </summary>
-    public string? Text { get; set; }
+    public string? Text
+    {
+        get => FormattedText?.ToString(false);
+        set => FormattedText = new AnsiFormattedString(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the formatted text to display.
+    /// </summary>
+    public AnsiFormattedString FormattedText { get; set; }
 
     /// <summary>
     /// Gets or sets the foreground color of the text.
@@ -128,22 +139,22 @@ public partial class TextBlockControl
         var ellipsis = TextEllipsis;
         var maxLength = ActualWidth;
 
-        if (string.IsNullOrEmpty(Text))
+        if (FormattedText is null || FormattedText.Length == 0)
         {
             return Enumerable.Repeat(new string(' ', maxLength), Height ?? 1).ToArray();
         }
 
         if ((!Height.HasValue || Height > 1) && wrap != Controls.TextWrap.NoWrap)
-            return FormatAndTrimLines(WrapText(Text, maxLength, wrap, NonWrappingChars), maxLength, Height ?? int.MaxValue, ellipsis, TextAlignment);
+            return FormatAndTrimLines(WrapText(FormattedText, maxLength, wrap, NonWrappingChars), maxLength, Height ?? int.MaxValue, ellipsis, TextAlignment);
         else
             return new[] { Text.Length > maxLength ? TrimText(Text, maxLength, ellipsis) : AlignText(Text, maxLength, TextAlignment, false) };
     }
 
-    private static string[] WrapText(string text, int maxLineLength, TextWrap wrap, IList<char> nonWrappingChars)
+    private static AnsiFormattedString[] WrapText(AnsiFormattedString text, int maxLineLength, TextWrap wrap, IList<char> nonWrappingChars)
     {
-        var lines = text.Replace("\r", string.Empty).Split(new[] { '\n' }, StringSplitOptions.None);
+        var lines = text.Replace("\r", string.Empty).Split("\n", StringSplitOptions.None);
         for (int i = 1; i < lines.Length; i++)
-            lines[i] = "\n" + lines[i];
+            lines[i].Insert(0, '\n');
         return wrap switch
         {
             Controls.TextWrap.CharacterWrap => lines.SelectMany(x => WrapCharacter(x, maxLineLength)).ToArray(),
@@ -151,7 +162,7 @@ public partial class TextBlockControl
             _ => new[] { text },
         };
 
-        static IEnumerable<string> WrapCharacter(string text, int maxLineLength)
+        static IEnumerable<AnsiFormattedString> WrapCharacter(AnsiFormattedString text, int maxLineLength)
         {
             for (int i = 0; i < text.Length; i += maxLineLength)
             {
@@ -165,7 +176,7 @@ public partial class TextBlockControl
 
                     if ((i + extra) >= text.Length)
                     {
-                        yield return text[i..];
+                        yield return text.Substring(i);
                         break;
                     }
                 }
@@ -174,9 +185,9 @@ public partial class TextBlockControl
             }
         }
 
-        static IEnumerable<string> WrapWord(string text, int maxLineLength, IEnumerable<char> nonWrappingChars)
+        static IEnumerable<AnsiFormattedString> WrapWord(AnsiFormattedString text, int maxLineLength, IEnumerable<char> nonWrappingChars)
         {
-            var matches = Regex.Matches(text, $@"[^\w{Regex.Escape(new string(nonWrappingChars.ToArray())).Replace("]", "\\]")}]");
+            var matches = Regex.Matches(text.ToString(false), $@"[^\w{Regex.Escape(new string(nonWrappingChars.ToArray())).Replace("]", "\\]")}]");
 
             var i = 0;
             foreach (var (cidx, nidx) in matches.OfType<Match>().Select(x => x.Index).Append(text.Length - 1).Distinct().WithNext())
@@ -192,14 +203,14 @@ public partial class TextBlockControl
 
                 if (nidx == 0 || (rnidx - i) >= maxLineLength)
                 {
-                    yield return text[i..(cidx + 1)];
+                    yield return text.Substring(i, cidx + 1 - i);
                     i = cidx + 1;
                 }
             }
         }
     }
 
-    private static string AlignText(string text, int maxLength, TextAlignment alignment, bool isLastLine)
+    private static AnsiFormattedString AlignText(AnsiFormattedString text, int maxLength, TextAlignment alignment, bool isLastLine)
     {
         if (text.Length == maxLength)
             return text;
@@ -256,7 +267,7 @@ public partial class TextBlockControl
         }
     }
 
-    private static string[] FormatAndTrimLines(string[] lines, int maxWidth, int maxHeight, TextEllipsis ellipsis, TextAlignment alignment)
+    private static AnsiFormattedString[] FormatAndTrimLines(AnsiFormattedString[] lines, int maxWidth, int maxHeight, TextEllipsis ellipsis, TextAlignment alignment)
     {
         var result = ellipsis switch
         {
@@ -269,26 +280,26 @@ public partial class TextBlockControl
 
         for (int i = 0; i < result.Length; i++)
         {
-            result[i] = AlignText(result[i][0] == '\n' ? result[i][1..].TrimEnd() : result[i].Trim(), maxWidth, alignment, i == result.Length - 1);
+            result[i] = AlignText(result[i][0] == '\n' ? result[i].Substring(1).TrimEnd() : result[i].Trim(), maxWidth, alignment, i == result.Length - 1);
         }
 
         return result;
 
-        string[] EndTrimming()
+        AnsiFormattedString[] EndTrimming()
         {
             var r = lines[..maxHeight];
             r[^1] = Trim(r[^1] + lines[maxHeight]);
             return r;
         }
 
-        string[] StartTrimming()
+        AnsiFormattedString[] StartTrimming()
         {
             var r = lines[^maxHeight..];
             r[0] = Trim(lines[^(maxHeight - 1)] + r[0]);
             return r;
         }
 
-        string[] CenterTrimming()
+        AnsiFormattedString[] CenterTrimming()
         {
             var n = maxHeight / 2;
             var r1 = lines[..n];
@@ -307,7 +318,7 @@ public partial class TextBlockControl
             }
         }
 
-        string Trim(string s, TextEllipsis? e = null) => TrimText(s[0] == '\n' ? s.TrimEnd() : s.Trim(), maxWidth, e ?? ellipsis);
+        AnsiFormattedString Trim(AnsiFormattedString s, TextEllipsis? e = null) => TrimText(s[0] == '\n' ? s.TrimEnd() : s.Trim(), maxWidth, e ?? ellipsis);
     }
 
     private static string TrimText(string text, int maxLength, TextEllipsis ellipsis)

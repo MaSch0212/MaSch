@@ -5,7 +5,7 @@ namespace MaSch.Console.Ansi;
 /// <summary>
 /// Represents a style that can be produced by ANSI control sequences.
 /// </summary>
-public class AnsiStyle
+public class AnsiStyle : ICloneable
 {
     private AnsiTextStyle _addedStyles;
     private AnsiTextStyle _removedStyles;
@@ -251,5 +251,29 @@ public class AnsiStyle
         if (BackgroundColor.HasValue)
             _ = result.Append(BackgroundColor.Value.BackgroundSequence);
         return result.ToString();
+    }
+
+    /// <summary>
+    /// Creates a new object that is a copy of the current instance.
+    /// </summary>
+    /// <returns>
+    /// A new object that is a copy of this instance.
+    /// </returns>
+    object ICloneable.Clone() => Clone();
+
+    /// <summary>
+    /// Creates a new object that is a copy of the current instance.
+    /// </summary>
+    /// <returns>
+    /// A new object that is a copy of this instance.
+    /// </returns>
+    public AnsiStyle Clone()
+    {
+        var copy = new AnsiStyle();
+        copy._addedStyles = _addedStyles;
+        copy._removedStyles = _removedStyles;
+        copy._background = _background;
+        copy._foreground = _foreground;
+        return copy;
     }
 }
