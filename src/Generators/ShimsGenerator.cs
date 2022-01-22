@@ -47,6 +47,8 @@ public class ShimsGenerator : ISourceGenerator
                 AddShim(Shims.NullableReferenceTypes, Resources.NullableReferenceTypes);
             if (shims.HasFlag(Shims.OSVersioning))
                 AddShim(Shims.OSVersioning, Resources.OSVersioning);
+            if (shims.HasFlag(Shims.CallerArgumentExpression))
+                AddShim(Shims.CallerArgumentExpression, Resources.CallerArgumentExpression);
         }
 
         void AddShim(Shims shim, string code)

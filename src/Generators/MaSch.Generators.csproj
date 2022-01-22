@@ -25,6 +25,7 @@
   <Import Project="$(GitBuildDir)MaSch.props" />
 
   <ItemGroup>
+    <Compile Remove="Resources\CallerArgumentExpression.cs" />
     <Compile Remove="Resources\OSVersioning.cs" />
     <Compile Remove="Resources\Records.cs" />
   </ItemGroup>
@@ -37,6 +38,7 @@
   <ItemGroup>
     <None Include="Resources/OSVersioning.cs" />
     <None Include="Resources/Records.cs" />
+    <None Include="Resources\CallerArgumentExpression.cs" />
   </ItemGroup>
   
   <ItemGroup>
