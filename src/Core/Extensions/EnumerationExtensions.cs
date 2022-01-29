@@ -14,7 +14,7 @@ public static class EnumerationExtensions
     /// <returns>Return the Description of the <see cref="Enum"/> value if the attribute <see cref="DescriptionAttribute"/> is set; otherwise <see langword="null"/>.</returns>
     public static string? GetDescription(this Enum enumValue)
     {
-        return Guard.NotNull(enumValue, nameof(enumValue))
+        return Guard.NotNull(enumValue)
                        .GetType()
                        .GetField(enumValue.ToString())?
                        .GetCustomAttribute<DescriptionAttribute>()?

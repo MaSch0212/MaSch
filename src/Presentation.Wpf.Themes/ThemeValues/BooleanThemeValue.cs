@@ -17,7 +17,7 @@ public class BooleanThemeValue : ThemeValueBase<bool>
     public override object RawValue
     {
         get => base.RawValue;
-        set => base.RawValue = Guard.OfType(value, nameof(value), typeof(ThemeValueReference), typeof(bool));
+        set => base.RawValue = Guard.OfType(value, new[] { typeof(ThemeValueReference), typeof(bool) });
     }
 
     public static implicit operator bool(BooleanThemeValue themeValue)

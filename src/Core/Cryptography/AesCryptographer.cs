@@ -62,8 +62,8 @@ public class AesCryptographer
     /// <returns>Returns the encrypted data.</returns>
     public byte[] Encrypt(string plainText, string passPhrase, byte[]? saltBytes = null)
     {
-        _ = Guard.NotNull(plainText, nameof(plainText));
-        _ = Guard.NotNull(passPhrase, nameof(passPhrase));
+        _ = Guard.NotNull(plainText);
+        _ = Guard.NotNull(passPhrase);
 
         using var plainTextStream = new MemoryStream(Encoding.UTF8.GetBytes(plainText));
         using var outStream = new MemoryStream();
@@ -81,9 +81,9 @@ public class AesCryptographer
     /// <param name="saltBytes">The salt bytes.</param>
     public void Encrypt(Stream output, Stream input, string passPhrase, byte[]? saltBytes = null)
     {
-        _ = Guard.NotNull(output, nameof(output));
-        _ = Guard.NotNull(input, nameof(input));
-        _ = Guard.NotNull(passPhrase, nameof(passPhrase));
+        _ = Guard.NotNull(output);
+        _ = Guard.NotNull(input);
+        _ = Guard.NotNull(passPhrase);
 
         EncryptImpl(output, input, passPhrase, saltBytes);
     }
@@ -97,8 +97,8 @@ public class AesCryptographer
     /// <returns>Returns the decrypted data as UTF8 string.</returns>
     public string Decrypt(byte[] bytes, string passPhrase, byte[]? saltBytes = null)
     {
-        _ = Guard.NotNull(bytes, nameof(bytes));
-        _ = Guard.NotNull(passPhrase, nameof(passPhrase));
+        _ = Guard.NotNull(bytes);
+        _ = Guard.NotNull(passPhrase);
 
         using var inStream = new MemoryStream(bytes);
         using var outStream = new MemoryStream();
@@ -116,16 +116,16 @@ public class AesCryptographer
     /// <param name="saltBytes">The salt bytes.</param>
     public void Decrypt(Stream output, Stream input, string passPhrase, byte[]? saltBytes = null)
     {
-        _ = Guard.NotNull(output, nameof(output));
-        _ = Guard.NotNull(input, nameof(input));
-        _ = Guard.NotNull(passPhrase, nameof(passPhrase));
+        _ = Guard.NotNull(output);
+        _ = Guard.NotNull(input);
+        _ = Guard.NotNull(passPhrase);
 
         DecryptImpl(output, input, passPhrase, saltBytes);
     }
 
     private static void VerifyInitVector(byte[] initVector)
     {
-        _ = Guard.NotNull(initVector, nameof(initVector));
+        _ = Guard.NotNull(initVector);
 
         if (initVector.Length != 16)
             throw new ArgumentException("The init-vector has to be 16 bytes long.");
@@ -135,7 +135,7 @@ public class AesCryptographer
     {
         using var password = new Rfc2898DeriveBytes(passPhrase, saltBytes ?? DefaultSaltBytes);
         var key = password.GetBytes(KeySize / 8);
-        using var aes = new AesManaged();
+        using var aes = Aes.Create();
         var encryptor = aes.CreateEncryptor(key, _initVector);
         using var encryptStream = new CryptoStream(output, encryptor, CryptoStreamMode.Write);
         int i;
@@ -149,7 +149,7 @@ public class AesCryptographer
     {
         using var password = new Rfc2898DeriveBytes(passPhrase, saltBytes ?? DefaultSaltBytes);
         var key = password.GetBytes(KeySize / 8);
-        using var aes = new AesManaged();
+        using var aes = Aes.Create();
         var decryptor = aes.CreateDecryptor(key, _initVector);
         using var decryptStream = new CryptoStream(input, decryptor, CryptoStreamMode.Read);
         int i;

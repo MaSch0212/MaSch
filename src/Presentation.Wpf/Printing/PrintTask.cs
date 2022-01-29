@@ -252,8 +252,8 @@ public sealed class PrintTask : ObservableObject, IDisposable
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task RunAsync(int runId)
     {
-        Guard.NotNull(PrintQueue, nameof(PrintQueue));
-        Guard.NotNull(PrintTicket, nameof(PrintTicket));
+        Guard.NotNull(PrintQueue);
+        Guard.NotNull(PrintTicket);
 
         var printQueueServerName = PrintQueue.HostingPrintServer.Name;
         var printQueueName = PrintQueue.Name;

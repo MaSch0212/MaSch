@@ -344,12 +344,12 @@ public class ExtendedSplitViewContent : SplitViewContent
         _messageIcon = GetTemplateChild("PART_MessageIcon") as IconPresenter;
         _messageText = GetTemplateChild("PART_MessageText") as TextBlock;
         var rootElement = GetTemplateChild("PART_Root") as FrameworkElement;
-        _ = Guard.NotNull(_messageIcon, nameof(_messageIcon));
-        _ = Guard.NotNull(_messageText, nameof(_messageText));
-        _ = Guard.NotNull(rootElement, nameof(rootElement));
+        _ = Guard.NotNull(_messageIcon);
+        _ = Guard.NotNull(_messageText);
+        _ = Guard.NotNull(rootElement);
 
         _showMessageStoryboard = rootElement.Resources["ShowMessageStoryboard"] as Storyboard;
-        _ = Guard.NotNull(_showMessageStoryboard, nameof(_showMessageStoryboard));
+        _ = Guard.NotNull(_showMessageStoryboard);
     }
 
     /// <summary>

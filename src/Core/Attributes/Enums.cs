@@ -75,7 +75,7 @@ public enum Shims
     OSVersioning = 8,
 
     /// <summary>
-    /// Generates shims for the <see href="https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.callerargumentexpressionattribute?view=net-6.0"/>CallerArgumentExpressionAttribute</see>
+    /// Generates shims for the <see href="https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.callerargumentexpressionattribute?view=net-6.0">CallerArgumentExpressionAttribute</see>
     /// introduced in C# 10 (available since .NET Core 3.0 and .NET 5.0).
     /// </summary>
     CallerArgumentExpression = 16,

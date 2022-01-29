@@ -16,7 +16,7 @@ public class ObjectExtensionDataStorage
     {
         get
         {
-            _ = Guard.NotNull(dataObject, nameof(dataObject));
+            _ = Guard.NotNull(dataObject);
             if (_dataStore.TryGetValue(dataObject, out var data))
                 return data;
             data = new();

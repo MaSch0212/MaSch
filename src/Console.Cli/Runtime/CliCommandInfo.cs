@@ -19,8 +19,8 @@ public class CliCommandInfo : ICliCommandInfo
 
     internal CliCommandInfo(Type commandType, Type? executorType, object? optionsInstance, object? executorFunc, object? executorInstance)
     {
-        CommandType = Guard.NotNull(commandType, nameof(commandType));
-        OptionsInstance = Guard.OfType(optionsInstance, nameof(optionsInstance), true, commandType);
+        CommandType = Guard.NotNull(commandType);
+        OptionsInstance = Guard.OfType(optionsInstance, commandType, allowNull: true);
 
         Attribute = (from t in commandType.FlattenHierarchy()
                      let attr = t.GetCustomAttribute<CliCommandAttribute>()
@@ -203,7 +203,7 @@ public class CliCommandInfo : ICliCommandInfo
 
     private void ValidateExecutionContext(CliExecutionContext context)
     {
-        _ = Guard.NotNull(context, nameof(context));
+        _ = Guard.NotNull(context);
         if (context.Command != this)
             throw new ArgumentException("The context contains the wrong command. Its instance needs to match this instance of the ICliCommandInfo.");
     }

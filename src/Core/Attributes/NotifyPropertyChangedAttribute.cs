@@ -21,7 +21,7 @@ public class NotifyPropertyChangedAttribute : Attribute
     /// <param name="methodName">The name of the method which is executed when the property have changed.</param>
     public NotifyPropertyChangedAttribute(string methodName)
     {
-        _ = Guard.NotNull(methodName, nameof(methodName));
+        _ = Guard.NotNull(methodName);
 
         _callbackMethodName = methodName;
     }
@@ -39,7 +39,7 @@ public class NotifyPropertyChangedAttribute : Attribute
     /// <returns>Returns a dictionary that contains the <see cref="NotifyParentPropertyAttribute"/> of all properties.</returns>
     public static Dictionary<string, NotifyPropertyChangedAttribute> InitializeAll(object classObject, bool reinitialize = false)
     {
-        _ = Guard.NotNull(classObject, nameof(classObject));
+        _ = Guard.NotNull(classObject);
 
         var result = GetAttributes(classObject.GetType());
         result.ForEach(x => x.Value.Initialize(x.Key, reinitialize));
@@ -52,7 +52,7 @@ public class NotifyPropertyChangedAttribute : Attribute
     /// <param name="classObject">The object on which to subscribe to.</param>
     public static void SubscribeAll(object classObject)
     {
-        _ = Guard.NotNull(classObject, nameof(classObject));
+        _ = Guard.NotNull(classObject);
 
         var result = GetAttributes(classObject.GetType());
         result.ForEach(x => x.Value.SubscribeEvent(classObject));
@@ -64,7 +64,7 @@ public class NotifyPropertyChangedAttribute : Attribute
     /// <param name="classObject">The object on which to unsubscribe from.</param>
     public static void UnsubscribeAll(object classObject)
     {
-        _ = Guard.NotNull(classObject, nameof(classObject));
+        _ = Guard.NotNull(classObject);
 
         var result = GetAttributes(classObject.GetType());
         result.ForEach(x => x.Value.UnsubscribeEvent(classObject));
@@ -83,7 +83,7 @@ public class NotifyPropertyChangedAttribute : Attribute
     [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "Member name is given into this attribute.")]
     public void Initialize(PropertyInfo property, bool reinitialize = false)
     {
-        _ = Guard.NotNull(property, nameof(property));
+        _ = Guard.NotNull(property);
 
         if (IsInitialized && !reinitialize)
             return;
@@ -112,7 +112,7 @@ public class NotifyPropertyChangedAttribute : Attribute
     /// <exception cref="ArgumentException">The declaring type of the property does not match the type of the given object.</exception>
     public void SubscribeEvent(object classObject)
     {
-        _ = Guard.NotNull(classObject, nameof(classObject));
+        _ = Guard.NotNull(classObject);
 
         if (!IsInitialized || _propertyInfo == null)
             throw new InvalidOperationException("You first need to initialize this attribute.");
@@ -137,7 +137,7 @@ public class NotifyPropertyChangedAttribute : Attribute
     /// <exception cref="ArgumentException">The declaring type of the property does not match the type of the given object.</exception>
     public void UnsubscribeEvent(object classObject)
     {
-        _ = Guard.NotNull(classObject, nameof(classObject));
+        _ = Guard.NotNull(classObject);
         if (!IsInitialized || _propertyInfo == null)
             throw new InvalidOperationException("You first need to initialize this attribute.");
         if (_propertyInfo.DeclaringType != classObject.GetType())

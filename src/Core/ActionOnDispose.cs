@@ -16,7 +16,7 @@ public sealed class ActionOnDispose : IDisposable
     /// <param name="action">The action to execute when disposing.</param>
     public ActionOnDispose(Action action)
     {
-        _action = Guard.NotNull(action, nameof(action));
+        _action = Guard.NotNull(action);
     }
 
     /// <summary>
@@ -25,7 +25,7 @@ public sealed class ActionOnDispose : IDisposable
     /// <param name="action">The action to execute when disposing.</param>
     public ActionOnDispose(Action<TimeSpan> action)
     {
-        _actionWithTime = Guard.NotNull(action, nameof(action));
+        _actionWithTime = Guard.NotNull(action);
         _start = DateTime.Now;
     }
 

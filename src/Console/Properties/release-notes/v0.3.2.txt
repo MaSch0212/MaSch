@@ -1,0 +1,2 @@
+﻿- Added binaries for net6.0, netstandard2.1 and netstandard 2.0.
+- Updates dependencies.

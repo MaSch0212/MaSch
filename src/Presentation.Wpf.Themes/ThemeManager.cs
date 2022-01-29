@@ -54,7 +54,7 @@ public class ThemeManager : IThemeManager
     /// <param name="theme">The theme to use.</param>
     public ThemeManager(IThemeManager? parentThemeManager, ITheme theme)
     {
-        _ = Guard.NotNull(theme, nameof(theme));
+        _ = Guard.NotNull(theme);
 
         _parentThemeManager = parentThemeManager;
         CurrentTheme = theme;

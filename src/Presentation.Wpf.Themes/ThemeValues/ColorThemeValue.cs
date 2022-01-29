@@ -18,7 +18,7 @@ public class ColorThemeValue : ThemeValueBase<Color>
     public override object RawValue
     {
         get => base.RawValue;
-        set => base.RawValue = Guard.OfType(value, nameof(value), typeof(ThemeValueReference), typeof(Color));
+        set => base.RawValue = Guard.OfType(value, new[] { typeof(ThemeValueReference), typeof(Color) });
     }
 
     public static implicit operator Color(ColorThemeValue themeValue)

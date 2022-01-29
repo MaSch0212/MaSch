@@ -17,7 +17,6 @@
     <OutputPath>$(MSBuildThisFileDirectory)..\bin\$(Configuration)\</OutputPath>
     <DocumentationFile Condition=" $(NoDocumentation) != 'true' ">$(OutputPath)$(TargetFramework)/$(AssemblyName).xml</DocumentationFile>
     <SupportedOSPlatform Condition=" $(UseWpf) == 'true' or $(UseWindowsForms) == 'true' ">windows</SupportedOSPlatform>
-    <NoWarn Condition=" '$(TargetFramework)' == '$(TfmNetFramework)' or '$(TargetFramework)' == '$(TfmNetStandard)' ">$(NoWarn);8600;8601;8602;8603;8604;8777;8767</NoWarn>
 
     <Authors>Marc Schmidt</Authors>
     <Copyright>Copyright © Marc Schmidt 2021</Copyright>
@@ -25,6 +24,17 @@
     <PackageProjectUrl>https://github.com/MaSch0212/MaSch</PackageProjectUrl>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <TargetFrameworkType Condition="$(TargetFramework) == 'net48'">NETFRAMEWORK</TargetFrameworkType>
+    <TargetFrameworkType Condition="$(TargetFramework.StartsWith('netstandard'))">NETSTANDARD</TargetFrameworkType>
+    <TargetFrameworkType Condition="$(TargetFramework.StartsWith('netcoreapp'))">NETCORE</TargetFrameworkType>
+    <TargetFrameworkType Condition="$(TargetFramework.StartsWith('net5')) or $(TargetFramework.StartsWith('net6'))">NET</TargetFrameworkType>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NoWarn Condition="$(TargetFrameworkType) == 'NETFRAMEWORK' or $(TargetFrameworkType) == 'NETSTANDARD' ">$(NoWarn);8600;8601;8602;8603;8604;8777;8767</NoWarn>
+  </PropertyGroup>
+  
   
   <!-- Analyzers -->
   <ItemGroup>

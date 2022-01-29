@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <!-- General Project info -->
-    <TargetFrameworks>$(TfmNetCore);$(TfmNetFramework)</TargetFrameworks>
+    <TargetFrameworks>net6.0;net5.0;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
     <RootNamespace>MaSch.Test.Assertion</RootNamespace>
     <ConfigureSourceLink>true</ConfigureSourceLink>
     <AddReleaseNotes>true</AddReleaseNotes>
@@ -16,7 +16,7 @@
 
     <!-- Package Info -->
     <Description>Contains Assertion logic for tests written with MSTest.</Description>
-    <Version>0.5.5</Version>
+    <Version>0.5.6</Version>
     <PackageTags>masch test mstest</PackageTags>
   </PropertyGroup>
 
@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\Generators\Resources\CallerArgumentExpression.cs" Link="Shims\CallerArgumentExpression.cs" />
     <Compile Include="..\Generators\Resources\NullableReferenceTypes.cs" Link="Shims\NullableReferenceTypes.cs" />
   </ItemGroup>
 
@@ -35,7 +36,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting"/>
+    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
   
 </Project>

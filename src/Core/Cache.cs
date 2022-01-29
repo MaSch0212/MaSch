@@ -28,7 +28,7 @@ public class Cache : ICache
     /// </returns>
     public virtual T? GetValue<T>([CallerMemberName] string key = "<Unknown>")
     {
-        _ = Guard.NotNull(key, nameof(key));
+        _ = Guard.NotNull(key);
         lock (ObjectsLock)
             return (T?)Objects[key];
     }
@@ -44,8 +44,8 @@ public class Cache : ICache
     /// </returns>
     public virtual T? GetValue<T>(Func<T> valueGetter, [CallerMemberName] string key = "<Unknown>")
     {
-        _ = Guard.NotNull(valueGetter, nameof(valueGetter));
-        _ = Guard.NotNull(key, nameof(key));
+        _ = Guard.NotNull(valueGetter);
+        _ = Guard.NotNull(key);
 
         lock (ObjectsLock)
         {
@@ -66,8 +66,8 @@ public class Cache : ICache
     /// </returns>
     public virtual async Task<T?> GetValueAsync<T>(Func<Task<T>> valueGetter, [CallerMemberName] string key = "<Unknown>")
     {
-        _ = Guard.NotNull(valueGetter, nameof(valueGetter));
-        _ = Guard.NotNull(key, nameof(key));
+        _ = Guard.NotNull(valueGetter);
+        _ = Guard.NotNull(key);
 
         Monitor.Enter(ObjectsLock);
         try
@@ -93,7 +93,7 @@ public class Cache : ICache
     /// </returns>
     public virtual bool TryGetValue<T>([NotNullWhen(true)] out T? value, [CallerMemberName] string key = "<Unknown>")
     {
-        _ = Guard.NotNull(key, nameof(key));
+        _ = Guard.NotNull(key);
 
         bool result;
         object? objValue;
@@ -119,7 +119,7 @@ public class Cache : ICache
     /// </returns>
     public virtual bool HasValue([CallerMemberName] string key = "<Unknown>")
     {
-        _ = Guard.NotNull(key, nameof(key));
+        _ = Guard.NotNull(key);
         lock (ObjectsLock)
             return Objects.ContainsKey(key);
     }
@@ -130,7 +130,7 @@ public class Cache : ICache
     /// <param name="key">The key for which the value should be removed.</param>
     public virtual void RemoveValue([CallerMemberName] string key = "<Unknown>")
     {
-        _ = Guard.NotNull(key, nameof(key));
+        _ = Guard.NotNull(key);
         lock (ObjectsLock)
             _ = Objects.TryRemove(key);
     }
@@ -144,7 +144,7 @@ public class Cache : ICache
     /// </remarks>
     public virtual void RemoveAndDisposeValue([CallerMemberName] string key = "<Unknown>")
     {
-        _ = Guard.NotNull(key, nameof(key));
+        _ = Guard.NotNull(key);
 
         object? value;
         lock (ObjectsLock)
@@ -162,7 +162,7 @@ public class Cache : ICache
     /// <param name="key">The key of the value to set.</param>
     public virtual void SetValue<T>(T value, [CallerMemberName] string key = "<Unknown>")
     {
-        _ = Guard.NotNull(key, nameof(key));
+        _ = Guard.NotNull(key);
         lock (ObjectsLock)
             Objects[key] = value;
     }

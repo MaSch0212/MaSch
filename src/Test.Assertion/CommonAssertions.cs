@@ -488,7 +488,7 @@ public partial class AssertBase
     /// <param name="message">The message to include in the exception when <paramref name="value" /> is not an instance of <paramref name="expectedType" />. The message is shown in test results.</param>
     public void IsInstanceOfType([NotNull] object? value, Type expectedType, string? message)
     {
-        RunAssertion(Guard.NotNull(expectedType, nameof(expectedType)), value?.GetType(), message, (e, a) => e.IsAssignableFrom(a));
+        RunAssertion(Guard.NotNull(expectedType), value?.GetType(), message, (e, a) => e.IsAssignableFrom(a));
     }
 
     /// <summary>
@@ -542,7 +542,7 @@ public partial class AssertBase
     /// <param name="message">The message to include in the exception when <paramref name="value" /> is an instance of <paramref name="wrongType" />. The message is shown in test results.</param>
     public void IsNotInstanceOfType(object? value, Type wrongType, string? message)
     {
-        RunNegatedAssertion(Guard.NotNull(wrongType, nameof(wrongType)), value?.GetType(), message, (e, a) => e.IsAssignableFrom(a));
+        RunNegatedAssertion(Guard.NotNull(wrongType), value?.GetType(), message, (e, a) => e.IsAssignableFrom(a));
     }
 
     /// <summary>
@@ -650,7 +650,7 @@ public partial class AssertBase
     /// <returns>The exception that was thrown.</returns>
     public Exception ThrowsException(Type expectedExceptionType, Action action, string? message)
     {
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(action);
 
         Exception? exception = null;
         try
@@ -769,7 +769,7 @@ public partial class AssertBase
     /// <returns>The <see cref="T:System.Threading.Tasks.Task" /> executing the delegate.</returns>
     public async Task<Exception> ThrowsExceptionAsync(Type expectedExceptionType, Func<Task> action, string? message)
     {
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(action);
 
         Exception? exception = null;
         try

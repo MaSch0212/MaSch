@@ -27,7 +27,7 @@ public class AdvancedLazy<T1>
     /// <param name="useCaching">if set to <c>true</c> the first value returned by the factory function is cached.</param>
     public AdvancedLazy(Func<T1> value1Factory, bool useCaching)
     {
-        _value1Factory = Guard.NotNull(value1Factory, nameof(value1Factory));
+        _value1Factory = Guard.NotNull(value1Factory);
         UseCaching = useCaching;
     }
 
@@ -103,7 +103,7 @@ public class AdvancedLazy<T1, T2> : AdvancedLazy<T1>
     public AdvancedLazy(Func<T1> value1Factory, Func<T2> value2Factory, bool useCaching)
         : base(value1Factory, useCaching)
     {
-        _value2Factory = Guard.NotNull(value2Factory, nameof(value2Factory));
+        _value2Factory = Guard.NotNull(value2Factory);
     }
 
     /// <summary>
@@ -154,7 +154,7 @@ public class AdvancedLazy<T1, T2, T3> : AdvancedLazy<T1, T2>
     public AdvancedLazy(Func<T1> value1Factory, Func<T2> value2Factory, Func<T3> value3Factory, bool useCaching)
         : base(value1Factory, value2Factory, useCaching)
     {
-        _valuei3Factory = Guard.NotNull(value3Factory, nameof(value3Factory));
+        _valuei3Factory = Guard.NotNull(value3Factory);
     }
 
     /// <summary>
@@ -208,7 +208,7 @@ public class AdvancedLazy<T1, T2, T3, T4> : AdvancedLazy<T1, T2, T3>
     public AdvancedLazy(Func<T1> value1Factory, Func<T2> value2Factory, Func<T3> value3Factory, Func<T4> value4Factory, bool useCaching)
         : base(value1Factory, value2Factory, value3Factory, useCaching)
     {
-        _value4Factory = Guard.NotNull(value4Factory, nameof(value4Factory));
+        _value4Factory = Guard.NotNull(value4Factory);
     }
 
     /// <summary>

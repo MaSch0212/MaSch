@@ -16,7 +16,7 @@ public class CliCommandOptionInfo : CliCommandMemberInfo, ICliCommandOptionInfo
     public CliCommandOptionInfo(ObjectExtensionDataStorage extensionStorage, ICliCommandInfo command, PropertyInfo property, CliCommandOptionAttribute attribute)
         : base(extensionStorage, command, property)
     {
-        Attribute = Guard.NotNull(attribute, nameof(attribute));
+        Attribute = Guard.NotNull(attribute);
     }
 
     /// <inheritdoc/>

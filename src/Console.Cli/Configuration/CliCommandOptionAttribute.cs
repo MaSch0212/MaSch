@@ -13,7 +13,7 @@ public class CliCommandOptionAttribute : Attribute
     /// </summary>
     /// <param name="name">The name of this option.</param>
     public CliCommandOptionAttribute(string name)
-        : this(null, new[] { Guard.NotNullOrEmpty(name, nameof(name)) })
+        : this(null, new[] { Guard.NotNullOrEmpty(name) })
     {
     }
 
@@ -23,7 +23,7 @@ public class CliCommandOptionAttribute : Attribute
     /// <param name="shortName">The short name of this option.</param>
     /// <param name="name">The name of this option.</param>
     public CliCommandOptionAttribute(char shortName, string name)
-        : this(new[] { shortName }, new[] { Guard.NotNullOrEmpty(name, nameof(name)) })
+        : this(new[] { shortName }, new[] { Guard.NotNullOrEmpty(name) })
     {
     }
 
@@ -33,14 +33,14 @@ public class CliCommandOptionAttribute : Attribute
     /// <param name="names">The names of this option. Can be either of type <see cref="string"/> to provide names or <see cref="char"/> to provde short names.</param>
     public CliCommandOptionAttribute(params object[] names)
         : this(
-              Guard.NotNull(names, nameof(names)).Where(x => x != null).OfType<char>().Distinct().ToArray(),
+              Guard.NotNull(names).Where(x => x != null).OfType<char>().Distinct().ToArray(),
               names.Where(x => x != null).OfType<string>().Where(x => !string.IsNullOrEmpty(x)).Distinct(StringComparer.OrdinalIgnoreCase).ToArray())
     {
     }
 
     private CliCommandOptionAttribute(char[]? shortAliases, string[] aliases)
     {
-        _ = Guard.NotNullOrEmpty(aliases, nameof(aliases));
+        _ = Guard.NotNullOrEmpty(aliases);
 
         ShortAliases = shortAliases ?? Array.Empty<char>();
         Aliases = aliases;

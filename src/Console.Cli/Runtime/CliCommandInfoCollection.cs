@@ -39,7 +39,7 @@ public class CliCommandInfoCollection : ICliCommandInfoCollection
     /// <inheritdoc/>
     public void Add(ICliCommandInfo item)
     {
-        _ = Guard.NotNull(item, nameof(item));
+        _ = Guard.NotNull(item);
 
         if (item.CommandType == null || item.Attribute == null)
             throw new ArgumentException("The given command has to have a CommandType.");
@@ -65,7 +65,7 @@ public class CliCommandInfoCollection : ICliCommandInfoCollection
     /// <inheritdoc/>
     public bool Remove(ICliCommandInfo item)
     {
-        _ = Guard.NotNull(item, nameof(item));
+        _ = Guard.NotNull(item);
 
         if (item.CommandType == null || !_allCommands.TryGetValue(item.CommandType, out var ei) || ei != item)
             return false;

@@ -16,7 +16,7 @@ public partial class TextBlockControl
     /// <param name="console">The console to use.</param>
     public TextBlockControl(IConsoleService console)
     {
-        _console = Guard.NotNull(console, nameof(console));
+        _console = Guard.NotNull(console);
     }
 
     /// <summary>

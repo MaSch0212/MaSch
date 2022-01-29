@@ -16,9 +16,9 @@ public abstract class CliCommandMemberInfo : ICliCommandMemberInfo
     /// <param name="property">The property this member represents.</param>
     protected CliCommandMemberInfo(ObjectExtensionDataStorage extensionStorage, ICliCommandInfo command, PropertyInfo property)
     {
-        _extensionStorage = Guard.NotNull(extensionStorage, nameof(extensionStorage));
-        Command = Guard.NotNull(command, nameof(command));
-        Property = Guard.NotNull(property, nameof(property));
+        _extensionStorage = Guard.NotNull(extensionStorage);
+        Command = Guard.NotNull(command);
+        Property = Guard.NotNull(property);
 
         if (Property.GetIndexParameters()?.Any() == true)
             throw new ArgumentException($"The property cannot be an indexer.", nameof(property));
@@ -57,21 +57,21 @@ public abstract class CliCommandMemberInfo : ICliCommandMemberInfo
     /// <inheritdoc/>
     public virtual object? GetValue(object options)
     {
-        _ = Guard.NotNull(options, nameof(options));
+        _ = Guard.NotNull(options);
         return Property.GetValue(options);
     }
 
     /// <inheritdoc/>
     public virtual bool HasValue(object options)
     {
-        _ = Guard.NotNull(options, nameof(options));
+        _ = Guard.NotNull(options);
         return _extensionStorage[options].TryGetValue(GetHasValueKey(), out object? objHasValue) && objHasValue is bool hasValue && hasValue;
     }
 
     /// <inheritdoc/>
     public virtual void SetDefaultValue(object options)
     {
-        _ = Guard.NotNull(options, nameof(options));
+        _ = Guard.NotNull(options);
         if (typeof(IEnumerable).IsAssignableFrom(PropertyType) && PropertyType != typeof(string))
             SetValue(options, Array.Empty<object?>(), true);
         else
@@ -81,7 +81,7 @@ public abstract class CliCommandMemberInfo : ICliCommandMemberInfo
     /// <inheritdoc/>
     public virtual void SetValue(object options, object? value)
     {
-        _ = Guard.NotNull(options, nameof(options));
+        _ = Guard.NotNull(options);
         SetValue(options, value, false);
     }
 

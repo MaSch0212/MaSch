@@ -180,7 +180,7 @@ public static class DbConnectionExtensions
         /// <param name="command">The command to which the parameters should be added.</param>
         public DbCommandParameterCollection(IDbCommand command)
         {
-            _ = Guard.NotNull(command, nameof(command));
+            _ = Guard.NotNull(command);
             Command = command;
         }
 

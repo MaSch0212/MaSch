@@ -10,6 +10,14 @@ public class GuardTests : TestClassBase
     [TestMethod]
     public void NotNull_Null()
     {
+        var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.NotNull<object?>(null!));
+
+        Assert.AreEqual("null", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void NotNull_Null_WithName()
+    {
         var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.NotNull<object?>(null!, "MyParamName"));
 
         Assert.AreEqual("MyParamName", ex.ParamName);
@@ -20,13 +28,21 @@ public class GuardTests : TestClassBase
     {
         var obj = new object();
 
-        var result = Guard.NotNull(obj, nameof(obj));
+        var result = Guard.NotNull(obj);
 
         Assert.AreSame(obj, result);
     }
 
     [TestMethod]
     public void NotNullOrEmpty_String_Null()
+    {
+        var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.NotNullOrEmpty(null));
+
+        Assert.AreEqual("null", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void NotNullOrEmpty_String_Null_WithName()
     {
         var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.NotNullOrEmpty(null, "MyParamName"));
 
@@ -35,6 +51,14 @@ public class GuardTests : TestClassBase
 
     [TestMethod]
     public void NotNullOrEmpty_String_Empty()
+    {
+        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.NotNullOrEmpty(string.Empty));
+
+        Assert.AreEqual("string.Empty", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void NotNullOrEmpty_String_Empty_WithName()
     {
         var ex = Assert.ThrowsException<ArgumentException>(() => Guard.NotNullOrEmpty(string.Empty, "MyParamName"));
 
@@ -46,13 +70,21 @@ public class GuardTests : TestClassBase
     {
         var obj = "Test";
 
-        var result = Guard.NotNullOrEmpty(obj, nameof(obj));
+        var result = Guard.NotNullOrEmpty(obj);
 
         Assert.AreSame(obj, result);
     }
 
     [TestMethod]
     public void NotNullOrEmpty_Collection_Null()
+    {
+        var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.NotNullOrEmpty<ICollection>(null));
+
+        Assert.AreEqual("null", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void NotNullOrEmpty_Collection_Null_WithName()
     {
         var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.NotNullOrEmpty<ICollection>(null, "MyParamName"));
 
@@ -61,6 +93,14 @@ public class GuardTests : TestClassBase
 
     [TestMethod]
     public void NotNullOrEmpty_Collection_Empty()
+    {
+        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.NotNullOrEmpty(Array.Empty<object>()));
+
+        Assert.AreEqual("Array.Empty<object>()", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void NotNullOrEmpty_Collection_Empty_WithName()
     {
         var ex = Assert.ThrowsException<ArgumentException>(() => Guard.NotNullOrEmpty(Array.Empty<object>(), "MyParamName"));
 
@@ -72,7 +112,7 @@ public class GuardTests : TestClassBase
     {
         var obj = new[] { "Test" };
 
-        var result = Guard.NotNullOrEmpty(obj, nameof(obj));
+        var result = Guard.NotNullOrEmpty(obj);
 
         Assert.AreSame(obj, result);
     }
@@ -80,7 +120,15 @@ public class GuardTests : TestClassBase
     [TestMethod]
     public void NotOutOfRange_Null()
     {
-        var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.NotOutOfRange(null, "MyParamName", string.Empty, string.Empty));
+        var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.NotOutOfRange(null, string.Empty, string.Empty));
+
+        Assert.AreEqual("null", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void NotOutOfRange_Null_WithName()
+    {
+        var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.NotOutOfRange(null, string.Empty, string.Empty, name: "MyParamName"));
 
         Assert.AreEqual("MyParamName", ex.ParamName);
     }
@@ -88,7 +136,15 @@ public class GuardTests : TestClassBase
     [TestMethod]
     public void NotOutOfRange_SmallerThanMin()
     {
-        var ex = Assert.ThrowsException<ArgumentOutOfRangeException>(() => Guard.NotOutOfRange("0", "MyParamName", "a", "c"));
+        var ex = Assert.ThrowsException<ArgumentOutOfRangeException>(() => Guard.NotOutOfRange("0", "a", "c"));
+
+        Assert.AreEqual("\"0\"", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void NotOutOfRange_SmallerThanMin_WithName()
+    {
+        var ex = Assert.ThrowsException<ArgumentOutOfRangeException>(() => Guard.NotOutOfRange("0", "a", "c", name: "MyParamName"));
 
         Assert.AreEqual("MyParamName", ex.ParamName);
     }
@@ -96,7 +152,15 @@ public class GuardTests : TestClassBase
     [TestMethod]
     public void NotOutOfRange_GreaterThanMax()
     {
-        var ex = Assert.ThrowsException<ArgumentOutOfRangeException>(() => Guard.NotOutOfRange("d", "MyParamName", "a", "c"));
+        var ex = Assert.ThrowsException<ArgumentOutOfRangeException>(() => Guard.NotOutOfRange("d", "a", "c"));
+
+        Assert.AreEqual("\"d\"", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void NotOutOfRange_GreaterThanMax_WithName()
+    {
+        var ex = Assert.ThrowsException<ArgumentOutOfRangeException>(() => Guard.NotOutOfRange("d", "a", "c", name: "MyParamName"));
 
         Assert.AreEqual("MyParamName", ex.ParamName);
     }
@@ -106,7 +170,7 @@ public class GuardTests : TestClassBase
     {
         var obj = "b";
 
-        var result = Guard.NotOutOfRange(obj, nameof(obj), "a", "c");
+        var result = Guard.NotOutOfRange(obj, "a", "c");
 
         Assert.AreSame(obj, result);
     }
@@ -116,7 +180,7 @@ public class GuardTests : TestClassBase
     {
         var obj = "a";
 
-        var result = Guard.NotOutOfRange(obj, nameof(obj), "a", "c");
+        var result = Guard.NotOutOfRange(obj, "a", "c");
 
         Assert.AreSame(obj, result);
     }
@@ -126,13 +190,21 @@ public class GuardTests : TestClassBase
     {
         var obj = "c";
 
-        var result = Guard.NotOutOfRange(obj, nameof(obj), "a", "c");
+        var result = Guard.NotOutOfRange(obj, "a", "c");
 
         Assert.AreSame(obj, result);
     }
 
     [TestMethod]
     public void OfType_Null()
+    {
+        var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.OfType<string>(null));
+
+        Assert.AreEqual("null", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void OfType_Null_WithName()
     {
         var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.OfType<string>(null, "MyParamName"));
 
@@ -141,6 +213,14 @@ public class GuardTests : TestClassBase
 
     [TestMethod]
     public void OfType_WrongType()
+    {
+        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType<string>(1));
+
+        Assert.AreEqual("1", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void OfType_WrongType_WithName()
     {
         var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType<string>(1, "MyParamName"));
 
@@ -152,7 +232,7 @@ public class GuardTests : TestClassBase
     {
         var obj = new TestClassType();
 
-        var result = Guard.OfType<TestClassType>(obj, nameof(obj));
+        var result = Guard.OfType<TestClassType>(obj);
 
         Assert.AreSame(obj, result);
     }
@@ -162,7 +242,7 @@ public class GuardTests : TestClassBase
     {
         var obj = new TestDerivedType();
 
-        var result = Guard.OfType<TestClassType>(obj, nameof(obj));
+        var result = Guard.OfType<TestClassType>(obj);
 
         Assert.AreSame(obj, result);
     }
@@ -172,7 +252,7 @@ public class GuardTests : TestClassBase
     {
         var obj = new TestClassType();
 
-        var result = Guard.OfType<ITestInterfaceType>(obj, nameof(obj));
+        var result = Guard.OfType<ITestInterfaceType>(obj);
 
         Assert.AreSame(obj, result);
     }
@@ -180,7 +260,7 @@ public class GuardTests : TestClassBase
     [TestMethod]
     public void OfType_AllowNull_Null()
     {
-        var result = Guard.OfType<TestClassType>(null, "blub", true);
+        var result = Guard.OfType<TestClassType>(null, true);
 
         Assert.IsNull(result);
     }
@@ -188,7 +268,15 @@ public class GuardTests : TestClassBase
     [TestMethod]
     public void OfType_AllowNull_WrongType()
     {
-        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType<string>(1, "MyParamName", true));
+        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType<string>(1, true));
+
+        Assert.AreEqual("1", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void OfType_AllowNull_WrongType_WithName()
+    {
+        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType<string>(1, true, "MyParamName"));
 
         Assert.AreEqual("MyParamName", ex.ParamName);
     }
@@ -198,7 +286,7 @@ public class GuardTests : TestClassBase
     {
         var obj = new TestClassType();
 
-        var result = Guard.OfType<TestClassType>(obj, nameof(obj), true);
+        var result = Guard.OfType<TestClassType>(obj, true);
 
         Assert.AreSame(obj, result);
     }
@@ -208,7 +296,7 @@ public class GuardTests : TestClassBase
     {
         var obj = new TestDerivedType();
 
-        var result = Guard.OfType<TestClassType>(obj, nameof(obj), true);
+        var result = Guard.OfType<TestClassType>(obj, true);
 
         Assert.AreSame(obj, result);
     }
@@ -218,15 +306,39 @@ public class GuardTests : TestClassBase
     {
         var obj = new TestClassType();
 
-        var result = Guard.OfType<ITestInterfaceType>(obj, nameof(obj), true);
+        var result = Guard.OfType<ITestInterfaceType>(obj, true);
 
         Assert.AreSame(obj, result);
     }
 
     [TestMethod]
+    public void OfType_AllowedType_Null()
+    {
+        var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.OfType(null, typeof(string)));
+
+        Assert.AreEqual("null", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void OfType_AllowedType_Null_WithName()
+    {
+        var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.OfType(null, typeof(string), "MyParamName"));
+
+        Assert.AreEqual("MyParamName", ex.ParamName);
+    }
+
+    [TestMethod]
     public void OfType_AllowedTypes_Null()
     {
-        var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.OfType(null, "MyParamName", typeof(string)));
+        var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.OfType(null, new[] { typeof(string) }));
+
+        Assert.AreEqual("null", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void OfType_AllowedTypes_Null_WithName()
+    {
+        var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.OfType(null, new[] { typeof(string) }, "MyParamName"));
 
         Assert.AreEqual("MyParamName", ex.ParamName);
     }
@@ -234,7 +346,7 @@ public class GuardTests : TestClassBase
     [TestMethod]
     public void OfType_AllowedTypes_NullArray()
     {
-        var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.OfType(1, "MyParamName", (Type[])null!));
+        var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.OfType(1, (Type[])null!));
 
         Assert.AreEqual("allowedTypes", ex.ParamName);
     }
@@ -242,17 +354,71 @@ public class GuardTests : TestClassBase
     [TestMethod]
     public void OfType_AllowedTypes_EmptyArray()
     {
-        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType(1, "MyParamName", Type.EmptyTypes));
+        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType(1, Type.EmptyTypes));
 
         Assert.AreEqual("allowedTypes", ex.ParamName);
     }
 
     [TestMethod]
-    public void OfType_AllowedTypes_WrongType()
+    public void OfType_AllowedType_WrongType()
     {
-        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType(1, "MyParamName", typeof(string)));
+        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType(1, typeof(string)));
+
+        Assert.AreEqual("1", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void OfType_AllowedType_WrongType_WithName()
+    {
+        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType(1, typeof(string), "MyParamName"));
 
         Assert.AreEqual("MyParamName", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void OfType_AllowedTypes_WrongType()
+    {
+        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType(1, new[] { typeof(string) }));
+
+        Assert.AreEqual("1", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void OfType_AllowedTypes_WrongType_WithName()
+    {
+        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType(1, new[] { typeof(string) }, "MyParamName"));
+
+        Assert.AreEqual("MyParamName", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void OfType_AllowedType_ExactTypeMatch()
+    {
+        var obj = new TestClassType();
+
+        var result = Guard.OfType(obj, typeof(TestClassType));
+
+        Assert.AreSame(obj, result);
+    }
+
+    [TestMethod]
+    public void OfType_AllowedType_DerivedTypeMatch()
+    {
+        var obj = new TestDerivedType();
+
+        var result = Guard.OfType(obj, typeof(TestClassType));
+
+        Assert.AreSame(obj, result);
+    }
+
+    [TestMethod]
+    public void OfType_AllowedType_InterfaceMatch()
+    {
+        var obj = new TestClassType();
+
+        var result = Guard.OfType(obj, typeof(ITestInterfaceType));
+
+        Assert.AreSame(obj, result);
     }
 
     [TestMethod]
@@ -260,7 +426,7 @@ public class GuardTests : TestClassBase
     {
         var obj = new TestClassType();
 
-        var result = Guard.OfType(obj, nameof(obj), typeof(int), typeof(TestClassType), typeof(double));
+        var result = Guard.OfType(obj, new[] { typeof(int), typeof(TestClassType), typeof(double) });
 
         Assert.AreSame(obj, result);
     }
@@ -270,7 +436,7 @@ public class GuardTests : TestClassBase
     {
         var obj = new TestDerivedType();
 
-        var result = Guard.OfType(obj, nameof(obj), typeof(int), typeof(TestClassType), typeof(double));
+        var result = Guard.OfType(obj, new[] { typeof(int), typeof(TestClassType), typeof(double) });
 
         Assert.AreSame(obj, result);
     }
@@ -280,15 +446,23 @@ public class GuardTests : TestClassBase
     {
         var obj = new TestClassType();
 
-        var result = Guard.OfType(obj, nameof(obj), typeof(int), typeof(ITestInterfaceType), typeof(double));
+        var result = Guard.OfType(obj, new[] { typeof(int), typeof(ITestInterfaceType), typeof(double) });
 
         Assert.AreSame(obj, result);
     }
 
     [TestMethod]
+    public void OfType_AllowedType_AllowNull_Null()
+    {
+        var result = Guard.OfType(null, typeof(string), true);
+
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
     public void OfType_AllowedTypes_AllowNull_Null()
     {
-        var result = Guard.OfType(null, "MyParamName", true, typeof(string));
+        var result = Guard.OfType(null, new[] { typeof(string) }, true, "MyParamName");
 
         Assert.IsNull(result);
     }
@@ -296,7 +470,7 @@ public class GuardTests : TestClassBase
     [TestMethod]
     public void OfType_AllowedTypes_AllowNull_NullArray()
     {
-        var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.OfType(1, "MyParamName", true, (Type[])null!));
+        var ex = Assert.ThrowsException<ArgumentNullException>(() => Guard.OfType(1, (Type[])null!, true));
 
         Assert.AreEqual("allowedTypes", ex.ParamName);
     }
@@ -304,17 +478,71 @@ public class GuardTests : TestClassBase
     [TestMethod]
     public void OfType_AllowedTypes_AllowNull_EmptyArray()
     {
-        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType(1, "MyParamName", true, Type.EmptyTypes));
+        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType(1, Type.EmptyTypes, true));
 
         Assert.AreEqual("allowedTypes", ex.ParamName);
     }
 
     [TestMethod]
-    public void OfType_AllowedTypes_AllowNull_WrongType()
+    public void OfType_AllowedType_AllowNull_WrongType()
     {
-        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType(1, "MyParamName", true, typeof(string)));
+        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType(1, typeof(string), true));
+
+        Assert.AreEqual("1", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void OfType_AllowedType_AllowNull_WrongType_WithName()
+    {
+        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType(1, typeof(string), true, "MyParamName"));
 
         Assert.AreEqual("MyParamName", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void OfType_AllowedTypes_AllowNull_WrongType()
+    {
+        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType(1, new[] { typeof(string) }, true));
+
+        Assert.AreEqual("1", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void OfType_AllowedTypes_AllowNull_WrongType_WithName()
+    {
+        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.OfType(1, new[] { typeof(string) }, true, "MyParamName"));
+
+        Assert.AreEqual("MyParamName", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void OfType_AllowedType_AllowNull_ExactTypeMatch()
+    {
+        var obj = new TestClassType();
+
+        var result = Guard.OfType(obj, typeof(TestClassType), true);
+
+        Assert.AreSame(obj, result);
+    }
+
+    [TestMethod]
+    public void OfType_AllowedType_AllowNull_DerivedTypeMatch()
+    {
+        var obj = new TestDerivedType();
+
+        var result = Guard.OfType(obj, typeof(TestClassType), true);
+
+        Assert.AreSame(obj, result);
+    }
+
+    [TestMethod]
+    public void OfType_AllowedType_AllowNull_InterfaceMatch()
+    {
+        var obj = new TestClassType();
+
+        var result = Guard.OfType(obj, typeof(ITestInterfaceType), true);
+
+        Assert.AreSame(obj, result);
     }
 
     [TestMethod]
@@ -322,7 +550,7 @@ public class GuardTests : TestClassBase
     {
         var obj = new TestClassType();
 
-        var result = Guard.OfType(obj, nameof(obj), true, typeof(int), typeof(TestClassType), typeof(double));
+        var result = Guard.OfType(obj, new[] { typeof(int), typeof(TestClassType), typeof(double) }, true);
 
         Assert.AreSame(obj, result);
     }
@@ -332,7 +560,7 @@ public class GuardTests : TestClassBase
     {
         var obj = new TestDerivedType();
 
-        var result = Guard.OfType(obj, nameof(obj), true, typeof(int), typeof(TestClassType), typeof(double));
+        var result = Guard.OfType(obj, new[] { typeof(int), typeof(TestClassType), typeof(double) }, true);
 
         Assert.AreSame(obj, result);
     }
@@ -342,7 +570,7 @@ public class GuardTests : TestClassBase
     {
         var obj = new TestClassType();
 
-        var result = Guard.OfType(obj, nameof(obj), true, typeof(int), typeof(ITestInterfaceType), typeof(double));
+        var result = Guard.OfType(obj, new[] { typeof(int), typeof(ITestInterfaceType), typeof(double) }, true);
 
         Assert.AreSame(obj, result);
     }

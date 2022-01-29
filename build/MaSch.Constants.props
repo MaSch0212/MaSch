@@ -26,10 +26,5 @@
     <AvaloniaVersion>0.10.3</AvaloniaVersion>
     <ReflectionAnalyzersVersion>0.3.0</ReflectionAnalyzersVersion>
     <IDisposableAnalyzersVersion>3.4.15</IDisposableAnalyzersVersion>
-
-    <!-- TargetFrameworks -->
-    <TfmNetFramework>net48</TfmNetFramework>
-    <TfmNetCore>net5.0</TfmNetCore>
-    <TfmNetStandard>netstandard2.0</TfmNetStandard>
   </PropertyGroup>
 </Project>

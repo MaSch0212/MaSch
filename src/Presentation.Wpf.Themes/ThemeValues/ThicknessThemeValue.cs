@@ -18,7 +18,7 @@ public class ThicknessThemeValue : ThemeValueBase<Thickness>
     public override object RawValue
     {
         get => base.RawValue;
-        set => base.RawValue = Guard.OfType(value, nameof(value), typeof(ThemeValueReference), typeof(Thickness));
+        set => base.RawValue = Guard.OfType(value, new[] { typeof(ThemeValueReference), typeof(Thickness) });
     }
 
     public static implicit operator Thickness(ThicknessThemeValue themeValue)

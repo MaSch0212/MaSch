@@ -23,7 +23,7 @@ public class ResizableArray<T> : IList<T>
     /// <param name="array">The array to wrap.</param>
     public ResizableArray(T[] array)
     {
-        _ = Guard.NotNull(array, nameof(array));
+        _ = Guard.NotNull(array);
 
         _array = array;
     }
@@ -44,12 +44,12 @@ public class ResizableArray<T> : IList<T>
     {
         get
         {
-            _ = Guard.NotOutOfRange(index, nameof(index), 0, Count - 1);
+            _ = Guard.NotOutOfRange(index, 0, Count - 1);
             return _array[index];
         }
         set
         {
-            _ = Guard.NotOutOfRange(index, nameof(index), 0, Count - 1);
+            _ = Guard.NotOutOfRange(index, 0, Count - 1);
             _array[index] = value;
         }
     }
@@ -124,7 +124,7 @@ public class ResizableArray<T> : IList<T>
     /// <inheritdoc />
     public void Insert(int index, T item)
     {
-        _ = Guard.NotOutOfRange(index, nameof(index), 0, Count);
+        _ = Guard.NotOutOfRange(index, 0, Count);
         if (Count == _array.Length)
         {
             Array.Resize(ref _array, _array.Length * 2);
@@ -138,7 +138,7 @@ public class ResizableArray<T> : IList<T>
     /// <inheritdoc />
     public void RemoveAt(int index)
     {
-        _ = Guard.NotOutOfRange(index, nameof(index), 0, Count - 1);
+        _ = Guard.NotOutOfRange(index, 0, Count - 1);
         for (int i = index; i < Count - 1; i++)
             _array[i] = _array[i + 1];
         _array[Count - 1] = default!;

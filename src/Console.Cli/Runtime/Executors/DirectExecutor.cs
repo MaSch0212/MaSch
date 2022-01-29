@@ -9,7 +9,7 @@ internal class DirectExecutor : ICliCommandExecutor
 
     public DirectExecutor(Type commandType)
     {
-        _commandType = Guard.NotNull(commandType, nameof(commandType));
+        _commandType = Guard.NotNull(commandType);
 
         if (!IsExecutable(commandType))
             throw new ArgumentException($"The type {commandType.Name} needs to implement {typeof(ICliExecutable).Name} and/or {typeof(ICliAsyncExecutable).Name}. If this command should not be executable, set the Executable Property on the CliCommandAttribute to false.", nameof(commandType));
@@ -22,8 +22,8 @@ internal class DirectExecutor : ICliCommandExecutor
 
     public int Execute(CliExecutionContext context, object obj)
     {
-        _ = Guard.NotNull(context, nameof(context));
-        _ = Guard.OfType(obj, nameof(obj), false, _commandType);
+        _ = Guard.NotNull(context);
+        _ = Guard.OfType(obj, _commandType);
 
         if (obj is ICliExecutable executor)
             return executor.ExecuteCommand(context);
@@ -35,8 +35,8 @@ internal class DirectExecutor : ICliCommandExecutor
 
     public async Task<int> ExecuteAsync(CliExecutionContext context, object obj)
     {
-        _ = Guard.NotNull(context, nameof(context));
-        _ = Guard.OfType(obj, nameof(obj), false, _commandType);
+        _ = Guard.NotNull(context);
+        _ = Guard.OfType(obj, _commandType);
 
         if (obj is ICliAsyncExecutable asyncExecutor)
             return await asyncExecutor.ExecuteCommandAsync(context);

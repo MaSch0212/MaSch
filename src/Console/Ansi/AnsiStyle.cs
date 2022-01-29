@@ -46,7 +46,7 @@ public class AnsiStyle
     /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
     public AnsiStyle WithStyles(AnsiTextStyle styles)
     {
-        _ = Guard.NotUndefinedFlagInEnumValue(styles, nameof(styles));
+        _ = Guard.NotUndefinedFlagInEnumValue(styles);
         _addedStyles |= styles;
         _removedStyles ^= styles & _removedStyles;
         return this;
@@ -59,7 +59,7 @@ public class AnsiStyle
     /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
     public AnsiStyle WithoutStyles(AnsiTextStyle styles)
     {
-        _ = Guard.NotUndefinedFlagInEnumValue(styles, nameof(styles));
+        _ = Guard.NotUndefinedFlagInEnumValue(styles);
         _addedStyles ^= styles & _addedStyles;
         _removedStyles |= styles;
         return this;
@@ -72,7 +72,7 @@ public class AnsiStyle
     /// <returns>The same <see cref="AnsiStyle"/> instance this method was called on.</returns>
     public AnsiStyle OverrideStyles(AnsiTextStyle exactStyles)
     {
-        _ = Guard.NotUndefinedFlagInEnumValue(exactStyles, nameof(exactStyles));
+        _ = Guard.NotUndefinedFlagInEnumValue(exactStyles);
         _addedStyles = exactStyles;
         _removedStyles = AnsiTextStyle.All ^ AnsiTextStyle.Invert ^ exactStyles;
         return this;

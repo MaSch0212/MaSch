@@ -48,7 +48,7 @@ public class Theme : ObservableObject, ITheme
         get => _values;
         set
         {
-            _ = Guard.NotNull(value, nameof(value));
+            _ = Guard.NotNull(value);
 
             if (_values != null)
             {

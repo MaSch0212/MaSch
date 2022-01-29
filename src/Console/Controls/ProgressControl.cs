@@ -43,7 +43,7 @@ public class ProgressControl : IDisposable
     /// <param name="console">The console on which the progress should be shown.</param>
     public ProgressControl(IConsoleService console)
     {
-        _console = Guard.NotNull(console, nameof(console));
+        _console = Guard.NotNull(console);
 
         IndicatorChars = _console.IsFancyConsole
             ? new[] { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }

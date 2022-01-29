@@ -13,7 +13,7 @@ public static class TaskExtensions
     /// <returns>Returns an awaitable task.</returns>
     public static async Task RunAtLeast(this Task task, int miliseconds)
     {
-        await Task.WhenAll(Guard.NotNull(task, nameof(task)), Task.Delay(miliseconds));
+        await Task.WhenAll(Guard.NotNull(task), Task.Delay(miliseconds));
     }
 
     /// <summary>
@@ -24,7 +24,7 @@ public static class TaskExtensions
     /// <returns>Returns an awaitable task.</returns>
     public static async Task RunAtLeast(this Task task, TimeSpan timeSpan)
     {
-        await Task.WhenAll(Guard.NotNull(task, nameof(task)), Task.Delay(timeSpan));
+        await Task.WhenAll(Guard.NotNull(task), Task.Delay(timeSpan));
     }
 
     /// <summary>
@@ -36,7 +36,7 @@ public static class TaskExtensions
     /// <returns>Returns an awaitable task.</returns>
     public static async Task<T?> RunAtLeast<T>(this Task<T> task, int miliseconds)
     {
-        _ = Guard.NotNull(task, nameof(task));
+        _ = Guard.NotNull(task);
         var waitTask = Task.Run(async () =>
         {
             await Task.Delay(miliseconds);
@@ -54,7 +54,7 @@ public static class TaskExtensions
     /// <returns>Returns an awaitable task.</returns>
     public static async Task<T?> RunAtLeast<T>(this Task<T> task, TimeSpan timeSpan)
     {
-        _ = Guard.NotNull(task, nameof(task));
+        _ = Guard.NotNull(task);
         var waitTask = Task.Run(async () =>
         {
             await Task.Delay(timeSpan);
@@ -70,7 +70,7 @@ public static class TaskExtensions
     [SuppressMessage("Major Bug", "S3168:\"async\" methods should not return \"void\"", Justification = "The purpose of this method is to not return a Task.")]
     public static async void Forget(this Task task)
     {
-        await Guard.NotNull(task, nameof(task));
+        await Guard.NotNull(task);
     }
 
     /// <summary>
@@ -81,7 +81,7 @@ public static class TaskExtensions
     [SuppressMessage("Major Bug", "S3168:\"async\" methods should not return \"void\"", Justification = "The purpose of this method is to not return a Task.")]
     public static async void Forget<T>(this Task<T> task)
     {
-        _ = await Guard.NotNull(task, nameof(task));
+        _ = await Guard.NotNull(task);
     }
 
     /// <summary>
@@ -91,7 +91,7 @@ public static class TaskExtensions
     /// <returns>Return true if the task has ben completed without a cancellation; otherwise false.</returns>
     public static async Task<bool> CatchCancellation(this Task task)
     {
-        _ = Guard.NotNull(task, nameof(task));
+        _ = Guard.NotNull(task);
         try
         {
             await task;
@@ -111,7 +111,7 @@ public static class TaskExtensions
     /// <returns>Return true and the result of the task if the task has ben completed without a cancellation; otherwise false and the default value of <typeparamref name="T"/>.</returns>
     public static async Task<(bool HasCompleted, T? Result)> CatchCancellation<T>(this Task<T> task)
     {
-        _ = Guard.NotNull(task, nameof(task));
+        _ = Guard.NotNull(task);
         try
         {
             return (true, await task);

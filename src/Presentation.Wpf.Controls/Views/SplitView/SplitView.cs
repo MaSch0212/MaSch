@@ -331,17 +331,17 @@ public class SplitView : Control
         _indicatorBottom = GetTemplateChild("PART_IndicatorBottom") as UIElement;
         _indicatorTop = GetTemplateChild("PART_IndicatorTop") as UIElement;
 
-        _ = Guard.NotNull(_treeView, nameof(_treeView));
-        _ = Guard.NotNull(menuButton, nameof(menuButton));
-        _ = Guard.NotNull(_buttonsColumn, nameof(_buttonsColumn));
-        _ = Guard.NotNull(_content, nameof(_content));
-        _ = Guard.NotNull(_infoAreaCollapsedTop, nameof(_infoAreaCollapsedTop));
-        _ = Guard.NotNull(_infoAreaCollapsedBottom, nameof(_infoAreaCollapsedBottom));
-        _ = Guard.NotNull(_infoAreaExpandedTop, nameof(_infoAreaExpandedTop));
-        _ = Guard.NotNull(_infoAreaExpandedBottom, nameof(_infoAreaExpandedBottom));
-        _ = Guard.NotNull(_treeViewScroll, nameof(_treeViewScroll));
-        _ = Guard.NotNull(_indicatorBottom, nameof(_indicatorBottom));
-        _ = Guard.NotNull(_indicatorTop, nameof(_indicatorTop));
+        _ = Guard.NotNull(_treeView);
+        _ = Guard.NotNull(menuButton);
+        _ = Guard.NotNull(_buttonsColumn);
+        _ = Guard.NotNull(_content);
+        _ = Guard.NotNull(_infoAreaCollapsedTop);
+        _ = Guard.NotNull(_infoAreaCollapsedBottom);
+        _ = Guard.NotNull(_infoAreaExpandedTop);
+        _ = Guard.NotNull(_infoAreaExpandedBottom);
+        _ = Guard.NotNull(_treeViewScroll);
+        _ = Guard.NotNull(_indicatorBottom);
+        _ = Guard.NotNull(_indicatorTop);
 
         _treeView.SelectedItemChanged += TreeView_SelectedItemChanged;
         menuButton.Click += MenuButton_Click;
@@ -525,8 +525,8 @@ public class SplitView : Control
 
     private static void GetGroupItemsRec(List<Border> items, TreeViewItem root)
     {
-        _ = Guard.NotNull(items, nameof(items));
-        _ = Guard.NotNull(root, nameof(root));
+        _ = Guard.NotNull(items);
+        _ = Guard.NotNull(root);
 
         if (root.DataContext is SplitViewItemGroup group)
         {
@@ -578,7 +578,7 @@ public class SplitView : Control
         }
     }
 
-    private async void ParentWindow_Closing(object sender, CancelEventArgs e)
+    private async void ParentWindow_Closing(object? sender, CancelEventArgs e)
     {
         if (!_closeConfirmed && SelectedItem is SplitViewItem item && item.Content is SplitViewContent content)
         {

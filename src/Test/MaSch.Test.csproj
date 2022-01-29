@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <!-- General Project info -->
-    <TargetFrameworks>$(TfmNetCore);$(TfmNetFramework)</TargetFrameworks>
+    <TargetFrameworks>net6.0;net5.0;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
     <ConfigureSourceLink>true</ConfigureSourceLink>
     <AddReleaseNotes>true</AddReleaseNotes>
     <UseMaSchGenerators>true</UseMaSchGenerators>
@@ -14,7 +14,7 @@
 
     <!-- Package Info -->
     <Description>Contains some supporting code for Unit Tests.</Description>
-    <Version>0.5.5</Version>
+    <Version>0.5.6</Version>
     <PackageTags>masch test</PackageTags>
 
     <DoesNotReturnAttribute>DoesNotReturnAttribute</DoesNotReturnAttribute>

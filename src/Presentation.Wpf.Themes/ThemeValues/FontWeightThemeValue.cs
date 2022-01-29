@@ -18,7 +18,7 @@ public class FontWeightThemeValue : ThemeValueBase<FontWeight>
     public override object RawValue
     {
         get => base.RawValue;
-        set => base.RawValue = Guard.OfType(value, nameof(value), typeof(ThemeValueReference), typeof(FontWeight));
+        set => base.RawValue = Guard.OfType(value, new[] { typeof(ThemeValueReference), typeof(FontWeight) });
     }
 
     public static implicit operator FontWeight(FontWeightThemeValue themeValue)

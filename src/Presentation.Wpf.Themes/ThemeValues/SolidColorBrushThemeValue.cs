@@ -23,7 +23,7 @@ public class SolidColorBrushThemeValue : ThemeValueBase<SolidColorBrush>
     public override object RawValue
     {
         get => Value;
-        set => Value = Guard.OfType<SolidColorBrush>(value, nameof(value));
+        set => Value = Guard.OfType<SolidColorBrush>(value);
     }
 
     /// <summary>

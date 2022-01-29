@@ -14,7 +14,7 @@ public static class ListExtensions
     /// <returns>Returns true if the item was removed; otherwise false.</returns>
     public static bool TryRemove<T>(this IList<T> list, T itemToRemove)
     {
-        _ = Guard.NotNull(list, nameof(list));
+        _ = Guard.NotNull(list);
 
         return TryRemoveImpl(list, itemToRemove);
     }
@@ -27,7 +27,7 @@ public static class ListExtensions
     /// <returns>Returns true if the item was removed; otherwise false.</returns>
     public static bool TryRemove(this IList list, object? itemToRemove)
     {
-        _ = Guard.NotNull(list, nameof(list));
+        _ = Guard.NotNull(list);
 
         return TryRemoveImpl(list, itemToRemove);
     }
@@ -41,8 +41,8 @@ public static class ListExtensions
     /// <returns>Return the count of removed items.</returns>
     public static int Remove<T>(this IList<T> list, IEnumerable<T> items)
     {
-        _ = Guard.NotNull(list, nameof(list));
-        _ = Guard.NotNull(items, nameof(items));
+        _ = Guard.NotNull(list);
+        _ = Guard.NotNull(items);
 
         return items.Count(x => TryRemoveImpl(list, x));
     }
@@ -57,8 +57,8 @@ public static class ListExtensions
     /// <returns>Return the count of removed items.</returns>
     public static int Remove<T>(this IList<T> list, IEnumerable<T> items, out IList<T> removedItems)
     {
-        _ = Guard.NotNull(list, nameof(list));
-        _ = Guard.NotNull(items, nameof(items));
+        _ = Guard.NotNull(list);
+        _ = Guard.NotNull(items);
 
         removedItems = items.Where(x => TryRemoveImpl(list, x)).ToList();
         return removedItems.Count;
@@ -72,8 +72,8 @@ public static class ListExtensions
     /// <returns>Return the count of removed items.</returns>
     public static int Remove(this IList list, IEnumerable items)
     {
-        _ = Guard.NotNull(list, nameof(list));
-        _ = Guard.NotNull(items, nameof(items));
+        _ = Guard.NotNull(list);
+        _ = Guard.NotNull(items);
 
         return items.Cast<object?>().Count(x => TryRemoveImpl(list, x));
     }
@@ -88,8 +88,8 @@ public static class ListExtensions
     [SuppressMessage("Major Code Smell", "S2971:\"IEnumerable\" LINQs should be simplified", Justification = "ToArray call is needed due to removal of elements in Count method.")]
     public static int RemoveWhere<T>(this IList<T> list, Func<T, bool> condition)
     {
-        _ = Guard.NotNull(list, nameof(list));
-        _ = Guard.NotNull(condition, nameof(condition));
+        _ = Guard.NotNull(list);
+        _ = Guard.NotNull(condition);
 
         return list.Where(condition).ToArray().Count(x => TryRemoveImpl(list, x));
     }
@@ -103,8 +103,8 @@ public static class ListExtensions
     [SuppressMessage("Major Code Smell", "S2971:\"IEnumerable\" LINQs should be simplified", Justification = "ToArray call is needed due to removal of elements in Count method.")]
     public static int RemoveWhere(this IList list, Func<object?, bool> condition)
     {
-        _ = Guard.NotNull(list, nameof(list));
-        _ = Guard.NotNull(condition, nameof(condition));
+        _ = Guard.NotNull(list);
+        _ = Guard.NotNull(condition);
 
         return list.Cast<object?>().Where(condition).ToArray().Count(x => TryRemoveImpl(list, x));
     }
@@ -117,7 +117,7 @@ public static class ListExtensions
     /// <returns>Return true if the item was added; otherwise false.</returns>
     public static bool AddIfNotExists(this IList list, object? itemToAdd)
     {
-        _ = Guard.NotNull(list, nameof(list));
+        _ = Guard.NotNull(list);
 
         return AddIfNotExistsImpl(list, itemToAdd);
     }
@@ -130,8 +130,8 @@ public static class ListExtensions
     /// <returns>Return the count of added items.</returns>
     public static int AddIfNotExists(this IList list, IEnumerable items)
     {
-        _ = Guard.NotNull(list, nameof(list));
-        _ = Guard.NotNull(items, nameof(items));
+        _ = Guard.NotNull(list);
+        _ = Guard.NotNull(items);
 
         return items.Cast<object?>().Count(x => AddIfNotExistsImpl(list, x));
     }

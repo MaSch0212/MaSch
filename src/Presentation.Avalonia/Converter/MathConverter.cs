@@ -38,7 +38,7 @@ public class MathConverter : MarkupExtension, IMultiValueConverter, IValueConver
     {
         try
         {
-            var result = Parse(Guard.NotNull(parameter.ToString(), nameof(parameter))).Eval(values);
+            var result = Parse(Guard.NotNull(parameter?.ToString())).Eval(values);
             if (targetType == typeof(decimal))
                 return result;
             if (targetType == typeof(string))

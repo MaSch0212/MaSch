@@ -49,7 +49,7 @@ public static class WindowExtensions
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public static Task<bool?> ShowDialogAsync(this Window self)
     {
-        _ = Guard.NotNull(self, nameof(self));
+        _ = Guard.NotNull(self);
         var completion = new TaskCompletionSource<bool?>();
         _ = self.Dispatcher.BeginInvoke(new Action(() => completion.SetResult(self.ShowDialog())));
         return completion.Task;

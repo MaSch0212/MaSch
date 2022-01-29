@@ -28,8 +28,8 @@ public static class CollectionExtensions
     /// <exception cref="NotSupportedException"><see cref="ICollection{T}"/> is read-only.</exception>
     public static void Add<T>(this ICollection<T> collection, IEnumerable<T> items)
     {
-        _ = Guard.NotNull(collection, nameof(collection));
-        _ = Guard.NotNull(items, nameof(items));
+        _ = Guard.NotNull(collection);
+        _ = Guard.NotNull(items);
 
         foreach (var item in items)
         {
@@ -46,8 +46,8 @@ public static class CollectionExtensions
     /// <exception cref="NotSupportedException"><see cref="ICollection{T}"/> is read-only.</exception>
     public static void Set<T>(this ICollection<T> collection, IEnumerable<T> items)
     {
-        _ = Guard.NotNull(collection, nameof(collection));
-        _ = Guard.NotNull(items, nameof(items));
+        _ = Guard.NotNull(collection);
+        _ = Guard.NotNull(items);
 
         collection.Clear();
         collection.Add(items);
@@ -62,7 +62,7 @@ public static class CollectionExtensions
     /// <returns>Return true if the item was added; otherwise false.</returns>
     public static bool AddIfNotExists<T>(this ICollection<T> collection, T itemToAdd)
     {
-        _ = Guard.NotNull(collection, nameof(collection));
+        _ = Guard.NotNull(collection);
 
         return AddIfNotExistsImpl(collection, itemToAdd);
     }
@@ -76,8 +76,8 @@ public static class CollectionExtensions
     /// <returns>Return the count of added items.</returns>
     public static int AddIfNotExists<T>(this ICollection<T> collection, IEnumerable<T> items)
     {
-        _ = Guard.NotNull(collection, nameof(collection));
-        _ = Guard.NotNull(items, nameof(items));
+        _ = Guard.NotNull(collection);
+        _ = Guard.NotNull(items);
 
         return items.Count(x => AddIfNotExistsImpl(collection, x));
     }
@@ -91,7 +91,7 @@ public static class CollectionExtensions
     /// <returns>Returns true if the item was removed; otherwise false.</returns>
     public static bool TryRemove<T>(this ICollection<T> collection, T itemToRemove)
     {
-        _ = Guard.NotNull(collection, nameof(collection));
+        _ = Guard.NotNull(collection);
 
         return TryRemoveImpl(collection, itemToRemove);
     }
@@ -106,8 +106,8 @@ public static class CollectionExtensions
     /// <returns>Returns true if the item was removed; otherwise false.</returns>
     public static bool TryRemove<T>(this ICollection<T> collection, T itemToRemove, IEqualityComparer<T> comparer)
     {
-        _ = Guard.NotNull(collection, nameof(collection));
-        _ = Guard.NotNull(comparer, nameof(comparer));
+        _ = Guard.NotNull(collection);
+        _ = Guard.NotNull(comparer);
 
         return TryRemoveImpl(collection, itemToRemove, comparer);
     }
@@ -121,7 +121,7 @@ public static class CollectionExtensions
     /// <returns>Return the count of removed items.</returns>
     public static int Remove<T>(this ICollection<T> collection, IEnumerable<T> items)
     {
-        _ = Guard.NotNull(collection, nameof(collection));
+        _ = Guard.NotNull(collection);
 
         return items.Count(x => TryRemoveImpl(collection, x));
     }
@@ -136,8 +136,8 @@ public static class CollectionExtensions
     /// <returns>Return the count of removed items.</returns>
     public static int Remove<T>(this ICollection<T> collection, IEnumerable<T> items, IEqualityComparer<T> comparer)
     {
-        _ = Guard.NotNull(collection, nameof(collection));
-        _ = Guard.NotNull(comparer, nameof(comparer));
+        _ = Guard.NotNull(collection);
+        _ = Guard.NotNull(comparer);
 
         return items.Count(x => TryRemoveImpl(collection, x, comparer));
     }
@@ -152,8 +152,8 @@ public static class CollectionExtensions
     [SuppressMessage("Major Code Smell", "S2971:\"IEnumerable\" LINQs should be simplified", Justification = "ToArray call is needed due to removal of elements in Count method.")]
     public static int RemoveWhere<T>(this ICollection<T> collection, Func<T, bool> condition)
     {
-        _ = Guard.NotNull(collection, nameof(collection));
-        _ = Guard.NotNull(condition, nameof(condition));
+        _ = Guard.NotNull(collection);
+        _ = Guard.NotNull(condition);
 
         return collection.Where(condition).ToArray().Count(x => TryRemoveImpl(collection, x));
     }
@@ -165,7 +165,7 @@ public static class CollectionExtensions
     /// <returns>Returns a <see cref="StringCollection"/> with the content of the <see cref="IEnumerable{T}"/>.</returns>
     public static StringCollection ToStringCollection(this IEnumerable<string> enumerable)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
 
         var result = new StringCollection();
         foreach (var i in enumerable)

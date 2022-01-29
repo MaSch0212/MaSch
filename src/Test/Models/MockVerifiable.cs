@@ -50,7 +50,7 @@ public sealed class MockVerifiable : IMockVerifiable
     /// <param name="defaultTimes">The default number of times a method is expected to be called.</param>
     public MockVerifiable(MockVerification verifyAction, Times defaultTimes)
     {
-        _verifyAction = Guard.NotNull(verifyAction, nameof(verifyAction));
+        _verifyAction = Guard.NotNull(verifyAction);
         _defaultTimes = defaultTimes;
     }
 

@@ -17,7 +17,7 @@ public class DoubleThemeValue : ThemeValueBase<double>
     public override object RawValue
     {
         get => base.RawValue;
-        set => base.RawValue = Guard.OfType(value, nameof(value), typeof(ThemeValueReference), typeof(double));
+        set => base.RawValue = Guard.OfType(value, new[] { typeof(ThemeValueReference), typeof(double) });
     }
 
     public static implicit operator double(DoubleThemeValue themeValue)

@@ -15,7 +15,7 @@ public static class RandomExtensions
     /// <returns>An <see cref="Array"/> of the specified number of random <see cref="byte"/>s.</returns>
     public static byte[] NextBytes(this Random random, int byteCount)
     {
-        var bytes = new byte[Guard.NotOutOfRange(byteCount, nameof(byteCount), 0, int.MaxValue)];
+        var bytes = new byte[Guard.NotOutOfRange(byteCount, 0, int.MaxValue)];
         random.NextBytes(bytes);
         return bytes;
     }
@@ -28,7 +28,7 @@ public static class RandomExtensions
     /// <returns>An <see cref="Array"/> of the specified number of random <see cref="byte"/>s.</returns>
     public static byte[] GetBytes(this RandomNumberGenerator random, int byteCount)
     {
-        var bytes = new byte[Guard.NotOutOfRange(byteCount, nameof(byteCount), 0, int.MaxValue)];
+        var bytes = new byte[Guard.NotOutOfRange(byteCount, 0, int.MaxValue)];
         random.GetBytes(bytes);
         return bytes;
     }

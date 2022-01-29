@@ -18,7 +18,7 @@ public class CornerRadiusThemeValue : ThemeValueBase<CornerRadius>
     public override object RawValue
     {
         get => base.RawValue;
-        set => base.RawValue = Guard.OfType(value, nameof(value), typeof(ThemeValueReference), typeof(CornerRadius));
+        set => base.RawValue = Guard.OfType(value, new[] { typeof(ThemeValueReference), typeof(CornerRadius) });
     }
 
     public static implicit operator CornerRadius(CornerRadiusThemeValue themeValue)

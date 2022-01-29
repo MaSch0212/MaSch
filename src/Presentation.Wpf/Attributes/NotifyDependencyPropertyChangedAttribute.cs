@@ -52,7 +52,7 @@ public class NotifyDependencyPropertyChangedAttribute : Attribute
     /// <returns>A <see cref="List{T}"/> of the <see cref="NotifyDependencyPropertyChangedAttribute"/> and the name of the property, the attribute is defined on.</returns>
     public static List<(string PropertyName, NotifyDependencyPropertyChangedAttribute Attribute)> GetAttributes(object classObject)
     {
-        _ = Guard.NotNull(classObject, nameof(classObject));
+        _ = Guard.NotNull(classObject);
         var classType = classObject.GetType();
 
         List<(string PropertyName, NotifyDependencyPropertyChangedAttribute Attribute)> result;

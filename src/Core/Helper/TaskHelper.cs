@@ -15,7 +15,7 @@ public static class TaskHelper
     [SupportedOSPlatform("windows")]
     public static Task RunSta(Action action)
     {
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(action);
         var tcs = new TaskCompletionSource<bool>();
         var thread = new Thread(() =>
         {
@@ -43,7 +43,7 @@ public static class TaskHelper
     [SupportedOSPlatform("windows")]
     public static Task<T> RunSta<T>(Func<T> func)
     {
-        _ = Guard.NotNull(func, nameof(func));
+        _ = Guard.NotNull(func);
         var tcs = new TaskCompletionSource<T>();
         var thread = new Thread(() =>
         {

@@ -25,7 +25,7 @@ public class ThemeValueReference : ICloneable
     /// <param name="property">The property that the reference points to..</param>
     public ThemeValueReference(string key, string? property)
     {
-        _ = Guard.NotNullOrEmpty(key, nameof(key));
+        _ = Guard.NotNullOrEmpty(key);
 
         CustomKey = key;
         Property = property;

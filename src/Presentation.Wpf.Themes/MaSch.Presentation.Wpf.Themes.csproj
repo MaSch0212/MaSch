@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <!-- General Project info -->
-    <TargetFrameworks>$(TfmNetCore)-windows;$(TfmNetFramework)</TargetFrameworks>
+    <TargetFrameworks>net6.0-windows;net5.0-windows;net48</TargetFrameworks>
     <RootNamespace>MaSch.Presentation.Wpf</RootNamespace>
     <UseWPF>true</UseWPF>
     <ConfigureSourceLink>true</ConfigureSourceLink>
@@ -16,7 +16,7 @@
 
     <!-- Package Info -->
     <Description>Contains modern themes for .NET WPF application</Description>
-    <Version>0.1.11</Version>
+    <Version>0.1.12</Version>
     <PackageTags>masch presentation ui frontend wpf themes theming</PackageTags>
   </PropertyGroup>
 
@@ -38,6 +38,10 @@
   
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFrameworkType) == 'NETFRAMEWORK'">
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
 
   <ItemGroup>

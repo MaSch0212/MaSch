@@ -5,7 +5,7 @@
   <PropertyGroup>
     <!-- General Project info -->
     <RootNamespace>MaSch.Presentation.Wpf</RootNamespace>
-    <TargetFrameworks>$(TfmNetCore)-windows;$(TfmNetFramework)</TargetFrameworks>
+    <TargetFrameworks>net6.0-windows;net48</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <ConfigureSourceLink>true</ConfigureSourceLink>
     <AddReleaseNotes>true</AddReleaseNotes>
@@ -16,7 +16,7 @@
 
     <!-- Package Info -->
     <Description>Contains advanced controls for .NET WPF applications.</Description>
-    <Version>0.2.5</Version>
+    <Version>0.2.6</Version>
     <PackageTags>masch presentation ui frontend wpf controls</PackageTags>
   </PropertyGroup>
 

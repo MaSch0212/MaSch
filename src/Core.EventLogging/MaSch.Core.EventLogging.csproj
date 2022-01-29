@@ -5,7 +5,7 @@
   <PropertyGroup>
     <!-- General Project info -->
     <RootNamespace>MaSch.Core</RootNamespace>
-    <TargetFrameworks>$(TfmNetCore)-windows;$(TfmNetFramework)</TargetFrameworks>
+    <TargetFrameworks>net6.0-windows;net5.0-windows;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
     <ConfigureSourceLink>true</ConfigureSourceLink>
     <AddReleaseNotes>true</AddReleaseNotes>
 
@@ -14,7 +14,7 @@
 
     <!-- Package Info -->
     <Description>Contains a logging provider for windows Event Logging.</Description>
-    <Version>0.1.5</Version>
+    <Version>0.1.6</Version>
     <PackageTags>masch generator sourcegenerator wrapper observable wpf</PackageTags>
   </PropertyGroup>
 

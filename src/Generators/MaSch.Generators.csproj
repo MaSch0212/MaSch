@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <!-- General Project info -->
-    <TargetFramework>$(TfmNetStandard)</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <DefineConstants>$(DefineConstants);MASCH_GENERATOR</DefineConstants>
 
     <!-- Output info -->
@@ -15,7 +15,7 @@
 
     <!-- Package Info -->
     <Description>Contains some useful Code Generators. Most of these generators requires a reference to the MaSch.Core NuGet package.</Description>
-    <Version>0.3.2</Version>
+    <Version>0.3.3</Version>
     <PackageTags>masch generator sourcegenerator wrapper observable wpf</PackageTags>
 
     <!-- Disable warnings that occur in the Resources.Designer.cs -->

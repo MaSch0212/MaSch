@@ -52,12 +52,12 @@ public class LoggingService : ILoggingService
     /// <inheritdoc/>
     public virtual bool AddLoggingProvider(ILoggingProvider provider)
     {
-        return _loggingProviders.AddIfNotExists(Guard.NotNull(provider, nameof(provider)));
+        return _loggingProviders.AddIfNotExists(Guard.NotNull(provider));
     }
 
     /// <inheritdoc/>
     public virtual bool RemoveLoggingProvider(ILoggingProvider provider)
     {
-        return _loggingProviders.TryRemove(Guard.NotNull(provider, nameof(provider)));
+        return _loggingProviders.TryRemove(Guard.NotNull(provider));
     }
 }

@@ -18,7 +18,7 @@ public class FontStyleThemeValue : ThemeValueBase<FontStyle>
     public override object RawValue
     {
         get => base.RawValue;
-        set => base.RawValue = Guard.OfType(value, nameof(value), typeof(ThemeValueReference), typeof(FontStyle));
+        set => base.RawValue = Guard.OfType(value, new[] { typeof(ThemeValueReference), typeof(FontStyle) });
     }
 
     public static implicit operator FontStyle(FontStyleThemeValue themeValue)

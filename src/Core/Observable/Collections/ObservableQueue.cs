@@ -59,7 +59,7 @@ public class ObservableQueue<T> : ICollection, IReadOnlyCollection<T>, INotifyPr
     /// <exception cref="ArgumentNullException">the queue is null.</exception>
     public ObservableQueue(Queue<T> queue)
     {
-        _ = Guard.NotNull(queue, nameof(queue));
+        _ = Guard.NotNull(queue);
         _queue = queue;
     }
 

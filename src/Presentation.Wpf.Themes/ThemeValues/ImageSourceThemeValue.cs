@@ -18,7 +18,7 @@ public class ImageSourceThemeValue : ThemeValueBase<ImageSource>
     public override object RawValue
     {
         get => base.RawValue;
-        set => base.RawValue = Guard.OfType(value, nameof(value), typeof(ThemeValueReference), typeof(ImageSource));
+        set => base.RawValue = Guard.OfType(value, new[] { typeof(ThemeValueReference), typeof(ImageSource) });
     }
 
     public static implicit operator ImageSource(ImageSourceThemeValue themeValue)

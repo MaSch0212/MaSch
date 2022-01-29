@@ -120,7 +120,6 @@ public abstract class SutBuilderBase
 /// </summary>
 /// <typeparam name="TSut">The type of the sut class that is built by the builder.</typeparam>
 /// <typeparam name="TBuilder">The actual builder class.</typeparam>
-[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic representation")]
 public abstract class SutBuilderBase<TSut, TBuilder> : SutBuilderBase
     where TBuilder : SutBuilderBase<TSut, TBuilder>
 {
@@ -140,7 +139,7 @@ public abstract class SutBuilderBase<TSut, TBuilder> : SutBuilderBase
     /// <param name="value">The value.</param>
     /// <param name="methodName">The method name (auto detected).</param>
     /// <returns>A self reference to this builder.</returns>
-#if NETFRAMEWORK
+#if NETFRAMEWORK || NETSTANDARD
     protected new TBuilder Set<T>(T value, [CallerMemberName] string? methodName = null)
 #else
     protected override TBuilder Set<T>(T value, [CallerMemberName] string? methodName = null)
@@ -156,7 +155,7 @@ public abstract class SutBuilderBase<TSut, TBuilder> : SutBuilderBase
     /// <param name="value">The value.</param>
     /// <param name="methodName">The method name (auto detected).</param>
     /// <returns>A self reference to this builder.</returns>
-#if NETFRAMEWORK
+#if NETFRAMEWORK || NETSTANDARD
     protected new TBuilder Add<T>(T value, [CallerMemberName] string? methodName = null)
 #else
     protected override TBuilder Add<T>(T value, [CallerMemberName] string? methodName = null)

@@ -20,9 +20,9 @@ public abstract class CliApplicationBase : ICliApplicationBase
     protected CliApplicationBase(IServiceProvider serviceProvider, ICliApplicationOptions options, ICliCommandInfoCollection commandsCollection)
     {
         VerifyTypes();
-        ServiceProvider = Guard.NotNull(serviceProvider, nameof(serviceProvider));
-        Options = Guard.NotNull(options, nameof(options));
-        CommandsCollection = Guard.NotNull(commandsCollection, nameof(commandsCollection));
+        ServiceProvider = Guard.NotNull(serviceProvider);
+        Options = Guard.NotNull(options);
+        CommandsCollection = Guard.NotNull(commandsCollection);
     }
 
     /// <inheritdoc/>
@@ -95,8 +95,8 @@ public abstract class CliApplicationBase : ICliApplicationBase
 
     private void VerifyTypes()
     {
-        _ = Guard.NotNull(ExecutorType, nameof(ExecutorType));
-        _ = Guard.NotNull(GenericExecutorType, nameof(GenericExecutorType));
+        _ = Guard.NotNull(ExecutorType);
+        _ = Guard.NotNull(GenericExecutorType);
 
         if (!GenericExecutorType.IsGenericType || GenericExecutorType.GetGenericArguments().Length != 1)
             throw new ArgumentException($"The generic executor type needs to be a generic type with exactly one gneric argument.");

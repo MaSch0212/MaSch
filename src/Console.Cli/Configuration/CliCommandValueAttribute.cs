@@ -15,7 +15,7 @@ public class CliCommandValueAttribute : Attribute
     /// <param name="displayName">The display name of this value. This is used when displaying the value list on the help page.</param>
     public CliCommandValueAttribute(int order, string displayName)
     {
-        _ = Guard.NotNullOrEmpty(displayName, nameof(displayName));
+        _ = Guard.NotNullOrEmpty(displayName);
 
         Order = order;
         DisplayName = displayName;

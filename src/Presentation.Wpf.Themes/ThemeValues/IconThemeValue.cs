@@ -34,7 +34,7 @@ public class IconThemeValue : ThemeValueBase<Icon>
     public override object RawValue
     {
         get => Value;
-        set => Value = Guard.OfType<Icon>(value, nameof(value));
+        set => Value = Guard.OfType<Icon>(value);
     }
 
     /// <summary>

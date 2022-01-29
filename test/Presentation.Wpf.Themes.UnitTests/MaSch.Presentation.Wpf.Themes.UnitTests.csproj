@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <!-- General Project info -->
-    <TargetFrameworks>$(TfmNetCore)-windows;$(TfmNetFramework)</TargetFrameworks>
+    <TargetFrameworks>net6.0-windows;net48</TargetFrameworks>
     <IsTestProject>true</IsTestProject>
     <UseWPF>true</UseWPF>
 

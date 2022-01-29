@@ -12,7 +12,7 @@ public static class CultureInfoExtensions
     /// <returns>Returns the neutral <see cref="CultureInfo"/> of this <see cref="CultureInfo"/>.</returns>
     public static CultureInfo? GetNeutralCulture(this CultureInfo culture)
     {
-        _ = Guard.NotNull(culture, nameof(culture));
+        _ = Guard.NotNull(culture);
 
         var current = culture;
         while (!current.IsNeutralCulture && !Equals(current, CultureInfo.InvariantCulture))

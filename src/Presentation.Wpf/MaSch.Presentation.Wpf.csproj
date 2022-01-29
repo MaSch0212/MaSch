@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <!-- General Project info -->
-    <TargetFrameworks>$(TfmNetCore)-windows;$(TfmNetFramework)</TargetFrameworks>
+    <TargetFrameworks>net6.0-windows;net5.0-windows;net48</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ConfigureSourceLink>true</ConfigureSourceLink>
@@ -16,7 +16,7 @@
     
     <!-- Package Info -->
     <Description>Contains supporting code for .NET WPF applications.</Description>
-    <Version>0.1.7</Version>
+    <Version>0.1.8</Version>
     <PackageTags>masch presentation ui frontend wpf</PackageTags>
   </PropertyGroup>
 
@@ -27,7 +27,7 @@
     <ProjectReference Include="$(GitSourceDir)Presentation/MaSch.Presentation.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)'=='$(TfmNetFramework)' ">
+  <ItemGroup Condition="$(TargetFrameworkTYPE) == 'NETFRAMEWORK'">
     <Reference Include="ReachFramework" />
     <Reference Include="System.Printing" />
   </ItemGroup>

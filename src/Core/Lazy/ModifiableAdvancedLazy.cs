@@ -30,8 +30,8 @@ public class ModifiableAdvancedLazy<T1>
     /// <param name="useCaching">if set to <c>true</c> the first value returned by the factory function is cached.</param>
     public ModifiableAdvancedLazy(Func<T1> value1Factory, Action<T1> value1Callback, bool useCaching)
     {
-        _value1Factory = Guard.NotNull(value1Factory, nameof(value1Factory));
-        _value1Callback = Guard.NotNull(value1Callback, nameof(value1Callback));
+        _value1Factory = Guard.NotNull(value1Factory);
+        _value1Callback = Guard.NotNull(value1Callback);
         UseCaching = useCaching;
     }
 
@@ -138,8 +138,8 @@ public class ModifiableAdvancedLazy<T1, T2> : ModifiableAdvancedLazy<T1>
     public ModifiableAdvancedLazy(Func<T1> value1Factory, Action<T1> value1Callback, Func<T2> value2Factory, Action<T2> value2Callback, bool useCaching)
         : base(value1Factory, value1Callback, useCaching)
     {
-        _value2Factory = Guard.NotNull(value2Factory, nameof(value2Factory));
-        _value2Callback = Guard.NotNull(value2Callback, nameof(value2Callback));
+        _value2Factory = Guard.NotNull(value2Factory);
+        _value2Callback = Guard.NotNull(value2Callback);
     }
 
     /// <summary>
@@ -201,8 +201,8 @@ public class ModifiableAdvancedLazy<T1, T2, T3> : ModifiableAdvancedLazy<T1, T2>
     public ModifiableAdvancedLazy(Func<T1> value1Factory, Action<T1> value1Callback, Func<T2> value2Factory, Action<T2> value2Callback, Func<T3> value3Factory, Action<T3> value3Callback, bool useCaching)
         : base(value1Factory, value1Callback, value2Factory, value2Callback, useCaching)
     {
-        _value3Factory = Guard.NotNull(value3Factory, nameof(value3Factory));
-        _value3Callback = Guard.NotNull(value3Callback, nameof(value3Callback));
+        _value3Factory = Guard.NotNull(value3Factory);
+        _value3Callback = Guard.NotNull(value3Callback);
     }
 
     /// <summary>
@@ -269,8 +269,8 @@ public class ModifiableAdvancedLazy<T1, T2, T3, T4> : ModifiableAdvancedLazy<T1,
     public ModifiableAdvancedLazy(Func<T1> value1Factory, Action<T1> value1Callback, Func<T2> value2Factory, Action<T2> value2Callback, Func<T3> value3Factory, Action<T3> value3Callback, Func<T4> value4Factory, Action<T4> value4Callback, bool useCaching)
         : base(value1Factory, value1Callback, value2Factory, value2Callback, value3Factory, value3Callback, useCaching)
     {
-        _value4Factory = Guard.NotNull(value4Factory, nameof(value4Factory));
-        _value4Callback = Guard.NotNull(value4Callback, nameof(value4Callback));
+        _value4Factory = Guard.NotNull(value4Factory);
+        _value4Callback = Guard.NotNull(value4Callback);
     }
 
     /// <summary>
