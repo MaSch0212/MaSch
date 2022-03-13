@@ -1,16 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../../build/MaSch.Constants.props" />
-
   <PropertyGroup>
     <!-- General Project info -->
-    <TargetFrameworks>net6.0;net5.0;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
-    <ConfigureSourceLink>true</ConfigureSourceLink>
-    <AddReleaseNotes>true</AddReleaseNotes>
-    <UseMaSchGenerators>false</UseMaSchGenerators>
-
-    <!-- Output info -->
-    <SignAssembly>true</SignAssembly>
+    <TargetFrameworks>$(TfmsNetCoreApp);$(TfmsNetFramework);$(TfmsNetStandard)</TargetFrameworks>
 
     <!-- Package Info -->
     <Description>Contains Assertion logic for tests independent of the test framework.</Description>
@@ -19,10 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Generators\Resources\CallerArgumentExpression.cs" Link="Shims\CallerArgumentExpression.cs" />
-    <Compile Include="..\Generators\Resources\NullableReferenceTypes.cs" Link="Shims\NullableReferenceTypes.cs" />
+    <Compile Include="$(GitSourceDir)Generators\Resources\CallerArgumentExpression.cs" Link="Shims\CallerArgumentExpression.cs" />
+    <Compile Include="$(GitSourceDir)Generators\Resources\NullableReferenceTypes.cs" Link="Shims\NullableReferenceTypes.cs" />
   </ItemGroup>
-
-  <Import Project="$(GitBuildDir)MaSch.props" />
 
 </Project>

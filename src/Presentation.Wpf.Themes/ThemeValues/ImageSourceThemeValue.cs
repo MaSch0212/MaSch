@@ -15,6 +15,7 @@ public class ImageSourceThemeValue : ThemeValueBase<ImageSource>
 {
     /// <inheritdoc/>
     [JsonConverter(typeof(ThemeValuePropertyJsonConverter<ImageSource>))]
+    [SuppressMessage("Critical Bug", "S4275:Getters and setters should access the expected fields", Justification = "Field is set via base class.")]
     public override object RawValue
     {
         get => base.RawValue;

@@ -30,14 +30,14 @@ public class ByteSizeToStringConverter : IValueConverter
     }
 
     /// <inheritdoc />
-    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var (bytes, suffix) = Format(System.Convert.ToDouble(value));
         return $"{bytes:0.00} {suffix}";
     }
 
     /// <inheritdoc />
-    public object? ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var s = System.Convert.ToString(value)?.Split(' ');
         if (s == null || s.Length < 2)

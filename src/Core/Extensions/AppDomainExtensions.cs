@@ -26,7 +26,7 @@ public static class AppDomainExtensions
                 select probing)
             .FirstOrDefault();
 
-        return probingElement?.Attribute("privatePath")?.Value.Split(';');
+        return probingElement?.Attribute("privatePath")?.Value.Split(';') ?? Array.Empty<string>();
     }
 }
 #endif

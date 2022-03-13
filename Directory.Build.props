@@ -1,0 +1,54 @@
+<!-- This file is imported for each csproj pretty early in the MSBuild process -->
+<Project>
+
+  <Import Project="$(MSBuildThisFileDirectory)build/Constants.props" Condition=" '$(MaSchConstantsImported)' != 'true' " />
+  <Import Project="$(MSBuildThisFileDirectory)build/GlobalUsings.props" />
+
+  <PropertyGroup>
+    <TfmNetCoreApp>net6.0</TfmNetCoreApp>
+    <TfmNetFramework>net48</TfmNetFramework>
+    <TfmsNetCoreApp>net6.0;net5.0</TfmsNetCoreApp>
+    <TfmsNetCoreAppWindows>net6.0-windows;net5.0-windows</TfmsNetCoreAppWindows>
+    <TfmsNetFramework>$(TfmNetFramework)</TfmsNetFramework>
+    <TfmsNetStandard>netstandard2.1;netstandard2.0</TfmsNetStandard>
+    
+    <EnableSigning>true</EnableSigning>
+    <EnableMaSchGenerators>false</EnableMaSchGenerators>
+    <EnableSourceLinkMS>true</EnableSourceLinkMS>
+    <EnableReleaseNotes>true</EnableReleaseNotes>
+    <EnableDocumentation>true</EnableDocumentation>
+  
+    <EnableNetAnalyzers>true</EnableNetAnalyzers>
+    <EnableStyleCopAnalyzers>true</EnableStyleCopAnalyzers>
+    <EnableSonarAnalyzers>true</EnableSonarAnalyzers>
+    <ReflectionAnalyzers>true</ReflectionAnalyzers>
+    <IDisposableAnalyzers>true</IDisposableAnalyzers>
+    
+    <EnableMoq>false</EnableMoq>
+    <EnableMaSchTest>false</EnableMaSchTest>
+  </PropertyGroup>
+    
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <CodeAnalysisRuleSet>$(GitBuildDir)/MaSch.ruleset</CodeAnalysisRuleSet>
+
+    <OutputPath>$(GitRootDir)bin\$(Configuration)\</OutputPath>
+    
+    <IsPackable>true</IsPackable>
+    <Authors>Marc Schmidt</Authors>
+    <Copyright>Copyright © Marc Schmidt 2021</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/MaSch0212/MaSch</PackageProjectUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+</Project>

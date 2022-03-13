@@ -47,9 +47,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{703BC87F-2F71-454A-93BA-014D78DF88C2}"
 	ProjectSection(SolutionItems) = preProject
 		build\build.yml = build\build.yml
+		build\Constants.props = build\Constants.props
 		build\GlobalUsings.props = build\GlobalUsings.props
-		build\MaSch.Constants.props = build\MaSch.Constants.props
-		build\MaSch.props = build\MaSch.props
 		build\MaSch.ruleset = build\MaSch.ruleset
 		build\MaSch.Tests.ruleset = build\MaSch.Tests.ruleset
 		build\stylecop.json = build\stylecop.json
@@ -94,6 +93,18 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaSch.Test.Assertion.MSTest.UnitTests", "test\Test.Assertion.MSTest.UnitTests\MaSch.Test.Assertion.MSTest.UnitTests.csproj", "{5CB2D0EE-EFD2-4C8C-89F4-4303A603EAEE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSTest", "MSTest", "{80618842-C8F6-4333-9F0F-2156ECDF6B7A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9698B67B-2D95-451F-A50D-BC0A8E27A1AE}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		Packages.props = Packages.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{1DAB73F0-1233-4AF1-A5E9-953569AE68E4}"
+	ProjectSection(SolutionItems) = preProject
+		test\Directory.Build.props = test\Directory.Build.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -497,6 +508,7 @@ Global
 		{03AFBC0F-6B9B-4BF8-B9E0-A7AA26DFDF40} = {58FA79F9-7163-4B5E-8838-86C5800A08B7}
 		{5CB2D0EE-EFD2-4C8C-89F4-4303A603EAEE} = {80618842-C8F6-4333-9F0F-2156ECDF6B7A}
 		{80618842-C8F6-4333-9F0F-2156ECDF6B7A} = {58FA79F9-7163-4B5E-8838-86C5800A08B7}
+		{1DAB73F0-1233-4AF1-A5E9-953569AE68E4} = {9698B67B-2D95-451F-A50D-BC0A8E27A1AE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {65E29835-6B71-486D-82EF-456494F172D7}

@@ -51,12 +51,28 @@ public class EquatableWeakReference : WeakReference
         }
     }
 
+    /// <summary>
+    /// Determines whether the two instance of type <see cref="EquatableWeakReference"/> are equal.
+    /// </summary>
+    /// <param name="x">The first instance.</param>
+    /// <param name="y">The second instance.</param>
+    /// <returns><c>true</c> when the two instances are equal; otherwise <c>false</c>.</returns>
     [SuppressMessage("Blocker Code Smell", "S3875:\"operator==\" should not be overloaded on reference types", Justification = "The caller would expect to compare the references to the target object.")]
     public static bool operator ==(EquatableWeakReference x, EquatableWeakReference y)
-        => Equals(x, y);
+    {
+        return Equals(x, y);
+    }
 
+    /// <summary>
+    /// Determines whether the two instance of type <see cref="EquatableWeakReference"/> are not equal.
+    /// </summary>
+    /// <param name="x">The first instance.</param>
+    /// <param name="y">The second instance.</param>
+    /// <returns><c>true</c> when the two instances are not equal; otherwise <c>false</c>.</returns>
     public static bool operator !=(EquatableWeakReference x, EquatableWeakReference y)
-        => !Equals(x, y);
+    {
+        return !Equals(x, y);
+    }
 
     /// <inheritdoc/>
     [SuppressMessage("Minor Bug", "S2328:\"GetHashCode\" should not reference mutable fields", Justification = "Needed here")]

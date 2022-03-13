@@ -1,26 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
-  <Import Project="../../build/MaSch.Constants.props" />
-
   <PropertyGroup>
     <!-- General Project info -->
     <RootNamespace>MaSch.Presentation.Wpf</RootNamespace>
-    <TargetFrameworks>net6.0-windows;net48</TargetFrameworks>
+    <TargetFrameworks>$(TfmsNetCoreAppWindows);$(TfmsNetFramework)</TargetFrameworks>
     <UseWPF>true</UseWPF>
-    <ConfigureSourceLink>true</ConfigureSourceLink>
-    <AddReleaseNotes>true</AddReleaseNotes>
-    <UseMaSchGenerators>true</UseMaSchGenerators>
-
-    <!-- Output info -->
-    <SignAssembly>true</SignAssembly>
+    <EnableMaSchGenerators>true</EnableMaSchGenerators>
 
     <!-- Package Info -->
     <Description>Contains advanced controls for .NET WPF applications.</Description>
     <Version>0.2.6</Version>
     <PackageTags>masch presentation ui frontend wpf controls</PackageTags>
   </PropertyGroup>
-
-  <Import Project="$(GitBuildDir)MaSch.props" />
 
   <ItemGroup>
     <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />

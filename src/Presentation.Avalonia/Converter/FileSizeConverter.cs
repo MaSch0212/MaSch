@@ -11,7 +11,7 @@ public class FileSizeConverter : IValueConverter
     private static readonly string[] Measures = { string.Empty, "K", "M", "G", "T", "P", "E", "Z", "Y" };
 
     /// <inheritdoc />
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (double.TryParse(value?.ToString(), out double size) && size >= 0)
         {
@@ -29,7 +29,7 @@ public class FileSizeConverter : IValueConverter
     }
 
     /// <inheritdoc />
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var s = value?.ToString();
         if (s != null)

@@ -12,7 +12,7 @@ internal static class Extensions
     /// <returns>
     ///   <c>true</c> if the value parameter occurs within this string, or if value is the empty string (""); otherwise, <c>false</c>.
     /// </returns>
-    public static bool Contains(this string s, string value, System.StringComparison comparisonType)
+    public static bool Contains(this string s, string value, StringComparison comparisonType)
     {
         return s.IndexOf(value, comparisonType) >= 0;
     }

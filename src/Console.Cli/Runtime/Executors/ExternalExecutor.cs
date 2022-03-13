@@ -2,6 +2,8 @@
 using MaSch.Core;
 using MaSch.Core.Extensions;
 
+#pragma warning disable SA1402 // File may only contain a single type
+
 namespace MaSch.Console.Cli.Runtime.Executors;
 
 internal static class ExternalExecutor

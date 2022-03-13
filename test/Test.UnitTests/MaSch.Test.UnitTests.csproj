@@ -1,22 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../../build/MaSch.Constants.props" />
-
   <PropertyGroup>
     <!-- General Project info -->
-    <TargetFrameworks>net6.0;net48</TargetFrameworks>
-    <IsTestProject>true</IsTestProject>
-    <NoMaSchTest>true</NoMaSchTest>
-    <UseMaSchGenerators>true</UseMaSchGenerators>
-
-    <!-- Output info -->
-    <SignAssembly>true</SignAssembly>
+    <TargetFrameworks>$(TfmNetCoreApp);$(TfmNetFramework)</TargetFrameworks>
+    <EnableMaSchTest>false</EnableMaSchTest>
+    <EnableMaSchGenerators>true</EnableMaSchGenerators>
 
     <!-- Disable warning about existing shim in MaSch.Test -->
     <NoWarn>$(NoWarn);0436</NoWarn>
   </PropertyGroup>
-
-  <Import Project="$(GitBuildDir)MaSch.props" />
 
   <ItemGroup>
     <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />

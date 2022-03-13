@@ -11,7 +11,7 @@ namespace MaSch.Presentation.Avalonia.Converter;
 public class ColorTransparencyConverter : IValueConverter, IMultiValueConverter
 {
     /// <inheritdoc />
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         Color? color = null;
         if (value is SolidColorBrush solidColorBrush)
@@ -31,7 +31,7 @@ public class ColorTransparencyConverter : IValueConverter, IMultiValueConverter
     }
 
     /// <inheritdoc />
-    public object Convert(IList<object> values, Type targetType, object parameter, CultureInfo culture)
+    public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
     {
         if (values.Count == 2)
             return Convert(values[0], targetType, values[1], culture);
@@ -39,7 +39,7 @@ public class ColorTransparencyConverter : IValueConverter, IMultiValueConverter
     }
 
     /// <inheritdoc />
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotSupportedException("The transparency of a color cannot be restored!");
     }

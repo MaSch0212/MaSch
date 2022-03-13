@@ -10,7 +10,7 @@ namespace MaSch.Presentation.Avalonia.Converter;
 public class DateTimeToStringConverter : IValueConverter
 {
     /// <inheritdoc />
-    public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is DateTime dt)
             return dt.ToString(culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.ShortTimePattern, culture);
@@ -18,7 +18,7 @@ public class DateTimeToStringConverter : IValueConverter
     }
 
     /// <inheritdoc />
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new InvalidOperationException();
     }

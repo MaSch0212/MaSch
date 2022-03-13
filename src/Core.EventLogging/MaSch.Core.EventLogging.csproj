@@ -1,16 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   
-  <Import Project="../../build/MaSch.Constants.props" />
-
   <PropertyGroup>
     <!-- General Project info -->
     <RootNamespace>MaSch.Core</RootNamespace>
-    <TargetFrameworks>net6.0-windows;net5.0-windows;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
-    <ConfigureSourceLink>true</ConfigureSourceLink>
-    <AddReleaseNotes>true</AddReleaseNotes>
-
-    <!-- Output info -->
-    <SignAssembly>true</SignAssembly>
+    <TargetFrameworks>$(TfmsNetCoreAppWindows);$(TfmsNetFramework);$(TfmsNetStandard)</TargetFrameworks>
 
     <!-- Package Info -->
     <Description>Contains a logging provider for windows Event Logging.</Description>
@@ -18,10 +11,8 @@
     <PackageTags>masch generator sourcegenerator wrapper observable wpf</PackageTags>
   </PropertyGroup>
 
-  <Import Project="$(GitBuildDir)MaSch.props" />
-
   <ItemGroup>
-    <PackageReference Include="System.Diagnostics.EventLog" Version="$(SystemDiagnosticsEventLogVersion)" />
+    <PackageReference Include="System.Diagnostics.EventLog" />
   </ItemGroup>
 
   <ItemGroup>

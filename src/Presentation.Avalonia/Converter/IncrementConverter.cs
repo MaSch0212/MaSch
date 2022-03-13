@@ -9,7 +9,7 @@ namespace MaSch.Presentation.Avalonia.Converter;
 public class IncrementConverter : IValueConverter
 {
     /// <inheritdoc />
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (!int.TryParse(parameter?.ToString(), out int p))
             p = 1;
@@ -19,7 +19,7 @@ public class IncrementConverter : IValueConverter
     }
 
     /// <inheritdoc />
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (!int.TryParse(parameter?.ToString(), out int p))
             p = 1;

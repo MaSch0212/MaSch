@@ -59,7 +59,7 @@ public static class ScreenExtensions
 
     // https://msdn.microsoft.com/en-us/library/windows/desktop/dd145062.aspx
     [DllImport("User32.dll")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:Field names should not use Hungarian notation", Justification = "PInvoke argument name.")]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:Field names should not use Hungarian notation", Justification = "PInvoke argument name.")]
     private static extern IntPtr MonitorFromPoint([In] Point pt, [In] uint dwFlags);
 
     // https://msdn.microsoft.com/en-us/library/windows/desktop/dn280510.aspx

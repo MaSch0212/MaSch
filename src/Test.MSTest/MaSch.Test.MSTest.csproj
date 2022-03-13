@@ -1,18 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   
-  <Import Project="../../build/MaSch.Constants.props" />
-  
   <PropertyGroup>
     <!-- General Project info -->
-    <TargetFrameworks>net6.0;net5.0;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
     <RootNamespace>MaSch.Test</RootNamespace>
-    <ConfigureSourceLink>true</ConfigureSourceLink>
-    <AddReleaseNotes>true</AddReleaseNotes>
-    <UseMaSchGenerators>true</UseMaSchGenerators>
-    <DefineConstants>$(DefineConstants);MSTEST</DefineConstants>
+    <TargetFrameworks>$(TfmsNetCoreApp);$(TfmsNetFramework);$(TfmsNetStandard)</TargetFrameworks>
+    <EnableMaSchGenerators>true</EnableMaSchGenerators>
 
-    <!-- Output info -->
-    <SignAssembly>true</SignAssembly>
+    <DefineConstants>$(DefineConstants);MSTEST</DefineConstants>
 
     <!-- Package Info -->
     <Description>Contains some supporting code for MSTest Unit Tests.</Description>
@@ -22,20 +16,18 @@
     <DoesNotReturnAttribute>DoesNotReturnAttribute</DoesNotReturnAttribute>
   </PropertyGroup>
 
-  <Import Project="$(GitBuildDir)MaSch.props" />
-
   <ItemGroup>
-    <Compile Include="../Test/**/*.cs" Exclude="../Test/obj/**/*" />
+    <Compile Include="$(GitSourceDir)Test/**/*.cs" Exclude="$(GitSourceDir)Test/obj/**/*" />
   </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
-    <ProjectReference Include="..\Test.Assertion.MSTest\MaSch.Test.Assertion.MSTest.csproj" />
+    <ProjectReference Include="$(GitSourceDir)Test.Assertion.MSTest\MaSch.Test.Assertion.MSTest.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MSTest.TestFramework" Version="$(MsTestVersion)" />
-    <PackageReference Include="Moq" Version="$(MoqVersion)" />
+    <PackageReference Include="MSTest.TestFramework" />
+    <PackageReference Include="Moq" />
   </ItemGroup>
 
   <ItemGroup>

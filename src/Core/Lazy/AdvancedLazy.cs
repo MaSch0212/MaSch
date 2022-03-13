@@ -1,4 +1,6 @@
-﻿namespace MaSch.Core.Lazy;
+﻿#pragma warning disable SA1402 // File may only contain a single type
+
+namespace MaSch.Core.Lazy;
 
 /// <summary>
 /// More advanced class than <see cref="Lazy{T}"/>.

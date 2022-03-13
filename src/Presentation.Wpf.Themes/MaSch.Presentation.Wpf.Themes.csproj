@@ -1,18 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
-  <Import Project="../../build/MaSch.Constants.props" />
-
   <PropertyGroup>
     <!-- General Project info -->
-    <TargetFrameworks>net6.0-windows;net5.0-windows;net48</TargetFrameworks>
     <RootNamespace>MaSch.Presentation.Wpf</RootNamespace>
+    <TargetFrameworks>$(TfmsNetCoreAppWindows);$(TfmsNetFramework)</TargetFrameworks>
     <UseWPF>true</UseWPF>
-    <ConfigureSourceLink>true</ConfigureSourceLink>
-    <AddReleaseNotes>true</AddReleaseNotes>
-    <UseMaSchGenerators>true</UseMaSchGenerators>
-
-    <!-- Output info -->
-    <SignAssembly>true</SignAssembly>
+    <EnableMaSchGenerators>true</EnableMaSchGenerators>
 
     <!-- Package Info -->
     <Description>Contains modern themes for .NET WPF application</Description>
@@ -20,14 +13,9 @@
     <PackageTags>masch presentation ui frontend wpf themes theming</PackageTags>
   </PropertyGroup>
 
-  <Import Project="$(GitBuildDir)MaSch.props" />
-  
   <ItemGroup>
-    <None Remove="Themes\Base\Theme.json" />
-    <None Remove="Themes\Dark\DefaultWindowIcon.ico" />
-    <None Remove="Themes\Dark\Theme.json" />
-    <None Remove="Themes\Light\DefaultWindowIcon.ico" />
-    <None Remove="Themes\Light\Theme.json" />
+    <None Remove="Themes\*\*" />
+    <Resource Include="Themes\*\*" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,24 +25,16 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
+    <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(TargetFrameworkType) == 'NETFRAMEWORK'">
+  <ItemGroup Condition="$(TargetFrameworkIdentifier) == '.NETFramework'">
     <Reference Include="System.Net.Http" />
   </ItemGroup>
 
   <ItemGroup>
     <Using Include="MaSch.Core.Extensions"/>
     <Using Include="Newtonsoft.Json"/>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Themes\Base\Theme.json" />
-    <Resource Include="Themes\Dark\DefaultWindowIcon.ico" />
-    <Resource Include="Themes\Dark\Theme.json" />
-    <Resource Include="Themes\Light\DefaultWindowIcon.ico" />
-    <Resource Include="Themes\Light\Theme.json" />
   </ItemGroup>
 
   <ItemGroup>

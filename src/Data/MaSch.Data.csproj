@@ -1,26 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   
-  <Import Project="../../build/MaSch.Constants.props" />
-
   <PropertyGroup>
     <!-- General Project info -->
-    <TargetFrameworks>net6.0;net5.0;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
-    <ConfigureSourceLink>true</ConfigureSourceLink>
-    <AddReleaseNotes>true</AddReleaseNotes>
-
-    <!-- Output info -->
-    <SignAssembly>true</SignAssembly>
+    <TargetFrameworks>$(TfmsNetCoreApp);$(TfmsNetFramework);$(TfmsNetStandard)</TargetFrameworks>
 
     <!-- Package Info -->
     <Description>Contains supporting code for data access in .NET applications.</Description>
     <Version>0.1.6</Version>
     <PackageTags>masch data database</PackageTags>
   </PropertyGroup>
-
-  <Import Project="$(GitBuildDir)MaSch.props" />
-
+  
   <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.CSharp" />
   </ItemGroup>
 
   <ItemGroup>

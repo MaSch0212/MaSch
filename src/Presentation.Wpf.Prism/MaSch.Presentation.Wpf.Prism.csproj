@@ -1,17 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
-  <Import Project="../../build/MaSch.Constants.props" />
-
   <PropertyGroup>
     <!-- General Project info -->
-    <TargetFrameworks>net6.0-windows;net5.0-windows;net48</TargetFrameworks>
     <RootNamespace>MaSch.Presentation.Wpf</RootNamespace>
+    <TargetFrameworks>$(TfmsNetCoreAppWindows);$(TfmsNetFramework)</TargetFrameworks>
     <UseWPF>true</UseWPF>
-    <ConfigureSourceLink>true</ConfigureSourceLink>
-    <AddReleaseNotes>true</AddReleaseNotes>
-
-    <!-- Output info -->
-    <SignAssembly>true</SignAssembly>
 
     <!-- Package Info -->
     <Description>Contains supporting code for .NET WPF applications using the Prism framework from Microsoft.</Description>
@@ -19,10 +12,8 @@
     <PackageTags>masch presentation ui frontend wpf prism</PackageTags>
   </PropertyGroup>
 
-  <Import Project="$(GitBuildDir)MaSch.props" />
-
   <ItemGroup>
-    <PackageReference Include="Prism.Wpf" Version="$(PrismWpfVersion)" />
+    <PackageReference Include="Prism.Wpf" />
   </ItemGroup>
   
 </Project>

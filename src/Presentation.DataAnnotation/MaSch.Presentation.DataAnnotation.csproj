@@ -1,16 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../../build/MaSch.Constants.props" />
-
   <PropertyGroup>
     <!-- General Project info -->
-    <TargetFrameworks>net6.0;net5.0;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
     <RootNamespace>MaSch.Presentation</RootNamespace>
-    <ConfigureSourceLink>true</ConfigureSourceLink>
-    <AddReleaseNotes>true</AddReleaseNotes>
-
-    <!-- Output info -->
-    <SignAssembly>true</SignAssembly>
+    <TargetFrameworks>$(TfmsNetCoreAppWindows);$(TfmsNetFramework);$(TfmsNetStandard)</TargetFrameworks>
 
     <!-- Package Info -->
     <Description>Contains supporting code for .NET front-end applications.</Description>
@@ -18,10 +11,8 @@
     <PackageTags>masch presentation ui frontend translation localization validation dataannotation annotation</PackageTags>
   </PropertyGroup>
 
-  <Import Project="$(GitBuildDir)MaSch.props" />
-
   <ItemGroup>
-    <PackageReference Include="System.ComponentModel.Annotations" Version="$(SystemComponentModelAnnotationsVersion)" />
+    <PackageReference Include="System.ComponentModel.Annotations" />
   </ItemGroup>
 
   <ItemGroup>

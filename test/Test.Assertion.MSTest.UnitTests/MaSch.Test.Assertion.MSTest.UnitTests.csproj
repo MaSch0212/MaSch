@@ -1,22 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../../build/MaSch.Constants.props" />
-
   <PropertyGroup>
     <!-- General Project info -->
-    <TargetFrameworks>net6.0;net48</TargetFrameworks>
     <RootNamespace>MaSch.Test.Assertion.UnitTests</RootNamespace>
-    <IsTestProject>true</IsTestProject>
-    <NoMaSchTest>true</NoMaSchTest>
-    <UseMaSchGenerators>true</UseMaSchGenerators>
+    <TargetFrameworks>$(TfmNetCoreApp);$(TfmNetFramework)</TargetFrameworks>
+    <EnableMaSchTest>false</EnableMaSchTest>
+    <EnableMaSchGenerators>true</EnableMaSchGenerators>
     <DefineConstants>$(DefineConstants);MSTEST</DefineConstants>
-
-    <!-- Output info -->
-    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
-
-  <Import Project="$(GitBuildDir)MaSch.props" />
-
+  
   <ItemGroup>
     <Compile Include="../Test.Assertion.UnitTests/**/*.cs" Exclude="../Test.Assertion.UnitTests/obj/**/*" />
   </ItemGroup>

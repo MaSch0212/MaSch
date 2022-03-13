@@ -1,0 +1,30 @@
+<!-- This file is imported for each csproj pretty late in the MSBuild process -->
+<Project>
+
+  <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.1" />
+  
+  <PropertyGroup>
+    <SignAssembly Condition=" '$(EnableSigning)' == 'true' ">true</SignAssembly>
+    <AssemblyOriginatorKeyFile Condition=" '$(EnableSigning)' == 'true' ">$(GitBuildDir)MaSch.snk</AssemblyOriginatorKeyFile>
+    <DocumentationFile Condition=" '$(EnableDocumentation)' == 'true' ">$(OutputPath)$(TargetFramework)/$(AssemblyName).xml</DocumentationFile>
+    <SupportedOSPlatform Condition=" '$(UseWpf)' == 'true' or '$(UseWindowsForms)' == 'true' ">windows</SupportedOSPlatform>
+    <NoWarn Condition="$(TargetFrameworkIdentifier) == '.NETFramework' or $(TargetFrameworkIdentifier) == '.NETStandard' ">$(NoWarn);8600;8601;8602;8603;8604;8777;8767</NoWarn>
+  </PropertyGroup>
+  
+  <!-- Release notes -->
+  <PropertyGroup Condition=" '$(EnableReleaseNotes)' == 'true' ">
+    <ReleaseNotesFile>$(ProjectDir)Properties/release-notes/v$(Version).txt</ReleaseNotesFile>
+  </PropertyGroup>
+  <Target Name="WarnAboutMissingReleaseNotesFile" BeforeTargets="DispatchToInnerBuilds" Condition=" '$(EnableReleaseNotes)' == 'true' ">
+    <Warning Text="No release notes found for version $(Version). The file is expected at the path &quot;$(ReleaseNotesFile)&quot;" Condition="!Exists('$(ReleaseNotesFile)')" />
+  </Target>
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec" Condition=" '$(EnableReleaseNotes)' == 'true' ">
+    <ReadLinesFromFile File="$(ReleaseNotesFile)" >
+      <Output TaskParameter="Lines" ItemName="ReleaseNoteLines"/>
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+  
+</Project>

@@ -1,33 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../../build/MaSch.Constants.props" />
-
   <PropertyGroup>
     <!-- General Project info -->
-    <TargetFrameworks>net6.0-windows;net5.0-windows;net48</TargetFrameworks>
+    <TargetFrameworks>$(TfmsNetCoreAppWindows);$(TfmsNetFramework)</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
-    <ConfigureSourceLink>true</ConfigureSourceLink>
-    <AddReleaseNotes>true</AddReleaseNotes>
-    <UseMaSchGenerators>true</UseMaSchGenerators>
+    <EnableMaSchGenerators>true</EnableMaSchGenerators>
 
-    <!-- Output info -->
-    <SignAssembly>true</SignAssembly>
-    
     <!-- Package Info -->
     <Description>Contains supporting code for .NET WPF applications.</Description>
     <Version>0.1.8</Version>
     <PackageTags>masch presentation ui frontend wpf</PackageTags>
   </PropertyGroup>
 
-  <Import Project="$(GitBuildDir)MaSch.props" />
-
   <ItemGroup>
     <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
     <ProjectReference Include="$(GitSourceDir)Presentation/MaSch.Presentation.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(TargetFrameworkTYPE) == 'NETFRAMEWORK'">
+  <ItemGroup Condition="$(TargetFrameworkIdentifier) == '.NETFramework'">
     <Reference Include="ReachFramework" />
     <Reference Include="System.Printing" />
   </ItemGroup>

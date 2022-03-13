@@ -1,0 +1,20 @@
+<!-- This file is imported for each csproj pretty early in the MSBuild process -->
+<Project>
+  
+  <Import Project="../Directory.Build.props" />
+
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>$(GitBuildDir)/MaSch.Tests.ruleset</CodeAnalysisRuleSet>
+    
+    <IsTestProject>true</IsTestProject>
+    <IsPackable>false</IsPackable>
+    
+    <EnableSourceLinkMS>false</EnableSourceLinkMS>
+    <EnableReleaseNotes>false</EnableReleaseNotes>
+    <EnableDocumentation>false</EnableDocumentation>
+    <EnableSonarAnalyzers>false</EnableSonarAnalyzers>
+    <EnableMoq>true</EnableMoq>
+    <EnableMaSchTest>true</EnableMaSchTest>
+  </PropertyGroup>
+
+</Project>

@@ -1,4 +1,6 @@
-﻿namespace MaSch.Core;
+﻿#pragma warning disable SA1402 // File may only contain a single type
+
+namespace MaSch.Core;
 
 /// <summary>
 /// Represents a wrappoer for an <see cref="IEnumerable{T}"/> which executes an action if it is disposed.

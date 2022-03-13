@@ -1,18 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../../build/MaSch.Constants.props" />
-
   <PropertyGroup>
     <!-- General Project info -->
-    <TargetFrameworks>net6.0;net5.0;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
     <RootNamespace>MaSch.Test.Assertion</RootNamespace>
-    <ConfigureSourceLink>true</ConfigureSourceLink>
-    <AddReleaseNotes>true</AddReleaseNotes>
-    <UseMaSchGenerators>false</UseMaSchGenerators>
+    <TargetFrameworks>$(TfmsNetCoreApp);$(TfmsNetFramework);$(TfmsNetStandard)</TargetFrameworks>
     <DefineConstants>$(DefineConstants);MSTEST</DefineConstants>
-    
-    <!-- Output info -->
-    <SignAssembly>true</SignAssembly>
 
     <!-- Package Info -->
     <Description>Contains Assertion logic for tests written with MSTest.</Description>
@@ -20,19 +12,17 @@
     <PackageTags>masch test mstest</PackageTags>
   </PropertyGroup>
 
-  <Import Project="$(GitBuildDir)MaSch.props" />
-
   <ItemGroup>
-    <Compile Include="../Test.Assertion/**/*.cs" Exclude="../Test.Assertion/obj/**/*" />
+    <Compile Include="$(GitSourceDir)Test.Assertion/**/*.cs" Exclude="$(GitSourceDir)Test.Assertion/obj/**/*" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\Generators\Resources\CallerArgumentExpression.cs" Link="Shims\CallerArgumentExpression.cs" />
-    <Compile Include="..\Generators\Resources\NullableReferenceTypes.cs" Link="Shims\NullableReferenceTypes.cs" />
+    <Compile Include="$(GitSourceDir)Generators\Resources\CallerArgumentExpression.cs" Link="Shims\CallerArgumentExpression.cs" />
+    <Compile Include="$(GitSourceDir)Generators\Resources\NullableReferenceTypes.cs" Link="Shims\NullableReferenceTypes.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MSTest.TestFramework" Version="$(MsTestVersion)" />
+    <PackageReference Include="MSTest.TestFramework" />
   </ItemGroup>
   
   <ItemGroup>

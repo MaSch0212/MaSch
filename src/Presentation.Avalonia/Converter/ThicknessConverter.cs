@@ -36,7 +36,7 @@ public class ThicknessConverter : IValueConverter, IMultiValueConverter
     public string RightFormula { get; set; } = "R";
 
     /// <inheritdoc />
-    public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var (lf, tf, rf, bf) = GetFormulas(parameter);
         var valuesList = new List<object>();
@@ -63,7 +63,7 @@ public class ThicknessConverter : IValueConverter, IMultiValueConverter
     }
 
     /// <inheritdoc />
-    public object? Convert(IList<object> values, Type targetType, object parameter, CultureInfo culture)
+    public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
     {
         if (values.IsNullOrEmpty())
             return null;
@@ -95,7 +95,7 @@ public class ThicknessConverter : IValueConverter, IMultiValueConverter
     }
 
     /// <inheritdoc />
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotSupportedException();
     }
@@ -118,7 +118,7 @@ public class ThicknessConverter : IValueConverter, IMultiValueConverter
             .Replace("x" + suffix, $"{{{startIndex}}}");
     }
 
-    private (string Left, string Top, string Right, string Bottom) GetFormulas(object parameter)
+    private (string Left, string Top, string Right, string Bottom) GetFormulas(object? parameter)
     {
         string lf = LeftFormula, tf = TopFormula, rf = RightFormula, bf = BottomFormula;
         if (parameter is string formula)
