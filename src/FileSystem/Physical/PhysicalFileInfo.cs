@@ -25,7 +25,11 @@ internal class PhysicalFileInfo : PhysicalFileSystemInfo, IFileInfo
 
     public bool IsReadOnly => WrappedInfo.IsReadOnly;
 
+#if NET5_0_OR_GREATER
     protected override FileInfo WrappedInfo { get; }
+#else
+    protected new FileInfo WrappedInfo { get; }
+#endif
 
     public StreamWriter AppendText()
     {
@@ -59,7 +63,11 @@ internal class PhysicalFileInfo : PhysicalFileSystemInfo, IFileInfo
 
     public void MoveTo(string destFileName, bool overwrite)
     {
+#if NET5_0_OR_GREATER
         WrappedInfo.MoveTo(destFileName, overwrite);
+#else
+        FileSystem.File.Move(FullName, destFileName, overwrite);
+#endif
     }
 
     public Stream Open(FileMode mode)
@@ -79,7 +87,7 @@ internal class PhysicalFileInfo : PhysicalFileSystemInfo, IFileInfo
 
     public Stream Open(FileStreamOptions options)
     {
-#if !NETFRAMEWORK && (!NETSTANDARD || NETSTANDARD2_1_OR_GREATER)
+#if NET6_0_OR_GREATER
         return WrappedInfo.Open(options);
 #else
         return new FileStream(WrappedInfo.FullName, options.Mode, options.Access, options.Share, options.BufferSize, options.Options);

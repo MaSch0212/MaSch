@@ -141,7 +141,7 @@ public abstract class FileServiceBase : IFileService
     public virtual StreamWriter AppendText(string path)
     {
         var fileStream = Open(path, FileMode.Append, FileAccess.Write, FileShare.Read, DefaultBufferSize, FileOptions.None);
-#if !NETFRAMEWORK && (!NETSTANDARD || NETSTANDARD2_1_OR_GREATER)
+#if NET5_0_OR_GREATER
         return new StreamWriter(fileStream, leaveOpen: false);
 #else
         return new StreamWriter(fileStream, Encoding.Default, 1024, leaveOpen: false);
@@ -179,7 +179,7 @@ public abstract class FileServiceBase : IFileService
     public virtual StreamWriter CreateText(string path)
     {
         var fileStream = Create(path, DefaultBufferSize, FileOptions.None);
-#if !NETFRAMEWORK && (!NETSTANDARD || NETSTANDARD2_1_OR_GREATER)
+#if NET5_0_OR_GREATER
         return new StreamWriter(fileStream, leaveOpen: false);
 #else
         return new StreamWriter(fileStream, Encoding.Default, 1024, leaveOpen: false);
@@ -262,7 +262,7 @@ public abstract class FileServiceBase : IFileService
     public virtual StreamReader OpenText(string path)
     {
         var fileStream = Open(path, FileMode.Open, FileAccess.Read, FileShare.Read, DefaultBufferSize, FileOptions.None);
-#if !NETFRAMEWORK && (!NETSTANDARD || NETSTANDARD2_1_OR_GREATER)
+#if NET5_0_OR_GREATER
         return new StreamReader(fileStream, leaveOpen: false);
 #else
         return new StreamReader(fileStream, Encoding.Default, true, 1024, leaveOpen: false);

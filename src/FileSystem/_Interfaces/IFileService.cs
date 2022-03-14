@@ -1,4 +1,6 @@
-﻿namespace MaSch.FileSystem;
+﻿#pragma warning disable S4136 // Method overloads should be grouped together
+
+namespace MaSch.FileSystem;
 
 public interface IFileService
 {

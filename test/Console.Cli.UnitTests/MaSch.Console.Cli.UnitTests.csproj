@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(GitSourceDir)Console.Cli/MaSch.Console.Cli.csproj" />
+    <MaSchReference Include="Console.Cli" />
   </ItemGroup>
 
 </Project>

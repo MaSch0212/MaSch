@@ -14,10 +14,12 @@
   <!-- Remove this group when this project contains usable code. -->
   <PropertyGroup>
     <IsPackable>false</IsPackable>
+    <CodeAnalysisRuleSet>FileSystem.ruleset</CodeAnalysisRuleSet>
+    <EnableReleaseNotes>false</EnableReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
+    <MaSchReference Include="Core" />
   </ItemGroup>
 
   <ItemGroup>

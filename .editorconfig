@@ -1,11 +1,9 @@
-root = true
+﻿root = true
 
 [*]
 charset = utf-8-bom
 end_of_line = crlf
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
-tab_width = 4
-indent_size = 4
 csharp_indent_labels = one_less_than_current
 csharp_space_around_binary_operators = before_and_after
 dotnet_style_coalesce_expression = true:suggestion
@@ -51,10 +49,12 @@ csharp_style_unused_value_expression_statement_preference = discard_variable:sil
 
 [*.{cs,json}]
 indent_size = 4
+tab_width = 4
 indent_style = space
 
 [*.{xaml,xml,csproj,props,target}]
 indent_size = 2
+tab_width = 2
 indent_style = space
 
 [*.{cs,vb}]

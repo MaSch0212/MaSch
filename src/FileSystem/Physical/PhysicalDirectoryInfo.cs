@@ -23,7 +23,11 @@ internal class PhysicalDirectoryInfo : PhysicalFileSystemInfo, IDirectoryInfo
 
     public IDirectoryInfo Root => new PhysicalDirectoryInfo(FileSystem, WrappedInfo.Root);
 
+#if NET5_0_OR_GREATER
     protected override DirectoryInfo WrappedInfo { get; }
+#else
+    protected new DirectoryInfo WrappedInfo { get; }
+#endif
 
     public void Create()
     {

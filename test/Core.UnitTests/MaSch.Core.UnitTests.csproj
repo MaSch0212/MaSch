@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
+    <MaSchReference Include="Core" />
   </ItemGroup>
   
 </Project>

@@ -16,11 +16,11 @@ public interface IFileInfo : IFileSystemInfo
     Stream Open(FileMode mode);
     Stream Open(FileMode mode, FileAccess access);
     Stream Open(FileMode mode, FileAccess access, FileShare share);
+    Stream Open(FileStreamOptions options);
     Stream OpenRead();
     Stream OpenWrite();
     void MoveTo(string destFileName);
     void MoveTo(string destFileName, bool overwrite);
     IFileInfo Replace(string destinationFileName, string? destinationBackupFileName);
     IFileInfo Replace(string destinationFileName, string? destinationBackupFileName, bool ignoreMetadataErrors);
-    Stream Open(FileStreamOptions options);
 }

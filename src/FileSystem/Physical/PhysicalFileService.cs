@@ -163,7 +163,7 @@ internal class PhysicalFileService : FileServiceBase
     /// <inheritdoc/>
     public override void Move(string sourceFileName, string destFileName, bool overwrite)
     {
-#if !NETFRAMEWORK && (!NETSTANDARD || NETSTANDARD2_1_OR_GREATER)
+#if NET5_0_OR_GREATER
         File.Move(sourceFileName, destFileName, overwrite);
 #else
         if (overwrite && File.Exists(destFileName))

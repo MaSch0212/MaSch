@@ -19,9 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
-    <ProjectReference Include="$(GitSourceDir)Presentation.Wpf/MaSch.Presentation.Wpf.csproj" />
-    <ProjectReference Include="$(GitSourceDir)Presentation/MaSch.Presentation.csproj" />
+    <MaSchReference Include="Core" />
+    <MaSchReference Include="Presentation.Wpf" />
+    <MaSchReference Include="Presentation" />
   </ItemGroup>
   
   <ItemGroup>

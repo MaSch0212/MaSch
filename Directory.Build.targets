@@ -1,4 +1,4 @@
-<!-- This file is imported for each csproj pretty late in the MSBuild process -->
+﻿<!-- This file is imported for each csproj pretty late in the MSBuild process -->
 <Project>
 
   <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.1" />
