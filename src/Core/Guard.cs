@@ -56,6 +56,22 @@ public static class Guard
     }
 
     /// <summary>
+    /// Verifies that the value is not null, empty or whitespace.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="name">The name of the parameter to verify.</param>
+    /// <exception cref="ArgumentException">The <paramref name="value"/> is empty or only consists of whitespace characters.</exception>
+    /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
+    /// <returns>The same instance as <paramref name="value"/>.</returns>
+    public static string NotNullOrWhitespace([NotNull] string? value, [CallerArgumentExpression("value")] string name = "")
+    {
+        _ = NotNull(value, name);
+        if (string.IsNullOrWhiteSpace(value))
+            throw new ArgumentException("The parameter value needs to contain at least one non-whitespace character.", name);
+        return value;
+    }
+
+    /// <summary>
     /// Verifies that a value is inside a specified range.
     /// </summary>
     /// <typeparam name="T">The type of the value to verify.</typeparam>
