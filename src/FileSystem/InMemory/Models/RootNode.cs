@@ -8,5 +8,7 @@ internal class RootNode : ContainerNode
         Root = this;
     }
 
+    public override string Path => Name;
+
     protected override RootNode ValidateRoot(RootNode root) => root;
 }

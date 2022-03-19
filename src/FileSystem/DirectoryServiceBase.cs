@@ -109,7 +109,10 @@ public abstract class DirectoryServiceBase : IDirectoryService
     }
 
     /// <inheritdoc/>
-    public abstract string[] GetDirectories(string path, string searchPattern, SearchOption searchOption);
+    public virtual string[] GetDirectories(string path, string searchPattern, SearchOption searchOption)
+    {
+        return EnumerateDirectories(path, searchPattern, searchOption).ToArray();
+    }
 
     /// <inheritdoc/>
     public string GetDirectoryRoot(string path)
@@ -132,7 +135,10 @@ public abstract class DirectoryServiceBase : IDirectoryService
     }
 
     /// <inheritdoc/>
-    public abstract string[] GetFiles(string path, string searchPattern, SearchOption searchOption);
+    public virtual string[] GetFiles(string path, string searchPattern, SearchOption searchOption)
+    {
+        return EnumerateFiles(path, searchPattern, searchOption).ToArray();
+    }
 
     /// <inheritdoc/>
     public virtual string[] GetFileSystemEntries(string path)
@@ -147,7 +153,10 @@ public abstract class DirectoryServiceBase : IDirectoryService
     }
 
     /// <inheritdoc/>
-    public abstract string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
+    public virtual string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
+    {
+        return EnumerateFileSystemEntries(path, searchPattern, searchOption).ToArray();
+    }
 
     /// <inheritdoc/>
     public virtual DateTime GetLastAccessTime(string path)
@@ -166,9 +175,6 @@ public abstract class DirectoryServiceBase : IDirectoryService
 
     /// <inheritdoc/>
     public abstract DateTime GetLastWriteTimeUtc(string path);
-
-    /// <inheritdoc/>
-    public abstract string[] GetLogicalDrives();
 
     /// <inheritdoc/>
     public virtual IDirectoryInfo? GetParent(string path)
@@ -223,12 +229,21 @@ public abstract class DirectoryServiceBase : IDirectoryService
     public abstract IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions);
 
     /// <inheritdoc/>
-    public abstract string[] GetDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions);
+    public virtual string[] GetDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
+    {
+        return EnumerateDirectories(path, searchPattern, enumerationOptions).ToArray();
+    }
 
     /// <inheritdoc/>
-    public abstract string[] GetFiles(string path, string searchPattern, EnumerationOptions enumerationOptions);
+    public virtual string[] GetFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
+    {
+        return EnumerateFiles(path, searchPattern, enumerationOptions).ToArray();
+    }
 
     /// <inheritdoc/>
-    public abstract string[] GetFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions);
+    public virtual string[] GetFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
+    {
+        return EnumerateFileSystemEntries(path, searchPattern, enumerationOptions).ToArray();
+    }
 #endif
 }

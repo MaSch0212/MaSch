@@ -9,4 +9,14 @@ internal class FileNode : FileSystemNode
     }
 
     public byte[] Content { get; set; }
+
+    public FileNode Clone()
+    {
+        return new FileNode(Root, ParentDirectory, Name)
+        {
+            Content = Content.ToArray(),
+            LastWriteTimeUtc = LastWriteTimeUtc,
+            Attributes = Attributes,
+        };
+    }
 }

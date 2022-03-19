@@ -159,11 +159,6 @@ internal class PhysicalDirectoryService : DirectoryServiceBase
         return Directory.GetLastWriteTimeUtc(path);
     }
 
-    public override string[] GetLogicalDrives()
-    {
-        return Directory.GetLogicalDrives();
-    }
-
     public override IDirectoryInfo? GetParent(string path)
     {
         var info = Directory.GetParent(path);

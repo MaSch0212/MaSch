@@ -13,6 +13,7 @@ internal abstract class FileSystemNode
         Attributes = attributes;
     }
 
+    public virtual string Path => System.IO.Path.Combine(Parent.Name, Name);
     public string Name { get; set; }
     public DateTime CreationTimeUtc { get; set; }
     public DateTime LastWriteTimeUtc { get; set; }

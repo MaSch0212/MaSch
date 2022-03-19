@@ -1,5 +1,4 @@
-﻿using MaSch.Core;
-using MaSch.FileSystem.InMemory.Models;
+﻿using MaSch.FileSystem.InMemory.Models;
 using System.Runtime.InteropServices;
 
 namespace MaSch.FileSystem.InMemory;
@@ -9,10 +8,24 @@ public class InMemoryFileSystemService : FileSystemServiceBase
     internal static readonly char[] DirectorySeperatorChars = GetDirectorySeperatorChars();
     internal static readonly StringComparison PathComparison = GetPathComparison();
     internal static readonly StringComparer PathComparer = GetPathComparer(PathComparison);
+    internal static readonly bool IsPathCaseSensitive = PathComparison == StringComparison.Ordinal;
 
     internal Dictionary<string, RootNode> Nodes { get; } = new(PathComparer);
 
-    internal bool TryGetNode(string path, [NotNullWhen(true)] out FileSystemNode? node)
+    internal bool TryGetNode<T>(string? path, [NotNullWhen(true)] out T? node)
+        where T : FileSystemNode
+    {
+        if (TryGetNode(path, out var fileSystemNode) && fileSystemNode is T castedNode)
+        {
+            node = castedNode;
+            return true;
+        }
+
+        node = null;
+        return false;
+    }
+
+    internal bool TryGetNode(string? path, [NotNullWhen(true)] out FileSystemNode? node)
     {
         if (!TryGetRootAndSegments(path, out var rootNode, out var segments))
         {
@@ -20,7 +33,18 @@ public class InMemoryFileSystemService : FileSystemServiceBase
             return false;
         }
 
-        ContainerNode currentNode = rootNode;
+        return TryGetSubNode(rootNode, segments, out node);
+    }
+
+    internal bool TryGetSubNode(ContainerNode parentNode, string subPath, [NotNullWhen(true)] out FileSystemNode? node)
+    {
+        var segments = subPath.Split(DirectorySeperatorChars, StringSplitOptions.RemoveEmptyEntries);
+        return TryGetSubNode(parentNode, segments, out node);
+    }
+
+    internal bool TryGetSubNode(ContainerNode parentNode, string[] segments, [NotNullWhen(true)] out FileSystemNode? node)
+    {
+        ContainerNode currentNode = parentNode;
         for (int i = 0; i < segments.Length; i++)
         {
             var segment = segments[i];
@@ -45,9 +69,14 @@ public class InMemoryFileSystemService : FileSystemServiceBase
         return true;
     }
 
-    internal bool TryGetRootAndSegments(string path, [NotNullWhen(true)] out RootNode? rootNode, [NotNullWhen(true)] out string[]? segments)
+    internal bool TryGetRootAndSegments(string? path, [NotNullWhen(true)] out RootNode? rootNode, [NotNullWhen(true)] out string[]? segments)
     {
-        Guard.NotNullOrWhitespace(path);
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            rootNode = null;
+            segments = null;
+            return false;
+        }
 
         var pathRoot = Path.GetPathRoot(path);
         if (pathRoot is null || !Nodes.TryGetValue(pathRoot, out rootNode))
@@ -57,7 +86,7 @@ public class InMemoryFileSystemService : FileSystemServiceBase
             return false;
         }
 
-        segments = path.Split(DirectorySeperatorChars, StringSplitOptions.RemoveEmptyEntries);
+        segments = path[pathRoot.Length..].Split(DirectorySeperatorChars, StringSplitOptions.RemoveEmptyEntries);
         return true;
     }
 

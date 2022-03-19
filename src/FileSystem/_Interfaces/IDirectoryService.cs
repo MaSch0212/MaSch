@@ -46,7 +46,6 @@ public interface IDirectoryService
     void Move(string sourceDirName, string destDirName);
     void Delete(string path);
     void Delete(string path, bool recursive);
-    string[] GetLogicalDrives();
 
 #if !NETFRAMEWORK && (!NETSTANDARD || NETSTANDARD2_1_OR_GREATER)
     string[] GetFiles(string path, string searchPattern, EnumerationOptions enumerationOptions);

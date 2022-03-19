@@ -5,18 +5,20 @@ namespace MaSch.FileSystem.InMemory;
 
 internal class InMemoryDirectoryInfo : DirectoryInfoBase
 {
-    private readonly ContainerNode? _node;
+    private readonly InMemoryFileSystemService _fileSystem;
+    private ContainerNode? _node;
 
     public InMemoryDirectoryInfo(InMemoryFileSystemService fileSystem, string path)
         : base(fileSystem, path)
     {
-        if (fileSystem.TryGetNode(path, out var node) && node is ContainerNode dirNode)
-            _node = dirNode;
+        _fileSystem = fileSystem;
+        Refresh();
     }
 
     public InMemoryDirectoryInfo(InMemoryFileSystemService fileSystem, string path, ContainerNode node)
         : base(fileSystem, path)
     {
+        _fileSystem = fileSystem;
         _node = Guard.NotNull(node);
     }
 
@@ -33,6 +35,7 @@ internal class InMemoryDirectoryInfo : DirectoryInfoBase
 
     public override void Refresh()
     {
-        // Nothing to do here
+        if (_fileSystem.TryGetNode<ContainerNode>(FullName, out var node))
+            _node = node;
     }
 }
