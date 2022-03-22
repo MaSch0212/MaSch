@@ -36,31 +36,19 @@ public abstract class FileSystemInfoBase : IFileSystemInfo
     public abstract bool Exists { get; }
 
     /// <inheritdoc/>
-    public virtual DateTime CreationTime
-    {
-        get => FileSystem.File.GetCreationTime(FullName);
-        set => FileSystem.File.SetCreationTime(FullName, value);
-    }
+    public abstract DateTime CreationTime { get; set; }
 
     /// <inheritdoc/>
     public abstract DateTime CreationTimeUtc { get; set; }
 
     /// <inheritdoc/>
-    public virtual DateTime LastAccessTime
-    {
-        get => FileSystem.File.GetLastAccessTime(FullName);
-        set => FileSystem.File.SetLastAccessTime(FullName, value);
-    }
+    public abstract DateTime LastAccessTime { get; set; }
 
     /// <inheritdoc/>
     public abstract DateTime LastAccessTimeUtc { get; set; }
 
     /// <inheritdoc/>
-    public virtual DateTime LastWriteTime
-    {
-        get => FileSystem.File.GetLastWriteTime(FullName);
-        set => FileSystem.File.SetLastWriteTime(FullName, value);
-    }
+    public abstract DateTime LastWriteTime { get; set; }
 
     /// <inheritdoc/>
     public abstract DateTime LastWriteTimeUtc { get; set; }

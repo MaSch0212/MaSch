@@ -114,17 +114,32 @@ public class InMemoryFileService : FileServiceBase
 
     public override void SetCreationTimeUtc(string path, DateTime creationTimeUtc)
     {
-        GetFileNode(path).CreationTimeUtc = creationTimeUtc;
+        GetFileNode(path).CreationTimeUtc = creationTimeUtc.ToUniversalTime(DateTimeKind.Utc);
+    }
+
+    public override void SetCreationTime(string path, DateTime creationTime)
+    {
+        GetFileNode(path).CreationTimeUtc = creationTime.ToUniversalTime(DateTimeKind.Local);
     }
 
     public override void SetLastAccessTimeUtc(string path, DateTime lastAccessTimeUtc)
     {
-        GetFileNode(path).LastAccessTimeUtc = lastAccessTimeUtc;
+        GetFileNode(path).LastAccessTimeUtc = lastAccessTimeUtc.ToUniversalTime(DateTimeKind.Utc);
+    }
+
+    public override void SetLastAccessTime(string path, DateTime lastAccessTime)
+    {
+        GetFileNode(path).LastAccessTimeUtc = lastAccessTime.ToUniversalTime(DateTimeKind.Local);
     }
 
     public override void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc)
     {
-        GetFileNode(path).LastWriteTimeUtc = lastWriteTimeUtc;
+        GetFileNode(path).LastWriteTimeUtc = lastWriteTimeUtc.ToUniversalTime(DateTimeKind.Utc);
+    }
+
+    public override void SetLastWriteTime(string path, DateTime lastWriteTime)
+    {
+        GetFileNode(path).LastWriteTimeUtc = lastWriteTime.ToUniversalTime(DateTimeKind.Local);
     }
 
     protected override Stream Open(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize, FileOptions options)

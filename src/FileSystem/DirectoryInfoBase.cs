@@ -36,6 +36,13 @@ public abstract class DirectoryInfoBase : FileSystemInfoBase, IDirectoryInfo
     }
 
     /// <inheritdoc/>
+    public override DateTime CreationTime
+    {
+        get => FileSystem.Directory.GetCreationTime(FullName);
+        set => FileSystem.Directory.SetCreationTime(FullName, value);
+    }
+
+    /// <inheritdoc/>
     public override DateTime LastAccessTimeUtc
     {
         get => FileSystem.Directory.GetLastAccessTimeUtc(FullName);
@@ -43,10 +50,24 @@ public abstract class DirectoryInfoBase : FileSystemInfoBase, IDirectoryInfo
     }
 
     /// <inheritdoc/>
+    public override DateTime LastAccessTime
+    {
+        get => FileSystem.Directory.GetLastAccessTime(FullName);
+        set => FileSystem.Directory.SetLastAccessTime(FullName, value);
+    }
+
+    /// <inheritdoc/>
     public override DateTime LastWriteTimeUtc
     {
         get => FileSystem.Directory.GetLastWriteTimeUtc(FullName);
         set => FileSystem.Directory.SetLastWriteTimeUtc(FullName, value);
+    }
+
+    /// <inheritdoc/>
+    public override DateTime LastWriteTime
+    {
+        get => FileSystem.Directory.GetLastWriteTime(FullName);
+        set => FileSystem.Directory.SetLastWriteTime(FullName, value);
     }
 
     /// <inheritdoc/>

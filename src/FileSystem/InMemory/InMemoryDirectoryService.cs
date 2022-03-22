@@ -140,7 +140,12 @@ internal class InMemoryDirectoryService : DirectoryServiceBase
 
     public override void SetCreationTimeUtc(string path, DateTime creationTimeUtc)
     {
-        GetDirectoryNode(path).CreationTimeUtc = creationTimeUtc;
+        GetDirectoryNode(path).CreationTimeUtc = creationTimeUtc.ToUniversalTime(DateTimeKind.Utc);
+    }
+
+    public override void SetCreationTime(string path, DateTime creationTime)
+    {
+        GetDirectoryNode(path).CreationTimeUtc = creationTime.ToUniversalTime(DateTimeKind.Local);
     }
 
     public override void SetCurrentDirectory(string path)
@@ -150,12 +155,22 @@ internal class InMemoryDirectoryService : DirectoryServiceBase
 
     public override void SetLastAccessTimeUtc(string path, DateTime lastAccessTimeUtc)
     {
-        GetDirectoryNode(path).LastAccessTimeUtc = lastAccessTimeUtc;
+        GetDirectoryNode(path).LastAccessTimeUtc = lastAccessTimeUtc.ToUniversalTime(DateTimeKind.Utc);
+    }
+
+    public override void SetLastAccessTime(string path, DateTime lastAccessTime)
+    {
+        GetDirectoryNode(path).LastAccessTimeUtc = lastAccessTime.ToUniversalTime(DateTimeKind.Local);
     }
 
     public override void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc)
     {
-        GetDirectoryNode(path).LastWriteTimeUtc = lastWriteTimeUtc;
+        GetDirectoryNode(path).LastWriteTimeUtc = lastWriteTimeUtc.ToUniversalTime(DateTimeKind.Utc);
+    }
+
+    public override void SetLastWriteTime(string path, DateTime lastWriteTime)
+    {
+        GetDirectoryNode(path).LastWriteTimeUtc = lastWriteTime.ToUniversalTime(DateTimeKind.Local);
     }
 
 #if !NETFRAMEWORK && (!NETSTANDARD || NETSTANDARD2_1_OR_GREATER)

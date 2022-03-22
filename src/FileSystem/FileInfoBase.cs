@@ -38,6 +38,13 @@ public abstract class FileInfoBase : FileSystemInfoBase, IFileInfo
     }
 
     /// <inheritdoc/>
+    public override DateTime CreationTime
+    {
+        get => FileSystem.File.GetCreationTime(FullName);
+        set => FileSystem.File.SetCreationTime(FullName, value);
+    }
+
+    /// <inheritdoc/>
     public override DateTime LastAccessTimeUtc
     {
         get => FileSystem.File.GetLastAccessTimeUtc(FullName);
@@ -45,10 +52,24 @@ public abstract class FileInfoBase : FileSystemInfoBase, IFileInfo
     }
 
     /// <inheritdoc/>
+    public override DateTime LastAccessTime
+    {
+        get => FileSystem.File.GetLastAccessTime(FullName);
+        set => FileSystem.File.SetLastAccessTime(FullName, value);
+    }
+
+    /// <inheritdoc/>
     public override DateTime LastWriteTimeUtc
     {
         get => FileSystem.File.GetLastWriteTimeUtc(FullName);
         set => FileSystem.File.SetLastWriteTimeUtc(FullName, value);
+    }
+
+    /// <inheritdoc/>
+    public override DateTime LastWriteTime
+    {
+        get => FileSystem.File.GetLastWriteTime(FullName);
+        set => FileSystem.File.SetLastWriteTime(FullName, value);
     }
 
     /// <inheritdoc/>

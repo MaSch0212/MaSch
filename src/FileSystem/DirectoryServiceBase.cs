@@ -189,10 +189,7 @@ public abstract class DirectoryServiceBase : IDirectoryService
     public abstract void Move(string sourceDirName, string destDirName);
 
     /// <inheritdoc/>
-    public virtual void SetCreationTime(string path, DateTime creationTime)
-    {
-        SetCreationTimeUtc(path, creationTime.ToUniversalTime());
-    }
+    public abstract void SetCreationTime(string path, DateTime creationTime);
 
     /// <inheritdoc/>
     public abstract void SetCreationTimeUtc(string path, DateTime creationTimeUtc);
@@ -201,19 +198,13 @@ public abstract class DirectoryServiceBase : IDirectoryService
     public abstract void SetCurrentDirectory(string path);
 
     /// <inheritdoc/>
-    public virtual void SetLastAccessTime(string path, DateTime lastAccessTime)
-    {
-        SetLastAccessTimeUtc(path, lastAccessTime.ToUniversalTime());
-    }
+    public abstract void SetLastAccessTime(string path, DateTime lastAccessTime);
 
     /// <inheritdoc/>
     public abstract void SetLastAccessTimeUtc(string path, DateTime lastAccessTimeUtc);
 
     /// <inheritdoc/>
-    public virtual void SetLastWriteTime(string path, DateTime lastWriteTime)
-    {
-        SetLastWriteTimeUtc(path, lastWriteTime.ToUniversalTime());
-    }
+    public abstract void SetLastWriteTime(string path, DateTime lastWriteTime);
 
     /// <inheritdoc/>
     public abstract void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc);

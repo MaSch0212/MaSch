@@ -1,0 +1,5 @@
+﻿- Added extension methods for DateTime.
+    - ToUniversalTime(DateTimeKind kindToAssumeWhenUnspecified)
+    - ToLocalTime(DateTimeKind kindToAssumeWhenUnspecified)
+- Added NotNullOrWhitespace method to Guard.
+- Added HasFlag and NotHasFlag methods to Guard.

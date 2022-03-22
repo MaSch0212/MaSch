@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- General Project info -->
+    <TargetFrameworks>$(TfmsNetCoreApp);$(TfmsNetFramework);$(TfmsNetStandard)</TargetFrameworks>
+    <EnableMaSchGenerators>true</EnableMaSchGenerators>
+    
+    <!-- Package Info -->
+    <Description>Contains some supporting code for Unit Tests in regards to the MaSch.FileSystem library.</Description>
+    <Version>0.1.0</Version>
+    <PackageTags>masch test file directory filesystem path</PackageTags>
+
+    <DoesNotReturnAttribute>DoesNotReturnAttribute</DoesNotReturnAttribute>
+  </PropertyGroup>
+  
+  <!-- Remove this group when this project contains usable code. -->
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <EnableReleaseNotes>false</EnableReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MaSchReference Include="Test.Assertion" />
+    <MaSchReference Include="FileSystem" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="MaSch.Core" />
+    <Using Include="MaSch.Test.Assertion" />
+  </ItemGroup>
+  
+</Project>

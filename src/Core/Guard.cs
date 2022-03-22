@@ -488,6 +488,44 @@ public static class Guard
         return value;
     }
 
+    /// <summary>
+    /// Verifies thet an enum value has a specified enum flag.
+    /// </summary>
+    /// <typeparam name="T">The enum type.</typeparam>
+    /// <param name="value">The value.</param>
+    /// <param name="expectedFlag">The expected enum flag.</param>
+    /// <param name="name">The name of the parameter to verify.</param>
+    /// <returns>Return the <paramref name="value"/>.</returns>
+    /// <exception cref="ArgumentException">The value <paramref name="value"/> needs to have the flag <paramref name="expectedFlag"/>.</exception>
+    public static T HasFlag<T>(T value, T expectedFlag, [CallerArgumentExpression("value")] string name = "")
+        where T : Enum
+    {
+        _ = NotNull(value, name);
+
+        if (!value.HasFlag(expectedFlag))
+            throw new ArgumentException($"The value \"{value}\" needs to have the flag \"{expectedFlag}\".", name);
+        return value;
+    }
+
+    /// <summary>
+    /// Verifies thet an enum value does not have a specified enum flag.
+    /// </summary>
+    /// <typeparam name="T">The enum type.</typeparam>
+    /// <param name="value">The value.</param>
+    /// <param name="unexpectedFlag">The unexpected enum flag.</param>
+    /// <param name="name">The name of the parameter to verify.</param>
+    /// <returns>Return the <paramref name="value"/>.</returns>
+    /// <exception cref="ArgumentException">The value <paramref name="value"/> cannot have the flag <paramref name="unexpectedFlag"/>.</exception>
+    public static T NotHasFlag<T>(T value, T unexpectedFlag, [CallerArgumentExpression("value")] string name = "")
+        where T : Enum
+    {
+        _ = NotNull(value, name);
+
+        if (value.HasFlag(unexpectedFlag))
+            throw new ArgumentException($"The value \"{value}\" cannot have the flag \"{unexpectedFlag}\".", name);
+        return value;
+    }
+
     private static Func<T, T, T> CompileEnumOperatorFunc<T>(Func<Expression, Expression, BinaryExpression> operatorExpressionFactory)
         where T : Enum
     {

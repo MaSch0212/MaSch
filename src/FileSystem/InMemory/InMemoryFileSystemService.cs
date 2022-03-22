@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace MaSch.FileSystem.InMemory;
 
-public class InMemoryFileSystemService : FileSystemServiceBase
+public class InMemoryFileSystemService : FileSystemServiceBase, IPathRootCreator
 {
     internal static readonly char[] DirectorySeperatorChars = GetDirectorySeperatorChars();
     internal static readonly StringComparison PathComparison = GetPathComparison();
@@ -11,6 +11,18 @@ public class InMemoryFileSystemService : FileSystemServiceBase
     internal static readonly bool IsPathCaseSensitive = PathComparison == StringComparison.Ordinal;
 
     internal Dictionary<string, RootNode> Nodes { get; } = new(PathComparer);
+
+    public void CreatePathRoot(string name)
+    {
+        var root = Path.GetPathRoot(name);
+        if (string.IsNullOrWhiteSpace(root))
+            throw new ArgumentException($"The path root of '{name}' could not be determined.");
+
+        if (Nodes.ContainsKey(root))
+            return;
+
+        Nodes.Add(root, new RootNode(root));
+    }
 
     internal bool TryGetNode<T>(string? path, [NotNullWhen(true)] out T? node)
         where T : FileSystemNode
