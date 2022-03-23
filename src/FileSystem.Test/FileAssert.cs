@@ -48,7 +48,7 @@ public class FileAssert
 
     private void ThrowAssertError(string? message, params (string Name, object? Value)?[]? values)
     {
-        var assertName = $"Directory.{new StackFrame(1).GetMethod()?.Name}";
+        var assertName = $"File.{new StackFrame(1).GetMethod()?.Name}";
         Assert.ThrowAssertError(assertName, message, values);
     }
 }
