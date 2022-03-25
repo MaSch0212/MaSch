@@ -39,6 +39,8 @@ public class InMemoryFileService : FileServiceBase
     public override void Delete(string path)
     {
         var node = GetFileNode(path);
+        if (!node.CanDelete)
+            throw new IOException("The file is being used by another process.");
         node.Parent.Files.Remove(node);
         node.ParentDirectory = null;
     }
@@ -82,6 +84,8 @@ public class InMemoryFileService : FileServiceBase
             throw new IOException($"The file '{destFileName}' already exists.");
         if (!_fileSystem.TryGetNode<ContainerNode>(Path.GetDirectoryName(destFileName), out var destParentNode))
             throw new DirectoryNotFoundException($"Could not find a part of the path '{Path.GetDirectoryName(destFileName)}'.");
+        if (!sourceNode.CanDelete)
+            throw new IOException("The file is being used by another process.");
 
         if (destNode is not null)
         {
@@ -163,7 +167,7 @@ public class InMemoryFileService : FileServiceBase
             destParentNode.Files.Add(fileNode);
         }
 
-        var stream = new MemoryFileStream(fileNode, access);
+        var stream = new MemoryFileStream(fileNode, access, share);
         if (mode == FileMode.Append)
         {
             stream.Seek(0, SeekOrigin.End);
@@ -182,11 +186,13 @@ public class InMemoryFileService : FileServiceBase
     private sealed class MemoryFileStream : MemoryStream
     {
         private readonly FileNode _node;
+        private readonly IDisposable _usage;
 
-        public MemoryFileStream(FileNode node, FileAccess access)
+        public MemoryFileStream(FileNode node, FileAccess access, FileShare share)
             : base(node.Content, access.HasFlag(FileAccess.Write))
         {
             _node = node;
+            _usage = node.RegisterUsage(access, share);
         }
 
         public override void Flush()
@@ -212,6 +218,7 @@ public class InMemoryFileService : FileServiceBase
                 if (disposing)
                 {
                     _node.Content = ToArray();
+                    _usage.Dispose();
                 }
             }
         }

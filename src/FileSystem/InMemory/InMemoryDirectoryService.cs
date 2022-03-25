@@ -41,6 +41,8 @@ internal class InMemoryDirectoryService : DirectoryServiceBase
         var node = GetDirectoryNode(path);
         if (!recursive && node.ChildNodes.Count > 0)
             throw new IOException($"The directory is not empty. : '{path}'");
+        if (node.GetAllFiles().Any(x => !x.CanDelete))
+            throw new IOException("A file is being used by another process.");
 
         node.Parent.Directories.Remove(node);
     }
@@ -124,6 +126,8 @@ internal class InMemoryDirectoryService : DirectoryServiceBase
             throw new IOException($"Cannot create '{destDirName}' because a file or directory with the same name already exists.");
         if (!_fileSystem.TryGetNode<ContainerNode>(Path.GetDirectoryName(destDirName), out var destParentNode))
             throw new DirectoryNotFoundException($"Could not find a part of the path '{Path.GetDirectoryName(destDirName)}'.");
+        if (nodeToMove.GetAllFiles().Any(x => !x.CanDelete))
+            throw new IOException("A file is being used by another process.");
 
         if (destParentNode != nodeToMove.Parent)
         {

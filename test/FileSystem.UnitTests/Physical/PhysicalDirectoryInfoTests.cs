@@ -263,54 +263,238 @@ public class PhysicalDirectoryInfoTests : TestClassBase
     }
 
     [TestMethod]
-    public void EnumerateDirectories()
+    [DataRow(false, DisplayName = "EnumerateDirectories")]
+    [DataRow(true, DisplayName = "GetDirectories")]
+    public void EnumerateDirectories(bool useGet)
     {
-        TestInfo.CreateSubdirectory("abc");
-        TestInfo.CreateSubdirectory("def");
+        Func<IEnumerable<IDirectoryInfo>> method = useGet ? Sut.GetDirectories : Sut.EnumerateDirectories;
+        CreateSubdirectories("abc", "def");
         Assert.AreCollectionsEquivalent(
             new[] { Path.Combine(TestPath, "abc"), Path.Combine(TestPath, "def") },
-            Sut.EnumerateDirectories().Select(x => GetWrappedInfo(x).FullName));
+            method().Select(x => GetWrappedInfo(x).FullName));
     }
 
     [TestMethod]
-    public void EnumerateDirectories_SearchPattern()
+    [DataRow(false, DisplayName = "EnumerateDirectories")]
+    [DataRow(true, DisplayName = "GetDirectories")]
+    public void EnumerateDirectories_SearchPattern(bool useGet)
     {
-        TestInfo.CreateSubdirectory("abcd");
-        TestInfo.CreateSubdirectory("abced");
-        TestInfo.CreateSubdirectory("abbbcd");
-        TestInfo.CreateSubdirectory("abbbcfd");
+        Func<string, IEnumerable<IDirectoryInfo>> method = useGet ? Sut.GetDirectories : Sut.EnumerateDirectories;
+        CreateSubdirectories("abcd", "abced", "abbbcd", "abbbcfd");
         Assert.AreCollectionsEquivalent(
             new[] { Path.Combine(TestPath, "abced"), Path.Combine(TestPath, "abbbcfd") },
-            Sut.EnumerateDirectories("a*c?d").Select(x => GetWrappedInfo(x).FullName));
+            method("a*c?d").Select(x => GetWrappedInfo(x).FullName));
     }
 
     [TestMethod]
-    public void EnumerateDirectories_SearchPattern_SearchOptionTopDirectoryOnly()
+    [DataRow(false, DisplayName = "EnumerateDirectories")]
+    [DataRow(true, DisplayName = "GetDirectories")]
+    public void EnumerateDirectories_SearchPattern_SearchOptionTopDirectoryOnly(bool useGet)
     {
-        TestInfo.CreateSubdirectory("abcd");
-        TestInfo.CreateSubdirectory("abced");
-        TestInfo.CreateSubdirectory(Path.Combine("sub", "abced"));
-        TestInfo.CreateSubdirectory("abbbcd");
-        TestInfo.CreateSubdirectory("abbbcfd");
-        TestInfo.CreateSubdirectory(Path.Combine("sub", "abbbcfd"));
+        Func<string, SearchOption, IEnumerable<IDirectoryInfo>> method = useGet ? Sut.GetDirectories : Sut.EnumerateDirectories;
+        CreateSubdirectories("abcd", "abced", "abbbcd", "abbbcfd", Path.Combine("sub", "abced"), Path.Combine("sub", "abbbcfd"));
         Assert.AreCollectionsEquivalent(
             new[] { Path.Combine(TestPath, "abced"), Path.Combine(TestPath, "abbbcfd") },
-            Sut.EnumerateDirectories("a*c?d", SearchOption.TopDirectoryOnly).Select(x => GetWrappedInfo(x).FullName));
+            method("a*c?d", SearchOption.TopDirectoryOnly).Select(x => GetWrappedInfo(x).FullName));
     }
 
     [TestMethod]
-    public void EnumerateDirectories_SearchPattern_SearchOptionAllDirectories()
+    [DataRow(false, DisplayName = "EnumerateDirectories")]
+    [DataRow(true, DisplayName = "GetDirectories")]
+    public void EnumerateDirectories_SearchPattern_SearchOptionAllDirectories(bool useGet)
     {
-        TestInfo.CreateSubdirectory("abcd");
-        TestInfo.CreateSubdirectory("abced");
-        TestInfo.CreateSubdirectory(Path.Combine("sub", "abced"));
-        TestInfo.CreateSubdirectory("abbbcd");
-        TestInfo.CreateSubdirectory("abbbcfd");
-        TestInfo.CreateSubdirectory(Path.Combine("sub", "abbbcfd"));
+        Func<string, SearchOption, IEnumerable<IDirectoryInfo>> method = useGet ? Sut.GetDirectories : Sut.EnumerateDirectories;
+        CreateSubdirectories("abcd", "abced", "abbbcd", "abbbcfd", Path.Combine("sub", "abced"), Path.Combine("sub", "abbbcfd"));
         Assert.AreCollectionsEquivalent(
             new[] { Path.Combine(TestPath, "abced"), Path.Combine(TestPath, "sub", "abced"), Path.Combine(TestPath, "abbbcfd"), Path.Combine(TestPath, "sub", "abbbcfd") },
-            Sut.EnumerateDirectories("a*c?d", SearchOption.AllDirectories).Select(x => GetWrappedInfo(x).FullName));
+            method("a*c?d", SearchOption.AllDirectories).Select(x => GetWrappedInfo(x).FullName));
     }
+
+    [TestMethod]
+    [DataRow(false, DisplayName = "EnumerateFiles")]
+    [DataRow(true, DisplayName = "GetFiles")]
+    public void EnumerateFiles(bool useGet)
+    {
+        Func<IEnumerable<IFileInfo>> method = useGet ? Sut.GetFiles : Sut.EnumerateFiles;
+        CreateFiles("abc.txt", "def.txt");
+        Assert.AreCollectionsEquivalent(
+            new[] { Path.Combine(TestPath, "abc.txt"), Path.Combine(TestPath, "def.txt") },
+            method().Select(x => GetWrappedInfo(x).FullName));
+    }
+
+    [TestMethod]
+    [DataRow(false, DisplayName = "EnumerateFiles")]
+    [DataRow(true, DisplayName = "GetFiles")]
+    public void EnumerateFiles_SearchPattern(bool useGet)
+    {
+        Func<string, IEnumerable<IFileInfo>> method = useGet ? Sut.GetFiles : Sut.EnumerateFiles;
+        CreateFiles("abcd.txt", "abced.txt", "abbbcd.txt", "abbbcfd.txt");
+        Assert.AreCollectionsEquivalent(
+            new[] { Path.Combine(TestPath, "abced.txt"), Path.Combine(TestPath, "abbbcfd.txt") },
+            method("a*c?d.txt").Select(x => GetWrappedInfo(x).FullName));
+    }
+
+    [TestMethod]
+    [DataRow(false, DisplayName = "EnumerateFiles")]
+    [DataRow(true, DisplayName = "GetFiles")]
+    public void EnumerateFiles_SearchPattern_SearchOptionTopDirectoryOnly(bool useGet)
+    {
+        Func<string, SearchOption, IEnumerable<IFileInfo>> method = useGet ? Sut.GetFiles : Sut.EnumerateFiles;
+        CreateFiles("abcd.txt", "abced.txt", "abbbcd.txt", "abbbcfd.txt", Path.Combine("sub", "abced.txt"), Path.Combine("sub", "abbbcfd.txt"));
+        Assert.AreCollectionsEquivalent(
+            new[] { Path.Combine(TestPath, "abced.txt"), Path.Combine(TestPath, "abbbcfd.txt") },
+            method("a*c?d.txt", SearchOption.TopDirectoryOnly).Select(x => GetWrappedInfo(x).FullName));
+    }
+
+    [TestMethod]
+    [DataRow(false, DisplayName = "EnumerateFiles")]
+    [DataRow(true, DisplayName = "GetFiles")]
+    public void EnumerateFiles_SearchPattern_SearchOptionAllDirectories(bool useGet)
+    {
+        Func<string, SearchOption, IEnumerable<IFileInfo>> method = useGet ? Sut.GetFiles : Sut.EnumerateFiles;
+        CreateFiles("abcd.txt", "abced.txt", "abbbcd.txt", "abbbcfd.txt", Path.Combine("sub", "abced.txt"), Path.Combine("sub", "abbbcfd.txt"));
+        Assert.AreCollectionsEquivalent(
+            new[] { Path.Combine(TestPath, "abced.txt"), Path.Combine(TestPath, "sub", "abced.txt"), Path.Combine(TestPath, "abbbcfd.txt"), Path.Combine(TestPath, "sub", "abbbcfd.txt") },
+            method("a*c?d.txt", SearchOption.AllDirectories).Select(x => GetWrappedInfo(x).FullName));
+    }
+
+    [TestMethod]
+    [DataRow(false, DisplayName = "EnumerateFileSystemInfos")]
+    [DataRow(true, DisplayName = "GetFileSystemInfos")]
+    public void EnumerateFileSystemInfos(bool useGet)
+    {
+        Func<IEnumerable<IFileSystemInfo>> method = useGet ? Sut.GetFileSystemInfos : Sut.EnumerateFileSystemInfos;
+        CreateSubdirectories("abc", "def");
+        CreateFiles("abc.txt", "def.txt");
+        Assert.AreCollectionsEquivalent(
+            new[] { Path.Combine(TestPath, "abc"), Path.Combine(TestPath, "def"), Path.Combine(TestPath, "abc.txt"), Path.Combine(TestPath, "def.txt") },
+            method().Select(x => GetWrappedInfo(x).FullName));
+    }
+
+    [TestMethod]
+    [DataRow(false, DisplayName = "EnumerateFileSystemInfos")]
+    [DataRow(true, DisplayName = "GetFileSystemInfos")]
+    public void EnumerateFileSystemInfos_SearchPattern(bool useGet)
+    {
+        Func<string, IEnumerable<IFileSystemInfo>> method = useGet ? Sut.GetFileSystemInfos : Sut.EnumerateFileSystemInfos;
+        CreateSubdirectories("abcd", "abced", "abbbcd", "abbbcfd");
+        CreateFiles("abcd.txt", "abced.txt", "abbbcd.txt", "abbbcfd.txt");
+        Assert.AreCollectionsEquivalent(
+            new[] { Path.Combine(TestPath, "abced"), Path.Combine(TestPath, "abbbcfd"), Path.Combine(TestPath, "abced.txt"), Path.Combine(TestPath, "abbbcfd.txt") },
+            method("a*c?d*").Select(x => GetWrappedInfo(x).FullName));
+    }
+
+    [TestMethod]
+    [DataRow(false, DisplayName = "EnumerateFileSystemInfos")]
+    [DataRow(true, DisplayName = "GetFileSystemInfos")]
+    public void EnumerateFileSystemInfos_SearchPattern_SearchOptionTopDirectoryOnly(bool useGet)
+    {
+        Func<string, SearchOption, IEnumerable<IFileSystemInfo>> method = useGet ? Sut.GetFileSystemInfos : Sut.EnumerateFileSystemInfos;
+        CreateSubdirectories("abcd", "abced", "abbbcd", "abbbcfd", Path.Combine("sub", "abced"), Path.Combine("sub", "abbbcfd"));
+        CreateFiles("abcd.txt", "abced.txt", "abbbcd.txt", "abbbcfd.txt", Path.Combine("sub", "abced.txt"), Path.Combine("sub", "abbbcfd.txt"));
+        Assert.AreCollectionsEquivalent(
+            new[] { Path.Combine(TestPath, "abced"), Path.Combine(TestPath, "abbbcfd"), Path.Combine(TestPath, "abced.txt"), Path.Combine(TestPath, "abbbcfd.txt") },
+            method("a*c?d*", SearchOption.TopDirectoryOnly).Select(x => GetWrappedInfo(x).FullName));
+    }
+
+    [TestMethod]
+    [DataRow(false, DisplayName = "EnumerateFileSystemInfos")]
+    [DataRow(true, DisplayName = "GetFileSystemInfos")]
+    public void EnumerateFileSystemInfos_SearchPattern_SearchOptionAllDirectories(bool useGet)
+    {
+        Func<string, SearchOption, IEnumerable<IFileSystemInfo>> method = useGet ? Sut.GetFileSystemInfos : Sut.EnumerateFileSystemInfos;
+        CreateSubdirectories("abcd", "abced", "abbbcd", "abbbcfd", Path.Combine("sub", "abced"), Path.Combine("sub", "abbbcfd"));
+        CreateFiles("abcd.txt", "abced.txt", "abbbcd.txt", "abbbcfd.txt", Path.Combine("sub", "abced.txt"), Path.Combine("sub", "abbbcfd.txt"));
+        Assert.AreCollectionsEquivalent(
+            new[] { Path.Combine(TestPath, "abced"), Path.Combine(TestPath, "sub", "abced"), Path.Combine(TestPath, "abbbcfd"), Path.Combine(TestPath, "sub", "abbbcfd"), Path.Combine(TestPath, "abced.txt"), Path.Combine(TestPath, "sub", "abced.txt"), Path.Combine(TestPath, "abbbcfd.txt"), Path.Combine(TestPath, "sub", "abbbcfd.txt") },
+            method("a*c?d*", SearchOption.AllDirectories).Select(x => GetWrappedInfo(x).FullName));
+    }
+
+    [TestMethod]
+    public void MoveTo()
+    {
+        var dirInfo = new PhysicalDirectoryInfo(FileSystemService.Object, TestInfo.CreateSubdirectory("sub"));
+        dirInfo.MoveTo(Path.Combine(TestPath, "sub2"));
+
+        Assert.IsFalse(Directory.Exists(Path.Combine(TestPath, "sub")));
+        Assert.IsTrue(Directory.Exists(Path.Combine(TestPath, "sub2")));
+    }
+
+#if !NETFRAMEWORK && (!NETSTANDARD || NETSTANDARD2_1_OR_GREATER)
+    [TestMethod]
+    [DataRow(false, DisplayName = "EnumerateDirectories")]
+    [DataRow(true, DisplayName = "GetDirectories")]
+    public void EnumerateDirectories_SearchPattern_EnumerationOptions_SearchOptionTopDirectoryOnly(bool useGet)
+    {
+        Func<string, EnumerationOptions, IEnumerable<IDirectoryInfo>> method = useGet ? Sut.GetDirectories : Sut.EnumerateDirectories;
+        CreateSubdirectories("abcd", "abced", "abbbcd", "abbbcfd", Path.Combine("sub", "abced"), Path.Combine("sub", "abbbcfd"));
+        Assert.AreCollectionsEquivalent(
+            new[] { Path.Combine(TestPath, "abced"), Path.Combine(TestPath, "abbbcfd") },
+            method("a*c?d", new EnumerationOptions { RecurseSubdirectories = false }).Select(x => GetWrappedInfo(x).FullName));
+    }
+
+    [TestMethod]
+    [DataRow(false, DisplayName = "EnumerateDirectories")]
+    [DataRow(true, DisplayName = "GetDirectories")]
+    public void EnumerateDirectories_SearchPattern_EnumerationOptions_SearchOptionAllDirectories(bool useGet)
+    {
+        Func<string, EnumerationOptions, IEnumerable<IDirectoryInfo>> method = useGet ? Sut.GetDirectories : Sut.EnumerateDirectories;
+        CreateSubdirectories("abcd", "abced", "abbbcd", "abbbcfd", Path.Combine("sub", "abced"), Path.Combine("sub", "abbbcfd"));
+        Assert.AreCollectionsEquivalent(
+            new[] { Path.Combine(TestPath, "abced"), Path.Combine(TestPath, "sub", "abced"), Path.Combine(TestPath, "abbbcfd"), Path.Combine(TestPath, "sub", "abbbcfd") },
+            method("a*c?d", new EnumerationOptions { RecurseSubdirectories = true }).Select(x => GetWrappedInfo(x).FullName));
+    }
+
+    [TestMethod]
+    [DataRow(false, DisplayName = "EnumerateFiles")]
+    [DataRow(true, DisplayName = "GetFiles")]
+    public void EnumerateFiles_SearchPattern_EnumerationOptions_SearchOptionTopDirectoryOnly(bool useGet)
+    {
+        Func<string, EnumerationOptions, IEnumerable<IFileInfo>> method = useGet ? Sut.GetFiles : Sut.EnumerateFiles;
+        CreateFiles("abcd.txt", "abced.txt", "abbbcd.txt", "abbbcfd.txt", Path.Combine("sub", "abced.txt"), Path.Combine("sub", "abbbcfd.txt"));
+        Assert.AreCollectionsEquivalent(
+            new[] { Path.Combine(TestPath, "abced.txt"), Path.Combine(TestPath, "abbbcfd.txt") },
+            method("a*c?d.txt", new EnumerationOptions { RecurseSubdirectories = false }).Select(x => GetWrappedInfo(x).FullName));
+    }
+
+    [TestMethod]
+    [DataRow(false, DisplayName = "EnumerateFiles")]
+    [DataRow(true, DisplayName = "GetFiles")]
+    public void EnumerateFiles_SearchPattern_EnumerationOptions_SearchOptionAllDirectories(bool useGet)
+    {
+        Func<string, EnumerationOptions, IEnumerable<IFileInfo>> method = useGet ? Sut.GetFiles : Sut.EnumerateFiles;
+        CreateFiles("abcd.txt", "abced.txt", "abbbcd.txt", "abbbcfd.txt", Path.Combine("sub", "abced.txt"), Path.Combine("sub", "abbbcfd.txt"));
+        Assert.AreCollectionsEquivalent(
+            new[] { Path.Combine(TestPath, "abced.txt"), Path.Combine(TestPath, "sub", "abced.txt"), Path.Combine(TestPath, "abbbcfd.txt"), Path.Combine(TestPath, "sub", "abbbcfd.txt") },
+            method("a*c?d.txt", new EnumerationOptions { RecurseSubdirectories = true }).Select(x => GetWrappedInfo(x).FullName));
+    }
+
+    [TestMethod]
+    [DataRow(false, DisplayName = "EnumerateFileSystemInfos")]
+    [DataRow(true, DisplayName = "GetFileSystemInfos")]
+    public void EnumerateFileSystemInfos_SearchPattern_EnumerationOptions_SearchOptionTopDirectoryOnly(bool useGet)
+    {
+        Func<string, EnumerationOptions, IEnumerable<IFileSystemInfo>> method = useGet ? Sut.GetFileSystemInfos : Sut.EnumerateFileSystemInfos;
+        CreateSubdirectories("abcd", "abced", "abbbcd", "abbbcfd", Path.Combine("sub", "abced"), Path.Combine("sub", "abbbcfd"));
+        CreateFiles("abcd.txt", "abced.txt", "abbbcd.txt", "abbbcfd.txt", Path.Combine("sub", "abced.txt"), Path.Combine("sub", "abbbcfd.txt"));
+        Assert.AreCollectionsEquivalent(
+            new[] { Path.Combine(TestPath, "abced"), Path.Combine(TestPath, "abbbcfd"), Path.Combine(TestPath, "abced.txt"), Path.Combine(TestPath, "abbbcfd.txt") },
+            method("a*c?d*", new EnumerationOptions { RecurseSubdirectories = false }).Select(x => GetWrappedInfo(x).FullName));
+    }
+
+    [TestMethod]
+    [DataRow(false, DisplayName = "EnumerateFileSystemInfos")]
+    [DataRow(true, DisplayName = "GetFileSystemInfos")]
+    public void EnumerateFileSystemInfos_SearchPattern_EnumerationOptions_SearchOptionAllDirectories(bool useGet)
+    {
+        Func<string, EnumerationOptions, IEnumerable<IFileSystemInfo>> method = useGet ? Sut.GetFileSystemInfos : Sut.EnumerateFileSystemInfos;
+        CreateSubdirectories("abcd", "abced", "abbbcd", "abbbcfd", Path.Combine("sub", "abced"), Path.Combine("sub", "abbbcfd"));
+        CreateFiles("abcd.txt", "abced.txt", "abbbcd.txt", "abbbcfd.txt", Path.Combine("sub", "abced.txt"), Path.Combine("sub", "abbbcfd.txt"));
+        Assert.AreCollectionsEquivalent(
+            new[] { Path.Combine(TestPath, "abced"), Path.Combine(TestPath, "sub", "abced"), Path.Combine(TestPath, "abbbcfd"), Path.Combine(TestPath, "sub", "abbbcfd"), Path.Combine(TestPath, "abced.txt"), Path.Combine(TestPath, "sub", "abced.txt"), Path.Combine(TestPath, "abbbcfd.txt"), Path.Combine(TestPath, "sub", "abbbcfd.txt") },
+            method("a*c?d*", new EnumerationOptions { RecurseSubdirectories = true }).Select(x => GetWrappedInfo(x).FullName));
+    }
+#endif
 
     private DirectoryInfo GetWrappedInfo(IDirectoryInfo info)
     {
@@ -318,5 +502,37 @@ public class PhysicalDirectoryInfoTests : TestClassBase
         var property = typeof(PhysicalDirectoryInfo).GetProperty("WrappedInfo", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly, null, typeof(DirectoryInfo), Type.EmptyTypes, null);
         Assert.IsNotNull(property, "Correct WrappedInfo property was not found.");
         return (DirectoryInfo)property.GetValue(info)!;
+    }
+
+    private FileInfo GetWrappedInfo(IFileInfo info)
+    {
+        Assert.IsInstanceOfType<PhysicalFileInfo>(info);
+        var property = typeof(PhysicalFileInfo).GetProperty("WrappedInfo", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly, null, typeof(FileInfo), Type.EmptyTypes, null);
+        Assert.IsNotNull(property, "Correct WrappedInfo property was not found.");
+        return (FileInfo)property.GetValue(info)!;
+    }
+
+    private FileSystemInfo GetWrappedInfo(IFileSystemInfo info)
+    {
+        Assert.IsInstanceOfType<PhysicalFileSystemInfo>(info);
+        var property = typeof(PhysicalFileSystemInfo).GetProperty("WrappedInfo", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly, null, typeof(FileSystemInfo), Type.EmptyTypes, null);
+        Assert.IsNotNull(property, "Correct WrappedInfo property was not found.");
+        return (FileSystemInfo)property.GetValue(info)!;
+    }
+
+    private void CreateSubdirectories(params string[] subdirs)
+    {
+        foreach (var subdir in subdirs)
+            TestInfo.CreateSubdirectory(subdir);
+    }
+
+    private void CreateFiles(params string[] files)
+    {
+        foreach (var file in files)
+        {
+            var fullPath = Path.GetFullPath(Path.Combine(TestPath, file));
+            Directory.CreateDirectory(Path.GetDirectoryName(fullPath)!);
+            File.Create(fullPath).Dispose();
+        }
     }
 }

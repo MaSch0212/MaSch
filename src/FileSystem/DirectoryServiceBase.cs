@@ -19,6 +19,7 @@ public abstract class DirectoryServiceBase : IDirectoryService
     }
 
     /// <inheritdoc/>
+    [ExcludeFromCodeCoverage]
     public IFileSystemService FileSystem { get; }
 
     /// <inheritdoc/>

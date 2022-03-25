@@ -181,6 +181,7 @@ internal class PhysicalDirectoryInfo : PhysicalFileSystemInfo, IDirectoryInfo
     private IDirectoryInfo[] ToDirectoryInfo(DirectoryInfo[] paths) => ToDirectoryInfo((IEnumerable<DirectoryInfo>)paths).ToArray();
     private IEnumerable<IFileInfo> ToFileInfo(IEnumerable<FileInfo> paths) => paths.Select(x => new PhysicalFileInfo(FileSystem, x));
     private IFileInfo[] ToFileInfo(FileInfo[] paths) => ToFileInfo((IEnumerable<FileInfo>)paths).ToArray();
+    [ExcludeFromCodeCoverage]
     private IEnumerable<IFileSystemInfo> ToFileSystemInfo(IEnumerable<FileSystemInfo> paths)
         => paths.Select<FileSystemInfo, IFileSystemInfo>(x => x switch
         {
