@@ -187,6 +187,187 @@ public class FileInfoBaseTests : TestClassBase
         Sut.Attributes = expected;
     }
 
+    [TestMethod]
+    public void AppendText()
+    {
+        using var ms = new MemoryStream();
+        using var result = new StreamWriter(ms);
+        FileService.Setup(x => x.AppendText(Path)).Returns(result).Verifiable(Verifiables, Times.Once());
+
+        Assert.AreSame(result, Sut.AppendText());
+    }
+
+    [TestMethod]
+    public void CopyTo()
+    {
+        var expectedPath = Guid.NewGuid().ToString();
+        var expectedInfo = Mocks.Create<IFileInfo>().Object;
+        FileService.Setup(x => x.Copy(Path, expectedPath)).Verifiable(Verifiables, Times.Once());
+        FileService.Setup(x => x.GetInfo(expectedPath)).Returns(expectedInfo).Verifiable(Verifiables, Times.Once());
+
+        Assert.AreSame(expectedInfo, Sut.CopyTo(expectedPath));
+    }
+
+    [TestMethod]
+    [DataRow(false)]
+    [DataRow(true)]
+    public void CopyTo_Overwrite(bool overwrite)
+    {
+        var expectedPath = Guid.NewGuid().ToString();
+        var expectedInfo = Mocks.Create<IFileInfo>().Object;
+        FileService.Setup(x => x.Copy(Path, expectedPath, overwrite)).Verifiable(Verifiables, Times.Once());
+        FileService.Setup(x => x.GetInfo(expectedPath)).Returns(expectedInfo).Verifiable(Verifiables, Times.Once());
+
+        Assert.AreSame(expectedInfo, Sut.CopyTo(expectedPath, overwrite));
+    }
+
+    [TestMethod]
+    public void Create()
+    {
+        using var expected = new MemoryStream();
+        FileService.Setup(x => x.Create(Path)).Returns(expected).Verifiable(Verifiables, Times.Once());
+
+        Assert.AreSame(expected, Sut.Create());
+    }
+
+    [TestMethod]
+    public void CreateText()
+    {
+        using var ms = new MemoryStream();
+        using var expected = new StreamWriter(ms);
+        FileService.Setup(x => x.CreateText(Path)).Returns(expected).Verifiable(Verifiables, Times.Once());
+
+        Assert.AreSame(expected, Sut.CreateText());
+    }
+
+    [TestMethod]
+    public void MoveTo()
+    {
+        var expectedPath = Guid.NewGuid().ToString();
+        FileService.Setup(x => x.Move(Path, expectedPath)).Verifiable(Verifiables, Times.Once());
+
+        Sut.MoveTo(expectedPath);
+    }
+
+    [TestMethod]
+    [DataRow(false)]
+    [DataRow(true)]
+    public void MoveTo_Overwrite(bool overwrite)
+    {
+        var expectedPath = Guid.NewGuid().ToString();
+        FileService.Setup(x => x.Move(Path, expectedPath, overwrite)).Verifiable(Verifiables, Times.Once());
+
+        Sut.MoveTo(expectedPath, overwrite);
+    }
+
+    [TestMethod]
+    public void Open_Mode()
+    {
+        var mode = Random.NextEnum<FileMode>();
+        using var expected = new MemoryStream();
+        FileService.Setup(x => x.Open(Path, mode)).Returns(expected).Verifiable(Verifiables, Times.Once());
+
+        Assert.AreSame(expected, Sut.Open(mode));
+    }
+
+    [TestMethod]
+    public void Open_Mode_Access()
+    {
+        var mode = Random.NextEnum<FileMode>();
+        var access = Random.NextEnum<FileAccess>();
+        using var expected = new MemoryStream();
+        FileService.Setup(x => x.Open(Path, mode, access)).Returns(expected).Verifiable(Verifiables, Times.Once());
+
+        Assert.AreSame(expected, Sut.Open(mode, access));
+    }
+
+    [TestMethod]
+    public void Open_Mode_Access_Share()
+    {
+        var mode = Random.NextEnum<FileMode>();
+        var access = Random.NextEnum<FileAccess>();
+        var share = Random.NextEnum<FileShare>();
+        using var expected = new MemoryStream();
+        FileService.Setup(x => x.Open(Path, mode, access, share)).Returns(expected).Verifiable(Verifiables, Times.Once());
+
+        Assert.AreSame(expected, Sut.Open(mode, access, share));
+    }
+
+    [TestMethod]
+    public void Open_FileStreamOptions()
+    {
+        var options = new FileStreamOptions();
+        using var expected = new MemoryStream();
+        FileService.Setup(x => x.Open(Path, options)).Returns(expected).Verifiable(Verifiables, Times.Once());
+
+        Assert.AreSame(expected, Sut.Open(options));
+    }
+
+    [TestMethod]
+    public void OpenRead()
+    {
+        var mode = Random.NextEnum<FileMode>();
+        using var expected = new MemoryStream();
+        FileService.Setup(x => x.OpenRead(Path)).Returns(expected).Verifiable(Verifiables, Times.Once());
+
+        Assert.AreSame(expected, Sut.OpenRead());
+    }
+
+    [TestMethod]
+    public void OpenText()
+    {
+        var mode = Random.NextEnum<FileMode>();
+        using var ms = new MemoryStream();
+        using var expected = new StreamReader(ms);
+        FileService.Setup(x => x.OpenText(Path)).Returns(expected).Verifiable(Verifiables, Times.Once());
+
+        Assert.AreSame(expected, Sut.OpenText());
+    }
+
+    [TestMethod]
+    public void OpenWrite()
+    {
+        var mode = Random.NextEnum<FileMode>();
+        using var expected = new MemoryStream();
+        FileService.Setup(x => x.OpenWrite(Path)).Returns(expected).Verifiable(Verifiables, Times.Once());
+
+        Assert.AreSame(expected, Sut.OpenWrite());
+    }
+
+    [TestMethod]
+    public void Replace()
+    {
+        var expectedDestPath = Guid.NewGuid().ToString();
+        var expectedBackupPath = Guid.NewGuid().ToString();
+        var expectedInfo = Mocks.Create<IFileInfo>().Object;
+        FileService.Setup(x => x.Replace(Path, expectedDestPath, expectedBackupPath)).Verifiable(Verifiables, Times.Once());
+        FileService.Setup(x => x.GetInfo(expectedDestPath)).Returns(expectedInfo).Verifiable(Verifiables, Times.Once());
+
+        Assert.AreSame(expectedInfo, Sut.Replace(expectedDestPath, expectedBackupPath));
+    }
+
+    [TestMethod]
+    [DataRow(false)]
+    [DataRow(true)]
+    public void Replace_IgnoreMetadataErrors(bool ignoreMetadataErrors)
+    {
+        var expectedDestPath = Guid.NewGuid().ToString();
+        var expectedBackupPath = Guid.NewGuid().ToString();
+        var expectedInfo = Mocks.Create<IFileInfo>().Object;
+        FileService.Setup(x => x.Replace(Path, expectedDestPath, expectedBackupPath, ignoreMetadataErrors)).Verifiable(Verifiables, Times.Once());
+        FileService.Setup(x => x.GetInfo(expectedDestPath)).Returns(expectedInfo).Verifiable(Verifiables, Times.Once());
+
+        Assert.AreSame(expectedInfo, Sut.Replace(expectedDestPath, expectedBackupPath, ignoreMetadataErrors));
+    }
+
+    [TestMethod]
+    public void Delete()
+    {
+        FileService.Setup(x => x.Delete(Path)).Verifiable(Verifiables, Times.Once());
+
+        Sut.Delete();
+    }
+
     private FileInfoBase CreateInfo(string path, out Mock<IDirectoryService> directoryService, out Mock<IFileService> fileService)
     {
         var dirService = directoryService = Mocks.Create<IDirectoryService>();

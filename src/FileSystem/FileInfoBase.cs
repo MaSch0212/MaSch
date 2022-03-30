@@ -88,13 +88,14 @@ public abstract class FileInfoBase : FileSystemInfoBase, IFileInfo
     /// <inheritdoc/>
     public virtual IFileInfo CopyTo(string destFileName)
     {
-        return CopyTo(destFileName, false);
+        FileSystem.File.Copy(FullName, destFileName);
+        return FileSystem.File.GetInfo(destFileName);
     }
 
     /// <inheritdoc/>
     public virtual IFileInfo CopyTo(string destFileName, bool overwrite)
     {
-        FileSystem.File.Copy(FullName, destFileName);
+        FileSystem.File.Copy(FullName, destFileName, overwrite);
         return FileSystem.File.GetInfo(destFileName);
     }
 
@@ -167,7 +168,8 @@ public abstract class FileInfoBase : FileSystemInfoBase, IFileInfo
     /// <inheritdoc/>
     public virtual IFileInfo Replace(string destinationFileName, string? destinationBackupFileName)
     {
-        return Replace(destinationFileName, destinationBackupFileName, false);
+        FileSystem.File.Replace(FullName, destinationFileName, destinationBackupFileName);
+        return FileSystem.GetFileInfo(destinationFileName);
     }
 
     /// <inheritdoc/>

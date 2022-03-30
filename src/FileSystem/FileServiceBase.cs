@@ -33,7 +33,7 @@ public abstract class FileServiceBase : IFileService
     /// <inheritdoc/>
     public virtual IDirectoryInfo? GetDirectory(string path)
     {
-        Guard.NotNullOrEmpty(path);
+        Guard.NotNullOrWhitespace(path);
         string fullPath = Path.GetFullPath(path);
         string? directoryName = Path.GetDirectoryName(fullPath);
         return directoryName == null ? null : FileSystem.GetDirectoryInfo(directoryName);

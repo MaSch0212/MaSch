@@ -62,6 +62,7 @@ internal class PhysicalFileSystemInfo : IFileSystemInfo
         set => WrappedInfo.Attributes = value;
     }
 
+    [ExcludeFromCodeCoverage]
     protected virtual FileSystemInfo WrappedInfo { get; }
 
     public virtual void Delete()

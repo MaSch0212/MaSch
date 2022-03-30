@@ -15,7 +15,7 @@ public abstract class FileSystemInfoBase : IFileSystemInfo
     protected FileSystemInfoBase(IFileSystemService fileSystem, string path)
     {
         FileSystem = Guard.NotNull(fileSystem);
-        OriginalPath = path;
+        OriginalPath = Guard.NotNullOrWhitespace(path);
         FullName = Path.GetFullPath(path);
         Name = Path.GetFileName(path);
     }
