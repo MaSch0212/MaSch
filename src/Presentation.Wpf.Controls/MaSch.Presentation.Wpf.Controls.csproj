@@ -9,7 +9,7 @@
 
     <!-- Package Info -->
     <Description>Contains advanced controls for .NET WPF applications.</Description>
-    <Version>0.2.6</Version>
+    <Version>0.2.7</Version>
     <PackageTags>masch presentation ui frontend wpf controls</PackageTags>
   </PropertyGroup>
 

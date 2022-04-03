@@ -483,7 +483,7 @@ public class TextBox : System.Windows.Controls.TextBox
                 previewText = matches.Cast<Match>().Aggregate(previewText, (current, match) => current.Replace(match.Value, match.Value + "0"));
                 if (string.IsNullOrEmpty(previewText) || previewText.StartsWith("e0"))
                     previewText = "0";
-                NumericValue = double.Parse(previewText);
+                NumericValue = double.Parse(previewText, CultureInfo.CurrentUICulture);
             }
         }
 
@@ -594,7 +594,10 @@ public class TextBox : System.Windows.Controls.TextBox
         if (obj is TextBox tbx && tbx.OnlyNumericValues)
         {
             tbx.NumericValueChanged?.Invoke(tbx, e.NewValue as double?);
-            tbx.Text = string.Format($"{{0:{(tbx.IsThrousandSeperatorEnabled ? "N" : "F") + tbx.DecimalPlaces}}}", e.NewValue);
+            if (e.NewValue is double newNumbericValue)
+                tbx.Text = newNumbericValue.ToString((tbx.IsThrousandSeperatorEnabled ? "N" : "F") + tbx.DecimalPlaces, CultureInfo.CurrentUICulture);
+            else
+                tbx.Text = string.Empty;
         }
     }
 
