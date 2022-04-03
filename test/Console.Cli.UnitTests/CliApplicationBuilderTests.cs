@@ -16,6 +16,7 @@ public class CliApplicationBuilderBaseTests : TestClassBase
         _ = mock.Setup(x => x.GetEnumerator()).Returns(() => Services.GetEnumerator());
         _ = mock.Setup(x => x.Count).Returns(() => Services.Count);
         _ = mock.Setup(x => x.CopyTo(It.IsAny<ServiceDescriptor[]>(), It.IsAny<int>())).Callback<ServiceDescriptor[], int>((a, b) => Services.CopyTo(a, b));
+        _ = mock.Setup(x => x[It.IsAny<int>()]).Returns<int>(i => Services[i]);
         return mock;
     })!;
     private Mock<ICliCommandInfoCollection> CommandsMock => Cache.GetValue(() => Mocks.Create<ICliCommandInfoCollection>())!;
@@ -263,6 +264,7 @@ public class CliApplicationBuilderTests : TestClassBase
         _ = mock.Setup(x => x.GetEnumerator()).Returns(() => Services.GetEnumerator());
         _ = mock.Setup(x => x.Count).Returns(() => Services.Count);
         _ = mock.Setup(x => x.CopyTo(It.IsAny<ServiceDescriptor[]>(), It.IsAny<int>())).Callback<ServiceDescriptor[], int>((a, b) => Services.CopyTo(a, b));
+        _ = mock.Setup(x => x[It.IsAny<int>()]).Returns<int>(i => Services[i]);
         return mock;
     })!;
     private Mock<ICliCommandInfoCollection> CommandsMock => Cache.GetValue(() => Mocks.Create<ICliCommandInfoCollection>())!;
@@ -458,6 +460,7 @@ public class CliAsyncApplicationBuilderTests : TestClassBase
         _ = mock.Setup(x => x.GetEnumerator()).Returns(() => Services.GetEnumerator());
         _ = mock.Setup(x => x.Count).Returns(() => Services.Count);
         _ = mock.Setup(x => x.CopyTo(It.IsAny<ServiceDescriptor[]>(), It.IsAny<int>())).Callback<ServiceDescriptor[], int>((a, b) => Services.CopyTo(a, b));
+        _ = mock.Setup(x => x[It.IsAny<int>()]).Returns<int>(i => Services[i]);
         return mock;
     })!;
     private Mock<ICliCommandInfoCollection> CommandsMock => Cache.GetValue(() => Mocks.Create<ICliCommandInfoCollection>())!;
