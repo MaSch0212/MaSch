@@ -59,10 +59,7 @@ public static class MessageBox
                 MessageBoxImage = icon,
                 DefaultResult = defaultResult,
             };
-            var dialog = new Views.MessageBox
-            {
-                DataContext = vm,
-            };
+            var dialog = new Views.MessageBox(vm);
             dialog.Owner = owner ?? (ReferenceEquals(Application.Current?.MainWindow, dialog) ? null : Application.Current?.MainWindow);
             _ = dialog.ShowDialog();
             return dialog.MessageBoxResult;

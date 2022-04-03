@@ -1,6 +1,10 @@
 ﻿using MaSch.Presentation.Wpf.ViewModels;
 using System.Media;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Forms;
+using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace MaSch.Presentation.Wpf.Views;
 
@@ -11,22 +15,28 @@ namespace MaSch.Presentation.Wpf.Views;
 /// <seealso cref="System.Windows.Markup.IComponentConnector" />
 internal partial class MessageBox
 {
-    private readonly double[] _steps = { 3D, 2D, 1.5D, 1.1D };
-    private int _stepIndex;
+    private readonly double[] _steps = { 4D, 3D, 2D, 1.5D, 1.1D };
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MessageBox"/> class.
     /// </summary>
-    public MessageBox()
+    public MessageBox(MessageBoxViewModel viewModel)
     {
         InitializeComponent();
         IsVisibleChanged += MessageBox_IsVisibleChanged;
         MessageBoxResult = MessageBoxResult.None;
         MaxHeight = SystemParameters.PrimaryScreenHeight * 0.9D;
         MaxWidth = SystemParameters.PrimaryScreenWidth / 4D;
-        OneLineMessageBoxText.SizeChanged += MessageBoxContent_SizeChanged;
+        DataContext = viewModel;
         Loaded += (s, e) =>
         {
+            UpdateSize(true);
+            viewModel.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(MessageBoxViewModel.Icon) || e.PropertyName == nameof(MessageBoxViewModel.MessageBoxText))
+                    UpdateSize(false);
+            };
+
             WindowState = WindowState.Normal;
             _ = Activate();
         };
@@ -37,14 +47,44 @@ internal partial class MessageBox
     /// </summary>
     public MessageBoxResult MessageBoxResult { get; set; }
 
-    private void MessageBoxContent_SizeChanged(object sender, SizeChangedEventArgs e)
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:Field names should not use Hungarian notation", Justification = "x/y is fine.")]
+    private void UpdateSize(bool updateLocation)
     {
-        Width = Math.Ceiling(30D + OneLineMessageBoxText.ActualWidth + (IconPresenter.Visibility == Visibility.Visible ? (IconPresenter.ActualWidth + 50) : 0D));
-        Height = Math.Ceiling(60D + ButtonRow.ActualHeight + Math.Max(MessageBoxContent.ActualHeight, IconPresenter.Visibility == Visibility.Visible ? IconPresenter.ActualHeight : 0));
-        if (Height >= MaxHeight && _stepIndex < _steps.Length - 1)
+        var formatted = new FormattedText(
+            ((MessageBoxViewModel)DataContext!).MessageBoxText,
+            CultureInfo.CurrentUICulture,
+            MessageBoxContent.FlowDirection,
+            new Typeface(MessageBoxContent.FontFamily, MessageBoxContent.FontStyle, MessageBoxContent.FontWeight, MessageBoxContent.FontStretch),
+            MessageBoxContent.FontSize,
+            MessageBoxContent.Foreground,
+            VisualTreeHelper.GetDpi(MessageBoxContent).PixelsPerDip);
+
+        double maxWidth = MaxWidth;
+        var xMargin = ActualWidth - MessageBoxContent.ActualWidth + MessageBoxContent.Padding.Left + MessageBoxContent.Padding.Right;
+        var yMargin = ActualHeight - MessageBoxContent.ActualHeight + MessageBoxContent.Padding.Top + MessageBoxContent.Padding.Bottom;
+        var maxTextHeight = MaxHeight - yMargin;
+        var rawTextWidth = formatted.Width;
+
+        int stepIndex;
+        for (stepIndex = 0; stepIndex < _steps.Length; stepIndex++)
         {
-            MaxWidth = SystemParameters.PrimaryScreenWidth / _steps[++_stepIndex];
-            MessageBoxContent_SizeChanged(sender, e);
+            maxWidth = SystemParameters.PrimaryScreenWidth / _steps[stepIndex];
+            formatted.MaxTextWidth = maxWidth - xMargin;
+            if (formatted.Height <= maxTextHeight && (formatted.Width > formatted.Height || formatted.Width == rawTextWidth))
+                break;
+        }
+
+        MaxWidth = Math.Ceiling(maxWidth);
+        Width = Math.Ceiling(formatted.Width + xMargin);
+        Height = Math.Ceiling(formatted.Height + yMargin);
+
+        MessageBoxContent.VerticalScrollBarVisibility = stepIndex >= _steps.Length ? ScrollBarVisibility.Auto : ScrollBarVisibility.Disabled;
+
+        if (updateLocation)
+        {
+            var currentScreen = Screen.FromHandle(new WindowInteropHelper(this).Handle);
+            Top = (currentScreen.WorkingArea.Height - Height) / 2;
+            Left = (currentScreen.WorkingArea.Width - Width) / 2;
         }
     }
 

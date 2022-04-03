@@ -9,7 +9,7 @@
 
     <!-- Package Info -->
     <Description>Contains modern themes for .NET WPF application</Description>
-    <Version>0.1.12</Version>
+    <Version>0.2.0</Version>
     <PackageTags>masch presentation ui frontend wpf themes theming</PackageTags>
   </PropertyGroup>
 

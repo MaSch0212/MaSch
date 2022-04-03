@@ -5,11 +5,12 @@
     <RootNamespace>MaSch.Presentation.Wpf</RootNamespace>
     <TargetFrameworks>$(TfmsNetCoreAppWindows);$(TfmsNetFramework)</TargetFrameworks>
     <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
     <EnableMaSchGenerators>true</EnableMaSchGenerators>
 
     <!-- Package Info -->
     <Description>Contains advanced controls for .NET WPF applications.</Description>
-    <Version>0.2.7</Version>
+    <Version>0.2.8</Version>
     <PackageTags>masch presentation ui frontend wpf controls</PackageTags>
   </PropertyGroup>
 

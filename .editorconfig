@@ -4,10 +4,10 @@ root = true
 charset = utf-8-bom
 end_of_line = crlf
 
-[*.{cs,json}]
+[*.{cs,xaml}]
 indent_size = 4
 indent_style = space
 
-[*.{xaml,xml,csproj,props,target}]
+[*.{xml,csproj,props,target,json}]
 indent_size = 2
 indent_style = space

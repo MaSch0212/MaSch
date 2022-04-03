@@ -30,9 +30,6 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <Canvas Visibility="Hidden">
-            <TextBlock x:Name="OneLineMessageBoxText" Text="{Binding MessageBoxText}" />
-        </Canvas>
         <mct:IconPresenter x:Name="IconPresenter"
                            Grid.Row="0"
                            Grid.Column="0"
