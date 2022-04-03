@@ -1,9 +1,12 @@
-trigger:
+﻿trigger:
   paths:
     include:
     - build
     - src
     - test
+    - Directory.Build.props
+    - Directory.Build.targets
+    - Packages.props
 
 pool:
   vmImage: 'windows-2022'
