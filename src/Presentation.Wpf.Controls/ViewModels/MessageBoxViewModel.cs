@@ -77,11 +77,6 @@ public partial class MessageBoxViewModel : ObservableObject, IMessageBoxViewMode
 
     private static IThemeManager CurrentThemeManager => ServiceContext.TryGetService<IThemeManager>() ?? ThemeManager.DefaultThemeManager;
 
-    partial void OnMessageBoxTextChanging(string? previous, ref string? value)
-    {
-        value = value?.Trim();
-    }
-
     private static BrushGeometry GetIcon(MessageBoxImage image)
     {
         return image switch
@@ -101,5 +96,10 @@ public partial class MessageBoxViewModel : ObservableObject, IMessageBoxViewMode
                 FillBrush = (CurrentThemeManager.GetValue<SolidColorBrush>(iconBrushKey) as SolidColorBrushThemeValue)?.Value,
             };
         }
+    }
+
+    partial void OnMessageBoxTextChanging(string? previous, ref string? value)
+    {
+        value = value?.Trim();
     }
 }
