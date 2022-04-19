@@ -23,13 +23,13 @@ public abstract class FileSystemServiceBase : IFileSystemService
     /// <inheritdoc />
     public virtual IDirectoryInfo GetDirectoryInfo(string directoryPath)
     {
-        throw new NotImplementedException();
+        return Directory.GetInfo(directoryPath);
     }
 
     /// <inheritdoc />
     public virtual IFileInfo GetFileInfo(string filePath)
     {
-        throw new NotImplementedException();
+        return File.GetInfo(filePath);
     }
 
     /// <summary>
