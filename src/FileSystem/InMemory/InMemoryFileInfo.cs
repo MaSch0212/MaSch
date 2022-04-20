@@ -23,7 +23,16 @@ internal class InMemoryFileInfo : FileInfoBase
     }
 
     public override long Length => EnsureNode().Content.Length;
-    public override bool IsReadOnly => EnsureNode().Attributes.HasFlag(FileAttributes.ReadOnly);
+    public override bool IsReadOnly
+    {
+        get => EnsureNode().Attributes.HasFlag(FileAttributes.ReadOnly);
+        set
+        {
+            var node = EnsureNode();
+            if (node.Attributes.HasFlag(FileAttributes.ReadOnly) != value)
+                node.Attributes ^= FileAttributes.ReadOnly;
+        }
+    }
 
     public override void Refresh()
     {

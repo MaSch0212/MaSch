@@ -1,6 +1,8 @@
 ﻿#if !NET6_0_OR_GREATER
 namespace MaSch.FileSystem;
 
+#pragma warning disable SA1600 // Elements should be documented
+
 public sealed class FileStreamOptions
 {
     public FileMode Mode { get; set; } = FileMode.Open;

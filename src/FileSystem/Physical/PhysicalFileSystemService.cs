@@ -1,7 +1,8 @@
-﻿using MaSch.Core;
+﻿namespace MaSch.FileSystem.Physical;
 
-namespace MaSch.FileSystem.Physical;
-
+/// <summary>
+/// Implementation of the <see cref="IFileSystemService"/> interface that managed the physical file system.
+/// </summary>
 public class PhysicalFileSystemService : FileSystemServiceBase
 {
     /// <summary>

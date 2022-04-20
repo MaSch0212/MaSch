@@ -1,6 +1,6 @@
 ﻿namespace MaSch.FileSystem.FileSystemBuilder.Actions;
 
-public class FileDeleteAction : IFileSystemAction
+internal class FileDeleteAction : IFileSystemAction
 {
     public FileDeleteAction(string fullPath)
     {

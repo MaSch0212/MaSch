@@ -564,6 +564,14 @@ public abstract class FileServiceBase : IFileService
 #endif
     }
 
+    /// <summary>Opens a <see cref="Stream" /> on the specified path, having the specified mode with read, write, or read/write access, the specified sharing option, buffer size and file options.</summary>
+    /// <param name="path">The file to open.</param>
+    /// <param name="mode">A <see cref="FileMode" /> value that specifies whether a file is created if one does not exist, and determines whether the contents of existing files are retained or overwritten.</param>
+    /// <param name="access">A <see cref="FileAccess" /> value that specifies the operations that can be performed on the file.</param>
+    /// <param name="share">A <see cref="FileShare" /> value specifying the type of access other threads have to the file.</param>
+    /// <param name="bufferSize">The buffer size for the underlying <see cref="Stream"/>.</param>
+    /// <param name="options">The file options with which to open the file.</param>
+    /// <returns>A <see cref="Stream" /> on the specified path, having the specified mode with read, write, or read/write access, the specified sharing option, buffer size and file options.</returns>
     protected abstract Stream Open(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize, FileOptions options);
 
 #if !NETFRAMEWORK && (!NETSTANDARD || NETSTANDARD2_1_OR_GREATER)

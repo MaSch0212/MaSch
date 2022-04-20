@@ -2,7 +2,7 @@
 
 namespace MaSch.FileSystem.InMemory;
 
-public class InMemoryFileService : FileServiceBase
+internal class InMemoryFileService : FileServiceBase
 {
     private readonly InMemoryFileSystemService _fileSystem;
 

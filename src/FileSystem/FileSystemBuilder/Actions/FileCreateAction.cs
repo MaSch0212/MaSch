@@ -1,6 +1,6 @@
 ﻿namespace MaSch.FileSystem.FileSystemBuilder.Actions;
 
-public class FileCreateAction : FileSystemEntryCreateAction
+internal class FileCreateAction : FileSystemEntryCreateAction
 {
     public FileCreateAction(string fullPath)
         : base(fullPath)
@@ -15,10 +15,13 @@ public class FileCreateAction : FileSystemEntryCreateAction
         if (dirPath is not null)
             service.Directory.CreateDirectory(dirPath);
 
-        using (var stream = service.File.Create(FullPath))
+        if (!service.File.Exists(FullPath) || Content is not null)
         {
-            if (Content is not null)
-                stream.Write(Content, 0, Content.Length);
+            using (var stream = service.File.Create(FullPath))
+            {
+                if (Content is not null)
+                    stream.Write(Content, 0, Content.Length);
+            }
         }
 
         base.Invoke(service);

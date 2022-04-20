@@ -11,13 +11,6 @@
     <PackageTags>masch file directory filesystem path</PackageTags>
   </PropertyGroup>
 
-  <!-- Remove this group when this project contains usable code. -->
-  <PropertyGroup>
-    <IsPackable>false</IsPackable>
-    <CodeAnalysisRuleSet>FileSystem.ruleset</CodeAnalysisRuleSet>
-    <EnableReleaseNotes>false</EnableReleaseNotes>
-  </PropertyGroup>
-
   <ItemGroup>
     <MaSchReference Include="Core" />
   </ItemGroup>

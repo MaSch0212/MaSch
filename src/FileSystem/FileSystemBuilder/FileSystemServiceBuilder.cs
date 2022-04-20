@@ -4,11 +4,15 @@ using MaSch.FileSystem.FileSystemBuilder.Actions;
 
 namespace MaSch.FileSystem;
 
+/// <summary>
+/// Class that is used to create a <see cref="IFileSystemService"/>.
+/// </summary>
 public class FileSystemServiceBuilder : IFileSystemServiceBuilder<FileSystemServiceBuilder>
 {
     private readonly List<IFileSystemAction> _actions = new();
     private Func<IFileSystemService>? _createServiceFunc;
 
+    /// <inheritdoc/>
     public IFileSystemService Build()
     {
         IFileSystemService service;
@@ -23,6 +27,7 @@ public class FileSystemServiceBuilder : IFileSystemServiceBuilder<FileSystemServ
         return service;
     }
 
+    /// <inheritdoc/>
     public FileSystemServiceBuilder UsingFileSystem(IFileSystemService service)
     {
         Guard.NotNull(service);
@@ -30,12 +35,14 @@ public class FileSystemServiceBuilder : IFileSystemServiceBuilder<FileSystemServ
         return this;
     }
 
+    /// <inheritdoc/>
     public FileSystemServiceBuilder UsingFileSystem(Func<IFileSystemService> serviceFactory)
     {
         _createServiceFunc = Guard.NotNull(serviceFactory);
         return this;
     }
 
+    /// <inheritdoc/>
     public FileSystemServiceBuilder UsingFileSystem<T>()
         where T : IFileSystemService, new()
     {
@@ -43,6 +50,7 @@ public class FileSystemServiceBuilder : IFileSystemServiceBuilder<FileSystemServ
         return this;
     }
 
+    /// <inheritdoc/>
     public FileSystemServiceBuilder WithRoot(string rootName)
     {
         EnsureCorrectPathRoot(rootName);
@@ -50,6 +58,7 @@ public class FileSystemServiceBuilder : IFileSystemServiceBuilder<FileSystemServ
         return this;
     }
 
+    /// <inheritdoc/>
     public FileSystemServiceBuilder WithRoot(string rootName, Action<IFileSystemRootBuilder> rootConfiguration)
     {
         Guard.NotNull(rootConfiguration);
@@ -60,6 +69,7 @@ public class FileSystemServiceBuilder : IFileSystemServiceBuilder<FileSystemServ
         return this;
     }
 
+    /// <inheritdoc/>
     public FileSystemServiceBuilder WithFile(string path)
     {
         EnsureRootedPath(path);
@@ -67,6 +77,7 @@ public class FileSystemServiceBuilder : IFileSystemServiceBuilder<FileSystemServ
         return this;
     }
 
+    /// <inheritdoc/>
     public FileSystemServiceBuilder WithFile(string path, Action<IFileBuilder> fileConfiguration)
     {
         Guard.NotNull(fileConfiguration);
@@ -77,6 +88,7 @@ public class FileSystemServiceBuilder : IFileSystemServiceBuilder<FileSystemServ
         return this;
     }
 
+    /// <inheritdoc/>
     public FileSystemServiceBuilder WithoutFile(string path)
     {
         EnsureRootedPath(path);
@@ -84,6 +96,7 @@ public class FileSystemServiceBuilder : IFileSystemServiceBuilder<FileSystemServ
         return this;
     }
 
+    /// <inheritdoc/>
     public FileSystemServiceBuilder WithDirectory(string path)
     {
         EnsureRootedPath(path);
@@ -91,6 +104,7 @@ public class FileSystemServiceBuilder : IFileSystemServiceBuilder<FileSystemServ
         return this;
     }
 
+    /// <inheritdoc/>
     public FileSystemServiceBuilder WithDirectory(string path, Action<IDirectoryBuilder> directoryConfiguration)
     {
         Guard.NotNull(directoryConfiguration);
@@ -101,6 +115,7 @@ public class FileSystemServiceBuilder : IFileSystemServiceBuilder<FileSystemServ
         return this;
     }
 
+    /// <inheritdoc/>
     public FileSystemServiceBuilder WithoutDirectory(string path)
     {
         EnsureRootedPath(path);

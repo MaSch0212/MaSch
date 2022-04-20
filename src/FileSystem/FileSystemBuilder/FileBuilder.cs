@@ -3,7 +3,7 @@ using MaSch.FileSystem.FileSystemBuilder.Actions;
 
 namespace MaSch.FileSystem.FileSystemBuilder;
 
-public class FileBuilder : IFileBuilder
+internal class FileBuilder : IFileBuilder
 {
     private readonly FileCreateAction _action;
 

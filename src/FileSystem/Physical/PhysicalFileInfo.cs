@@ -23,7 +23,11 @@ internal class PhysicalFileInfo : PhysicalFileSystemInfo, IFileInfo
         }
     }
 
-    public bool IsReadOnly => WrappedInfo.IsReadOnly;
+    public bool IsReadOnly
+    {
+        get => WrappedInfo.IsReadOnly;
+        set => WrappedInfo.IsReadOnly = value;
+    }
 
 #if NET5_0_OR_GREATER
     protected override FileInfo WrappedInfo { get; }

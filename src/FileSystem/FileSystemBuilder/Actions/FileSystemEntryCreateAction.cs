@@ -1,6 +1,6 @@
 ﻿namespace MaSch.FileSystem.FileSystemBuilder.Actions;
 
-public abstract class FileSystemEntryCreateAction : IFileSystemAction
+internal abstract class FileSystemEntryCreateAction : IFileSystemAction
 {
     protected FileSystemEntryCreateAction(string fullPath)
     {

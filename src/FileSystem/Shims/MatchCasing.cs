@@ -5,6 +5,6 @@ internal enum MatchCasing
 {
     PlatformDefault,
     CaseSensitive,
-    CaseInsensitive
+    CaseInsensitive,
 }
 #endif

@@ -1,6 +1,6 @@
 ﻿namespace MaSch.FileSystem.FileSystemBuilder.Actions;
 
-public class FileSystemRootCreateAction : IFileSystemAction
+internal class FileSystemRootCreateAction : IFileSystemAction
 {
     public FileSystemRootCreateAction(string rootName)
     {

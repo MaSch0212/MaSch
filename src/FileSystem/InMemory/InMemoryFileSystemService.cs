@@ -3,6 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace MaSch.FileSystem.InMemory;
 
+/// <summary>
+/// Implementation of the <see cref="IFileSystemService"/> that managed a virtual in-memory file system.
+/// </summary>
 public class InMemoryFileSystemService : FileSystemServiceBase, IPathRootCreator
 {
     internal static readonly char[] DirectorySeperatorChars = GetDirectorySeperatorChars();
@@ -12,6 +15,7 @@ public class InMemoryFileSystemService : FileSystemServiceBase, IPathRootCreator
 
     internal Dictionary<string, RootNode> Nodes { get; } = new(PathComparer);
 
+    /// <inheritdoc/>
     public void CreatePathRoot(string name)
     {
         var root = Path.GetPathRoot(name);
@@ -102,14 +106,16 @@ public class InMemoryFileSystemService : FileSystemServiceBase, IPathRootCreator
         return true;
     }
 
+    /// <inheritdoc/>
     protected override IDirectoryService CreateDirectoryService()
     {
-        throw new NotImplementedException();
+        return new InMemoryDirectoryService(this);
     }
 
+    /// <inheritdoc/>
     protected override IFileService CreateFileService()
     {
-        throw new NotImplementedException();
+        return new InMemoryFileService(this);
     }
 
     private static char[] GetDirectorySeperatorChars()

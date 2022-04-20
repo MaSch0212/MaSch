@@ -1,6 +1,6 @@
 ﻿namespace MaSch.FileSystem.FileSystemBuilder.Actions;
 
-public class DirectoryCreateAction : FileSystemEntryCreateAction
+internal class DirectoryCreateAction : FileSystemEntryCreateAction
 {
     public DirectoryCreateAction(string fullPath)
         : base(fullPath)

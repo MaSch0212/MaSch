@@ -25,7 +25,7 @@ public abstract class FileInfoBase : FileSystemInfoBase, IFileInfo
     public virtual IDirectoryInfo? Directory => FileSystem.File.GetDirectory(FullName);
 
     /// <inheritdoc/>
-    public abstract bool IsReadOnly { get; }
+    public abstract bool IsReadOnly { get; set; }
 
     /// <inheritdoc/>
     public override bool Exists => FileSystem.File.Exists(FullName);

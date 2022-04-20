@@ -8,6 +8,6 @@ internal static class NodeExtensions
         where TNode : FileSystemNode
     {
         var comparer = InMemoryFileSystemService.PathComparer;
-        return enumerable.TryFirst(x => comparer.Equals(x.Name, name), out node);
+        return enumerable.TryFirst<TNode>(x => comparer.Equals(x.Name, name), out node);
     }
 }
