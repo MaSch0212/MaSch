@@ -56,6 +56,22 @@ public static class Guard
     }
 
     /// <summary>
+    /// Verifies that the value is not null, empty or whitespace.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="name">The name of the parameter to verify.</param>
+    /// <exception cref="ArgumentException">The <paramref name="value"/> is empty or only consists of whitespace characters.</exception>
+    /// <exception cref="ArgumentNullException">The <paramref name="value"/> is null.</exception>
+    /// <returns>The same instance as <paramref name="value"/>.</returns>
+    public static string NotNullOrWhitespace([NotNull] string? value, [CallerArgumentExpression("value")] string name = "")
+    {
+        _ = NotNull(value, name);
+        if (string.IsNullOrWhiteSpace(value))
+            throw new ArgumentException("The parameter value needs to contain at least one non-whitespace character.", name);
+        return value;
+    }
+
+    /// <summary>
     /// Verifies that a value is inside a specified range.
     /// </summary>
     /// <typeparam name="T">The type of the value to verify.</typeparam>
@@ -469,6 +485,44 @@ public static class Guard
         var result = Enum.GetValues(typeof(T)).Cast<T>().Aggregate(value, (a, x) => and(xor(a, x), a));
         if (!Equals(result, default(T)))
             throw new ArgumentException($"At least one flag in \"{value}\" is not defined in the enum \"{typeof(T).Name}\".", name);
+        return value;
+    }
+
+    /// <summary>
+    /// Verifies thet an enum value has a specified enum flag.
+    /// </summary>
+    /// <typeparam name="T">The enum type.</typeparam>
+    /// <param name="value">The value.</param>
+    /// <param name="expectedFlag">The expected enum flag.</param>
+    /// <param name="name">The name of the parameter to verify.</param>
+    /// <returns>Return the <paramref name="value"/>.</returns>
+    /// <exception cref="ArgumentException">The value <paramref name="value"/> needs to have the flag <paramref name="expectedFlag"/>.</exception>
+    public static T HasFlag<T>(T value, T expectedFlag, [CallerArgumentExpression("value")] string name = "")
+        where T : Enum
+    {
+        _ = NotNull(value, name);
+
+        if (!value.HasFlag(expectedFlag))
+            throw new ArgumentException($"The value \"{value}\" needs to have the flag \"{expectedFlag}\".", name);
+        return value;
+    }
+
+    /// <summary>
+    /// Verifies thet an enum value does not have a specified enum flag.
+    /// </summary>
+    /// <typeparam name="T">The enum type.</typeparam>
+    /// <param name="value">The value.</param>
+    /// <param name="unexpectedFlag">The unexpected enum flag.</param>
+    /// <param name="name">The name of the parameter to verify.</param>
+    /// <returns>Return the <paramref name="value"/>.</returns>
+    /// <exception cref="ArgumentException">The value <paramref name="value"/> cannot have the flag <paramref name="unexpectedFlag"/>.</exception>
+    public static T NotHasFlag<T>(T value, T unexpectedFlag, [CallerArgumentExpression("value")] string name = "")
+        where T : Enum
+    {
+        _ = NotNull(value, name);
+
+        if (value.HasFlag(unexpectedFlag))
+            throw new ArgumentException($"The value \"{value}\" cannot have the flag \"{unexpectedFlag}\".", name);
         return value;
     }
 

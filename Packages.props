@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
 
   <Import Project="$(MSBuildThisFileDirectory)build/MaSch.Constants.props" Condition=" '$(MaSchConstantsImported)' != 'true' " />
   <Import Project="$(MSBuildThisFileDirectory)src/Generators/MaSch.Generators.targets" Condition=" '$(EnableMaSchGenerators)' == 'true' " />
@@ -13,7 +13,7 @@
     <PackageReference Include="MSTest.TestAdapter" />
     <PackageReference Include="MSTest.TestFramework" />
     <PackageReference Include="Moq" Condition=" '$(EnableMoq)' != 'false' " />
-    <ProjectReference Include="$(GitSourceDir)Test.MSTest/MaSch.Test.MSTest.csproj" Condition=" '$(EnableMaSchTest)' != 'false' " />
+    <MaSchReference Include="Test.MSTest" Condition=" '$(EnableMaSchTest)' != 'false' " />
   </ItemGroup>
   
   <!-- Central package versions -->
@@ -58,6 +58,10 @@
   <!-- Windows Forms -->
   <ItemGroup Condition=" $(UseWindowsForms) == 'true' and $(TargetFrameworkIdentifier) == '.NETFramework' ">
     <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="@(MaSchReference -> '$(GitSourceDir)%(Identity)/MaSch.%(Identity).csproj')" />
   </ItemGroup>
 
 </Project>

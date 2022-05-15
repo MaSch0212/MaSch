@@ -23,7 +23,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="$(GitSourceDir)Presentation.Wpf/MaSch.Presentation.Wpf.csproj" />
+    <MaSchReference Include="Presentation.Wpf" />
   </ItemGroup>
 
   <ItemGroup>

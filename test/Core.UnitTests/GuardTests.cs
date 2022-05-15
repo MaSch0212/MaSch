@@ -1,8 +1,18 @@
-﻿namespace MaSch.Core.UnitTests;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace MaSch.Core.UnitTests;
 
 [TestClass]
 public class GuardTests : TestClassBase
 {
+    [Flags]
+    private enum TestEnum
+    {
+        Flag1 = 1,
+        Flag2 = 2,
+        Flag3 = 4,
+        Flag4 = 8,
+    }
+
     private interface ITestInterfaceType
     {
     }
@@ -573,6 +583,54 @@ public class GuardTests : TestClassBase
         var result = Guard.OfType(obj, new[] { typeof(int), typeof(ITestInterfaceType), typeof(double) }, true);
 
         Assert.AreSame(obj, result);
+    }
+
+    [TestMethod]
+    public void HasFlag_Success()
+    {
+        var value = (TestEnum)3;
+
+        var result = Guard.HasFlag(value, TestEnum.Flag1);
+
+        Assert.AreEqual(value, result);
+    }
+
+    [TestMethod]
+    public void HasFlag_Fail()
+    {
+        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.HasFlag((TestEnum)3, TestEnum.Flag3));
+        Assert.AreEqual("(TestEnum)3", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void HasFlag_Fail_WithName()
+    {
+        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.HasFlag((TestEnum)3, TestEnum.Flag3, "MyParamName"));
+        Assert.AreEqual("MyParamName", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void NotHasFlag_Success()
+    {
+        var value = (TestEnum)3;
+
+        var result = Guard.NotHasFlag(value, TestEnum.Flag3);
+
+        Assert.AreEqual(value, result);
+    }
+
+    [TestMethod]
+    public void NotHasFlag_Fail()
+    {
+        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.NotHasFlag((TestEnum)3, TestEnum.Flag1));
+        Assert.AreEqual("(TestEnum)3", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void NotHasFlag_Fail_WithName()
+    {
+        var ex = Assert.ThrowsException<ArgumentException>(() => Guard.NotHasFlag((TestEnum)3, TestEnum.Flag1, "MyParamName"));
+        Assert.AreEqual("MyParamName", ex.ParamName);
     }
 
     private class TestClassType : ITestInterfaceType

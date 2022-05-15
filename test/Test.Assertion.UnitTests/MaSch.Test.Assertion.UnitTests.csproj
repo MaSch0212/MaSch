@@ -8,8 +8,8 @@
     </PropertyGroup>
   
     <ItemGroup>
-      <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
-      <ProjectReference Include="$(GitSourceDir)Test.Assertion/MaSch.Test.Assertion.csproj" />
+      <MaSchReference Include="Core" />
+      <MaSchReference Include="Test.Assertion" />
     </ItemGroup>
 
 </Project>

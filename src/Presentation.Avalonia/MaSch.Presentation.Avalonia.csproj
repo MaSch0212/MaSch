@@ -17,8 +17,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
-    <ProjectReference Include="$(GitSourceDir)Presentation/MaSch.Presentation.csproj" />
+    <MaSchReference Include="Core" />
+    <MaSchReference Include="Presentation" />
   </ItemGroup>
 
   <ItemGroup>

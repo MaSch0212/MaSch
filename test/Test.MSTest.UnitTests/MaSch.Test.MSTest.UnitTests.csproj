@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <!-- General Project info -->
@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
-    <ProjectReference Include="$(GitSourceDir)Test.MSTest/MaSch.Test.MSTest.csproj" />
+    <MaSchReference Include="Core" />
+    <MaSchReference Include="Test.MSTest" />
   </ItemGroup>
 
 </Project>

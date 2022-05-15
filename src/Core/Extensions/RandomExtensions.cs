@@ -76,4 +76,46 @@ public static class RandomExtensions
     {
         return GetBytes(random, byteCount).ToHexChars();
     }
+
+    /// <summary>
+    /// Gets a random enumeration value for the specified enum type.
+    /// </summary>
+    /// <typeparam name="T">The enum type from which to get random enum value.</typeparam>
+    /// <param name="rng">The object that is used to create random numbers.</param>
+    /// <returns>A random enum value of type <typeparamref name="T"/>.</returns>
+    public static T NextEnum<T>(this Random rng)
+        where T : struct, Enum
+    {
+        bool isFlagEnum = typeof(T).GetCustomAttribute<FlagsAttribute>() != null;
+        return NextEnum<T>(rng, isFlagEnum);
+    }
+
+    /// <summary>
+    /// Gets a random enumeration value for the specified enum type.
+    /// </summary>
+    /// <typeparam name="T">The enum type from which to get random enum value.</typeparam>
+    /// <param name="rng">The object that is used to create random numbers.</param>
+    /// <param name="combineValues">Determines whether multiple enum values should be combined using bitwise or.</param>
+    /// <returns>A random enum value of type <typeparamref name="T"/>.</returns>
+    public static T NextEnum<T>(this Random rng, bool combineValues)
+        where T : struct, Enum
+    {
+#if NET5_0_OR_GREATER
+        var enumValues = Enum.GetValues<T>().Distinct().ToArray();
+#else
+        var enumValues = Enum.GetValues(typeof(T)).Cast<T>().Distinct().ToArray();
+#endif
+
+        if (combineValues)
+        {
+            return enumValues
+                .OrderBy(x => Guid.NewGuid())
+                .Take(rng.Next(1, enumValues.Length))
+                .Aggregate((a, b) => a.BitwiseOr(b));
+        }
+        else
+        {
+            return enumValues[rng.Next(0, enumValues.Length)];
+        }
+    }
 }

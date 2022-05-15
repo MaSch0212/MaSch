@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(GitSourceDir)Console/MaSch.Console.csproj" />
-    <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
+    <MaSchReference Include="Console" />
+    <MaSchReference Include="Core" />
   </ItemGroup>
   
 </Project>

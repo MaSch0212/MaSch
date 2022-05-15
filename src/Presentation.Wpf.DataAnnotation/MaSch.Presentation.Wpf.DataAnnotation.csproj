@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <!-- General Project info -->
@@ -13,8 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(GitSourceDir)Core.DataAnnotation/MaSch.Core.DataAnnotation.csproj" />
-    <ProjectReference Include="$(GitSourceDir)Presentation.Wpf/MaSch.Presentation.Wpf.csproj" />
+    <MaSchReference Include="Core.DataAnnotation" />
+    <MaSchReference Include="Presentation.Wpf" />
   </ItemGroup>
 
   <ItemGroup>
