@@ -15,12 +15,6 @@
     <DoesNotReturnAttribute>DoesNotReturnAttribute</DoesNotReturnAttribute>
   </PropertyGroup>
 
-  <!-- Remove this group when this project contains usable code. -->
-  <PropertyGroup>
-    <IsPackable>false</IsPackable>
-    <EnableReleaseNotes>false</EnableReleaseNotes>
-  </PropertyGroup>
-
   <ItemGroup>
     <Compile Include="$(GitSourceDir)FileSystem.Test/**/*.cs" Exclude="$(GitSourceDir)FileSystem.Test/obj/**/*" />
   </ItemGroup>

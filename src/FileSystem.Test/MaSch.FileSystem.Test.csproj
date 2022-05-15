@@ -12,12 +12,6 @@
 
     <DoesNotReturnAttribute>DoesNotReturnAttribute</DoesNotReturnAttribute>
   </PropertyGroup>
-  
-  <!-- Remove this group when this project contains usable code. -->
-  <PropertyGroup>
-    <IsPackable>false</IsPackable>
-    <EnableReleaseNotes>false</EnableReleaseNotes>
-  </PropertyGroup>
 
   <ItemGroup>
     <MaSchReference Include="Test.Assertion" />

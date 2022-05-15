@@ -1,14 +1,15 @@
 ﻿using MaSch.Core.Extensions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace MaSch.FileSystem.UnitTests;
 
 [TestClass]
 public class FileServiceBaseTests : TestClassBase
 {
-    private static readonly Random _rng = new();
-
     private const int DefaultBufferSize = 4096;
     private const string Path = "C:\\Folder\\SubFolder\\file.txt";
+
+    private static readonly Random _rng = new();
+
     private FileServiceBase Sut => SutMock.Object;
     private Mock<FileServiceBase> SutMock { get; set; } = null!;
     private Mock<IDirectoryService> DirectoryService { get; set; } = null!;

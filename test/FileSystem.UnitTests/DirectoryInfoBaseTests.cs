@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-namespace MaSch.FileSystem.UnitTests;
+﻿namespace MaSch.FileSystem.UnitTests;
 
 [TestClass]
 public class DirectoryInfoBaseTests : TestClassBase
@@ -8,14 +7,6 @@ public class DirectoryInfoBaseTests : TestClassBase
     private DirectoryInfoBase Sut { get; set; } = null!;
     private Mock<IDirectoryService> DirectoryService { get; set; } = null!;
     private Mock<IFileService> FileService { get; set; } = null!;
-
-    protected override void OnInitializeTest()
-    {
-        base.OnInitializeTest();
-        Sut = CreateInfo(Path, out var ds, out var fs);
-        DirectoryService = ds;
-        FileService = fs;
-    }
 
     [TestMethod]
     public void Parent()
@@ -692,6 +683,14 @@ public class DirectoryInfoBaseTests : TestClassBase
         Assert.AreCollectionsEqual(expected.Values, result);
     }
 #endif
+
+    protected override void OnInitializeTest()
+    {
+        base.OnInitializeTest();
+        Sut = CreateInfo(Path, out var ds, out var fs);
+        DirectoryService = ds;
+        FileService = fs;
+    }
 
     private DirectoryInfoBase CreateInfo(string path, out Mock<IDirectoryService> directoryService, out Mock<IFileService> fileService)
     {

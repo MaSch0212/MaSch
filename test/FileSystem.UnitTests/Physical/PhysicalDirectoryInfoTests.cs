@@ -1,5 +1,4 @@
 ﻿using MaSch.FileSystem.Physical;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MaSch.FileSystem.UnitTests.Physical;
 
@@ -10,22 +9,6 @@ public class PhysicalDirectoryInfoTests : TestClassBase
     private DirectoryInfo TestInfo { get; set; } = null!;
     private PhysicalDirectoryInfo Sut { get; set; } = null!;
     private Mock<IFileSystemService> FileSystemService { get; set; } = null!;
-
-    protected override void OnInitializeTest()
-    {
-        base.OnInitializeTest();
-        TestPath = Path.Combine(TestContext.DeploymentDirectory, Guid.NewGuid().ToString());
-        TestInfo = Directory.CreateDirectory(TestPath);
-        FileSystemService = Mocks.Create<IFileSystemService>();
-        Sut = new PhysicalDirectoryInfo(FileSystemService.Object, TestInfo);
-    }
-
-    protected override void OnCleanupTest()
-    {
-        if (Directory.Exists(TestPath))
-            Directory.Delete(TestPath, true);
-        base.OnCleanupTest();
-    }
 
     [TestMethod]
     public void Constructor_Checks()
@@ -495,6 +478,22 @@ public class PhysicalDirectoryInfoTests : TestClassBase
             method("a*c?d*", new EnumerationOptions { RecurseSubdirectories = true }).Select(x => GetWrappedInfo(x).FullName));
     }
 #endif
+
+    protected override void OnInitializeTest()
+    {
+        base.OnInitializeTest();
+        TestPath = Path.Combine(TestContext.DeploymentDirectory, Guid.NewGuid().ToString());
+        TestInfo = Directory.CreateDirectory(TestPath);
+        FileSystemService = Mocks.Create<IFileSystemService>();
+        Sut = new PhysicalDirectoryInfo(FileSystemService.Object, TestInfo);
+    }
+
+    protected override void OnCleanupTest()
+    {
+        if (Directory.Exists(TestPath))
+            Directory.Delete(TestPath, true);
+        base.OnCleanupTest();
+    }
 
     private DirectoryInfo GetWrappedInfo(IDirectoryInfo info)
     {

@@ -1,10 +1,4 @@
 ﻿using MaSch.Core.Extensions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MaSch.FileSystem.UnitTests;
 
@@ -17,14 +11,6 @@ public class FileInfoBaseTests : TestClassBase
     private FileInfoBase Sut { get; set; } = null!;
     private Mock<IDirectoryService> DirectoryService { get; set; } = null!;
     private Mock<IFileService> FileService { get; set; } = null!;
-
-    protected override void OnInitializeTest()
-    {
-        base.OnInitializeTest();
-        Sut = CreateInfo(Path, out var ds, out var fs);
-        DirectoryService = ds;
-        FileService = fs;
-    }
 
     [TestMethod]
     public void Get_DirectoryName()
@@ -366,6 +352,14 @@ public class FileInfoBaseTests : TestClassBase
         FileService.Setup(x => x.Delete(Path)).Verifiable(Verifiables, Times.Once());
 
         Sut.Delete();
+    }
+
+    protected override void OnInitializeTest()
+    {
+        base.OnInitializeTest();
+        Sut = CreateInfo(Path, out var ds, out var fs);
+        DirectoryService = ds;
+        FileService = fs;
     }
 
     private FileInfoBase CreateInfo(string path, out Mock<IDirectoryService> directoryService, out Mock<IFileService> fileService)

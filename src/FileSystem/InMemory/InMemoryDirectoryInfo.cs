@@ -35,7 +35,7 @@ internal class InMemoryDirectoryInfo : DirectoryInfoBase
 
     public override void Refresh()
     {
-        if (_fileSystem.TryGetNode<ContainerNode>(FullName, out var node))
-            _node = node;
+        _fileSystem.TryGetNode<ContainerNode>(FullName, out var node);
+        _node = node;
     }
 }

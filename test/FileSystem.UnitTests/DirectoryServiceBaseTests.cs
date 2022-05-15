@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-namespace MaSch.FileSystem.UnitTests;
+﻿namespace MaSch.FileSystem.UnitTests;
 
 [TestClass]
 public class DirectoryServiceBaseTests : TestClassBase
@@ -8,13 +7,6 @@ public class DirectoryServiceBaseTests : TestClassBase
     private DirectoryServiceBase Sut => SutMock.Object;
     private Mock<DirectoryServiceBase> SutMock { get; set; } = null!;
     private Mock<IFileService> FileService { get; set; } = null!;
-
-    protected override void OnInitializeTest()
-    {
-        base.OnInitializeTest();
-        SutMock = CreateService(out var fs);
-        FileService = fs;
-    }
 
     [TestMethod]
     public void Constructor_NullCheck()
@@ -257,6 +249,13 @@ public class DirectoryServiceBaseTests : TestClassBase
     }
 
 #endif
+
+    protected override void OnInitializeTest()
+    {
+        base.OnInitializeTest();
+        SutMock = CreateService(out var fs);
+        FileService = fs;
+    }
 
     private Mock<DirectoryServiceBase> CreateService(out Mock<IFileService> fileService)
     {

@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-namespace MaSch.FileSystem.UnitTests;
+﻿namespace MaSch.FileSystem.UnitTests;
 
 [TestClass]
 public class FileSystemInfoBaseTests : TestClassBase
@@ -9,14 +8,6 @@ public class FileSystemInfoBaseTests : TestClassBase
     private FileSystemInfoBase Sut { get; set; } = null!;
     private Mock<IDirectoryService> DirectoryService { get; set; } = null!;
     private Mock<IFileService> FileService { get; set; } = null!;
-
-    protected override void OnInitializeTest()
-    {
-        base.OnInitializeTest();
-        Sut = CreateInfo(Path, out var ds, out var fs);
-        DirectoryService = ds;
-        FileService = fs;
-    }
 
     [TestMethod]
     public void Constructor_NullChecks()
@@ -54,6 +45,14 @@ public class FileSystemInfoBaseTests : TestClassBase
 
         Assert.AreEqual("blub\\abc.txt", sutPo.GetProperty<string>("OriginalPath"));
         Assert.AreEqual(System.IO.Path.GetFullPath("blub\\abc.txt"), sut.FullName);
+    }
+
+    protected override void OnInitializeTest()
+    {
+        base.OnInitializeTest();
+        Sut = CreateInfo(Path, out var ds, out var fs);
+        DirectoryService = ds;
+        FileService = fs;
     }
 
     private FileSystemInfoBase CreateInfo(string path, out Mock<IDirectoryService> directoryService, out Mock<IFileService> fileService)
