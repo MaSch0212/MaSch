@@ -14,5 +14,9 @@
   <ItemGroup>
     <MaSchReference Include="Core" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NetEscapades.EnumGenerators" />
+  </ItemGroup>
   
 </Project>

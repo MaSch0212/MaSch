@@ -73,7 +73,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// </summary>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString AppendStyle(Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString AppendStyle(Action<AnsiStyleBuilder>? styleAction)
     {
         if (styleAction is null)
             return this;
@@ -87,7 +87,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="length">The length of text to apply the style to.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString ApplyStyle(int startIndex, int length, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString ApplyStyle(int startIndex, int length, Action<AnsiStyleBuilder>? styleAction)
     {
         if (styleAction is null)
             return this;
@@ -113,7 +113,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Append(IFormattable? value, IFormatProvider? formatProvider, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Append(IFormattable? value, IFormatProvider? formatProvider, Action<AnsiStyleBuilder>? styleAction)
     {
         return CallInsert(Length, value?.ToString(null, formatProvider), (b, i, x) => b.Append(x), styleAction);
     }
@@ -134,7 +134,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="value">The value to append.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Append(string? value, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Append(string? value, Action<AnsiStyleBuilder>? styleAction)
     {
         return CallInsert(Length, value, (b, i, x) => b.Append(x), styleAction);
     }
@@ -159,7 +159,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="count">The number of characters in <paramref name="value"/> to append.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Append(string? value, int startIndex, int count, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Append(string? value, int startIndex, int count, Action<AnsiStyleBuilder>? styleAction)
     {
         return CallInsert(Length, value, startIndex, count, (b, i, x, y, z) => b.Append(x, y, z), styleAction);
     }
@@ -184,7 +184,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="count">The number of characters in <paramref name="value"/> to append.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Append(StringBuilder? value, int startIndex, int count, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Append(StringBuilder? value, int startIndex, int count, Action<AnsiStyleBuilder>? styleAction)
     {
 #if NETFRAMEWORK || (NETSTANDARD && !NETSTANDARD2_1_OR_GREATER)
         return CallInsert(Length, value?.ToString(), startIndex, count, (b, i, x, y, z) => b.Append(x, y, z), styleAction);
@@ -209,7 +209,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="value">The string builder to append.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Append(StringBuilder? value, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Append(StringBuilder? value, Action<AnsiStyleBuilder>? styleAction)
     {
         return CallInsert(Length, value, (b, i, x) => b.Append(x), styleAction);
     }
@@ -230,7 +230,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="value">The value to append.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Append(object? value, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Append(object? value, Action<AnsiStyleBuilder>? styleAction)
     {
         return CallInsert(Length, value, (b, i, x) => b.Append(x), styleAction);
     }
@@ -255,7 +255,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="count">The number of characters to append.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Append(char[]? value, int startIndex, int count, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Append(char[]? value, int startIndex, int count, Action<AnsiStyleBuilder>? styleAction)
     {
         return CallInsert(Length, value, startIndex, count, (b, i, x, y, z) => b.Append(x, y, z), styleAction);
     }
@@ -276,7 +276,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="value">The array of characters to append.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Append(char[]? value, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Append(char[]? value, Action<AnsiStyleBuilder>? styleAction)
     {
         return CallInsert(Length, value, (b, i, x) => b.Append(x), styleAction);
     }
@@ -299,7 +299,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="repeatCount">The number of times to append value.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Append(char value, int repeatCount, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Append(char value, int repeatCount, Action<AnsiStyleBuilder>? styleAction)
     {
         return CallInsert(Length, value, repeatCount, (b, i, x, y) => b.Append(x, y), styleAction);
     }
@@ -320,7 +320,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="value">The UTF-16-encoded code unit to append.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Append(char value, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Append(char value, Action<AnsiStyleBuilder>? styleAction)
     {
         return CallInsert(Length, value, (b, i, x) => b.Append(x), styleAction);
     }
@@ -335,7 +335,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <returns>A reference to this instance after the append operation has completed.</returns>
     public AnsiFormattedString AppendFormat(string format, params object?[] args)
     {
-        return AppendFormat((Action<AnsiStyle>?)null, format, args);
+        return AppendFormat((Action<AnsiStyleBuilder>?)null, format, args);
     }
 
     /// <summary>
@@ -347,7 +347,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="format">A composite format string.</param>
     /// <param name="args">An array of objects to format.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString AppendFormat(Action<AnsiStyle>? styleAction, string format, params object?[] args)
+    public AnsiFormattedString AppendFormat(Action<AnsiStyleBuilder>? styleAction, string format, params object?[] args)
     {
         return CallInsert(Length, format, args, (b, i, x, y) => b.AppendFormat(x, y), styleAction);
     }
@@ -378,7 +378,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="format">A composite format string.</param>
     /// <param name="args">An array of objects to format.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString AppendFormat(IFormatProvider? formatProvider, Action<AnsiStyle>? styleAction, string format, params object?[] args)
+    public AnsiFormattedString AppendFormat(IFormatProvider? formatProvider, Action<AnsiStyleBuilder>? styleAction, string format, params object?[] args)
     {
         return CallInsert(Length, formatProvider, format, args, (b, i, x, y, z) => b.AppendFormat(x, y, z), styleAction);
     }
@@ -403,7 +403,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="separator">The string to use as a separator. separator is included in the concatenated and appended strings only if values has more than one element.</param>
     /// <param name="values">A collection that contains the objects to concatenate and append to the current instance of the string builder.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString AppendJoin<T>(Action<AnsiStyle>? styleAction, string? separator, IEnumerable<T> values)
+    public AnsiFormattedString AppendJoin<T>(Action<AnsiStyleBuilder>? styleAction, string? separator, IEnumerable<T> values)
     {
 #if NETFRAMEWORK || (NETSTANDARD && !NETSTANDARD2_1_OR_GREATER)
         return CallInsert(Length, string.Join(separator, values), (b, i, x) => b.Append(x), styleAction);
@@ -434,7 +434,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="separator">The string to use as a separator. separator is included in the concatenated and appended strings only if values has more than one element.</param>
     /// <param name="values">A collection that contains the objects to concatenate and append to the current instance of the string builder.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString AppendJoin(Action<AnsiStyle>? styleAction, string? separator, params object?[] values)
+    public AnsiFormattedString AppendJoin(Action<AnsiStyleBuilder>? styleAction, string? separator, params object?[] values)
     {
 #if NETFRAMEWORK || (NETSTANDARD && !NETSTANDARD2_1_OR_GREATER)
         return CallInsert(Length, string.Join(separator, values), (b, i, x) => b.Append(x), styleAction);
@@ -459,7 +459,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="value">The string to append.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString AppendLine(string? value, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString AppendLine(string? value, Action<AnsiStyleBuilder>? styleAction)
     {
         return CallInsert(Length, value, (b, i, x) => b.AppendLine(x), styleAction);
     }
@@ -494,7 +494,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Insert(int index, IFormattable? value, IFormatProvider formatProvider, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Insert(int index, IFormattable? value, IFormatProvider formatProvider, Action<AnsiStyleBuilder>? styleAction)
     {
         return CallInsert(index, value?.ToString(null, formatProvider), (b, i, x) => b.Insert(i, x), styleAction);
     }
@@ -517,7 +517,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="value">The string to insert.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Insert(int index, string? value, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Insert(int index, string? value, Action<AnsiStyleBuilder>? styleAction)
     {
         return CallInsert(index, value, (b, i, x) => b.Insert(i, x), styleAction);
     }
@@ -542,7 +542,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="count">The number of times to insert value.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Insert(int index, string? value, int count, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Insert(int index, string? value, int count, Action<AnsiStyleBuilder>? styleAction)
     {
         return CallInsert(index, value, count, (b, i, x, y) => b.Insert(i, x, y), styleAction);
     }
@@ -565,7 +565,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="value">The object to insert, or null.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Insert(int index, object? value, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Insert(int index, object? value, Action<AnsiStyleBuilder>? styleAction)
     {
         return CallInsert(index, value, (b, i, x) => b.Insert(i, x), styleAction);
     }
@@ -588,7 +588,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="value">The character array to insert.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Insert(int index, char[]? value, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Insert(int index, char[]? value, Action<AnsiStyleBuilder>? styleAction)
     {
         return CallInsert(index, value, (b, i, x) => b.Insert(i, x), styleAction);
     }
@@ -615,7 +615,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="charCount">The number of characters to insert.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Insert(int index, char[]? value, int startIndex, int charCount, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Insert(int index, char[]? value, int startIndex, int charCount, Action<AnsiStyleBuilder>? styleAction)
     {
         return CallInsert(index, value, startIndex, charCount, (b, i, x, y, z) => b.Insert(i, x, y, z), styleAction);
     }
@@ -638,7 +638,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="value">The value to insert.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Insert(int index, char value, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Insert(int index, char value, Action<AnsiStyleBuilder>? styleAction)
     {
         return CallInsert(index, value, (b, i, x) => b.Insert(i, x), styleAction);
     }
@@ -689,7 +689,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="newChar">The character that replaces oldChar.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Replace(char oldChar, char newChar, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Replace(char oldChar, char newChar, Action<AnsiStyleBuilder>? styleAction)
     {
         return Replace(oldChar, newChar, 0, Length, styleAction);
     }
@@ -703,7 +703,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="count">The length of the substring.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Replace(char oldChar, char newChar, int startIndex, int count, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Replace(char oldChar, char newChar, int startIndex, int count, Action<AnsiStyleBuilder>? styleAction)
     {
         for (int i = 0; i < count; i++)
         {
@@ -750,7 +750,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="newValue">The string that replaces oldValue, or null.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Replace(string oldValue, string? newValue, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Replace(string oldValue, string? newValue, Action<AnsiStyleBuilder>? styleAction)
     {
         return Replace(oldValue, newValue, 0, Length, styleAction);
     }
@@ -764,7 +764,7 @@ public sealed class AnsiFormattedString : ICloneable
     /// <param name="count">The length of the substring.</param>
     /// <param name="styleAction">The style builder delegate.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
-    public AnsiFormattedString Replace(string oldValue, string? newValue, int startIndex, int count, Action<AnsiStyle>? styleAction)
+    public AnsiFormattedString Replace(string oldValue, string? newValue, int startIndex, int count, Action<AnsiStyleBuilder>? styleAction)
     {
         var foundValues = new LinkedList<int>();
 
@@ -812,8 +812,8 @@ public sealed class AnsiFormattedString : ICloneable
     /// <returns>A formatted string that is equivalent to the substring of length <paramref name="length"/> that begins at <paramref name="startIndex"/> in this instance, or an empty string if <paramref name="startIndex"/> is equal to the length of this instance and <paramref name="length"/> is zero.</returns>
     public AnsiFormattedString Substring(int startIndex, int length)
     {
-        Guard.NotOutOfRange(startIndex, nameof(startIndex), 0, Length);
-        Guard.NotOutOfRange(length, nameof(length), 0, Length - startIndex);
+        Guard.NotOutOfRange(startIndex, 0, Length);
+        Guard.NotOutOfRange(length, 0, Length - startIndex);
 
         var result = new AnsiFormattedString(_builder.ToString(startIndex, length));
         foreach (var styleRange in _styles)
@@ -831,7 +831,7 @@ public sealed class AnsiFormattedString : ICloneable
                     result._nextStyleId++,
                     rangeStart,
                     rangeLength,
-                    styleRange.Style.Clone()));
+                    styleRange.Style));
         }
 
         return result;
@@ -896,19 +896,6 @@ public sealed class AnsiFormattedString : ICloneable
         return Trim(false, true);
     }
 
-    private AnsiFormattedString Trim(bool start, bool end)
-    {
-        var match = TrimRegex.Match(_builder.ToString());
-        if (!match.Success)
-            return Remove(0, Length);
-        var endIndex = match.Index + match.Length;
-        if (end && endIndex < Length - 1)
-            Remove(endIndex, Length - endIndex);
-        if (start)
-            Remove(0, match.Index);
-        return this;
-    }
-
     /// <summary>
     /// Removes all characters and styles from the current <see cref="AnsiFormattedString"/> instance.
     /// </summary>
@@ -954,9 +941,9 @@ public sealed class AnsiFormattedString : ICloneable
                 if (currentNode.Value.Start + currentNode.Value.Length <= i)
                 {
                     UpdatePreStyles(activeStyles, ref preStyles, currentNode.Value.Style);
-                    if (currentNode.Value.Style.ForegroundColor is not null)
+                    if (currentNode.Value.Style.ForegroundColor.HasColor)
                         hasForegroundColorChanged = true;
-                    if (currentNode.Value.Style.BackgroundColor is not null)
+                    if (currentNode.Value.Style.BackgroundColor.HasColor)
                         hasBackgroundColorChanged = true;
                     activeStyles.Remove(currentNode);
                 }
@@ -970,9 +957,9 @@ public sealed class AnsiFormattedString : ICloneable
                 foreach (var s in newStyles)
                 {
                     UpdatePreStyles(activeStyles, ref preStyles, s.Style);
-                    if (s.Style.ForegroundColor is not null)
+                    if (s.Style.ForegroundColor.HasColor)
                         hasForegroundColorChanged = true;
-                    if (s.Style.BackgroundColor is not null)
+                    if (s.Style.BackgroundColor.HasColor)
                         hasBackgroundColorChanged = true;
 
                     var current = activeStyles.First;
@@ -1045,13 +1032,26 @@ public sealed class AnsiFormattedString : ICloneable
     {
         var clone = new AnsiFormattedString(_builder.ToString());
         clone._nextStyleId = _nextStyleId;
-        clone._styles.Add(_styles);
+        clone._styles.Add(_styles.Select(x => x.Clone()));
         return clone;
     }
 
     private static AnsiTextStyle CombineStyles(AnsiTextStyle current, StyleRange style)
     {
         return (current ^ (style.Style.RemovedStyles & current)) | style.Style.AddedStyles;
+    }
+
+    private AnsiFormattedString Trim(bool start, bool end)
+    {
+        var match = TrimRegex.Match(_builder.ToString());
+        if (!match.Success)
+            return Remove(0, Length);
+        var endIndex = match.Index + match.Length;
+        if (end && endIndex < Length - 1)
+            Remove(endIndex, Length - endIndex);
+        if (start)
+            Remove(0, match.Index);
+        return this;
     }
 
     private void OnRemove(int startIndex, int length)
@@ -1091,29 +1091,29 @@ public sealed class AnsiFormattedString : ICloneable
         }
     }
 
-    private AnsiFormattedString ApplyStyleImpl(int startIndex, int length, Action<AnsiStyle> styleAction)
+    private AnsiFormattedString ApplyStyleImpl(int startIndex, int length, Action<AnsiStyleBuilder> styleAction)
     {
-        var style = new AnsiStyle();
+        var style = new AnsiStyleBuilder();
         styleAction(style);
-        _styles.AddLast(new StyleRange(_nextStyleId++, startIndex, length, style));
+        _styles.AddLast(new StyleRange(_nextStyleId++, startIndex, length, style.Build()));
         return this;
     }
 
-    private AnsiFormattedString CallInsert<T>(int index, T value, Action<StringBuilder, int, T> func, Action<AnsiStyle>? styleAction)
+    private AnsiFormattedString CallInsert<T>(int index, T value, Action<StringBuilder, int, T> func, Action<AnsiStyleBuilder>? styleAction)
     {
         using (new StyleScope(this, index, styleAction))
             func(_builder, index, value);
         return this;
     }
 
-    private AnsiFormattedString CallInsert<T1, T2>(int index, T1 value1, T2 value2, Action<StringBuilder, int, T1, T2> func, Action<AnsiStyle>? styleAction)
+    private AnsiFormattedString CallInsert<T1, T2>(int index, T1 value1, T2 value2, Action<StringBuilder, int, T1, T2> func, Action<AnsiStyleBuilder>? styleAction)
     {
         using (new StyleScope(this, index, styleAction))
             func(_builder, index, value1, value2);
         return this;
     }
 
-    private AnsiFormattedString CallInsert<T1, T2, T3>(int index, T1 value1, T2 value2, T3 value3, Action<StringBuilder, int, T1, T2, T3> func, Action<AnsiStyle>? styleAction)
+    private AnsiFormattedString CallInsert<T1, T2, T3>(int index, T1 value1, T2 value2, T3 value3, Action<StringBuilder, int, T1, T2, T3> func, Action<AnsiStyleBuilder>? styleAction)
     {
         using (new StyleScope(this, index, styleAction))
             func(_builder, index, value1, value2, value3);
@@ -1126,45 +1126,14 @@ public sealed class AnsiFormattedString : ICloneable
         Guard.NotOutOfRange(length, 0, Length - startIndex);
     }
 
-    private sealed class StyleRange : ICloneable
-    {
-        public StyleRange(int id, int start, int length, AnsiStyle style)
-        {
-            Id = id;
-            Start = start;
-            Length = length;
-            Style = style;
-        }
-
-        public int Id { get; set; }
-        public int Start { get; set; }
-        public int Length { get; set; }
-        public AnsiStyle Style { get; }
-
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns>Cloned instance.</returns>
-        object ICloneable.Clone() => Clone();
-
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns>Cloned instance.</returns>
-        public StyleRange Clone()
-        {
-            return new StyleRange(Id, Start, Length, Style.Clone());
-        }
-    }
-
-    private sealed class StyleScope : IDisposable
+    private readonly struct StyleScope : IDisposable
     {
         private readonly AnsiFormattedString _formattedString;
         private readonly int _index;
         private readonly int _preLen;
-        private readonly Action<AnsiStyle>? _styleAction;
+        private readonly Action<AnsiStyleBuilder>? _styleAction;
 
-        public StyleScope(AnsiFormattedString formattedString, int index, Action<AnsiStyle>? styleAction)
+        public StyleScope(AnsiFormattedString formattedString, int index, Action<AnsiStyleBuilder>? styleAction)
         {
             _formattedString = formattedString;
             _index = index;
@@ -1195,5 +1164,25 @@ public sealed class AnsiFormattedString : ICloneable
             if (addLen > 0 && _styleAction is not null)
                 _ = _formattedString.ApplyStyleImpl(_index, addLen, _styleAction);
         }
+    }
+
+    private sealed class StyleRange : ICloneable
+    {
+        public StyleRange(int id, int start, int length, AnsiStyle style)
+        {
+            Id = id;
+            Start = start;
+            Length = length;
+            Style = style;
+        }
+
+        public int Id { get; }
+        public int Start { get; set; }
+        public int Length { get; set; }
+        public AnsiStyle Style { get; }
+
+        public StyleRange Clone() => new(Id, Start, Length, Style);
+
+        object ICloneable.Clone() => Clone();
     }
 }

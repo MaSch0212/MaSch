@@ -1,8 +1,11 @@
-﻿namespace MaSch.Console.Ansi;
+﻿using NetEscapades.EnumGenerators;
+
+namespace MaSch.Console.Ansi;
 
 /// <summary>
 /// Specifies constants that define what should be cleared for the ANSI escape code <c>ESC[#J</c>.
 /// </summary>
+[EnumExtensions]
 public enum AnsiClearMode
 {
     /// <summary>
@@ -29,6 +32,7 @@ public enum AnsiClearMode
 /// <summary>
 /// Specifies constants that define what should be cleared for the ANSI escape code <c>ESC[#K</c>".
 /// </summary>
+[EnumExtensions]
 public enum AnsiLineClearMode
 {
     /// <summary>
@@ -113,6 +117,7 @@ public enum AnsiTextStyle
 /// Specifies constants that define color codes for the ANSI escape codes <c>ESC[38;5;#m</c> and <c>ESC[48;5;#m</c>".
 /// See <see href="https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit"/> for color table.
 /// </summary>
+[EnumExtensions]
 public enum AnsiColorCode
 {
     /// <summary>

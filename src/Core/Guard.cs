@@ -455,11 +455,28 @@ public static class Guard
     /// <exception cref="ArgumentException">The <paramref name="value"/> is not defined in <typeparamref name="T"/>.</exception>
     /// <returns>Returns the <paramref name="value"/>.</returns>
     public static T NotUndefinedEnumMember<T>(T value, [CallerArgumentExpression("value")] string name = "")
-        where T : Enum
+        where T : notnull, Enum
     {
-        _ = NotNull(value, name);
         if (!Enum.IsDefined(typeof(T), value))
             throw new ArgumentException($"The value \"{value}\" is not defined in the enum \"{typeof(T).Name}\".", name);
+        return value;
+    }
+
+    /// <summary>
+    /// Verifies that an enum value is defined in the specified enum type.
+    /// </summary>
+    /// <typeparam name="T">The enum type in which the <paramref name="value"/> needs to be defined.</typeparam>
+    /// <param name="value">The value.</param>
+    /// <param name="isDefinedFunc">Function that determines whether the specified value is defined in the enum.</param>
+    /// <param name="toStringFunc">Function that gets the string representation of the value.</param>
+    /// <param name="name">The name of the parameter to verify.</param>
+    /// <exception cref="ArgumentException">The <paramref name="value"/> is not defined in <typeparamref name="T"/>.</exception>
+    /// <returns>Returns the <paramref name="value"/>.</returns>
+    public static T NotUndefinedEnumMember<T>(T value, Func<T, bool> isDefinedFunc, Func<T, string> toStringFunc, [CallerArgumentExpression("value")] string name = "")
+        where T : notnull, Enum
+    {
+        if (!isDefinedFunc(value))
+            throw new ArgumentException($"The value \"{toStringFunc(value)}\" is not defined in the enum \"{typeof(T).Name}\".", name);
         return value;
     }
 

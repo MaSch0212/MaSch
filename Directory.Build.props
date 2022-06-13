@@ -1,4 +1,4 @@
-<!-- This file is imported for each csproj pretty early in the MSBuild process -->
+﻿<!-- This file is imported for each csproj pretty early in the MSBuild process -->
 <Project>
 
   <Import Project="$(MSBuildThisFileDirectory)build/Constants.props" Condition=" '$(MaSchConstantsImported)' != 'true' " />

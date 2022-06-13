@@ -10,10 +10,7 @@ namespace MaSch.Console.Ansi;
 /// </summary>
 public static class AnsiEscapeUtility
 {
-    /// <summary>
-    /// The ANSI escape code starting character (ESC) (0x1B).
-    /// </summary>
-    public static readonly char ESC = '\u001b';
+    private const char ESC = '\u001b';
 
     /// <summary>
     /// Gets a regular expression that matches an ANSI escape sequence.
@@ -126,7 +123,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i><paramref name="mode"/></i> J</c></returns>
     public static string GetEraseScreen(AnsiClearMode mode)
     {
-        _ = Guard.NotUndefinedEnumMember(mode);
+        _ = Guard.NotUndefinedEnumMember(mode, AnsiClearModeExtensions.IsDefined, AnsiClearModeExtensions.ToStringFast);
         return $"{ESC}[{(int)mode}J";
     }
 
@@ -138,7 +135,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i><paramref name="mode"/></i> K</c></returns>
     public static string GetEraseLine(AnsiLineClearMode mode)
     {
-        _ = Guard.NotUndefinedEnumMember(mode);
+        _ = Guard.NotUndefinedEnumMember(mode, AnsiLineClearModeExtensions.IsDefined, AnsiLineClearModeExtensions.ToStringFast);
         return $"{ESC}[{(int)mode}K";
     }
 
@@ -290,8 +287,6 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i>#</i> m</c></returns>
     public static string GetAddStyle(AnsiTextStyle style)
     {
-        _ = Guard.NotUndefinedFlagInEnumValue(style);
-
         static void Add(StringBuilder sb, int n) => sb.Append($"{ESC}[{n}m");
 
         var result = new StringBuilder();
@@ -323,8 +318,6 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i>#</i> m</c></returns>
     public static string GetRemoveStyle(AnsiTextStyle style)
     {
-        _ = Guard.NotUndefinedFlagInEnumValue(style);
-
         static void Add(StringBuilder sb, int n) => sb.Append($"{ESC}[{n}m");
 
         var result = new StringBuilder();
@@ -352,7 +345,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ 38 ; 5 ; <i><paramref name="colorCode"/></i> m</c></returns>
     public static string GetSetForegroundColor(AnsiColorCode colorCode)
     {
-        _ = Guard.NotUndefinedEnumMember(colorCode);
+        _ = Guard.NotUndefinedEnumMember(colorCode, AnsiColorCodeExtensions.IsDefined, AnsiColorCodeExtensions.ToStringFast);
         return $"{ESC}[38;5;{(int)colorCode}m";
     }
 
@@ -384,7 +377,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ 48 ; 5 ; <i><paramref name="colorCode"/></i> m</c></returns>
     public static string GetSetBackgroundColor(AnsiColorCode colorCode)
     {
-        _ = Guard.NotUndefinedEnumMember(colorCode);
+        _ = Guard.NotUndefinedEnumMember(colorCode, AnsiColorCodeExtensions.IsDefined, AnsiColorCodeExtensions.ToStringFast);
         return $"{ESC}[48;5;{(int)colorCode}m";
     }
 
