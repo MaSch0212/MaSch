@@ -18,7 +18,7 @@ public class EnumerationExtension : MarkupExtension
     /// <param name="enumType">Type of the enum.</param>
     public EnumerationExtension(Type enumType)
     {
-        _ = Guard.NotNull(enumType, nameof(enumType));
+        _ = Guard.NotNull(enumType);
 
         _enumType = ValidateType(enumType);
     }

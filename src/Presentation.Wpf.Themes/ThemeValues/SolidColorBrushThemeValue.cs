@@ -20,10 +20,11 @@ public class SolidColorBrushThemeValue : ThemeValueBase<SolidColorBrush>
 
     /// <inheritdoc/>
     [JsonIgnore]
+    [SuppressMessage("Critical Bug", "S4275:Getters and setters should access the expected fields", Justification = "Field is set via base class.")]
     public override object RawValue
     {
         get => Value;
-        set => Value = Guard.OfType<SolidColorBrush>(value, nameof(value));
+        set => Value = Guard.OfType<SolidColorBrush>(value);
     }
 
     /// <summary>

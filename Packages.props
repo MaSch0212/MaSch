@@ -1,0 +1,67 @@
+﻿<Project>
+
+  <Import Project="$(MSBuildThisFileDirectory)build/MaSch.Constants.props" Condition=" '$(MaSchConstantsImported)' != 'true' " />
+  <Import Project="$(MSBuildThisFileDirectory)src/Generators/MaSch.Generators.targets" Condition=" '$(EnableMaSchGenerators)' == 'true' " />
+  
+  <!-- Default packages and project references -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" Condition=" '$(EnableSourceLinkMS)' == 'true' " />
+    <ProjectReference Include="$(GitSourceDir)Generators/MaSch.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" Condition=" '$(EnableMaSchGenerators)' == 'true' " />
+  </ItemGroup>
+  <ItemGroup Condition=" $(IsTestProject) == 'true' ">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="MSTest.TestAdapter" />
+    <PackageReference Include="MSTest.TestFramework" />
+    <PackageReference Include="Moq" Condition=" '$(EnableMoq)' != 'false' " />
+    <MaSchReference Include="Test.MSTest" Condition=" '$(EnableMaSchTest)' != 'false' " />
+  </ItemGroup>
+  
+  <!-- Central package versions -->
+  <ItemGroup>
+    <PackageReference Update="Avalonia" Version="0.10.13" />
+    <PackageReference Update="Avalonia.Desktop" Version="0.10.13" />
+    <PackageReference Update="Avalonia.Diagnostics" Version="0.10.13" />
+    <PackageReference Update="Avalonia.ReactiveUI" Version="0.10.13" />
+    <PackageReference Update="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
+    <PackageReference Update="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Update="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.0.0" />
+    <PackageReference Update="Moq" Version="4.16.1" />
+    <PackageReference Update="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Update="MSTest.TestAdapter" Version="2.2.3" />
+    <PackageReference Update="MSTest.TestFramework" Version="2.2.3" />
+    <PackageReference Update="Prism.Wpf" Version="[7.2.0.1367,8.0.0)" />
+    <PackageReference Update="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Update="System.Diagnostics.EventLog" Version="6.0.0" />
+  </ItemGroup>
+
+  <!-- Global packages (analyzers and stuff) -->
+  <ItemGroup>
+    <GlobalPackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.406" Condition=" '$(EnableStyleCopAnalyzers)' != 'false' " />
+    <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="8.36.1.44192" Condition=" '$(EnableSonarAnalyzers)' != 'false' " />
+    <GlobalPackageReference Include="ReflectionAnalyzers" Version="0.3.1" Condition=" '$(EnableReflectionAnalyzers)' != 'false' " />
+    <GlobalPackageReference Include="IDisposableAnalyzers" Version="4.0.2" Condition=" '$(EnableIDisposableAnalyzers)' != 'false' " />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="$(GitRootDir)build/stylecop.json" Link="stylecop.json" Visible="false" />
+  </ItemGroup>
+  
+  <!-- Wpf -->
+  <ItemGroup Condition=" $(UseWpf) == 'true' and $(TargetFrameworkIdentifier) == '.NETFramework' ">
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+
+  <!-- Windows Forms -->
+  <ItemGroup Condition=" $(UseWindowsForms) == 'true' and $(TargetFrameworkIdentifier) == '.NETFramework' ">
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="@(MaSchReference -> '$(GitSourceDir)%(Identity)/MaSch.%(Identity).csproj')" />
+  </ItemGroup>
+
+</Project>

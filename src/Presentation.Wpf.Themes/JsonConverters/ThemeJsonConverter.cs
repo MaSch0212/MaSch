@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.IO.Packaging;
 using System.Net;
+using System.Net.Http;
 
 namespace MaSch.Presentation.Wpf.JsonConverters;
 
@@ -11,8 +12,7 @@ namespace MaSch.Presentation.Wpf.JsonConverters;
 public class ThemeJsonConverter : JsonConverter<ITheme>
 {
     private static readonly IWebRequestCreate PackRequestFactory = new PackWebRequestFactory();
-    [SuppressMessage("Blocker Bug", "S2930:\"IDisposables\" should be disposed", Justification = "Static")]
-    private static readonly WebClient WebClient = new();
+    private static readonly HttpClient HttpClient = new();
 
     /// <inheritdoc/>
     public override bool CanWrite => false;
@@ -85,7 +85,7 @@ public class ThemeJsonConverter : JsonConverter<ITheme>
         if (TestScheme(Uri.UriSchemeFile))
             result = File.ReadAllText(absoluteUri.LocalPath);
         else if (TestScheme(Uri.UriSchemeHttp, Uri.UriSchemeHttps))
-            result = WebClient.DownloadString(absoluteUri);
+            result = DownloadStringAsync(absoluteUri).Result;
         else if (TestScheme(PackUriHelper.UriSchemePack))
             result = ReadJsonFromPackUri(absoluteUri);
         else
@@ -125,5 +125,11 @@ public class ThemeJsonConverter : JsonConverter<ITheme>
         using var response = request.GetResponse();
         using var reader = new StreamReader(response.GetResponseStream());
         return reader.ReadToEnd();
+    }
+
+    private static async Task<string> DownloadStringAsync(Uri uri)
+    {
+        using var response = await HttpClient.GetAsync(uri);
+        return await response.Content.ReadAsStringAsync();
     }
 }

@@ -17,8 +17,8 @@ public class DelegateEqualityComparer<T> : IEqualityComparer<T>
     /// <param name="getHashCodeFunc">The get hash code function.</param>
     public DelegateEqualityComparer(Func<T?, T?, bool> equalsFunc, Func<T, int> getHashCodeFunc)
     {
-        _ = Guard.NotNull(equalsFunc, nameof(equalsFunc));
-        _ = Guard.NotNull(getHashCodeFunc, nameof(getHashCodeFunc));
+        _ = Guard.NotNull(equalsFunc);
+        _ = Guard.NotNull(getHashCodeFunc);
 
         _equalsFunc = equalsFunc;
         _getHashCodeFunc = getHashCodeFunc;

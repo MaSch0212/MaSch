@@ -15,10 +15,11 @@ public class ColorThemeValue : ThemeValueBase<Color>
 {
     /// <inheritdoc/>
     [JsonConverter(typeof(ThemeValuePropertyJsonConverter<Color>))]
+    [SuppressMessage("Critical Bug", "S4275:Getters and setters should access the expected fields", Justification = "Field is set via base class.")]
     public override object RawValue
     {
         get => base.RawValue;
-        set => base.RawValue = Guard.OfType(value, nameof(value), typeof(ThemeValueReference), typeof(Color));
+        set => base.RawValue = Guard.OfType(value, new[] { typeof(ThemeValueReference), typeof(Color) });
     }
 
     public static implicit operator Color(ColorThemeValue themeValue)

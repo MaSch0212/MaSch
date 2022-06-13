@@ -21,9 +21,9 @@ public class CliArgumentParser : ICliArgumentParser
     /// <param name="serviceProvider">The service provider to use to get options instances.</param>
     public CliArgumentParser(ICliApplicationBase application, IEnumerable<ICliValidator<object>> validators, IServiceProvider serviceProvider)
     {
-        _application = Guard.NotNull(application, nameof(application));
-        _validators = Guard.NotNull(validators, nameof(validators));
-        _serviceProvider = Guard.NotNull(serviceProvider, nameof(serviceProvider));
+        _application = Guard.NotNull(application);
+        _validators = Guard.NotNull(validators);
+        _serviceProvider = Guard.NotNull(serviceProvider);
     }
 
     /// <inheritdoc/>

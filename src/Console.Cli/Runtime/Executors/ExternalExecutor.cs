@@ -2,14 +2,16 @@
 using MaSch.Core;
 using MaSch.Core.Extensions;
 
+#pragma warning disable SA1402 // File may only contain a single type
+
 namespace MaSch.Console.Cli.Runtime.Executors;
 
 internal static class ExternalExecutor
 {
     public static ICliCommandExecutor GetExecutor(Type executorType, Type commandType, object? executorInstance)
     {
-        _ = Guard.NotNull(executorType, nameof(executorType));
-        _ = Guard.NotNull(commandType, nameof(commandType));
+        _ = Guard.NotNull(executorType);
+        _ = Guard.NotNull(commandType);
 
         var types = (from i in executorType.GetInterfaces()
                      where i.IsGenericType
@@ -25,7 +27,6 @@ internal static class ExternalExecutor
     }
 }
 
-[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Generic counterpart to ExternalExecutor.")]
 internal class ExternalExecutor<T> : ICliCommandExecutor
 {
     private readonly Type _executorType;
@@ -33,8 +34,8 @@ internal class ExternalExecutor<T> : ICliCommandExecutor
 
     public ExternalExecutor(Type executorType, object? executorInstance)
     {
-        _executorType = Guard.NotNull(executorType, nameof(executorType));
-        _executorInstance = Guard.OfType(executorInstance, nameof(executorInstance), true, executorType);
+        _executorType = Guard.NotNull(executorType);
+        _executorInstance = Guard.OfType(executorInstance, executorType, allowNull: true);
 
         if (!typeof(ICliExecutor<T>).IsAssignableFrom(executorType) && !typeof(ICliAsyncExecutor<T>).IsAssignableFrom(executorType))
             throw new ArgumentException($"The type {executorType.Name} needs to implement {typeof(ICliExecutor<T>).Name} and/or {typeof(ICliAsyncExecutor<T>).Name} for type {typeof(T).Name}.", nameof(executorType));
@@ -44,8 +45,8 @@ internal class ExternalExecutor<T> : ICliCommandExecutor
 
     public int Execute(CliExecutionContext context, object obj)
     {
-        _ = Guard.NotNull(context, nameof(context));
-        _ = Guard.NotNull(obj, nameof(obj));
+        _ = Guard.NotNull(context);
+        _ = Guard.NotNull(obj);
         var (executor, castedObject) = PreExecute(context.ServiceProvider, obj);
         LastExecutorInstance = executor;
 
@@ -59,8 +60,8 @@ internal class ExternalExecutor<T> : ICliCommandExecutor
 
     public async Task<int> ExecuteAsync(CliExecutionContext context, object obj)
     {
-        _ = Guard.NotNull(context, nameof(context));
-        _ = Guard.NotNull(obj, nameof(obj));
+        _ = Guard.NotNull(context);
+        _ = Guard.NotNull(obj);
         var (executor, castedObject) = PreExecute(context.ServiceProvider, obj);
         LastExecutorInstance = executor;
 
@@ -74,8 +75,8 @@ internal class ExternalExecutor<T> : ICliCommandExecutor
 
     public bool ValidateOptions(CliExecutionContext context, object parameters, [MaybeNullWhen(true)] out IEnumerable<CliError> errors)
     {
-        _ = Guard.NotNull(context, nameof(context));
-        _ = Guard.OfType(parameters, nameof(parameters), false, typeof(T));
+        _ = Guard.NotNull(context);
+        _ = Guard.OfType<T>(parameters);
         var ee = PreValidate(context.ServiceProvider);
         LastExecutorInstance = ee;
 

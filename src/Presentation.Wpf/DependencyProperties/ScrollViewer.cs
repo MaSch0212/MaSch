@@ -159,7 +159,7 @@ public static class ScrollViewer
     /// <returns>The value of the <see cref="ScrollOnDragDropProperty"/>.</returns>
     public static bool GetScrollOnDragDrop(DependencyObject element)
     {
-        _ = Guard.NotNull(element, nameof(element));
+        _ = Guard.NotNull(element);
         return (bool)element.GetValue(ScrollOnDragDropProperty);
     }
 
@@ -170,7 +170,7 @@ public static class ScrollViewer
     /// <param name="value">The value to set.</param>
     public static void SetScrollOnDragDrop(DependencyObject element, bool value)
     {
-        _ = Guard.NotNull(element, nameof(element));
+        _ = Guard.NotNull(element);
         element.SetValue(ScrollOnDragDropProperty, value);
     }
 
@@ -328,13 +328,13 @@ public static class ScrollViewer
 
     private static void Subscribe(FrameworkElement container)
     {
-        _ = Guard.NotNull(container, nameof(container));
+        _ = Guard.NotNull(container);
         container.PreviewDragOver += OnContainerPreviewDragOver;
     }
 
     private static void Unsubscribe(FrameworkElement container)
     {
-        _ = Guard.NotNull(container, nameof(container));
+        _ = Guard.NotNull(container);
         container.PreviewDragOver -= OnContainerPreviewDragOver;
     }
 

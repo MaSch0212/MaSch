@@ -29,7 +29,7 @@ public class IniTranslationProvider : DictionaryTranslationProvider
     /// <param name="translationFilePath">The file path in which the .ini files for translation are contained.</param>
     public IniTranslationProvider(string translationFilePath)
     {
-        _translationFilesPath = Guard.NotNullOrEmpty(Path.GetDirectoryName(translationFilePath), nameof(translationFilePath));
+        _translationFilesPath = Guard.NotNullOrEmpty(Path.GetDirectoryName(translationFilePath));
         _fileName = Path.GetFileNameWithoutExtension(translationFilePath);
         _fileExtension = Path.GetExtension(translationFilePath);
     }

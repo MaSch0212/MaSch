@@ -18,7 +18,7 @@ public static class DictionaryExtensions
     public static TValue? TryGetValue<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key)
         where TKey : notnull
     {
-        _ = Guard.NotNull(dict, nameof(dict));
+        _ = Guard.NotNull(dict);
 
         return dict.ContainsKey(key) ? dict[key] : default;
     }
@@ -31,7 +31,7 @@ public static class DictionaryExtensions
     /// <returns>Return the value for the key if the key exists in the <see cref="IDictionary"/>; otherwise <see langword="null"/>.</returns>
     public static object? TryGetValue(this IDictionary dict, object key)
     {
-        _ = Guard.NotNull(dict, nameof(dict));
+        _ = Guard.NotNull(dict);
 
         return dict.Contains(key) ? dict[key] : null;
     }
@@ -48,7 +48,7 @@ public static class DictionaryExtensions
     public static TValue? TryGetValue<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, out bool keyFound)
         where TKey : notnull
     {
-        _ = Guard.NotNull(dict, nameof(dict));
+        _ = Guard.NotNull(dict);
 
         if (dict.ContainsKey(key))
         {
@@ -71,8 +71,8 @@ public static class DictionaryExtensions
     public static bool[] TryRemove<TKey, TValue>(this IDictionary<TKey, TValue> dict, params TKey[] keysToRemove)
         where TKey : notnull
     {
-        _ = Guard.NotNull(dict, nameof(dict));
-        _ = Guard.NotNull(keysToRemove, nameof(keysToRemove));
+        _ = Guard.NotNull(dict);
+        _ = Guard.NotNull(keysToRemove);
 
         var result = new bool[keysToRemove.Length];
         for (int i = 0; i < keysToRemove.Length; i++)
@@ -95,8 +95,8 @@ public static class DictionaryExtensions
     /// <returns>Returns bool values determining which elements were removed successfully.</returns>
     public static bool[] TryRemove(this IDictionary dict, params object[] keysToRemove)
     {
-        _ = Guard.NotNull(dict, nameof(dict));
-        _ = Guard.NotNull(keysToRemove, nameof(keysToRemove));
+        _ = Guard.NotNull(dict);
+        _ = Guard.NotNull(keysToRemove);
 
         var result = new bool[keysToRemove.Length];
         for (int i = 0; i < keysToRemove.Length; i++)
@@ -123,7 +123,7 @@ public static class DictionaryExtensions
     public static bool TryRemove<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey keyToRemove, [MaybeNullWhen(false)] out TValue value)
         where TKey : notnull
     {
-        _ = Guard.NotNull(dict, nameof(dict));
+        _ = Guard.NotNull(dict);
 
         if (dict.ContainsKey(keyToRemove))
         {
@@ -148,7 +148,7 @@ public static class DictionaryExtensions
     public static bool AddIfNotExists<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue value)
         where TKey : notnull
     {
-        _ = Guard.NotNull(dict, nameof(dict));
+        _ = Guard.NotNull(dict);
 
         if (dict.ContainsKey(key))
             return false;
@@ -185,10 +185,10 @@ public static class DictionaryExtensions
     public static void Add<TKey, TValue, TItem>(this IDictionary<TKey, TValue> dict, IEnumerable<TItem> itemsToAdd, Func<TItem, TKey> keySelector, Func<TItem, TValue> elementSelector)
         where TKey : notnull
     {
-        _ = Guard.NotNull(dict, nameof(dict));
-        _ = Guard.NotNull(itemsToAdd, nameof(itemsToAdd));
-        _ = Guard.NotNull(keySelector, nameof(keySelector));
-        _ = Guard.NotNull(elementSelector, nameof(elementSelector));
+        _ = Guard.NotNull(dict);
+        _ = Guard.NotNull(itemsToAdd);
+        _ = Guard.NotNull(keySelector);
+        _ = Guard.NotNull(elementSelector);
 
         foreach (var item in itemsToAdd)
         {
@@ -207,7 +207,7 @@ public static class DictionaryExtensions
     public static void AddToList<TKey, TValue>(this IDictionary<TKey, IList<TValue>> dict, TKey key, TValue valueToAdd)
         where TKey : notnull
     {
-        _ = Guard.NotNull(dict, nameof(dict));
+        _ = Guard.NotNull(dict);
 
         if (!dict.ContainsKey(key))
             dict.Add(key, new List<TValue>());

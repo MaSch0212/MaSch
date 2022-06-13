@@ -34,8 +34,8 @@ public class ObjectConvertManager : IObjectConvertManager
     /// <inheritdoc/>
     public virtual object? Convert(object? objectToConvert, Type? sourceType, Type targetType, IFormatProvider formatProvider)
     {
-        _ = Guard.NotNull(targetType, nameof(targetType));
-        _ = Guard.NotNull(formatProvider, nameof(formatProvider));
+        _ = Guard.NotNull(targetType);
+        _ = Guard.NotNull(formatProvider);
 
         if (objectToConvert == null && sourceType?.IsClass == false)
             throw new ArgumentException("The object cannot be null, because the sourceType is not nullable.");
@@ -77,7 +77,7 @@ public class ObjectConvertManager : IObjectConvertManager
     /// <inheritdoc/>
     public virtual void RegisterConverter(IObjectConverter converter)
     {
-        _ = Guard.NotNull(converter, nameof(converter));
+        _ = Guard.NotNull(converter);
         _objectConverters.Add(converter);
     }
 

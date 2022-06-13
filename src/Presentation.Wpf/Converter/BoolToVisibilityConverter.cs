@@ -17,7 +17,7 @@ public class BoolToVisibilityConverter : IValueConverter
     public bool UseCollapse { get; set; } = true;
 
     /// <inheritdoc />
-    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         var b = value as bool?;
         if (!b.HasValue)
@@ -28,7 +28,7 @@ public class BoolToVisibilityConverter : IValueConverter
     }
 
     /// <inheritdoc />
-    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
         bool n = parameter != null && string.Equals(parameter.ToString(), "negate", StringComparison.InvariantCultureIgnoreCase);
         return value as Visibility? == Visibility.Visible ? !n : n;

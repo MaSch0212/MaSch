@@ -42,7 +42,7 @@ public static class DataGrid
 
     private static void BindableColumnsPropertyChanged(DependencyObject source, DependencyPropertyChangedEventArgs e)
     {
-        var dataGrid = Guard.OfType<System.Windows.Controls.DataGrid>(source, nameof(source));
+        var dataGrid = Guard.OfType<System.Windows.Controls.DataGrid>(source);
 
         dataGrid.Columns.Clear();
         if (e.NewValue is not ObservableCollection<DataGridColumn> columns)

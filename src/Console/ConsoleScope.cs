@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace MaSch.Console;
 
@@ -34,11 +35,7 @@ public sealed class ConsoleScope : IDisposable
 
         _backColor = scopeColor ? console.BackgroundColor : ConsoleColor.Black;
         _foreColor = scopeColor ? console.ForegroundColor : ConsoleColor.Gray;
-#if NETFRAMEWORK
-        _cursorVisible = console.IsCursorVisible;
-#else
-        _cursorVisible = !OperatingSystem.IsWindows() || console.IsCursorVisible;
-#endif
+        _cursorVisible = !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || console.IsCursorVisible;
 
         var pos = scopePosition || clearContent ? console.CursorPosition.Point : new Point(0, 0);
         _posX = pos.X;

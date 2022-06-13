@@ -7,7 +7,7 @@ internal static class FunctionExecutor
 {
     public static ICliCommandExecutor GetExecutor(object executorFunction)
     {
-        _ = Guard.NotNull(executorFunction, nameof(executorFunction));
+        _ = Guard.NotNull(executorFunction);
         var type = executorFunction.GetType();
         if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(Func<,,>))
             throw new ArgumentException($"The executor function needs to be of type Func<,,>.", nameof(executorFunction));
@@ -47,8 +47,8 @@ internal class FunctionExecutor<T> : ICliCommandExecutor
 
     public int Execute(CliExecutionContext context, object obj)
     {
-        _ = Guard.NotNull(context, nameof(context));
-        _ = Guard.NotNull(obj, nameof(obj));
+        _ = Guard.NotNull(context);
+        _ = Guard.NotNull(obj);
         var castedObject = FunctionExecutor.PreExecute<T>(obj);
         if (_executorFunc != null)
             return _executorFunc(context, castedObject);
@@ -60,8 +60,8 @@ internal class FunctionExecutor<T> : ICliCommandExecutor
 
     public async Task<int> ExecuteAsync(CliExecutionContext context, object obj)
     {
-        _ = Guard.NotNull(context, nameof(context));
-        _ = Guard.NotNull(obj, nameof(obj));
+        _ = Guard.NotNull(context);
+        _ = Guard.NotNull(obj);
         var castedObject = FunctionExecutor.PreExecute<T>(obj);
         if (_asyncExecutorFunc != null)
             return await _asyncExecutorFunc(context, castedObject);

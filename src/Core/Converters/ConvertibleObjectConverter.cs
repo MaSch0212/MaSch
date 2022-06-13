@@ -44,8 +44,8 @@ public class ConvertibleObjectConverter : IObjectConverter
     /// <param name="canConvertFunc">The function that determines wether a convertion is possible.</param>
     public static void AddCanConvertFunction(Type sourceType, Func<Type, bool> canConvertFunc)
     {
-        _ = Guard.NotNull(sourceType, nameof(sourceType));
-        _ = Guard.NotNull(canConvertFunc, nameof(canConvertFunc));
+        _ = Guard.NotNull(sourceType);
+        _ = Guard.NotNull(canConvertFunc);
         if (!CanConvertFunctions.TryGetValue(sourceType, out var functions))
         {
             functions = new List<Func<Type, bool>>();

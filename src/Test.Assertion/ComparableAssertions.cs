@@ -50,7 +50,7 @@ public partial class AssertBase
     /// <param name="message">The message to include in the exception when <paramref name="actual"/> is not greater than <paramref name="expected"/>.</param>. The message is shown in test results.
     public void IsGreaterThan<T>(T expected, T actual, IComparer<T> comparer, string? message)
     {
-        _ = Guard.NotNull(comparer, nameof(comparer));
+        _ = Guard.NotNull(comparer);
         RunAssertion(expected, actual, message, (e, a) => comparer.Compare(a, e) > 0);
     }
 
@@ -99,7 +99,7 @@ public partial class AssertBase
     /// <param name="message">The message to include in the exception when <paramref name="actual"/> is not greater than or equal to <paramref name="expected"/>.</param>. The message is shown in test results.
     public void IsGreaterThanOrEqualTo<T>(T expected, T actual, IComparer<T> comparer, string? message)
     {
-        _ = Guard.NotNull(comparer, nameof(comparer));
+        _ = Guard.NotNull(comparer);
         RunAssertion(expected, actual, message, (e, a) => comparer.Compare(a, e) >= 0);
     }
 
@@ -148,7 +148,7 @@ public partial class AssertBase
     /// <param name="message">The message to include in the exception when <paramref name="actual"/> is not smaller than <paramref name="expected"/>.</param>. The message is shown in test results.
     public void IsSmallerThan<T>(T expected, T actual, IComparer<T> comparer, string? message)
     {
-        _ = Guard.NotNull(comparer, nameof(comparer));
+        _ = Guard.NotNull(comparer);
         RunAssertion(expected, actual, message, (e, a) => comparer.Compare(a, e) < 0);
     }
 
@@ -197,7 +197,7 @@ public partial class AssertBase
     /// <param name="message">The message to include in the exception when <paramref name="actual"/> is not smaller than or equal to <paramref name="expected"/>.</param>. The message is shown in test results.
     public void IsSmallerThanOrEqualTo<T>(T expected, T actual, IComparer<T> comparer, string? message)
     {
-        _ = Guard.NotNull(comparer, nameof(comparer));
+        _ = Guard.NotNull(comparer);
         RunAssertion(expected, actual, message, (e, a) => comparer.Compare(a, e) <= 0);
     }
 

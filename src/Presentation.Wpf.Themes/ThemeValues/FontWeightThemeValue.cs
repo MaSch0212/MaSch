@@ -15,10 +15,11 @@ public class FontWeightThemeValue : ThemeValueBase<FontWeight>
 {
     /// <inheritdoc/>
     [JsonConverter(typeof(ThemeValuePropertyJsonConverter<FontWeight>))]
+    [SuppressMessage("Critical Bug", "S4275:Getters and setters should access the expected fields", Justification = "Field is set via base class.")]
     public override object RawValue
     {
         get => base.RawValue;
-        set => base.RawValue = Guard.OfType(value, nameof(value), typeof(ThemeValueReference), typeof(FontWeight));
+        set => base.RawValue = Guard.OfType(value, new[] { typeof(ThemeValueReference), typeof(FontWeight) });
     }
 
     public static implicit operator FontWeight(FontWeightThemeValue themeValue)

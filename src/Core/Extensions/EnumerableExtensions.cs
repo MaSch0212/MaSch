@@ -24,8 +24,8 @@ public static class EnumerableExtensions
     /// <returns>Returns each item after the action has been executed.</returns>
     public static IEnumerable<T> Each<T>(this IEnumerable<T> enumerable, Action<T> action)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
         foreach (var item in enumerable)
         {
             action(item);
@@ -42,8 +42,8 @@ public static class EnumerableExtensions
     /// <returns>Returns each item after the action has been executed.</returns>
     public static IEnumerable<T> Each<T>(this IEnumerable<T> enumerable, Action<T, LoopState> action)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
         var state = new LoopState();
         foreach (var item in enumerable)
         {
@@ -63,8 +63,8 @@ public static class EnumerableExtensions
     /// <returns>Returns each item with the exception that occurred after the action has been executed. If no exception occurred, the exception entry is <c>null</c>.</returns>
     public static IEnumerable<(T Item, Exception? Error)> TryEach<T>(this IEnumerable<T> enumerable, Action<T> action)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
         foreach (var item in enumerable)
         {
             Exception? error = null;
@@ -90,8 +90,8 @@ public static class EnumerableExtensions
     /// <returns>Returns each item with the exception that occurred after the action has been executed. If no exception occurred, the exception entry is <c>null</c>.</returns>
     public static IEnumerable<(T Item, Exception? Error)> TryEach<T>(this IEnumerable<T> enumerable, Action<T, LoopState> action)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
         var state = new LoopState();
         foreach (var item in enumerable)
         {
@@ -123,8 +123,8 @@ public static class EnumerableExtensions
     /// <param name="action">The action to execute.</param>
     public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
         foreach (var item in enumerable)
             action(item);
     }
@@ -137,8 +137,8 @@ public static class EnumerableExtensions
     /// <param name="action">The action to execute.</param>
     public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T, LoopState> action)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
         var state = new LoopState();
         foreach (var item in enumerable)
         {
@@ -156,8 +156,8 @@ public static class EnumerableExtensions
     /// <param name="action">The action to execute. The first parameter is the last element of the loop - for the first item, this parameter is <c>default</c>.</param>
     public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T?, T, LoopState> action)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
         T? last = default;
         var state = new LoopState();
         foreach (var item in enumerable)
@@ -191,8 +191,8 @@ public static class EnumerableExtensions
     /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
     public static bool TryForEach<T>(this IEnumerable<T> enumerable, Action<T> action, bool continueOnError)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
         bool result = true;
         foreach (var item in enumerable)
         {
@@ -233,8 +233,8 @@ public static class EnumerableExtensions
     /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
     public static bool TryForEach<T>(this IEnumerable<T> enumerable, Action<T, LoopState> action, bool continueOnError)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
         bool result = true;
         var state = new LoopState();
         foreach (var item in enumerable)
@@ -281,8 +281,8 @@ public static class EnumerableExtensions
     /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
     public static bool TryForEach<T>(this IEnumerable<T> enumerable, Action<T> action, out ICollection<(T Item, Exception Error)> errors, bool continueOnError)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
         errors = new List<(T, Exception)>();
         foreach (var item in enumerable)
         {
@@ -325,8 +325,8 @@ public static class EnumerableExtensions
     /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
     public static bool TryForEach<T>(this IEnumerable<T> enumerable, Action<T, LoopState> action, out ICollection<(T Item, int Index, Exception Error)> errors, bool continueOnError)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
         errors = new List<(T, int, Exception)>();
         var state = new LoopState();
         foreach (var item in enumerable)
@@ -375,8 +375,8 @@ public static class EnumerableExtensions
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public static async Task ForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, Task> action, CancellationToken token)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
         foreach (var item in enumerable)
         {
             await action(item);
@@ -407,8 +407,8 @@ public static class EnumerableExtensions
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public static async Task ForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, AsyncLoopState, Task> action, CancellationToken token)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
         var state = new AsyncLoopState(token);
         foreach (var item in enumerable)
         {
@@ -440,8 +440,8 @@ public static class EnumerableExtensions
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public static async Task ForEachAsync<T>(this IEnumerable<T> enumerable, Func<T?, T, AsyncLoopState, Task> action, CancellationToken token)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
         T? last = default;
         var state = new AsyncLoopState(token);
         foreach (var item in enumerable)
@@ -475,8 +475,8 @@ public static class EnumerableExtensions
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public static async Task ParallelForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, Task> action, CancellationToken token)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
 
         var tcs = new TaskCompletionSource<object>();
         using (token.Register(() => tcs.TrySetCanceled(), false))
@@ -507,8 +507,8 @@ public static class EnumerableExtensions
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public static async Task ParallelForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, Task> action, int maxDegreeOfParallelism, CancellationToken token)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
 
         var activeTasks = new HashSet<Task>();
         foreach (var item in enumerable)
@@ -546,8 +546,8 @@ public static class EnumerableExtensions
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public static async Task ParallelForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, AsyncLoopState, Task> action, CancellationToken token)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
 
         var state = new AsyncLoopState(token);
         var activeTasks = new HashSet<Task>(enumerable.Select(x => action(x, state)));
@@ -584,8 +584,8 @@ public static class EnumerableExtensions
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public static async Task ParallelForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, AsyncLoopState, Task> action, int maxDegreeOfParallelism, CancellationToken token)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
 
         var state = new AsyncLoopState(token);
         var activeTasks = new HashSet<Task>();
@@ -651,8 +651,8 @@ public static class EnumerableExtensions
     /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
     public static async Task<bool> TryForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, Task> action, bool continueOnError, CancellationToken token)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
         bool result = true;
         foreach (var item in enumerable)
         {
@@ -723,8 +723,8 @@ public static class EnumerableExtensions
     /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
     public static async Task<bool> TryForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, AsyncLoopState, Task> action, bool continueOnError, CancellationToken token)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
         bool result = true;
         var state = new AsyncLoopState(token);
         foreach (var item in enumerable)
@@ -758,7 +758,7 @@ public static class EnumerableExtensions
     /// <returns>The zero-based index of the first occurrence of item within the entire <see cref="IEnumerable{T}"/>, if found; otherwise, –1.</returns>
     public static int IndexOf<T>(this IEnumerable<T> enumerable, T value)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         int i = 0;
         foreach (var item in enumerable)
         {
@@ -780,8 +780,8 @@ public static class EnumerableExtensions
     /// <returns>The zero-based index of the first occurrence of item within the entire <see cref="IEnumerable{T}"/>, if found; otherwise, –1.</returns>
     public static int IndexOf<T>(this IEnumerable<T> enumerable, T value, IEqualityComparer<T> comparer)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(comparer, nameof(comparer));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(comparer);
         int i = 0;
         foreach (var item in enumerable)
         {
@@ -803,8 +803,8 @@ public static class EnumerableExtensions
     /// <exception cref="ArgumentNullException"><paramref name="enumerable"/> or <paramref name="match"/> is <see langword="null"/>.</exception>
     public static int IndexOf<T>(this IEnumerable<T> enumerable, Predicate<T> match)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(match, nameof(match));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(match);
         int i = 0;
         foreach (var item in enumerable)
         {
@@ -826,8 +826,8 @@ public static class EnumerableExtensions
     /// <exception cref="ArgumentNullException"><paramref name="enumerable"/> or <paramref name="match"/> is <see langword="null"/>.</exception>
     public static int IndexOf<T>(this IEnumerable<T> enumerable, Func<T, int, bool> match)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(match, nameof(match));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(match);
         int i = 0;
         foreach (var item in enumerable)
         {
@@ -849,8 +849,8 @@ public static class EnumerableExtensions
     ///   <paramref name="enumerable" /> or <paramref name="expression" /> is <see langword="null" />.</exception>
     public static bool Any<T>(this IEnumerable<T> enumerable, Func<T, int, bool> expression)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(expression, nameof(expression));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(expression);
         int i = 0;
         return enumerable.Any(x => expression(x, i++));
     }
@@ -866,7 +866,7 @@ public static class EnumerableExtensions
     public static TSource? FirstMaxElement<TSource, TValue>(this IEnumerable<TSource> enumerable, Func<TSource, TValue> func)
         where TValue : IComparable<TValue>
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         var first = true;
         var maxO = default(TSource);
         var maxV = default(TValue);
@@ -896,7 +896,7 @@ public static class EnumerableExtensions
     public static int FirstMaxIndex<TSource, TValue>(this IEnumerable<TSource> enumerable, Func<TSource, TValue> func)
         where TValue : IComparable<TValue>
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         var result = -1;
         var currentIndex = -1;
         var maxV = default(TValue);
@@ -925,7 +925,7 @@ public static class EnumerableExtensions
     public static TSource? FirstMinElement<TSource, TValue>(this IEnumerable<TSource> enumerable, Func<TSource, TValue> func)
         where TValue : IComparable<TValue>
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         var first = true;
         var maxO = default(TSource);
         var maxV = default(TValue);
@@ -955,7 +955,7 @@ public static class EnumerableExtensions
     public static int FirstMinIndex<TSource, TValue>(this IEnumerable<TSource> enumerable, Func<TSource, TValue> func)
         where TValue : IComparable<TValue>
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         var result = -1;
         var currentIndex = -1;
         var maxV = default(TValue);
@@ -983,7 +983,7 @@ public static class EnumerableExtensions
     /// <returns>A specified number of continuous elements from the end of a sequence.</returns>
     public static IEnumerable<T> TakeLast<T>(this IEnumerable<T> enumerable, int count)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         var buffer = new LinkedList<T>();
         int c = 0;
         foreach (var item in enumerable)
@@ -1007,7 +1007,7 @@ public static class EnumerableExtensions
     /// <returns>A specified number of continuous elements from the end of a sequence.</returns>
     public static IEnumerable<T> TakeLast<T>(this IEnumerable<T> enumerable, int count, int skip)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         var buffer = new LinkedList<T>();
         int c = 0;
         foreach (var item in enumerable)
@@ -1029,7 +1029,7 @@ public static class EnumerableExtensions
     ///   <paramref name="enumerable" /> is <see langword="null" />.</exception>
     public static IEnumerable<TSource> Except<TSource>(this IEnumerable<TSource> enumerable, TSource itemToExclude)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         return enumerable.Except(new[] { itemToExclude });
     }
 
@@ -1043,7 +1043,7 @@ public static class EnumerableExtensions
     ///   <paramref name="enumerable" /> is <see langword="null" />.</exception>
     public static IEnumerable<TSource> Except<TSource>(this IEnumerable<TSource> enumerable, TSource itemToExclude, IEqualityComparer<TSource> comparer)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         return enumerable.Except(new[] { itemToExclude }, comparer);
     }
 
@@ -1056,7 +1056,7 @@ public static class EnumerableExtensions
     ///   <paramref name="enumerable" /> or <paramref name="func" /> is <see langword="null" />.</exception>
     public static IEnumerable<TSource> Where<TSource>(this IEnumerable<TSource> enumerable, Func<TSource?, TSource, bool> func)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         TSource? last = default;
         foreach (TSource item in enumerable)
         {
@@ -1076,9 +1076,9 @@ public static class EnumerableExtensions
     /// <returns>An <see cref="IEnumerable{T}"/> that contains elements for which the action threw an exception.</returns>
     public static IEnumerable<T> WhereException<T>(this IEnumerable<T> enumerable, Action<T> action, params Type[] matchedExceptions)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
-        _ = Guard.NotNull(matchedExceptions, nameof(matchedExceptions));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
+        _ = Guard.NotNull(matchedExceptions);
         foreach (T item in enumerable)
         {
             bool matched;
@@ -1110,9 +1110,9 @@ public static class EnumerableExtensions
     /// <returns>An <see cref="IEnumerable{T}"/> that contains elements for which the action did not throw an exception.</returns>
     public static IEnumerable<T> WhereNoException<T>(this IEnumerable<T> enumerable, Action<T> action, params Type[] expectedExceptions)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(action, nameof(action));
-        _ = Guard.NotNull(expectedExceptions, nameof(expectedExceptions));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(action);
+        _ = Guard.NotNull(expectedExceptions);
         foreach (T item in enumerable)
         {
             bool matched;
@@ -1165,7 +1165,7 @@ public static class EnumerableExtensions
     ///   <paramref name="enumerable" /> is <see langword="null" />.</exception>
     public static async Task<List<T>> ToListAsync<T>(this IEnumerable<T> enumerable, CancellationToken token)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         return await Task.Run(() => ToList(enumerable, token), token);
     }
 
@@ -1178,7 +1178,7 @@ public static class EnumerableExtensions
     ///   <paramref name="enumerable" /> is <see langword="null" />.</exception>
     public static List<T> ToList<T>(this IEnumerable<T> enumerable, CancellationToken token)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         var result = new List<T>();
         if (!token.IsCancellationRequested)
         {
@@ -1213,7 +1213,7 @@ public static class EnumerableExtensions
     ///   <paramref name="enumerable" /> is <see langword="null" />.</exception>
     public static async Task<T[]> ToArrayAsync<T>(this IEnumerable<T> enumerable, CancellationToken token)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         return await Task.Run(() => ToArray(enumerable, token), token);
     }
 
@@ -1226,7 +1226,7 @@ public static class EnumerableExtensions
     ///   <paramref name="enumerable" /> is <see langword="null" />.</exception>
     public static T[] ToArray<T>(this IEnumerable<T> enumerable, CancellationToken token)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         var result = new ResizableArray<T>();
         if (!token.IsCancellationRequested)
         {
@@ -1493,7 +1493,7 @@ public static class EnumerableExtensions
     /// <returns><see langword="true"/> if an element was found in the <see cref="IEnumerable{T}"/>; otherwise, <see langword="false"/>.</returns>
     public static bool TryFirst<T>(this IEnumerable<T> enumerable, [MaybeNullWhen(false)] out T value)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         using var enumerator = enumerable.GetEnumerator();
         var result = enumerator.MoveNext();
         value = result ? enumerator.Current : default;
@@ -1510,7 +1510,7 @@ public static class EnumerableExtensions
     /// <returns><see langword="true"/> if an element that matches <paramref name="predicate"/> was found in the <see cref="IEnumerable{T}"/>; otherwise, <see langword="false"/>.</returns>
     public static bool TryFirst<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate, [MaybeNullWhen(false)] out T value)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         using var enumerator = enumerable.Where(predicate).GetEnumerator();
         var result = enumerator.MoveNext();
         value = result ? enumerator.Current : default;
@@ -1526,7 +1526,7 @@ public static class EnumerableExtensions
     /// <returns><see langword="true"/> if exactly one element was found in the <see cref="IEnumerable{T}"/>; otherwise, <see langword="false"/>.</returns>
     public static bool TrySingle<T>(this IEnumerable<T> enumerable, [MaybeNullWhen(false)] out T value)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         using var enumerator = enumerable.GetEnumerator();
         var result = enumerator.MoveNext();
         value = result ? enumerator.Current : default;
@@ -1545,7 +1545,7 @@ public static class EnumerableExtensions
     /// <returns><see langword="true"/> if exactly one element matches <paramref name="predicate"/> was found in the <see cref="IEnumerable{T}"/>; otherwise, <see langword="false"/>.</returns>
     public static bool TrySingle<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate, [MaybeNullWhen(false)] out T value)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         using var enumerator = enumerable.Where(predicate).GetEnumerator();
         var result = enumerator.MoveNext();
         value = result ? enumerator.Current : default;
@@ -1563,7 +1563,7 @@ public static class EnumerableExtensions
     /// <returns><see langword="true"/> if an element was found in the <see cref="IEnumerable{T}"/>; otherwise, <see langword="false"/>.</returns>
     public static bool TryLast<T>(this IEnumerable<T> enumerable, [MaybeNullWhen(false)] out T value)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         bool result = false;
         value = default;
         foreach (var item in enumerable)
@@ -1585,7 +1585,7 @@ public static class EnumerableExtensions
     /// <returns><see langword="true"/> if an element that matches <paramref name="predicate"/> was found in the <see cref="IEnumerable{T}"/>; otherwise, <see langword="false"/>.</returns>
     public static bool TryLast<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate, [MaybeNullWhen(false)] out T value)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         bool result = false;
         value = default;
         foreach (var item in enumerable.Where(predicate))
@@ -1607,7 +1607,7 @@ public static class EnumerableExtensions
     /// <returns><c>true</c> if an element exists at the specified <paramref name="index"/> in the <paramref name="enumerable"/>.</returns>
     public static bool TryElementAt<T>(this IEnumerable<T> enumerable, int index, [MaybeNullWhen(false)] out T value)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         return TryFirst(enumerable.Skip(index), out value);
     }
 
@@ -1700,8 +1700,8 @@ public static class EnumerableExtensions
     /// <returns>An <see cref="IEnumerable{T}"/> which contains the result of the <paramref name="aggregateFunction"/> of each element in the <paramref name="enumerable"/>.</returns>
     public static IEnumerable<TResult> Link<TItem, TResult>(this IEnumerable<TItem> enumerable, TResult? seed, Func<TResult?, TItem, TResult> aggregateFunction)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(aggregateFunction, nameof(aggregateFunction));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(aggregateFunction);
 
         var previousResult = seed;
         foreach (var item in enumerable)
@@ -1791,7 +1791,7 @@ public static class EnumerableExtensions
     private static Dictionary<TKey, TValue> ToDictionaryImpl<TSource, TKey, TValue>(IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector, IEqualityComparer<TKey>? keyComparer, CancellationToken token)
         where TKey : notnull
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
+        _ = Guard.NotNull(enumerable);
         var result = new Dictionary<TKey, TValue>(keyComparer);
         if (!token.IsCancellationRequested)
         {

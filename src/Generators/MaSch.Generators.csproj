@@ -1,30 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   
-  <Import Project="../../build/MaSch.Constants.props" />
-
   <PropertyGroup>
     <!-- General Project info -->
-    <TargetFramework>$(TfmNetStandard)</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <DefineConstants>$(DefineConstants);MASCH_GENERATOR</DefineConstants>
 
     <!-- Output info -->
-    <SignAssembly>true</SignAssembly>
     <BuildOutputTargetFolder>analyzers</BuildOutputTargetFolder>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
-    <AddReleaseNotes>true</AddReleaseNotes>
 
     <!-- Package Info -->
     <Description>Contains some useful Code Generators. Most of these generators requires a reference to the MaSch.Core NuGet package.</Description>
-    <Version>0.3.2</Version>
+    <Version>0.3.3</Version>
     <PackageTags>masch generator sourcegenerator wrapper observable wpf</PackageTags>
 
     <!-- Disable warnings that occur in the Resources.Designer.cs -->
     <NoWarn>$(NoWarn);1587;1570</NoWarn>
   </PropertyGroup>
 
-  <Import Project="$(GitBuildDir)MaSch.props" />
-
   <ItemGroup>
+    <Compile Remove="Resources\CallerArgumentExpression.cs" />
     <Compile Remove="Resources\OSVersioning.cs" />
     <Compile Remove="Resources\Records.cs" />
   </ItemGroup>
@@ -37,6 +32,7 @@
   <ItemGroup>
     <None Include="Resources/OSVersioning.cs" />
     <None Include="Resources/Records.cs" />
+    <None Include="Resources\CallerArgumentExpression.cs" />
   </ItemGroup>
   
   <ItemGroup>
@@ -44,11 +40,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
   </ItemGroup>
   
   <ItemGroup>

@@ -16,8 +16,8 @@ public class CliHelpPage : ICliHelpPage
     /// <param name="console">The console service to use to write help data.</param>
     public CliHelpPage(ICliApplicationBase application, IConsoleService console)
     {
-        Application = Guard.NotNull(application, nameof(application));
-        Console = Guard.NotNull(console, nameof(console));
+        Application = Guard.NotNull(application);
+        Console = Guard.NotNull(console);
     }
 
     /// <summary>

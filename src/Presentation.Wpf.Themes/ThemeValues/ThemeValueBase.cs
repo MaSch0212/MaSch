@@ -49,7 +49,7 @@ public abstract class ThemeValueBase : ObservableObject, IThemeValue
         get => _themeManager;
         set
         {
-            _ = Guard.NotNull(value, nameof(value));
+            _ = Guard.NotNull(value);
 
             if (_themeManager != null)
                 _themeManager.ThemeValueChanged -= ThemeManagerOnThemeValueChanged;

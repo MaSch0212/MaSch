@@ -24,21 +24,21 @@ public class MathConverter : MarkupExtension, IMultiValueConverter, IValueConver
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:Elements should be documented", Justification = "Private interfaces do not need to be documented.")]
     private interface IExpression
     {
-        decimal Eval(IList<object> args);
+        decimal Eval(IList<object?> args);
     }
 
     /// <inheritdoc />
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         return Convert(new[] { value }, targetType, parameter, culture);
     }
 
     /// <inheritdoc />
-    public object Convert(IList<object> values, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
     {
         try
         {
-            var result = Parse(Guard.NotNull(parameter.ToString(), nameof(parameter))).Eval(values);
+            var result = Parse(Guard.NotNull(parameter?.ToString())).Eval(values);
             if (targetType == typeof(decimal))
                 return result;
             if (targetType == typeof(string))
@@ -60,7 +60,7 @@ public class MathConverter : MarkupExtension, IMultiValueConverter, IValueConver
     }
 
     /// <inheritdoc />
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotSupportedException();
     }
@@ -103,7 +103,7 @@ public class MathConverter : MarkupExtension, IMultiValueConverter, IValueConver
             }
         }
 
-        public decimal Eval(IList<object> args)
+        public decimal Eval(IList<object?> args)
         {
             return _value;
         }
@@ -126,7 +126,7 @@ public class MathConverter : MarkupExtension, IMultiValueConverter, IValueConver
             _index = n;
         }
 
-        public decimal Eval(IList<object> args)
+        public decimal Eval(IList<object?> args)
         {
             if (_index >= args.Count)
             {
@@ -158,7 +158,7 @@ public class MathConverter : MarkupExtension, IMultiValueConverter, IValueConver
             };
         }
 
-        public decimal Eval(IList<object> args)
+        public decimal Eval(IList<object?> args)
         {
             return _operation(_left.Eval(args), _right.Eval(args));
         }
@@ -173,7 +173,7 @@ public class MathConverter : MarkupExtension, IMultiValueConverter, IValueConver
             _param = param;
         }
 
-        public decimal Eval(IList<object> args)
+        public decimal Eval(IList<object?> args)
         {
             return -_param.Eval(args);
         }

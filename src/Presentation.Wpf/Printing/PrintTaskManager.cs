@@ -51,7 +51,7 @@ public class PrintTaskManager : ObservableObject
     /// <exception cref="InvalidOperationException">Only a task in the state NotStarted can be queued.</exception>
     public void QueueNewTask(PrintTask task)
     {
-        _ = Guard.NotNull(task, nameof(task));
+        _ = Guard.NotNull(task);
         if (task.State != PrintTaskState.NotStarted)
             throw new InvalidOperationException("Only a task in the state NotStarted can be queued.");
         task.State = PrintTaskState.Queued;

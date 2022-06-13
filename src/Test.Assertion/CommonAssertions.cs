@@ -488,7 +488,7 @@ public partial class AssertBase
     /// <param name="message">The message to include in the exception when <paramref name="value" /> is not an instance of <paramref name="expectedType" />. The message is shown in test results.</param>
     public void IsInstanceOfType([NotNull] object? value, Type expectedType, string? message)
     {
-        RunAssertion(Guard.NotNull(expectedType, nameof(expectedType)), value?.GetType(), message, (e, a) => e.IsAssignableFrom(a));
+        RunAssertion(Guard.NotNull(expectedType), value?.GetType(), message, (e, a) => e.IsAssignableFrom(a));
     }
 
     /// <summary>
@@ -542,7 +542,7 @@ public partial class AssertBase
     /// <param name="message">The message to include in the exception when <paramref name="value" /> is an instance of <paramref name="wrongType" />. The message is shown in test results.</param>
     public void IsNotInstanceOfType(object? value, Type wrongType, string? message)
     {
-        RunNegatedAssertion(Guard.NotNull(wrongType, nameof(wrongType)), value?.GetType(), message, (e, a) => e.IsAssignableFrom(a));
+        RunNegatedAssertion(Guard.NotNull(wrongType), value?.GetType(), message, (e, a) => e.IsAssignableFrom(a));
     }
 
     /// <summary>
@@ -584,7 +584,7 @@ public partial class AssertBase
     public T ThrowsException<T>(Action action)
         where T : Exception
     {
-        return ThrowsException<T>(action, null);
+        return (T)ThrowsException(typeof(T), action, null);
     }
 
     /// <summary>
@@ -598,22 +598,7 @@ public partial class AssertBase
     public T ThrowsException<T>(Action action, string? message)
         where T : Exception
     {
-        _ = Guard.NotNull(action, nameof(action));
-
-        Exception? exception = null;
-        try
-        {
-            action();
-        }
-        catch (Exception ex)
-        {
-            exception = ex;
-        }
-
-        if (exception == null || !typeof(T).Equals(exception.GetType()))
-            ThrowAssertError(message, ("ExpectedException", typeof(T).Name), ("ActualException", exception?.GetType().Name), ("ExceptionDetails", exception?.ToString()));
-
-        return (exception as T)!;
+        return (T)ThrowsException(typeof(T), action, message);
     }
 
     /// <summary>
@@ -626,7 +611,7 @@ public partial class AssertBase
     public T ThrowsException<T>(Func<object?> action)
         where T : Exception
     {
-        return ThrowsException<T>(() => { _ = action(); }, null);
+        return (T)ThrowsException(typeof(T), () => { _ = action(); }, null);
     }
 
     /// <summary>
@@ -640,7 +625,72 @@ public partial class AssertBase
     public T ThrowsException<T>(Func<object?> action, string? message)
         where T : Exception
     {
-        return ThrowsException<T>(() => { _ = action(); }, message);
+        return (T)ThrowsException(typeof(T), () => { _ = action(); }, message);
+    }
+
+    /// <summary>
+    /// Tests whether the code specified by delegate <paramref name="action" /> throws exact given exception of type <paramref name="expectedExceptionType"/> (and not of derived type)
+    /// and throws <c>AssertFailedException</c> if code does not throws exception or throws exception of type other than <paramref name="expectedExceptionType"/>.
+    /// </summary>
+    /// <param name="expectedExceptionType">Type of exception expected to be thrown.</param>
+    /// <param name="action">Delegate to code to be tested and which is expected to throw exception.</param>
+    /// <returns>The exception that was thrown.</returns>
+    public Exception ThrowsException(Type expectedExceptionType, Action action)
+    {
+        return ThrowsException(expectedExceptionType, action, null);
+    }
+
+    /// <summary>
+    /// Tests whether the code specified by delegate <paramref name="action" /> throws exact given exception of type <paramref name="expectedExceptionType"/> (and not of derived type)
+    /// and throws <c>AssertFailedException</c> if code does not throws exception or throws exception of type other than <paramref name="expectedExceptionType"/>.
+    /// </summary>
+    /// <param name="expectedExceptionType">Type of exception expected to be thrown.</param>
+    /// <param name="action">Delegate to code to be tested and which is expected to throw exception.</param>
+    /// <param name="message">The message to include in the exception when <paramref name="action" /> does not throws exception of type <paramref name="expectedExceptionType"/>.</param>
+    /// <returns>The exception that was thrown.</returns>
+    public Exception ThrowsException(Type expectedExceptionType, Action action, string? message)
+    {
+        _ = Guard.NotNull(action);
+
+        Exception? exception = null;
+        try
+        {
+            action();
+        }
+        catch (Exception ex)
+        {
+            exception = ex;
+        }
+
+        if (exception == null || !expectedExceptionType.Equals(exception.GetType()))
+            ThrowAssertError(message, ("ExpectedException", expectedExceptionType.Name), ("ActualException", exception?.GetType().Name), ("ExceptionDetails", exception?.ToString()));
+
+        return exception!;
+    }
+
+    /// <summary>
+    /// Tests whether the code specified by delegate <paramref name="action" /> throws exact given exception of type <paramref name="expectedExceptionType"/> (and not of derived type)
+    /// and throws <c>AssertFailedException</c> if code does not throws exception or throws exception of type other than <paramref name="expectedExceptionType"/>.
+    /// </summary>
+    /// <param name="expectedExceptionType">Type of exception expected to be thrown.</param>
+    /// <param name="action">Delegate to code to be tested and which is expected to throw exception.</param>
+    /// <returns>The exception that was thrown.</returns>
+    public Exception ThrowsException(Type expectedExceptionType, Func<object?> action)
+    {
+        return ThrowsException(expectedExceptionType, () => { _ = action(); }, null);
+    }
+
+    /// <summary>
+    /// Tests whether the code specified by delegate <paramref name="action" /> throws exact given exception of type <paramref name="expectedExceptionType"/> (and not of derived type)
+    /// and throws <c>AssertFailedException</c> if code does not throws exception or throws exception of type other than <paramref name="expectedExceptionType"/>.
+    /// </summary>
+    /// <param name="expectedExceptionType">Type of exception expected to be thrown.</param>
+    /// <param name="action">Delegate to code to be tested and which is expected to throw exception.</param>
+    /// <param name="message">The message to include in the exception when <paramref name="action" /> does not throws exception of type <paramref name="expectedExceptionType"/>.</param>
+    /// <returns>The exception that was thrown.</returns>
+    public Exception ThrowsException(Type expectedExceptionType, Func<object?> action, string? message)
+    {
+        return ThrowsException(expectedExceptionType, () => { _ = action(); }, message);
     }
 
     /// <summary>
@@ -653,7 +703,7 @@ public partial class AssertBase
     public async Task<T> ThrowsExceptionAsync<T>(Func<Task> action)
         where T : Exception
     {
-        return await ThrowsExceptionAsync<T>(action, null);
+        return (T)(await ThrowsExceptionAsync(typeof(T), action, null));
     }
 
     /// <summary>
@@ -667,22 +717,7 @@ public partial class AssertBase
     public async Task<T> ThrowsExceptionAsync<T>(Func<Task> action, string? message)
         where T : Exception
     {
-        _ = Guard.NotNull(action, nameof(action));
-
-        Exception? exception = null;
-        try
-        {
-            await action();
-        }
-        catch (Exception ex)
-        {
-            exception = ex;
-        }
-
-        if (exception == null || !typeof(T).Equals(exception.GetType()))
-            ThrowAssertError(nameof(ThrowsExceptionAsync), message, ("ExpectedException", typeof(T).Name), ("ActualException", exception?.GetType().Name), ("ExceptionDetails", exception?.ToString()));
-
-        return (exception as T)!;
+        return (T)(await ThrowsExceptionAsync(typeof(T), action, message));
     }
 
     /// <summary>
@@ -695,7 +730,7 @@ public partial class AssertBase
     public async Task<T> ThrowsExceptionAsync<T>(Func<Task<object?>> action)
         where T : Exception
     {
-        return await ThrowsExceptionAsync<T>(async () => { _ = await action(); }, null);
+        return (T)(await ThrowsExceptionAsync(typeof(T), async () => { _ = await action(); }, null));
     }
 
     /// <summary>
@@ -709,6 +744,71 @@ public partial class AssertBase
     public async Task<T> ThrowsExceptionAsync<T>(Func<Task<object?>> action, string? message)
         where T : Exception
     {
-        return await ThrowsExceptionAsync<T>(async () => { _ = await action(); }, message);
+        return (T)(await ThrowsExceptionAsync(typeof(T), async () => { _ = await action(); }, message));
+    }
+
+    /// <summary>
+    /// Tests whether the code specified by delegate <paramref name="action" /> throws exact given exception of type <paramref name="expectedExceptionType"/> (and not of derived type)
+    /// and throws <c>AssertFailedException</c> if code does not throws exception or throws exception of type other than <paramref name="expectedExceptionType"/>.
+    /// </summary>
+    /// <param name="expectedExceptionType">Type of exception expected to be thrown.</param>
+    /// <param name="action">Delegate to code to be tested and which is expected to throw exception.</param>
+    /// <returns>The <see cref="T:System.Threading.Tasks.Task" /> executing the delegate.</returns>
+    public async Task<Exception> ThrowsExceptionAsync(Type expectedExceptionType, Func<Task> action)
+    {
+        return await ThrowsExceptionAsync(expectedExceptionType, action, null);
+    }
+
+    /// <summary>
+    /// Tests whether the code specified by delegate <paramref name="action" /> throws exact given exception of type <paramref name="expectedExceptionType"/> (and not of derived type)
+    /// and throws <c>AssertFailedException</c> if code does not throws exception or throws exception of type other than <paramref name="expectedExceptionType"/>.
+    /// </summary>
+    /// <param name="expectedExceptionType">Type of exception expected to be thrown.</param>
+    /// <param name="action">Delegate to code to be tested and which is expected to throw exception.</param>
+    /// <param name="message">The message to include in the exception when <paramref name="action" /> does not throws exception of type <paramref name="expectedExceptionType"/>.</param>
+    /// <returns>The <see cref="T:System.Threading.Tasks.Task" /> executing the delegate.</returns>
+    public async Task<Exception> ThrowsExceptionAsync(Type expectedExceptionType, Func<Task> action, string? message)
+    {
+        _ = Guard.NotNull(action);
+
+        Exception? exception = null;
+        try
+        {
+            await action();
+        }
+        catch (Exception ex)
+        {
+            exception = ex;
+        }
+
+        if (exception == null || !expectedExceptionType.Equals(exception.GetType()))
+            ThrowAssertError(nameof(ThrowsExceptionAsync), message, ("ExpectedException", expectedExceptionType.Name), ("ActualException", exception?.GetType().Name), ("ExceptionDetails", exception?.ToString()));
+
+        return exception!;
+    }
+
+    /// <summary>
+    /// Tests whether the code specified by delegate <paramref name="action" /> throws exact given exception of type <paramref name="expectedExceptionType"/> (and not of derived type)
+    /// and throws <c>AssertFailedException</c> if code does not throws exception or throws exception of type other than <paramref name="expectedExceptionType"/>.
+    /// </summary>
+    /// <param name="expectedExceptionType">Type of exception expected to be thrown.</param>
+    /// <param name="action">Delegate to code to be tested and which is expected to throw exception.</param>
+    /// <returns>The exception that was thrown.</returns>
+    public async Task<Exception> ThrowsExceptionAsync(Type expectedExceptionType, Func<Task<object?>> action)
+    {
+        return await ThrowsExceptionAsync(expectedExceptionType, async () => { _ = await action(); }, null);
+    }
+
+    /// <summary>
+    /// Tests whether the code specified by delegate <paramref name="action" /> throws exact given exception of type <paramref name="expectedExceptionType"/> (and not of derived type)
+    /// and throws <c>AssertFailedException</c> if code does not throws exception or throws exception of type other than <paramref name="expectedExceptionType"/>.
+    /// </summary>
+    /// <param name="expectedExceptionType">Type of exception expected to be thrown.</param>
+    /// <param name="action">Delegate to code to be tested and which is expected to throw exception.</param>
+    /// <param name="message">The message to include in the exception when <paramref name="action" /> does not throws exception of type <paramref name="expectedExceptionType"/>.</param>
+    /// <returns>The exception that was thrown.</returns>
+    public async Task<Exception> ThrowsExceptionAsync(Type expectedExceptionType, Func<Task<object?>> action, string? message)
+    {
+        return await ThrowsExceptionAsync(expectedExceptionType, async () => { _ = await action(); }, message);
     }
 }

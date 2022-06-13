@@ -209,7 +209,7 @@ public class CliApplicationTests : TestClassBase
         _ = optionsProviderSettableMock.Setup(x => x.SetOptions(options)).Verifiable(Verifiables, Times.Once());
         _ = appMock.Protected()
             .Setup<bool>("TryParseArguments", sspMock.Object, args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
-            .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((IServiceProvider serviceProvider, string[] a, out CliExecutionContext? c, out object? o, out int e) =>
+            .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((IServiceProvider serviceProvider, string[] a, [NotNullWhen(true)] out CliExecutionContext? c, [NotNullWhen(true)] out object? o, out int e) =>
             {
                 c = execCtx;
                 o = options;
@@ -232,7 +232,7 @@ public class CliApplicationTests : TestClassBase
         var args = new[] { "blub" };
         _ = appMock.Protected()
             .Setup<bool>("TryParseArguments", sspMock.Object, args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
-            .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((IServiceProvider serviceProvider, string[] a, out CliExecutionContext? c, out object? o, out int e) =>
+            .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((IServiceProvider serviceProvider, string[] a, [NotNullWhen(true)] out CliExecutionContext? c, [NotNullWhen(true)] out object? o, out int e) =>
             {
                 c = null;
                 o = null;
@@ -288,7 +288,7 @@ public class CliAsyncApplicationTests : TestClassBase
         _ = optionsProviderSettableMock.Setup(x => x.SetOptions(options)).Verifiable(Verifiables, Times.Once());
         _ = appMock.Protected()
             .Setup<bool>("TryParseArguments", sspMock.Object, args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
-            .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((IServiceProvider serviceProvider, string[] a, out CliExecutionContext? c, out object? o, out int e) =>
+            .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((IServiceProvider serviceProvider, string[] a, [NotNullWhen(true)] out CliExecutionContext? c, [NotNullWhen(true)] out object? o, out int e) =>
             {
                 c = execCtx;
                 o = options;
@@ -311,7 +311,7 @@ public class CliAsyncApplicationTests : TestClassBase
         var args = new[] { "blub" };
         _ = appMock.Protected()
             .Setup<bool>("TryParseArguments", sspMock.Object, args, ItExpr.Ref<CliExecutionContext?>.IsAny, ItExpr.Ref<object?>.IsAny, ItExpr.Ref<int>.IsAny)
-            .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((IServiceProvider serviceProvider, string[] a, out CliExecutionContext? c, out object? o, out int e) =>
+            .Returns(new CliApplicationBaseTests.TryParseArgumentsDelegate((IServiceProvider serviceProvider, string[] a, [NotNullWhen(true)] out CliExecutionContext? c, [NotNullWhen(true)] out object? o, out int e) =>
             {
                 c = null;
                 o = null;

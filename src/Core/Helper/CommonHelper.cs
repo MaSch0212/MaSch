@@ -64,7 +64,7 @@ public static class CommonHelper
     /// </exception>
     public static IEnumerable<T?> Merge<T>(bool ignoreInvalidObjects, params object?[] objects)
     {
-        _ = Guard.NotNull(objects, nameof(objects));
+        _ = Guard.NotNull(objects);
         foreach (var o in objects)
         {
             if (Equals(o, default(T)))

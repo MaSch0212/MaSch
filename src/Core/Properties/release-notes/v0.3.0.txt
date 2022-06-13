@@ -1,0 +1,3 @@
+﻿- Added Shim for CallerArgumentExpressionAttribute.
+- Added CallerArgumentExpressionAttribute to Guard methods.
+- Added binaries for net6.0, netstandard2.1 and netstandard2.0.

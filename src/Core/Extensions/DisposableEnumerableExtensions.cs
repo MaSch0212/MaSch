@@ -16,7 +16,7 @@ public static class DisposableEnumerableExtensions
     /// <returns>Returns each item after the action has been executed.</returns>
     public static IDisposableEnumerable<T> Each<T>(this IDisposableEnumerable<T> enumerable, Action<T> action)
     {
-        return Redirect(Guard.NotNull(enumerable, nameof(enumerable)), x => x.Each(Guard.NotNull(action, nameof(action))));
+        return Redirect(Guard.NotNull(enumerable), x => x.Each(Guard.NotNull(action)));
     }
 
     /// <summary>
@@ -28,7 +28,7 @@ public static class DisposableEnumerableExtensions
     /// <returns>Returns each item after the action has been executed.</returns>
     public static IDisposableEnumerable<T> Each<T>(this IDisposableEnumerable<T> enumerable, Action<T, LoopState> action)
     {
-        return Redirect(Guard.NotNull(enumerable, nameof(enumerable)), x => x.Each(Guard.NotNull(action, nameof(action))));
+        return Redirect(Guard.NotNull(enumerable), x => x.Each(Guard.NotNull(action)));
     }
 
     /// <summary>
@@ -40,7 +40,7 @@ public static class DisposableEnumerableExtensions
     /// <returns>Returns each item with the exception that occurred after the action has been executed. If no exception occurred, the exception entry is <c>null</c>.</returns>
     public static IDisposableEnumerable<(T Item, Exception? Error)> TryEach<T>(this IDisposableEnumerable<T> enumerable, Action<T> action)
     {
-        return Redirect(Guard.NotNull(enumerable, nameof(enumerable)), x => x.TryEach(Guard.NotNull(action, nameof(action))));
+        return Redirect(Guard.NotNull(enumerable), x => x.TryEach(Guard.NotNull(action)));
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ public static class DisposableEnumerableExtensions
     /// <returns>Returns each item with the exception that occurred after the action has been executed. If no exception occurred, the exception entry is <c>null</c>.</returns>
     public static IDisposableEnumerable<(T Item, Exception? Error)> TryEach<T>(this IDisposableEnumerable<T> enumerable, Action<T, LoopState> action)
     {
-        return Redirect(Guard.NotNull(enumerable, nameof(enumerable)), x => x.TryEach(Guard.NotNull(action, nameof(action))));
+        return Redirect(Guard.NotNull(enumerable), x => x.TryEach(Guard.NotNull(action)));
     }
 
     /// <summary>
@@ -63,7 +63,7 @@ public static class DisposableEnumerableExtensions
     /// <param name="action">The action to execute.</param>
     public static void ForEachAndDispose<T>(this IDisposableEnumerable<T> enumerable, Action<T> action)
     {
-        Guard.NotNull(enumerable, nameof(enumerable)).DoAndDispose(x => x.ForEach(Guard.NotNull(action, nameof(action))));
+        Guard.NotNull(enumerable).DoAndDispose(x => x.ForEach(Guard.NotNull(action)));
     }
 
     /// <summary>
@@ -74,7 +74,7 @@ public static class DisposableEnumerableExtensions
     /// <param name="action">The action to execute.</param>
     public static void ForEachAndDispose<T>(this IDisposableEnumerable<T> enumerable, Action<T, LoopState> action)
     {
-        Guard.NotNull(enumerable, nameof(enumerable)).DoAndDispose(x => x.ForEach(Guard.NotNull(action, nameof(action))));
+        Guard.NotNull(enumerable).DoAndDispose(x => x.ForEach(Guard.NotNull(action)));
     }
 
     /// <summary>
@@ -85,7 +85,7 @@ public static class DisposableEnumerableExtensions
     /// <param name="action">The action to execute. The first parameter is the last element of the loop - for the first item, this parameter is <c>default</c>.</param>
     public static void ForEachAndDispose<T>(this IDisposableEnumerable<T> enumerable, Action<T?, T, LoopState> action)
     {
-        Guard.NotNull(enumerable, nameof(enumerable)).DoAndDispose(x => x.ForEach(Guard.NotNull(action, nameof(action))));
+        Guard.NotNull(enumerable).DoAndDispose(x => x.ForEach(Guard.NotNull(action)));
     }
 
     /// <summary>
@@ -97,7 +97,7 @@ public static class DisposableEnumerableExtensions
     /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
     public static bool TryForEachAndDispose<T>(this IDisposableEnumerable<T> enumerable, Action<T> action)
     {
-        return Guard.NotNull(enumerable, nameof(enumerable)).DoAndDispose(x => x.TryForEach(Guard.NotNull(action, nameof(action))));
+        return Guard.NotNull(enumerable).DoAndDispose(x => x.TryForEach(Guard.NotNull(action)));
     }
 
     /// <summary>
@@ -110,7 +110,7 @@ public static class DisposableEnumerableExtensions
     /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
     public static bool TryForEachAndDispose<T>(this IDisposableEnumerable<T> enumerable, Action<T> action, bool continueOnError)
     {
-        return Guard.NotNull(enumerable, nameof(enumerable)).DoAndDispose(x => x.TryForEach(Guard.NotNull(action, nameof(action)), continueOnError));
+        return Guard.NotNull(enumerable).DoAndDispose(x => x.TryForEach(Guard.NotNull(action), continueOnError));
     }
 
     /// <summary>
@@ -122,7 +122,7 @@ public static class DisposableEnumerableExtensions
     /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
     public static bool TryForEachAndDispose<T>(this IDisposableEnumerable<T> enumerable, Action<T, LoopState> action)
     {
-        return Guard.NotNull(enumerable, nameof(enumerable)).DoAndDispose(x => x.TryForEach(Guard.NotNull(action, nameof(action))));
+        return Guard.NotNull(enumerable).DoAndDispose(x => x.TryForEach(Guard.NotNull(action)));
     }
 
     /// <summary>
@@ -135,7 +135,7 @@ public static class DisposableEnumerableExtensions
     /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
     public static bool TryForEachAndDispose<T>(this IDisposableEnumerable<T> enumerable, Action<T, LoopState> action, bool continueOnError)
     {
-        return Guard.NotNull(enumerable, nameof(enumerable)).DoAndDispose(x => x.TryForEach(Guard.NotNull(action, nameof(action)), continueOnError));
+        return Guard.NotNull(enumerable).DoAndDispose(x => x.TryForEach(Guard.NotNull(action), continueOnError));
     }
 
     /// <summary>
@@ -148,7 +148,7 @@ public static class DisposableEnumerableExtensions
     /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
     public static bool TryForEachAndDispose<T>(this IDisposableEnumerable<T> enumerable, Action<T> action, out ICollection<(T Item, Exception Error)> errors)
     {
-        return Guard.NotNull(enumerable, nameof(enumerable)).DoAndDispose(x => (x.TryForEach(Guard.NotNull(action, nameof(action)), out var err), err), out errors);
+        return Guard.NotNull(enumerable).DoAndDispose(x => (x.TryForEach(Guard.NotNull(action), out var err), err), out errors);
     }
 
     /// <summary>
@@ -162,7 +162,7 @@ public static class DisposableEnumerableExtensions
     /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
     public static bool TryForEachAndDispose<T>(this IDisposableEnumerable<T> enumerable, Action<T> action, out ICollection<(T Item, Exception Error)> errors, bool continueOnError)
     {
-        return Guard.NotNull(enumerable, nameof(enumerable)).DoAndDispose(x => (x.TryForEach(Guard.NotNull(action, nameof(action)), out var err, continueOnError), err), out errors);
+        return Guard.NotNull(enumerable).DoAndDispose(x => (x.TryForEach(Guard.NotNull(action), out var err, continueOnError), err), out errors);
     }
 
     /// <summary>
@@ -175,7 +175,7 @@ public static class DisposableEnumerableExtensions
     /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
     public static bool TryForEachAndDispose<T>(this IDisposableEnumerable<T> enumerable, Action<T, LoopState> action, out ICollection<(T Item, int Index, Exception Error)> errors)
     {
-        return Guard.NotNull(enumerable, nameof(enumerable)).DoAndDispose(x => (x.TryForEach(Guard.NotNull(action, nameof(action)), out var err), err), out errors);
+        return Guard.NotNull(enumerable).DoAndDispose(x => (x.TryForEach(Guard.NotNull(action), out var err), err), out errors);
     }
 
     /// <summary>
@@ -189,7 +189,7 @@ public static class DisposableEnumerableExtensions
     /// <returns><c>true</c> if no expected occurred; otherwise, <c>false</c>.</returns>
     public static bool TryForEachAndDispose<T>(this IDisposableEnumerable<T> enumerable, Action<T, LoopState> action, out ICollection<(T Item, int Index, Exception Error)> errors, bool continueOnError)
     {
-        return Guard.NotNull(enumerable, nameof(enumerable)).DoAndDispose(x => (x.TryForEach(Guard.NotNull(action, nameof(action)), out var err, continueOnError), err), out errors);
+        return Guard.NotNull(enumerable).DoAndDispose(x => (x.TryForEach(Guard.NotNull(action), out var err, continueOnError), err), out errors);
     }
 
     #region Linq wrappers
@@ -202,7 +202,7 @@ public static class DisposableEnumerableExtensions
     /// <returns>An array that contains the elements from the input sequence.</returns>
     public static T[] ToArrayAndDispose<T>(this IDisposableEnumerable<T> enumerable)
     {
-        return Guard.NotNull(enumerable, nameof(enumerable)).DoAndDispose(x => x.ToArray());
+        return Guard.NotNull(enumerable).DoAndDispose(x => x.ToArray());
     }
 
     /// <summary>
@@ -213,7 +213,7 @@ public static class DisposableEnumerableExtensions
     /// <returns>A <see cref="List{T}"/> that contains elements from the input sequence.</returns>
     public static List<T> ToListAndDispose<T>(this IDisposableEnumerable<T> enumerable)
     {
-        return Guard.NotNull(enumerable, nameof(enumerable)).DoAndDispose(x => x.ToList());
+        return Guard.NotNull(enumerable).DoAndDispose(x => x.ToList());
     }
 
     /// <summary>
@@ -227,7 +227,7 @@ public static class DisposableEnumerableExtensions
     public static Dictionary<TKey, TSource> ToDictionaryAndDispose<TSource, TKey>(this IDisposableEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         where TKey : notnull
     {
-        return Guard.NotNull(source, nameof(source)).DoAndDispose(x => x.ToDictionary(Guard.NotNull(keySelector, nameof(keySelector))));
+        return Guard.NotNull(source).DoAndDispose(x => x.ToDictionary(Guard.NotNull(keySelector)));
     }
 
     /// <summary>
@@ -242,7 +242,7 @@ public static class DisposableEnumerableExtensions
     public static Dictionary<TKey, TSource> ToDictionaryAndDispose<TSource, TKey>(this IDisposableEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
         where TKey : notnull
     {
-        return Guard.NotNull(source, nameof(source)).DoAndDispose(x => x.ToDictionary(Guard.NotNull(keySelector, nameof(keySelector)), Guard.NotNull(comparer, nameof(comparer))));
+        return Guard.NotNull(source).DoAndDispose(x => x.ToDictionary(Guard.NotNull(keySelector), Guard.NotNull(comparer)));
     }
 
     /// <summary>
@@ -258,7 +258,7 @@ public static class DisposableEnumerableExtensions
     public static Dictionary<TKey, TElement> ToDictionaryAndDispose<TSource, TKey, TElement>(this IDisposableEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
         where TKey : notnull
     {
-        return Guard.NotNull(source, nameof(source)).DoAndDispose(x => x.ToDictionary(Guard.NotNull(keySelector, nameof(keySelector)), Guard.NotNull(elementSelector, nameof(elementSelector))));
+        return Guard.NotNull(source).DoAndDispose(x => x.ToDictionary(Guard.NotNull(keySelector), Guard.NotNull(elementSelector)));
     }
 
     /// <summary>
@@ -275,7 +275,7 @@ public static class DisposableEnumerableExtensions
     public static Dictionary<TKey, TElement> ToDictionaryAndDispose<TSource, TKey, TElement>(this IDisposableEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey> comparer)
         where TKey : notnull
     {
-        return Guard.NotNull(source, nameof(source)).DoAndDispose(x => x.ToDictionary(Guard.NotNull(keySelector, nameof(keySelector)), Guard.NotNull(elementSelector, nameof(elementSelector)), Guard.NotNull(comparer, nameof(comparer))));
+        return Guard.NotNull(source).DoAndDispose(x => x.ToDictionary(Guard.NotNull(keySelector), Guard.NotNull(elementSelector), Guard.NotNull(comparer)));
     }
 
     /// <summary>Returns distinct elements from a sequence by using the default equality comparer to compare values.</summary>
@@ -287,7 +287,7 @@ public static class DisposableEnumerableExtensions
     /// </exception>
     public static IDisposableEnumerable<TSource> Distinct<TSource>(this IDisposableEnumerable<TSource> source)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.Distinct());
+        return Redirect(Guard.NotNull(source), x => x.Distinct());
     }
 
     /// <summary>Returns distinct elements from a sequence by using a specified <see cref="IEqualityComparer{TSource}"/> to compare values.</summary>
@@ -300,7 +300,7 @@ public static class DisposableEnumerableExtensions
     /// </exception>
     public static IDisposableEnumerable<TSource> Distinct<TSource>(this IDisposableEnumerable<TSource> source, IEqualityComparer<TSource> comparer)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.Distinct(Guard.NotNull(comparer, nameof(comparer))));
+        return Redirect(Guard.NotNull(source), x => x.Distinct(Guard.NotNull(comparer)));
     }
 
     /// <summary>Produces the set difference of two sequences by using the default equality comparer to compare values.</summary>
@@ -313,7 +313,7 @@ public static class DisposableEnumerableExtensions
     /// </exception>
     public static IDisposableEnumerable<TSource> Except<TSource>(this IDisposableEnumerable<TSource> first, IEnumerable<TSource> second)
     {
-        return Redirect(Guard.NotNull(first, nameof(first)), x => x.Except(Guard.NotNull(second, nameof(second))));
+        return Redirect(Guard.NotNull(first), x => x.Except(Guard.NotNull(second)));
     }
 
     /// <summary>Produces the set difference of two sequences by using the specified <see cref="IEqualityComparer{TSource}"/> to compare values.</summary>
@@ -327,7 +327,7 @@ public static class DisposableEnumerableExtensions
     /// </exception>
     public static IDisposableEnumerable<TSource> Except<TSource>(this IDisposableEnumerable<TSource> first, IEnumerable<TSource> second, IEqualityComparer<TSource> comparer)
     {
-        return Redirect(Guard.NotNull(first, nameof(first)), x => x.Except(Guard.NotNull(second, nameof(second)), Guard.NotNull(comparer, nameof(comparer))));
+        return Redirect(Guard.NotNull(first), x => x.Except(Guard.NotNull(second), Guard.NotNull(comparer)));
     }
 
     /// <summary>Groups the elements of a sequence according to a specified key selector function and creates a result value from each group and its key. Key values are compared by using a specified comparer, and the elements of each group are projected by using a specified function.</summary>
@@ -343,7 +343,7 @@ public static class DisposableEnumerableExtensions
     /// <returns>A collection of elements of type <typeparamref name="TResult" /> where each element represents a projection over a group and its key.</returns>
     public static IDisposableEnumerable<TResult> GroupBy<TSource, TKey, TElement, TResult>(this IDisposableEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, Func<TKey, IEnumerable<TElement>, TResult> resultSelector, IEqualityComparer<TKey> comparer)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.GroupBy(Guard.NotNull(keySelector, nameof(keySelector)), Guard.NotNull(elementSelector, nameof(elementSelector)), Guard.NotNull(resultSelector, nameof(resultSelector)), Guard.NotNull(comparer, nameof(comparer))));
+        return Redirect(Guard.NotNull(source), x => x.GroupBy(Guard.NotNull(keySelector), Guard.NotNull(elementSelector), Guard.NotNull(resultSelector), Guard.NotNull(comparer)));
     }
 
     /// <summary>Groups the elements of a sequence according to a specified key selector function and creates a result value from each group and its key. The elements of each group are projected by using a specified function.</summary>
@@ -358,7 +358,7 @@ public static class DisposableEnumerableExtensions
     /// <returns>A collection of elements of type <typeparamref name="TResult" /> where each element represents a projection over a group and its key.</returns>
     public static IDisposableEnumerable<TResult> GroupBy<TSource, TKey, TElement, TResult>(this IDisposableEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, Func<TKey, IEnumerable<TElement>, TResult> resultSelector)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.GroupBy(Guard.NotNull(keySelector, nameof(keySelector)), Guard.NotNull(elementSelector, nameof(elementSelector)), Guard.NotNull(resultSelector, nameof(resultSelector))));
+        return Redirect(Guard.NotNull(source), x => x.GroupBy(Guard.NotNull(keySelector), Guard.NotNull(elementSelector), Guard.NotNull(resultSelector)));
     }
 
     /// <summary>Groups the elements of a sequence according to a specified key selector function and creates a result value from each group and its key. The keys are compared by using a specified comparer.</summary>
@@ -372,7 +372,7 @@ public static class DisposableEnumerableExtensions
     /// <returns>A collection of elements of type <typeparamref name="TResult" /> where each element represents a projection over a group and its key.</returns>
     public static IDisposableEnumerable<TResult> GroupBy<TSource, TKey, TResult>(this IDisposableEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TKey, IEnumerable<TSource>, TResult> resultSelector, IEqualityComparer<TKey> comparer)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.GroupBy(Guard.NotNull(keySelector, nameof(keySelector)), Guard.NotNull(resultSelector, nameof(resultSelector)), Guard.NotNull(comparer, nameof(comparer))));
+        return Redirect(Guard.NotNull(source), x => x.GroupBy(Guard.NotNull(keySelector), Guard.NotNull(resultSelector), Guard.NotNull(comparer)));
     }
 
     /// <summary>Groups the elements of a sequence according to a specified key selector function and creates a result value from each group and its key.</summary>
@@ -385,7 +385,7 @@ public static class DisposableEnumerableExtensions
     /// <returns>A collection of elements of type <typeparamref name="TResult" /> where each element represents a projection over a group and its key.</returns>
     public static IDisposableEnumerable<TResult> GroupBy<TSource, TKey, TResult>(this IDisposableEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TKey, IEnumerable<TSource>, TResult> resultSelector)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.GroupBy(Guard.NotNull(keySelector, nameof(keySelector)), Guard.NotNull(resultSelector, nameof(resultSelector))));
+        return Redirect(Guard.NotNull(source), x => x.GroupBy(Guard.NotNull(keySelector), Guard.NotNull(resultSelector)));
     }
 
     /// <summary>Groups the elements of a sequence according to a specified key selector function and compares the keys by using a specified comparer.</summary>
@@ -400,7 +400,7 @@ public static class DisposableEnumerableExtensions
     /// </exception>
     public static IDisposableEnumerable<IGrouping<TKey, TSource>> GroupBy<TSource, TKey>(this IDisposableEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.GroupBy(Guard.NotNull(keySelector, nameof(keySelector)), Guard.NotNull(comparer, nameof(comparer))));
+        return Redirect(Guard.NotNull(source), x => x.GroupBy(Guard.NotNull(keySelector), Guard.NotNull(comparer)));
     }
 
     /// <summary>Groups the elements of a sequence according to a specified key selector function and projects the elements for each group by using a specified function.</summary>
@@ -415,7 +415,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="keySelector" /> or <paramref name="elementSelector" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<IGrouping<TKey, TElement>> GroupBy<TSource, TKey, TElement>(this IDisposableEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.GroupBy(Guard.NotNull(keySelector, nameof(keySelector)), Guard.NotNull(elementSelector, nameof(elementSelector))));
+        return Redirect(Guard.NotNull(source), x => x.GroupBy(Guard.NotNull(keySelector), Guard.NotNull(elementSelector)));
     }
 
     /// <summary>Groups the elements of a sequence according to a specified key selector function.</summary>
@@ -429,7 +429,7 @@ public static class DisposableEnumerableExtensions
     /// </exception>
     public static IDisposableEnumerable<IGrouping<TKey, TSource>> GroupBy<TSource, TKey>(this IDisposableEnumerable<TSource> source, Func<TSource, TKey> keySelector)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.GroupBy(Guard.NotNull(keySelector, nameof(keySelector))));
+        return Redirect(Guard.NotNull(source), x => x.GroupBy(Guard.NotNull(keySelector)));
     }
 
     /// <summary>Groups the elements of a sequence according to a key selector function. The keys are compared by using a comparer and each group's elements are projected by using a specified function.</summary>
@@ -445,7 +445,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="keySelector" /> or <paramref name="elementSelector" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<IGrouping<TKey, TElement>> GroupBy<TSource, TKey, TElement>(this IDisposableEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey> comparer)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.GroupBy(Guard.NotNull(keySelector, nameof(keySelector)), Guard.NotNull(elementSelector, nameof(elementSelector)), Guard.NotNull(comparer, nameof(comparer))));
+        return Redirect(Guard.NotNull(source), x => x.GroupBy(Guard.NotNull(keySelector), Guard.NotNull(elementSelector), Guard.NotNull(comparer)));
     }
 
     /// <summary>Correlates the elements of two sequences based on key equality and groups the results. A specified <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> is used to compare keys.</summary>
@@ -464,7 +464,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="outer" /> or <paramref name="inner" /> or <paramref name="outerKeySelector" /> or <paramref name="innerKeySelector" /> or <paramref name="resultSelector" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TResult> GroupJoin<TOuter, TInner, TKey, TResult>(this IDisposableEnumerable<TOuter> outer, IEnumerable<TInner> inner, Func<TOuter, TKey> outerKeySelector, Func<TInner, TKey> innerKeySelector, Func<TOuter, IEnumerable<TInner>, TResult> resultSelector, IEqualityComparer<TKey> comparer)
     {
-        return Redirect(Guard.NotNull(outer, nameof(outer)), x => x.GroupJoin(Guard.NotNull(inner, nameof(inner)), Guard.NotNull(outerKeySelector, nameof(outerKeySelector)), Guard.NotNull(innerKeySelector, nameof(innerKeySelector)), Guard.NotNull(resultSelector, nameof(resultSelector)), Guard.NotNull(comparer, nameof(comparer))));
+        return Redirect(Guard.NotNull(outer), x => x.GroupJoin(Guard.NotNull(inner), Guard.NotNull(outerKeySelector), Guard.NotNull(innerKeySelector), Guard.NotNull(resultSelector), Guard.NotNull(comparer)));
     }
 
     /// <summary>Correlates the elements of two sequences based on equality of keys and groups the results. The default equality comparer is used to compare keys.</summary>
@@ -482,7 +482,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="outer" /> or <paramref name="inner" /> or <paramref name="outerKeySelector" /> or <paramref name="innerKeySelector" /> or <paramref name="resultSelector" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TResult> GroupJoin<TOuter, TInner, TKey, TResult>(this IDisposableEnumerable<TOuter> outer, IEnumerable<TInner> inner, Func<TOuter, TKey> outerKeySelector, Func<TInner, TKey> innerKeySelector, Func<TOuter, IEnumerable<TInner>, TResult> resultSelector)
     {
-        return Redirect(Guard.NotNull(outer, nameof(outer)), x => x.GroupJoin(Guard.NotNull(inner, nameof(inner)), Guard.NotNull(outerKeySelector, nameof(outerKeySelector)), Guard.NotNull(innerKeySelector, nameof(innerKeySelector)), Guard.NotNull(resultSelector, nameof(resultSelector))));
+        return Redirect(Guard.NotNull(outer), x => x.GroupJoin(Guard.NotNull(inner), Guard.NotNull(outerKeySelector), Guard.NotNull(innerKeySelector), Guard.NotNull(resultSelector)));
     }
 
     /// <summary>Produces the set intersection of two sequences by using the specified <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> to compare values.</summary>
@@ -495,7 +495,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="first" /> or <paramref name="second" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TSource> Intersect<TSource>(this IDisposableEnumerable<TSource> first, IEnumerable<TSource> second, IEqualityComparer<TSource> comparer)
     {
-        return Redirect(Guard.NotNull(first, nameof(first)), x => x.Intersect(Guard.NotNull(second, nameof(second)), Guard.NotNull(comparer, nameof(comparer))));
+        return Redirect(Guard.NotNull(first), x => x.Intersect(Guard.NotNull(second), Guard.NotNull(comparer)));
     }
 
     /// <summary>Produces the set intersection of two sequences by using the default equality comparer to compare values.</summary>
@@ -507,7 +507,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="first" /> or <paramref name="second" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TSource> Intersect<TSource>(this IDisposableEnumerable<TSource> first, IEnumerable<TSource> second)
     {
-        return Redirect(Guard.NotNull(first, nameof(first)), x => x.Intersect(Guard.NotNull(second, nameof(second))));
+        return Redirect(Guard.NotNull(first), x => x.Intersect(Guard.NotNull(second)));
     }
 
     /// <summary>Correlates the elements of two sequences based on matching keys. The default equality comparer is used to compare keys.</summary>
@@ -525,7 +525,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="outer" /> or <paramref name="inner" /> or <paramref name="outerKeySelector" /> or <paramref name="innerKeySelector" /> or <paramref name="resultSelector" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TResult> Join<TOuter, TInner, TKey, TResult>(this IDisposableEnumerable<TOuter> outer, IEnumerable<TInner> inner, Func<TOuter, TKey> outerKeySelector, Func<TInner, TKey> innerKeySelector, Func<TOuter, TInner, TResult> resultSelector)
     {
-        return Redirect(Guard.NotNull(outer, nameof(outer)), x => x.Join(Guard.NotNull(inner, nameof(inner)), Guard.NotNull(outerKeySelector, nameof(outerKeySelector)), Guard.NotNull(innerKeySelector, nameof(innerKeySelector)), Guard.NotNull(resultSelector, nameof(resultSelector))));
+        return Redirect(Guard.NotNull(outer), x => x.Join(Guard.NotNull(inner), Guard.NotNull(outerKeySelector), Guard.NotNull(innerKeySelector), Guard.NotNull(resultSelector)));
     }
 
     /// <summary>Correlates the elements of two sequences based on matching keys. A specified <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> is used to compare keys.</summary>
@@ -544,7 +544,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="outer" /> or <paramref name="inner" /> or <paramref name="outerKeySelector" /> or <paramref name="innerKeySelector" /> or <paramref name="resultSelector" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TResult> Join<TOuter, TInner, TKey, TResult>(this IDisposableEnumerable<TOuter> outer, IEnumerable<TInner> inner, Func<TOuter, TKey> outerKeySelector, Func<TInner, TKey> innerKeySelector, Func<TOuter, TInner, TResult> resultSelector, IEqualityComparer<TKey> comparer)
     {
-        return Redirect(Guard.NotNull(outer, nameof(outer)), x => x.Join(Guard.NotNull(inner, nameof(inner)), Guard.NotNull(outerKeySelector, nameof(outerKeySelector)), Guard.NotNull(innerKeySelector, nameof(innerKeySelector)), Guard.NotNull(resultSelector, nameof(resultSelector)), Guard.NotNull(comparer, nameof(comparer))));
+        return Redirect(Guard.NotNull(outer), x => x.Join(Guard.NotNull(inner), Guard.NotNull(outerKeySelector), Guard.NotNull(innerKeySelector), Guard.NotNull(resultSelector), Guard.NotNull(comparer)));
     }
 
     /// <summary>Sorts the elements of a sequence in ascending order by using a specified comparer.</summary>
@@ -558,7 +558,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="keySelector" /> is <see langword="null" />.</exception>
     public static IOrderedDisposableEnumerable<TSource> OrderBy<TSource, TKey>(this IDisposableEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey> comparer)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.OrderBy(Guard.NotNull(keySelector, nameof(keySelector)), Guard.NotNull(comparer, nameof(comparer))));
+        return Redirect(Guard.NotNull(source), x => x.OrderBy(Guard.NotNull(keySelector), Guard.NotNull(comparer)));
     }
 
     /// <summary>Sorts the elements of a sequence in ascending order according to a key.</summary>
@@ -571,7 +571,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="keySelector" /> is <see langword="null" />.</exception>
     public static IOrderedDisposableEnumerable<TSource> OrderBy<TSource, TKey>(this IDisposableEnumerable<TSource> source, Func<TSource, TKey> keySelector)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.OrderBy(Guard.NotNull(keySelector, nameof(keySelector))));
+        return Redirect(Guard.NotNull(source), x => x.OrderBy(Guard.NotNull(keySelector)));
     }
 
     /// <summary>Sorts the elements of a sequence in descending order according to a key.</summary>
@@ -584,7 +584,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="keySelector" /> is <see langword="null" />.</exception>
     public static IOrderedDisposableEnumerable<TSource> OrderByDescending<TSource, TKey>(this IDisposableEnumerable<TSource> source, Func<TSource, TKey> keySelector)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.OrderByDescending(Guard.NotNull(keySelector, nameof(keySelector))));
+        return Redirect(Guard.NotNull(source), x => x.OrderByDescending(Guard.NotNull(keySelector)));
     }
 
     /// <summary>Sorts the elements of a sequence in descending order by using a specified comparer.</summary>
@@ -598,7 +598,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="keySelector" /> is <see langword="null" />.</exception>
     public static IOrderedDisposableEnumerable<TSource> OrderByDescending<TSource, TKey>(this IDisposableEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey> comparer)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.OrderByDescending(Guard.NotNull(keySelector, nameof(keySelector)), Guard.NotNull(comparer, nameof(comparer))));
+        return Redirect(Guard.NotNull(source), x => x.OrderByDescending(Guard.NotNull(keySelector), Guard.NotNull(comparer)));
     }
 
     /// <summary>Inverts the order of the elements in a sequence.</summary>
@@ -609,7 +609,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TSource> Reverse<TSource>(this IDisposableEnumerable<TSource> source)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.Reverse());
+        return Redirect(Guard.NotNull(source), x => x.Reverse());
     }
 
     /// <summary>Projects each element of a sequence into a new form.</summary>
@@ -622,7 +622,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="selector" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TResult> Select<TSource, TResult>(this IDisposableEnumerable<TSource> source, Func<TSource, TResult> selector)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.Select(Guard.NotNull(selector, nameof(selector))));
+        return Redirect(Guard.NotNull(source), x => x.Select(Guard.NotNull(selector)));
     }
 
     /// <summary>Projects each element of a sequence into a new form by incorporating the element's index.</summary>
@@ -635,7 +635,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="selector" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TResult> Select<TSource, TResult>(this IDisposableEnumerable<TSource> source, Func<TSource, int, TResult> selector)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.Select(Guard.NotNull(selector, nameof(selector))));
+        return Redirect(Guard.NotNull(source), x => x.Select(Guard.NotNull(selector)));
     }
 
     /// <summary>Projects each element of a sequence to an <see cref="IDisposableEnumerable{TResult}" /> and flattens the resulting sequences into one sequence.</summary>
@@ -648,7 +648,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="selector" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TResult> SelectMany<TSource, TResult>(this IDisposableEnumerable<TSource> source, Func<TSource, IEnumerable<TResult>> selector)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.SelectMany(Guard.NotNull(selector, nameof(selector))));
+        return Redirect(Guard.NotNull(source), x => x.SelectMany(Guard.NotNull(selector)));
     }
 
     /// <summary>Projects each element of a sequence to an <see cref="IDisposableEnumerable{TResult}" />, and flattens the resulting sequences into one sequence. The index of each source element is used in the projected form of that element.</summary>
@@ -661,7 +661,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="selector" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TResult> SelectMany<TSource, TResult>(this IDisposableEnumerable<TSource> source, Func<TSource, int, IEnumerable<TResult>> selector)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.SelectMany(Guard.NotNull(selector, nameof(selector))));
+        return Redirect(Guard.NotNull(source), x => x.SelectMany(Guard.NotNull(selector)));
     }
 
     /// <summary>Projects each element of a sequence to an <see cref="IDisposableEnumerable{TResult}" />, flattens the resulting sequences into one sequence, and invokes a result selector function on each element therein.</summary>
@@ -676,7 +676,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="collectionSelector" /> or <paramref name="resultSelector" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TResult> SelectMany<TSource, TCollection, TResult>(this IDisposableEnumerable<TSource> source, Func<TSource, IEnumerable<TCollection>> collectionSelector, Func<TSource, TCollection, TResult> resultSelector)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.SelectMany(Guard.NotNull(collectionSelector, nameof(collectionSelector)), Guard.NotNull(resultSelector, nameof(resultSelector))));
+        return Redirect(Guard.NotNull(source), x => x.SelectMany(Guard.NotNull(collectionSelector), Guard.NotNull(resultSelector)));
     }
 
     /// <summary>Projects each element of a sequence to an <see cref="IDisposableEnumerable{TResult}" />, flattens the resulting sequences into one sequence, and invokes a result selector function on each element therein. The index of each source element is used in the intermediate projected form of that element.</summary>
@@ -691,7 +691,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="collectionSelector" /> or <paramref name="resultSelector" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TResult> SelectMany<TSource, TCollection, TResult>(this IDisposableEnumerable<TSource> source, Func<TSource, int, IEnumerable<TCollection>> collectionSelector, Func<TSource, TCollection, TResult> resultSelector)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.SelectMany(Guard.NotNull(collectionSelector, nameof(collectionSelector)), Guard.NotNull(resultSelector, nameof(resultSelector))));
+        return Redirect(Guard.NotNull(source), x => x.SelectMany(Guard.NotNull(collectionSelector), Guard.NotNull(resultSelector)));
     }
 
     /// <summary>Bypasses a specified number of elements in a sequence and then returns the remaining elements.</summary>
@@ -703,10 +703,10 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TSource> Skip<TSource>(this IDisposableEnumerable<TSource> source, int count)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.Skip(count));
+        return Redirect(Guard.NotNull(source), x => x.Skip(count));
     }
 
-#if !NETFRAMEWORK
+#if !NETFRAMEWORK && (!NETSTANDARD || NETSTANDARD2_1_OR_GREATER)
     /// <summary>
     /// Returns a new enumerable collection that contains the elements from <paramref name="source"/> with the last <paramref name="count"/> elements of the source collection omitted.
     /// </summary>
@@ -716,7 +716,7 @@ public static class DisposableEnumerableExtensions
     /// <returns>A new enumerable collection that contains the elements from <paramref name="source"/> minus <paramref name="count"/> elements from the end of the collection.</returns>
     public static IDisposableEnumerable<TSource> SkipLast<TSource>(this IDisposableEnumerable<TSource> source, int count)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.SkipLast(count));
+        return Redirect(Guard.NotNull(source), x => x.SkipLast(count));
     }
 #endif
 
@@ -729,7 +729,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="predicate" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TSource> SkipWhile<TSource>(this IDisposableEnumerable<TSource> source, Func<TSource, bool> predicate)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.SkipWhile(Guard.NotNull(predicate, nameof(predicate))));
+        return Redirect(Guard.NotNull(source), x => x.SkipWhile(Guard.NotNull(predicate)));
     }
 
     /// <summary>Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements. The element's index is used in the logic of the predicate function.</summary>
@@ -741,7 +741,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="predicate" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TSource> SkipWhile<TSource>(this IDisposableEnumerable<TSource> source, Func<TSource, int, bool> predicate)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.SkipWhile(Guard.NotNull(predicate, nameof(predicate))));
+        return Redirect(Guard.NotNull(source), x => x.SkipWhile(Guard.NotNull(predicate)));
     }
 
     /// <summary>Returns a specified number of contiguous elements from the start of a sequence.</summary>
@@ -753,10 +753,10 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TSource> Take<TSource>(this IDisposableEnumerable<TSource> source, int count)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.Take(count));
+        return Redirect(Guard.NotNull(source), x => x.Take(count));
     }
 
-#if !NETFRAMEWORK
+#if !NETFRAMEWORK && (!NETSTANDARD || NETSTANDARD2_1_OR_GREATER)
     /// <summary>
     /// Returns a new enumerable collection that contains the last <paramref name="count"/> elements from <paramref name="source"/>.
     /// </summary>
@@ -766,7 +766,7 @@ public static class DisposableEnumerableExtensions
     /// <returns>A new enumerable collection that contains the last <paramref name="count"/> elements from <paramref name="source"/>.</returns>
     public static IDisposableEnumerable<TSource> TakeLast<TSource>(this IDisposableEnumerable<TSource> source, int count)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.TakeLast(count));
+        return Redirect(Guard.NotNull(source), x => x.TakeLast(count));
     }
 #endif
 
@@ -779,7 +779,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="predicate" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TSource> TakeWhile<TSource>(this IDisposableEnumerable<TSource> source, Func<TSource, bool> predicate)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.TakeWhile(Guard.NotNull(predicate, nameof(predicate))));
+        return Redirect(Guard.NotNull(source), x => x.TakeWhile(Guard.NotNull(predicate)));
     }
 
     /// <summary>Returns elements from a sequence as long as a specified condition is true. The element's index is used in the logic of the predicate function.</summary>
@@ -791,7 +791,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="predicate" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TSource> TakeWhile<TSource>(this IDisposableEnumerable<TSource> source, Func<TSource, int, bool> predicate)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.TakeWhile(Guard.NotNull(predicate, nameof(predicate))));
+        return Redirect(Guard.NotNull(source), x => x.TakeWhile(Guard.NotNull(predicate)));
     }
 
     /// <summary>Performs a subsequent ordering of the elements in a sequence in ascending order by using a specified comparer.</summary>
@@ -805,7 +805,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="keySelector" /> is <see langword="null" />.</exception>
     public static IOrderedDisposableEnumerable<TSource> ThenBy<TSource, TKey>(this IOrderedDisposableEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey> comparer)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.ThenBy(Guard.NotNull(keySelector, nameof(keySelector)), Guard.NotNull(comparer, nameof(comparer))));
+        return Redirect(Guard.NotNull(source), x => x.ThenBy(Guard.NotNull(keySelector), Guard.NotNull(comparer)));
     }
 
     /// <summary>Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.</summary>
@@ -818,7 +818,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="keySelector" /> is <see langword="null" />.</exception>
     public static IOrderedDisposableEnumerable<TSource> ThenBy<TSource, TKey>(this IOrderedDisposableEnumerable<TSource> source, Func<TSource, TKey> keySelector)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.ThenBy(Guard.NotNull(keySelector, nameof(keySelector))));
+        return Redirect(Guard.NotNull(source), x => x.ThenBy(Guard.NotNull(keySelector)));
     }
 
     /// <summary>Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.</summary>
@@ -831,7 +831,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="keySelector" /> is <see langword="null" />.</exception>
     public static IOrderedDisposableEnumerable<TSource> ThenByDescending<TSource, TKey>(this IOrderedDisposableEnumerable<TSource> source, Func<TSource, TKey> keySelector)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.ThenByDescending(Guard.NotNull(keySelector, nameof(keySelector))));
+        return Redirect(Guard.NotNull(source), x => x.ThenByDescending(Guard.NotNull(keySelector)));
     }
 
     /// <summary>Performs a subsequent ordering of the elements in a sequence in descending order by using a specified comparer.</summary>
@@ -845,7 +845,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="keySelector" /> is <see langword="null" />.</exception>
     public static IOrderedDisposableEnumerable<TSource> ThenByDescending<TSource, TKey>(this IOrderedDisposableEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey> comparer)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.ThenByDescending(Guard.NotNull(keySelector, nameof(keySelector)), Guard.NotNull(comparer, nameof(comparer))));
+        return Redirect(Guard.NotNull(source), x => x.ThenByDescending(Guard.NotNull(keySelector), Guard.NotNull(comparer)));
     }
 
     /// <summary>Filters a sequence of values based on a predicate. Each element's index is used in the logic of the predicate function.</summary>
@@ -857,7 +857,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="predicate" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TSource> Where<TSource>(this IDisposableEnumerable<TSource> source, Func<TSource, int, bool> predicate)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.Where(Guard.NotNull(predicate, nameof(predicate))));
+        return Redirect(Guard.NotNull(source), x => x.Where(Guard.NotNull(predicate)));
     }
 
     /// <summary>Filters a sequence of values based on a predicate.</summary>
@@ -869,7 +869,7 @@ public static class DisposableEnumerableExtensions
     ///   <paramref name="source" /> or <paramref name="predicate" /> is <see langword="null" />.</exception>
     public static IDisposableEnumerable<TSource> Where<TSource>(this IDisposableEnumerable<TSource> source, Func<TSource, bool> predicate)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.Where(Guard.NotNull(predicate, nameof(predicate))));
+        return Redirect(Guard.NotNull(source), x => x.Where(Guard.NotNull(predicate)));
     }
 
     #endregion
@@ -886,7 +886,7 @@ public static class DisposableEnumerableExtensions
     /// <returns>An <see cref="IDisposableEnumerable{T}"/> that contains elements from the input sequence of type <typeparamref name="TResult"/>.</returns>
     public static IDisposableEnumerable<TResult> OfType<TResult>(this IDisposableEnumerable source)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.OfType<TResult>());
+        return Redirect(Guard.NotNull(source), x => x.OfType<TResult>());
     }
 
     /// <summary>
@@ -897,7 +897,7 @@ public static class DisposableEnumerableExtensions
     /// <returns>An <see cref="IDisposableEnumerable{T}"/> that contains each element of the source sequence cast to the specified type.</returns>
     public static IDisposableEnumerable<TResult> Cast<TResult>(this IDisposableEnumerable source)
     {
-        return Redirect(Guard.NotNull(source, nameof(source)), x => x.Cast<TResult>());
+        return Redirect(Guard.NotNull(source), x => x.Cast<TResult>());
     }
 
     /// <summary>
@@ -907,7 +907,7 @@ public static class DisposableEnumerableExtensions
     /// <returns>Returns a <see cref="IDisposableEnumerable{T}"/> that represents the <see cref="IDisposableEnumerable"/>.</returns>
     public static IDisposableEnumerable<object?> ToGeneric(this IDisposableEnumerable enumerable)
     {
-        return Redirect(Guard.NotNull(enumerable, nameof(enumerable)), x => x.ToGeneric());
+        return Redirect(Guard.NotNull(enumerable), x => x.ToGeneric());
     }
 
     #endregion

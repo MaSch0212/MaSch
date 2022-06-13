@@ -193,7 +193,7 @@ public static class ConsoleServiceExtensions
     /// <param name="lineCount">The number of lines to reserve.</param>
     public static void ReserveBufferLines(this IConsoleService service, int lineCount)
     {
-        _ = Guard.NotOutOfRange(lineCount, nameof(lineCount), 0, service.BufferSize.Height - 1);
+        _ = Guard.NotOutOfRange(lineCount, 0, service.BufferSize.Height - 1);
 
         if (!service.IsOutputRedirected && lineCount > 0)
         {

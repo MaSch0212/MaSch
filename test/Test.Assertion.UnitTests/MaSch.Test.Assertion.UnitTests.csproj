@@ -1,23 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="../../build/MaSch.Constants.props" />
-  
     <PropertyGroup>
       <!-- General Project info -->
-      <TargetFrameworks>$(TfmNetCore);$(TfmNetFramework)</TargetFrameworks>
-      <IsTestProject>true</IsTestProject>
-      <NoMaSchTest>true</NoMaSchTest>
-      <UseMaSchGenerators>true</UseMaSchGenerators>
-  
-      <!-- Output info -->
-      <SignAssembly>true</SignAssembly>
+      <TargetFrameworks>$(TfmNetCoreApp);$(TfmNetFramework)</TargetFrameworks>
+      <EnableMaSchTest>false</EnableMaSchTest>
+      <EnableMaSchGenerators>true</EnableMaSchGenerators>
     </PropertyGroup>
   
-    <Import Project="$(GitBuildDir)MaSch.props" />
-  
     <ItemGroup>
-      <ProjectReference Include="$(GitSourceDir)Core/MaSch.Core.csproj" />
-      <ProjectReference Include="$(GitSourceDir)Test.Assertion/MaSch.Test.Assertion.csproj" />
+      <MaSchReference Include="Core" />
+      <MaSchReference Include="Test.Assertion" />
     </ItemGroup>
 
 </Project>

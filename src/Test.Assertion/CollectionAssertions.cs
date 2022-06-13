@@ -21,7 +21,7 @@ public partial class AssertBase
     /// <param name="message">The message to include in the exception when <paramref name="collection"/> is not empty. The message is shown in test results.</param>
     public void IsEmpty(IEnumerable collection, string? message)
     {
-        _ = Guard.NotNull(collection, nameof(collection));
+        _ = Guard.NotNull(collection);
 
         var enumerator = collection.GetEnumerator();
         if (enumerator.MoveNext())
@@ -65,7 +65,7 @@ public partial class AssertBase
     /// <param name="message">The message to include in the exception when <paramref name="collection"/> is empty. The message is shown in test results.</param>
     public void IsNotEmpty(IEnumerable collection, string? message)
     {
-        _ = Guard.NotNull(collection, nameof(collection));
+        _ = Guard.NotNull(collection);
 
         var enumerator = collection.GetEnumerator();
         if (!enumerator.MoveNext())
@@ -309,7 +309,7 @@ public partial class AssertBase
     /// <param name="message"> The message to include in the exception when <paramref name="collection" /> contains a null element. The message is shown in test results.</param>
     public void AllItemsAreNotNull(IEnumerable collection, string? message)
     {
-        _ = Guard.NotNull(collection, nameof(collection));
+        _ = Guard.NotNull(collection);
 
         var faultyIdx = new List<int>();
         int idx = 0;
@@ -365,8 +365,8 @@ public partial class AssertBase
     /// <param name="message">The message to include in the exception when <paramref name="collection" /> contains at least one duplicate element. The message is shown in test results.</param>
     public void AllItemsAreUnique<T>(IEnumerable<T> collection, IEqualityComparer<T> comparer, string? message)
     {
-        _ = Guard.NotNull(collection, nameof(collection));
-        _ = Guard.NotNull(comparer, nameof(comparer));
+        _ = Guard.NotNull(collection);
+        _ = Guard.NotNull(comparer);
 
         int? nullIdx = null;
         var checkedItems = new Dictionary<int, int>();
@@ -442,9 +442,9 @@ public partial class AssertBase
     /// <param name="message"> The message to include in the exception when an element in <paramref name="subset" /> is not found in <paramref name="superset" />. The message is shown in test results.</param>
     public void IsSubsetOf<T>(IEnumerable<T> subset, IEnumerable<T> superset, IEqualityComparer<T> comparer, string? message)
     {
-        _ = Guard.NotNull(subset, nameof(subset));
-        _ = Guard.NotNull(superset, nameof(superset));
-        _ = Guard.NotNull(comparer, nameof(comparer));
+        _ = Guard.NotNull(subset);
+        _ = Guard.NotNull(superset);
+        _ = Guard.NotNull(comparer);
 
         var missingItems = subset.Except(superset, comparer).ToArray();
         if (missingItems.Length > 0)
@@ -496,9 +496,9 @@ public partial class AssertBase
     /// <param name="message">The message to include in the exception when every element in <paramref name="subset" /> is also found in <paramref name="superset" />. The message is shown in test results.</param>
     public void IsNotSubsetOf<T>(IEnumerable<T> subset, IEnumerable<T> superset, IEqualityComparer<T> comparer, string? message)
     {
-        _ = Guard.NotNull(subset, nameof(subset));
-        _ = Guard.NotNull(superset, nameof(superset));
-        _ = Guard.NotNull(comparer, nameof(comparer));
+        _ = Guard.NotNull(subset);
+        _ = Guard.NotNull(superset);
+        _ = Guard.NotNull(comparer);
 
         var missingItems = subset.Except(superset, comparer).ToArray();
         if (missingItems.Length == 0)
@@ -550,9 +550,9 @@ public partial class AssertBase
     /// <param name="message">The message to include in the exception when an element was found in one of the collections but not the other. The message is shown in test results.</param>
     public void AreCollectionsEquivalent<T>(IEnumerable<T> expected, IEnumerable<T> actual, IEqualityComparer<T> comparer, string? message)
     {
-        _ = Guard.NotNull(expected, nameof(expected));
-        _ = Guard.NotNull(actual, nameof(actual));
-        _ = Guard.NotNull(comparer, nameof(comparer));
+        _ = Guard.NotNull(expected);
+        _ = Guard.NotNull(actual);
+        _ = Guard.NotNull(comparer);
 
         var expectedArray = expected.ToArray();
         var actualArray = actual.ToArray();
@@ -613,9 +613,9 @@ public partial class AssertBase
     /// <param name="message">The message to include in the exception when <paramref name="actual" /> contains the same elements as <paramref name="expected" />. The message is shown in test results.</param>
     public void AreCollectionsNotEquivalent<T>(IEnumerable<T> expected, IEnumerable<T> actual, IEqualityComparer<T> comparer, string? message)
     {
-        _ = Guard.NotNull(expected, nameof(expected));
-        _ = Guard.NotNull(actual, nameof(actual));
-        _ = Guard.NotNull(comparer, nameof(comparer));
+        _ = Guard.NotNull(expected);
+        _ = Guard.NotNull(actual);
+        _ = Guard.NotNull(comparer);
 
         var diff = new HashSet<T>(expected, comparer);
         diff.SymmetricExceptWith(actual);
@@ -643,8 +643,8 @@ public partial class AssertBase
     /// <param name="message">The message to include in the exception when an element in <paramref name="collection" /> is not an instance of <paramref name="expectedType" />. The message is shown in test results.</param>
     public void AllItemsAreInstancesOfType(IEnumerable collection, Type expectedType, string? message)
     {
-        _ = Guard.NotNull(collection, nameof(collection));
-        _ = Guard.NotNull(expectedType, nameof(expectedType));
+        _ = Guard.NotNull(collection);
+        _ = Guard.NotNull(expectedType);
 
         var wrong = new List<(int, Type?, object?)>();
         int idx = 0;
@@ -714,9 +714,9 @@ public partial class AssertBase
     [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP001:Dispose created.", Justification = "False positive.")]
     public void AreCollectionsEqual<T>(IEnumerable<T> expected, IEnumerable<T> actual, IEqualityComparer<T> comparer, string? message)
     {
-        _ = Guard.NotNull(expected, nameof(expected));
-        _ = Guard.NotNull(actual, nameof(actual));
-        _ = Guard.NotNull(comparer, nameof(comparer));
+        _ = Guard.NotNull(expected);
+        _ = Guard.NotNull(actual);
+        _ = Guard.NotNull(comparer);
 
         var wrong = new List<(int, T?, T?)>();
         using var eenum = expected.GetEnumerator();
@@ -812,9 +812,9 @@ public partial class AssertBase
     /// <param name="message">The message to include in the exception when <paramref name="actual" /> is equal to <paramref name="notExpected" />. The message is shown in test results.</param>
     public void AreCollectionsNotEqual<T>(IEnumerable<T> notExpected, IEnumerable<T> actual, IEqualityComparer<T> comparer, string? message)
     {
-        _ = Guard.NotNull(notExpected, nameof(notExpected));
-        _ = Guard.NotNull(actual, nameof(actual));
-        _ = Guard.NotNull(comparer, nameof(comparer));
+        _ = Guard.NotNull(notExpected);
+        _ = Guard.NotNull(actual);
+        _ = Guard.NotNull(comparer);
 
         if (notExpected.SequenceEqual(actual, comparer))
             ThrowAssertError(message);

@@ -45,7 +45,7 @@ public sealed partial class ServiceContext : IServiceContext
     /// <exception cref="ArgumentException"><paramref name="serviceInstance"/> is not an instance of type <paramref name="serviceType"/>.</exception>
     void IServiceContext.AddService(Type serviceType, object serviceInstance, string? name)
     {
-        _ = Guard.OfType(serviceInstance, nameof(serviceInstance), serviceType);
+        _ = Guard.OfType(serviceInstance, serviceType);
 
         var key = (serviceType, name);
         ServiceContextEventArgs eventArgs;

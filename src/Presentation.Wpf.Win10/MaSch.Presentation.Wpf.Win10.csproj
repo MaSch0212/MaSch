@@ -1,28 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
-  <Import Project="../../build/MaSch.Constants.props" />
-
   <PropertyGroup>
 
     <!-- General Project info -->
-    <TargetFrameworks>$(TfmNetCore)-windows;$(TfmNetFramework)</TargetFrameworks>
+    <TargetFrameworks>$(TfmsNetCoreAppWindows);$(TfmsNetFramework)</TargetFrameworks>
     <UseWPF>true</UseWPF>
-    <ConfigureSourceLink>true</ConfigureSourceLink>
-    <AddReleaseNotes>true</AddReleaseNotes>
-
-    <!-- Output info -->
-    <SignAssembly>true</SignAssembly>
 
     <!-- Package Info -->
     <Description>Contains the icon set used in Windows 10 provided by Microsoft for use in .NET WPF applications.</Description>
-    <Version>0.1.7</Version>
+    <Version>0.1.8</Version>
     <PackageTags>masch presentation ui frontend wpf icons mdl2 windows</PackageTags>
   </PropertyGroup>
 
-  <Import Project="$(GitBuildDir)MaSch.props" />
-
   <ItemGroup>
-    <ProjectReference Include="$(GitSourceDir)Presentation.Wpf/MaSch.Presentation.Wpf.csproj" />
+    <MaSchReference Include="Presentation.Wpf" />
   </ItemGroup>
 
   <ItemGroup>

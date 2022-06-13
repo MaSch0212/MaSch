@@ -28,7 +28,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i><paramref name="count"/></i> A</c></returns>
     public static string GetCursorUp(int count)
     {
-        _ = Guard.NotSmallerThan(count, nameof(count), 0);
+        _ = Guard.NotSmallerThan(count, 0);
         return $"{ESC}[{count}A";
     }
 
@@ -40,7 +40,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i><paramref name="count"/></i> B</c></returns>
     public static string GetCursorDown(int count)
     {
-        _ = Guard.NotSmallerThan(count, nameof(count), 0);
+        _ = Guard.NotSmallerThan(count, 0);
         return $"{ESC}[{count}B";
     }
 
@@ -52,7 +52,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i><paramref name="count"/></i> D</c></returns>
     public static string GetCursorBack(int count)
     {
-        _ = Guard.NotSmallerThan(count, nameof(count), 0);
+        _ = Guard.NotSmallerThan(count, 0);
         return $"{ESC}[{count}D";
     }
 
@@ -64,7 +64,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i><paramref name="count"/></i> C</c></returns>
     public static string GetCursorForward(int count)
     {
-        _ = Guard.NotSmallerThan(count, nameof(count), 0);
+        _ = Guard.NotSmallerThan(count, 0);
         return $"{ESC}[{count}C";
     }
 
@@ -76,7 +76,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i><paramref name="count"/></i> E</c></returns>
     public static string GetCursorNextLine(int count)
     {
-        _ = Guard.NotSmallerThan(count, nameof(count), 0);
+        _ = Guard.NotSmallerThan(count, 0);
         return $"{ESC}[{count}E";
     }
 
@@ -88,7 +88,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i><paramref name="count"/></i> F</c></returns>
     public static string GetCursorPreviousLine(int count)
     {
-        _ = Guard.NotSmallerThan(count, nameof(count), 0);
+        _ = Guard.NotSmallerThan(count, 0);
         return $"{ESC}[{count}F";
     }
 
@@ -100,7 +100,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i><paramref name="column"/></i> G</c></returns>
     public static string GetCursorToColumn(int column)
     {
-        _ = Guard.NotSmallerThan(column, nameof(column), 0);
+        _ = Guard.NotSmallerThan(column, 0);
         return $"{ESC}[{column}G";
     }
 
@@ -113,8 +113,8 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i><paramref name="row"/></i> ; <i><paramref name="column"/></i> H</c></returns>
     public static string GetCursorToPosition(int row, int column)
     {
-        _ = Guard.NotSmallerThan(row, nameof(row), 0);
-        _ = Guard.NotSmallerThan(column, nameof(column), 0);
+        _ = Guard.NotSmallerThan(row, 0);
+        _ = Guard.NotSmallerThan(column, 0);
         return $"{ESC}[{row};{column}H";
     }
 
@@ -126,7 +126,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i><paramref name="mode"/></i> J</c></returns>
     public static string GetEraseScreen(AnsiClearMode mode)
     {
-        _ = Guard.NotUndefinedEnumMember(mode, nameof(mode));
+        _ = Guard.NotUndefinedEnumMember(mode);
         return $"{ESC}[{(int)mode}J";
     }
 
@@ -138,7 +138,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i><paramref name="mode"/></i> K</c></returns>
     public static string GetEraseLine(AnsiLineClearMode mode)
     {
-        _ = Guard.NotUndefinedEnumMember(mode, nameof(mode));
+        _ = Guard.NotUndefinedEnumMember(mode);
         return $"{ESC}[{(int)mode}K";
     }
 
@@ -150,7 +150,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i><paramref name="count"/></i> S</c></returns>
     public static string GetScrollUp(int count)
     {
-        _ = Guard.NotSmallerThan(count, nameof(count), 0);
+        _ = Guard.NotSmallerThan(count, 0);
         return $"{ESC}[{count}S";
     }
 
@@ -162,7 +162,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i><paramref name="count"/></i> T</c></returns>
     public static string GetScrollDown(int count)
     {
-        _ = Guard.NotSmallerThan(count, nameof(count), 0);
+        _ = Guard.NotSmallerThan(count, 0);
         return $"{ESC}[{count}T";
     }
 
@@ -175,7 +175,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i><paramref name="count"/></i> M</c></returns>
     public static string GetDeleteLines(int count)
     {
-        _ = Guard.NotSmallerThan(count, nameof(count), 0);
+        _ = Guard.NotSmallerThan(count, 0);
         return $"{ESC}[{count}M";
     }
 
@@ -188,7 +188,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i><paramref name="count"/></i> L</c></returns>
     public static string GetInsertLines(int count)
     {
-        _ = Guard.NotSmallerThan(count, nameof(count), 0);
+        _ = Guard.NotSmallerThan(count, 0);
         return $"{ESC}[{count}L";
     }
 
@@ -202,7 +202,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i><paramref name="count"/></i> X</c></returns>
     public static string GetEraseCharacters(int count)
     {
-        _ = Guard.NotSmallerThan(count, nameof(count), 0);
+        _ = Guard.NotSmallerThan(count, 0);
         return $"{ESC}[{count}X";
     }
 
@@ -216,7 +216,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i><paramref name="count"/></i> P</c></returns>
     public static string GetDeleteCharacters(int count)
     {
-        _ = Guard.NotSmallerThan(count, nameof(count), 0);
+        _ = Guard.NotSmallerThan(count, 0);
         return $"{ESC}[{count}P";
     }
 
@@ -230,7 +230,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i><paramref name="count"/></i> @</c></returns>
     public static string GetInsertCharacters(int count)
     {
-        _ = Guard.NotSmallerThan(count, nameof(count), 0);
+        _ = Guard.NotSmallerThan(count, 0);
         return $"{ESC}[{count}@";
     }
 
@@ -290,7 +290,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i>#</i> m</c></returns>
     public static string GetAddStyle(AnsiTextStyle style)
     {
-        _ = Guard.NotUndefinedFlagInEnumValue(style, nameof(style));
+        _ = Guard.NotUndefinedFlagInEnumValue(style);
 
         static void Add(StringBuilder sb, int n) => sb.Append($"{ESC}[{n}m");
 
@@ -323,7 +323,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ <i>#</i> m</c></returns>
     public static string GetRemoveStyle(AnsiTextStyle style)
     {
-        _ = Guard.NotUndefinedFlagInEnumValue(style, nameof(style));
+        _ = Guard.NotUndefinedFlagInEnumValue(style);
 
         static void Add(StringBuilder sb, int n) => sb.Append($"{ESC}[{n}m");
 
@@ -352,7 +352,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ 38 ; 5 ; <i><paramref name="colorCode"/></i> m</c></returns>
     public static string GetSetForegroundColor(AnsiColorCode colorCode)
     {
-        _ = Guard.NotUndefinedEnumMember(colorCode, nameof(colorCode));
+        _ = Guard.NotUndefinedEnumMember(colorCode);
         return $"{ESC}[38;5;{(int)colorCode}m";
     }
 
@@ -384,7 +384,7 @@ public static class AnsiEscapeUtility
     /// <returns><c>ESC [ 48 ; 5 ; <i><paramref name="colorCode"/></i> m</c></returns>
     public static string GetSetBackgroundColor(AnsiColorCode colorCode)
     {
-        _ = Guard.NotUndefinedEnumMember(colorCode, nameof(colorCode));
+        _ = Guard.NotUndefinedEnumMember(colorCode);
         return $"{ESC}[48;5;{(int)colorCode}m";
     }
 

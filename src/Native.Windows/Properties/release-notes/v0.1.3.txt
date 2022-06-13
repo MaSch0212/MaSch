@@ -1,0 +1,1 @@
+﻿- Added binaries for net6.0-windows.

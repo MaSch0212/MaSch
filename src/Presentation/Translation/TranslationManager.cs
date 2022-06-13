@@ -87,7 +87,7 @@ public class TranslationManager : ITranslationManager
     /// <param name="providerKey">The provider key used to register the provider.</param>
     public void RegisterTranslationProvider(ITranslationProvider provider, string providerKey)
     {
-        _ = Guard.NotNull(provider, nameof(provider));
+        _ = Guard.NotNull(provider);
         _registeredProviders.Add(providerKey, provider);
     }
 

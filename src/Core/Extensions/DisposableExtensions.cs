@@ -15,10 +15,10 @@ public static class DisposableExtensions
     public static void DoAndDispose<TDisposable>(this TDisposable disposable, Action<TDisposable> action)
         where TDisposable : IDisposable
     {
-        _ = Guard.NotNull(disposable, nameof(disposable));
+        _ = Guard.NotNull(disposable);
         using (disposable)
         {
-            _ = Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(action);
             action(disposable);
         }
     }
@@ -161,10 +161,10 @@ public static class DisposableExtensions
     public static TResult DoAndDispose<TDisposable, TResult>(this TDisposable disposable, Func<TDisposable, TResult> function)
         where TDisposable : IDisposable
     {
-        _ = Guard.NotNull(disposable, nameof(disposable));
+        _ = Guard.NotNull(disposable);
         using (disposable)
         {
-            _ = Guard.NotNull(function, nameof(function));
+            _ = Guard.NotNull(function);
             return function(disposable);
         }
     }
@@ -180,10 +180,10 @@ public static class DisposableExtensions
     public static async Task DoAndDisposeAsync<TDisposable>(this TDisposable disposable, Func<TDisposable, Task> action)
         where TDisposable : IDisposable
     {
-        _ = Guard.NotNull(disposable, nameof(disposable));
+        _ = Guard.NotNull(disposable);
         using (disposable)
         {
-            _ = Guard.NotNull(action, nameof(action));
+            _ = Guard.NotNull(action);
             await action(disposable);
         }
     }
@@ -200,10 +200,10 @@ public static class DisposableExtensions
     public static async Task<TResult> DoAndDisposeAsync<TDisposable, TResult>(this TDisposable disposable, Func<TDisposable, Task<TResult>> function)
         where TDisposable : IDisposable
     {
-        _ = Guard.NotNull(disposable, nameof(disposable));
+        _ = Guard.NotNull(disposable);
         using (disposable)
         {
-            _ = Guard.NotNull(function, nameof(function));
+            _ = Guard.NotNull(function);
             return await function(disposable);
         }
     }

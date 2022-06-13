@@ -1,0 +1,8 @@
+﻿- Added extension methods for DateTime.
+    - ToUniversalTime(DateTimeKind kindToAssumeWhenUnspecified)
+    - ToLocalTime(DateTimeKind kindToAssumeWhenUnspecified)
+- Added NotNullOrWhitespace method to Guard.
+- Added HasFlag and NotHasFlag methods to Guard.
+- Added methods to build Delegates for BitwiseOr and BitwiseAnd for System.Enum.
+- Added BitwiseOr and BitwiseAnd extension methods for System.Enum.
+- Added NextEnum extension methods for System.Random.

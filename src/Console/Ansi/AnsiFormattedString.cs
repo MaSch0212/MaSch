@@ -186,8 +186,8 @@ public sealed class AnsiFormattedString : ICloneable
     /// <returns>A reference to this instance after the append operation has completed.</returns>
     public AnsiFormattedString Append(StringBuilder? value, int startIndex, int count, Action<AnsiStyle>? styleAction)
     {
-#if NETFRAMEWORK
-            return CallInsert(Length, value?.ToString(), startIndex, count, (b, i, x, y, z) => b.Append(x, y, z), styleAction);
+#if NETFRAMEWORK || (NETSTANDARD && !NETSTANDARD2_1_OR_GREATER)
+        return CallInsert(Length, value?.ToString(), startIndex, count, (b, i, x, y, z) => b.Append(x, y, z), styleAction);
 #else
         return CallInsert(Length, value, startIndex, count, (b, i, x, y, z) => b.Append(x, y, z), styleAction);
 #endif
@@ -405,8 +405,8 @@ public sealed class AnsiFormattedString : ICloneable
     /// <returns>A reference to this instance after the append operation has completed.</returns>
     public AnsiFormattedString AppendJoin<T>(Action<AnsiStyle>? styleAction, string? separator, IEnumerable<T> values)
     {
-#if NETFRAMEWORK
-            return CallInsert(Length, string.Join(separator, values), (b, i, x) => b.Append(x), styleAction);
+#if NETFRAMEWORK || (NETSTANDARD && !NETSTANDARD2_1_OR_GREATER)
+        return CallInsert(Length, string.Join(separator, values), (b, i, x) => b.Append(x), styleAction);
 #else
         return CallInsert(Length, separator, values, (b, i, x, y) => b.AppendJoin(x, y), styleAction);
 #endif
@@ -436,8 +436,8 @@ public sealed class AnsiFormattedString : ICloneable
     /// <returns>A reference to this instance after the append operation has completed.</returns>
     public AnsiFormattedString AppendJoin(Action<AnsiStyle>? styleAction, string? separator, params object?[] values)
     {
-#if NETFRAMEWORK
-            return CallInsert(Length, string.Join(separator, values), (b, i, x) => b.Append(x), styleAction);
+#if NETFRAMEWORK || (NETSTANDARD && !NETSTANDARD2_1_OR_GREATER)
+        return CallInsert(Length, string.Join(separator, values), (b, i, x) => b.Append(x), styleAction);
 #else
         return CallInsert(Length, separator, values, (b, i, x, y) => b.AppendJoin(x, y), styleAction);
 #endif
@@ -1122,8 +1122,8 @@ public sealed class AnsiFormattedString : ICloneable
 
     private void ValidateRange(int startIndex, int length)
     {
-        Guard.NotOutOfRange(startIndex, nameof(startIndex), 0, Length - 1);
-        Guard.NotOutOfRange(length, nameof(length), 0, Length - startIndex);
+        Guard.NotOutOfRange(startIndex, 0, Length - 1);
+        Guard.NotOutOfRange(length, 0, Length - startIndex);
     }
 
     private sealed class StyleRange : ICloneable

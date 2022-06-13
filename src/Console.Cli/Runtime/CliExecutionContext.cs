@@ -14,8 +14,8 @@ public class CliExecutionContext
     /// <param name="command">The command information.</param>
     public CliExecutionContext(IServiceProvider serviceProvider, ICliCommandInfo command)
     {
-        ServiceProvider = Guard.NotNull(serviceProvider, nameof(serviceProvider));
-        Command = Guard.NotNull(command, nameof(command));
+        ServiceProvider = Guard.NotNull(serviceProvider);
+        Command = Guard.NotNull(command);
     }
 
     /// <summary>

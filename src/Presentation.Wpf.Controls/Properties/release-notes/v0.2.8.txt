@@ -1,0 +1,2 @@
+﻿- Fixed MessageBox icons not showing.
+- Completely reworked sizing calculation of MessageBox window.

@@ -1,0 +1,1 @@
+﻿- Added non-generic overloads for the Assert.ThrowsException and Assert.ThrowsExceptionsAsync methods.

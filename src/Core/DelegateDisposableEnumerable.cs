@@ -1,4 +1,6 @@
-﻿namespace MaSch.Core;
+﻿#pragma warning disable SA1402 // File may only contain a single type
+
+namespace MaSch.Core;
 
 /// <summary>
 /// Represents a wrappoer for an <see cref="IEnumerable{T}"/> which executes an action if it is disposed.
@@ -17,8 +19,8 @@ public class DelegateDisposableEnumerable<T> : IDisposableEnumerable<T>
     /// <param name="actionOnDispose">The action that is executed on dispose.</param>
     public DelegateDisposableEnumerable(IEnumerable<T> enumerable, Action actionOnDispose)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(actionOnDispose, nameof(actionOnDispose));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(actionOnDispose);
 
         _enumerable = enumerable;
         _actionOnDispose = actionOnDispose;
@@ -81,8 +83,8 @@ public class DelegateOrderedDisposableEnumerable<T> : IOrderedDisposableEnumerab
     /// <param name="actionOnDispose">The action that is executed on dispose.</param>
     public DelegateOrderedDisposableEnumerable(IOrderedEnumerable<T> enumerable, Action actionOnDispose)
     {
-        _ = Guard.NotNull(enumerable, nameof(enumerable));
-        _ = Guard.NotNull(actionOnDispose, nameof(actionOnDispose));
+        _ = Guard.NotNull(enumerable);
+        _ = Guard.NotNull(actionOnDispose);
 
         _enumerable = enumerable;
         _actionOnDispose = actionOnDispose;

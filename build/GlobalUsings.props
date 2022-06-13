@@ -1,8 +1,5 @@
 <Project>
-  <PropertyGroup>
-    <MaSchGlobalUsingsImported>true</MaSchGlobalUsingsImported>
-  </PropertyGroup>
-  
+
   <ItemGroup>
     <Using Include="System"/>
     <Using Include="System.IO"/>
@@ -23,11 +20,12 @@
     <Using Include="System.Threading.Tasks"/>
   </ItemGroup>
 
-  <ItemGroup Condition=" $(IsTestProject) == 'true' ">
+  <ItemGroup Condition="'$(IsTestProject)' == 'true' ">
     <Using Include="MaSch.Test"/>
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting"/>
     <Using Include="Moq"/>
     <Using Include="Moq.Language"/>
     <Using Include="Moq.Protected"/>
   </ItemGroup>
+  
 </Project>

@@ -16,7 +16,7 @@ public class NumberInputControl
     /// <param name="console">The console that is used to request input.</param>
     public NumberInputControl(IConsoleService console)
     {
-        _console = Guard.NotNull(console, nameof(console));
+        _console = Guard.NotNull(console);
     }
 
     /// <summary>

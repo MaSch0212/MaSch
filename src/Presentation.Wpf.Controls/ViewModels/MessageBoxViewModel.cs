@@ -2,6 +2,7 @@
 using MaSch.Core.Attributes;
 using MaSch.Core.Observable;
 using MaSch.Presentation.Wpf.Themes;
+using MaSch.Presentation.Wpf.ThemeValues;
 using MaSch.Presentation.Wpf.ViewModels.MessageBox;
 using System.Windows;
 using System.Windows.Media;
@@ -43,30 +44,7 @@ internal interface IMessageBoxViewModelProps
 /// <seealso cref="IMessageBoxViewModelProps" />
 public partial class MessageBoxViewModel : ObservableObject, IMessageBoxViewModelProps
 {
-    private static readonly Dictionary<int, Func<BrushGeometry>> IconDict = new()
-    {
-        [0] = () => new BrushGeometry(),
-        [16] = () => new BrushGeometry
-        {
-            Icon = CurrentThemeManager.GetValue<Icon>(ThemeKey.MessageBoxErrorIcon) as Icon,
-            FillBrush = new SolidColorBrush(Colors.Red),
-        },
-        [32] = () => new BrushGeometry
-        {
-            Icon = CurrentThemeManager.GetValue<Icon>(ThemeKey.MessageBoxQuestionIcon) as Icon,
-            FillBrush = new SolidColorBrush(Color.FromArgb(255, 25, 88, 185)),
-        },
-        [48] = () => new BrushGeometry
-        {
-            Icon = CurrentThemeManager.GetValue<Icon>(ThemeKey.MessageBoxWarningIcon) as Icon,
-            FillBrush = new SolidColorBrush(Colors.Orange),
-        },
-        [64] = () => new BrushGeometry
-        {
-            Icon = CurrentThemeManager.GetValue<Icon>(ThemeKey.MessageBoxInfoIcon) as Icon,
-            FillBrush = new SolidColorBrush(Color.FromArgb(255, 25, 88, 185)),
-        },
-    };
+    private static readonly BrushGeometry EmptyIcon = new();
 
     private MessageBoxImage _messageBoxImage = MessageBoxImage.None;
 
@@ -87,7 +65,7 @@ public partial class MessageBoxViewModel : ObservableObject, IMessageBoxViewMode
         get => _messageBoxImage;
         set
         {
-            Icon = IconDict.ContainsKey((int)value) ? IconDict[(int)value]() : IconDict.FirstOrDefault().Value();
+            Icon = GetIcon(value);
             _messageBoxImage = value;
         }
     }
@@ -98,4 +76,30 @@ public partial class MessageBoxViewModel : ObservableObject, IMessageBoxViewMode
     public MessageBoxResult DefaultResult { get; set; }
 
     private static IThemeManager CurrentThemeManager => ServiceContext.TryGetService<IThemeManager>() ?? ThemeManager.DefaultThemeManager;
+
+    private static BrushGeometry GetIcon(MessageBoxImage image)
+    {
+        return image switch
+        {
+            MessageBoxImage.Error => CreateResult(ThemeKey.MessageBoxErrorIcon, ThemeKey.MessageBoxErrorIconBrush),
+            MessageBoxImage.Question => CreateResult(ThemeKey.MessageBoxQuestionIcon, ThemeKey.MessageBoxQuestionIconBrush),
+            MessageBoxImage.Exclamation => CreateResult(ThemeKey.MessageBoxWarningIcon, ThemeKey.MessageBoxWarningIconBrush),
+            MessageBoxImage.Asterisk => CreateResult(ThemeKey.MessageBoxInfoIcon, ThemeKey.MessageBoxInfoIconBrush),
+            _ => EmptyIcon,
+        };
+
+        static BrushGeometry CreateResult(ThemeKey iconThemeKey, ThemeKey iconBrushKey)
+        {
+            return new BrushGeometry
+            {
+                Icon = (CurrentThemeManager.GetValue<Icon>(iconThemeKey) as IconThemeValue)?.Value,
+                FillBrush = (CurrentThemeManager.GetValue<SolidColorBrush>(iconBrushKey) as SolidColorBrushThemeValue)?.Value,
+            };
+        }
+    }
+
+    partial void OnMessageBoxTextChanging(string? previous, ref string? value)
+    {
+        value = value?.Trim();
+    }
 }

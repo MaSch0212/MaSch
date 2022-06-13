@@ -35,8 +35,8 @@ public static class TypeExtensions
     /// <returns>true if this type is castable to the given type, otherwise false.</returns>
     public static bool IsCastableTo(this Type from, Type to, bool implicitly = false)
     {
-        _ = Guard.NotNull(from, nameof(from));
-        _ = Guard.NotNull(to, nameof(to));
+        _ = Guard.NotNull(from);
+        _ = Guard.NotNull(to);
         return to.IsAssignableFrom(from) || from.HasCastDefined(to, implicitly);
     }
 
@@ -49,7 +49,7 @@ public static class TypeExtensions
     /// </returns>
     public static bool IsOverriding(this MethodInfo methodInfo)
     {
-        _ = Guard.NotNull(methodInfo, nameof(methodInfo));
+        _ = Guard.NotNull(methodInfo);
         return methodInfo.DeclaringType != methodInfo.GetBaseDefinition().DeclaringType;
     }
 
@@ -63,7 +63,7 @@ public static class TypeExtensions
     /// <exception cref="ArgumentException">The property does not have a setter nor a getter. - <paramref name="propertyInfo"/>.</exception>
     public static bool IsOverriding(this PropertyInfo propertyInfo)
     {
-        _ = Guard.NotNull(propertyInfo, nameof(propertyInfo));
+        _ = Guard.NotNull(propertyInfo);
         return IsOverriding(propertyInfo.GetMethod ?? propertyInfo.SetMethod ?? throw new ArgumentException($"The property does not have a setter nor a getter.", nameof(propertyInfo)));
     }
 
@@ -77,7 +77,7 @@ public static class TypeExtensions
     /// <exception cref="ArgumentException">The event does not have an add method nor a remove method. - <paramref name="eventInfo"/>.</exception>
     public static bool IsOverriding(this EventInfo eventInfo)
     {
-        _ = Guard.NotNull(eventInfo, nameof(eventInfo));
+        _ = Guard.NotNull(eventInfo);
         return IsOverriding(eventInfo.AddMethod ?? eventInfo.RemoveMethod ?? throw new ArgumentException($"The event does not have an add method nor a remove method.", nameof(eventInfo)));
     }
 
@@ -90,7 +90,7 @@ public static class TypeExtensions
     /// </returns>
     public static bool IsHiding(this MethodInfo methodInfo)
     {
-        _ = Guard.NotNull(methodInfo, nameof(methodInfo));
+        _ = Guard.NotNull(methodInfo);
         if (methodInfo.DeclaringType != methodInfo.GetBaseDefinition().DeclaringType)
             return false;
 
@@ -140,7 +140,7 @@ public static class TypeExtensions
     /// <exception cref="ArgumentException">The property does not have a setter nor a getter. - <paramref name="propertyInfo"/>.</exception>
     public static bool IsHiding(this PropertyInfo propertyInfo)
     {
-        _ = Guard.NotNull(propertyInfo, nameof(propertyInfo));
+        _ = Guard.NotNull(propertyInfo);
         return IsHiding(propertyInfo.GetMethod ?? propertyInfo.SetMethod ?? throw new ArgumentException($"The property does not have a setter nor a getter.", nameof(propertyInfo)));
     }
 
@@ -154,7 +154,7 @@ public static class TypeExtensions
     /// <exception cref="ArgumentException">The event does not have an add method nor a remove method. - <paramref name="eventInfo"/>.</exception>
     public static bool IsHiding(this EventInfo eventInfo)
     {
-        _ = Guard.NotNull(eventInfo, nameof(eventInfo));
+        _ = Guard.NotNull(eventInfo);
         return IsHiding(eventInfo.AddMethod ?? eventInfo.RemoveMethod ?? throw new ArgumentException($"The event does not have an add method nor a remove method.", nameof(eventInfo)));
     }
 
@@ -167,7 +167,7 @@ public static class TypeExtensions
     /// </returns>
     public static bool IsHiding(this FieldInfo fieldInfo)
     {
-        _ = Guard.NotNull(fieldInfo, nameof(fieldInfo));
+        _ = Guard.NotNull(fieldInfo);
         var baseType = fieldInfo.DeclaringType?.BaseType;
         if (baseType == null)
             return false;
@@ -186,8 +186,8 @@ public static class TypeExtensions
     /// </returns>
     public static bool IsHiddenInType(this MethodInfo methodInfo, Type type)
     {
-        _ = Guard.NotNull(methodInfo, nameof(methodInfo));
-        _ = Guard.NotNull(type, nameof(type));
+        _ = Guard.NotNull(methodInfo);
+        _ = Guard.NotNull(type);
 
         var methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Static);
         foreach (var method in methods)
@@ -228,8 +228,8 @@ public static class TypeExtensions
     /// <exception cref="ArgumentException">The property does not have a setter nor a getter. - <paramref name="propertyInfo"/>.</exception>
     public static bool IsHiddenInType(this PropertyInfo propertyInfo, Type type)
     {
-        _ = Guard.NotNull(propertyInfo, nameof(propertyInfo));
-        _ = Guard.NotNull(type, nameof(type));
+        _ = Guard.NotNull(propertyInfo);
+        _ = Guard.NotNull(type);
         return IsHiddenInType(propertyInfo.GetMethod ?? propertyInfo.SetMethod ?? throw new ArgumentException($"The property does not have a setter nor a getter.", nameof(propertyInfo)), type);
     }
 
@@ -244,8 +244,8 @@ public static class TypeExtensions
     /// <exception cref="ArgumentException">The event does not have an add method nor a remove method. - <paramref name="eventInfo"/>.</exception>
     public static bool IsHiddenInType(this EventInfo eventInfo, Type type)
     {
-        _ = Guard.NotNull(eventInfo, nameof(eventInfo));
-        _ = Guard.NotNull(type, nameof(type));
+        _ = Guard.NotNull(eventInfo);
+        _ = Guard.NotNull(type);
         return IsHiddenInType(eventInfo.AddMethod ?? eventInfo.RemoveMethod ?? throw new ArgumentException($"The event does not have an add method nor a remove method.", nameof(eventInfo)), type);
     }
 
@@ -259,8 +259,8 @@ public static class TypeExtensions
     /// </returns>
     public static bool IsHiddenInType(this FieldInfo fieldInfo, Type type)
     {
-        _ = Guard.NotNull(fieldInfo, nameof(fieldInfo));
-        _ = Guard.NotNull(type, nameof(type));
+        _ = Guard.NotNull(fieldInfo);
+        _ = Guard.NotNull(type);
 
         return type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Static)
             .Any(x => x.Name == fieldInfo.Name && x != fieldInfo && fieldInfo.DeclaringType?.IsAssignableFrom(x.DeclaringType) == true);
@@ -277,8 +277,8 @@ public static class TypeExtensions
     [SuppressMessage("ReflectionAnalyzers.SystemReflection", "REFL045:These flags are insufficient to match any members.", Justification = "False positive.")]
     public static MethodInfo? GetMethodRecursive(this Type? t, string name, BindingFlags bindingFlags, params Type[] types)
     {
-        _ = Guard.NotNullOrEmpty(name, nameof(name));
-        _ = Guard.NotNull(types, nameof(types));
+        _ = Guard.NotNullOrEmpty(name);
+        _ = Guard.NotNull(types);
         var currentType = t;
         MethodInfo? result = null;
         while (result == null && currentType != null)
@@ -299,8 +299,8 @@ public static class TypeExtensions
     /// <returns>A combined <see cref="IEnumerable{T}"/> of all results of <paramref name="func"/>.</returns>
     public static IEnumerable<T> QueryTypesRecursive<T>(this Type t, Func<Type, IEnumerable<T>> func)
     {
-        _ = Guard.NotNull(t, nameof(t));
-        _ = Guard.NotNull(func, nameof(func));
+        _ = Guard.NotNull(t);
+        _ = Guard.NotNull(func);
         var result = func(t);
         if (t.BaseType != null)
             result = result.Concat(QueryTypesRecursive(t.BaseType, func));
@@ -315,7 +315,7 @@ public static class TypeExtensions
     /// <returns>The name of the type <paramref name="t"/> with any generic information.</returns>
     public static string GetTypeNameWithoutGenericArtiy(this Type t)
     {
-        _ = Guard.NotNull(t, nameof(t));
+        _ = Guard.NotNull(t);
         string name = t.Name;
         int index = name.IndexOf('`');
         return index == -1 ? name : name.Substring(0, index);
@@ -328,7 +328,7 @@ public static class TypeExtensions
     /// <returns>The default value of <paramref name="type"/>.</returns>
     public static object? GetDefault(this Type type)
     {
-        _ = Guard.NotNull(type, nameof(type));
+        _ = Guard.NotNull(type);
         if (type.IsValueType)
         {
             return Activator.CreateInstance(type);
@@ -443,8 +443,8 @@ public static class TypeExtensions
 
     private static bool HasCastDefined(this Type from, Type to, bool implicitly)
     {
-        _ = Guard.NotNull(from, nameof(from));
-        _ = Guard.NotNull(to, nameof(to));
+        _ = Guard.NotNull(from);
+        _ = Guard.NotNull(to);
         if ((from.IsPrimitive || from.IsEnum) && (to.IsPrimitive || to.IsEnum))
         {
             if (!implicitly)
@@ -476,9 +476,9 @@ public static class TypeExtensions
 
     private static bool IsCastDefined(IReflect type, Func<MethodInfo, Type> baseType, Func<MethodInfo, Type> derivedType, bool implicitly, bool lookInBase)
     {
-        _ = Guard.NotNull(type, nameof(type));
-        _ = Guard.NotNull(baseType, nameof(baseType));
-        _ = Guard.NotNull(derivedType, nameof(derivedType));
+        _ = Guard.NotNull(type);
+        _ = Guard.NotNull(baseType);
+        _ = Guard.NotNull(derivedType);
         var bindinFlags = BindingFlags.Public | BindingFlags.Static
                         | (lookInBase ? BindingFlags.FlattenHierarchy : BindingFlags.DeclaredOnly);
         return type.GetMethods(bindinFlags).Any(

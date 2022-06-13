@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- General Project info -->
+    <RootNamespace>MaSch.FileSystem.Test</RootNamespace>
+    <TargetFrameworks>$(TfmsNetCoreApp);$(TfmsNetFramework);$(TfmsNetStandard)</TargetFrameworks>
+    <EnableMaSchGenerators>true</EnableMaSchGenerators>
+    <DefineConstants>$(DefineConstants);MSTEST</DefineConstants>
+
+    <!-- Package Info -->
+    <Description>Contains some supporting code for MSTest Unit Tests in regards to the MaSch.FileSystem library.</Description>
+    <Version>0.1.0</Version>
+    <PackageTags>masch test mstest file directory filesystem path</PackageTags>
+
+    <DoesNotReturnAttribute>DoesNotReturnAttribute</DoesNotReturnAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="$(GitSourceDir)FileSystem.Test/**/*.cs" Exclude="$(GitSourceDir)FileSystem.Test/obj/**/*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <MaSchReference Include="Test.Assertion.MSTest" />
+    <MaSchReference Include="FileSystem" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MSTest.TestFramework" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
+    <Using Include="MaSch.Core" />
+    <Using Include="MaSch.Test.Assertion" />
+  </ItemGroup>
+
+</Project>

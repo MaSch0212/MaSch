@@ -28,7 +28,7 @@ public abstract class ObservableChangeTrackingObject : ObservableObject, IChange
     /// <exception cref="ArgumentNullException"><paramref name="changeTracker"/>.</exception>
     protected ObservableChangeTrackingObject(IChangeTracker changeTracker)
     {
-        ChangeTracker = Guard.NotNull(changeTracker, nameof(changeTracker));
+        ChangeTracker = Guard.NotNull(changeTracker);
     }
 
     #endregion

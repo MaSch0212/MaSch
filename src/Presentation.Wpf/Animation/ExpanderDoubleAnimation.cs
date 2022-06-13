@@ -72,8 +72,8 @@ public class ExpanderDoubleAnimation : DoubleAnimationBase
     /// <returns>Returns the new double to set.</returns>
     protected override double GetCurrentValueCore(double defaultOriginValue, double defaultDestinationValue, AnimationClock animationClock)
     {
-        var fromVal = Guard.NotNull(From, nameof(From)).Value;
-        var toVal = Guard.NotNull(To, nameof(To)).Value;
+        var fromVal = Guard.NotNull(From).Value;
+        var toVal = Guard.NotNull(To).Value;
 
         if (defaultOriginValue == toVal && ReverseValue.HasValue)
         {

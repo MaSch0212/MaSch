@@ -20,7 +20,7 @@ public partial class SelectControl
     /// <param name="console">The console to use.</param>
     public SelectControl(IConsoleService console)
     {
-        _console = Guard.NotNull(console, nameof(console));
+        _console = Guard.NotNull(console);
     }
 
     /// <summary>

@@ -19,7 +19,7 @@ public class StringTransformationConverter : IValueConverter
     public bool ToLower { get; set; }
 
     /// <inheritdoc />
-    public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value == null)
             return null;
@@ -31,7 +31,7 @@ public class StringTransformationConverter : IValueConverter
     }
 
     /// <inheritdoc />
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotSupportedException();
     }

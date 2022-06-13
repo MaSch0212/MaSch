@@ -26,9 +26,9 @@ public struct AnsiColor
     {
         _isDefaultColor = false;
         _colorCode = null;
-        _red = (byte)Guard.NotOutOfRange(red, nameof(red), 0, 255);
-        _green = (byte)Guard.NotOutOfRange(green, nameof(green), 0, 255);
-        _blue = (byte)Guard.NotOutOfRange(blue, nameof(blue), 0, 255);
+        _red = (byte)Guard.NotOutOfRange(red, 0, 255);
+        _green = (byte)Guard.NotOutOfRange(green, 0, 255);
+        _blue = (byte)Guard.NotOutOfRange(blue, 0, 255);
     }
 
     /// <summary>
@@ -63,7 +63,7 @@ public struct AnsiColor
     /// <returns>A <see cref="AnsiColor"/> instance that represents the <paramref name="colorCode"/>.</returns>
     public static AnsiColor FromColorCode(AnsiColorCode colorCode)
     {
-        return new(Guard.NotUndefinedEnumMember(colorCode, nameof(colorCode)));
+        return new(Guard.NotUndefinedEnumMember(colorCode));
     }
 
     /// <summary>

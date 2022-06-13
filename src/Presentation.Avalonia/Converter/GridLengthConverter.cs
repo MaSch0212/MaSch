@@ -10,7 +10,7 @@ namespace MaSch.Presentation.Avalonia.Converter;
 public class GridLengthConverter : IValueConverter
 {
     /// <inheritdoc />
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         double val = value.ConvertTo<double>();
         GridLength gridLength = new(val);
@@ -19,8 +19,11 @@ public class GridLengthConverter : IValueConverter
     }
 
     /// <inheritdoc />
-    public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
+        if (value is null)
+            return value;
+
         GridLength val = (GridLength)value;
 
         return val.Value.ConvertTo(targetType);

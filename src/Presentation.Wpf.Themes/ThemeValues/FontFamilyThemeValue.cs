@@ -15,10 +15,11 @@ public class FontFamilyThemeValue : ThemeValueBase<FontFamily>
 {
     /// <inheritdoc/>
     [JsonConverter(typeof(ThemeValuePropertyJsonConverter<FontFamily>))]
+    [SuppressMessage("Critical Bug", "S4275:Getters and setters should access the expected fields", Justification = "Field is set via base class.")]
     public override object RawValue
     {
         get => base.RawValue;
-        set => base.RawValue = Guard.OfType(value, nameof(value), typeof(ThemeValueReference), typeof(FontFamily));
+        set => base.RawValue = Guard.OfType(value, new[] { typeof(ThemeValueReference), typeof(FontFamily) });
     }
 
     public static implicit operator FontFamily(FontFamilyThemeValue themeValue)

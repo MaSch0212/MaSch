@@ -25,7 +25,7 @@ public class ObservableChangeTrackingDependencyObject : ObservableDependencyObje
     /// <param name="changeTracker">The change tracker.</param>
     protected ObservableChangeTrackingDependencyObject(IChangeTracker changeTracker)
     {
-        ChangeTracker = Guard.NotNull(changeTracker, nameof(changeTracker));
+        ChangeTracker = Guard.NotNull(changeTracker);
     }
 
     /// <inheritdoc />

@@ -1,3 +1,4 @@
 ﻿- WrapperClassGenerator: Added support for indexer properties.
 - Added option to disable generation of RuntimeHelpers class by adding define "MASCH_SHIMS_SKIPRUNTIMEHELPERS".
 - Fix some namespace issues with some of the generators.
+- Added Shim for CallerArgumentExpressionAttribute.
