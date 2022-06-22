@@ -1,0 +1,1 @@
+﻿- Fixen an issue where source generators might generate type definitions with the "!" in an context where NullableReferenceTypes are enabled.

@@ -26,7 +26,7 @@ public static class CodeGenerationHelpers
         SymbolDisplayPropertyStyle.NameOnly,
         SymbolDisplayLocalOptions.None,
         SymbolDisplayKindOptions.IncludeMemberKeyword,
-        SymbolDisplayMiscellaneousOptions.UseSpecialTypes | SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier | SymbolDisplayMiscellaneousOptions.IncludeNotNullableReferenceTypeModifier);
+        SymbolDisplayMiscellaneousOptions.UseSpecialTypes | SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier);
 
     /// <summary>
     /// Format that can be used to get the usage syntax of a Symbol.
@@ -42,7 +42,7 @@ public static class CodeGenerationHelpers
         SymbolDisplayPropertyStyle.NameOnly,
         SymbolDisplayLocalOptions.None,
         SymbolDisplayKindOptions.None,
-        SymbolDisplayMiscellaneousOptions.UseSpecialTypes | SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier | SymbolDisplayMiscellaneousOptions.IncludeNotNullableReferenceTypeModifier);
+        SymbolDisplayMiscellaneousOptions.UseSpecialTypes | SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier);
 
     /// <summary>
     /// Determines all types that are defined inside a given namespace (includes descendant namespaces).
