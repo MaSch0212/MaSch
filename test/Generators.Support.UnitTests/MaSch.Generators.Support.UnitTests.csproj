@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(TfmNetCoreApp);$(TfmNetFramework)</TargetFrameworks>
+    
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <MaSchReference Include="Generators.Support" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Support\" />
+  </ItemGroup>
+
+  <Target Name="CopySupportFiles" AfterTargets="PostBuildEvent">
+    <ItemGroup>
+      <SupportFiles Include="$(GitSourceDir)Generators.Support/Support/**/*.cs" />
+    </ItemGroup>
+    <MakeDir Directories="$(OutputPath)TestFiles/Generators.Support" />
+    <Copy SourceFiles="@(SupportFiles)" DestinationFolder="$(OutputPath)TestFiles/Generators.Support" />
+  </Target>
+  
+</Project>

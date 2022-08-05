@@ -1,6 +1,11 @@
-﻿using MaSch.Generators.Common;
+﻿using MaSch.Generators.Support;
 using Microsoft.CodeAnalysis;
-using static MaSch.Generators.Common.CodeGenerationHelpers;
+using Microsoft.CodeAnalysis.Text;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace MaSch.Generators;
 
@@ -25,14 +30,10 @@ public class SqlQueryAccessorGenerator : ISourceGenerator
     /// <inheritdoc />
     public void Execute(GeneratorExecutionContext context)
     {
-        var debugGeneratorSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.DebugGeneratorAttribute");
-
         if (!context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.generatesqlqueryaccessor", out var strShouldGenerate) || !bool.TryParse(strShouldGenerate, out var shouldGenerate) || !shouldGenerate)
             return;
 
         var assemblyAttributes = context.Compilation.Assembly.GetAttributes();
-        if (assemblyAttributes.Any(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, debugGeneratorSymbol)))
-            LaunchDebuggerOnBuild();
 
         _ = context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.rootnamespace", out var globalNamespaceName);
         _ = context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.projectdir", out var projectDir);
@@ -50,7 +51,7 @@ public class SqlQueryAccessorGenerator : ISourceGenerator
             className = DefaultClassName;
 
         var source = GenerateSqlQueryAccessor(globalNamespaceName, className, rootDir, context.AdditionalFiles.Where(x => x.Path.StartsWith(rootDir)));
-        context.AddSource(CreateHintName(className, nameof(SqlQueryAccessorGenerator)), source);
+        context.AddSource(SourceText.From(source), className);
     }
 
     private static string GenerateSqlQueryAccessor(string rootNamespace, string className, string rootDir, IEnumerable<AdditionalText> files)
@@ -59,7 +60,7 @@ public class SqlQueryAccessorGenerator : ISourceGenerator
         var dirStartIndex = rootDir.Length;
         foreach (var file in files)
         {
-            var relativePath = file.Path[dirStartIndex..].Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
+            var relativePath = file.Path.Substring(dirStartIndex).Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
             rootNode.Add(relativePath, file);
         }
 
@@ -97,7 +98,7 @@ public class SqlQueryAccessorGenerator : ISourceGenerator
                     SubNodes.Add(subNode);
                 }
 
-                subNode.Add(pathParts[1..], file);
+                subNode.Add(pathParts.Skip(1).ToArray(), file);
             }
         }
 

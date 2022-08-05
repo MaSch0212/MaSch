@@ -1,7 +1,8 @@
-﻿using MaSch.Core.Attributes;
-using MaSch.Generators.Common;
+﻿using MaSch.Core;
+using MaSch.Generators.Support;
 using Microsoft.CodeAnalysis;
-using static MaSch.Generators.Common.CodeGenerationHelpers;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace MaSch.Generators;
 
@@ -24,19 +25,18 @@ public class ObservablePropertiesGenerator : ISourceGenerator
         if (!context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.nullable", out var nullableProperty))
             nullableProperty = "disable";
 
-        var debugGeneratorSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.DebugGeneratorAttribute");
-        var definitionAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.ObservablePropertyDefinitionAttribute");
+        var definitionAttributeSymbol = context.Compilation.GetTypeByMetadataName(typeof(ObservablePropertyDefinitionAttribute).FullName);
         var observableObjectSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Observable.IObservableObject");
-        var observableObjectAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.GenerateObservableObjectAttribute");
-        var notifyPropChangeAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.GenerateNotifyPropertyChangedAttribute");
-        var accessModifierAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.ObservablePropertyAccessModifierAttribute");
+        var observableObjectAttributeSymbol = context.Compilation.GetTypeByMetadataName(typeof(GenerateObservableObjectAttribute).FullName);
+        var notifyPropChangeAttributeSymbol = context.Compilation.GetTypeByMetadataName(typeof(GenerateNotifyPropertyChangedAttribute).FullName);
+        var accessModifierAttributeSymbol = context.Compilation.GetTypeByMetadataName(typeof(ObservablePropertyAccessModifierAttribute).FullName);
 
         if (definitionAttributeSymbol == null || (observableObjectSymbol == null && observableObjectAttributeSymbol == null))
             return;
 
-        var query = from typeSymbol in context.Compilation.SourceModule.GlobalNamespace.GetNamespaceTypes()
+        var query = from typeSymbol in context.Compilation.SourceModule.GlobalNamespace.EnumerateNamespaceTypes()
                     where (observableObjectSymbol != null && typeSymbol.AllInterfaces.Contains(observableObjectSymbol)) ||
-                          (observableObjectAttributeSymbol != null && typeSymbol.GetAllAttributes().FirstOrDefault(x =>
+                          (observableObjectAttributeSymbol != null && typeSymbol.EnumerateAllAttributes().FirstOrDefault(x =>
                             SymbolEqualityComparer.Default.Equals(x.AttributeClass, observableObjectAttributeSymbol) ||
                             SymbolEqualityComparer.Default.Equals(x.AttributeClass, notifyPropChangeAttributeSymbol)) != null)
                     from @interface in typeSymbol.Interfaces
@@ -48,9 +48,6 @@ public class ObservablePropertiesGenerator : ISourceGenerator
 
         foreach (var type in query)
         {
-            if (type.Key.GetAttributes().Any(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, debugGeneratorSymbol)))
-                LaunchDebuggerOnBuild();
-
             var builder = new SourceBuilder();
 
             _ = builder.AppendLine($"#nullable {nullableProperty}")
@@ -64,20 +61,20 @@ public class ObservablePropertiesGenerator : ISourceGenerator
                 bool isFirst = true;
                 foreach (var propInfo in type)
                 {
-                    var fieldName = $"_{propInfo.Name[0].ToString().ToLowerInvariant()}{propInfo.Name[1..]}";
+                    var fieldName = $"_{propInfo.Name[0].ToString().ToLowerInvariant()}{propInfo.Name.Substring(1)}";
                     var propertyName = propInfo.Name;
 
                     if (!isFirst)
                         _ = builder.AppendLine();
                     isFirst = false;
 
-                    _ = builder.AppendLine($"private {propInfo.Type.ToDisplayString(UsageFormat)} {fieldName};");
+                    _ = builder.AppendLine($"private {propInfo.Type.ToUsageString()} {fieldName};");
 
                     var xmlDoc = propInfo.GetFormattedDocumentationCommentXml();
                     if (xmlDoc != null)
                         _ = builder.AppendLine(xmlDoc);
 
-                    foreach (var attribute in propInfo.GetAllAttributes())
+                    foreach (var attribute in propInfo.EnumerateAllAttributes())
                     {
                         _ = builder.AppendLine($"[{Regex.Replace(attribute.ToString(), @"[\{\}]", string.Empty)}]");
                     }
@@ -100,7 +97,7 @@ public class ObservablePropertiesGenerator : ISourceGenerator
                             getterModifier = GetAccessModifier((AccessModifier)getterModifierKey) + " ";
                     }
 
-                    using (builder.AddBlock($"{accessModifier} {propInfo.Type.ToDisplayString(UsageFormat)} {propertyName}"))
+                    using (builder.AddBlock($"{accessModifier} {propInfo.Type.ToUsageString()} {propertyName}"))
                     {
                         using (builder.AddBlock($"{getterModifier}get"))
                         {
@@ -119,15 +116,15 @@ public class ObservablePropertiesGenerator : ISourceGenerator
                     }
 
                     _ = builder.AppendLine($"[SuppressMessage(\"Style\", \"IDE0060:Remove unused parameter\", Justification = \"Partial Method!\")]")
-                           .AppendLine($"partial void OnGet{propertyName}(ref {propInfo.Type.ToDisplayString(UsageFormat)} value);")
+                           .AppendLine($"partial void OnGet{propertyName}(ref {propInfo.Type.ToUsageString()} value);")
                            .AppendLine($"[SuppressMessage(\"Style\", \"IDE0060:Remove unused parameter\", Justification = \"Partial Method!\")]")
-                           .AppendLine($"partial void On{propertyName}Changing({propInfo.Type.ToDisplayString(UsageFormat)} previous, ref {propInfo.Type.ToDisplayString(UsageFormat)} value);")
+                           .AppendLine($"partial void On{propertyName}Changing({propInfo.Type.ToUsageString()} previous, ref {propInfo.Type.ToUsageString()} value);")
                            .AppendLine($"[SuppressMessage(\"Style\", \"IDE0060:Remove unused parameter\", Justification = \"Partial Method!\")]")
-                           .AppendLine($"partial void On{propertyName}Changed({propInfo.Type.ToDisplayString(UsageFormat)} previous, {propInfo.Type.ToDisplayString(UsageFormat)} value);");
+                           .AppendLine($"partial void On{propertyName}Changed({propInfo.Type.ToUsageString()} previous, {propInfo.Type.ToUsageString()} value);");
                 }
             }
 
-            context.AddSource(type.Key, builder, nameof(ObservablePropertiesGenerator));
+            context.AddSource(builder.ToSourceText(), type.Key);
         }
     }
 

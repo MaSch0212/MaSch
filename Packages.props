@@ -22,18 +22,20 @@
     <PackageReference Update="Avalonia.Desktop" Version="0.10.13" />
     <PackageReference Update="Avalonia.Diagnostics" Version="0.10.13" />
     <PackageReference Update="Avalonia.ReactiveUI" Version="0.10.13" />
-    <PackageReference Update="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
+    <PackageReference Update="Microsoft.CodeAnalysis.CSharp" Version="4.2.0" />
     <PackageReference Update="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Update="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.9.4" />
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.0.0" />
     <PackageReference Update="Moq" Version="4.16.1" />
     <PackageReference Update="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Update="MSTest.TestAdapter" Version="2.2.3" />
-    <PackageReference Update="MSTest.TestFramework" Version="2.2.3" />
+    <PackageReference Update="MSTest.TestAdapter" Version="2.2.10" />
+    <PackageReference Update="MSTest.TestFramework" Version="2.2.10" />
     <PackageReference Update="Prism.Wpf" Version="[7.2.0.1367,8.0.0)" />
     <PackageReference Update="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Update="System.Diagnostics.EventLog" Version="6.0.0" />
+    <PackageReference Update="Verify.SourceGenerators" Version="1.5.0" />
+    <PackageReference Update="Verify.MSTest" Version="17.5.0" />
   </ItemGroup>
 
   <!-- Global packages (analyzers and stuff) -->

@@ -1,3 +1,3 @@
-﻿using MaSch.Core.Attributes;
+﻿using MaSch.Core;
 
 [assembly: Shims(Shims.NullableReferenceTypes)]

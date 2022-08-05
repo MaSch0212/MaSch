@@ -1,6 +1,8 @@
-﻿using MaSch.Generators.Common;
+﻿using MaSch.Core;
+using MaSch.Generators.Support;
 using Microsoft.CodeAnalysis;
-using static MaSch.Generators.Common.CodeGenerationHelpers;
+using System;
+using System.Linq;
 
 namespace MaSch.Generators;
 
@@ -27,29 +29,18 @@ public class ObservableObjectGenerator : ISourceGenerator
     /// <inheritdoc />
     public void Execute(GeneratorExecutionContext context)
     {
-        var debugGeneratorSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.DebugGeneratorAttribute");
-        var observableObjectAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.GenerateObservableObjectAttribute");
-        var notifyPropChangeAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.GenerateNotifyPropertyChangedAttribute");
-
-        if (observableObjectAttributeSymbol == null)
-            return;
-
-        var query = from typeSymbol in context.Compilation.SourceModule.GlobalNamespace.GetNamespaceTypes()
+        var query = from typeSymbol in context.Compilation.SourceModule.GlobalNamespace.EnumerateNamespaceTypes()
                     let attributes = typeSymbol.GetAttributes()
-                    let shouldDebug = attributes.Any(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, debugGeneratorSymbol))
-                    let oo = attributes.FirstOrDefault(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, observableObjectAttributeSymbol))
-                    let npc = attributes.FirstOrDefault(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, notifyPropChangeAttributeSymbol))
+                    let oo = attributes.FirstOrDefault(x => x.AttributeClass.ToDisplayString() == typeof(GenerateObservableObjectAttribute).FullName)
+                    let npc = attributes.FirstOrDefault(x => x.AttributeClass.ToDisplayString() == typeof(GenerateNotifyPropertyChangedAttribute).FullName)
                     let interfaceType = (oo is not null ? InterfaceType.ObservableObject : (InterfaceType?)null) ??
                                         (npc is not null ? InterfaceType.NotifyPropertyChanged : (InterfaceType?)null) ??
                                         InterfaceType.None
                     where interfaceType != InterfaceType.None
-                    select (typeSymbol, interfaceType, attribute: oo ?? npc, shouldDebug);
+                    select (typeSymbol, interfaceType, attribute: oo ?? npc);
 
-        foreach (var (typeSymbol, interfaceType, attribute, shouldDebug) in query)
+        foreach (var (typeSymbol, interfaceType, attribute) in query)
         {
-            if (shouldDebug)
-                LaunchDebuggerOnBuild();
-
             var interfaceName = interfaceType switch
             {
                 InterfaceType.NotifyPropertyChanged => "System.ComponentModel.INotifyPropertyChanged",
@@ -139,7 +130,7 @@ public class ObservableObjectGenerator : ISourceGenerator
                 }
             }
 
-            context.AddSource(typeSymbol, builder, nameof(ObservableObjectGenerator));
+            context.AddSource(builder.ToSourceText(), typeSymbol);
         }
     }
 }

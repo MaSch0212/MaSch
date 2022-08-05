@@ -1,4 +1,4 @@
-﻿using MaSch.Core.Attributes;
+﻿using MaSch.Core;
 using System.Windows;
 using System.Windows.Markup;
 

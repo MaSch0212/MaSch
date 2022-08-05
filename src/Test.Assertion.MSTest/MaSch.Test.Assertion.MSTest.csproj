@@ -5,6 +5,7 @@
     <RootNamespace>MaSch.Test.Assertion</RootNamespace>
     <TargetFrameworks>$(TfmsNetCoreApp);$(TfmsNetFramework);$(TfmsNetStandard)</TargetFrameworks>
     <DefineConstants>$(DefineConstants);MSTEST</DefineConstants>
+    <EnableMaSchGenerators>true</EnableMaSchGenerators>
 
     <!-- Package Info -->
     <Description>Contains Assertion logic for tests written with MSTest.</Description>
@@ -14,11 +15,6 @@
 
   <ItemGroup>
     <Compile Include="$(GitSourceDir)Test.Assertion/**/*.cs" Exclude="$(GitSourceDir)Test.Assertion/obj/**/*" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="$(GitSourceDir)Generators\Resources\CallerArgumentExpression.cs" Link="Shims\CallerArgumentExpression.cs" />
-    <Compile Include="$(GitSourceDir)Generators\Resources\NullableReferenceTypes.cs" Link="Shims\NullableReferenceTypes.cs" />
   </ItemGroup>
 
   <ItemGroup>

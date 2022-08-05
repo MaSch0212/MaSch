@@ -1,6 +1,8 @@
-﻿using MaSch.Generators.Common;
+﻿using MaSch.Core;
+using MaSch.Generators.Support;
 using Microsoft.CodeAnalysis;
-using static MaSch.Generators.Common.CodeGenerationHelpers;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MaSch.Generators;
 
@@ -20,31 +22,28 @@ public class WrapperClassGenerator : ISourceGenerator
     /// <inheritdoc />
     public void Execute(GeneratorExecutionContext context)
     {
-        var debugGeneratorSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.DebugGeneratorAttribute");
-        var wrappingAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.WrappingAttribute");
+        var wrappingAttributeSymbol = context.Compilation.GetTypeByMetadataName(typeof(WrappingAttribute).FullName);
 
         if (wrappingAttributeSymbol == null)
             return;
 
-        var query = from typeSymbol in context.Compilation.SourceModule.GlobalNamespace.GetNamespaceTypes()
+#pragma warning disable RS1024 // Symbols should be compared for equality
+        var query = from typeSymbol in context.Compilation.SourceModule.GlobalNamespace.EnumerateNamespaceTypes()
                     let attributes = typeSymbol.GetAttributes()
-                    let shouldDebug = attributes.Any(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, debugGeneratorSymbol))
                     from attribute in attributes
                     where SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, wrappingAttributeSymbol)
-                    group attribute by (typeSymbol, shouldDebug) into g
+                    group attribute by typeSymbol into g
                     select g;
+#pragma warning restore RS1024 // Symbols should be compared for equality
 
         foreach (var type in query)
         {
-            if (type.Key.shouldDebug)
-                LaunchDebuggerOnBuild();
-
             var builder = new SourceBuilder();
 
-            using (builder.AddBlock($"namespace {type.Key.typeSymbol.ContainingNamespace}"))
-            using (builder.AddBlock($"partial class {type.Key.typeSymbol.Name}"))
+            using (builder.AddBlock($"namespace {type.Key.ContainingNamespace}"))
+            using (builder.AddBlock($"partial class {type.Key.Name}"))
             {
-                var existingMembers = type.Key.typeSymbol.GetMembers();
+                var existingMembers = type.Key.GetMembers();
                 var wrappedTypes = new List<(INamedTypeSymbol Type, string PropName)>();
                 bool isFirstRegion = true;
                 foreach (var attribute in type)
@@ -64,7 +63,7 @@ public class WrapperClassGenerator : ISourceGenerator
                 if (!existingMembers.OfType<IMethodSymbol>().Any(x => x.MethodKind == MethodKind.Constructor && x.Parameters.Length > 0))
                 {
                     _ = builder.AppendLine();
-                    using (builder.AddBlock($"public {type.Key.typeSymbol.Name}({string.Join(", ", wrappedTypes.Select(x => $"{x} wrapped{x.Type.Name}"))})"))
+                    using (builder.AddBlock($"public {type.Key.Name}({string.Join(", ", wrappedTypes.Select(x => $"{x} wrapped{x.Type.Name}"))})"))
                     {
                         foreach (var t in wrappedTypes)
                             _ = builder.AppendLine($"{t.PropName} = wrapped{t.Type.Name};");
@@ -72,7 +71,7 @@ public class WrapperClassGenerator : ISourceGenerator
                 }
             }
 
-            context.AddSource(type.Key.typeSymbol, builder, nameof(WrapperClassGenerator));
+            context.AddSource(builder.ToSourceText(), type.Key);
         }
     }
 
@@ -91,9 +90,9 @@ public class WrapperClassGenerator : ISourceGenerator
                 if (existingMembers.OfType<IPropertySymbol>().Any(x => x.Name == p.Name))
                     continue;
                 _ = builder.AppendLine();
-                using (builder.AddBlock($"public virtual {p.ToDisplayString(DefinitionFormat)}"))
+                using (builder.AddBlock($"public virtual {p.ToDefinitionString()}"))
                 {
-                    var usage = p.IsIndexer ? $"{name}{p.ToDisplayString(UsageFormat)[4..]}" : $"{name}.{p.ToDisplayString(UsageFormat)}";
+                    var usage = p.IsIndexer ? $"{name}{p.ToUsageString().Substring(4)}" : $"{name}.{p.ToUsageString()}";
                     if (p.GetMethod != null)
                         _ = builder.AppendLine($"get => {usage};");
                     if (p.SetMethod != null)
@@ -106,7 +105,7 @@ public class WrapperClassGenerator : ISourceGenerator
                 if (existingMembers.OfType<IEventSymbol>().Any(x => x.Name == e.Name))
                     continue;
                 _ = builder.AppendLine();
-                using (builder.AddBlock($"public virtual {e.ToDisplayString(DefinitionFormat)}"))
+                using (builder.AddBlock($"public virtual {e.ToDefinitionString()}"))
                 {
                     if (e.AddMethod != null)
                         _ = builder.AppendLine($"add => {name}.{e.Name} += value;");
@@ -122,7 +121,7 @@ public class WrapperClassGenerator : ISourceGenerator
                 hadMethod = true;
                 if (existingMembers.OfType<IMethodSymbol>().Any(x => x.Name == m.Name && x.TypeParameters.Length == m.TypeParameters.Length && x.Parameters.Select(y => y.Type).SequenceEqual(m.Parameters.Select(y => y.Type), SymbolEqualityComparer.Default)))
                     continue;
-                _ = builder.AppendLine($"public virtual {m.ToDisplayString(DefinitionFormat)} => {name}.{m.ToDisplayString(UsageFormat)};");
+                _ = builder.AppendLine($"public virtual {m.ToDefinitionString()} => {name}.{m.ToUsageString()};");
             }
 
             if (hadMethod)

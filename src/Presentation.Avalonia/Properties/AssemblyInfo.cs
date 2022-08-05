@@ -1,5 +1,5 @@
 ﻿using Avalonia.Metadata;
-using MaSch.Core.Attributes;
+using MaSch.Core;
 
 [assembly: Shims(Shims.IndexAndRange)]
 

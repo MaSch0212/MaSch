@@ -19,20 +19,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Resources\CallerArgumentExpression.cs" />
-    <Compile Remove="Resources\OSVersioning.cs" />
-    <Compile Remove="Resources\Records.cs" />
+    <Using Remove="*" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="$(GitSourceDir)Core/Attributes/Enums.cs" Link="Common/Enums.cs" />
-    <Compile Include="$(GitSourceDir)Core/Extensions/ArrayExtensions.cs" Link="Extensions/ArrayExtensions.cs" />
+    <Compile Remove="Shims\IndexAndRange.cs" />
+    <Compile Remove="Shims\OSVersioning.cs" />
+    <Compile Remove="Shims\Records.cs" />
   </ItemGroup>
   
   <ItemGroup>
-    <None Include="Resources/OSVersioning.cs" />
-    <None Include="Resources/Records.cs" />
-    <None Include="Resources\CallerArgumentExpression.cs" />
+    <None Include="Shims\OSVersioning.cs" />
+    <None Include="Shims\Records.cs" />
+    <None Include="Shims\IndexAndRange.cs" />
   </ItemGroup>
   
   <ItemGroup>
@@ -41,6 +40,10 @@
   
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Generators.Support\MaSch.Generators.Support.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
   
   <ItemGroup>

@@ -118,43 +118,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="AccessModifier" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\staticfiles\accessmodifier.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="AddSourceExtensions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\support\addsourceextensions.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="CallerArgumentExpression" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\shims\callerargumentexpression.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="SourceBuilder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\support\sourcebuilder.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="GenerateNotifyPropertyChangedAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\staticfiles\generatenotifypropertychangedattribute.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="SymbolExtensions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\support\symbolextensions.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="GenerateObservableObjectAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\staticfiles\generateobservableobjectattribute.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="IndexAndRange" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\shims\indexandrange.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="NullableReferenceTypes" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\shims\nullablereferencetypes.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="ObservablePropertyAccessModifierAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\staticfiles\observablepropertyaccessmodifierattribute.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="ObservablePropertyDefinitionAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\staticfiles\observablepropertydefinitionattribute.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="OSVersioning" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\shims\osversioning.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="Records" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\shims\records.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="Shims" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\staticfiles\shims.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="ShimsAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\staticfiles\shimsattribute.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="WrappingAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\staticfiles\wrappingattribute.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="SyntaxExtensions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\support\syntaxextensions.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>

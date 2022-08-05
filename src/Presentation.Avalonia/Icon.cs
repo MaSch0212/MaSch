@@ -1,5 +1,5 @@
 ﻿using Avalonia.Media;
-using MaSch.Core.Attributes;
+using MaSch.Core;
 
 namespace MaSch.Presentation.Avalonia;
 

@@ -1,8 +1,10 @@
-﻿using MaSch.Core.Attributes;
+﻿using MaSch.Core;
 using MaSch.Generators.Common;
 using MaSch.Generators.Properties;
 using Microsoft.CodeAnalysis;
-using static MaSch.Generators.Common.CodeGenerationHelpers;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Linq;
+using System.Threading;
 
 namespace MaSch.Generators;
 
@@ -11,49 +13,52 @@ namespace MaSch.Generators;
 /// </summary>
 /// <seealso cref="ISourceGenerator" />
 [Generator]
-public class ShimsGenerator : ISourceGenerator
+public class ShimsGenerator : IIncrementalGenerator
 {
-    /// <inheritdoc />
-    public void Initialize(GeneratorInitializationContext context)
+    /// <inheritdoc/>
+    public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        // No initialization required
+        var shims = context.SyntaxProvider
+            .CreateSyntaxProvider(
+                predicate: FilterSyntax,
+                transform: Transform)
+            .Where(x => x != Shims.None);
+
+        context.RegisterSourceOutput(shims, (ctx, source) => Execute(ctx, source));
     }
 
-    /// <inheritdoc />
-    public void Execute(GeneratorExecutionContext context)
+    private static bool FilterSyntax(SyntaxNode node, CancellationToken cancellation)
     {
-        var debugGeneratorSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.DebugGeneratorAttribute");
-        var shimsAttributeSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.ShimsAttribute");
+        return node is AttributeSyntax attributeSyntax &&
+               attributeSyntax.Parent is AttributeListSyntax attributeListSyntax &&
+               attributeListSyntax.Target?.Identifier.ValueText == "assembly";
+    }
 
-        if (shimsAttributeSymbol == null)
-            return;
-
-        var assemblyAttributes = context.Compilation.Assembly.GetAttributes();
-        if (assemblyAttributes.Any(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, debugGeneratorSymbol)))
-            LaunchDebuggerOnBuild();
-
-        var shimsAttribute = assemblyAttributes.FirstOrDefault(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, shimsAttributeSymbol));
-        if (shimsAttribute == null || shimsAttribute.ConstructorArguments.Length == 0)
-            return;
-
-        if (shimsAttribute.ConstructorArguments[0].Value is int shimsKey)
+    private static Shims Transform(GeneratorSyntaxContext context, CancellationToken cancellation)
+    {
+        if (context.Node is not AttributeSyntax attributeSyntax ||
+            context.SemanticModel.GetSymbolInfo(attributeSyntax, cancellation).Symbol is not IMethodSymbol methodSymbol ||
+            methodSymbol.ContainingType.ToDisplayString() != typeof(ShimsAttribute).FullName)
         {
-            var shims = (Shims)shimsKey;
-            if (shims.HasFlag(Shims.Records))
-                AddShim(Shims.Records, Resources.Records);
-            if (shims.HasFlag(Shims.IndexAndRange))
-                AddShim(Shims.IndexAndRange, Resources.IndexAndRange);
-            if (shims.HasFlag(Shims.NullableReferenceTypes))
-                AddShim(Shims.NullableReferenceTypes, Resources.NullableReferenceTypes);
-            if (shims.HasFlag(Shims.OSVersioning))
-                AddShim(Shims.OSVersioning, Resources.OSVersioning);
-            if (shims.HasFlag(Shims.CallerArgumentExpression))
-                AddShim(Shims.CallerArgumentExpression, Resources.CallerArgumentExpression);
+            return 0;
         }
 
-        void AddShim(Shims shim, string code)
-        {
-            context.AddSource(context.Compilation.Assembly.CreateHintName(nameof(ShimsGenerator), shim.ToString()), code);
-        }
+        var shimsAttributeData = context.SemanticModel.Compilation.Assembly.GetAttributes().FirstOrDefault(x => SymbolEqualityComparer.Default.Equals(x.AttributeConstructor, methodSymbol));
+        return (Shims)(shimsAttributeData?.ConstructorArguments.FirstOrDefault().Value as int? ?? 0);
+    }
+
+    private static void Execute(SourceProductionContext context, Shims shims)
+    {
+        var creator = new StaticSourceCreator(context.AddSource);
+        if (shims.HasFlag(Shims.Records))
+            creator.AddSource(Resources.Records);
+        if (shims.HasFlag(Shims.IndexAndRange))
+            creator.AddSource(Resources.IndexAndRange);
+        if (shims.HasFlag(Shims.NullableReferenceTypes))
+            creator.AddSource(Resources.NullableReferenceTypes);
+        if (shims.HasFlag(Shims.OSVersioning))
+            creator.AddSource(Resources.OSVersioning);
+        if (shims.HasFlag(Shims.CallerArgumentExpression))
+            creator.AddSource(Resources.CallerArgumentExpression);
     }
 }

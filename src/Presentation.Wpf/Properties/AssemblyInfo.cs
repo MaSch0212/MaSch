@@ -1,4 +1,4 @@
-﻿using MaSch.Core.Attributes;
+﻿using MaSch.Core;
 using System.Windows.Markup;
 
 [assembly: Shims(Shims.IndexAndRange)]

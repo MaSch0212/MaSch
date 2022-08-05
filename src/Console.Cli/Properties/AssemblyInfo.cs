@@ -1,4 +1,4 @@
-﻿using MaSch.Core.Attributes;
+﻿using MaSch.Core;
 
 [assembly: Shims(Shims.IndexAndRange | Shims.NullableReferenceTypes | Shims.Records)]
 

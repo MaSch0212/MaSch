@@ -1,6 +1,11 @@
-﻿using MaSch.Generators.Common;
+﻿using MaSch.Generators.Support;
 using Microsoft.CodeAnalysis;
-using static MaSch.Generators.Common.CodeGenerationHelpers;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace MaSch.Generators;
 
@@ -20,15 +25,14 @@ public class WpfIconFontGenerator : ISourceGenerator
     /// <inheritdoc />
     public void Execute(GeneratorExecutionContext context)
     {
-        var debugGeneratorSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Attributes.DebugGeneratorAttribute");
         var iconFontAttribute = context.Compilation.GetTypeByMetadataName("MaSch.Presentation.Wpf.Attributes.WpfIconFontAttribute");
         var iconFontExtraGeomAttribute = context.Compilation.GetTypeByMetadataName("MaSch.Presentation.Wpf.Attributes.WpfIconFontExtraGeometryAttribute");
 
         if (iconFontAttribute == null || iconFontExtraGeomAttribute == null)
             return;
 
-        var query = from typeSymbol in context.Compilation.SourceModule.GlobalNamespace.GetNamespaceTypes()
-                    let attributes = typeSymbol.GetAllAttributes()
+        var query = from typeSymbol in context.Compilation.SourceModule.GlobalNamespace.EnumerateNamespaceTypes()
+                    let attributes = typeSymbol.EnumerateAllAttributes()
                     let iconFont = attributes.FirstOrDefault(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, iconFontAttribute))
                     where iconFont != null
                     let extraGeoms = (from attr in attributes
@@ -41,8 +45,6 @@ public class WpfIconFontGenerator : ISourceGenerator
 
         foreach (var (typeSymbol, iconFont, extraGeoms) in query)
         {
-            if (typeSymbol.GetAttributes().Any(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, debugGeneratorSymbol)))
-                LaunchDebuggerOnBuild();
 
             var fontName = iconFont.ConstructorArguments.FirstOrDefault().Value as string;
             var cssFileName = iconFont.ConstructorArguments.Skip(1).FirstOrDefault().Value as string;
@@ -111,7 +113,7 @@ public class WpfIconFontGenerator : ISourceGenerator
                 }
             }
 
-            context.AddSource(typeSymbol, builder, nameof(WpfIconFontGenerator));
+            context.AddSource(builder.ToSourceText(), typeSymbol);
         }
     }
 
