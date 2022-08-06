@@ -12,10 +12,7 @@
 
   <ItemGroup>
     <MaSchReference Include="Generators.Support" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Support\" />
+    <MaSchReference Include="Test.CodeAnalysis.CSharp.MSTest" />
   </ItemGroup>
 
   <Target Name="CopySupportFiles" AfterTargets="PostBuildEvent">

@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- General Project info -->
+    <RootNamespace>MaSch.Test.CodeAnalysis.CSharp</RootNamespace>
+    <TargetFrameworks>$(TfmsNetCoreApp);$(TfmsNetFramework);$(TfmsNetStandard)</TargetFrameworks>
+    <EnableMaSchGenerators>true</EnableMaSchGenerators>
+
+    <DefineConstants>$(DefineConstants);MSTEST</DefineConstants>
+
+    <!-- Package Info -->
+    <Description>Contains some supporting code for Unit Testing Source Generators.</Description>
+    <Version>0.1.0</Version>
+    <PackageTags>masch test mstest sourcegenerators generators</PackageTags>
+
+    <DoesNotReturnAttribute>DoesNotReturnAttribute</DoesNotReturnAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="Microsoft.CodeAnalysis.Accessibility" Alias="Access" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(GitSourceDir)Test.CodeAnalysis.CSharp/**/*.cs" Exclude="$(GitSourceDir)Test.CodeAnalysis.CSharp/obj/**/*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <MaSchReference Include="Test.Assertion.MSTest" />
+  </ItemGroup>
+
+</Project>
