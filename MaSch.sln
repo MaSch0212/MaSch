@@ -119,7 +119,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaSch.Generators.Support", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaSch.Generators.Support.UnitTests", "test\Generators.Support.UnitTests\MaSch.Generators.Support.UnitTests.csproj", "{325B6CAE-6B41-495E-86B6-456B3076198B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generators.UnitTests", "test\Generators.UnitTests\Generators.UnitTests.csproj", "{6ED62C69-A436-4553-BA9D-AA8A14AFB6A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaSch.Generators.UnitTests", "test\Generators.UnitTests\MaSch.Generators.UnitTests.csproj", "{6ED62C69-A436-4553-BA9D-AA8A14AFB6A2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaSch.Test.CodeAnalysis.CSharp.MSTest", "src\Test.CodeAnalysis.CSharp.MSTest\MaSch.Test.CodeAnalysis.CSharp.MSTest.csproj", "{BA8AFD44-EF29-4D95-A2AA-B6FB09B12074}"
 EndProject
