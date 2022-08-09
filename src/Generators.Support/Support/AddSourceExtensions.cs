@@ -99,6 +99,27 @@ namespace MaSch.Generators.Support
         public static void AddSource(this SourceProductionContext context, SourceText sourceText, ISymbol relatedSymbol, string? fileNameWithoutExtension = null, string? purpose = null)
             => AddSource(context.AddSource, sourceText, relatedSymbol, purpose, fileNameWithoutExtension);
 
+        /// <summary>
+        /// Adds a <see cref="SourceText"/> to the compilation.
+        /// </summary>
+        /// <param name="context">The context to add the <see cref="SourceText"/>.</param>
+        /// <param name="sourceText">The <see cref="SourceText"/> to add.</param>
+        /// <param name="fileNameWithoutExtension">The display name of the generated source.</param>
+        /// <param name="purpose">The purpose of the source. Used to generate a different hash for the hint name. Useful when potentially generating multiple files with the same name.</param>
+        public static void AddSource(this IAddSource context, SourceText sourceText, string fileNameWithoutExtension, string? purpose = null)
+            => AddSource(context.AddSource, sourceText, null, purpose, fileNameWithoutExtension);
+
+        /// <summary>
+        /// Adds a <see cref="SourceText"/> to the compilation.
+        /// </summary>
+        /// <param name="context">The context to add the <see cref="SourceText"/>.</param>
+        /// <param name="sourceText">The <see cref="SourceText"/> to add.</param>
+        /// <param name="relatedSymbol">A <see cref="ISymbol"/> that is related to the generated code. Used to generate a different hash for the hint name and to automatically determine <paramref name="fileNameWithoutExtension"/>.</param>
+        /// <param name="fileNameWithoutExtension">The display name of the generated source.</param>
+        /// <param name="purpose">The purpose of the source. Used to generate a different hash for the hint name. Useful when potentially generating multiple files with the same name.</param>
+        public static void AddSource(this IAddSource context, SourceText sourceText, ISymbol relatedSymbol, string? fileNameWithoutExtension = null, string? purpose = null)
+            => AddSource(context.AddSource, sourceText, relatedSymbol, purpose, fileNameWithoutExtension);
+
         private static void AddSource(Action<string, SourceText> addSourceFunc, SourceText sourceText, ISymbol? relatedSymbol, string? purpose, string? fileNameWithoutExtension)
         {
             fileNameWithoutExtension ??= relatedSymbol is null ? "GeneratedSourceFile" : FileNameReplaceRegex.Replace(relatedSymbol.Name, "-");

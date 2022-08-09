@@ -33,7 +33,7 @@ public class GeneratorTests : TestClassBase
     public void AllFilesGenerated()
     {
         var result = CompilationBuilder.Create()
-            .WithGenerator(new Generator())
+            .WithGenerator(new StaticFilesGenerator())
             .WithReferences(_assemblyReferences)
             .Build();
 

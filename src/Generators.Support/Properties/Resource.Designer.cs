@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MaSch.Generators.Properties {
+namespace MaSch.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace MaSch.Generators.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MaSch.Generators.Properties.Resource", typeof(Resource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MaSch.Properties.Resource", typeof(Resource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -81,6 +81,56 @@ namespace MaSch.Generators.Properties {
         internal static string AddSourceExtensions {
             get {
                 return ResourceManager.GetString("AddSourceExtensions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System;
+        ///
+        ///#pragma warning disable SA1649 // File name should match first type name
+        ///#pragma warning disable SA1402 // File may only contain a single type
+        ///
+        ///#nullable enable
+        ///
+        ///namespace MaSch.Generators.Support
+        ///{
+        ///    /// &lt;summary&gt;
+        ///    /// If added to a class or struct, boiler plat code is generated.
+        ///    /// &lt;/summary&gt;
+        ///    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
+        ///    public class FileGeneratorAttribute : Attribute
+        ///    {
+        ///      [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Attributes {
+            get {
+                return ResourceManager.GetString("Attributes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using Microsoft.CodeAnalysis.Text;
+        ///
+        ///#pragma warning disable SA1649 // File name should match first type name
+        ///
+        ///#nullable enable
+        ///
+        ///namespace MaSch.Generators.Support
+        ///{
+        ///    /// &lt;summary&gt;
+        ///    /// Provides a AddSource method.
+        ///    /// &lt;/summary&gt;
+        ///    public interface IAddSource
+        ///    {
+        ///        /// &lt;summary&gt;
+        ///        /// Adds a source text to the compilation.
+        ///        /// &lt;/summary&gt;
+        ///        /// &lt;param name=&quot;hintName&quot;&gt;The hint name.&lt;/param&gt;
+        ///        /// &lt;param name=&quot;sourceText&quot;&gt;The source text to add.&lt;/pa [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Interfaces {
+            get {
+                return ResourceManager.GetString("Interfaces", resourceCulture);
             }
         }
         

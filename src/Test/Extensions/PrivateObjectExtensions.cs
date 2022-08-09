@@ -6,6 +6,8 @@
 [ExcludeFromCodeCoverage]
 public static class PrivateObjectExtensions
 {
+    private const BindingFlags BindToEveryThing = BindingFlags.Default | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public;
+
     /// <summary>
     /// Invokes the specified method.
     /// </summary>
@@ -285,5 +287,63 @@ public static class PrivateObjectExtensions
     public static T GetProperty<T>(this PrivateObject po, string name, BindingFlags bindingFlags, Type[] parameterTypes, object[] args)
     {
         return (T)po.GetProperty(name, bindingFlags, parameterTypes, args);
+    }
+
+    /// <summary>
+    /// Adds an event handler.
+    /// </summary>
+    /// <param name="po">The private object.</param>
+    /// <param name="name">Name of the event.</param>
+    /// <param name="eventHandler">The event handler to add to the specified event.</param>
+    public static void AddEventHandler(this PrivateObject po, string name, Delegate? eventHandler)
+        => AddEventHandler(po, name, BindToEveryThing, eventHandler);
+
+    /// <summary>
+    /// Adds an event handler.
+    /// </summary>
+    /// <param name="po">The private object.</param>
+    /// <param name="name">Name of the event.</param>
+    /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="T:System.Reflection.BindingFlags"/> that specify how the search is conducted.</param>
+    /// <param name="eventHandler">The event handler to add to the specified event.</param>
+    [SuppressMessage("ReflectionAnalyzers.SystemReflection", "REFL045:These flags are insufficient to match any members", Justification = "Binding flags are passen into this method")]
+    public static void AddEventHandler(this PrivateObject po, string name, BindingFlags bindingFlags, Delegate? eventHandler)
+    {
+        var ei = po.RealType.GetEvent(name, bindingFlags);
+        if (ei == null)
+        {
+            throw new ArgumentException(
+                string.Format(CultureInfo.CurrentCulture, "The member specified ({0}) could not be found. You might need to regenerate your private accessor, or the member may be private and defined on a base class. If the latter is true, you need to pass the type that defines the member into PrivateObject's constructor.", name));
+        }
+
+        ei.AddEventHandler(po.Target, eventHandler);
+    }
+
+    /// <summary>
+    /// Removes an event handler.
+    /// </summary>
+    /// <param name="po">The private object.</param>
+    /// <param name="name">Name of the event.</param>
+    /// <param name="eventHandler">The event handler to remove from the specified event.</param>
+    public static void RemoveEventHandler(this PrivateObject po, string name, Delegate? eventHandler)
+        => RemoveEventHandler(po, name, BindToEveryThing, eventHandler);
+
+    /// <summary>
+    /// Removes an event handler.
+    /// </summary>
+    /// <param name="po">The private object.</param>
+    /// <param name="name">Name of the event.</param>
+    /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="T:System.Reflection.BindingFlags"/> that specify how the search is conducted.</param>
+    /// <param name="eventHandler">The event handler to remove from the specified event.</param>
+    [SuppressMessage("ReflectionAnalyzers.SystemReflection", "REFL045:These flags are insufficient to match any members", Justification = "Binding flags are passen into this method")]
+    public static void RemoveEventHandler(this PrivateObject po, string name, BindingFlags bindingFlags, Delegate? eventHandler)
+    {
+        var ei = po.RealType.GetEvent(name, bindingFlags);
+        if (ei == null)
+        {
+            throw new ArgumentException(
+                string.Format(CultureInfo.CurrentCulture, "The member specified ({0}) could not be found. You might need to regenerate your private accessor, or the member may be private and defined on a base class. If the latter is true, you need to pass the type that defines the member into PrivateObject's constructor.", name));
+        }
+
+        ei.RemoveEventHandler(po.Target, eventHandler);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using MaSch.Test.CodeAnalysis.CSharp.Validators;
 using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
+using System.Reflection;
 
 namespace MaSch.Test.CodeAnalysis.CSharp;
 
@@ -93,5 +94,17 @@ public class CompilationResult
         }
 
         System.Diagnostics.Trace.WriteLine(genLog.ToString());
+    }
+
+    public Assembly GetFinalAssembly()
+    {
+        using var stream = new MemoryStream();
+        var emitResult = FinalCompilation.Emit(stream);
+
+        if (!emitResult.Success)
+            throw new InvalidOperationException($"Emitting assembly from compilation failed:\n{string.Join("\n", emitResult.Diagnostics.Select(x => x.ToString()))}");
+
+        stream.Seek(0, SeekOrigin.Begin);
+        return Assembly.Load(stream.ToArray());
     }
 }

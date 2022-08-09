@@ -2,8 +2,13 @@
 using MaSch.Test.CodeAnalysis.CSharp.Extensions;
 using Microsoft.CodeAnalysis;
 
+// TODO
+#pragma warning disable SA1600 // Elements should be documented
+#pragma warning disable SA1601 // Partial elements should be documented
+
 namespace MaSch.Test.CodeAnalysis.CSharp.Validators;
 
+[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "File name matches (except the 'I')")]
 public interface ISymbolValidator : IValidator
 {
     new ISymbolValidator? Parent { get; }
@@ -78,6 +83,8 @@ public class SymbolValidator<T> : ISymbolValidator<T>
     }
 }
 
+[SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1204:Static elements should appear before instance elements", Justification = "Extended class definition should come first")]
+[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Extension methods are fine")]
 public static partial class SymbolValidatorExtensions
 {
     public static T? TryGetParent<T>(this ISymbolValidator validator)

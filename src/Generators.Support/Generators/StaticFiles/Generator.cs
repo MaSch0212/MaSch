@@ -1,11 +1,11 @@
-﻿using MaSch.Generators.Properties;
-using MaSch.Generators.Support;
+﻿using MaSch.Generators.Support;
+using MaSch.Properties;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace MaSch.Generators;
+namespace MaSch.Generators.StaticFiles;
 
 /// <summary>
 /// Generates the supporting code for other generator projects.
@@ -23,6 +23,8 @@ public class Generator : IIncrementalGenerator
     {
         new SourceCreator(context)
             .AddSource(Resource.AddSourceExtensions)
+            .AddSource(Resource.Attributes)
+            .AddSource(Resource.Interfaces)
             .AddSource(Resource.SourceBuilder)
             .AddSource(Resource.SymbolExtensions)
             .AddSource(Resource.SyntaxExtensions);

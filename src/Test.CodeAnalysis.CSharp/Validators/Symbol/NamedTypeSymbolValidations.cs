@@ -1,6 +1,9 @@
 ﻿using MaSch.Test.Assertion;
 using Microsoft.CodeAnalysis;
 
+// TODO
+#pragma warning disable SA1600 // Elements should be documented
+
 namespace MaSch.Test.CodeAnalysis.CSharp.Validators;
 
 public static class NamedTypeSymbolValidations
@@ -35,6 +38,22 @@ public static class NamedTypeSymbolValidations
         {
             var propertyValidator = new SymbolValidator<IFieldSymbol>(field, validator);
             fieldValidation(propertyValidator);
+        }
+
+        return validator;
+    }
+
+    public static ISymbolValidator<INamedTypeSymbol> HasEvent(this ISymbolValidator<INamedTypeSymbol> validator, string eventName)
+        => HasEvent(validator, eventName, null);
+    public static ISymbolValidator<INamedTypeSymbol> HasEvent(this ISymbolValidator<INamedTypeSymbol> validator, string eventName, Action<ISymbolValidator<IEventSymbol>>? eventValidation)
+    {
+        var @event = validator.Symbol.GetMembers(eventName).OfType<IEventSymbol>().FirstOrDefault();
+        Assert.Instance.IsNotNull(@event, $"Event \"{eventName}\" does not exist in type \"{GetTypeName(validator)}\".");
+
+        if (eventValidation is not null)
+        {
+            var propertyValidator = new SymbolValidator<IEventSymbol>(@event, validator);
+            eventValidation(propertyValidator);
         }
 
         return validator;
@@ -141,29 +160,29 @@ public static class NamedTypeSymbolValidations
 
     public static ISymbolValidator<INamedTypeSymbol> HasMembers(this ISymbolValidator<INamedTypeSymbol> validator, SymbolKind kind, int count)
     {
-        var propertyCount = validator.Symbol.GetMembers().Where(x => x.Kind == kind).Count();
-        Assert.Instance.AreEqual(count, propertyCount, $"The type \"{GetTypeName(validator)}\" has the wrong number of members of kind {kind}.");
+        var members = validator.Symbol.GetMembers().Where(x => x.Kind == kind).ToArray();
+        Assert.Instance.AreEqual(count, members.Length, $"The type \"{GetTypeName(validator)}\" has the wrong number of members of kind {kind}.\n{GetMembersText(members)}");
         return validator;
     }
 
     public static ISymbolValidator<INamedTypeSymbol> HasMembers(this ISymbolValidator<INamedTypeSymbol> validator, MethodKind kind, int count)
     {
-        var propertyCount = validator.Symbol.GetMembers().OfType<IMethodSymbol>().Where(x => x.MethodKind == kind).Count();
-        Assert.Instance.AreEqual(count, propertyCount, $"The type \"{GetTypeName(validator)}\" has the wrong number of methods of kind {kind}.");
+        var members = validator.Symbol.GetMembers().OfType<IMethodSymbol>().Where(x => x.MethodKind == kind).ToArray();
+        Assert.Instance.AreEqual(count, members.Length, $"The type \"{GetTypeName(validator)}\" has the wrong number of methods of kind {kind}.\n{GetMembersText(members)}");
         return validator;
     }
 
     public static ISymbolValidator<INamedTypeSymbol> HasMembers(this ISymbolValidator<INamedTypeSymbol> validator, SymbolKind kind, Access accessibility, int count)
     {
-        var propertyCount = validator.Symbol.GetMembers().Where(x => x.Kind == kind && x.DeclaredAccessibility == accessibility).Count();
-        Assert.Instance.AreEqual(count, propertyCount, $"The type \"{GetTypeName(validator)}\" has the wrong number of {accessibility} members of kind {kind}.");
+        var members = validator.Symbol.GetMembers().Where(x => x.Kind == kind && x.DeclaredAccessibility == accessibility).ToArray();
+        Assert.Instance.AreEqual(count, members.Length, $"The type \"{GetTypeName(validator)}\" has the wrong number of {accessibility} members of kind {kind}.\n{GetMembersText(members)}");
         return validator;
     }
 
     public static ISymbolValidator<INamedTypeSymbol> HasMembers(this ISymbolValidator<INamedTypeSymbol> validator, MethodKind kind, Access accessibility, int count)
     {
-        var propertyCount = validator.Symbol.GetMembers().OfType<IMethodSymbol>().Where(x => x.MethodKind == kind && x.DeclaredAccessibility == accessibility).Count();
-        Assert.Instance.AreEqual(count, propertyCount, $"The type \"{GetTypeName(validator)}\" has the wrong number of {accessibility} methods of kind {kind}.");
+        var members = validator.Symbol.GetMembers().OfType<IMethodSymbol>().Where(x => x.MethodKind == kind && x.DeclaredAccessibility == accessibility).ToArray();
+        Assert.Instance.AreEqual(count, members.Length, $"The type \"{GetTypeName(validator)}\" has the wrong number of {accessibility} methods of kind {kind}.\n{GetMembersText(members)}");
         return validator;
     }
 
@@ -174,6 +193,80 @@ public static class NamedTypeSymbolValidations
         return validator;
     }
 
+    public static ISymbolValidator<INamedTypeSymbol> DerivesFromTypeDirectly(this ISymbolValidator<INamedTypeSymbol> validator, Type baseType)
+        => DerivesFromTypeDirectly(validator, validator.Compilation.GetTypeSymbolFromType(baseType));
+
+    public static ISymbolValidator<INamedTypeSymbol> DerivesFromTypeDirectly(this ISymbolValidator<INamedTypeSymbol> validator, INamedTypeSymbol baseType)
+    {
+        Assert.Instance.AreEqual(baseType, validator.Symbol.BaseType, $"Type \"{validator.Symbol}\" does not derive from \"{baseType}\" directly.");
+        return validator;
+    }
+
+    public static ISymbolValidator<INamedTypeSymbol> DoesNotDeriveFromTypeDirectly(this ISymbolValidator<INamedTypeSymbol> validator, Type baseType)
+        => DoesNotDeriveFromTypeDirectly(validator, validator.Compilation.GetTypeSymbolFromType(baseType));
+
+    public static ISymbolValidator<INamedTypeSymbol> DoesNotDeriveFromTypeDirectly(this ISymbolValidator<INamedTypeSymbol> validator, INamedTypeSymbol baseType)
+    {
+        Assert.Instance.AreNotEqual(baseType, validator.Symbol.BaseType, $"Type \"{validator.Symbol}\" does derive from \"{baseType}\" directly.");
+        return validator;
+    }
+
+    public static ISymbolValidator<INamedTypeSymbol> DrivesFromType(this ISymbolValidator<INamedTypeSymbol> validator, Type baseType)
+        => DrivesFromType(validator, validator.Compilation.GetTypeSymbolFromType(baseType));
+
+    public static ISymbolValidator<INamedTypeSymbol> DrivesFromType(this ISymbolValidator<INamedTypeSymbol> validator, INamedTypeSymbol baseType)
+    {
+        Assert.Instance.Contains(baseType, EnumerateAllBaseTypes(validator.Symbol), $"Type \"{validator.Symbol}\" does not derive from \"{baseType}\".");
+        return validator;
+    }
+
+    public static ISymbolValidator<INamedTypeSymbol> DoesNotDriveFromType(this ISymbolValidator<INamedTypeSymbol> validator, Type baseType)
+        => DoesNotDriveFromType(validator, validator.Compilation.GetTypeSymbolFromType(baseType));
+
+    public static ISymbolValidator<INamedTypeSymbol> DoesNotDriveFromType(this ISymbolValidator<INamedTypeSymbol> validator, INamedTypeSymbol baseType)
+    {
+        Assert.Instance.DoesNotContain(baseType, EnumerateAllBaseTypes(validator.Symbol), $"Type \"{validator.Symbol}\" does derive from \"{baseType}\".");
+        return validator;
+    }
+
+    public static ISymbolValidator<INamedTypeSymbol> ImplementsInterfaceDirectly(this ISymbolValidator<INamedTypeSymbol> validator, Type baseType)
+        => ImplementsInterfaceDirectly(validator, validator.Compilation.GetTypeSymbolFromType(baseType));
+
+    public static ISymbolValidator<INamedTypeSymbol> ImplementsInterfaceDirectly(this ISymbolValidator<INamedTypeSymbol> validator, INamedTypeSymbol interfaceType)
+    {
+        Assert.Instance.Contains(interfaceType, validator.Symbol.Interfaces, SymbolEqualityComparer.Default, $"Type \"{validator.Symbol}\" does not implement interface \"{interfaceType}\" directly.");
+        return validator;
+    }
+
+    public static ISymbolValidator<INamedTypeSymbol> DoesNotImplementInterfaceDirectly(this ISymbolValidator<INamedTypeSymbol> validator, Type baseType)
+        => DoesNotImplementInterfaceDirectly(validator, validator.Compilation.GetTypeSymbolFromType(baseType));
+
+    public static ISymbolValidator<INamedTypeSymbol> DoesNotImplementInterfaceDirectly(this ISymbolValidator<INamedTypeSymbol> validator, INamedTypeSymbol interfaceType)
+    {
+        Assert.Instance.DoesNotContain(interfaceType, validator.Symbol.Interfaces, SymbolEqualityComparer.Default, $"Type \"{validator.Symbol}\" does implement interface \"{interfaceType}\" directly.");
+        return validator;
+    }
+
+    public static ISymbolValidator<INamedTypeSymbol> ImplementsInterface(this ISymbolValidator<INamedTypeSymbol> validator, Type baseType)
+        => ImplementsInterface(validator, validator.Compilation.GetTypeSymbolFromType(baseType));
+
+    public static ISymbolValidator<INamedTypeSymbol> ImplementsInterface(this ISymbolValidator<INamedTypeSymbol> validator, INamedTypeSymbol interfaceType)
+    {
+        Assert.Instance.Contains(interfaceType, validator.Symbol.AllInterfaces, SymbolEqualityComparer.Default, $"Type \"{validator.Symbol}\" does not implement interface \"{interfaceType}\".");
+        return validator;
+    }
+
+    public static ISymbolValidator<INamedTypeSymbol> DoesNotImplementInterface(this ISymbolValidator<INamedTypeSymbol> validator, Type baseType)
+        => DoesNotImplementInterface(validator, validator.Compilation.GetTypeSymbolFromType(baseType));
+
+    public static ISymbolValidator<INamedTypeSymbol> DoesNotImplementInterface(this ISymbolValidator<INamedTypeSymbol> validator, INamedTypeSymbol interfaceType)
+    {
+        Assert.Instance.DoesNotContain(interfaceType, validator.Symbol.AllInterfaces, SymbolEqualityComparer.Default, $"Type \"{validator.Symbol}\" does implement interface \"{interfaceType}\".");
+        return validator;
+    }
+
+    private static string GetMembersText(ICollection<ISymbol> members) => $"Members:\n{(members.Count == 0 ? "<None>" : $"- {string.Join("\n- ", members)}")}";
+
     private static ISymbolValidator<INamedTypeSymbol> DoesNotHaveMember<T>(ISymbolValidator<INamedTypeSymbol> validator, string name, Func<T, bool>? predicate, string memberTypeDisplayName)
         where T : ISymbol
     {
@@ -183,5 +276,15 @@ public static class NamedTypeSymbolValidations
         var member = members.FirstOrDefault();
         Assert.Instance.IsNull(member, $"{memberTypeDisplayName} \"{name}\" exist unexpectedly in type \"{GetTypeName(validator)}\".");
         return validator;
+    }
+
+    private static IEnumerable<INamedTypeSymbol> EnumerateAllBaseTypes(INamedTypeSymbol symbol)
+    {
+        var current = symbol.BaseType;
+        while (current != null)
+        {
+            yield return current;
+            current = current.BaseType;
+        }
     }
 }

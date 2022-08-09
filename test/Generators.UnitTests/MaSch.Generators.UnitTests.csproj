@@ -6,11 +6,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Using Include="MaSch.Generators" />
+    <Using Include="MaSch.Generators.Support"/>
+    <Using Include="MaSch.Test.CodeAnalysis.CSharp"/>
+    <Using Include="MaSch.Test.CodeAnalysis.CSharp.Validators"/>
+  </ItemGroup>
+  
+  <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
   </ItemGroup>
 
   <ItemGroup>
+    <MaSchReference Include="Core" />
     <MaSchReference Include="Generators" />
+    <MaSchReference Include="Test.CodeAnalysis.CSharp.MSTest" />
   </ItemGroup>
+
+  <Target Name="CopySupportFiles" AfterTargets="PostBuildEvent">
+    <ItemGroup>
+      <SupportFiles Include="$(GitSourceDir)Generators/StaticFiles/**/*.cs" />
+    </ItemGroup>
+    <MakeDir Directories="$(OutputPath)TestFiles/Generators/StaticFiles" />
+    <Copy SourceFiles="@(SupportFiles)" DestinationFolder="$(OutputPath)TestFiles/Generators/StaticFiles" />
+  </Target>
 
 </Project>

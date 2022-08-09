@@ -168,6 +168,30 @@ namespace MaSch.Generators.Support
         }
 
         /// <summary>
+        /// Tries to get a specific attribute from the symbol.
+        /// </summary>
+        /// <param name="symbol">The symbol to search in.</param>
+        /// <param name="attributeTypeSymbol">The type of attribute to find.</param>
+        /// <param name="attributeData">The found attribute data. If no attribute was found, null is returned.</param>
+        /// <returns><c>true</c> if an attribute was found; otherwise <c>false</c>.</returns>
+        public static bool TryGetAttribute(this ISymbol symbol, INamedTypeSymbol attributeTypeSymbol, out AttributeData attributeData)
+        {
+            attributeData = GetAttributes(symbol, attributeTypeSymbol).FirstOrDefault();
+            return attributeData != null;
+        }
+
+        /// <summary>
+        /// Gets all attributes of a specific type from the symbol.
+        /// </summary>
+        /// <param name="symbol">The symbol to search in.</param>
+        /// <param name="attributeTypeSymbol">The type of attributes to find.</param>
+        /// <returns>An enumerable of all found attributes.</returns>
+        public static IEnumerable<AttributeData> GetAttributes(this ISymbol symbol, INamedTypeSymbol attributeTypeSymbol)
+        {
+            return symbol.GetAttributes().Where(x => SymbolEqualityComparer.Default.Equals(x.AttributeClass, attributeTypeSymbol));
+        }
+
+        /// <summary>
         /// Determines all base types of a given symbol.
         /// </summary>
         /// <param name="symbol">The symbol to search in.</param>

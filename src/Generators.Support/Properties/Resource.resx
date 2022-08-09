@@ -121,6 +121,12 @@
   <data name="AddSourceExtensions" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\support\addsourceextensions.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="Attributes" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\support\attributes.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="Interfaces" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\support\interfaces.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="SourceBuilder" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\support\sourcebuilder.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>

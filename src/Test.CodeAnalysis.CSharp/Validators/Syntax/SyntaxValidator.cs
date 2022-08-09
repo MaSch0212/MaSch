@@ -2,8 +2,12 @@
 using MaSch.Test.CodeAnalysis.CSharp.Extensions;
 using Microsoft.CodeAnalysis;
 
+// TODO
+#pragma warning disable SA1600 // Elements should be documented
+
 namespace MaSch.Test.CodeAnalysis.CSharp.Validators;
 
+[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "File name matches (except the 'I')")]
 public interface ISyntaxNodeValidator : IValidator
 {
     new ISyntaxNodeValidator? Parent { get; }
