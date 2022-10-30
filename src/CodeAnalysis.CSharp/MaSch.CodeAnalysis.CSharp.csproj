@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- General Project info -->
+    <TargetFramework>netstandard2.0</TargetFramework>
+
+    <!-- Output info -->
+    <BuildOutputTargetFolder>analyzers</BuildOutputTargetFolder>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+
+    <!-- Package Info -->
+    <Description>Contains supporting code for implementation of C# source generators and code analyzers.</Description>
+    <Version>0.1.0</Version>
+    <PackageTags>masch generator sourcegenerator analyzer</PackageTags>
+
+    <!-- Disable warnings that occur in the Resources.Designer.cs -->
+    <NoWarn>$(NoWarn);1587;1570</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+  </ItemGroup>
+
+</Project>

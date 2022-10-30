@@ -125,6 +125,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaSch.Test.CodeAnalysis.CSh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaSch.Test.CodeAnalysis.CSharp", "src\Test.CodeAnalysis.CSharp\MaSch.Test.CodeAnalysis.CSharp.csproj", "{A4659591-582E-4C2B-A523-E5C6CFCE9520}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaSch.CodeAnalysis.CSharp", "src\CodeAnalysis.CSharp\MaSch.CodeAnalysis.CSharp.csproj", "{E91F3041-E217-499E-9F76-866767BD2B43}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -603,6 +605,18 @@ Global
 		{A4659591-582E-4C2B-A523-E5C6CFCE9520}.Release|x64.Build.0 = Release|Any CPU
 		{A4659591-582E-4C2B-A523-E5C6CFCE9520}.Release|x86.ActiveCfg = Release|Any CPU
 		{A4659591-582E-4C2B-A523-E5C6CFCE9520}.Release|x86.Build.0 = Release|Any CPU
+		{E91F3041-E217-499E-9F76-866767BD2B43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E91F3041-E217-499E-9F76-866767BD2B43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E91F3041-E217-499E-9F76-866767BD2B43}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E91F3041-E217-499E-9F76-866767BD2B43}.Debug|x64.Build.0 = Debug|Any CPU
+		{E91F3041-E217-499E-9F76-866767BD2B43}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E91F3041-E217-499E-9F76-866767BD2B43}.Debug|x86.Build.0 = Debug|Any CPU
+		{E91F3041-E217-499E-9F76-866767BD2B43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E91F3041-E217-499E-9F76-866767BD2B43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E91F3041-E217-499E-9F76-866767BD2B43}.Release|x64.ActiveCfg = Release|Any CPU
+		{E91F3041-E217-499E-9F76-866767BD2B43}.Release|x64.Build.0 = Release|Any CPU
+		{E91F3041-E217-499E-9F76-866767BD2B43}.Release|x86.ActiveCfg = Release|Any CPU
+		{E91F3041-E217-499E-9F76-866767BD2B43}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
