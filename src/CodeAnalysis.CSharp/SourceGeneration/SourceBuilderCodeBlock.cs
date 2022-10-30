@@ -7,7 +7,7 @@
 public readonly struct SourceBuilderCodeBlock : IDisposable
 {
     private readonly ISourceBuilder _builder;
-    private readonly string _endContent;
+    private readonly string? _endContent;
     private readonly bool _changeIndent;
 
     /// <summary>
@@ -16,7 +16,7 @@ public readonly struct SourceBuilderCodeBlock : IDisposable
     /// <param name="builder">The <see cref="SourceBuilder"/> that owns the <see cref="SourceBuilderCodeBlock"/>.</param>
     /// <param name="endContent">The text that should be appended after the block is disposed.</param>
     /// <param name="changeIndent">Determines whether indentation should be changed.</param>
-    public SourceBuilderCodeBlock(ISourceBuilder builder, string endContent, bool changeIndent)
+    public SourceBuilderCodeBlock(ISourceBuilder builder, string? endContent, bool changeIndent)
     {
         _builder = builder;
         _endContent = endContent;
@@ -31,6 +31,7 @@ public readonly struct SourceBuilderCodeBlock : IDisposable
     {
         if (_changeIndent)
             _builder.CurrentIndentLevel--;
-        _ = _builder.AppendLine(_endContent);
+        if (_endContent is not null)
+            _ = _builder.AppendLine(_endContent);
     }
 }

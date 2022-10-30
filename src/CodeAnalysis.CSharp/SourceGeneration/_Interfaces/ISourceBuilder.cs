@@ -48,6 +48,12 @@ public interface ISourceBuilder
     SourceBuilderCodeBlock AppendBlock(bool addSemicolon);
 
     /// <summary>
+    /// Adds one indentation level. If the current line already contains characters, only subsequent lines are affected.
+    /// </summary>
+    /// <returns>Returns an <see cref="IDisposable"/> object, which closes the code block when disposed.</returns>
+    SourceBuilderCodeBlock Indent();
+
+    /// <summary>
     /// Appends the default line terminator to the end of the current <see cref="SourceBuilder"/> object.
     /// </summary>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
@@ -59,6 +65,12 @@ public interface ISourceBuilder
     /// <param name="value">The string to append.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
     ISourceBuilder AppendLine(string value);
+
+    /// <summary>
+    /// Ensures that the line above the current line is empty or consists only of whitespace characters.
+    /// </summary>
+    /// <returns>A value indicating whether the line above the current line is empty.</returns>
+    ISourceBuilder EnsurePreviousLineEmpty();
 
     /// <summary>
     /// Appends a copy of the specified string to this instance.
@@ -95,9 +107,65 @@ public interface ISourceBuilder<T> : ISourceBuilder
     /// <inheritdoc cref="ISourceBuilder.AppendLine(string)" />
     new T AppendLine(string value);
 
+    /// <inheritdoc cref="ISourceBuilder.EnsurePreviousLineEmpty()" />
+    new T EnsurePreviousLineEmpty();
+
     /// <inheritdoc cref="ISourceBuilder.Append(string)" />
     new T Append(string value);
 
     /// <inheritdoc cref="ISourceBuilder.Append(char)" />
     new T Append(char value);
+}
+
+[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1601:Partial elements should be documented", Justification = "Already has documentation")]
+public partial class SourceBuilder : ISourceBuilder
+{
+    /// <inheritdoc/>
+    int ISourceBuilder.IndentSize => IndentSize;
+
+    /// <inheritdoc/>
+    int ISourceBuilder.CurrentIndentLevel
+    {
+        get => CurrentIndentLevel;
+        set => CurrentIndentLevel = value;
+    }
+
+    /// <inheritdoc/>
+    ISourceBuilder ISourceBuilder.Append(string value) => Append(value);
+
+    /// <inheritdoc/>
+    ISourceBuilder ISourceBuilder.Append(char value) => Append(value);
+
+    /// <inheritdoc/>
+    SourceBuilderCodeBlock ISourceBuilder.AppendBlock(string blockLine) => AppendBlock(blockLine);
+
+    /// <inheritdoc/>
+    SourceBuilderCodeBlock ISourceBuilder.AppendBlock(string blockLine, bool addSemicolon) => AppendBlock(blockLine, addSemicolon);
+
+    /// <inheritdoc/>
+    SourceBuilderCodeBlock ISourceBuilder.AppendBlock() => AppendBlock();
+
+    /// <inheritdoc/>
+    SourceBuilderCodeBlock ISourceBuilder.AppendBlock(bool addSemicolon) => AppendBlock(addSemicolon);
+
+    /// <inheritdoc/>
+    ISourceBuilder ISourceBuilder.AppendLine() => AppendLine();
+
+    /// <inheritdoc/>
+    ISourceBuilder ISourceBuilder.AppendLine(string value) => AppendLine(value);
+
+    /// <inheritdoc/>
+    SourceBuilderCodeBlock ISourceBuilder.AppendRegion(string regionName) => AppendRegion(regionName);
+
+    /// <inheritdoc/>
+    T ISourceBuilder.As<T>() => (T)(ISourceBuilder)this;
+
+    /// <inheritdoc/>
+    ISourceBuilder ISourceBuilder.EnsurePreviousLineEmpty() => EnsurePreviousLineEmpty();
+
+    /// <inheritdoc/>
+    SourceBuilderCodeBlock ISourceBuilder.Indent() => Indent();
+
+    /// <inheritdoc/>
+    SourceText ISourceBuilder.ToSourceText(Encoding? encoding, SourceHashAlgorithm checksumAlgorithm) => ToSourceText(encoding, checksumAlgorithm);
 }
