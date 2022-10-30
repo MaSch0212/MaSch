@@ -67,21 +67,4 @@ public class SourceCodeAttributeBuilder : ISourceCodeAttributeBuilder
         WriteTo(builder);
         return builder.ToString();
     }
-
-    private static string GetAttributePrefix(CodeAttributeTarget target)
-    {
-        return target switch
-        {
-            CodeAttributeTarget.Assembly => "assembly: ",
-            CodeAttributeTarget.Module => "module: ",
-            CodeAttributeTarget.Field => "field: ",
-            CodeAttributeTarget.Event => "event: ",
-            CodeAttributeTarget.Method => "method: ",
-            CodeAttributeTarget.Parameter => "param: ",
-            CodeAttributeTarget.Property => "property: ",
-            CodeAttributeTarget.Return => "return: ",
-            CodeAttributeTarget.Type => "type: ",
-            _ => string.Empty,
-        };
-    }
 }
