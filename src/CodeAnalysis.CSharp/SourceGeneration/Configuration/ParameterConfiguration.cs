@@ -16,7 +16,7 @@ public class ParameterConfiguration : CodeConfiguration, IParameterConfiguration
         _name = name;
     }
 
-    public bool LinebreakAfterCodeAttribute { get; set; } = false;
+    public bool LineBreakAfterCodeAttribute { get; set; } = false;
 
     protected override int StartCapacity => 16;
 

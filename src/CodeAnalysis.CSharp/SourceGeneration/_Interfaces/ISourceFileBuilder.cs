@@ -2,8 +2,8 @@
 
 public interface ISourceFileBuilder :
     ISourceBuilder<ISourceFileBuilder>,
-    ISourceNamespaceImportBuilder<ISourceFileBuilder>,
-    ISourceNamespaceDeclarationBuilder<ISourceFileBuilder>
+    INamespaceImportBuilder<ISourceFileBuilder>,
+    INamespaceDeclarationBuilder<ISourceFileBuilder>
 {
     ISourceFileBuilder AppendFileNamespace(string @namespace);
     ISourceFileBuilder AppendAssemblyCodeAttribute<TParams>(string attributeTypeName, TParams @params, Action<ISourceCodeAttributeBuilder, TParams> attributeConfiguration);
@@ -27,22 +27,22 @@ public partial class SourceBuilder : ISourceFileBuilder
     ISourceFileBuilder ISourceBuilder<ISourceFileBuilder>.Append(char value) => Append(value);
 
     /// <inheritdoc/>
-    ISourceFileBuilder ISourceNamespaceImportBuilder<ISourceFileBuilder>.AppendNamespaceImport(string @namespace) => AppendNamespaceImport(@namespace);
+    ISourceFileBuilder INamespaceImportBuilder<ISourceFileBuilder>.AppendNamespaceImport(string @namespace) => AppendNamespaceImport(@namespace);
 
     /// <inheritdoc/>
-    ISourceFileBuilder ISourceNamespaceImportBuilder<ISourceFileBuilder>.AppendNamespaceImport(string @namespace, string alias) => AppendNamespaceImport(@namespace, alias);
+    ISourceFileBuilder INamespaceImportBuilder<ISourceFileBuilder>.AppendNamespaceImport(string @namespace, string alias) => AppendNamespaceImport(@namespace, alias);
 
     /// <inheritdoc/>
-    ISourceFileBuilder ISourceNamespaceImportBuilder<ISourceFileBuilder>.AppendStaticNamespaceImport(string @namespace) => AppendStaticNamespaceImport(@namespace);
+    ISourceFileBuilder INamespaceImportBuilder<ISourceFileBuilder>.AppendStaticNamespaceImport(string @namespace) => AppendStaticNamespaceImport(@namespace);
 
     /// <inheritdoc/>
-    ISourceFileBuilder ISourceNamespaceImportBuilder<ISourceFileBuilder>.AppendGlobalNamespaceImport(string @namespace) => AppendGlobalNamespaceImport(@namespace);
+    ISourceFileBuilder INamespaceImportBuilder<ISourceFileBuilder>.AppendGlobalNamespaceImport(string @namespace) => AppendGlobalNamespaceImport(@namespace);
 
     /// <inheritdoc/>
-    ISourceFileBuilder ISourceNamespaceImportBuilder<ISourceFileBuilder>.AppendGlobalNamespaceImport(string @namespace, string alias) => AppendGlobalNamespaceImport(@namespace, alias);
+    ISourceFileBuilder INamespaceImportBuilder<ISourceFileBuilder>.AppendGlobalNamespaceImport(string @namespace, string alias) => AppendGlobalNamespaceImport(@namespace, alias);
 
     /// <inheritdoc/>
-    ISourceFileBuilder ISourceNamespaceImportBuilder<ISourceFileBuilder>.AppendGlobalStaticNamespaceImport(string @namespace) => AppendGlobalStaticNamespaceImport(@namespace);
+    ISourceFileBuilder INamespaceImportBuilder<ISourceFileBuilder>.AppendGlobalStaticNamespaceImport(string @namespace) => AppendGlobalStaticNamespaceImport(@namespace);
 
     /// <inheritdoc/>
     ISourceFileBuilder ISourceFileBuilder.AppendFileNamespace(string @namespace) => AppendFileNamespace(@namespace);
@@ -51,5 +51,5 @@ public partial class SourceBuilder : ISourceFileBuilder
     ISourceFileBuilder ISourceFileBuilder.AppendAssemblyCodeAttribute<TParams>(string attributeTypeName, TParams @params, Action<ISourceCodeAttributeBuilder, TParams> attributeConfiguration) => AppendAssemblyCodeAttribute(attributeTypeName, @params, attributeConfiguration);
 
     /// <inheritdoc/>
-    SourceBuilderCodeBlock ISourceNamespaceDeclarationBuilder<ISourceFileBuilder>.AppendNamespace(string @namespace, out ISourceNamespaceBuilder namespaceBuilder) => AppendNamespace(@namespace, out namespaceBuilder);
+    SourceBuilderCodeBlock INamespaceDeclarationBuilder<ISourceFileBuilder>.AppendNamespace(string @namespace, out INamespaceBuilder namespaceBuilder) => AppendNamespace(@namespace, out namespaceBuilder);
 }

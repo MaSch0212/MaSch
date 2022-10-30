@@ -1,11 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
 
-namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
-public class MethodConfiguration
+public interface IMethodConfiguration<T> : IMemberConfiguration<T>
+    where T : IMemberConfiguration<T>
+{
+}
+
+public interface IMethodConfiguration : IMethodConfiguration<IMethodConfiguration>
+{
+}
+
+public class MethodConfiguration<T> : MemberConfiguration<T>, IMethodConfiguration<T>
+    where T : IMethodConfiguration<T>
+{
+
+}
+
+public sealed class MethodConfiguration : MethodConfiguration<IMethodConfiguration>, IMethodConfiguration
 {
 
 }

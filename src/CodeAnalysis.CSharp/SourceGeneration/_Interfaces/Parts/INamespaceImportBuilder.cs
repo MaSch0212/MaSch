@@ -1,7 +1,7 @@
 ﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
 
-public interface ISourceNamespaceImportBuilder<T> : ISourceBuilder
-    where T : ISourceNamespaceImportBuilder<T>
+public interface INamespaceImportBuilder<T> : ISourceBuilder
+    where T : INamespaceImportBuilder<T>
 {
     T AppendNamespaceImport(string @namespace);
     T AppendNamespaceImport(string @namespace, string alias);
