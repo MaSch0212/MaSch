@@ -1,5 +1,5 @@
 ﻿using MaSch.Generators.Support;
-using MaSch.Properties;
+using MaSch.Generators.Properties;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using System.Runtime.CompilerServices;

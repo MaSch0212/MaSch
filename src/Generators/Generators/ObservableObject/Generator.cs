@@ -21,6 +21,13 @@ public class Generator : IIncrementalGenerator
 
     private static void Execute(SourceProductionContext context, GeneratorData info)
     {
+        try
+        {
 
+        }
+        catch
+        {
+
+        }
     }
 }

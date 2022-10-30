@@ -25,17 +25,24 @@ internal readonly partial struct IncrementalValueProviderFactory
 
     private static GeneratorData? GetSemanticTargetForGeneration(GeneratorSyntaxContext context, CancellationToken cancellationToken)
     {
-        var classDeclarationSyntax = (ClassDeclarationSyntax)context.Node;
-        var validator = ClassDeclarationValidator.Validate(classDeclarationSyntax, context.SemanticModel);
+        try
+        {
+            var classDeclarationSyntax = (ClassDeclarationSyntax)context.Node;
+            var validator = ClassDeclarationValidator.Validate(classDeclarationSyntax, context.SemanticModel);
 
-        var interfaceType = validator.GetGenerateAttributeType();
-        if (interfaceType == InterfaceType.None)
+            var interfaceType = validator.GetGenerateAttributeType();
+            if (interfaceType == InterfaceType.None)
+                return null;
+
+            var declaredSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclarationSyntax);
+            if (declaredSymbol is not INamedTypeSymbol typeSymbol)
+                return null;
+
+            return new GeneratorData(typeSymbol, interfaceType);
+        }
+        catch
+        {
             return null;
-
-        var declaredSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclarationSyntax);
-        if (declaredSymbol is not INamedTypeSymbol typeSymbol)
-            return null;
-
-        return new GeneratorData(typeSymbol, interfaceType);
+        }
     }
 }

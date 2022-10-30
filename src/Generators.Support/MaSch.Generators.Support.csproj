@@ -3,7 +3,7 @@
   <PropertyGroup>
     <!-- General Project info -->
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>MaSch</RootNamespace>
+    <RootNamespace>MaSch.Generators</RootNamespace>
     
     <!-- Output info -->
     <BuildOutputTargetFolder>analyzers</BuildOutputTargetFolder>

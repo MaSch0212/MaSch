@@ -6,6 +6,13 @@ using System.Collections.Immutable;
 
 namespace MaSch.Generators.GeneratorHelpers;
 
+/// <summary>
+/// Generator that generated boilerplate code for classes or structs having one of the attributes:
+/// <see cref="T:MaSch.Generators.Support.FileGeneratorAttribute"/>,
+/// <see cref="T:MaSch.Generators.Support.MemberGeneratorAttribute"/>,
+/// <see cref="T:MaSch.Generators.Support.SyntaxValidatorAttribute"/>,
+/// <see cref="T:MaSch.Generators.Support.IncrementalValueProviderFactoryAttribute"/>.
+/// </summary>
 [Generator]
 public class Generator : IIncrementalGenerator
 {
@@ -40,9 +47,15 @@ public class Generator : IIncrementalGenerator
                             fileGenerator.SyntaxValidator,
                             fileGenerator.IncrementalValueProviderFactory);
                 }
-                catch { /* Do not generate file if an error occured. */ }
+                catch
+                {
+                    // Do not generate file if an error occured.
+                }
             }
         }
-        catch { /* Do not generate any files if an error occured. */ }
+        catch
+        {
+            // Do not generate any files if an error occured.
+        }
     }
 }

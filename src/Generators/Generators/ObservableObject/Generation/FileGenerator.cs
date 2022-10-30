@@ -12,4 +12,11 @@ internal readonly partial struct FileGenerator
 
         _context.AddSource(sourceBuilder.ToSourceText(), data.TypeSymbol);
     }
+
+    public void NotifyPropertyChanged(GeneratorData data)
+    {
+        var sourceBuilder = new SourceBuilder();
+
+        _context.AddSource(sourceBuilder.ToSourceText(), data.TypeSymbol);
+    }
 }

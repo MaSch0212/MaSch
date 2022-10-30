@@ -51,7 +51,10 @@ internal readonly struct IncrementalValueProviderFactory
                 return null;
             return new ValueProviderData(attributeType, typeDeclarationSyntax);
         }
-        catch { return null; }
+        catch
+        {
+            return null;
+        }
     }
 
     private static AttributeType GetAttributeType(TypeDeclarationSyntax typeDeclarationSyntax, SemanticModel semanticModel)

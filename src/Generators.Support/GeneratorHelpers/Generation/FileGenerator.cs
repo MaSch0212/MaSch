@@ -85,7 +85,7 @@ internal readonly struct FileGenerator
         {
             builder.AppendLine($"private readonly global::Microsoft.CodeAnalysis.IncrementalGeneratorInitializationContext _context;")
                    .AppendLine();
-            using (builder.AddBlock($"private global::Microsoft.CodeAnalysis.IncrementalGeneratorInitializationContext context)"))
+            using (builder.AddBlock($"private {data.TypeSymbol.Name}(global::Microsoft.CodeAnalysis.IncrementalGeneratorInitializationContext context)"))
                 builder.AppendLine("_context = context;");
             builder.AppendLine()
                    .AppendLine($"public static {data.TypeSymbol.Name} From(global::Microsoft.CodeAnalysis.IncrementalGeneratorInitializationContext context) => new {data.TypeSymbol.Name}(context);");
