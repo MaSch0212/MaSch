@@ -1,4 +1,4 @@
-﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
+﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
 public interface ICodeAttributeConfiguration : ICodeConfiguration
 {
@@ -26,6 +26,14 @@ public sealed class CodeAttributeConfiguration : CodeConfiguration, ICodeAttribu
 
     /// <inheritdoc/>
     protected override int StartCapacity => 128;
+
+    public static CodeAttributeConfiguration AddCodeAttribute<TParams>(IList<ICodeAttributeConfiguration> codeAttributes, string attributeTypeName, TParams @params, Action<ICodeAttributeConfiguration, TParams> attributeConfiguration)
+    {
+        var codeAttribute = new CodeAttributeConfiguration(attributeTypeName);
+        attributeConfiguration?.Invoke(codeAttribute, @params);
+        codeAttributes.Add(codeAttribute);
+        return codeAttribute;
+    }
 
     /// <inheritdoc/>
     public override void WriteTo(ISourceBuilder sourceBuilder)

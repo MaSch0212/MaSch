@@ -1,4 +1,4 @@
-﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
+﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
 public abstract class CodeConfiguration : ICodeConfiguration
 {

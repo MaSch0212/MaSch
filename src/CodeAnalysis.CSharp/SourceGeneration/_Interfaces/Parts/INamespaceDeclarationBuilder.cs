@@ -1,9 +1,20 @@
 ﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
 
-public interface INamespaceDeclarationBuilder<T> : ISourceBuilder
-    where T : INamespaceDeclarationBuilder<T>
+public interface INamespaceDeclarationBuilder : ISourceBuilder
 {
     SourceBuilderCodeBlock AppendNamespace(string @namespace, out INamespaceBuilder namespaceBuilder);
+}
+
+public interface INamespaceDeclarationBuilder<T> : INamespaceDeclarationBuilder
+    where T : INamespaceDeclarationBuilder<T>
+{
+}
+
+public partial class SourceBuilder : INamespaceDeclarationBuilder
+{
+    /// <inheritdoc/>
+    SourceBuilderCodeBlock INamespaceDeclarationBuilder.AppendNamespace(string @namespace, out INamespaceBuilder namespaceBuilder)
+        => AppendNamespace(@namespace, out namespaceBuilder);
 }
 
 /// <summary>
@@ -12,18 +23,18 @@ public interface INamespaceDeclarationBuilder<T> : ISourceBuilder
 public static class NamespaceDeclarationBuilderExtensions
 {
     public static TBuilder AppendNamespace<TBuilder>(this TBuilder builder, string @namespace, Action<INamespaceBuilder> action)
-        where TBuilder : INamespaceDeclarationBuilder<TBuilder>
+        where TBuilder : INamespaceDeclarationBuilder
     {
         using (builder.AppendNamespace(@namespace, out var namespaceBuilder))
-            action(namespaceBuilder);
+            action?.Invoke(namespaceBuilder);
         return builder;
     }
 
     public static TBuilder AppendNamespace<TBuilder, TParams>(this TBuilder builder, string @namespace, TParams actionParams, Action<INamespaceBuilder, TParams> action)
-        where TBuilder : INamespaceDeclarationBuilder<TBuilder>
+        where TBuilder : INamespaceDeclarationBuilder
     {
         using (builder.AppendNamespace(@namespace, out var namespaceBuilder))
-            action(namespaceBuilder, actionParams);
+            action?.Invoke(namespaceBuilder, actionParams);
         return builder;
     }
 }

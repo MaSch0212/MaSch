@@ -1,34 +1,25 @@
-﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
+﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
+
+namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
 
 public interface IClassBuilder :
     ITypeMemberDeclarationBuilder<IClassBuilder>,
-    INamespaceMemberDeclarationBuilder<IClassBuilder>
+    INamespaceMemberDeclarationBuilder<IClassBuilder>,
+    IConstructorDeclarationBuilder<IClassBuilder>
 {
 }
 
 public partial class SourceBuilder : IClassBuilder
 {
     /// <inheritdoc/>
-    SourceBuilderCodeBlock INamespaceMemberDeclarationBuilder<IClassBuilder>.AppendClass<TParams>(string className, out IClassBuilder classBuilder, TParams @params, Action<IClassConfiguration, TParams> classConfiguration)
-        => AppendClass(className, out classBuilder, @params, classConfiguration);
-
-    /// <inheritdoc/>
     IClassBuilder INamespaceMemberDeclarationBuilder<IClassBuilder>.AppendDelegate<TParams>(string delegateName, TParams @params, Action<IDelegateConfiguration, TParams> delegateConfiguration)
         => AppendDelegate(delegateName, @params, delegateConfiguration);
 
     /// <inheritdoc/>
-    SourceBuilderCodeBlock INamespaceMemberDeclarationBuilder<IClassBuilder>.AppendEnum<TParams>(string enumName, out IEnumBuilder enumBuilder, TParams @params, Action<IEnumConfiguration, TParams> enumConfiguration)
-        => AppendEnum(enumName, out enumBuilder, @params, enumConfiguration);
+    IClassBuilder ITypeMemberDeclarationBuilder<IClassBuilder>.AppendField<TParams>(string fieldTypeName, string fieldName, TParams @params, Action<IFieldConfiguration, TParams> fieldConfiguration)
+        => AppendField(fieldTypeName, fieldName, @params, fieldConfiguration);
 
     /// <inheritdoc/>
-    SourceBuilderCodeBlock INamespaceMemberDeclarationBuilder<IClassBuilder>.AppendInterface<TParams>(string interfaceName, out IInterfaceBuilder interfaceBuilder, TParams @params, Action<IInterfaceConfguration, TParams> interfaceConfiguration)
-        => AppendInterface(interfaceName, out interfaceBuilder, @params, interfaceConfiguration);
-
-    /// <inheritdoc/>
-    SourceBuilderCodeBlock INamespaceMemberDeclarationBuilder<IClassBuilder>.AppendRecord<TParams>(string recordName, out IRecordBuilder recordBuilder, TParams @params, Action<IRecordConfiguration, TParams> recordConfiguration)
-        => AppendRecord(recordName, out recordBuilder, @params, recordConfiguration);
-
-    /// <inheritdoc/>
-    SourceBuilderCodeBlock INamespaceMemberDeclarationBuilder<IClassBuilder>.AppendStruct<TParams>(string structName, out IStructBuilder structBuilder, TParams @params, Action<IStructConfiguration, TParams> structConfiguration)
-        => AppendStruct(structName, out structBuilder, @params, structConfiguration);
+    IClassBuilder ITypeMemberDeclarationBuilder<IClassBuilder>.AppendMethod<TParams>(string methodName, TParams @params, Action<IMethodConfiguration, TParams> methodConfiguration)
+        => AppendMethod(methodName, @params, methodConfiguration);
 }

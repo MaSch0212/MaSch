@@ -1,20 +1,113 @@
-﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
+﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
-public interface IMemberConfiguration<T> : ISupportsCodeAttributeConfiguration<T>
-    where T : IMemberConfiguration<T>
+public interface IMemberConfiguration : ISupportsCodeAttributeConfiguration
 {
-    T WithAccessModifier(AccessModifier accessModifier);
-    T WithKeyword(MemberKeyword keyword);
-    T WithGenericParameter<TParams>(string name, TParams @params, Action<IGenericParameterConfiguration, TParams> parameterConfiguration);
+    string MemberName { get; }
+
+    IMemberConfiguration WithAccessModifier(AccessModifier accessModifier);
+    IMemberConfiguration WithKeyword(MemberKeyword keyword);
 }
 
-public static class MemberConfigurationExtensions
+public interface IMemberConfiguration<T> : IMemberConfiguration, ISupportsCodeAttributeConfiguration<T>
+    where T : IMemberConfiguration<T>
 {
-    public static TConfig WithGenericParameter<TConfig>(this TConfig config, string name, Action<IGenericParameterConfiguration> parameterConfiguration)
-        where TConfig : IMemberConfiguration<TConfig>
-        => config.WithGenericParameter(name, parameterConfiguration, (builder, config) => config(builder));
+    new T WithAccessModifier(AccessModifier accessModifier);
+    new T WithKeyword(MemberKeyword keyword);
+}
 
-    public static TConfig WithGenericParameter<TConfig>(this TConfig config, string name)
-        where TConfig : IMemberConfiguration<TConfig>
-        => config.WithGenericParameter<object?>(name, null, (_, _) => { });
+/// <summary>
+/// Provides extension methods for the <see cref="IMemberConfiguration{T}"/> interface.
+/// </summary>
+public static class SourceMemberBuilderExtensions
+{
+    public static TConfig AsPublic<TConfig>(this TConfig builder)
+        where TConfig : IMemberConfiguration
+    {
+        builder.WithAccessModifier(AccessModifier.Public);
+        return builder;
+    }
+
+    public static TConfig AsPrivate<TConfig>(this TConfig builder)
+        where TConfig : IMemberConfiguration
+    {
+        builder.WithAccessModifier(AccessModifier.Private);
+        return builder;
+    }
+
+    public static TConfig AsProtected<TConfig>(this TConfig builder)
+        where TConfig : IMemberConfiguration
+    {
+        builder.WithAccessModifier(AccessModifier.Protected);
+        return builder;
+    }
+
+    public static TConfig AsInternal<TConfig>(this TConfig builder)
+        where TConfig : IMemberConfiguration
+    {
+        builder.WithAccessModifier(AccessModifier.Internal);
+        return builder;
+    }
+
+    public static TConfig AsProtectedInternal<TConfig>(this TConfig builder)
+        where TConfig : IMemberConfiguration
+    {
+        builder.WithAccessModifier(AccessModifier.ProtectedInternal);
+        return builder;
+    }
+
+    public static TConfig AsPrivateProtected<TConfig>(this TConfig builder)
+        where TConfig : IMemberConfiguration
+    {
+        builder.WithAccessModifier(AccessModifier.PrivateProtected);
+        return builder;
+    }
+
+    public static TConfig WithCodeAttribute<TConfig>(this TConfig builder, string attributeTypeName)
+        where TConfig : IMemberConfiguration
+    {
+        builder.WithCodeAttribute<object?>(attributeTypeName, null, static (_, _) => { });
+        return builder;
+    }
+
+    public static TConfig WithCodeAttribute<TConfig>(this TConfig builder, string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
+        where TConfig : IMemberConfiguration
+    {
+        builder.WithCodeAttribute(attributeTypeName, attributeConfiguration, static (builder, action) => action(builder));
+        return builder;
+    }
+
+    public static TConfig WithCodeAttribute<TConfig>(this TConfig builder, string attributeTypeName, string param1)
+        where TConfig : IMemberConfiguration
+    {
+        builder.WithCodeAttribute(attributeTypeName, param1, static (b, p) => b.WithParameter(p));
+        return builder;
+    }
+
+    public static TConfig WithCodeAttribute<TConfig>(this TConfig builder, string attributeTypeName, string param1, string param2)
+        where TConfig : IMemberConfiguration
+    {
+        builder.WithCodeAttribute(attributeTypeName, (param1, param2), static (b, p) => b.WithParameters(p.param1, p.param2));
+        return builder;
+    }
+
+    public static TConfig WithCodeAttribute<TConfig>(this TConfig builder, string attributeTypeName, string param1, string param2, string param3)
+        where TConfig : IMemberConfiguration
+    {
+        builder.WithCodeAttribute(attributeTypeName, (param1, param2, param3), static (b, p) => b.WithParameters(p.param1, p.param2, p.param3));
+        return builder;
+    }
+
+    public static TConfig WithCodeAttribute<TConfig>(this TConfig builder, string attributeTypeName, string param1, string param2, string param3, string param4)
+        where TConfig : IMemberConfiguration
+    {
+        builder.WithCodeAttribute(attributeTypeName, (param1, param2, param3, param4), static (b, p) => b.WithParameters(p.param1, p.param2, p.param3, p.param4));
+        return builder;
+    }
+
+    public static TConfig WithCodeAttribute<TConfig>(this TConfig builder, string attributeTypeName, params string[] @params)
+        where TConfig : IMemberConfiguration
+    {
+        builder.WithCodeAttribute(attributeTypeName, @params, static (b, p) => b.WithParameters(p));
+        return builder;
+    }
 }

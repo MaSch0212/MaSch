@@ -1,8 +1,12 @@
-﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
+﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
-public interface ITypeConfiguration<T> : IMemberConfiguration<T>
+public interface ITypeConfiguration : IGenericMemberConfiguration, ISupportsInheritanceConfiguration
+{
+    ITypeConfiguration Implements(string interfaceTypeName);
+}
+
+public interface ITypeConfiguration<T> : ITypeConfiguration, IGenericMemberConfiguration<T>, ISupportsInheritanceConfiguration<T>
     where T : ITypeConfiguration<T>
 {
-    T DrivesFrom(string typeName);
-    T Implements(string interfaceTypeName);
+    new T Implements(string interfaceTypeName);
 }

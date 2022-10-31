@@ -1,11 +1,10 @@
-﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
+﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
 public abstract class MemberConfiguration<T> : CodeConfiguration, IMemberConfiguration<T>
     where T : IMemberConfiguration<T>
 {
     private readonly string _memberName;
     private readonly List<ICodeAttributeConfiguration> _codeAttributes = new();
-    private readonly List<IGenericParameterConfiguration> _genericParameters = new();
     private AccessModifier _accessModifier = AccessModifier.Default;
     private MemberKeyword _keywords = MemberKeyword.None;
 
@@ -14,14 +13,23 @@ public abstract class MemberConfiguration<T> : CodeConfiguration, IMemberConfigu
         _memberName = memberName;
     }
 
+    /// <inheritdoc/>
+    public virtual string MemberName => _memberName;
+
     protected abstract T This { get; }
 
+    /// <inheritdoc/>
     public T WithAccessModifier(AccessModifier accessModifier)
     {
         _accessModifier = accessModifier;
         return This;
     }
 
+    /// <inheritdoc/>
+    IMemberConfiguration IMemberConfiguration.WithAccessModifier(AccessModifier accessModifier)
+        => WithAccessModifier(accessModifier);
+
+    /// <inheritdoc/>
     public T WithCodeAttribute<TParams>(string attributeTypeName, TParams @params, Action<ICodeAttributeConfiguration, TParams> attributeConfiguration)
     {
         var config = new CodeAttributeConfiguration(attributeTypeName);
@@ -30,19 +38,20 @@ public abstract class MemberConfiguration<T> : CodeConfiguration, IMemberConfigu
         return This;
     }
 
-    public T WithGenericParameter<TParams>(string name, TParams @params, Action<IGenericParameterConfiguration, TParams> parameterConfiguration)
-    {
-        var config = new GenericParameterConfiguration(name);
-        parameterConfiguration?.Invoke(config, @params);
-        _genericParameters.Add(config);
-        return This;
-    }
+    /// <inheritdoc/>
+    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute<TParams>(string attributeTypeName, TParams @params, Action<ICodeAttributeConfiguration, TParams> attributeConfiguration)
+        => WithCodeAttribute(attributeTypeName, @params, attributeConfiguration);
 
+    /// <inheritdoc/>
     public T WithKeyword(MemberKeyword keyword)
     {
         _keywords |= keyword;
         return This;
     }
+
+    /// <inheritdoc/>
+    IMemberConfiguration IMemberConfiguration.WithKeyword(MemberKeyword keyword)
+        => WithKeyword(keyword);
 
     protected void WriteCodeAttributesTo(ISourceBuilder sourceBuilder)
     {
@@ -61,40 +70,8 @@ public abstract class MemberConfiguration<T> : CodeConfiguration, IMemberConfigu
             sourceBuilder.Append(_keywords.ToMemberPrefix());
     }
 
-    protected void WriteNameTo(ISourceBuilder sourceBuilder)
+    protected virtual void WriteNameTo(ISourceBuilder sourceBuilder)
     {
         sourceBuilder.Append(_memberName);
-
-        if (_genericParameters.Count > 0)
-        {
-            sourceBuilder.Append('<');
-
-            bool isFirst = true;
-            foreach (var genericParameter in _genericParameters)
-            {
-                if (!isFirst)
-                    sourceBuilder.Append(", ");
-                genericParameter.WriteParameterTo(sourceBuilder);
-
-                isFirst = false;
-            }
-
-            sourceBuilder.Append('>');
-        }
-    }
-
-    protected void WriteGenericConstraintsTo(ISourceBuilder sourceBuilder)
-    {
-        if (_genericParameters.Count == 0)
-            return;
-
-        using (sourceBuilder.Indent())
-        {
-            foreach (var genericParameter in _genericParameters.Where(x => x.HasConstraints))
-            {
-                sourceBuilder.AppendLine();
-                genericParameter.WriteConstraintTo(sourceBuilder);
-            }
-        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MaSch.CodeAnalysis.CSharp.Common;
+using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
 namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
 
@@ -44,6 +45,10 @@ public sealed partial class SourceBuilder
 
     /// <inheritdoc cref="ISourceBuilder.CurrentIndentLevel"/>
     public int CurrentIndentLevel { get; set; }
+
+    private string CurrentTypeName { get; set; }
+
+    private string CurrentTypeNameWithoutGenericParameters { get; set; }
 
     /// <summary>
     /// Creates a new source file builder.
@@ -191,6 +196,11 @@ public sealed partial class SourceBuilder
         return this;
     }
 
+    /// <inheritdoc cref="ISourceBuilder.As{T}" />
+    public T As<T>()
+        where T : ISourceBuilder
+        => (T)(ISourceBuilder)this;
+
     /// <inheritdoc cref="ISourceBuilder.ToSourceText(Encoding?, SourceHashAlgorithm)"/>
     public SourceText ToSourceText(Encoding? encoding = null, SourceHashAlgorithm checksumAlgorithm = SourceHashAlgorithm.Sha1)
     {
@@ -284,11 +294,69 @@ public sealed partial class SourceBuilder
         return AppendLine();
     }
 
+    private SourceBuilderCodeBlock AppendConstructor<TParams>(out ISourceBuilder constructorBuilder, TParams @params, Action<IConstructorConfiguration, TParams> constructorConfiguration)
+    {
+        constructorBuilder = this;
+        return AppendMemberWithBuilder(new ConstructorConfiguration(CurrentTypeNameWithoutGenericParameters), @params, constructorConfiguration);
+    }
+
+    private SourceBuilderCodeBlock AppendFinalizer(out ISourceBuilder finalizerBuilder)
+    {
+        finalizerBuilder = this;
+        return AppendBlock($"~{CurrentTypeNameWithoutGenericParameters}()");
+    }
+
+    private SourceBuilderCodeBlock AppendStaticConstructor(out ISourceBuilder constructorBuilder)
+    {
+        constructorBuilder = this;
+        return AppendBlock($"static {CurrentTypeNameWithoutGenericParameters}()");
+    }
+
+    private SourceBuilder AppendField<TParams>(string fieldTypeName, string fieldName, TParams @params, Action<IFieldConfiguration, TParams> fieldConfiguration)
+    {
+        var config = new FieldConfiguration(fieldTypeName, fieldName);
+        fieldConfiguration?.Invoke(config, @params);
+        config.WriteTo(this);
+        return Append(';').AppendLine();
+    }
+
+    private SourceBuilderCodeBlock AppendMethod<TParams>(string methodName, out ISourceBuilder methodBuilder, TParams @params, Action<IMethodConfiguration, TParams> methodConfiguration)
+    {
+        methodBuilder = this;
+        return AppendMemberWithBuilder(new MethodConfiguration(methodName), @params, methodConfiguration);
+    }
+
+    private SourceBuilder AppendMethod<TParams>(string methodName, TParams @params, Action<IMethodConfiguration, TParams> methodConfiguration)
+    {
+        var config = new MethodConfiguration(methodName);
+        methodConfiguration?.Invoke(config, @params);
+        config.WriteTo(this);
+        return Append(';').AppendLine();
+    }
+
+    private SourceBuilder AppendValue<TParams>(string name, TParams @params, Action<IEnumValueConfiguration, TParams> enumValueConfiguration)
+    {
+        var config = new EnumValueConfiguration(name);
+        enumValueConfiguration?.Invoke(config, @params);
+        config.WriteTo(this);
+        return AppendLine();
+    }
+
     private SourceBuilderCodeBlock AppendMemberWithBuilder<TConfig, TParams>(TConfig config, TParams @params, Action<TConfig, TParams> interfaceConfiguration)
         where TConfig : ICodeConfiguration
     {
         interfaceConfiguration?.Invoke(config, @params);
         config.WriteTo(this);
+
+        if (config is IMemberConfiguration memberConfiguration)
+        {
+            CurrentTypeName = memberConfiguration.MemberName;
+            CurrentTypeNameWithoutGenericParameters =
+                config is IGenericMemberConfiguration genericMemberConfiguration
+                    ? genericMemberConfiguration.MemberNameWithoutGenericParameters
+                    : memberConfiguration.MemberName;
+        }
+
         return AppendLine().AppendBlock();
     }
 }

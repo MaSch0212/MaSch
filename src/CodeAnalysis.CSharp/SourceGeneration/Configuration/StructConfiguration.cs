@@ -1,4 +1,4 @@
-﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
+﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
 public interface IStructConfiguration : ITypeConfiguration<IStructConfiguration>
 {
@@ -11,8 +11,10 @@ public sealed class StructConfiguration : TypeConfiguration<IStructConfiguration
     {
     }
 
+    /// <inheritdoc/>
     protected override IStructConfiguration This => this;
 
+    /// <inheritdoc/>
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
         WriteCodeAttributesTo(sourceBuilder);

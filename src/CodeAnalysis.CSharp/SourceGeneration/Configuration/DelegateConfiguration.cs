@@ -1,19 +1,32 @@
-﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
+﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
 public interface IDelegateConfiguration : IMethodConfiguration<IDelegateConfiguration>
 {
 }
 
-public sealed class DelegateConfiguration : MemberConfiguration<IDelegateConfiguration>, IDelegateConfiguration
+public sealed class DelegateConfiguration : MethodConfiguration<IDelegateConfiguration>, IDelegateConfiguration
 {
-    private readonly string _delegateName;
-    private readonly string _returnType;
-
     public DelegateConfiguration(string delegateName)
+        : base(delegateName)
     {
-        _delegateName = delegateName;
-        _returnType = "void";
     }
 
+    /// <inheritdoc/>
     protected override int StartCapacity => 128;
+
+    /// <inheritdoc/>
+    protected override IDelegateConfiguration This => this;
+
+    /// <inheritdoc/>
+    public override void WriteTo(ISourceBuilder sourceBuilder)
+    {
+        WriteCodeAttributesTo(sourceBuilder);
+        WriteKeywordsTo(sourceBuilder);
+        sourceBuilder.Append("delegate ");
+        WriteReturnTypeTo(sourceBuilder);
+        WriteNameTo(sourceBuilder);
+        WriteParametersTo(sourceBuilder);
+        WriteGenericConstraintsTo(sourceBuilder);
+        sourceBuilder.Append(';');
+    }
 }

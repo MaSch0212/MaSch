@@ -162,7 +162,7 @@ public static class AccessModifierExtensions
             AccessModifier.Internal => "internal ",
             AccessModifier.ProtectedInternal => "protected internal ",
             AccessModifier.PrivateProtected => "private protected ",
-            _ => string.Empty;
+            _ => string.Empty,
         };
     }
 }

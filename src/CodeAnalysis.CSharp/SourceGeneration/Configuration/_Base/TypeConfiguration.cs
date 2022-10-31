@@ -1,6 +1,6 @@
-﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
+﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
-public abstract class TypeConfiguration<T> : MemberConfiguration<T>, ITypeConfiguration<T>
+public abstract class TypeConfiguration<T> : GenericMemberConfiguration<T>, ITypeConfiguration<T>
     where T : ITypeConfiguration<T>
 {
     private readonly List<string> _interfaceImplementations = new();
@@ -11,19 +11,30 @@ public abstract class TypeConfiguration<T> : MemberConfiguration<T>, ITypeConfig
     {
     }
 
-    protected override int StartCapacity => 512;
+    /// <inheritdoc/>
+    protected override int StartCapacity => 128;
 
-    public T DrivesFrom(string typeName)
+    /// <inheritdoc/>
+    public T DerivesFrom(string typeName)
     {
         _baseType = typeName;
         return This;
     }
 
+    /// <inheritdoc/>
+    ISupportsInheritanceConfiguration ISupportsInheritanceConfiguration.DerivesFrom(string typeName)
+        => DerivesFrom(typeName);
+
+    /// <inheritdoc/>
     public T Implements(string interfaceTypeName)
     {
         _interfaceImplementations.Add(interfaceTypeName);
         return This;
     }
+
+    /// <inheritdoc/>
+    ITypeConfiguration ITypeConfiguration.Implements(string interfaceTypeName)
+        => Implements(interfaceTypeName);
 
     protected void WriteBaseTypesTo(ISourceBuilder sourceBuilder)
     {

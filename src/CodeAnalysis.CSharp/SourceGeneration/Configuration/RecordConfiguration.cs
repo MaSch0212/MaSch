@@ -1,4 +1,4 @@
-﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
+﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
 public interface IRecordConfiguration :
     ITypeConfiguration<IRecordConfiguration>,
@@ -15,16 +15,22 @@ public sealed class RecordConfiguration : TypeConfiguration<IRecordConfiguration
     {
     }
 
+    /// <inheritdoc/>
     protected override IRecordConfiguration This => this;
 
+    /// <inheritdoc/>
     public IRecordConfiguration WithParameter<TParams>(string type, string name, TParams @params, Action<IParameterConfiguration, TParams> parameterConfiguration)
     {
-        var config = new ParameterConfiguration(type, name) { LineBreakAfterCodeAttribute = true };
-        parameterConfiguration?.Invoke(config, @params);
-        _parameters.Add(config);
+        var config = ParameterConfiguration.AddParameter(_parameters, type, name, @params, parameterConfiguration);
+        config.LineBreakAfterCodeAttribute = true;
         return This;
     }
 
+    /// <inheritdoc/>
+    IDefinesParametersConfiguration IDefinesParametersConfiguration.WithParameter<TParams>(string type, string name, TParams @params, Action<IParameterConfiguration, TParams> parameterConfiguration)
+        => WithParameter(type, name, @params, parameterConfiguration);
+
+    /// <inheritdoc/>
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
         WriteCodeAttributesTo(sourceBuilder);
@@ -38,21 +44,6 @@ public sealed class RecordConfiguration : TypeConfiguration<IRecordConfiguration
 
     private void WriteParametersTo(ISourceBuilder sourceBuilder)
     {
-        if (_parameters.Count == 0)
-            return;
-
-        using (sourceBuilder.Indent())
-        {
-            sourceBuilder.Append('(');
-            for (int i = 0; i < _parameters.Count; i++)
-            {
-                sourceBuilder.AppendLine();
-                _parameters[i].WriteTo(sourceBuilder);
-                if (i < _parameters.Count - 1)
-                    sourceBuilder.Append(',');
-            }
-
-            sourceBuilder.Append(')');
-        }
+        ParameterConfiguration.WriteParametersTo(_parameters, sourceBuilder);
     }
 }

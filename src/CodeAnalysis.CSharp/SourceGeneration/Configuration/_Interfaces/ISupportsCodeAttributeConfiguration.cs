@@ -1,7 +1,12 @@
-﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
+﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
-public interface ISupportsCodeAttributeConfiguration<T> : ICodeConfiguration
+public interface ISupportsCodeAttributeConfiguration : ICodeConfiguration
+{
+    ISupportsCodeAttributeConfiguration WithCodeAttribute<TParams>(string attributeTypeName, TParams @params, Action<ICodeAttributeConfiguration, TParams> attributeConfiguration);
+}
+
+public interface ISupportsCodeAttributeConfiguration<T> : ISupportsCodeAttributeConfiguration
     where T : ISupportsCodeAttributeConfiguration<T>
 {
-    T WithCodeAttribute<TParams>(string attributeTypeName, TParams @params, Action<ICodeAttributeConfiguration, TParams> attributeConfiguration);
+    new T WithCodeAttribute<TParams>(string attributeTypeName, TParams @params, Action<ICodeAttributeConfiguration, TParams> attributeConfiguration);
 }
