@@ -5,7 +5,7 @@ public interface IFieldConfiguration : IMemberConfiguration<IFieldConfiguration>
     IFieldConfiguration WithValue(string value);
 }
 
-public class FieldConfiguration : MemberConfiguration<IFieldConfiguration>, IFieldConfiguration
+internal sealed class FieldConfiguration : MemberConfiguration<IFieldConfiguration>, IFieldConfiguration
 {
     private readonly string _fieldTypeName;
     private string _value;
@@ -39,7 +39,5 @@ public class FieldConfiguration : MemberConfiguration<IFieldConfiguration>, IFie
 
         if (_value is not null)
             sourceBuilder.Append($" = {_value}");
-
-        sourceBuilder.Append(';');
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
-public abstract class GenericMemberConfiguration<T> : MemberConfiguration<T>, IGenericMemberConfiguration<T>
+internal abstract class GenericMemberConfiguration<T> : MemberConfiguration<T>, IGenericMemberConfiguration<T>
     where T : IGenericMemberConfiguration<T>
 {
     private readonly List<IGenericParameterConfiguration> _genericParameters = new();
@@ -10,7 +10,6 @@ public abstract class GenericMemberConfiguration<T> : MemberConfiguration<T>, IG
     {
     }
 
-    /// <inheritdoc/>
     public override string MemberName
     {
         get
@@ -21,23 +20,19 @@ public abstract class GenericMemberConfiguration<T> : MemberConfiguration<T>, IG
         }
     }
 
-    /// <inheritdoc/>
     public string MemberNameWithoutGenericParameters => base.MemberName;
 
-    /// <inheritdoc/>
-    public T WithGenericParameter<TParams>(string name, TParams @params, Action<IGenericParameterConfiguration, TParams> parameterConfiguration)
+    public T WithGenericParameter(string name, Action<IGenericParameterConfiguration> parameterConfiguration)
     {
         var config = new GenericParameterConfiguration(name);
-        parameterConfiguration?.Invoke(config, @params);
+        parameterConfiguration?.Invoke(config);
         _genericParameters.Add(config);
         return This;
     }
 
-    /// <inheritdoc/>
-    IGenericMemberConfiguration IGenericMemberConfiguration.WithGenericParameter<TParams>(string name, TParams @params, Action<IGenericParameterConfiguration, TParams> parameterConfiguration)
-        => WithGenericParameter(name, @params, parameterConfiguration);
+    IGenericMemberConfiguration IGenericMemberConfiguration.WithGenericParameter(string name, Action<IGenericParameterConfiguration> parameterConfiguration)
+        => WithGenericParameter(name, parameterConfiguration);
 
-    /// <inheritdoc/>
     protected override void WriteNameTo(ISourceBuilder sourceBuilder)
     {
         base.WriteNameTo(sourceBuilder);

@@ -4,7 +4,7 @@ public interface IEnumConfiguration : IMemberConfiguration<IEnumConfiguration>, 
 {
 }
 
-public sealed class EnumConfiguration : MemberConfiguration<IEnumConfiguration>, IEnumConfiguration
+internal sealed class EnumConfiguration : MemberConfiguration<IEnumConfiguration>, IEnumConfiguration
 {
     private string _baseType;
 

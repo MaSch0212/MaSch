@@ -26,6 +26,7 @@ public sealed partial class SourceBuilder
     private const int StartCapacity = 16 * 1024; // 16KB
 
     private readonly StringBuilder _builder;
+    private readonly CodeConfigurationFactory _configurationFactory = new();
     private bool _isLineIndented = false;
     private bool _isLastLineEmpty;
 
@@ -45,10 +46,6 @@ public sealed partial class SourceBuilder
 
     /// <inheritdoc cref="ISourceBuilder.CurrentIndentLevel"/>
     public int CurrentIndentLevel { get; set; }
-
-    private string CurrentTypeName { get; set; }
-
-    private string CurrentTypeNameWithoutGenericParameters { get; set; }
 
     /// <summary>
     /// Creates a new source file builder.
@@ -163,7 +160,7 @@ public sealed partial class SourceBuilder
                 lineIsEmpty = true;
             }
 
-            if (!char.IsWhiteSpace(value[i]))
+            if (!char.IsWhiteSpace(value[i]) && value[i] is not '{')
                 lineIsEmpty = false;
         }
 
@@ -221,142 +218,12 @@ public sealed partial class SourceBuilder
         return _builder.ToString();
     }
 
-    private SourceBuilder AppendNamespaceImport(string @namespace)
-        => AppendLine($"using {@namespace};");
-
-    private SourceBuilder AppendNamespaceImport(string @namespace, string alias)
-        => string.IsNullOrEmpty(alias) ? AppendNamespaceImport(@namespace) : AppendLine($"using {alias} = {@namespace};");
-
-    private SourceBuilder AppendStaticNamespaceImport(string @namespace)
-        => AppendLine($"using static {@namespace};");
-
-    private SourceBuilder AppendGlobalNamespaceImport(string @namespace)
-        => Append("global ").AppendNamespaceImport(@namespace);
-
-    private SourceBuilder AppendGlobalNamespaceImport(string @namespace, string alias)
-        => Append("global ").AppendNamespaceImport(@namespace, alias);
-
-    private SourceBuilder AppendGlobalStaticNamespaceImport(string @namespace)
-        => Append("global ").AppendStaticNamespaceImport(@namespace);
-
-    private SourceBuilder AppendFileNamespace(string @namespace)
-        => AppendLine($"namespace {@namespace};");
-
-    private SourceBuilder AppendAssemblyCodeAttribute<TParams>(string attributeTypeName, TParams @params, Action<ICodeAttributeConfiguration, TParams> attributeConfiguration)
+    private SourceBuilder AppendAsBlock<T>(ICodeConfiguration configuration, T builder, Action<T> builderFunc)
+        where T : ISourceBuilder
     {
-        var attributeConfig = new CodeAttributeConfiguration(attributeTypeName).OnAssembly();
-        attributeConfiguration?.Invoke(attributeConfig, @params);
-        attributeConfig.WriteTo(this);
-        return AppendLine();
-    }
-
-    private SourceBuilderCodeBlock AppendNamespace(string @namespace, out INamespaceBuilder namespaceBuilder)
-    {
-        namespaceBuilder = this;
-        return AppendBlock($"namespace {@namespace}");
-    }
-
-    private SourceBuilderCodeBlock AppendClass<TParams>(string className, out IClassBuilder classBuilder, TParams @params, Action<IClassConfiguration, TParams> classConfiguration)
-    {
-        classBuilder = this;
-        return AppendMemberWithBuilder(new ClassConfiguration(className), @params, classConfiguration);
-    }
-
-    private SourceBuilderCodeBlock AppendRecord<TParams>(string recordName, out IRecordBuilder recordBuilder, TParams @params, Action<IRecordConfiguration, TParams> recordConfiguration)
-    {
-        recordBuilder = this;
-        return AppendMemberWithBuilder(new RecordConfiguration(recordName), @params, recordConfiguration);
-    }
-
-    private SourceBuilderCodeBlock AppendInterface<TParams>(string interfaceName, out IInterfaceBuilder interfaceBuilder, TParams @params, Action<IInterfaceConfguration, TParams> interfaceConfiguration)
-    {
-        interfaceBuilder = this;
-        return AppendMemberWithBuilder(new InterfaceConfguration(interfaceName), @params, interfaceConfiguration);
-    }
-
-    private SourceBuilderCodeBlock AppendStruct<TParams>(string structName, out IStructBuilder structBuilder, TParams @params, Action<IStructConfiguration, TParams> structConfiguration)
-    {
-        structBuilder = this;
-        return AppendMemberWithBuilder(new StructConfiguration(structName), @params, structConfiguration);
-    }
-
-    private SourceBuilderCodeBlock AppendEnum<TParams>(string enumName, out IEnumBuilder enumBuilder, TParams @params, Action<IEnumConfiguration, TParams> enumConfiguration)
-    {
-        enumBuilder = this;
-        return AppendMemberWithBuilder(new EnumConfiguration(enumName), @params, enumConfiguration);
-    }
-
-    private SourceBuilder AppendDelegate<TParams>(string delegateName, TParams @params, Action<IDelegateConfiguration, TParams> delegateConfiguration)
-    {
-        var config = new DelegateConfiguration(delegateName);
-        delegateConfiguration?.Invoke(config, @params);
-        config.WriteTo(this);
-        return AppendLine();
-    }
-
-    private SourceBuilderCodeBlock AppendConstructor<TParams>(out ISourceBuilder constructorBuilder, TParams @params, Action<IConstructorConfiguration, TParams> constructorConfiguration)
-    {
-        constructorBuilder = this;
-        return AppendMemberWithBuilder(new ConstructorConfiguration(CurrentTypeNameWithoutGenericParameters), @params, constructorConfiguration);
-    }
-
-    private SourceBuilderCodeBlock AppendFinalizer(out ISourceBuilder finalizerBuilder)
-    {
-        finalizerBuilder = this;
-        return AppendBlock($"~{CurrentTypeNameWithoutGenericParameters}()");
-    }
-
-    private SourceBuilderCodeBlock AppendStaticConstructor(out ISourceBuilder constructorBuilder)
-    {
-        constructorBuilder = this;
-        return AppendBlock($"static {CurrentTypeNameWithoutGenericParameters}()");
-    }
-
-    private SourceBuilder AppendField<TParams>(string fieldTypeName, string fieldName, TParams @params, Action<IFieldConfiguration, TParams> fieldConfiguration)
-    {
-        var config = new FieldConfiguration(fieldTypeName, fieldName);
-        fieldConfiguration?.Invoke(config, @params);
-        config.WriteTo(this);
-        return Append(';').AppendLine();
-    }
-
-    private SourceBuilderCodeBlock AppendMethod<TParams>(string methodName, out ISourceBuilder methodBuilder, TParams @params, Action<IMethodConfiguration, TParams> methodConfiguration)
-    {
-        methodBuilder = this;
-        return AppendMemberWithBuilder(new MethodConfiguration(methodName), @params, methodConfiguration);
-    }
-
-    private SourceBuilder AppendMethod<TParams>(string methodName, TParams @params, Action<IMethodConfiguration, TParams> methodConfiguration)
-    {
-        var config = new MethodConfiguration(methodName);
-        methodConfiguration?.Invoke(config, @params);
-        config.WriteTo(this);
-        return Append(';').AppendLine();
-    }
-
-    private SourceBuilder AppendValue<TParams>(string name, TParams @params, Action<IEnumValueConfiguration, TParams> enumValueConfiguration)
-    {
-        var config = new EnumValueConfiguration(name);
-        enumValueConfiguration?.Invoke(config, @params);
-        config.WriteTo(this);
-        return AppendLine();
-    }
-
-    private SourceBuilderCodeBlock AppendMemberWithBuilder<TConfig, TParams>(TConfig config, TParams @params, Action<TConfig, TParams> interfaceConfiguration)
-        where TConfig : ICodeConfiguration
-    {
-        interfaceConfiguration?.Invoke(config, @params);
-        config.WriteTo(this);
-
-        if (config is IMemberConfiguration memberConfiguration)
-        {
-            CurrentTypeName = memberConfiguration.MemberName;
-            CurrentTypeNameWithoutGenericParameters =
-                config is IGenericMemberConfiguration genericMemberConfiguration
-                    ? genericMemberConfiguration.MemberNameWithoutGenericParameters
-                    : memberConfiguration.MemberName;
-        }
-
-        return AppendLine().AppendBlock();
+        configuration.WriteTo(this);
+        using (AppendLine().AppendBlock())
+            builderFunc(builder);
+        return this;
     }
 }

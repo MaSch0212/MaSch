@@ -1,4 +1,6 @@
-﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
+﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
+
+namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
 
 public interface ISourceBuilder
 {
@@ -183,27 +185,11 @@ public static class SourceBuilderExtensions
         return builder;
     }
 
-    public static TBuilder AppendRegion<TBuilder, TParams>(this TBuilder builder, string regionName, TParams actionParams, Action<TBuilder, TParams> action)
-        where TBuilder : ISourceBuilder
-    {
-        using (builder.AppendRegion(regionName))
-            action(builder, actionParams);
-        return builder;
-    }
-
     public static TBuilder AppendBlock<TBuilder>(this TBuilder builder, string blockLine, Action<TBuilder> action)
         where TBuilder : ISourceBuilder
     {
         using (builder.AppendBlock(blockLine))
             action(builder);
-        return builder;
-    }
-
-    public static TBuilder AppendBlock<TBuilder, TParams>(this TBuilder builder, string blockLine, TParams actionParams, Action<TBuilder, TParams> action)
-        where TBuilder : ISourceBuilder
-    {
-        using (builder.AppendBlock(blockLine))
-            action(builder, actionParams);
         return builder;
     }
 
@@ -215,14 +201,6 @@ public static class SourceBuilderExtensions
         return builder;
     }
 
-    public static TBuilder AppendBlock<TBuilder, TParams>(this TBuilder builder, string blockLine, bool addSemicolon, TParams actionParams, Action<TBuilder, TParams> action)
-        where TBuilder : ISourceBuilder
-    {
-        using (builder.AppendBlock(blockLine, addSemicolon))
-            action(builder, actionParams);
-        return builder;
-    }
-
     public static TBuilder AppendBlock<TBuilder>(this TBuilder builder, Action<TBuilder> action)
         where TBuilder : ISourceBuilder
     {
@@ -231,27 +209,11 @@ public static class SourceBuilderExtensions
         return builder;
     }
 
-    public static TBuilder AppendBlock<TBuilder, TParams>(this TBuilder builder, TParams actionParams, Action<TBuilder, TParams> action)
-        where TBuilder : ISourceBuilder
-    {
-        using (builder.AppendBlock())
-            action(builder, actionParams);
-        return builder;
-    }
-
     public static TBuilder AppendBlock<TBuilder>(this TBuilder builder, bool addSemicolon, Action<TBuilder> action)
         where TBuilder : ISourceBuilder
     {
         using (builder.AppendBlock(addSemicolon))
             action(builder);
-        return builder;
-    }
-
-    public static TBuilder AppendBlock<TBuilder, TParams>(this TBuilder builder, bool addSemicolon, TParams actionParams, Action<TBuilder, TParams> action)
-        where TBuilder : ISourceBuilder
-    {
-        using (builder.AppendBlock(addSemicolon))
-            action(builder, actionParams);
         return builder;
     }
 }

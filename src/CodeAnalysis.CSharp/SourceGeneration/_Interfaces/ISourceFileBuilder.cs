@@ -5,7 +5,7 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
 public interface ISourceFileBuilder :
     ISourceBuilder<ISourceFileBuilder>,
     INamespaceImportBuilder<ISourceFileBuilder>,
-    INamespaceDeclarationBuilder<ISourceFileBuilder>
+    INamespaceDeclarationBuilder<ISourceFileBuilder, IFileMemberFactory>
 {
     ISourceFileBuilder AppendFileNamespace(string @namespace);
     ISourceFileBuilder AppendAssemblyCodeAttribute<TParams>(string attributeTypeName, TParams @params, Action<ICodeAttributeConfiguration, TParams> attributeConfiguration);
@@ -51,6 +51,10 @@ public partial class SourceBuilder : ISourceFileBuilder
 
     /// <inheritdoc/>
     ISourceFileBuilder ISourceFileBuilder.AppendAssemblyCodeAttribute<TParams>(string attributeTypeName, TParams @params, Action<ICodeAttributeConfiguration, TParams> attributeConfiguration) => AppendAssemblyCodeAttribute(attributeTypeName, @params, attributeConfiguration);
+
+    ISourceFileBuilder INamespaceDeclarationBuilder<ISourceFileBuilder, IFileMemberFactory>.Append(Func<IFileMemberFactory, INamespaceConfiguration> createFunc) => Append(createFunc(CodeConfigurationFactory.Instance), null);
+
+    ISourceFileBuilder INamespaceDeclarationBuilder<ISourceFileBuilder, IFileMemberFactory>.Append(Func<IFileMemberFactory, INamespaceConfiguration> createFunc, Action<INamespaceBuilder> builderFunc) => Append(createFunc(CodeConfigurationFactory.Instance), builderFunc);
 }
 
 /// <summary>

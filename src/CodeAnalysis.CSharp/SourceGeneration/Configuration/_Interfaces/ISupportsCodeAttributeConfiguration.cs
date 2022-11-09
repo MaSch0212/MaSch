@@ -2,11 +2,11 @@
 
 public interface ISupportsCodeAttributeConfiguration : ICodeConfiguration
 {
-    ISupportsCodeAttributeConfiguration WithCodeAttribute<TParams>(string attributeTypeName, TParams @params, Action<ICodeAttributeConfiguration, TParams> attributeConfiguration);
+    ISupportsCodeAttributeConfiguration WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration);
 }
 
 public interface ISupportsCodeAttributeConfiguration<T> : ISupportsCodeAttributeConfiguration
     where T : ISupportsCodeAttributeConfiguration<T>
 {
-    new T WithCodeAttribute<TParams>(string attributeTypeName, TParams @params, Action<ICodeAttributeConfiguration, TParams> attributeConfiguration);
+    new T WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration);
 }

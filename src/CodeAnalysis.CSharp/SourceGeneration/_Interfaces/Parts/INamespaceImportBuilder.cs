@@ -1,49 +1,27 @@
-﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
+﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
+
+namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
 
 public interface INamespaceImportBuilder : ISourceBuilder
 {
-    INamespaceImportBuilder AppendNamespaceImport(string @namespace);
-    INamespaceImportBuilder AppendNamespaceImport(string @namespace, string alias);
-    INamespaceImportBuilder AppendStaticNamespaceImport(string @namespace);
-    INamespaceImportBuilder AppendGlobalNamespaceImport(string @namespace);
-    INamespaceImportBuilder AppendGlobalNamespaceImport(string @namespace, string alias);
-    INamespaceImportBuilder AppendGlobalStaticNamespaceImport(string @namespace);
+    INamespaceImportBuilder Append(Func<INamespaceImportConfigurationFactory, INamespaceImportConfiguration> createFunc);
 }
 
-public interface INamespaceImportBuilder<T> : INamespaceImportBuilder
-    where T : INamespaceImportBuilder<T>
+public interface INamespaceImportBuilder<TBuilder, TConfigFactory> : INamespaceImportBuilder
+    where TBuilder : INamespaceImportBuilder<TBuilder, TConfigFactory>
+    where TConfigFactory : INamespaceImportConfigurationFactory
 {
-    new T AppendNamespaceImport(string @namespace);
-    new T AppendNamespaceImport(string @namespace, string alias);
-    new T AppendStaticNamespaceImport(string @namespace);
-    new T AppendGlobalNamespaceImport(string @namespace);
-    new T AppendGlobalNamespaceImport(string @namespace, string alias);
-    new T AppendGlobalStaticNamespaceImport(string @namespace);
+    TBuilder Append(Func<TConfigFactory, INamespaceImportConfiguration> createFunc);
 }
 
 public partial class SourceBuilder : INamespaceImportBuilder
 {
-    /// <inheritdoc/>
-    INamespaceImportBuilder INamespaceImportBuilder.AppendGlobalNamespaceImport(string @namespace)
-        => AppendGlobalNamespaceImport(@namespace);
+    INamespaceImportBuilder INamespaceImportBuilder.Append(Func<INamespaceImportConfigurationFactory, INamespaceImportConfiguration> createFunc)
+        => Append(createFunc(_configurationFactory));
 
-    /// <inheritdoc/>
-    INamespaceImportBuilder INamespaceImportBuilder.AppendGlobalNamespaceImport(string @namespace, string alias)
-        => AppendGlobalNamespaceImport(@namespace, alias);
-
-    /// <inheritdoc/>
-    INamespaceImportBuilder INamespaceImportBuilder.AppendGlobalStaticNamespaceImport(string @namespace)
-        => AppendGlobalStaticNamespaceImport(@namespace);
-
-    /// <inheritdoc/>
-    INamespaceImportBuilder INamespaceImportBuilder.AppendNamespaceImport(string @namespace)
-        => AppendNamespaceImport(@namespace);
-
-    /// <inheritdoc/>
-    INamespaceImportBuilder INamespaceImportBuilder.AppendNamespaceImport(string @namespace, string alias)
-        => AppendNamespaceImport(@namespace, alias);
-
-    /// <inheritdoc/>
-    INamespaceImportBuilder INamespaceImportBuilder.AppendStaticNamespaceImport(string @namespace)
-        => AppendStaticNamespaceImport(@namespace);
+    private SourceBuilder Append(INamespaceImportConfiguration namespaceImportConfiguration)
+    {
+        namespaceImportConfiguration.WriteTo(this);
+        return Append(';').AppendLine();
+    }
 }

@@ -6,7 +6,7 @@ public interface IRecordConfiguration :
 {
 }
 
-public sealed class RecordConfiguration : TypeConfiguration<IRecordConfiguration>, IRecordConfiguration
+internal sealed class RecordConfiguration : TypeConfiguration<IRecordConfiguration>, IRecordConfiguration
 {
     private readonly List<IParameterConfiguration> _parameters = new();
 
@@ -19,16 +19,16 @@ public sealed class RecordConfiguration : TypeConfiguration<IRecordConfiguration
     protected override IRecordConfiguration This => this;
 
     /// <inheritdoc/>
-    public IRecordConfiguration WithParameter<TParams>(string type, string name, TParams @params, Action<IParameterConfiguration, TParams> parameterConfiguration)
+    public IRecordConfiguration WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration)
     {
-        var config = ParameterConfiguration.AddParameter(_parameters, type, name, @params, parameterConfiguration);
+        var config = ParameterConfiguration.AddParameter(_parameters, type, name, parameterConfiguration);
         config.LineBreakAfterCodeAttribute = true;
         return This;
     }
 
     /// <inheritdoc/>
-    IDefinesParametersConfiguration IDefinesParametersConfiguration.WithParameter<TParams>(string type, string name, TParams @params, Action<IParameterConfiguration, TParams> parameterConfiguration)
-        => WithParameter(type, name, @params, parameterConfiguration);
+    IDefinesParametersConfiguration IDefinesParametersConfiguration.WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration)
+        => WithParameter(type, name, parameterConfiguration);
 
     /// <inheritdoc/>
     public override void WriteTo(ISourceBuilder sourceBuilder)

@@ -1,40 +1,35 @@
-﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
+﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
+
+namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
 
 public interface INamespaceDeclarationBuilder : ISourceBuilder
 {
-    SourceBuilderCodeBlock AppendNamespace(string @namespace, out INamespaceBuilder namespaceBuilder);
+    INamespaceDeclarationBuilder Append(Func<INamespaceConfigurationFactory, INamespaceConfiguration> createFunc);
+    INamespaceDeclarationBuilder Append(Func<INamespaceConfigurationFactory, INamespaceConfiguration> createFunc, Action<INamespaceBuilder> builderFunc);
 }
 
-public interface INamespaceDeclarationBuilder<T> : INamespaceDeclarationBuilder
-    where T : INamespaceDeclarationBuilder<T>
+public interface INamespaceDeclarationBuilder<TBuilder, TConfigFactory> : INamespaceDeclarationBuilder, ISourceBuilder<TBuilder>
+    where TBuilder : INamespaceDeclarationBuilder<TBuilder, TConfigFactory>
+    where TConfigFactory : INamespaceConfigurationFactory
 {
+    TBuilder Append(Func<TConfigFactory, INamespaceConfiguration> createFunc);
+    TBuilder Append(Func<TConfigFactory, INamespaceConfiguration> createFunc, Action<INamespaceBuilder> builderFunc);
 }
 
 public partial class SourceBuilder : INamespaceDeclarationBuilder
 {
-    /// <inheritdoc/>
-    SourceBuilderCodeBlock INamespaceDeclarationBuilder.AppendNamespace(string @namespace, out INamespaceBuilder namespaceBuilder)
-        => AppendNamespace(@namespace, out namespaceBuilder);
-}
+    INamespaceDeclarationBuilder INamespaceDeclarationBuilder.Append(Func<INamespaceConfigurationFactory, INamespaceConfiguration> createFunc)
+        => Append(createFunc(_configurationFactory), null);
 
-/// <summary>
-/// Provides extension methods for the <see cref="INamespaceDeclarationBuilder{T}"/> interface.
-/// </summary>
-public static class NamespaceDeclarationBuilderExtensions
-{
-    public static TBuilder AppendNamespace<TBuilder>(this TBuilder builder, string @namespace, Action<INamespaceBuilder> action)
-        where TBuilder : INamespaceDeclarationBuilder
-    {
-        using (builder.AppendNamespace(@namespace, out var namespaceBuilder))
-            action?.Invoke(namespaceBuilder);
-        return builder;
-    }
+    INamespaceDeclarationBuilder INamespaceDeclarationBuilder.Append(Func<INamespaceConfigurationFactory, INamespaceConfiguration> createFunc, Action<INamespaceBuilder> builderFunc)
+        => Append(createFunc(_configurationFactory), builderFunc);
 
-    public static TBuilder AppendNamespace<TBuilder, TParams>(this TBuilder builder, string @namespace, TParams actionParams, Action<INamespaceBuilder, TParams> action)
-        where TBuilder : INamespaceDeclarationBuilder
+    private SourceBuilder Append(INamespaceConfiguration namespaceConfiguration, Action<INamespaceBuilder>? builderFunc)
     {
-        using (builder.AppendNamespace(@namespace, out var namespaceBuilder))
-            action?.Invoke(namespaceBuilder, actionParams);
-        return builder;
+        if (builderFunc is not null)
+            return AppendAsBlock(namespaceConfiguration, this, builderFunc);
+
+        namespaceConfiguration.WriteTo(this);
+        return Append(';').AppendLine();
     }
 }

@@ -4,7 +4,7 @@ public interface IStructConfiguration : ITypeConfiguration<IStructConfiguration>
 {
 }
 
-public sealed class StructConfiguration : TypeConfiguration<IStructConfiguration>, IStructConfiguration
+internal sealed class StructConfiguration : TypeConfiguration<IStructConfiguration>, IStructConfiguration
 {
     public StructConfiguration(string structName)
         : base(structName)

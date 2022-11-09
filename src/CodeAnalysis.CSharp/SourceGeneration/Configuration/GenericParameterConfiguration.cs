@@ -1,79 +1,85 @@
-﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
+﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
-public interface IGenericParameterConfiguration
+namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration
 {
-    /// <summary>
-    /// Gets a value indicating whether this <see cref="GenericParameterConfiguration"/> has any constraints defined.
-    /// </summary>
-    bool HasConstraints { get; }
-
-    IGenericParameterConfiguration WithVariance(GenericParameterVariance variance);
-    IGenericParameterConfiguration WithConstraint(string constraint);
-    void WriteParameterTo(ISourceBuilder sourceBuilder);
-    void WriteConstraintTo(ISourceBuilder sourceBuilder);
-}
-
-public sealed class GenericParameterConfiguration : IGenericParameterConfiguration
-{
-    private readonly string _name;
-    private readonly List<string> _constraints = new();
-    private GenericParameterVariance _variance = GenericParameterVariance.None;
-
-    public GenericParameterConfiguration(string name)
+    public interface IGenericParameterConfiguration
     {
-        _name = name;
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="GenericParameterConfiguration"/> has any constraints defined.
+        /// </summary>
+        bool HasConstraints { get; }
+
+        IGenericParameterConfiguration WithVariance(GenericParameterVariance variance);
+        IGenericParameterConfiguration WithConstraint(string constraint);
+        void WriteParameterTo(ISourceBuilder sourceBuilder);
+        void WriteConstraintTo(ISourceBuilder sourceBuilder);
     }
 
-    /// <inheritdoc/>
-    public bool HasConstraints => _constraints.Count > 0;
-
-    /// <inheritdoc/>
-    public IGenericParameterConfiguration WithVariance(GenericParameterVariance variance)
+    internal sealed class GenericParameterConfiguration : IGenericParameterConfiguration
     {
-        _variance = variance;
-        return this;
-    }
+        private readonly string _name;
+        private readonly List<string> _constraints = new();
+        private GenericParameterVariance _variance = GenericParameterVariance.None;
 
-    /// <inheritdoc/>
-    public IGenericParameterConfiguration WithConstraint(string constraint)
-    {
-        _constraints.Add(constraint);
-        return this;
-    }
-
-    /// <inheritdoc/>
-    public void WriteParameterTo(ISourceBuilder sourceBuilder)
-    {
-        if (_variance is not GenericParameterVariance.None)
-            sourceBuilder.Append(_variance.ToParameterPrefix());
-        sourceBuilder.Append(_name);
-    }
-
-    /// <inheritdoc/>
-    public void WriteConstraintTo(ISourceBuilder sourceBuilder)
-    {
-        if (_constraints.Count == 0)
-            return;
-
-        sourceBuilder.Append($"where {_name} : ");
-
-        bool isFirst = true;
-        foreach (var constraint in _constraints)
+        public GenericParameterConfiguration(string name)
         {
-            if (!isFirst)
-                sourceBuilder.Append(", ");
-            sourceBuilder.Append(constraint);
+            _name = name;
+        }
 
-            isFirst = false;
+        /// <inheritdoc/>
+        public bool HasConstraints => _constraints.Count > 0;
+
+        /// <inheritdoc/>
+        public IGenericParameterConfiguration WithVariance(GenericParameterVariance variance)
+        {
+            _variance = variance;
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IGenericParameterConfiguration WithConstraint(string constraint)
+        {
+            _constraints.Add(constraint);
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public void WriteParameterTo(ISourceBuilder sourceBuilder)
+        {
+            if (_variance is not GenericParameterVariance.None)
+                sourceBuilder.Append(_variance.ToParameterPrefix());
+            sourceBuilder.Append(_name);
+        }
+
+        /// <inheritdoc/>
+        public void WriteConstraintTo(ISourceBuilder sourceBuilder)
+        {
+            if (_constraints.Count == 0)
+                return;
+
+            sourceBuilder.Append($"where {_name} : ");
+
+            bool isFirst = true;
+            foreach (var constraint in _constraints)
+            {
+                if (!isFirst)
+                    sourceBuilder.Append(", ");
+                sourceBuilder.Append(constraint);
+
+                isFirst = false;
+            }
         }
     }
 }
 
-public static class GenericParameterConfigurationExtensions
+namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
 {
-    public static IGenericParameterConfiguration AsCovariant(this IGenericParameterConfiguration config)
-        => config.WithVariance(GenericParameterVariance.Covariant);
+    public static class GenericParameterConfigurationExtensions
+    {
+        public static IGenericParameterConfiguration AsCovariant(this IGenericParameterConfiguration config)
+            => config.WithVariance(GenericParameterVariance.Covariant);
 
-    public static IGenericParameterConfiguration AsContravariant(this IGenericParameterConfiguration config)
-        => config.WithVariance(GenericParameterVariance.Contravariant);
+        public static IGenericParameterConfiguration AsContravariant(this IGenericParameterConfiguration config)
+            => config.WithVariance(GenericParameterVariance.Contravariant);
+    }
 }

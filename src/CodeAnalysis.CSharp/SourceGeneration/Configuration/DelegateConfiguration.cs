@@ -4,7 +4,7 @@ public interface IDelegateConfiguration : IMethodConfiguration<IDelegateConfigur
 {
 }
 
-public sealed class DelegateConfiguration : MethodConfiguration<IDelegateConfiguration>, IDelegateConfiguration
+internal sealed class DelegateConfiguration : MethodConfiguration<IDelegateConfiguration>, IDelegateConfiguration
 {
     public DelegateConfiguration(string delegateName)
         : base(delegateName)
@@ -27,6 +27,5 @@ public sealed class DelegateConfiguration : MethodConfiguration<IDelegateConfigu
         WriteNameTo(sourceBuilder);
         WriteParametersTo(sourceBuilder);
         WriteGenericConstraintsTo(sourceBuilder);
-        sourceBuilder.Append(';');
     }
 }

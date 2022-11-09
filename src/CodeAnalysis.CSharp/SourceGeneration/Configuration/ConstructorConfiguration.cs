@@ -4,9 +4,9 @@ public interface IConstructorConfiguration : IMemberConfiguration<IConstructorCo
 {
 }
 
-public class ConstructorConfiguration : MemberConfiguration<IConstructorConfiguration>, IConstructorConfiguration
+internal sealed class ConstructorConfiguration : MemberConfiguration<IConstructorConfiguration>, IConstructorConfiguration
 {
-    private readonly List<IParameterConfiguration> _parameters;
+    private readonly List<IParameterConfiguration> _parameters = new();
 
     public ConstructorConfiguration(string containingTypeName)
         : base(containingTypeName)
@@ -15,23 +15,27 @@ public class ConstructorConfiguration : MemberConfiguration<IConstructorConfigur
 
     /// <inheritdoc/>
     protected override IConstructorConfiguration This => this;
+
     /// <inheritdoc/>
     protected override int StartCapacity => 64;
 
     /// <inheritdoc/>
-    public IConstructorConfiguration WithParameter<TParams>(string type, string name, TParams @params, Action<IParameterConfiguration, TParams> parameterConfiguration)
+    public IConstructorConfiguration WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration)
     {
-        ParameterConfiguration.AddParameter(_parameters, type, name, @params, parameterConfiguration);
+        ParameterConfiguration.AddParameter(_parameters, type, name, parameterConfiguration);
         return This;
     }
 
     /// <inheritdoc/>
-    IDefinesParametersConfiguration IDefinesParametersConfiguration.WithParameter<TParams>(string type, string name, TParams @params, Action<IParameterConfiguration, TParams> parameterConfiguration)
-        => WithParameter(type, name, @params, parameterConfiguration);
+    IDefinesParametersConfiguration IDefinesParametersConfiguration.WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration)
+        => WithParameter(type, name, parameterConfiguration);
 
     /// <inheritdoc/>
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
-        throw new NotImplementedException();
+        WriteCodeAttributesTo(sourceBuilder);
+        WriteKeywordsTo(sourceBuilder);
+        WriteNameTo(sourceBuilder);
+        ParameterConfiguration.WriteParametersTo(_parameters, sourceBuilder);
     }
 }

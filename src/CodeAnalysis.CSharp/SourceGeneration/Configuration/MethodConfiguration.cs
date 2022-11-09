@@ -10,7 +10,7 @@ public interface IMethodConfiguration : IMethodConfiguration<IMethodConfiguratio
 {
 }
 
-public abstract class MethodConfiguration<T> : GenericMemberConfiguration<T>, IMethodConfiguration<T>
+internal abstract class MethodConfiguration<T> : GenericMemberConfiguration<T>, IMethodConfiguration<T>
     where T : IMethodConfiguration<T>
 {
     private readonly List<IParameterConfiguration> _parameters = new();
@@ -21,21 +21,17 @@ public abstract class MethodConfiguration<T> : GenericMemberConfiguration<T>, IM
     {
     }
 
-    /// <inheritdoc/>
     protected override int StartCapacity => 128;
 
-    /// <inheritdoc/>
-    public T WithParameter<TParams>(string type, string name, TParams @params, Action<IParameterConfiguration, TParams> parameterConfiguration)
+    public T WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration)
     {
-        ParameterConfiguration.AddParameter(_parameters, type, name, @params, parameterConfiguration);
+        ParameterConfiguration.AddParameter(_parameters, type, name, parameterConfiguration);
         return This;
     }
 
-    /// <inheritdoc/>
-    IDefinesParametersConfiguration IDefinesParametersConfiguration.WithParameter<TParams>(string type, string name, TParams @params, Action<IParameterConfiguration, TParams> parameterConfiguration)
-        => WithParameter(type, name, @params, parameterConfiguration);
+    IDefinesParametersConfiguration IDefinesParametersConfiguration.WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration)
+        => WithParameter(type, name, parameterConfiguration);
 
-    /// <inheritdoc/>
     public T WithReturnType(string typeName)
     {
         _returnType = typeName;
@@ -53,24 +49,24 @@ public abstract class MethodConfiguration<T> : GenericMemberConfiguration<T>, IM
     }
 }
 
-public sealed class MethodConfiguration : MethodConfiguration<IMethodConfiguration>, IMethodConfiguration
+internal sealed class MethodConfiguration : MethodConfiguration<IMethodConfiguration>, IMethodConfiguration
 {
     public MethodConfiguration(string memberName)
         : base(memberName)
     {
     }
 
-    /// <inheritdoc/>
     protected override IMethodConfiguration This => this;
 
-    /// <inheritdoc/>
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
         WriteCodeAttributesTo(sourceBuilder);
         WriteKeywordsTo(sourceBuilder);
         WriteReturnTypeTo(sourceBuilder);
         WriteNameTo(sourceBuilder);
+        sourceBuilder.Append('(');
         WriteParametersTo(sourceBuilder);
+        sourceBuilder.Append(')');
         WriteGenericConstraintsTo(sourceBuilder);
     }
 }

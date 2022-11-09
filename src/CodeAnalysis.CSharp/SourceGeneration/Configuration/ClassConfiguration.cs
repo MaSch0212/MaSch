@@ -4,7 +4,7 @@ public interface IClassConfiguration : ITypeConfiguration<IClassConfiguration>
 {
 }
 
-public sealed class ClassConfiguration : TypeConfiguration<IClassConfiguration>, IClassConfiguration
+internal sealed class ClassConfiguration : TypeConfiguration<IClassConfiguration>, IClassConfiguration
 {
     public ClassConfiguration(string className)
         : base(className)

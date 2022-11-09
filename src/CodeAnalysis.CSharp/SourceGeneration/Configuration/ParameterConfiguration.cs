@@ -1,11 +1,10 @@
-﻿using System.Reflection.Metadata;
-namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
+﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
 public interface IParameterConfiguration : ISupportsCodeAttributeConfiguration<IParameterConfiguration>
 {
 }
 
-public class ParameterConfiguration : CodeConfiguration, IParameterConfiguration
+internal sealed class ParameterConfiguration : CodeConfiguration, IParameterConfiguration
 {
     private readonly string _type;
     private readonly string _name;
@@ -19,13 +18,12 @@ public class ParameterConfiguration : CodeConfiguration, IParameterConfiguration
 
     public bool LineBreakAfterCodeAttribute { get; set; } = false;
 
-    /// <inheritdoc/>
     protected override int StartCapacity => 16;
 
-    public static ParameterConfiguration AddParameter<TParams>(IList<IParameterConfiguration> parameters, string type, string name, TParams @params, Action<IParameterConfiguration, TParams> parameterConfiguration)
+    public static ParameterConfiguration AddParameter(IList<IParameterConfiguration> parameters, string type, string name, Action<IParameterConfiguration> parameterConfiguration)
     {
         var config = new ParameterConfiguration(type, name) { LineBreakAfterCodeAttribute = true };
-        parameterConfiguration?.Invoke(config, @params);
+        parameterConfiguration?.Invoke(config);
         parameters.Add(config);
         return config;
     }
@@ -50,18 +48,15 @@ public class ParameterConfiguration : CodeConfiguration, IParameterConfiguration
         }
     }
 
-    /// <inheritdoc/>
-    public IParameterConfiguration WithCodeAttribute<TParams>(string attributeTypeName, TParams @params, Action<ICodeAttributeConfiguration, TParams> attributeConfiguration)
+    public IParameterConfiguration WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
     {
-        CodeAttributeConfiguration.AddCodeAttribute(_codeAttributes, attributeTypeName, @params, attributeConfiguration);
+        CodeAttributeConfiguration.AddCodeAttribute(_codeAttributes, attributeTypeName, attributeConfiguration);
         return this;
     }
 
-    /// <inheritdoc/>
-    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute<TParams>(string attributeTypeName, TParams @params, Action<ICodeAttributeConfiguration, TParams> attributeConfiguration)
-        => WithCodeAttribute<TParams>(attributeTypeName, @params, attributeConfiguration);
+    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
+        => WithCodeAttribute(attributeTypeName, attributeConfiguration);
 
-    /// <inheritdoc/>
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
         foreach (var codeAttribute in _codeAttributes)

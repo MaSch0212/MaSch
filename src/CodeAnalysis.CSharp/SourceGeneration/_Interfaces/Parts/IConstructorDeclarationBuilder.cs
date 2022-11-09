@@ -4,113 +4,37 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
 
 public interface IConstructorDeclarationBuilder : ISourceBuilder
 {
-    SourceBuilderCodeBlock AppendConstructor<TParams>(out ISourceBuilder constructorBuilder, TParams @params, Action<IConstructorConfiguration, TParams> constructorConfiguration);
-    SourceBuilderCodeBlock AppendStaticConstructor(out ISourceBuilder constructorBuilder);
-    SourceBuilderCodeBlock AppendFinalizer(out ISourceBuilder finalizerBuilder);
+    IConstructorDeclarationBuilder Append(Func<IConstructorConfigurationFactory, IConstructorConfiguration> createFunc, Action<ISourceBuilder> constructorBuilder);
+    IConstructorDeclarationBuilder Append(Func<IConstructorConfigurationFactory, IFinalizerConfiguration> createFunc, Action<ISourceBuilder> finalizerBuilder);
+    IConstructorDeclarationBuilder Append(Func<IConstructorConfigurationFactory, IStaticConstructorConfiguration> createFunc, Action<ISourceBuilder> staticConstructorBuilder);
 }
 
-public interface IConstructorDeclarationBuilder<T> : IConstructorDeclarationBuilder
-    where T : IConstructorDeclarationBuilder<T>
+public interface IConstructorDeclarationBuilder<TBuilder, TConfigFactory> : IConstructorDeclarationBuilder
+    where TBuilder : IConstructorDeclarationBuilder<TBuilder, TConfigFactory>
+    where TConfigFactory : IConstructorConfigurationFactory
 {
+    TBuilder Append(Func<TConfigFactory, IConstructorConfiguration> createFunc, Action<ISourceBuilder> constructorBuilder);
+    TBuilder Append(Func<TConfigFactory, IFinalizerConfiguration> createFunc, Action<ISourceBuilder> finalizerBuilder);
+    TBuilder Append(Func<TConfigFactory, IStaticConstructorConfiguration> createFunc, Action<ISourceBuilder> staticConstructorBuilder);
 }
 
 public partial class SourceBuilder : IConstructorDeclarationBuilder
 {
-    /// <inheritdoc/>
-    SourceBuilderCodeBlock IConstructorDeclarationBuilder.AppendConstructor<TParams>(out ISourceBuilder constructorBuilder, TParams @params, Action<IConstructorConfiguration, TParams> constructorConfiguration)
-        => AppendConstructor(out constructorBuilder, @params, constructorConfiguration);
+    IConstructorDeclarationBuilder IConstructorDeclarationBuilder.Append(Func<IConstructorConfigurationFactory, IConstructorConfiguration> createFunc, Action<ISourceBuilder> constructorBuilder)
+        => Append(createFunc(_configurationFactory), constructorBuilder);
 
-    /// <inheritdoc/>
-    SourceBuilderCodeBlock IConstructorDeclarationBuilder.AppendFinalizer(out ISourceBuilder finalizerBuilder)
-        => AppendFinalizer(out finalizerBuilder);
+    IConstructorDeclarationBuilder IConstructorDeclarationBuilder.Append(Func<IConstructorConfigurationFactory, IFinalizerConfiguration> createFunc, Action<ISourceBuilder> finalizerBuilder)
+        => Append(createFunc(_configurationFactory), finalizerBuilder);
 
-    /// <inheritdoc/>
-    SourceBuilderCodeBlock IConstructorDeclarationBuilder.AppendStaticConstructor(out ISourceBuilder constructorBuilder)
-        => AppendStaticConstructor(out constructorBuilder);
-}
+    IConstructorDeclarationBuilder IConstructorDeclarationBuilder.Append(Func<IConstructorConfigurationFactory, IStaticConstructorConfiguration> createFunc, Action<ISourceBuilder> staticConstructorBuilder)
+        => Append(createFunc(_configurationFactory), staticConstructorBuilder);
 
-public static class ConstructorDeclarationBuilderExtensions
-{
-    public static SourceBuilderCodeBlock AppendConstructor(this IConstructorDeclarationBuilder builder, out ISourceBuilder constructorBuilder, Action<IConstructorConfiguration> constructorConfiguration)
-        => builder.AppendConstructor(out constructorBuilder, constructorConfiguration, static (builder, config) => config?.Invoke(builder));
+    private SourceBuilder Append(IConstructorConfiguration constructorConfiguration, Action<ISourceBuilder> builderFunc)
+        => AppendAsBlock(constructorConfiguration, this, builderFunc);
 
-    public static TBuilder AppendConstructor<TBuilder, TConfigParams, TBuilderParams>(
-        this TBuilder builder,
-        TConfigParams constructorConfigurationParams,
-        Action<IConstructorConfiguration, TConfigParams> constructorConfiguration,
-        TBuilderParams constructorBuilderParams,
-        Action<ISourceBuilder, TBuilderParams> constructorBuilderAction)
-        where TBuilder : IConstructorDeclarationBuilder
-    {
-        using (builder.AppendConstructor(out var constructorBuilder, constructorConfigurationParams, constructorConfiguration))
-            constructorBuilderAction?.Invoke(constructorBuilder, constructorBuilderParams);
-        return builder;
-    }
+    private SourceBuilder Append(IFinalizerConfiguration finalizerConfiguration, Action<ISourceBuilder> builderFunc)
+        => AppendAsBlock(finalizerConfiguration, this, builderFunc);
 
-    public static TBuilder AppendConstructor<TBuilder, TBuilderParams>(
-        this TBuilder builder,
-        Action<IConstructorConfiguration> constructorConfiguration,
-        TBuilderParams constructorBuilderParams,
-        Action<ISourceBuilder, TBuilderParams> constructorBuilderAction)
-        where TBuilder : IConstructorDeclarationBuilder
-    {
-        using (builder.AppendConstructor(out var constructorBuilder, constructorConfiguration, static (builder, config) => config?.Invoke(builder)))
-            constructorBuilderAction?.Invoke(constructorBuilder, constructorBuilderParams);
-        return builder;
-    }
-
-    public static TBuilder AppendConstructor<TBuilder, TConfigParams>(
-        this TBuilder builder,
-        TConfigParams constructorConfigurationParams,
-        Action<IConstructorConfiguration, TConfigParams> constructorConfiguration,
-        Action<ISourceBuilder> constructorBuilderAction)
-        where TBuilder : IConstructorDeclarationBuilder
-    {
-        using (builder.AppendConstructor(out var constructorBuilder, constructorConfigurationParams, constructorConfiguration))
-            constructorBuilderAction?.Invoke(constructorBuilder);
-        return builder;
-    }
-
-    public static TBuilder AppendConstructor<TBuilder>(
-        this TBuilder builder,
-        Action<IConstructorConfiguration> constructorConfiguration,
-        Action<ISourceBuilder> constructorBuilderAction)
-        where TBuilder : IConstructorDeclarationBuilder
-    {
-        using (builder.AppendConstructor(out var constructorBuilder, constructorConfiguration, static (builder, config) => config?.Invoke(builder)))
-            constructorBuilderAction?.Invoke(constructorBuilder);
-        return builder;
-    }
-
-    public static TBuilder AppendStaticConstructor<TBuilder, TParams>(this TBuilder builder, TParams constructorBuilderParams, Action<ISourceBuilder, TParams> constructorBuilderAction)
-        where TBuilder : IConstructorDeclarationBuilder
-    {
-        using (builder.AppendStaticConstructor(out var constructorBuilder))
-            constructorBuilderAction?.Invoke(constructorBuilder, constructorBuilderParams);
-        return builder;
-    }
-
-    public static TBuilder AppendStaticConstructor<TBuilder>(this TBuilder builder, Action<ISourceBuilder> constructorBuilderAction)
-        where TBuilder : IConstructorDeclarationBuilder
-    {
-        using (builder.AppendStaticConstructor(out var constructorBuilder))
-            constructorBuilderAction?.Invoke(constructorBuilder);
-        return builder;
-    }
-
-    public static TBuilder AppendFinalizer<TBuilder, TParams>(this TBuilder builder, TParams finalizerBuilderParams, Action<ISourceBuilder, TParams> finalizerBuilderAction)
-        where TBuilder : IConstructorDeclarationBuilder
-    {
-        using (builder.AppendFinalizer(out var finalizerBuilder))
-            finalizerBuilderAction?.Invoke(finalizerBuilder, finalizerBuilderParams);
-        return builder;
-    }
-
-    public static TBuilder AppendFinalizer<TBuilder>(this TBuilder builder, Action<ISourceBuilder> finalizerBuilderAction)
-        where TBuilder : IConstructorDeclarationBuilder
-    {
-        using (builder.AppendFinalizer(out var finalizerBuilder))
-            finalizerBuilderAction?.Invoke(finalizerBuilder);
-        return builder;
-    }
+    private SourceBuilder Append(IStaticConstructorConfiguration staticConstructorConfiguration, Action<ISourceBuilder> builderFunc)
+        => AppendAsBlock(staticConstructorConfiguration, this, builderFunc);
 }
