@@ -1,11 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.ConfigurationFactories;
 
-namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.ConfigurationFactories;
-public interface IInterfaceMemberFactory
+public interface IInterfaceMemberFactory :
+    IDelegateConfigurationFactory,
+    IPropertyConfigurationFactory,
+    IMethodConfigurationFactory,
+    IEventConfigurationFactory,
+    IIndexerConfigurationFactory,
+    IEnumConfigurationFactory,
+    IInterfaceConfigurationFactory,
+    IClassConfigurationFactory,
+    IStructConfigurationFactory,
+    IRecordConfgurationFactory
 {
+}
 
+partial class CodeConfigurationFactory : IInterfaceMemberFactory
+{
 }

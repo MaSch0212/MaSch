@@ -1,6 +1,6 @@
 ﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
-namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
+namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.ConfigurationFactories;
 
 public interface IConstructorConfigurationFactory
 {
@@ -8,8 +8,6 @@ public interface IConstructorConfigurationFactory
     IConstructorConfiguration Constructor(string containingTypeName);
     IStaticConstructorConfiguration StaticConstructor();
     IStaticConstructorConfiguration StaticConstructor(string containingTypeName);
-    IFinalizerConfiguration Finalizer();
-    IFinalizerConfiguration Finalizer(string containingTypeName);
 }
 
 partial class CodeConfigurationFactory : IConstructorConfigurationFactory
@@ -34,16 +32,5 @@ partial class CodeConfigurationFactory : IConstructorConfigurationFactory
     {
         _lastTypeName = containingTypeName;
         return new StaticConstructorConfiguration(containingTypeName);
-    }
-
-    public IFinalizerConfiguration Finalizer()
-    {
-        return new FinalizerConfiguration(_lastTypeName);
-    }
-
-    public IFinalizerConfiguration Finalizer(string containingTypeName)
-    {
-        _lastTypeName = containingTypeName;
-        return new FinalizerConfiguration(containingTypeName);
     }
 }

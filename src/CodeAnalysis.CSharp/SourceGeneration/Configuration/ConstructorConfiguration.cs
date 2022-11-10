@@ -2,6 +2,7 @@
 
 public interface IConstructorConfiguration : IMemberConfiguration<IConstructorConfiguration>, IDefinesParametersConfiguration<IConstructorConfiguration>
 {
+    IConstructorConfiguration WithMultilineParameters();
 }
 
 internal sealed class ConstructorConfiguration : MemberConfiguration<IConstructorConfiguration>, IConstructorConfiguration
@@ -13,29 +14,32 @@ internal sealed class ConstructorConfiguration : MemberConfiguration<IConstructo
     {
     }
 
-    /// <inheritdoc/>
+    public bool MultilineParameters { get; set; }
+
     protected override IConstructorConfiguration This => this;
 
-    /// <inheritdoc/>
     protected override int StartCapacity => 64;
 
-    /// <inheritdoc/>
     public IConstructorConfiguration WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration)
     {
         ParameterConfiguration.AddParameter(_parameters, type, name, parameterConfiguration);
         return This;
     }
 
-    /// <inheritdoc/>
     IDefinesParametersConfiguration IDefinesParametersConfiguration.WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration)
         => WithParameter(type, name, parameterConfiguration);
 
-    /// <inheritdoc/>
+    public IConstructorConfiguration WithMultilineParameters()
+    {
+        MultilineParameters = true;
+        return This;
+    }
+
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
         WriteCodeAttributesTo(sourceBuilder);
         WriteKeywordsTo(sourceBuilder);
         WriteNameTo(sourceBuilder);
-        ParameterConfiguration.WriteParametersTo(_parameters, sourceBuilder);
+        ParameterConfiguration.WriteParametersTo(_parameters, sourceBuilder, MultilineParameters);
     }
 }

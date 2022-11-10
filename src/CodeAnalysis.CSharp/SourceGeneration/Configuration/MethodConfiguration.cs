@@ -3,7 +3,11 @@
 public interface IMethodConfiguration<T> : IGenericMemberConfiguration<T>, IDefinesParametersConfiguration<T>
     where T : IMethodConfiguration<T>
 {
+    MethodBodyType BodyType { get; }
+
     T WithReturnType(string typeName);
+    T AsExpression(bool placeInNewLine = true);
+    T WithMultilineParameters();
 }
 
 public interface IMethodConfiguration : IMethodConfiguration<IMethodConfiguration>
@@ -20,6 +24,9 @@ internal abstract class MethodConfiguration<T> : GenericMemberConfiguration<T>, 
         : base(memberName)
     {
     }
+
+    public MethodBodyType BodyType { get; private set; } = MethodBodyType.Block;
+    public bool MultilineParameters { get; set; }
 
     protected override int StartCapacity => 128;
 
@@ -38,6 +45,18 @@ internal abstract class MethodConfiguration<T> : GenericMemberConfiguration<T>, 
         return This;
     }
 
+    public T AsExpression(bool placeInNewLine = true)
+    {
+        BodyType = placeInNewLine ? MethodBodyType.ExpressionNewLine : MethodBodyType.Expression;
+        return This;
+    }
+
+    public T WithMultilineParameters()
+    {
+        MultilineParameters = true;
+        return This;
+    }
+
     protected void WriteReturnTypeTo(ISourceBuilder sourceBuilder)
     {
         sourceBuilder.Append(_returnType).Append(' ');
@@ -45,7 +64,7 @@ internal abstract class MethodConfiguration<T> : GenericMemberConfiguration<T>, 
 
     protected void WriteParametersTo(ISourceBuilder sourceBuilder)
     {
-        ParameterConfiguration.WriteParametersTo(_parameters, sourceBuilder);
+        ParameterConfiguration.WriteParametersTo(_parameters, sourceBuilder, MultilineParameters);
     }
 }
 

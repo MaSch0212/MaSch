@@ -2,6 +2,8 @@
 
 public interface IDefinesParametersConfiguration : ICodeConfiguration
 {
+    bool MultilineParameters { get; set; }
+
     IDefinesParametersConfiguration WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration);
 }
 

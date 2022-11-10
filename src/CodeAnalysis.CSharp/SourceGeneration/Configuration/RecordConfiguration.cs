@@ -4,6 +4,7 @@ public interface IRecordConfiguration :
     ITypeConfiguration<IRecordConfiguration>,
     IDefinesParametersConfiguration<IRecordConfiguration>
 {
+    IRecordConfiguration WithSinglelineParameters();
 }
 
 internal sealed class RecordConfiguration : TypeConfiguration<IRecordConfiguration>, IRecordConfiguration
@@ -15,22 +16,25 @@ internal sealed class RecordConfiguration : TypeConfiguration<IRecordConfigurati
     {
     }
 
-    /// <inheritdoc/>
+    public bool MultilineParameters { get; set; } = true;
+
     protected override IRecordConfiguration This => this;
 
-    /// <inheritdoc/>
     public IRecordConfiguration WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration)
     {
-        var config = ParameterConfiguration.AddParameter(_parameters, type, name, parameterConfiguration);
-        config.LineBreakAfterCodeAttribute = true;
+        ParameterConfiguration.AddParameter(_parameters, type, name, parameterConfiguration);
         return This;
     }
 
-    /// <inheritdoc/>
     IDefinesParametersConfiguration IDefinesParametersConfiguration.WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration)
         => WithParameter(type, name, parameterConfiguration);
 
-    /// <inheritdoc/>
+    public IRecordConfiguration WithSinglelineParameters()
+    {
+        MultilineParameters = false;
+        return This;
+    }
+
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
         WriteCodeAttributesTo(sourceBuilder);
@@ -44,6 +48,7 @@ internal sealed class RecordConfiguration : TypeConfiguration<IRecordConfigurati
 
     private void WriteParametersTo(ISourceBuilder sourceBuilder)
     {
-        ParameterConfiguration.WriteParametersTo(_parameters, sourceBuilder);
+        if (_parameters.Count > 0)
+            ParameterConfiguration.WriteParametersTo(_parameters, sourceBuilder, MultilineParameters);
     }
 }

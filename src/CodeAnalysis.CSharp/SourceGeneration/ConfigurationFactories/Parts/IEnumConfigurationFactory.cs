@@ -1,6 +1,6 @@
 ﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
-namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
+namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.ConfigurationFactories;
 
 public interface IEnumConfigurationFactory
 {

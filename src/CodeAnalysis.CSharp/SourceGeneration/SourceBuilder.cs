@@ -226,4 +226,27 @@ public sealed partial class SourceBuilder
             builderFunc(builder);
         return this;
     }
+
+    private SourceBuilder AppendAsExpression<T>(ICodeConfiguration configuration, T builder, Action<T> builderFunc, bool appendLineBreak)
+        where T : ISourceBuilder
+    {
+        configuration.WriteTo(this);
+        using (Indent())
+        {
+            if (appendLineBreak)
+                AppendLine();
+            else
+                Append(' ');
+            Append("=> ");
+            builderFunc(builder);
+        }
+
+        return this;
+    }
+
+    private SourceBuilder AppendWithLineTerminator(ICodeConfiguration configuration)
+    {
+        configuration.WriteTo(this);
+        return Append(';').AppendLine();
+    }
 }

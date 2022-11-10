@@ -150,6 +150,21 @@ public enum GenericParameterVariance
     Out = Covariant,
 }
 
+public enum MethodBodyType
+{
+    Block,
+    Expression,
+    ExpressionNewLine,
+}
+
+public enum PropertyGetMethodType
+{
+    Block,
+    Expression,
+    ExpressionNewLine,
+    Initialize,
+}
+
 public static class AccessModifierExtensions
 {
     public static string ToMemberPrefix(this AccessModifier accessModifier)

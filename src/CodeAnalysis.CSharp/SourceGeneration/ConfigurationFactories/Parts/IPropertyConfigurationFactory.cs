@@ -1,15 +1,15 @@
 ﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
-namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
+namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.ConfigurationFactories;
 
 public interface IPropertyConfigurationFactory
 {
-    IPropertyConfiguration Property(string propertyTypeName, string propertyName);
+    IPropertyConfigurationBase Property(string propertyTypeName, string propertyName);
 }
 
 partial class CodeConfigurationFactory : IPropertyConfigurationFactory
 {
-    public IPropertyConfiguration Property(string propertyTypeName, string propertyName)
+    public IPropertyConfigurationBase Property(string propertyTypeName, string propertyName)
     {
         return new PropertyConfiguration(propertyTypeName, propertyName);
     }

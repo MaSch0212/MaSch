@@ -3,22 +3,32 @@
 public interface IPropertyMethodConfiguration : ISupportsCodeAttributeConfiguration<IPropertyMethodConfiguration>, ISupportsAccessModifierConfiguration<IPropertyMethodConfiguration>
 {
     bool ShouldBeOnItsOwnLine { get; }
+    MethodBodyType BodyType { get; }
+
+    IPropertyMethodConfiguration AsExpression();
 }
 
 internal sealed class PropertyMethodConfiguration : CodeConfiguration, IPropertyMethodConfiguration
 {
-    private readonly string _methodKeyword;
     private readonly List<ICodeAttributeConfiguration> _codeAttributes = new();
     private AccessModifier _accessModifier = AccessModifier.Default;
 
     public PropertyMethodConfiguration(string methodKeyword)
     {
-        _methodKeyword = methodKeyword;
+        MethodKeyword = methodKeyword;
     }
+
+    public bool ShouldBeOnItsOwnLine => _codeAttributes.Count > 0;
+    public MethodBodyType BodyType { get; private set; } = MethodBodyType.Block;
+    public string MethodKeyword { get; set; }
 
     protected override int StartCapacity => 16;
 
-    public bool ShouldBeOnItsOwnLine => _codeAttributes.Any();
+    public IPropertyMethodConfiguration AsExpression()
+    {
+        BodyType = MethodBodyType.Expression;
+        return this;
+    }
 
     public IPropertyMethodConfiguration WithAccessModifier(AccessModifier accessModifier)
     {
@@ -41,7 +51,7 @@ internal sealed class PropertyMethodConfiguration : CodeConfiguration, IProperty
         }
 
         sourceBuilder.Append(_accessModifier.ToMemberPrefix());
-        sourceBuilder.Append(_methodKeyword);
+        sourceBuilder.Append(MethodKeyword);
     }
 
     ISupportsAccessModifierConfiguration ISupportsAccessModifierConfiguration.WithAccessModifier(AccessModifier accessModifier)

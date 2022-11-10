@@ -1,72 +1,132 @@
 ﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
-public interface IPropertyHasGetterConfiguration<T> : IMemberConfiguration<T>
-    where T : IPropertyHasGetterConfiguration<T>
-{
-    T ConfigureGetter(Action<IPropertyMethodConfiguration> configurationFunc);
-    void WriteGetterTo(ISourceBuilder sourceBuilder);
-}
-
-public interface IPropertyHasSetterConfiguration<T> : IMemberConfiguration<T>
-    where T : IPropertyHasSetterConfiguration<T>
-{
-    T ConfigureSetter(Action<IPropertyMethodConfiguration> configurationFunc);
-    void WriteSetterTo(ISourceBuilder sourceBuilder);
-}
-
-public interface IPropertyConfiguration<TConfig, TReadOnly, TWriteOnly> : IMemberConfiguration<TConfig>, IPropertyHasGetterConfiguration<TConfig>, IPropertyHasSetterConfiguration<TConfig>
-    where TConfig : IPropertyConfiguration<TConfig, TReadOnly, TWriteOnly>
-    where TReadOnly : IPropertyHasGetterConfiguration<TReadOnly>
-    where TWriteOnly : IPropertyHasSetterConfiguration<TWriteOnly>
-{
-    TReadOnly AsReadOnly();
-    TWriteOnly AsWriteOnly();
-}
-
-public interface IReadOnlyPropertyConfiguration : IPropertyHasGetterConfiguration<IReadOnlyPropertyConfiguration>
+public interface IPropertyConfigurationBase : IMemberConfiguration
 {
 }
 
-public interface IWriteOnlyPropertyConfiguration : IPropertyHasSetterConfiguration<IWriteOnlyPropertyConfiguration>
+public interface IPropertyConfigurationBase<T> : IPropertyConfigurationBase, IMemberConfiguration<T>
+    where T : IPropertyConfigurationBase<T>
 {
 }
 
-public interface IPropertyConfiguration : IPropertyConfiguration<IPropertyConfiguration, IReadOnlyPropertyConfiguration, IWriteOnlyPropertyConfiguration>
+public interface IPropertyHasGetConfiguration : IPropertyConfigurationBase
+{
+    IPropertyMethodConfiguration GetMethod { get; }
+
+    IPropertyHasGetConfiguration ConfigureGet(Action<IPropertyMethodConfiguration> configurationFunc);
+}
+
+public interface IPropertyHasGetConfiguration<T> : IPropertyHasGetConfiguration, IPropertyConfigurationBase<T>
+    where T : IPropertyHasGetConfiguration<T>
+{
+    new T ConfigureGet(Action<IPropertyMethodConfiguration> configurationFunc);
+}
+
+public interface IPropertyHasSetConfiguration : IPropertyConfigurationBase
+{
+    IPropertyMethodConfiguration SetMethod { get; }
+
+    IPropertyHasSetConfiguration ConfigureSet(Action<IPropertyMethodConfiguration> configurationFunc);
+    IPropertyHasSetConfiguration AsInitOnly();
+}
+
+public interface IPropertyHasSetConfiguration<T> : IPropertyHasSetConfiguration, IPropertyConfigurationBase<T>
+    where T : IPropertyHasSetConfiguration<T>
+{
+    new T ConfigureSet(Action<IPropertyMethodConfiguration> configurationFunc);
+    new T AsInitOnly();
+}
+
+public interface IReadOnlyPropertyConfigurationBase : IPropertyHasGetConfiguration
+{
+    PropertyGetMethodType GetBodyType { get; }
+
+    IReadOnlyPropertyConfigurationBase AsExpression(bool placeInNewLine = true);
+    IReadOnlyPropertyConfigurationBase AsInitialize();
+}
+
+public interface IReadOnlyPropertyConfigurationBase<T> : IReadOnlyPropertyConfigurationBase, IPropertyHasGetConfiguration<T>
+    where T : IReadOnlyPropertyConfigurationBase<T>
+{
+    new T AsExpression(bool placeInNewLine = true);
+    new T AsInitialize();
+}
+
+public interface IWriteOnlyPropertyConfigurationBase : IPropertyHasSetConfiguration
 {
 }
 
-internal abstract class PropertyConfiguration<TConfig, TReadOnly, TWriteOnly> : MemberConfiguration<TConfig>, IPropertyConfiguration<TConfig, TReadOnly, TWriteOnly>
-    where TConfig : IPropertyConfiguration<TConfig, TReadOnly, TWriteOnly>
-    where TReadOnly : IPropertyHasGetterConfiguration<TReadOnly>
-    where TWriteOnly : IPropertyHasSetterConfiguration<TWriteOnly>
+public interface IWriteOnlyPropertyConfigurationBase<T> : IWriteOnlyPropertyConfigurationBase, IPropertyHasSetConfiguration<T>
+    where T : IWriteOnlyPropertyConfigurationBase<T>
+{
+}
+
+public interface IFullPropertyConfigurationBase : IPropertyHasGetConfiguration, IPropertyHasSetConfiguration
+{
+    IReadOnlyPropertyConfigurationBase AsReadOnly();
+    IWriteOnlyPropertyConfigurationBase AsWriteOnly();
+}
+
+public interface IFullPropertyConfigurationBase<TConfig, TReadOnly, TWriteOnly> : IFullPropertyConfigurationBase, IPropertyHasGetConfiguration<TConfig>, IPropertyHasSetConfiguration<TConfig>
+    where TConfig : IFullPropertyConfigurationBase<TConfig, TReadOnly, TWriteOnly>
+    where TReadOnly : IReadOnlyPropertyConfigurationBase<TReadOnly>
+    where TWriteOnly : IWriteOnlyPropertyConfigurationBase<TWriteOnly>
+{
+    new TReadOnly AsReadOnly();
+    new TWriteOnly AsWriteOnly();
+}
+
+internal abstract class PropertyConfiguration<TConfig, TReadOnly, TWriteOnly> : MemberConfiguration<TConfig>, IFullPropertyConfigurationBase<TConfig, TReadOnly, TWriteOnly>
+    where TConfig : IFullPropertyConfigurationBase<TConfig, TReadOnly, TWriteOnly>
+    where TReadOnly : IReadOnlyPropertyConfigurationBase<TReadOnly>
+    where TWriteOnly : IWriteOnlyPropertyConfigurationBase<TWriteOnly>
 {
     private readonly string _propertyType;
-    private readonly IPropertyMethodConfiguration _getterConfiguration;
-    private readonly IPropertyMethodConfiguration _setterConfiguration;
+    private readonly PropertyMethodConfiguration _getMethodConfiguration;
+    private readonly PropertyMethodConfiguration _setMethodConfiguration;
 
-    protected PropertyConfiguration(string propertyType, string propertyName, string getterKeyword, string setterKeyword)
+    protected PropertyConfiguration(string propertyType, string propertyName)
         : base(propertyName)
     {
         _propertyType = propertyType;
-        _getterConfiguration = new PropertyMethodConfiguration(getterKeyword);
-        _setterConfiguration = new PropertyMethodConfiguration(setterKeyword);
+        _getMethodConfiguration = new PropertyMethodConfiguration("get");
+        _setMethodConfiguration = new PropertyMethodConfiguration("set");
     }
 
-    public TConfig ConfigureGetter(Action<IPropertyMethodConfiguration> configurationFunc)
-    {
-        configurationFunc(_getterConfiguration);
-        return This;
-    }
+    public IPropertyMethodConfiguration GetMethod => _getMethodConfiguration;
+    public IPropertyMethodConfiguration SetMethod => _setMethodConfiguration;
 
-    public TConfig ConfigureSetter(Action<IPropertyMethodConfiguration> configurationFunc)
-    {
-        configurationFunc(_setterConfiguration);
-        return This;
-    }
+    public PropertyGetMethodType GetBodyType { get; private set; } = PropertyGetMethodType.Block;
 
-    public abstract TReadOnly AsReadOnly();
+    TReadOnly IFullPropertyConfigurationBase<TConfig, TReadOnly, TWriteOnly>.AsReadOnly()
+        => AsReadOnly();
 
-    public abstract TWriteOnly AsWriteOnly();
+    TWriteOnly IFullPropertyConfigurationBase<TConfig, TReadOnly, TWriteOnly>.AsWriteOnly()
+        => AsWriteOnly();
+
+    IReadOnlyPropertyConfigurationBase IFullPropertyConfigurationBase.AsReadOnly()
+        => AsReadOnly();
+
+    IWriteOnlyPropertyConfigurationBase IFullPropertyConfigurationBase.AsWriteOnly()
+        => AsWriteOnly();
+
+    TConfig IPropertyHasGetConfiguration<TConfig>.ConfigureGet(Action<IPropertyMethodConfiguration> configurationFunc)
+        => ConfigureGet(configurationFunc);
+
+    IPropertyHasGetConfiguration IPropertyHasGetConfiguration.ConfigureGet(Action<IPropertyMethodConfiguration> configurationFunc)
+        => ConfigureGet(configurationFunc);
+
+    TConfig IPropertyHasSetConfiguration<TConfig>.ConfigureSet(Action<IPropertyMethodConfiguration> configurationFunc)
+        => ConfigureSet(configurationFunc);
+
+    TConfig IPropertyHasSetConfiguration<TConfig>.AsInitOnly()
+        => AsInitOnly();
+
+    IPropertyHasSetConfiguration IPropertyHasSetConfiguration.ConfigureSet(Action<IPropertyMethodConfiguration> configurationFunc)
+        => ConfigureSet(configurationFunc);
+
+    IPropertyHasSetConfiguration IPropertyHasSetConfiguration.AsInitOnly()
+        => AsInitOnly();
 
     protected override void WriteKeywordsTo(ISourceBuilder sourceBuilder)
     {
@@ -74,43 +134,70 @@ internal abstract class PropertyConfiguration<TConfig, TReadOnly, TWriteOnly> : 
         sourceBuilder.Append(_propertyType).Append(' ');
     }
 
-    public virtual void WriteGetterTo(ISourceBuilder sourceBuilder)
+    protected TConfig ConfigureGet(Action<IPropertyMethodConfiguration> configurationFunc)
     {
-        _getterConfiguration.WriteTo(sourceBuilder);
+        configurationFunc(_getMethodConfiguration);
+        return This;
     }
 
-    public virtual void WriteSetterTo(ISourceBuilder sourceBuilder)
+    protected TConfig ConfigureSet(Action<IPropertyMethodConfiguration> configurationFunc)
     {
-        _setterConfiguration.WriteTo(sourceBuilder);
+        configurationFunc(_setMethodConfiguration);
+        return This;
     }
+
+    protected TConfig AsInitOnly()
+    {
+        _setMethodConfiguration.MethodKeyword = "init";
+        return This;
+    }
+
+    protected TConfig AsExpression(bool placeInNewLine = true)
+    {
+        GetBodyType = placeInNewLine ? PropertyGetMethodType.ExpressionNewLine : PropertyGetMethodType.Expression;
+        return This;
+    }
+
+    protected TConfig AsInitialize()
+    {
+        GetBodyType = PropertyGetMethodType.Initialize;
+        return This;
+    }
+
+    protected abstract TReadOnly AsReadOnly();
+
+    protected abstract TWriteOnly AsWriteOnly();
+}
+
+public interface IReadOnlyPropertyConfiguration : IReadOnlyPropertyConfigurationBase<IReadOnlyPropertyConfiguration>
+{
+}
+
+public interface IWriteOnlyPropertyConfiguration : IWriteOnlyPropertyConfigurationBase<IWriteOnlyPropertyConfiguration>
+{
+}
+
+public interface IPropertyConfiguration : IFullPropertyConfigurationBase<IPropertyConfiguration, IReadOnlyPropertyConfiguration, IWriteOnlyPropertyConfiguration>
+{
 }
 
 internal sealed class PropertyConfiguration :
     PropertyConfiguration<IPropertyConfiguration, IReadOnlyPropertyConfiguration, IWriteOnlyPropertyConfiguration>,
-    IPropertyConfiguration,
     IReadOnlyPropertyConfiguration,
-    IWriteOnlyPropertyConfiguration
+    IWriteOnlyPropertyConfiguration,
+    IPropertyConfiguration
 {
     public PropertyConfiguration(string propertyType, string propertyName)
-        : base(propertyType, propertyName, "get", "set")
+        : base(propertyType, propertyName)
     {
     }
 
     public string MemberName { get; }
+    public MethodBodyType BodyType { get; private set; } = MethodBodyType.Block;
 
     protected override IPropertyConfiguration This => this;
 
     protected override int StartCapacity => 32;
-
-    public override IReadOnlyPropertyConfiguration AsReadOnly()
-    {
-        return this;
-    }
-
-    public override IWriteOnlyPropertyConfiguration AsWriteOnly()
-    {
-        return this;
-    }
 
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
@@ -119,21 +206,55 @@ internal sealed class PropertyConfiguration :
         WriteNameTo(sourceBuilder);
     }
 
-    IReadOnlyPropertyConfiguration IPropertyHasGetterConfiguration<IReadOnlyPropertyConfiguration>.ConfigureGetter(Action<IPropertyMethodConfiguration> configurationFunc)
+    protected override IReadOnlyPropertyConfiguration AsReadOnly()
     {
-        ConfigureGetter(configurationFunc);
         return this;
     }
 
-    IWriteOnlyPropertyConfiguration IPropertyHasSetterConfiguration<IWriteOnlyPropertyConfiguration>.ConfigureSetter(Action<IPropertyMethodConfiguration> configurationFunc)
+    protected override IWriteOnlyPropertyConfiguration AsWriteOnly()
     {
-        ConfigureSetter(configurationFunc);
         return this;
     }
 
-    IReadOnlyPropertyConfiguration ISupportsAccessModifierConfiguration<IReadOnlyPropertyConfiguration>.WithAccessModifier(AccessModifier accessModifier)
+    IReadOnlyPropertyConfiguration IReadOnlyPropertyConfigurationBase<IReadOnlyPropertyConfiguration>.AsExpression(bool placeInNewLine)
     {
-        WithAccessModifier(accessModifier);
+        AsExpression(placeInNewLine);
+        return this;
+    }
+
+    IReadOnlyPropertyConfigurationBase IReadOnlyPropertyConfigurationBase.AsExpression(bool placeInNewLine)
+    {
+        AsExpression(placeInNewLine);
+        return this;
+    }
+
+    IReadOnlyPropertyConfiguration IReadOnlyPropertyConfigurationBase<IReadOnlyPropertyConfiguration>.AsInitialize()
+    {
+        AsInitialize();
+        return this;
+    }
+
+    IReadOnlyPropertyConfigurationBase IReadOnlyPropertyConfigurationBase.AsInitialize()
+    {
+        AsInitialize();
+        return this;
+    }
+
+    IWriteOnlyPropertyConfiguration IPropertyHasSetConfiguration<IWriteOnlyPropertyConfiguration>.AsInitOnly()
+    {
+        AsInitOnly();
+        return this;
+    }
+
+    IReadOnlyPropertyConfiguration IPropertyHasGetConfiguration<IReadOnlyPropertyConfiguration>.ConfigureGet(Action<IPropertyMethodConfiguration> configurationFunc)
+    {
+        ConfigureGet(configurationFunc);
+        return this;
+    }
+
+    IWriteOnlyPropertyConfiguration IPropertyHasSetConfiguration<IWriteOnlyPropertyConfiguration>.ConfigureSet(Action<IPropertyMethodConfiguration> configurationFunc)
+    {
+        ConfigureSet(configurationFunc);
         return this;
     }
 
@@ -143,9 +264,9 @@ internal sealed class PropertyConfiguration :
         return this;
     }
 
-    IReadOnlyPropertyConfiguration ISupportsCodeAttributeConfiguration<IReadOnlyPropertyConfiguration>.WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
+    IReadOnlyPropertyConfiguration ISupportsAccessModifierConfiguration<IReadOnlyPropertyConfiguration>.WithAccessModifier(AccessModifier accessModifier)
     {
-        WithCodeAttribute(attributeTypeName, attributeConfiguration);
+        WithAccessModifier(accessModifier);
         return this;
     }
 
@@ -155,13 +276,19 @@ internal sealed class PropertyConfiguration :
         return this;
     }
 
-    IReadOnlyPropertyConfiguration IMemberConfiguration<IReadOnlyPropertyConfiguration>.WithKeyword(MemberKeyword keyword)
+    IReadOnlyPropertyConfiguration ISupportsCodeAttributeConfiguration<IReadOnlyPropertyConfiguration>.WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
+    {
+        WithCodeAttribute(attributeTypeName, attributeConfiguration);
+        return this;
+    }
+
+    IWriteOnlyPropertyConfiguration IMemberConfiguration<IWriteOnlyPropertyConfiguration>.WithKeyword(MemberKeyword keyword)
     {
         WithKeyword(keyword);
         return this;
     }
 
-    IWriteOnlyPropertyConfiguration IMemberConfiguration<IWriteOnlyPropertyConfiguration>.WithKeyword(MemberKeyword keyword)
+    IReadOnlyPropertyConfiguration IMemberConfiguration<IReadOnlyPropertyConfiguration>.WithKeyword(MemberKeyword keyword)
     {
         WithKeyword(keyword);
         return this;

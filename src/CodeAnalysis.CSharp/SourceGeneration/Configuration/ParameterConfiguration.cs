@@ -2,6 +2,7 @@
 
 public interface IParameterConfiguration : ISupportsCodeAttributeConfiguration<IParameterConfiguration>
 {
+    void WriteTo(ISourceBuilder sourceBuilder, bool lineBreakAfterCodeAttribute);
 }
 
 internal sealed class ParameterConfiguration : CodeConfiguration, IParameterConfiguration
@@ -16,19 +17,17 @@ internal sealed class ParameterConfiguration : CodeConfiguration, IParameterConf
         _name = name;
     }
 
-    public bool LineBreakAfterCodeAttribute { get; set; } = false;
-
     protected override int StartCapacity => 16;
 
     public static ParameterConfiguration AddParameter(IList<IParameterConfiguration> parameters, string type, string name, Action<IParameterConfiguration> parameterConfiguration)
     {
-        var config = new ParameterConfiguration(type, name) { LineBreakAfterCodeAttribute = true };
+        var config = new ParameterConfiguration(type, name);
         parameterConfiguration?.Invoke(config);
         parameters.Add(config);
         return config;
     }
 
-    public static void WriteParametersTo(IList<IParameterConfiguration> parameters, ISourceBuilder sourceBuilder)
+    public static void WriteParametersTo(IList<IParameterConfiguration> parameters, ISourceBuilder sourceBuilder, bool multiline)
     {
         if (parameters.Count == 0)
             return;
@@ -38,8 +37,12 @@ internal sealed class ParameterConfiguration : CodeConfiguration, IParameterConf
             sourceBuilder.Append('(');
             for (int i = 0; i < parameters.Count; i++)
             {
-                sourceBuilder.AppendLine();
-                parameters[i].WriteTo(sourceBuilder);
+                if (multiline)
+                    sourceBuilder.AppendLine();
+                else if (i > 0)
+                    sourceBuilder.Append(' ');
+
+                parameters[i].WriteTo(sourceBuilder, multiline);
                 if (i < parameters.Count - 1)
                     sourceBuilder.Append(',');
             }
@@ -58,11 +61,14 @@ internal sealed class ParameterConfiguration : CodeConfiguration, IParameterConf
         => WithCodeAttribute(attributeTypeName, attributeConfiguration);
 
     public override void WriteTo(ISourceBuilder sourceBuilder)
+        => WriteTo(sourceBuilder, false);
+
+    public void WriteTo(ISourceBuilder sourceBuilder, bool lineBreakAfterCodeAttribute)
     {
         foreach (var codeAttribute in _codeAttributes)
         {
             codeAttribute.WriteTo(sourceBuilder);
-            if (LineBreakAfterCodeAttribute)
+            if (lineBreakAfterCodeAttribute)
                 sourceBuilder.AppendLine();
             else
                 sourceBuilder.Append(' ');

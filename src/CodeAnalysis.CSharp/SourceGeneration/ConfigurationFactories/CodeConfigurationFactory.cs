@@ -1,4 +1,4 @@
-﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
+﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.ConfigurationFactories;
 
 internal sealed partial class CodeConfigurationFactory
 {

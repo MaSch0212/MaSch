@@ -1,6 +1,4 @@
-﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
-
-namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
+﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
 
 public interface ISourceBuilder
 {
