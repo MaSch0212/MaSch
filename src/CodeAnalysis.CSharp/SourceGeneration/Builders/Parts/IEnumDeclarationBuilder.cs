@@ -21,10 +21,8 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
 {
     public partial class SourceBuilder : IEnumDeclarationBuilder
     {
+        /// <inheritdoc/>
         IEnumDeclarationBuilder IEnumDeclarationBuilder.Append(Func<IEnumConfigurationFactory, IEnumConfiguration> createFunc, Action<IEnumBuilder> builderFunc)
             => Append(createFunc(_configurationFactory), builderFunc);
-
-        private SourceBuilder Append(IEnumConfiguration enumConfiguration, Action<IEnumBuilder> builderFunc)
-            => AppendAsBlock(enumConfiguration, this, builderFunc);
     }
 }

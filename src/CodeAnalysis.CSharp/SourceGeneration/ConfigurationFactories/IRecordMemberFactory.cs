@@ -6,7 +6,7 @@ public interface IRecordMemberFactory :
     IPropertyConfigurationFactory,
     IMethodConfigurationFactory,
     IEventConfigurationFactory,
-    // TODO: Indexer
+    IIndexerConfigurationFactory,
     IConstructorConfigurationFactory,
     IFinalizerConfigurationFactory,
     IEnumConfigurationFactory,

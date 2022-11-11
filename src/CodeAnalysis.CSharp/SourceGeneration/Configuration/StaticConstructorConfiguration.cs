@@ -2,6 +2,9 @@
 
 public interface IStaticConstructorConfiguration : ISupportsCodeAttributeConfiguration<IStaticConstructorConfiguration>
 {
+    MethodBodyType BodyType { get; }
+
+    IStaticConstructorConfiguration AsExpression(bool placeInNewLine = true);
 }
 
 internal sealed class StaticConstructorConfiguration : CodeConfiguration, IStaticConstructorConfiguration
@@ -14,7 +17,15 @@ internal sealed class StaticConstructorConfiguration : CodeConfiguration, IStati
         _containingTypeName = containingTypeName;
     }
 
+    public MethodBodyType BodyType { get; private set; } = MethodBodyType.Block;
+
     protected override int StartCapacity => 16;
+
+    public IStaticConstructorConfiguration AsExpression(bool placeInNewLine = true)
+    {
+        BodyType = placeInNewLine ? MethodBodyType.ExpressionNewLine : MethodBodyType.Expression;
+        return this;
+    }
 
     public IStaticConstructorConfiguration WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
     {

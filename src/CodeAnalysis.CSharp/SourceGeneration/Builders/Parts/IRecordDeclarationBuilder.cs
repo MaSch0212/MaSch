@@ -23,18 +23,12 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
 {
     partial class SourceBuilder : IRecordDeclarationBuilder
     {
+        /// <inheritdoc/>
         IRecordDeclarationBuilder IRecordDeclarationBuilder.Append(Func<IRecordConfgurationFactory, IRecordConfiguration> createFunc)
             => Append(createFunc(_configurationFactory), null);
 
+        /// <inheritdoc/>
         IRecordDeclarationBuilder IRecordDeclarationBuilder.Append(Func<IRecordConfgurationFactory, IRecordConfiguration> createFunc, Action<IRecordBuilder> builderFunc)
             => Append(createFunc(_configurationFactory), builderFunc);
-
-        private SourceBuilder Append(IRecordConfiguration recordConfiguration, Action<IRecordBuilder>? builderFunc)
-        {
-            if (builderFunc is null)
-                return AppendWithLineTerminator(recordConfiguration);
-
-            return AppendAsBlock(recordConfiguration, this, builderFunc);
-        }
     }
 }

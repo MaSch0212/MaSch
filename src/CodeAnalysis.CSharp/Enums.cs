@@ -41,6 +41,11 @@ public enum AccessModifier
     /// The type or member can be accessed by types derived from the <c>class</c> that are declared within its containing assembly.
     /// </summary>
     PrivateProtected,
+
+    /// <summary>
+    /// The type can be accessed by types that are declared within its containing file.
+    /// </summary>
+    File,
 }
 
 /// <summary>
@@ -177,6 +182,7 @@ public static class AccessModifierExtensions
             AccessModifier.Internal => "internal ",
             AccessModifier.ProtectedInternal => "protected internal ",
             AccessModifier.PrivateProtected => "private protected ",
+            AccessModifier.File => "file ",
             _ => string.Empty,
         };
     }

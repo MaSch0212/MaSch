@@ -6,7 +6,7 @@ public interface IStructMemberFactory :
     IPropertyConfigurationFactory,
     IMethodConfigurationFactory,
     IEventConfigurationFactory,
-    // TODO: Indexer
+    IIndexerConfigurationFactory,
     IConstructorConfigurationFactory,
     IEnumConfigurationFactory,
     IInterfaceConfigurationFactory,

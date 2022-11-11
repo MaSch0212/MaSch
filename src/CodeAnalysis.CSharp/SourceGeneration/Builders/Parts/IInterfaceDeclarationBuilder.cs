@@ -21,10 +21,8 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
 {
     public partial class SourceBuilder : IInterfaceDeclarationBuilder
     {
+        /// <inheritdoc/>
         IInterfaceDeclarationBuilder IInterfaceDeclarationBuilder.Append(Func<IInterfaceConfigurationFactory, IInterfaceConfguration> createFunc, Action<IInterfaceBuilder> builderFunc)
             => Append(createFunc(_configurationFactory), builderFunc);
-
-        private SourceBuilder Append(IInterfaceConfguration interfaceConfguration, Action<IInterfaceBuilder> builderFunc)
-            => AppendAsBlock(interfaceConfguration, this, builderFunc);
     }
 }

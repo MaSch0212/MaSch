@@ -14,7 +14,12 @@ internal abstract class GenericMemberConfiguration<T> : MemberConfiguration<T>, 
     {
         get
         {
-            var builder = SourceBuilder.Create(capacity: 64, autoAddFileHeader: false);
+            var options = new SourceBuilderOptions
+            {
+                Capacity = 64,
+                IncludeFileHeader = false,
+            };
+            var builder = SourceBuilder.Create(options);
             WriteNameTo(builder);
             return builder.ToString();
         }

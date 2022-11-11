@@ -3,9 +3,9 @@
 public interface ISourceBuilder
 {
     /// <summary>
-    /// Gets the size of the indentation.
+    /// Gets the options of this <see cref="ISourceBuilder"/>.
     /// </summary>
-    int IndentSize { get; }
+    SourceBuilderOptions Options { get; }
 
     /// <summary>
     /// Gets or sets the current indentation level.
@@ -94,6 +94,11 @@ public interface ISourceBuilder
     /// <returns>A <see cref="SourceText"/> whose value is the same as this instance.</returns>
     SourceText ToSourceText(Encoding? encoding = null, SourceHashAlgorithm checksumAlgorithm = SourceHashAlgorithm.Sha1);
 
+    /// <summary>
+    /// Changes the type of this <see cref="ISourceBuilder"/> to another source builder interface.
+    /// </summary>
+    /// <typeparam name="T">The source builder interface to change to.</typeparam>
+    /// <returns>The builder implementing <typeparamref name="T"/>.</returns>
     T As<T>()
         where T : ISourceBuilder;
 }
@@ -121,7 +126,7 @@ public interface ISourceBuilder<T> : ISourceBuilder
 public partial class SourceBuilder : ISourceBuilder
 {
     /// <inheritdoc/>
-    int ISourceBuilder.IndentSize => IndentSize;
+    SourceBuilderOptions ISourceBuilder.Options => Options;
 
     /// <inheritdoc/>
     int ISourceBuilder.CurrentIndentLevel
@@ -173,6 +178,8 @@ public partial class SourceBuilder : ISourceBuilder
 /// <summary>
 /// Provides extension methods for the <see cref="SourceBuilder"/> class and <see cref="ISourceBuilder"/> and <see cref="ISourceBuilder{T}"/> interfaces.
 /// </summary>
+[SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1204:Static elements should appear before instance elements", Justification = "Extensions should be in the bottom of the file.")]
+[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Extensions for ISourceBuilder")]
 public static class SourceBuilderExtensions
 {
     public static TBuilder AppendRegion<TBuilder>(this TBuilder builder, string regionName, Action<TBuilder> action)

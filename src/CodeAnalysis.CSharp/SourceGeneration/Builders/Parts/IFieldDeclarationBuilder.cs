@@ -21,10 +21,8 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
 {
     public partial class SourceBuilder : IFieldDeclarationBuilder
     {
+        /// <inheritdoc/>
         IFieldDeclarationBuilder IFieldDeclarationBuilder.Append(Func<IFieldConfigurationFactory, IFieldConfiguration> createFunc)
             => Append(createFunc(_configurationFactory));
-
-        private SourceBuilder Append(IFieldConfiguration fieldConfiguration)
-            => AppendWithLineTerminator(fieldConfiguration);
     }
 }

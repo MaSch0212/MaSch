@@ -7,7 +7,7 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders
     public interface IEventDeclarationBuilder : ISourceBuilder
     {
         IEventDeclarationBuilder Append(Func<IEventConfigurationFactory, IEventConfiguration> createFunc);
-        IEventDeclarationBuilder Append(Func<IEventConfigurationFactory, IEventConfiguration> createFunc, Action<ISourceBuilder> addMethodBuilderFunc, Action<ISourceBuilder> removeMethodBuilderFunc);
+        IEventDeclarationBuilder Append(Func<IEventConfigurationFactory, IEventConfiguration> createFunc, Action<ISourceBuilder> addBuilderFunc, Action<ISourceBuilder> removeBuilderFunc);
     }
 
     public interface IEventDeclarationBuilder<TBuilder, TConfigFactory> : IEventDeclarationBuilder, ISourceBuilder<TBuilder>
@@ -15,7 +15,7 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders
         where TConfigFactory : IEventConfigurationFactory
     {
         TBuilder Append(Func<TConfigFactory, IEventConfiguration> createFunc);
-        TBuilder Append(Func<TConfigFactory, IEventConfiguration> createFunc, Action<ISourceBuilder> addMethodBuilderFunc, Action<ISourceBuilder> removeMethodBuilderFunc);
+        TBuilder Append(Func<TConfigFactory, IEventConfiguration> createFunc, Action<ISourceBuilder> addBuilderFunc, Action<ISourceBuilder> removeBuilderFunc);
     }
 }
 
@@ -23,33 +23,12 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
 {
     partial class SourceBuilder : IEventDeclarationBuilder
     {
+        /// <inheritdoc/>
         IEventDeclarationBuilder IEventDeclarationBuilder.Append(Func<IEventConfigurationFactory, IEventConfiguration> createFunc)
             => Append(createFunc(_configurationFactory), null, null);
 
-        IEventDeclarationBuilder IEventDeclarationBuilder.Append(Func<IEventConfigurationFactory, IEventConfiguration> createFunc, Action<ISourceBuilder> addMethodBuilderFunc, Action<ISourceBuilder> removeMethodBuilderFunc)
-            => Append(createFunc(_configurationFactory), addMethodBuilderFunc, removeMethodBuilderFunc);
-
-        private SourceBuilder Append(IEventConfiguration eventConfiguration, Action<ISourceBuilder>? addMethodBuilderFunc, Action<ISourceBuilder>? removeMethodBuilderFunc)
-        {
-            if (addMethodBuilderFunc is null || removeMethodBuilderFunc is null)
-                return AppendWithLineTerminator(eventConfiguration);
-
-            eventConfiguration.WriteTo(this);
-            using (AppendLine().AppendBlock())
-            {
-                Append(eventConfiguration.AddMethod, addMethodBuilderFunc);
-                Append(eventConfiguration.RemoveMethod, removeMethodBuilderFunc);
-            }
-
-            return this;
-        }
-
-        private SourceBuilder Append(IEventMethodConfiguration eventMethodConfiguration, Action<ISourceBuilder> builderFunc)
-        {
-            if (eventMethodConfiguration.BodyType is MethodBodyType.Expression or MethodBodyType.ExpressionNewLine)
-                return AppendAsExpression(eventMethodConfiguration, this, builderFunc, false);
-
-            return AppendAsBlock(eventMethodConfiguration, this, builderFunc);
-        }
+        /// <inheritdoc/>
+        IEventDeclarationBuilder IEventDeclarationBuilder.Append(Func<IEventConfigurationFactory, IEventConfiguration> createFunc, Action<ISourceBuilder> addBuilderFunc, Action<ISourceBuilder> removeBuilderFunc)
+            => Append(createFunc(_configurationFactory), addBuilderFunc, removeBuilderFunc);
     }
 }

@@ -8,7 +8,12 @@ internal abstract class CodeConfiguration : ICodeConfiguration
 
     public override string ToString()
     {
-        var builder = SourceBuilder.Create(capacity: StartCapacity, autoAddFileHeader: false);
+        var options = new SourceBuilderOptions
+        {
+            Capacity = StartCapacity,
+            IncludeFileHeader = false,
+        };
+        var builder = SourceBuilder.Create(options);
         WriteTo(builder);
         return builder.ToString();
     }

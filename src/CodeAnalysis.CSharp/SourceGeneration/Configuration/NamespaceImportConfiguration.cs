@@ -48,6 +48,6 @@ internal sealed class NamespaceImportConfiguration : CodeConfiguration, INamespa
             sourceBuilder.Append("static ");
         if (_alias is not null)
             sourceBuilder.Append($"{_alias} = ");
-        sourceBuilder.Append(_namespace).Append(';');
+        sourceBuilder.Append(_namespace);
     }
 }

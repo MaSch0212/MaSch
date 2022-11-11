@@ -6,14 +6,14 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders
 {
     public interface IFinalizerDeclarationBuilder : ISourceBuilder
     {
-        IFinalizerDeclarationBuilder Append(Func<IFinalizerConfigurationFactory, IFinalizerConfiguration> createFunc, Action<ISourceBuilder> finalizerBuilder);
+        IFinalizerDeclarationBuilder Append(Func<IFinalizerConfigurationFactory, IFinalizerConfiguration> createFunc, Action<ISourceBuilder> builderFunc);
     }
 
     public interface IFinalizerDeclarationBuilder<TBuilder, TConfigFactory> : IFinalizerDeclarationBuilder, ISourceBuilder<TBuilder>
         where TBuilder : IFinalizerDeclarationBuilder<TBuilder, TConfigFactory>
         where TConfigFactory : IFinalizerConfigurationFactory
     {
-        TBuilder Append(Func<TConfigFactory, IFinalizerConfiguration> createFunc, Action<ISourceBuilder> finalizerBuilder);
+        TBuilder Append(Func<TConfigFactory, IFinalizerConfiguration> createFunc, Action<ISourceBuilder> builderFunc);
     }
 }
 
@@ -21,10 +21,8 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
 {
     public partial class SourceBuilder : IFinalizerDeclarationBuilder
     {
-        IFinalizerDeclarationBuilder IFinalizerDeclarationBuilder.Append(Func<IFinalizerConfigurationFactory, IFinalizerConfiguration> createFunc, Action<ISourceBuilder> finalizerBuilder)
-            => Append(createFunc(_configurationFactory), finalizerBuilder);
-
-        private SourceBuilder Append(IFinalizerConfiguration finalizerConfiguration, Action<ISourceBuilder> builderFunc)
-            => AppendAsBlock(finalizerConfiguration, this, builderFunc);
+        /// <inheritdoc/>
+        IFinalizerDeclarationBuilder IFinalizerDeclarationBuilder.Append(Func<IFinalizerConfigurationFactory, IFinalizerConfiguration> createFunc, Action<ISourceBuilder> builderFunc)
+            => Append(createFunc(_configurationFactory), builderFunc);
     }
 }

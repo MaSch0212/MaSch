@@ -8,9 +8,14 @@ internal sealed class EnumValueConfiguration : CodeConfiguration, IEnumValueConf
 {
     private readonly List<ICodeAttributeConfiguration> _codeAttributes = new();
     private readonly string _name;
-    private readonly string _value;
+    private readonly string? _value;
 
-    public EnumValueConfiguration(string name, string value)
+    public EnumValueConfiguration(string name)
+        : this(name, null)
+    {
+    }
+
+    public EnumValueConfiguration(string name, string? value)
     {
         _name = name;
         _value = value;

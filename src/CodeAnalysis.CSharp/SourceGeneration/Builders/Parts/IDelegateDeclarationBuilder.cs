@@ -21,10 +21,8 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
 {
     public partial class SourceBuilder : IDelegateDeclarationBuilder
     {
+        /// <inheritdoc/>
         IDelegateDeclarationBuilder IDelegateDeclarationBuilder.Append(Func<IDelegateConfigurationFactory, IDelegateConfiguration> createFunc)
             => Append(createFunc(_configurationFactory));
-
-        private SourceBuilder Append(IDelegateConfiguration delegateConfiguration)
-            => AppendWithLineTerminator(delegateConfiguration);
     }
 }

@@ -6,7 +6,6 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders
 {
     public interface INamespaceDeclarationBuilder : ISourceBuilder
     {
-        INamespaceDeclarationBuilder Append(Func<INamespaceConfigurationFactory, INamespaceConfiguration> createFunc);
         INamespaceDeclarationBuilder Append(Func<INamespaceConfigurationFactory, INamespaceConfiguration> createFunc, Action<INamespaceBuilder> builderFunc);
     }
 
@@ -14,7 +13,6 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders
         where TBuilder : INamespaceDeclarationBuilder<TBuilder, TConfigFactory>
         where TConfigFactory : INamespaceConfigurationFactory
     {
-        TBuilder Append(Func<TConfigFactory, INamespaceConfiguration> createFunc);
         TBuilder Append(Func<TConfigFactory, INamespaceConfiguration> createFunc, Action<INamespaceBuilder> builderFunc);
     }
 }
@@ -23,18 +21,8 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
 {
     public partial class SourceBuilder : INamespaceDeclarationBuilder
     {
-        INamespaceDeclarationBuilder INamespaceDeclarationBuilder.Append(Func<INamespaceConfigurationFactory, INamespaceConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory), null);
-
+        /// <inheritdoc/>
         INamespaceDeclarationBuilder INamespaceDeclarationBuilder.Append(Func<INamespaceConfigurationFactory, INamespaceConfiguration> createFunc, Action<INamespaceBuilder> builderFunc)
             => Append(createFunc(_configurationFactory), builderFunc);
-
-        private SourceBuilder Append(INamespaceConfiguration namespaceConfiguration, Action<INamespaceBuilder>? builderFunc)
-        {
-            if (builderFunc is null)
-                return AppendWithLineTerminator(namespaceConfiguration);
-
-            return AppendAsBlock(namespaceConfiguration, this, builderFunc);
-        }
     }
 }

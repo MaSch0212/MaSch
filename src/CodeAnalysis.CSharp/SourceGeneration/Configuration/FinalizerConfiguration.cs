@@ -2,6 +2,9 @@
 
 public interface IFinalizerConfiguration : ISupportsCodeAttributeConfiguration<IFinalizerConfiguration>
 {
+    MethodBodyType BodyType { get; }
+
+    IFinalizerConfiguration AsExpression(bool placeInNewLine = true);
 }
 
 internal sealed class FinalizerConfiguration : CodeConfiguration, IFinalizerConfiguration
@@ -14,7 +17,15 @@ internal sealed class FinalizerConfiguration : CodeConfiguration, IFinalizerConf
         _containingTypeName = containingTypeName;
     }
 
+    public MethodBodyType BodyType { get; private set; } = MethodBodyType.Block;
+
     protected override int StartCapacity => 16;
+
+    public IFinalizerConfiguration AsExpression(bool placeInNewLine = true)
+    {
+        BodyType = placeInNewLine ? MethodBodyType.ExpressionNewLine : MethodBodyType.Expression;
+        return this;
+    }
 
     public IFinalizerConfiguration WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
     {
