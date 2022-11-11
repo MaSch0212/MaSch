@@ -27,7 +27,13 @@ internal abstract class GenericMemberConfiguration<T> : MemberConfiguration<T>, 
 
     public string MemberNameWithoutGenericParameters => base.MemberName;
 
-    public T WithGenericParameter(string name, Action<IGenericParameterConfiguration> parameterConfiguration)
+    public T WithGenericParameter(string name)
+        => WithGenericParameter(name, null);
+
+    IGenericMemberConfiguration IGenericMemberConfiguration.WithGenericParameter(string name)
+        => WithGenericParameter(name, null);
+
+    public T WithGenericParameter(string name, Action<IGenericParameterConfiguration>? parameterConfiguration)
     {
         var config = new GenericParameterConfiguration(name);
         parameterConfiguration?.Invoke(config);

@@ -27,7 +27,10 @@ internal sealed class FinalizerConfiguration : CodeConfiguration, IFinalizerConf
         return this;
     }
 
-    public IFinalizerConfiguration WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
+    public IFinalizerConfiguration WithCodeAttribute(string attributeTypeName)
+        => WithCodeAttribute(attributeTypeName, null);
+
+    public IFinalizerConfiguration WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration>? attributeConfiguration)
     {
         CodeAttributeConfiguration.AddCodeAttribute(_codeAttributes, attributeTypeName, attributeConfiguration);
         return this;
@@ -46,4 +49,7 @@ internal sealed class FinalizerConfiguration : CodeConfiguration, IFinalizerConf
 
     ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
         => WithCodeAttribute(attributeTypeName, attributeConfiguration);
+
+    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName)
+        => WithCodeAttribute(attributeTypeName, null);
 }

@@ -26,7 +26,13 @@ internal abstract class MemberConfiguration<T> : CodeConfiguration, IMemberConfi
     ISupportsAccessModifierConfiguration ISupportsAccessModifierConfiguration.WithAccessModifier(AccessModifier accessModifier)
         => WithAccessModifier(accessModifier);
 
-    public T WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
+    public T WithCodeAttribute(string attributeTypeName)
+        => WithCodeAttribute(attributeTypeName, null);
+
+    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName)
+        => WithCodeAttribute(attributeTypeName, null);
+
+    public T WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration>? attributeConfiguration)
     {
         var config = new CodeAttributeConfiguration(attributeTypeName);
         attributeConfiguration?.Invoke(config);

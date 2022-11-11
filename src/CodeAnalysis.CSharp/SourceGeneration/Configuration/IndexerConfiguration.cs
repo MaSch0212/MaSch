@@ -119,6 +119,16 @@ internal sealed class IndexerConfiguration :
         return this;
     }
 
+    IReadOnlyIndexerConfiguration ISupportsCodeAttributeConfiguration<IReadOnlyIndexerConfiguration>.WithCodeAttribute(string attributeTypeName)
+    {
+        throw new NotImplementedException();
+    }
+
+    IWriteOnlyIndexerConfiguration ISupportsCodeAttributeConfiguration<IWriteOnlyIndexerConfiguration>.WithCodeAttribute(string attributeTypeName)
+    {
+        throw new NotImplementedException();
+    }
+
     IReadOnlyIndexerConfiguration IMemberConfiguration<IReadOnlyIndexerConfiguration>.WithKeyword(MemberKeyword keyword)
     {
         WithKeyword(keyword);
@@ -131,19 +141,31 @@ internal sealed class IndexerConfiguration :
         return this;
     }
 
+    IIndexerConfiguration IDefinesParametersConfiguration<IIndexerConfiguration>.WithParameter(string type, string name)
+        => WithParameter(type, name, null);
+
     IIndexerConfiguration IDefinesParametersConfiguration<IIndexerConfiguration>.WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration)
         => WithParameter(type, name, parameterConfiguration);
+
+    IDefinesParametersConfiguration IDefinesParametersConfiguration.WithParameter(string type, string name)
+        => WithParameter(type, name, null);
 
     IDefinesParametersConfiguration IDefinesParametersConfiguration.WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration)
         => WithParameter(type, name, parameterConfiguration);
 
+    IReadOnlyIndexerConfiguration IDefinesParametersConfiguration<IReadOnlyIndexerConfiguration>.WithParameter(string type, string name)
+        => WithParameter(type, name, null);
+
     IReadOnlyIndexerConfiguration IDefinesParametersConfiguration<IReadOnlyIndexerConfiguration>.WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration)
         => WithParameter(type, name, parameterConfiguration);
+
+    IWriteOnlyIndexerConfiguration IDefinesParametersConfiguration<IWriteOnlyIndexerConfiguration>.WithParameter(string type, string name)
+        => WithParameter(type, name, null);
 
     IWriteOnlyIndexerConfiguration IDefinesParametersConfiguration<IWriteOnlyIndexerConfiguration>.WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration)
         => WithParameter(type, name, parameterConfiguration);
 
-    private IndexerConfiguration WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration)
+    private IndexerConfiguration WithParameter(string type, string name, Action<IParameterConfiguration>? parameterConfiguration)
     {
         ParameterConfiguration.AddParameter(_parameters, type, name, parameterConfiguration);
         return this;

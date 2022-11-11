@@ -36,11 +36,14 @@ internal sealed class PropertyMethodConfiguration : CodeConfiguration, IProperty
         return this;
     }
 
-    public IPropertyMethodConfiguration WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
+    public IPropertyMethodConfiguration WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration>? attributeConfiguration)
     {
         CodeAttributeConfiguration.AddCodeAttribute(_codeAttributes, attributeTypeName, attributeConfiguration);
         return this;
     }
+
+    public IPropertyMethodConfiguration WithCodeAttribute(string attributeTypeName)
+        => WithCodeAttribute(attributeTypeName, null);
 
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
@@ -59,4 +62,7 @@ internal sealed class PropertyMethodConfiguration : CodeConfiguration, IProperty
 
     ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
         => WithCodeAttribute(attributeTypeName, attributeConfiguration);
+
+    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName)
+        => WithCodeAttribute(attributeTypeName, null);
 }

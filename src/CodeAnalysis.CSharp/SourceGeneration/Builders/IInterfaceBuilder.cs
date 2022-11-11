@@ -14,7 +14,8 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders
         IInterfaceDeclarationBuilder<IInterfaceBuilder, IInterfaceMemberFactory>,
         IClassDeclarationBuilder<IInterfaceBuilder, IInterfaceMemberFactory>,
         IStructDeclarationBuilder<IInterfaceBuilder, IInterfaceMemberFactory>,
-        IRecordDeclarationBuilder<IInterfaceBuilder, IInterfaceMemberFactory>
+        IRecordDeclarationBuilder<IInterfaceBuilder, IInterfaceMemberFactory>,
+        ISourceBuilder<IInterfaceBuilder>
     {
     }
 }

@@ -282,6 +282,18 @@ internal sealed class PropertyConfiguration :
         return this;
     }
 
+    IReadOnlyPropertyConfiguration ISupportsCodeAttributeConfiguration<IReadOnlyPropertyConfiguration>.WithCodeAttribute(string attributeTypeName)
+    {
+        WithCodeAttribute(attributeTypeName, null);
+        return this;
+    }
+
+    IWriteOnlyPropertyConfiguration ISupportsCodeAttributeConfiguration<IWriteOnlyPropertyConfiguration>.WithCodeAttribute(string attributeTypeName)
+    {
+        WithCodeAttribute(attributeTypeName, null);
+        return this;
+    }
+
     IWriteOnlyPropertyConfiguration IMemberConfiguration<IWriteOnlyPropertyConfiguration>.WithKeyword(MemberKeyword keyword)
     {
         WithKeyword(keyword);

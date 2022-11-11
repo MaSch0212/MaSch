@@ -20,7 +20,13 @@ internal sealed class RecordConfiguration : TypeConfiguration<IRecordConfigurati
 
     protected override IRecordConfiguration This => this;
 
-    public IRecordConfiguration WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration)
+    public IRecordConfiguration WithParameter(string type, string name)
+        => WithParameter(type, name, null);
+
+    IDefinesParametersConfiguration IDefinesParametersConfiguration.WithParameter(string type, string name)
+        => WithParameter(type, name, null);
+
+    public IRecordConfiguration WithParameter(string type, string name, Action<IParameterConfiguration>? parameterConfiguration)
     {
         ParameterConfiguration.AddParameter(_parameters, type, name, parameterConfiguration);
         return This;

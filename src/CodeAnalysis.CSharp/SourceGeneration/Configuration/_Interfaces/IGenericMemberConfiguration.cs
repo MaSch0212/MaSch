@@ -4,11 +4,13 @@ public interface IGenericMemberConfiguration : IMemberConfiguration
 {
     string MemberNameWithoutGenericParameters { get; }
 
+    IGenericMemberConfiguration WithGenericParameter(string name);
     IGenericMemberConfiguration WithGenericParameter(string name, Action<IGenericParameterConfiguration> parameterConfiguration);
 }
 
 public interface IGenericMemberConfiguration<T> : IGenericMemberConfiguration, IMemberConfiguration<T>
     where T : IGenericMemberConfiguration<T>
 {
-    T WithGenericParameter(string name, Action<IGenericParameterConfiguration> parameterConfiguration);
+    new T WithGenericParameter(string name);
+    new T WithGenericParameter(string name, Action<IGenericParameterConfiguration> parameterConfiguration);
 }

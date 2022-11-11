@@ -27,11 +27,14 @@ internal sealed class StaticConstructorConfiguration : CodeConfiguration, IStati
         return this;
     }
 
-    public IStaticConstructorConfiguration WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
+    public IStaticConstructorConfiguration WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration>? attributeConfiguration)
     {
         CodeAttributeConfiguration.AddCodeAttribute(_codeAttributes, attributeTypeName, attributeConfiguration);
         return this;
     }
+
+    public IStaticConstructorConfiguration WithCodeAttribute(string attributeTypeName)
+        => WithCodeAttribute(attributeTypeName, null);
 
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
@@ -46,4 +49,7 @@ internal sealed class StaticConstructorConfiguration : CodeConfiguration, IStati
 
     ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
         => WithCodeAttribute(attributeTypeName, attributeConfiguration);
+
+    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName)
+        => WithCodeAttribute(attributeTypeName, null);
 }

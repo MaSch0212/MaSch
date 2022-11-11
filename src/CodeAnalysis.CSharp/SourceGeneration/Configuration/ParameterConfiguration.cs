@@ -19,7 +19,7 @@ internal sealed class ParameterConfiguration : CodeConfiguration, IParameterConf
 
     protected override int StartCapacity => 16;
 
-    public static ParameterConfiguration AddParameter(IList<IParameterConfiguration> parameters, string type, string name, Action<IParameterConfiguration> parameterConfiguration)
+    public static ParameterConfiguration AddParameter(IList<IParameterConfiguration> parameters, string type, string name, Action<IParameterConfiguration>? parameterConfiguration)
     {
         var config = new ParameterConfiguration(type, name);
         parameterConfiguration?.Invoke(config);
@@ -51,7 +51,13 @@ internal sealed class ParameterConfiguration : CodeConfiguration, IParameterConf
         }
     }
 
-    public IParameterConfiguration WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
+    public IParameterConfiguration WithCodeAttribute(string attributeTypeName)
+        => WithCodeAttribute(attributeTypeName, null);
+
+    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName)
+        => WithCodeAttribute(attributeTypeName, null);
+
+    public IParameterConfiguration WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration>? attributeConfiguration)
     {
         CodeAttributeConfiguration.AddCodeAttribute(_codeAttributes, attributeTypeName, attributeConfiguration);
         return this;

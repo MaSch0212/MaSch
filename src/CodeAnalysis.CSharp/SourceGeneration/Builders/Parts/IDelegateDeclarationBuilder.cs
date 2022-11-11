@@ -1,28 +1,11 @@
-﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders;
-using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
+﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 using MaSch.CodeAnalysis.CSharp.SourceGeneration.ConfigurationFactories;
 
-namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders
-{
-    public interface IDelegateDeclarationBuilder : ISourceBuilder
-    {
-        IDelegateDeclarationBuilder Append(Func<IDelegateConfigurationFactory, IDelegateConfiguration> createFunc);
-    }
+namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders;
 
-    public interface IDelegateDeclarationBuilder<TBuilder, TConfigFactory> : IDelegateDeclarationBuilder, ISourceBuilder<TBuilder>
-        where TBuilder : IDelegateDeclarationBuilder<TBuilder, TConfigFactory>
-        where TConfigFactory : IDelegateConfigurationFactory
-    {
-        TBuilder Append(Func<TConfigFactory, IDelegateConfiguration> createFunc);
-    }
-}
-
-namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
+public interface IDelegateDeclarationBuilder<TBuilder, TConfigFactory>
+    where TBuilder : IDelegateDeclarationBuilder<TBuilder, TConfigFactory>
+    where TConfigFactory : IDelegateConfigurationFactory
 {
-    public partial class SourceBuilder : IDelegateDeclarationBuilder
-    {
-        /// <inheritdoc/>
-        IDelegateDeclarationBuilder IDelegateDeclarationBuilder.Append(Func<IDelegateConfigurationFactory, IDelegateConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory));
-    }
+    TBuilder Append(Func<TConfigFactory, IDelegateConfiguration> createFunc);
 }

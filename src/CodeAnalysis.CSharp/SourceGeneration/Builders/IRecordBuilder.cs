@@ -5,19 +5,20 @@ using MaSch.CodeAnalysis.CSharp.SourceGeneration.ConfigurationFactories;
 namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders
 {
     public interface IRecordBuilder :
-            IFieldDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-            IDelegateDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-            IPropertyDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-            IMethodDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-            IEventDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-            IIndexerDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-            IConstructorDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-            IFinalizerDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-            IEnumDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-            IInterfaceDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-            IClassDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-            IStructDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-            IRecordDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>
+        IFieldDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
+        IDelegateDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
+        IPropertyDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
+        IMethodDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
+        IEventDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
+        IIndexerDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
+        IConstructorDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
+        IFinalizerDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
+        IEnumDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
+        IInterfaceDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
+        IClassDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
+        IStructDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
+        IRecordDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
+        ISourceBuilder<IRecordBuilder>
     {
     }
 }

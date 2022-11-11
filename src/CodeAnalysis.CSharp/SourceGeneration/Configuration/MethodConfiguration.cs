@@ -30,7 +30,13 @@ internal abstract class MethodConfiguration<T> : GenericMemberConfiguration<T>, 
 
     protected override int StartCapacity => 128;
 
-    public T WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration)
+    public T WithParameter(string type, string name)
+        => WithParameter(type, name, null);
+
+    IDefinesParametersConfiguration IDefinesParametersConfiguration.WithParameter(string type, string name)
+        => WithParameter(type, name, null);
+
+    public T WithParameter(string type, string name, Action<IParameterConfiguration>? parameterConfiguration)
     {
         ParameterConfiguration.AddParameter(_parameters, type, name, parameterConfiguration);
         return This;

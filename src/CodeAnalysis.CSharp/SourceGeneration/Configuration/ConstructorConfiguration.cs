@@ -28,7 +28,13 @@ internal sealed class ConstructorConfiguration : MemberConfiguration<IConstructo
 
     public MethodBodyType BodyType { get; private set; } = MethodBodyType.Block;
 
-    public IConstructorConfiguration WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration)
+    public IConstructorConfiguration WithParameter(string type, string name)
+        => WithParameter(type, name, null);
+
+    IDefinesParametersConfiguration IDefinesParametersConfiguration.WithParameter(string type, string name)
+        => WithParameter(type, name, null);
+
+    public IConstructorConfiguration WithParameter(string type, string name, Action<IParameterConfiguration>? parameterConfiguration)
     {
         ParameterConfiguration.AddParameter(_parameters, type, name, parameterConfiguration);
         return This;

@@ -27,7 +27,13 @@ internal sealed class EventMethodConfiguration : CodeConfiguration, IEventMethod
         return this;
     }
 
-    public IEventMethodConfiguration WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
+    public IEventMethodConfiguration WithCodeAttribute(string attributeTypeName)
+        => WithCodeAttribute(attributeTypeName, null);
+
+    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName)
+        => WithCodeAttribute(attributeTypeName, null);
+
+    public IEventMethodConfiguration WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration>? attributeConfiguration)
     {
         CodeAttributeConfiguration.AddCodeAttribute(_codeAttributes, attributeTypeName, attributeConfiguration);
         return this;

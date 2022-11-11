@@ -29,7 +29,7 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration
         /// <inheritdoc/>
         protected override int StartCapacity => 128;
 
-        public static CodeAttributeConfiguration AddCodeAttribute(IList<ICodeAttributeConfiguration> codeAttributes, string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
+        public static CodeAttributeConfiguration AddCodeAttribute(IList<ICodeAttributeConfiguration> codeAttributes, string attributeTypeName, Action<ICodeAttributeConfiguration>? attributeConfiguration)
         {
             var codeAttribute = new CodeAttributeConfiguration(attributeTypeName);
             attributeConfiguration?.Invoke(codeAttribute);
