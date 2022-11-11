@@ -244,9 +244,12 @@ public sealed partial class SourceBuilder
         return this;
     }
 
-    private SourceBuilder AppendWithLineTerminator(ICodeConfiguration configuration)
+    private SourceBuilder AppendWithLineTerminator(ICodeConfiguration configuration, bool appendLine = true)
     {
         configuration.WriteTo(this);
-        return Append(';').AppendLine();
+        Append(';');
+        if (appendLine)
+            AppendLine();
+        return this;
     }
 }
