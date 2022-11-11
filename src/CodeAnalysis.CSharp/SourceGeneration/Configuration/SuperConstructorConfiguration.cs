@@ -5,7 +5,7 @@ public interface ISuperConstructorConfiguration : ICodeConfiguration
     ISuperConstructorConfiguration WithParameter(string value);
 }
 
-internal sealed class SuperConstructorConfiguration : CodeConfiguration, ISuperConstructorConfiguration
+internal sealed class SuperConstructorConfiguration : CodeConfigurationBase, ISuperConstructorConfiguration
 {
     private readonly string _superConstructorKeyword;
     private readonly List<string> _parameterValues = new();

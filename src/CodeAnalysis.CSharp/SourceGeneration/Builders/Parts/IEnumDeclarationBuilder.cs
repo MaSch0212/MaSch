@@ -1,11 +1,9 @@
 ﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
-using MaSch.CodeAnalysis.CSharp.SourceGeneration.ConfigurationFactories;
 
 namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders;
 
-public interface IEnumDeclarationBuilder<TBuilder, TConfigFactory>
-    where TBuilder : IEnumDeclarationBuilder<TBuilder, TConfigFactory>
-    where TConfigFactory : IEnumConfigurationFactory
+public interface IEnumDeclarationBuilder<TBuilder>
+    where TBuilder : IEnumDeclarationBuilder<TBuilder>
 {
-    TBuilder Append(Func<TConfigFactory, IEnumConfiguration> createFunc, Action<IEnumBuilder> builderFunc);
+    TBuilder Append(IEnumConfiguration enumConfiguration, Action<IEnumBuilder> builderFunc);
 }

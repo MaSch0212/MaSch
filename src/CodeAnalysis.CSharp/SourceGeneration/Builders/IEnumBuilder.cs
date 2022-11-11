@@ -1,12 +1,11 @@
 ﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders;
 using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
-using MaSch.CodeAnalysis.CSharp.SourceGeneration.ConfigurationFactories;
 
 namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders
 {
     public interface IEnumBuilder : ISourceBuilder<IEnumBuilder>
     {
-        IEnumBuilder Append(Func<IEnumMemberFactory, IEnumValueConfiguration> createFunc);
+        IEnumBuilder Append(IEnumValueConfiguration enumValueConfiguration);
     }
 }
 
@@ -15,8 +14,8 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
     partial class SourceBuilder : IEnumBuilder
     {
         /// <inheritdoc/>
-        IEnumBuilder IEnumBuilder.Append(Func<IEnumMemberFactory, IEnumValueConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory));
+        IEnumBuilder IEnumBuilder.Append(IEnumValueConfiguration enumValueConfiguration)
+            => Append(enumValueConfiguration);
 
         /// <inheritdoc/>
         IEnumBuilder ISourceBuilder<IEnumBuilder>.Append(string value)

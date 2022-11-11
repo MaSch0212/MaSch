@@ -7,7 +7,7 @@ public interface INamespaceImportConfiguration : ICodeConfiguration
     INamespaceImportConfiguration WithAlias(string alias);
 }
 
-internal sealed class NamespaceImportConfiguration : CodeConfiguration, INamespaceImportConfiguration
+internal sealed class NamespaceImportConfiguration : CodeConfigurationBase, INamespaceImportConfiguration
 {
     private readonly string _namespace;
     private bool _isGlobal;

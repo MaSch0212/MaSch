@@ -7,12 +7,12 @@ public interface IFinalizerConfiguration : ISupportsCodeAttributeConfiguration<I
     IFinalizerConfiguration AsExpression(bool placeInNewLine = true);
 }
 
-internal sealed class FinalizerConfiguration : CodeConfiguration, IFinalizerConfiguration
+internal sealed class FinalizerConfiguration : CodeConfigurationBase, IFinalizerConfiguration
 {
-    private readonly string _containingTypeName;
+    private readonly string? _containingTypeName;
     private readonly List<ICodeAttributeConfiguration> _codeAttributes = new();
 
-    public FinalizerConfiguration(string containingTypeName)
+    public FinalizerConfiguration(string? containingTypeName)
     {
         _containingTypeName = containingTypeName;
     }
@@ -44,7 +44,7 @@ internal sealed class FinalizerConfiguration : CodeConfiguration, IFinalizerConf
             sourceBuilder.AppendLine();
         }
 
-        sourceBuilder.Append('~').Append(_containingTypeName).Append("()");
+        sourceBuilder.Append('~').Append(_containingTypeName ?? sourceBuilder.CurrentTypeName).Append("()");
     }
 
     ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)

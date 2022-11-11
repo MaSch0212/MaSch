@@ -1,7 +1,6 @@
 ﻿using MaSch.CodeAnalysis.CSharp.Common;
 using MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders;
 using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
-using MaSch.CodeAnalysis.CSharp.SourceGeneration.ConfigurationFactories;
 
 namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
 
@@ -27,7 +26,6 @@ public sealed partial class SourceBuilder
     private const char IndentChar = ' ';
 
     private readonly StringBuilder _builder;
-    private readonly CodeConfigurationFactory _configurationFactory = new();
     private bool _isLineIndented = false;
     private bool _isLastLineEmpty;
     private bool _isCurrentLineEmpty;
@@ -49,6 +47,9 @@ public sealed partial class SourceBuilder
 
     /// <inheritdoc cref="ISourceBuilder.CurrentIndentLevel"/>
     public int CurrentIndentLevel { get; set; }
+
+    /// <inheritdoc cref="ISourceBuilder.CurrentTypeName"/>
+    public string? CurrentTypeName { get; set; }
 
     /// <summary>
     /// Creates a new source file builder.
@@ -231,7 +232,12 @@ public sealed partial class SourceBuilder
     {
         configuration.WriteTo(this);
         using (AppendLine().AppendBlock())
+        {
+            if (configuration is ITypeConfiguration typeConfiguration)
+                CurrentTypeName = typeConfiguration.MemberNameWithoutGenericParameters;
             builderFunc(builder);
+        }
+
         return this;
     }
 

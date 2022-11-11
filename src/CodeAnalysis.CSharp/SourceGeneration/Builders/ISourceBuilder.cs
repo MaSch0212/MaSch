@@ -13,6 +13,11 @@ public interface ISourceBuilder
     int CurrentIndentLevel { get; set; }
 
     /// <summary>
+    /// Gets or sets the name of the currently generated type.
+    /// </summary>
+    string? CurrentTypeName { get; set; }
+
+    /// <summary>
     /// Appends a new region to the source file.
     /// </summary>
     /// <param name="regionName">Name of the region.</param>

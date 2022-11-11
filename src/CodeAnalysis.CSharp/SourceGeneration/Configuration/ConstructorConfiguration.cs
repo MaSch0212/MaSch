@@ -13,17 +13,18 @@ public interface IConstructorConfiguration : IMemberConfiguration<IConstructorCo
 internal sealed class ConstructorConfiguration : MemberConfiguration<IConstructorConfiguration>, IConstructorConfiguration
 {
     private readonly List<IParameterConfiguration> _parameters = new();
+    private readonly string? _containingTypeName;
     private ISuperConstructorConfiguration? _superConstructor;
 
-    public ConstructorConfiguration(string containingTypeName)
-        : base(containingTypeName)
+    public ConstructorConfiguration(string? containingTypeName)
+        : base(containingTypeName!)
     {
+        _containingTypeName = containingTypeName;
     }
 
     public bool MultilineParameters { get; set; }
 
     protected override IConstructorConfiguration This => this;
-
     protected override int StartCapacity => 64;
 
     public MethodBodyType BodyType { get; private set; } = MethodBodyType.Block;
@@ -86,5 +87,13 @@ internal sealed class ConstructorConfiguration : MemberConfiguration<IConstructo
                 _superConstructor.WriteTo(sourceBuilder);
             }
         }
+    }
+
+    protected override void WriteNameTo(ISourceBuilder sourceBuilder)
+    {
+        if (_containingTypeName is not null)
+            base.WriteNameTo(sourceBuilder);
+        else
+            sourceBuilder.Append(sourceBuilder.CurrentTypeName);
     }
 }

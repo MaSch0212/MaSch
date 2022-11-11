@@ -7,7 +7,7 @@ public interface IEventMethodConfiguration : ISupportsCodeAttributeConfiguration
     IEventMethodConfiguration AsExpression();
 }
 
-internal sealed class EventMethodConfiguration : CodeConfiguration, IEventMethodConfiguration
+internal sealed class EventMethodConfiguration : CodeConfigurationBase, IEventMethodConfiguration
 {
     private readonly string _methodKeyword;
     private readonly List<ICodeAttributeConfiguration> _codeAttributes = new();

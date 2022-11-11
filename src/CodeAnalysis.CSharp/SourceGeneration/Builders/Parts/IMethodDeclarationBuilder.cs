@@ -1,12 +1,10 @@
 ﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
-using MaSch.CodeAnalysis.CSharp.SourceGeneration.ConfigurationFactories;
 
 namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders;
 
-public interface IMethodDeclarationBuilder<TBuilder, TConfigFactory>
-    where TBuilder : IMethodDeclarationBuilder<TBuilder, TConfigFactory>
-    where TConfigFactory : IMethodConfigurationFactory
+public interface IMethodDeclarationBuilder<TBuilder>
+    where TBuilder : IMethodDeclarationBuilder<TBuilder>
 {
-    TBuilder Append(Func<TConfigFactory, IMethodConfiguration> createFunc);
-    TBuilder Append(Func<TConfigFactory, IMethodConfiguration> createFunc, Action<ISourceBuilder> builderFunc);
+    TBuilder Append(IMethodConfiguration methodConfiguration);
+    TBuilder Append(IMethodConfiguration methodConfiguration, Action<ISourceBuilder> builderFunc);
 }

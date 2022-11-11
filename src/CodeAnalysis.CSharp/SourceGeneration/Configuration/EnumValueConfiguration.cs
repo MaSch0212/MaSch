@@ -4,7 +4,7 @@ public interface IEnumValueConfiguration : ISupportsCodeAttributeConfiguration<I
 {
 }
 
-internal sealed class EnumValueConfiguration : CodeConfiguration, IEnumValueConfiguration
+internal sealed class EnumValueConfiguration : CodeConfigurationBase, IEnumValueConfiguration
 {
     private readonly List<ICodeAttributeConfiguration> _codeAttributes = new();
     private readonly string _name;

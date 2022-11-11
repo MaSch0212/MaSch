@@ -4,7 +4,7 @@ public interface INamespaceConfiguration : ICodeConfiguration
 {
 }
 
-internal sealed class NamespaceConfiguration : CodeConfiguration, INamespaceConfiguration
+internal sealed class NamespaceConfiguration : CodeConfigurationBase, INamespaceConfiguration
 {
     private readonly string _name;
 

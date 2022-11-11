@@ -1,11 +1,9 @@
 ﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
-using MaSch.CodeAnalysis.CSharp.SourceGeneration.ConfigurationFactories;
 
 namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders;
 
-public interface INamespaceDeclarationBuilder<TBuilder, TConfigFactory>
-    where TBuilder : INamespaceDeclarationBuilder<TBuilder, TConfigFactory>
-    where TConfigFactory : INamespaceConfigurationFactory
+public interface INamespaceDeclarationBuilder<TBuilder>
+    where TBuilder : INamespaceDeclarationBuilder<TBuilder>
 {
-    TBuilder Append(Func<TConfigFactory, INamespaceConfiguration> createFunc, Action<INamespaceBuilder> builderFunc);
+    TBuilder Append(INamespaceConfiguration namespaceConfiguration, Action<INamespaceBuilder> builderFunc);
 }

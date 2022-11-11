@@ -8,7 +8,7 @@ public interface IPropertyMethodConfiguration : ISupportsCodeAttributeConfigurat
     IPropertyMethodConfiguration AsExpression();
 }
 
-internal sealed class PropertyMethodConfiguration : CodeConfiguration, IPropertyMethodConfiguration
+internal sealed class PropertyMethodConfiguration : CodeConfigurationBase, IPropertyMethodConfiguration
 {
     private readonly List<ICodeAttributeConfiguration> _codeAttributes = new();
     private AccessModifier _accessModifier = AccessModifier.Default;

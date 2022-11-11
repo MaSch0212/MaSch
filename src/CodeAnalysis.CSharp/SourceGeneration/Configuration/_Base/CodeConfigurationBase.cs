@@ -1,6 +1,6 @@
 ﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
-internal abstract class CodeConfiguration : ICodeConfiguration
+internal abstract class CodeConfigurationBase : ICodeConfiguration
 {
     protected abstract int StartCapacity { get; }
 

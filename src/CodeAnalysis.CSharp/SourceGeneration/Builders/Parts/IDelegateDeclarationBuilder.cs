@@ -1,11 +1,9 @@
 ﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
-using MaSch.CodeAnalysis.CSharp.SourceGeneration.ConfigurationFactories;
 
 namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders;
 
-public interface IDelegateDeclarationBuilder<TBuilder, TConfigFactory>
-    where TBuilder : IDelegateDeclarationBuilder<TBuilder, TConfigFactory>
-    where TConfigFactory : IDelegateConfigurationFactory
+public interface IDelegateDeclarationBuilder<TBuilder>
+    where TBuilder : IDelegateDeclarationBuilder<TBuilder>
 {
-    TBuilder Append(Func<TConfigFactory, IDelegateConfiguration> createFunc);
+    TBuilder Append(IDelegateConfiguration delegateConfiguration);
 }

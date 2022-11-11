@@ -11,7 +11,7 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration
     /// <summary>
     /// Represents a C# code attribute.
     /// </summary>
-    internal sealed class CodeAttributeConfiguration : CodeConfiguration, ICodeAttributeConfiguration
+    internal sealed class CodeAttributeConfiguration : CodeConfigurationBase, ICodeAttributeConfiguration
     {
         private readonly string _typeName;
         private readonly List<string> _parameters = new();

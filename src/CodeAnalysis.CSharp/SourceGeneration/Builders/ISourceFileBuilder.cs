@@ -1,16 +1,15 @@
 ﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders;
 using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
-using MaSch.CodeAnalysis.CSharp.SourceGeneration.ConfigurationFactories;
 
 namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders
 {
     public interface ISourceFileBuilder :
-        INamespaceDeclarationBuilder<ISourceFileBuilder, IFileMemberFactory>,
-        INamespaceImportBuilder<ISourceFileBuilder, IFileMemberFactory>,
+        INamespaceDeclarationBuilder<ISourceFileBuilder>,
+        INamespaceImportBuilder<ISourceFileBuilder>,
         ISourceBuilder<ISourceFileBuilder>
     {
-        ISourceFileBuilder Append(Func<IFileMemberFactory, INamespaceConfiguration> createFunc);
-        ISourceFileBuilder Append(Func<IFileMemberFactory, ICodeAttributeConfiguration> createFunc);
+        ISourceFileBuilder Append(INamespaceConfiguration namespaceConfiguration);
+        ISourceFileBuilder Append(ICodeAttributeConfiguration codeAttributeConfiguration);
     }
 }
 
@@ -19,20 +18,20 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
     partial class SourceBuilder : ISourceFileBuilder
     {
         /// <inheritdoc/>
-        ISourceFileBuilder ISourceFileBuilder.Append(Func<IFileMemberFactory, INamespaceConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory), null);
+        ISourceFileBuilder ISourceFileBuilder.Append(INamespaceConfiguration namespaceConfiguration)
+            => Append(namespaceConfiguration, null);
 
         /// <inheritdoc/>
-        ISourceFileBuilder ISourceFileBuilder.Append(Func<IFileMemberFactory, ICodeAttributeConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory));
+        ISourceFileBuilder ISourceFileBuilder.Append(ICodeAttributeConfiguration codeAttributeConfiguration)
+            => Append(codeAttributeConfiguration);
 
         /// <inheritdoc/>
-        ISourceFileBuilder INamespaceDeclarationBuilder<ISourceFileBuilder, IFileMemberFactory>.Append(Func<IFileMemberFactory, INamespaceConfiguration> createFunc, Action<INamespaceBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        ISourceFileBuilder INamespaceDeclarationBuilder<ISourceFileBuilder>.Append(INamespaceConfiguration namespaceConfiguration, Action<INamespaceBuilder> builderFunc)
+            => Append(namespaceConfiguration, builderFunc);
 
         /// <inheritdoc/>
-        ISourceFileBuilder INamespaceImportBuilder<ISourceFileBuilder, IFileMemberFactory>.Append(Func<IFileMemberFactory, INamespaceImportConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory));
+        ISourceFileBuilder INamespaceImportBuilder<ISourceFileBuilder>.Append(INamespaceImportConfiguration namespaceImportConfiguration)
+            => Append(namespaceImportConfiguration);
 
         /// <inheritdoc/>
         ISourceFileBuilder ISourceBuilder<ISourceFileBuilder>.Append(string value)

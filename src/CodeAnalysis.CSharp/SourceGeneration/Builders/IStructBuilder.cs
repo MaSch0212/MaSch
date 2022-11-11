@@ -1,22 +1,21 @@
 ﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders;
 using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
-using MaSch.CodeAnalysis.CSharp.SourceGeneration.ConfigurationFactories;
 
 namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders
 {
     public interface IStructBuilder :
-        IFieldDeclarationBuilder<IStructBuilder, IStructMemberFactory>,
-        IDelegateDeclarationBuilder<IStructBuilder, IStructMemberFactory>,
-        IPropertyDeclarationBuilder<IStructBuilder, IStructMemberFactory>,
-        IMethodDeclarationBuilder<IStructBuilder, IStructMemberFactory>,
-        IEventDeclarationBuilder<IStructBuilder, IStructMemberFactory>,
-        IIndexerDeclarationBuilder<IStructBuilder, IStructMemberFactory>,
-        IConstructorDeclarationBuilder<IStructBuilder, IStructMemberFactory>,
-        IEnumDeclarationBuilder<IStructBuilder, IStructMemberFactory>,
-        IInterfaceDeclarationBuilder<IStructBuilder, IStructMemberFactory>,
-        IClassDeclarationBuilder<IStructBuilder, IStructMemberFactory>,
-        IStructDeclarationBuilder<IStructBuilder, IStructMemberFactory>,
-        IRecordDeclarationBuilder<IStructBuilder, IStructMemberFactory>,
+        IFieldDeclarationBuilder<IStructBuilder>,
+        IDelegateDeclarationBuilder<IStructBuilder>,
+        IPropertyDeclarationBuilder<IStructBuilder>,
+        IMethodDeclarationBuilder<IStructBuilder>,
+        IEventDeclarationBuilder<IStructBuilder>,
+        IIndexerDeclarationBuilder<IStructBuilder>,
+        IConstructorDeclarationBuilder<IStructBuilder>,
+        IEnumDeclarationBuilder<IStructBuilder>,
+        IInterfaceDeclarationBuilder<IStructBuilder>,
+        IClassDeclarationBuilder<IStructBuilder>,
+        IStructDeclarationBuilder<IStructBuilder>,
+        IRecordDeclarationBuilder<IStructBuilder>,
         ISourceBuilder<IStructBuilder>
     {
     }
@@ -27,100 +26,100 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
     public partial class SourceBuilder : IStructBuilder
     {
         /// <inheritdoc/>
-        IStructBuilder IFieldDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IFieldConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory));
+        IStructBuilder IFieldDeclarationBuilder<IStructBuilder>.Append(IFieldConfiguration fieldConfiguration)
+            => Append(fieldConfiguration);
 
         /// <inheritdoc/>
-        IStructBuilder IDelegateDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IDelegateConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory));
+        IStructBuilder IDelegateDeclarationBuilder<IStructBuilder>.Append(IDelegateConfiguration delegateConfiguration)
+            => Append(delegateConfiguration);
 
         /// <inheritdoc/>
-        IStructBuilder IPropertyDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IPropertyConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory), null, null);
+        IStructBuilder IPropertyDeclarationBuilder<IStructBuilder>.Append(IPropertyConfiguration propertyConfiguration)
+            => Append(propertyConfiguration, null, null);
 
         /// <inheritdoc/>
-        IStructBuilder IPropertyDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IPropertyConfiguration> createFunc, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
-            => Append(createFunc(_configurationFactory), getBuilderFunc, setBuilderFunc);
+        IStructBuilder IPropertyDeclarationBuilder<IStructBuilder>.Append(IPropertyConfiguration propertyConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
+            => Append(propertyConfiguration, getBuilderFunc, setBuilderFunc);
 
         /// <inheritdoc/>
-        IStructBuilder IPropertyDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IReadOnlyPropertyConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory), null, null);
+        IStructBuilder IPropertyDeclarationBuilder<IStructBuilder>.Append(IReadOnlyPropertyConfiguration propertyConfiguration)
+            => Append(propertyConfiguration, null, null);
 
         /// <inheritdoc/>
-        IStructBuilder IPropertyDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IReadOnlyPropertyConfiguration> createFunc, Action<ISourceBuilder> getBuilderFunc)
-            => Append(createFunc(_configurationFactory), getBuilderFunc, null);
+        IStructBuilder IPropertyDeclarationBuilder<IStructBuilder>.Append(IReadOnlyPropertyConfiguration propertyConfiguration, Action<ISourceBuilder> getBuilderFunc)
+            => Append(propertyConfiguration, getBuilderFunc, null);
 
         /// <inheritdoc/>
-        IStructBuilder IPropertyDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IWriteOnlyPropertyConfiguration> createFunc, Action<ISourceBuilder> setBuilderFunc)
-            => Append(createFunc(_configurationFactory), null, setBuilderFunc);
+        IStructBuilder IPropertyDeclarationBuilder<IStructBuilder>.Append(IWriteOnlyPropertyConfiguration propertyConfiguration, Action<ISourceBuilder> setBuilderFunc)
+            => Append(propertyConfiguration, null, setBuilderFunc);
 
         /// <inheritdoc/>
-        IStructBuilder IMethodDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IMethodConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory), null);
+        IStructBuilder IMethodDeclarationBuilder<IStructBuilder>.Append(IMethodConfiguration methodConfiguration)
+            => Append(methodConfiguration, null);
 
         /// <inheritdoc/>
-        IStructBuilder IMethodDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IMethodConfiguration> createFunc, Action<ISourceBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        IStructBuilder IMethodDeclarationBuilder<IStructBuilder>.Append(IMethodConfiguration methodConfiguration, Action<ISourceBuilder> builderFunc)
+            => Append(methodConfiguration, builderFunc);
 
         /// <inheritdoc/>
-        IStructBuilder IEventDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IEventConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory), null, null);
+        IStructBuilder IEventDeclarationBuilder<IStructBuilder>.Append(IEventConfiguration eventConfiguration)
+            => Append(eventConfiguration, null, null);
 
         /// <inheritdoc/>
-        IStructBuilder IEventDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IEventConfiguration> createFunc, Action<ISourceBuilder> addBuilderFunc, Action<ISourceBuilder> removeBuilderFunc)
-            => Append(createFunc(_configurationFactory), addBuilderFunc, removeBuilderFunc);
+        IStructBuilder IEventDeclarationBuilder<IStructBuilder>.Append(IEventConfiguration eventConfiguration, Action<ISourceBuilder> addBuilderFunc, Action<ISourceBuilder> removeBuilderFunc)
+            => Append(eventConfiguration, addBuilderFunc, removeBuilderFunc);
 
         /// <inheritdoc/>
-        IStructBuilder IIndexerDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IIndexerConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory), null, null);
+        IStructBuilder IIndexerDeclarationBuilder<IStructBuilder>.Append(IIndexerConfiguration indexerConfiguration)
+            => Append(indexerConfiguration, null, null);
 
         /// <inheritdoc/>
-        IStructBuilder IIndexerDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IIndexerConfiguration> createFunc, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
-            => Append(createFunc(_configurationFactory), getBuilderFunc, setBuilderFunc);
+        IStructBuilder IIndexerDeclarationBuilder<IStructBuilder>.Append(IIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
+            => Append(indexerConfiguration, getBuilderFunc, setBuilderFunc);
 
         /// <inheritdoc/>
-        IStructBuilder IIndexerDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IReadOnlyIndexerConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory), null, null);
+        IStructBuilder IIndexerDeclarationBuilder<IStructBuilder>.Append(IReadOnlyIndexerConfiguration indexerConfiguration)
+            => Append(indexerConfiguration, null, null);
 
         /// <inheritdoc/>
-        IStructBuilder IIndexerDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IReadOnlyIndexerConfiguration> createFunc, Action<ISourceBuilder> getBuilderFunc)
-            => Append(createFunc(_configurationFactory), getBuilderFunc, null);
+        IStructBuilder IIndexerDeclarationBuilder<IStructBuilder>.Append(IReadOnlyIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc)
+            => Append(indexerConfiguration, getBuilderFunc, null);
 
         /// <inheritdoc/>
-        IStructBuilder IIndexerDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IWriteOnlyIndexerConfiguration> createFunc, Action<ISourceBuilder> setBuilderFunc)
-            => Append(createFunc(_configurationFactory), null, setBuilderFunc);
+        IStructBuilder IIndexerDeclarationBuilder<IStructBuilder>.Append(IWriteOnlyIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> setBuilderFunc)
+            => Append(indexerConfiguration, null, setBuilderFunc);
 
         /// <inheritdoc/>
-        IStructBuilder IConstructorDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IConstructorConfiguration> createFunc, Action<ISourceBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        IStructBuilder IConstructorDeclarationBuilder<IStructBuilder>.Append(IConstructorConfiguration constructorConfiguration, Action<ISourceBuilder> builderFunc)
+            => Append(constructorConfiguration, builderFunc);
 
         /// <inheritdoc/>
-        IStructBuilder IConstructorDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IStaticConstructorConfiguration> createFunc, Action<ISourceBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        IStructBuilder IConstructorDeclarationBuilder<IStructBuilder>.Append(IStaticConstructorConfiguration staticConstructorConfiguration, Action<ISourceBuilder> builderFunc)
+            => Append(staticConstructorConfiguration, builderFunc);
 
         /// <inheritdoc/>
-        IStructBuilder IEnumDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IEnumConfiguration> createFunc, Action<IEnumBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        IStructBuilder IEnumDeclarationBuilder<IStructBuilder>.Append(IEnumConfiguration enumConfiguration, Action<IEnumBuilder> builderFunc)
+            => Append(enumConfiguration, builderFunc);
 
         /// <inheritdoc/>
-        IStructBuilder IInterfaceDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IInterfaceConfguration> createFunc, Action<IInterfaceBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        IStructBuilder IInterfaceDeclarationBuilder<IStructBuilder>.Append(IInterfaceConfguration interfaceConfguration, Action<IInterfaceBuilder> builderFunc)
+            => Append(interfaceConfguration, builderFunc);
 
         /// <inheritdoc/>
-        IStructBuilder IClassDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IClassConfiguration> createFunc, Action<IClassBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        IStructBuilder IClassDeclarationBuilder<IStructBuilder>.Append(IClassConfiguration classConfiguration, Action<IClassBuilder> builderFunc)
+            => Append(classConfiguration, builderFunc);
 
         /// <inheritdoc/>
-        IStructBuilder IStructDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IStructConfiguration> createFunc, Action<IStructBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        IStructBuilder IStructDeclarationBuilder<IStructBuilder>.Append(IStructConfiguration structConfiguration, Action<IStructBuilder> builderFunc)
+            => Append(structConfiguration, builderFunc);
 
         /// <inheritdoc/>
-        IStructBuilder IRecordDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IRecordConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory), null);
+        IStructBuilder IRecordDeclarationBuilder<IStructBuilder>.Append(IRecordConfiguration recordConfiguration)
+            => Append(recordConfiguration, null);
 
         /// <inheritdoc/>
-        IStructBuilder IRecordDeclarationBuilder<IStructBuilder, IStructMemberFactory>.Append(Func<IStructMemberFactory, IRecordConfiguration> createFunc, Action<IRecordBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        IStructBuilder IRecordDeclarationBuilder<IStructBuilder>.Append(IRecordConfiguration recordConfiguration, Action<IRecordBuilder> builderFunc)
+            => Append(recordConfiguration, builderFunc);
 
         /// <inheritdoc/>
         IStructBuilder ISourceBuilder<IStructBuilder>.Append(string value)

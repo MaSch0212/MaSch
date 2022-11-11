@@ -5,7 +5,7 @@ public interface IParameterConfiguration : ISupportsCodeAttributeConfiguration<I
     void WriteTo(ISourceBuilder sourceBuilder, bool lineBreakAfterCodeAttribute);
 }
 
-internal sealed class ParameterConfiguration : CodeConfiguration, IParameterConfiguration
+internal sealed class ParameterConfiguration : CodeConfigurationBase, IParameterConfiguration
 {
     private readonly string _type;
     private readonly string _name;

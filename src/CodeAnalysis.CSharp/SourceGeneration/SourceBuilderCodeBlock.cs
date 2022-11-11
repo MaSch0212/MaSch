@@ -9,6 +9,7 @@ public readonly struct SourceBuilderCodeBlock : IDisposable
     private readonly ISourceBuilder _builder;
     private readonly string? _endContent;
     private readonly bool _changeIndent;
+    private readonly string? _lastTypeName;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SourceBuilderCodeBlock"/> struct.
@@ -21,6 +22,7 @@ public readonly struct SourceBuilderCodeBlock : IDisposable
         _builder = builder;
         _endContent = endContent;
         _changeIndent = changeIndent;
+        _lastTypeName = builder.CurrentTypeName;
 
         if (changeIndent)
             _builder.CurrentIndentLevel++;
@@ -33,5 +35,6 @@ public readonly struct SourceBuilderCodeBlock : IDisposable
             _builder.CurrentIndentLevel--;
         if (_endContent is not null)
             _ = _builder.AppendLine(_endContent);
+        _builder.CurrentTypeName = _lastTypeName;
     }
 }

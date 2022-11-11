@@ -7,12 +7,12 @@ public interface IStaticConstructorConfiguration : ISupportsCodeAttributeConfigu
     IStaticConstructorConfiguration AsExpression(bool placeInNewLine = true);
 }
 
-internal sealed class StaticConstructorConfiguration : CodeConfiguration, IStaticConstructorConfiguration
+internal sealed class StaticConstructorConfiguration : CodeConfigurationBase, IStaticConstructorConfiguration
 {
-    private readonly string _containingTypeName;
+    private readonly string? _containingTypeName;
     private readonly List<ICodeAttributeConfiguration> _codeAttributes = new();
 
-    public StaticConstructorConfiguration(string containingTypeName)
+    public StaticConstructorConfiguration(string? containingTypeName)
     {
         _containingTypeName = containingTypeName;
     }
@@ -44,7 +44,7 @@ internal sealed class StaticConstructorConfiguration : CodeConfiguration, IStati
             sourceBuilder.AppendLine();
         }
 
-        sourceBuilder.Append("static ").Append(_containingTypeName).Append("()");
+        sourceBuilder.Append("static ").Append(_containingTypeName ?? sourceBuilder.CurrentTypeName).Append("()");
     }
 
     ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)

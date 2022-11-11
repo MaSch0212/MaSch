@@ -1,23 +1,22 @@
 ﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders;
 using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
-using MaSch.CodeAnalysis.CSharp.SourceGeneration.ConfigurationFactories;
 
 namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders
 {
     public interface IRecordBuilder :
-        IFieldDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-        IDelegateDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-        IPropertyDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-        IMethodDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-        IEventDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-        IIndexerDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-        IConstructorDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-        IFinalizerDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-        IEnumDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-        IInterfaceDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-        IClassDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-        IStructDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
-        IRecordDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>,
+        IFieldDeclarationBuilder<IRecordBuilder>,
+        IDelegateDeclarationBuilder<IRecordBuilder>,
+        IPropertyDeclarationBuilder<IRecordBuilder>,
+        IMethodDeclarationBuilder<IRecordBuilder>,
+        IEventDeclarationBuilder<IRecordBuilder>,
+        IIndexerDeclarationBuilder<IRecordBuilder>,
+        IConstructorDeclarationBuilder<IRecordBuilder>,
+        IFinalizerDeclarationBuilder<IRecordBuilder>,
+        IEnumDeclarationBuilder<IRecordBuilder>,
+        IInterfaceDeclarationBuilder<IRecordBuilder>,
+        IClassDeclarationBuilder<IRecordBuilder>,
+        IStructDeclarationBuilder<IRecordBuilder>,
+        IRecordDeclarationBuilder<IRecordBuilder>,
         ISourceBuilder<IRecordBuilder>
     {
     }
@@ -28,104 +27,104 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
     partial class SourceBuilder : IRecordBuilder
     {
         /// <inheritdoc/>
-        IRecordBuilder IFieldDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IFieldConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory));
+        IRecordBuilder IFieldDeclarationBuilder<IRecordBuilder>.Append(IFieldConfiguration fieldConfiguration)
+            => Append(fieldConfiguration);
 
         /// <inheritdoc/>
-        IRecordBuilder IDelegateDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IDelegateConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory));
+        IRecordBuilder IDelegateDeclarationBuilder<IRecordBuilder>.Append(IDelegateConfiguration delegateConfiguration)
+            => Append(delegateConfiguration);
 
         /// <inheritdoc/>
-        IRecordBuilder IPropertyDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IPropertyConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory), null, null);
+        IRecordBuilder IPropertyDeclarationBuilder<IRecordBuilder>.Append(IPropertyConfiguration propertyConfiguration)
+            => Append(propertyConfiguration, null, null);
 
         /// <inheritdoc/>
-        IRecordBuilder IPropertyDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IPropertyConfiguration> createFunc, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
-            => Append(createFunc(_configurationFactory), getBuilderFunc, setBuilderFunc);
+        IRecordBuilder IPropertyDeclarationBuilder<IRecordBuilder>.Append(IPropertyConfiguration propertyConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
+            => Append(propertyConfiguration, getBuilderFunc, setBuilderFunc);
 
         /// <inheritdoc/>
-        IRecordBuilder IPropertyDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IReadOnlyPropertyConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory), null, null);
+        IRecordBuilder IPropertyDeclarationBuilder<IRecordBuilder>.Append(IReadOnlyPropertyConfiguration propertyConfiguration)
+            => Append(propertyConfiguration, null, null);
 
         /// <inheritdoc/>
-        IRecordBuilder IPropertyDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IReadOnlyPropertyConfiguration> createFunc, Action<ISourceBuilder> getBuilderFunc)
-            => Append(createFunc(_configurationFactory), getBuilderFunc, null);
+        IRecordBuilder IPropertyDeclarationBuilder<IRecordBuilder>.Append(IReadOnlyPropertyConfiguration propertyConfiguration, Action<ISourceBuilder> getBuilderFunc)
+            => Append(propertyConfiguration, getBuilderFunc, null);
 
         /// <inheritdoc/>
-        IRecordBuilder IPropertyDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IWriteOnlyPropertyConfiguration> createFunc, Action<ISourceBuilder> setBuilderFunc)
-            => Append(createFunc(_configurationFactory), null, setBuilderFunc);
+        IRecordBuilder IPropertyDeclarationBuilder<IRecordBuilder>.Append(IWriteOnlyPropertyConfiguration propertyConfiguration, Action<ISourceBuilder> setBuilderFunc)
+            => Append(propertyConfiguration, null, setBuilderFunc);
 
         /// <inheritdoc/>
-        IRecordBuilder IMethodDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IMethodConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory), null);
+        IRecordBuilder IMethodDeclarationBuilder<IRecordBuilder>.Append(IMethodConfiguration methodConfiguration)
+            => Append(methodConfiguration, null);
 
         /// <inheritdoc/>
-        IRecordBuilder IMethodDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IMethodConfiguration> createFunc, Action<ISourceBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        IRecordBuilder IMethodDeclarationBuilder<IRecordBuilder>.Append(IMethodConfiguration methodConfiguration, Action<ISourceBuilder> builderFunc)
+            => Append(methodConfiguration, builderFunc);
 
         /// <inheritdoc/>
-        IRecordBuilder IEventDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IEventConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory), null, null);
+        IRecordBuilder IEventDeclarationBuilder<IRecordBuilder>.Append(IEventConfiguration eventConfiguration)
+            => Append(eventConfiguration, null, null);
 
         /// <inheritdoc/>
-        IRecordBuilder IEventDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IEventConfiguration> createFunc, Action<ISourceBuilder> addBuilderFunc, Action<ISourceBuilder> removeBuilderFunc)
-            => Append(createFunc(_configurationFactory), addBuilderFunc, removeBuilderFunc);
+        IRecordBuilder IEventDeclarationBuilder<IRecordBuilder>.Append(IEventConfiguration eventConfiguration, Action<ISourceBuilder> addBuilderFunc, Action<ISourceBuilder> removeBuilderFunc)
+            => Append(eventConfiguration, addBuilderFunc, removeBuilderFunc);
 
         /// <inheritdoc/>
-        IRecordBuilder IIndexerDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IIndexerConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory), null, null);
+        IRecordBuilder IIndexerDeclarationBuilder<IRecordBuilder>.Append(IIndexerConfiguration indexerConfiguration)
+            => Append(indexerConfiguration, null, null);
 
         /// <inheritdoc/>
-        IRecordBuilder IIndexerDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IIndexerConfiguration> createFunc, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
-            => Append(createFunc(_configurationFactory), getBuilderFunc, setBuilderFunc);
+        IRecordBuilder IIndexerDeclarationBuilder<IRecordBuilder>.Append(IIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
+            => Append(indexerConfiguration, getBuilderFunc, setBuilderFunc);
 
         /// <inheritdoc/>
-        IRecordBuilder IIndexerDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IReadOnlyIndexerConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory), null, null);
+        IRecordBuilder IIndexerDeclarationBuilder<IRecordBuilder>.Append(IReadOnlyIndexerConfiguration indexerConfiguration)
+            => Append(indexerConfiguration, null, null);
 
         /// <inheritdoc/>
-        IRecordBuilder IIndexerDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IReadOnlyIndexerConfiguration> createFunc, Action<ISourceBuilder> getBuilderFunc)
-            => Append(createFunc(_configurationFactory), getBuilderFunc, null);
+        IRecordBuilder IIndexerDeclarationBuilder<IRecordBuilder>.Append(IReadOnlyIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc)
+            => Append(indexerConfiguration, getBuilderFunc, null);
 
         /// <inheritdoc/>
-        IRecordBuilder IIndexerDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IWriteOnlyIndexerConfiguration> createFunc, Action<ISourceBuilder> setBuilderFunc)
-            => Append(createFunc(_configurationFactory), null, setBuilderFunc);
+        IRecordBuilder IIndexerDeclarationBuilder<IRecordBuilder>.Append(IWriteOnlyIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> setBuilderFunc)
+            => Append(indexerConfiguration, null, setBuilderFunc);
 
         /// <inheritdoc/>
-        IRecordBuilder IConstructorDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IConstructorConfiguration> createFunc, Action<ISourceBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        IRecordBuilder IConstructorDeclarationBuilder<IRecordBuilder>.Append(IConstructorConfiguration constructorConfiguration, Action<ISourceBuilder> builderFunc)
+            => Append(constructorConfiguration, builderFunc);
 
         /// <inheritdoc/>
-        IRecordBuilder IConstructorDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IStaticConstructorConfiguration> createFunc, Action<ISourceBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        IRecordBuilder IConstructorDeclarationBuilder<IRecordBuilder>.Append(IStaticConstructorConfiguration staticConstructorConfiguration, Action<ISourceBuilder> builderFunc)
+            => Append(staticConstructorConfiguration, builderFunc);
 
         /// <inheritdoc/>
-        IRecordBuilder IFinalizerDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IFinalizerConfiguration> createFunc, Action<ISourceBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        IRecordBuilder IFinalizerDeclarationBuilder<IRecordBuilder>.Append(IFinalizerConfiguration finalizerConfiguration, Action<ISourceBuilder> builderFunc)
+            => Append(finalizerConfiguration, builderFunc);
 
         /// <inheritdoc/>
-        IRecordBuilder IEnumDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IEnumConfiguration> createFunc, Action<IEnumBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        IRecordBuilder IEnumDeclarationBuilder<IRecordBuilder>.Append(IEnumConfiguration enumConfiguration, Action<IEnumBuilder> builderFunc)
+            => Append(enumConfiguration, builderFunc);
 
         /// <inheritdoc/>
-        IRecordBuilder IInterfaceDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IInterfaceConfguration> createFunc, Action<IInterfaceBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        IRecordBuilder IInterfaceDeclarationBuilder<IRecordBuilder>.Append(IInterfaceConfguration interfaceConfguration, Action<IInterfaceBuilder> builderFunc)
+            => Append(interfaceConfguration, builderFunc);
 
         /// <inheritdoc/>
-        IRecordBuilder IClassDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IClassConfiguration> createFunc, Action<IClassBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        IRecordBuilder IClassDeclarationBuilder<IRecordBuilder>.Append(IClassConfiguration classConfiguration, Action<IClassBuilder> builderFunc)
+            => Append(classConfiguration, builderFunc);
 
         /// <inheritdoc/>
-        IRecordBuilder IStructDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IStructConfiguration> createFunc, Action<IStructBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        IRecordBuilder IStructDeclarationBuilder<IRecordBuilder>.Append(IStructConfiguration structConfiguration, Action<IStructBuilder> builderFunc)
+            => Append(structConfiguration, builderFunc);
 
         /// <inheritdoc/>
-        IRecordBuilder IRecordDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IRecordConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory), null);
+        IRecordBuilder IRecordDeclarationBuilder<IRecordBuilder>.Append(IRecordConfiguration recordConfiguration)
+            => Append(recordConfiguration, null);
 
         /// <inheritdoc/>
-        IRecordBuilder IRecordDeclarationBuilder<IRecordBuilder, IRecordMemberFactory>.Append(Func<IRecordMemberFactory, IRecordConfiguration> createFunc, Action<IRecordBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        IRecordBuilder IRecordDeclarationBuilder<IRecordBuilder>.Append(IRecordConfiguration recordConfiguration, Action<IRecordBuilder> builderFunc)
+            => Append(recordConfiguration, builderFunc);
 
         /// <inheritdoc/>
         IRecordBuilder ISourceBuilder<IRecordBuilder>.Append(string value)

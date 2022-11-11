@@ -1,6 +1,6 @@
 ﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
-internal abstract class MemberConfiguration<T> : CodeConfiguration, IMemberConfiguration<T>
+internal abstract class MemberConfiguration<T> : CodeConfigurationBase, IMemberConfiguration<T>
     where T : IMemberConfiguration<T>
 {
     private readonly string _memberName;

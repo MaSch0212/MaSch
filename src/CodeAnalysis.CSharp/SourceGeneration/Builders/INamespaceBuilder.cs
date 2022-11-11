@@ -1,17 +1,16 @@
 ﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders;
 using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
-using MaSch.CodeAnalysis.CSharp.SourceGeneration.ConfigurationFactories;
 
 namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders
 {
     public interface INamespaceBuilder :
-        INamespaceDeclarationBuilder<INamespaceBuilder, INamespaceMemberFactory>,
-        IDelegateDeclarationBuilder<INamespaceBuilder, INamespaceMemberFactory>,
-        IEnumDeclarationBuilder<INamespaceBuilder, INamespaceMemberFactory>,
-        IInterfaceDeclarationBuilder<INamespaceBuilder, INamespaceMemberFactory>,
-        IClassDeclarationBuilder<INamespaceBuilder, INamespaceMemberFactory>,
-        IStructDeclarationBuilder<INamespaceBuilder, INamespaceMemberFactory>,
-        IRecordDeclarationBuilder<INamespaceBuilder, INamespaceMemberFactory>,
+        INamespaceDeclarationBuilder<INamespaceBuilder>,
+        IDelegateDeclarationBuilder<INamespaceBuilder>,
+        IEnumDeclarationBuilder<INamespaceBuilder>,
+        IInterfaceDeclarationBuilder<INamespaceBuilder>,
+        IClassDeclarationBuilder<INamespaceBuilder>,
+        IStructDeclarationBuilder<INamespaceBuilder>,
+        IRecordDeclarationBuilder<INamespaceBuilder>,
         ISourceBuilder<INamespaceBuilder>
     {
     }
@@ -22,36 +21,36 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
     partial class SourceBuilder : INamespaceBuilder
     {
         /// <inheritdoc/>
-        INamespaceBuilder INamespaceDeclarationBuilder<INamespaceBuilder, INamespaceMemberFactory>.Append(Func<INamespaceMemberFactory, INamespaceConfiguration> createFunc, Action<INamespaceBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        INamespaceBuilder INamespaceDeclarationBuilder<INamespaceBuilder>.Append(INamespaceConfiguration namespaceConfiguration, Action<INamespaceBuilder> builderFunc)
+            => Append(namespaceConfiguration, builderFunc);
 
         /// <inheritdoc/>
-        INamespaceBuilder IDelegateDeclarationBuilder<INamespaceBuilder, INamespaceMemberFactory>.Append(Func<INamespaceMemberFactory, IDelegateConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory));
+        INamespaceBuilder IDelegateDeclarationBuilder<INamespaceBuilder>.Append(IDelegateConfiguration delegateConfiguration)
+            => Append(delegateConfiguration);
 
         /// <inheritdoc/>
-        INamespaceBuilder IEnumDeclarationBuilder<INamespaceBuilder, INamespaceMemberFactory>.Append(Func<INamespaceMemberFactory, IEnumConfiguration> createFunc, Action<IEnumBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        INamespaceBuilder IEnumDeclarationBuilder<INamespaceBuilder>.Append(IEnumConfiguration enumConfiguration, Action<IEnumBuilder> builderFunc)
+            => Append(enumConfiguration, builderFunc);
 
         /// <inheritdoc/>
-        INamespaceBuilder IInterfaceDeclarationBuilder<INamespaceBuilder, INamespaceMemberFactory>.Append(Func<INamespaceMemberFactory, IInterfaceConfguration> createFunc, Action<IInterfaceBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        INamespaceBuilder IInterfaceDeclarationBuilder<INamespaceBuilder>.Append(IInterfaceConfguration interfaceConfguration, Action<IInterfaceBuilder> builderFunc)
+            => Append(interfaceConfguration, builderFunc);
 
         /// <inheritdoc/>
-        INamespaceBuilder IClassDeclarationBuilder<INamespaceBuilder, INamespaceMemberFactory>.Append(Func<INamespaceMemberFactory, IClassConfiguration> createFunc, Action<IClassBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        INamespaceBuilder IClassDeclarationBuilder<INamespaceBuilder>.Append(IClassConfiguration classConfiguration, Action<IClassBuilder> builderFunc)
+            => Append(classConfiguration, builderFunc);
 
         /// <inheritdoc/>
-        INamespaceBuilder IStructDeclarationBuilder<INamespaceBuilder, INamespaceMemberFactory>.Append(Func<INamespaceMemberFactory, IStructConfiguration> createFunc, Action<IStructBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        INamespaceBuilder IStructDeclarationBuilder<INamespaceBuilder>.Append(IStructConfiguration structConfiguration, Action<IStructBuilder> builderFunc)
+            => Append(structConfiguration, builderFunc);
 
         /// <inheritdoc/>
-        INamespaceBuilder IRecordDeclarationBuilder<INamespaceBuilder, INamespaceMemberFactory>.Append(Func<INamespaceMemberFactory, IRecordConfiguration> createFunc)
-            => Append(createFunc(_configurationFactory), null);
+        INamespaceBuilder IRecordDeclarationBuilder<INamespaceBuilder>.Append(IRecordConfiguration recordConfiguration)
+            => Append(recordConfiguration, null);
 
         /// <inheritdoc/>
-        INamespaceBuilder IRecordDeclarationBuilder<INamespaceBuilder, INamespaceMemberFactory>.Append(Func<INamespaceMemberFactory, IRecordConfiguration> createFunc, Action<IRecordBuilder> builderFunc)
-            => Append(createFunc(_configurationFactory), builderFunc);
+        INamespaceBuilder IRecordDeclarationBuilder<INamespaceBuilder>.Append(IRecordConfiguration recordConfiguration, Action<IRecordBuilder> builderFunc)
+            => Append(recordConfiguration, builderFunc);
 
         /// <inheritdoc/>
         INamespaceBuilder ISourceBuilder<INamespaceBuilder>.Append(string value)
