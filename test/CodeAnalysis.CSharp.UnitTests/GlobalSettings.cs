@@ -17,13 +17,14 @@ public static class GlobalSettings
 
     private static PathInfo DerivePathInfo(string sourceFile, string projectDirectory, Type type, MethodInfo method)
     {
-        var subDir = string.Empty;
-        if (sourceFile.StartsWith(projectDirectory))
-            subDir = Path.GetDirectoryName(sourceFile)?.Substring(projectDirectory.Length).Trim(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        var subDir = type.Namespace!.Substring(typeof(GlobalSettings).Namespace!.Length + 1).Replace('.', Path.DirectorySeparatorChar);
+        var typeName = type.Name;
+        if (typeName.EndsWith("Tests"))
+            typeName = typeName.Substring(0, typeName.Length - 5);
 
         return new(
-            directory: Path.Combine(projectDirectory, ".verify", subDir ?? string.Empty),
-            typeName: type.Name,
+            directory: Path.Combine(projectDirectory, ".verify", subDir, typeName),
+            typeName: "Test",
             methodName: method.Name);
     }
 }

@@ -1,0 +1,19 @@
+﻿public class MyClass1
+{
+    // Class Content
+}
+
+static class MyClass2
+{
+    // Class Content
+}
+
+internal sealed class MyClass3
+{
+    // Class Content
+}
+
+internal sealed partial class MyClass3
+{
+    // Class Content
+}

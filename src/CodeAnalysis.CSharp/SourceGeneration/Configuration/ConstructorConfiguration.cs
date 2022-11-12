@@ -77,7 +77,9 @@ internal sealed class ConstructorConfiguration : MemberConfiguration<IConstructo
         WriteCodeAttributesTo(sourceBuilder);
         WriteKeywordsTo(sourceBuilder);
         WriteNameTo(sourceBuilder);
+        sourceBuilder.Append('(');
         ParameterConfiguration.WriteParametersTo(_parameters, sourceBuilder, MultilineParameters);
+        sourceBuilder.Append(')');
 
         if (_superConstructor is not null)
         {

@@ -1,0 +1,8 @@
+﻿[MyAttr(4711, "Test")]
+[Obsolete]
+internal sealed partial class MyClass<in T1, out T2> : object, IDisposable, ISerializable
+    where T1 : class, IDisposable
+    where T2 : struct
+{
+    // Class Content
+}

@@ -55,6 +55,10 @@ internal sealed class RecordConfiguration : TypeConfiguration<IRecordConfigurati
     private void WriteParametersTo(ISourceBuilder sourceBuilder)
     {
         if (_parameters.Count > 0)
+        {
+            sourceBuilder.Append('(');
             ParameterConfiguration.WriteParametersTo(_parameters, sourceBuilder, MultilineParameters);
+            sourceBuilder.Append(')');
+        }
     }
 }

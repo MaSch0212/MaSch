@@ -6,7 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Using Include="FluentAssertions"/>
+    <Using Include="FluentAssertions" />
+    <Using Include="MaSch.CodeAnalysis.CSharp.SourceGeneration.CodeConfiguration" Static="true"/>
   </ItemGroup>
   
   <ItemGroup>

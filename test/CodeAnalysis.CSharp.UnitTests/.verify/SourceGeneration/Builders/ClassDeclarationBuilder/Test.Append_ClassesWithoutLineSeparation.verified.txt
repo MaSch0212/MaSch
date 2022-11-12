@@ -1,0 +1,8 @@
+﻿class MyClass1
+{
+    // Class Content
+}
+class MyClass2
+{
+    // Class Content
+}

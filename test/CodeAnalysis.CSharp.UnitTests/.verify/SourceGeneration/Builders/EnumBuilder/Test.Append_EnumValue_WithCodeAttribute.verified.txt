@@ -1,0 +1,8 @@
+﻿enum MyEnum
+{
+    [Obsolete]
+    Value1,
+    [MyAttribute(4711, "Hello")]
+    [Obsolete]
+    Value2,
+}

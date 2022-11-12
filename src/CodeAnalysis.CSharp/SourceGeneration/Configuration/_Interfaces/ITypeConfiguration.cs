@@ -21,11 +21,17 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
     /// </summary>
     public static class TypeConfigurationExtensions
     {
-        public static TConfig AsFileScoped<TConfig>(this TConfig builder)
+        /// <summary>
+        /// Marks the code configuration as <c>file</c>.
+        /// </summary>
+        /// <typeparam name="TConfig">The type of code configuration.</typeparam>
+        /// <param name="config">The code configuration to change.</param>
+        /// <returns>A self-reference to <paramref name="config"/>.</returns>
+        public static TConfig AsFileScoped<TConfig>(this TConfig config)
             where TConfig : ITypeConfiguration
         {
-            builder.WithAccessModifier(AccessModifier.File);
-            return builder;
+            config.WithAccessModifier(AccessModifier.File);
+            return config;
         }
     }
 }

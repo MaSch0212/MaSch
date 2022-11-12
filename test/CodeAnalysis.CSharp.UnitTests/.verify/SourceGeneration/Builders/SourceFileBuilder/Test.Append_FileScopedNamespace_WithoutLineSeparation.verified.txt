@@ -1,0 +1,2 @@
+﻿// Header
+namespace My.Fancy.Namespace;

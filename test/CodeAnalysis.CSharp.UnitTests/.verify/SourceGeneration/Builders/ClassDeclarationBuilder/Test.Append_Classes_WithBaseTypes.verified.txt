@@ -1,0 +1,24 @@
+﻿class MyClass1 : object
+{
+    // Class Content
+}
+
+class MyClass2 : IDisposable
+{
+    // Class Content
+}
+
+class MyClass3 : IDisposable, ISerializable
+{
+    // Class Content
+}
+
+class MyClass4 : object, IDisposable
+{
+    // Class Content
+}
+
+class MyClass5 : object, IDisposable, ISerializable
+{
+    // Class Content
+}

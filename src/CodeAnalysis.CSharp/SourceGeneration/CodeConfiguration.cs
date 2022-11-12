@@ -113,4 +113,9 @@ public static class CodeConfiguration
     {
         return new EnumValueConfiguration(name, value);
     }
+
+    public static ICodeAttributeConfiguration AssemblyAttribute(string attributeTypeName)
+    {
+        return new CodeAttributeConfiguration(attributeTypeName).OnAssembly();
+    }
 }

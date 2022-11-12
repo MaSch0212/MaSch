@@ -70,7 +70,9 @@ internal abstract class MethodConfiguration<T> : GenericMemberConfiguration<T>, 
 
     protected void WriteParametersTo(ISourceBuilder sourceBuilder)
     {
+        sourceBuilder.Append('(');
         ParameterConfiguration.WriteParametersTo(_parameters, sourceBuilder, MultilineParameters);
+        sourceBuilder.Append(')');
     }
 }
 
@@ -89,9 +91,7 @@ internal sealed class MethodConfiguration : MethodConfiguration<IMethodConfigura
         WriteKeywordsTo(sourceBuilder);
         WriteReturnTypeTo(sourceBuilder);
         WriteNameTo(sourceBuilder);
-        sourceBuilder.Append('(');
         WriteParametersTo(sourceBuilder);
-        sourceBuilder.Append(')');
         WriteGenericConstraintsTo(sourceBuilder);
     }
 }

@@ -1,0 +1,4 @@
+﻿class MyClass
+{
+    // Class Content
+}

@@ -29,12 +29,8 @@ internal sealed class ParameterConfiguration : CodeConfigurationBase, IParameter
 
     public static void WriteParametersTo(IList<IParameterConfiguration> parameters, ISourceBuilder sourceBuilder, bool multiline)
     {
-        if (parameters.Count == 0)
-            return;
-
         using (sourceBuilder.Indent())
         {
-            sourceBuilder.Append('(');
             for (int i = 0; i < parameters.Count; i++)
             {
                 if (multiline)
@@ -46,8 +42,6 @@ internal sealed class ParameterConfiguration : CodeConfigurationBase, IParameter
                 if (i < parameters.Count - 1)
                     sourceBuilder.Append(',');
             }
-
-            sourceBuilder.Append(')');
         }
     }
 

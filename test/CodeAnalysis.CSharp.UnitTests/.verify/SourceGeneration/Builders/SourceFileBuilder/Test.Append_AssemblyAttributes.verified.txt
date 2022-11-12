@@ -1,0 +1,3 @@
+﻿[assembly: MyAttr1]
+[assembly: MyAttr2(4711)]
+[assembly: MyAttr3(4711, "Test")]

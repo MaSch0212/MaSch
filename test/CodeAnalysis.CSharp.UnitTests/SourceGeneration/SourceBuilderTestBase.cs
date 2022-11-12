@@ -5,7 +5,6 @@ using VerifyTests;
 
 namespace MaSch.CodeAnalysis.CSharp.UnitTests.SourceGeneration;
 
-[TestClass]
 public class SourceBuilderTestBase<T> : VerifyBase
     where T : ISourceBuilder
 {
@@ -42,13 +41,18 @@ public class SourceBuilderTestBase<T> : VerifyBase
 
     protected async Task VerifyBuilder()
     {
-        await Verify(Builder.ToString());
+        await Verify(Builder, null);
     }
 
     protected async Task VerifyBuilder(params object?[] parameters)
     {
         var settings = new VerifySettings();
         settings.UseParameters(parameters);
-        await Verify(Builder.ToString(), settings);
+        await Verify(Builder, settings);
+    }
+
+    protected async Task Verify(ISourceBuilder builder, VerifySettings? settings)
+    {
+        await Verify(builder.ToString(), settings);
     }
 }

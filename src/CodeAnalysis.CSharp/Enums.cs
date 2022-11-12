@@ -65,11 +65,8 @@ public enum MemberKeyword : uint
     Abstract = 0x40,
     Virtual = 0x80,
     Extern = 0x100,
-    Ref = 0x200,
-    Unsafe = 0x400,
-    Operator = 0x800,
-    Explicit = 0x1000,
-    Implcitit = 0x2000,
+    Unsafe = 0x200,
+    Ref = 0x400,
     Partial = 0x4000,
 }
 
@@ -215,12 +212,6 @@ public static class MemberKeywordExtensions
             prefix += "ref ";
         if (keyword.HasFlag(MemberKeyword.Unsafe))
             prefix += "unsafe ";
-        if (keyword.HasFlag(MemberKeyword.Operator))
-            prefix += "operator ";
-        if (keyword.HasFlag(MemberKeyword.Explicit))
-            prefix += "explicit ";
-        if (keyword.HasFlag(MemberKeyword.Implcitit))
-            prefix += "implicit ";
         if (keyword.HasFlag(MemberKeyword.Partial))
             prefix += "partial ";
         return prefix;

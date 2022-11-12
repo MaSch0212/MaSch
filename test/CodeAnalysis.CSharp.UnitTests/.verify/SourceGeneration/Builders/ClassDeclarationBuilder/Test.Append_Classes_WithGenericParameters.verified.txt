@@ -1,0 +1,38 @@
+﻿class MyClass1<T>
+{
+    // Class Content
+}
+
+class MyClass2<T>
+    where T : class
+{
+    // Class Content
+}
+
+class MyClass3<T>
+    where T : class, IDisposable
+{
+    // Class Content
+}
+
+class MyClass4<T1, T2>
+    where T1 : class
+    where T2 : struct
+{
+    // Class Content
+}
+
+class MyClass5<T1, T2>
+{
+    // Class Content
+}
+
+class MyClass6<in T>
+{
+    // Class Content
+}
+
+class MyClass7<out T>
+{
+    // Class Content
+}

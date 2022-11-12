@@ -26,4 +26,23 @@
     <Using Include="Microsoft.CodeAnalysis.Text" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="SourceGeneration\CodeConfigurationKeywordsExtensions.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CodeConfigurationKeywordsExtensions.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="SourceGeneration\CodeConfigurationKeywordsExtensions.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CodeConfigurationKeywordsExtensions.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>

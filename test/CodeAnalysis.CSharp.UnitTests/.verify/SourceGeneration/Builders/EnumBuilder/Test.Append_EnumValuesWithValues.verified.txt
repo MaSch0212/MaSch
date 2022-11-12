@@ -1,0 +1,6 @@
+﻿enum MyEnum
+{
+    Value1 = 0x1,
+    Value2 = 0x2,
+    Value3 = 0x4,
+}
