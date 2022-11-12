@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- General Project info -->
+    <TargetFrameworks>$(TfmNetCoreApp);$(TfmNetFramework)</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="FluentAssertions"/>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <MaSchReference Include="CodeAnalysis.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Verify.MSTest" />
+    <PackageReference Include="FluentAssertions" />
+  </ItemGroup>
+
+</Project>

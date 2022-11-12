@@ -19,6 +19,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Generators\ObservableObject\**" />
+    <EmbeddedResource Remove="Generators\ObservableObject\**" />
+    <None Remove="Generators\ObservableObject\**" />
     <Using Remove="*" />
   </ItemGroup>
 
@@ -41,10 +44,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Generators.Support\MaSch.Generators.Support.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-  </ItemGroup>
   
   <ItemGroup>
     <Compile Update="Properties/Resources.Designer.cs">
@@ -60,5 +59,23 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Generators\" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\CodeAnalysis.CSharp\MaSch.CodeAnalysis.CSharp.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
+  </PropertyGroup>
+
+  <Target Name="GetDependencyTargetPaths">
+    <ItemGroup>
+      <TargetPathWithTargetPlatformMoniker Include="..\..\bin\$(Configuration)\netstandard2.0\MaSch.CodeAnalysis.CSharp.dll" IncludeRuntimeDependency="false" />
+    </ItemGroup>
+  </Target>
   
 </Project>

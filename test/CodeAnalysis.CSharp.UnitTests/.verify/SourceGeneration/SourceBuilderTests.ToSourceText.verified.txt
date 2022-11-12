@@ -1,0 +1,64 @@
+﻿{
+  Encoding: Unicode (UTF-8),
+  Source:
+namespace Test
+{
+}
+,
+  Length: 22,
+  ChecksumAlgorithm: Sha1,
+  CanBeEmbedded: true,
+  Container: {},
+  Lines: [
+    {
+      End: 14,
+      EndIncludingLineBreak: 16,
+      Span: {
+        Length: 14
+      },
+      SpanIncludingLineBreak: {
+        Length: 16
+      }
+    },
+    {
+      LineNumber: 1,
+      Start: 16,
+      End: 17,
+      EndIncludingLineBreak: 19,
+      Span: {
+        Start: 16,
+        Length: 1
+      },
+      SpanIncludingLineBreak: {
+        Start: 16,
+        Length: 3
+      }
+    },
+    {
+      LineNumber: 2,
+      Start: 19,
+      End: 20,
+      EndIncludingLineBreak: 22,
+      Span: {
+        Start: 19,
+        Length: 1
+      },
+      SpanIncludingLineBreak: {
+        Start: 19,
+        Length: 3
+      }
+    },
+    {
+      LineNumber: 3,
+      Start: 22,
+      End: 22,
+      EndIncludingLineBreak: 22,
+      Span: {
+        Start: 22
+      },
+      SpanIncludingLineBreak: {
+        Start: 22
+      }
+    }
+  ]
+}

@@ -1,5 +1,6 @@
-﻿using MaSch.Core;
-using MaSch.Generators.Support;
+﻿using MaSch.CodeAnalysis.CSharp.Extensions;
+using MaSch.CodeAnalysis.CSharp.SourceGeneration;
+using MaSch.Core;
 using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,10 +39,10 @@ public class WrapperClassGenerator : ISourceGenerator
 
         foreach (var type in query)
         {
-            var builder = new SourceBuilder();
+            var builder = SourceBuilder.Create();
 
-            using (builder.AddBlock($"namespace {type.Key.ContainingNamespace}"))
-            using (builder.AddBlock($"partial class {type.Key.Name}"))
+            using (builder.AppendBlock($"namespace {type.Key.ContainingNamespace}"))
+            using (builder.AppendBlock($"partial class {type.Key.Name}"))
             {
                 var existingMembers = type.Key.GetMembers();
                 var wrappedTypes = new List<(INamedTypeSymbol Type, string PropName)>();
@@ -63,7 +64,7 @@ public class WrapperClassGenerator : ISourceGenerator
                 if (!existingMembers.OfType<IMethodSymbol>().Any(x => x.MethodKind == MethodKind.Constructor && x.Parameters.Length > 0))
                 {
                     _ = builder.AppendLine();
-                    using (builder.AddBlock($"public {type.Key.Name}({string.Join(", ", wrappedTypes.Select(x => $"{x} wrapped{x.Type.Name}"))})"))
+                    using (builder.AppendBlock($"public {type.Key.Name}({string.Join(", ", wrappedTypes.Select(x => $"{x} wrapped{x.Type.Name}"))})"))
                     {
                         foreach (var t in wrappedTypes)
                             _ = builder.AppendLine($"{t.PropName} = wrapped{t.Type.Name};");
@@ -75,10 +76,10 @@ public class WrapperClassGenerator : ISourceGenerator
         }
     }
 
-    private static void GenerateWrapperClassRegion(SourceBuilder builder, IList<ISymbol> existingMembers, ITypeSymbol wrappedType, string wrapperPropName)
+    private static void GenerateWrapperClassRegion(ISourceBuilder builder, IList<ISymbol> existingMembers, ITypeSymbol wrappedType, string wrapperPropName)
     {
         var name = wrapperPropName;
-        using (builder.AddRegion($"{wrappedType.Name} members"))
+        using (builder.AppendRegion($"{wrappedType.Name} members"))
         {
             _ = builder.AppendLine()
                    .AppendLine($"protected {wrappedType} {name} {{ get; set; }}");
@@ -90,7 +91,7 @@ public class WrapperClassGenerator : ISourceGenerator
                 if (existingMembers.OfType<IPropertySymbol>().Any(x => x.Name == p.Name))
                     continue;
                 _ = builder.AppendLine();
-                using (builder.AddBlock($"public virtual {p.ToDefinitionString()}"))
+                using (builder.AppendBlock($"public virtual {p.ToDefinitionString()}"))
                 {
                     var usage = p.IsIndexer ? $"{name}{p.ToUsageString().Substring(4)}" : $"{name}.{p.ToUsageString()}";
                     if (p.GetMethod != null)
@@ -105,7 +106,7 @@ public class WrapperClassGenerator : ISourceGenerator
                 if (existingMembers.OfType<IEventSymbol>().Any(x => x.Name == e.Name))
                     continue;
                 _ = builder.AppendLine();
-                using (builder.AddBlock($"public virtual {e.ToDefinitionString()}"))
+                using (builder.AppendBlock($"public virtual {e.ToDefinitionString()}"))
                 {
                     if (e.AddMethod != null)
                         _ = builder.AppendLine($"add => {name}.{e.Name} += value;");

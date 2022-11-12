@@ -1,5 +1,6 @@
-﻿using MaSch.Core;
-using MaSch.Generators.Support;
+﻿using MaSch.CodeAnalysis.CSharp.Extensions;
+using MaSch.CodeAnalysis.CSharp.SourceGeneration;
+using MaSch.Core;
 using Microsoft.CodeAnalysis;
 using System;
 using System.Linq;
@@ -48,10 +49,10 @@ public class ObservableObjectGenerator : ISourceGenerator
                 _ => throw new Exception("Unknown interface type: " + interfaceType),
             };
 
-            var builder = new SourceBuilder();
+            var builder = SourceBuilder.Create();
 
-            using (builder.AddBlock($"namespace {typeSymbol.ContainingNamespace}"))
-            using (builder.AddBlock($"partial class {typeSymbol.Name} : {interfaceName}"))
+            using (builder.AppendBlock($"namespace {typeSymbol.ContainingNamespace}"))
+            using (builder.AppendBlock($"partial class {typeSymbol.Name} : {interfaceName}"))
             {
                 if (interfaceType == InterfaceType.ObservableObject)
                 {
@@ -83,15 +84,15 @@ public class ObservableObjectGenerator : ISourceGenerator
                            .AppendLine("/// <param name=\"propertyName\">Name of the property.</param>");
                 }
 
-                using (builder.AddBlock("public virtual void SetProperty<T>(ref T property, T value, [System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)"))
+                using (builder.AppendBlock("public virtual void SetProperty<T>(ref T property, T value, [System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)"))
                 {
                     if (interfaceType == InterfaceType.ObservableObject)
                     {
-                        using (builder.AddBlock("if (_attributes.ContainsKey(propertyName))"))
+                        using (builder.AppendBlock("if (_attributes.ContainsKey(propertyName))"))
                             _ = builder.AppendLine("_attributes[propertyName].UnsubscribeEvent(this);");
                         _ = builder.AppendLine("property = value;")
                                .AppendLine("NotifyPropertyChanged(propertyName);");
-                        using (builder.AddBlock("if (_attributes.ContainsKey(propertyName))"))
+                        using (builder.AppendBlock("if (_attributes.ContainsKey(propertyName))"))
                             _ = builder.AppendLine("_attributes[propertyName].SubscribeEvent(this);");
                     }
                     else
@@ -105,27 +106,27 @@ public class ObservableObjectGenerator : ISourceGenerator
                 if (interfaceType == InterfaceType.ObservableObject)
                 {
                     _ = builder.AppendLine("/// <inheritdoc/>");
-                    using (builder.AddBlock("public virtual void NotifyPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = \"\", bool notifyDependencies = true)"))
+                    using (builder.AppendBlock("public virtual void NotifyPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = \"\", bool notifyDependencies = true)"))
                     {
-                        using (builder.AddBlock("if (IsNotifyEnabled)"))
+                        using (builder.AppendBlock("if (IsNotifyEnabled)"))
                         {
                             _ = builder.AppendLine("PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));");
-                            using (builder.AddBlock("if (notifyDependencies)"))
+                            using (builder.AppendBlock("if (notifyDependencies)"))
                                 _ = builder.AppendLine("_module.NotifyDependentProperties(propertyName);");
                         }
                     }
 
                     _ = builder.AppendLine()
                            .AppendLine("/// <inheritdoc/>");
-                    using (builder.AddBlock("public virtual void NotifyCommandChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = \"\")"))
+                    using (builder.AppendBlock("public virtual void NotifyCommandChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = \"\")"))
                     {
-                        using (builder.AddBlock("if (IsNotifyEnabled)"))
+                        using (builder.AppendBlock("if (IsNotifyEnabled)"))
                             _ = builder.AppendLine("_module.NotifyCommandChanged(propertyName);");
                     }
                 }
                 else
                 {
-                    using (builder.AddBlock("protected virtual void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)"))
+                    using (builder.AppendBlock("protected virtual void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)"))
                         _ = builder.AppendLine("PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));");
                 }
             }

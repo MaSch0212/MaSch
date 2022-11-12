@@ -1,5 +1,6 @@
-﻿using MaSch.Core;
-using MaSch.Generators.Support;
+﻿using MaSch.CodeAnalysis.CSharp.Extensions;
+using MaSch.CodeAnalysis.CSharp.SourceGeneration;
+using MaSch.Core;
 using Microsoft.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -48,15 +49,15 @@ public class ObservablePropertiesGenerator : ISourceGenerator
 
         foreach (var type in query)
         {
-            var builder = new SourceBuilder();
+            var builder = SourceBuilder.Create();
 
             _ = builder.AppendLine($"#nullable {nullableProperty}")
                    .AppendLine()
                    .AppendLine("using System.Diagnostics.CodeAnalysis;")
                    .AppendLine();
 
-            using (builder.AddBlock($"namespace {type.Key.ContainingNamespace}"))
-            using (builder.AddBlock($"partial class {type.Key.Name}"))
+            using (builder.AppendBlock($"namespace {type.Key.ContainingNamespace}"))
+            using (builder.AppendBlock($"partial class {type.Key.Name}"))
             {
                 bool isFirst = true;
                 foreach (var propInfo in type)
@@ -97,16 +98,16 @@ public class ObservablePropertiesGenerator : ISourceGenerator
                             getterModifier = GetAccessModifier((AccessModifier)getterModifierKey) + " ";
                     }
 
-                    using (builder.AddBlock($"{accessModifier} {propInfo.Type.ToUsageString()} {propertyName}"))
+                    using (builder.AppendBlock($"{accessModifier} {propInfo.Type.ToUsageString()} {propertyName}"))
                     {
-                        using (builder.AddBlock($"{getterModifier}get"))
+                        using (builder.AppendBlock($"{getterModifier}get"))
                         {
                             _ = builder.AppendLine($"var result = {fieldName};")
                                    .AppendLine($"OnGet{propertyName}(ref result);")
                                    .AppendLine("return result;");
                         }
 
-                        using (builder.AddBlock($"{setterModifier}set"))
+                        using (builder.AppendBlock($"{setterModifier}set"))
                         {
                             _ = builder.AppendLine($"var previous = {fieldName};")
                                    .AppendLine($"On{propertyName}Changing(previous, ref value);")

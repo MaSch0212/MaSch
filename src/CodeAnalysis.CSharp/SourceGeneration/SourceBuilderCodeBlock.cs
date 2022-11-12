@@ -34,7 +34,12 @@ public readonly struct SourceBuilderCodeBlock : IDisposable
         if (_changeIndent)
             _builder.CurrentIndentLevel--;
         if (_endContent is not null)
+        {
+            if (_builder is SourceBuilder sourceBuilder && !sourceBuilder.IsCurrentLineEmpty)
+                _builder.AppendLine();
             _ = _builder.AppendLine(_endContent);
+        }
+
         _builder.CurrentTypeName = _lastTypeName;
     }
 }

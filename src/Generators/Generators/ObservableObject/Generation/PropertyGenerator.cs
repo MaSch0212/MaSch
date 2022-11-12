@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MaSch.Generators.Generators.ObservableObject.Generation;
 
-[MemberGenerator(typeof(ObservableObjectGeneratorContext)]
+[MemberGenerator(typeof(ObservableObjectGeneratorContext))]
 internal readonly partial struct PropertyGenerator
 {
 

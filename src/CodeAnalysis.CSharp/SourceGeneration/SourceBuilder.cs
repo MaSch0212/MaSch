@@ -51,6 +51,9 @@ public sealed partial class SourceBuilder
     /// <inheritdoc cref="ISourceBuilder.CurrentTypeName"/>
     public string? CurrentTypeName { get; set; }
 
+    internal bool IsCurrentLineEmpty => _isCurrentLineEmpty;
+    internal bool IsLastLineEmpty => _isLastLineEmpty;
+
     /// <summary>
     /// Creates a new source file builder.
     /// </summary>
@@ -124,6 +127,8 @@ public sealed partial class SourceBuilder
     /// <inheritdoc cref="ISourceBuilder.EnsurePreviousLineEmpty()" />
     public SourceBuilder EnsurePreviousLineEmpty()
     {
+        if (!_isCurrentLineEmpty)
+            AppendLine();
         if (!_isLastLineEmpty)
             AppendLine();
         return this;
@@ -151,7 +156,7 @@ public sealed partial class SourceBuilder
 
                 if (lineLength > 0)
                 {
-                    if (CurrentIndentLevel > 0 && !_isLineIndented)
+                    if (!_isLineIndented)
                         _ = _builder.Append(IndentChar, indentCount);
                     _ = _builder.Append(value, lineStartIndex, lineLength);
                 }
@@ -168,7 +173,7 @@ public sealed partial class SourceBuilder
                 _isCurrentLineEmpty = false;
         }
 
-        if (CurrentIndentLevel > 0 && !_isLineIndented && lineStartIndex < value.Length - 1)
+        if (!_isLineIndented && lineStartIndex < value.Length - 1)
         {
             _ = _builder.Append(IndentChar, indentCount);
             _isLineIndented = true;
@@ -181,7 +186,7 @@ public sealed partial class SourceBuilder
     /// <inheritdoc cref="ISourceBuilder.Append(char)" />
     public SourceBuilder Append(char value)
     {
-        if (CurrentIndentLevel > 0 && !_isLineIndented)
+        if (!_isLineIndented)
         {
             _builder.Append(IndentChar, CurrentIndentLevel * Options.IndentSize);
             _isLineIndented = CurrentIndentLevel > 0;

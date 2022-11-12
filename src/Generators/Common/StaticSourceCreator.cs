@@ -1,4 +1,4 @@
-﻿using MaSch.Generators.Support;
+﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration;
 using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Runtime.CompilerServices;
