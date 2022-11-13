@@ -1,0 +1,12 @@
+﻿[Obsolete]
+string MyProperty1 { get; set; }
+
+[MyAttr(4711, "Test")]
+[Obsolete]
+string MyProperty2 { get; set; }
+
+[property: MyAttr3]
+string MyProperty3 { get; set; }
+
+[field: MyAttr4]
+string MyProperty4 { get; set; }

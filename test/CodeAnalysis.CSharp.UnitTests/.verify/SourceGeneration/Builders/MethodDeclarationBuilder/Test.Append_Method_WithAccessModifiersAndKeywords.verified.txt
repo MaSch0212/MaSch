@@ -1,0 +1,19 @@
+﻿public void MyMethod1()
+{
+    // Method Content
+}
+
+static void MyMethod2()
+{
+    // Method Content
+}
+
+internal sealed void MyMethod3()
+{
+    // Method Content
+}
+
+internal sealed partial void MyMethod4()
+{
+    // Method Content
+}

@@ -3,9 +3,6 @@
 internal abstract class TypeConfiguration<T> : GenericMemberConfiguration<T>, ITypeConfiguration<T>
     where T : ITypeConfiguration<T>
 {
-    private readonly List<string> _interfaceImplementations = new();
-    private string? _baseType;
-
     protected TypeConfiguration(string typeName)
         : base(typeName)
     {
@@ -13,9 +10,14 @@ internal abstract class TypeConfiguration<T> : GenericMemberConfiguration<T>, IT
 
     protected override int StartCapacity => 128;
 
+    protected List<string> InterfaceImplementations { get; } = new();
+    protected string? BaseType { get; set; }
+
+    protected bool HasBaseTypes => BaseType is not null || InterfaceImplementations.Count > 0;
+
     public T DerivesFrom(string typeName)
     {
-        _baseType = typeName;
+        BaseType = typeName;
         return This;
     }
 
@@ -24,7 +26,7 @@ internal abstract class TypeConfiguration<T> : GenericMemberConfiguration<T>, IT
 
     public T Implements(string interfaceTypeName)
     {
-        _interfaceImplementations.Add(interfaceTypeName);
+        InterfaceImplementations.Add(interfaceTypeName);
         return This;
     }
 
@@ -33,12 +35,12 @@ internal abstract class TypeConfiguration<T> : GenericMemberConfiguration<T>, IT
 
     protected void WriteBaseTypesTo(ISourceBuilder sourceBuilder)
     {
-        if (_baseType is null && _interfaceImplementations.Count == 0)
+        if (!HasBaseTypes)
             return;
 
-        sourceBuilder.Append(" : ");
+        sourceBuilder.Append(": ");
 
-        var baseTypes = _baseType is null ? _interfaceImplementations : _interfaceImplementations.Prepend(_baseType);
+        var baseTypes = BaseType is null ? InterfaceImplementations : InterfaceImplementations.Prepend(BaseType);
         bool isFirst = true;
         foreach (var baseType in baseTypes)
         {

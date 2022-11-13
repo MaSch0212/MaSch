@@ -1,0 +1,24 @@
+﻿[Obsolete]
+void MyMethod1()
+{
+    // Method Content
+}
+
+[MyAttr(4711, "Test")]
+[Obsolete]
+void MyMethod2()
+{
+    // Method Content
+}
+
+[method: MyAttr3]
+void MyMethod3()
+{
+    // Method Content
+}
+
+[return: MyAttr4]
+void MyMethod4()
+{
+    // Method Content
+}

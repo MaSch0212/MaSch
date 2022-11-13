@@ -1,0 +1,8 @@
+﻿MyType()
+{
+    // Content
+}
+MyType()
+{
+    // Content
+}

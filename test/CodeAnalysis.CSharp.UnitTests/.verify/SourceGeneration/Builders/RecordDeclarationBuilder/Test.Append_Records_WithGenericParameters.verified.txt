@@ -1,0 +1,38 @@
+﻿record MyRecord1<T>
+{
+    // Record Content
+}
+
+record MyRecord2<T>
+    where T : class
+{
+    // Record Content
+}
+
+record MyRecord3<T>
+    where T : class, IDisposable
+{
+    // Record Content
+}
+
+record MyRecord4<T1, T2>
+    where T1 : class
+    where T2 : struct
+{
+    // Record Content
+}
+
+record MyRecord5<T1, T2>
+{
+    // Record Content
+}
+
+record MyRecord6<in T>
+{
+    // Record Content
+}
+
+record MyRecord7<out T>
+{
+    // Record Content
+}

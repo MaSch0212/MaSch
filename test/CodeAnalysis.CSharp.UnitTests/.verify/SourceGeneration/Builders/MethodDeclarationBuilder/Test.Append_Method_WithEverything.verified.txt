@@ -1,0 +1,12 @@
+﻿[MyAttr(4711, "Test")]
+[Obsolete]
+[method: MyAttr3]
+[return: MyAttr4]
+internal sealed partial string MyMethod<T1, T2>(
+    string p1,
+    [MyAttr1]
+    [MyAttr2(4711, "Test")]
+    string p2)
+    where T1 : class
+    where T2 : struct
+    => Something();

@@ -1,0 +1,17 @@
+﻿MyType1()
+    : base()
+{
+    // Content
+}
+
+MyType2(string p1)
+    : base(p1)
+{
+    // Content
+}
+
+MyType3(string p1, int p2)
+    : base(p1, p2)
+{
+    // Content
+}

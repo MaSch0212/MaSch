@@ -1,0 +1,17 @@
+﻿[MyAttr(4711, "Test")]
+[Obsolete]
+[event: MyAttr3]
+internal sealed partial event EventHandler MyEvent1
+{
+    [MyAttr1]
+    [method: MyAttr3]
+    [param: MyAttr4]
+    [return: MyAttr5]
+    add => OtherEvent += value;
+    [MyAttr1]
+    [MyAttr2(4711, "Test")]
+    [method: MyAttr3]
+    [param: MyAttr4]
+    [return: MyAttr5]
+    remove => OtherEvent -= value;
+}

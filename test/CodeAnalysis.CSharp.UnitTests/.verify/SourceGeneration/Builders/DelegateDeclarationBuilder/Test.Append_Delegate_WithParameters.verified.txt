@@ -1,0 +1,7 @@
+﻿delegate void MyDelegate1(string p1);
+
+delegate void MyDelegate2(string p1, int p2);
+
+delegate void MyDelegate3([MyAttr1] string p1);
+
+delegate void MyDelegate4(string p1, [MyAttr1] [MyAttr2(4711, "Test")] string p2);

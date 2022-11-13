@@ -1,0 +1,4 @@
+﻿string MyMethod()
+{
+    // Method Content
+}

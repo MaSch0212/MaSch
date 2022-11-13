@@ -21,7 +21,13 @@ internal sealed class StructConfiguration : TypeConfiguration<IStructConfigurati
         WriteKeywordsTo(sourceBuilder);
         sourceBuilder.Append("struct ");
         WriteNameTo(sourceBuilder);
-        WriteBaseTypesTo(sourceBuilder);
-        WriteGenericConstraintsTo(sourceBuilder);
+
+        using (sourceBuilder.Indent())
+        {
+            if (HasBaseTypes)
+                sourceBuilder.Append(' ');
+            WriteBaseTypesTo(sourceBuilder);
+            WriteGenericConstraintsTo(sourceBuilder);
+        }
     }
 }

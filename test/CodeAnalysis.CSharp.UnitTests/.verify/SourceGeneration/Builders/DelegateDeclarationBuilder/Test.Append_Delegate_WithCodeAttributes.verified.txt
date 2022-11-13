@@ -1,0 +1,12 @@
+﻿[Obsolete]
+delegate void MyDelegate1();
+
+[MyAttr(4711, "Test")]
+[Obsolete]
+delegate void MyDelegate2();
+
+[type: MyAttr3]
+delegate void MyDelegate3();
+
+[return: MyAttr4]
+delegate void MyDelegate4();

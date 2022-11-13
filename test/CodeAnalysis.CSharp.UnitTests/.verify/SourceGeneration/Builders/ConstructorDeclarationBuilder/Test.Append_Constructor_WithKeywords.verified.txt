@@ -1,0 +1,14 @@
+﻿public MyType1()
+{
+    // Content
+}
+
+readonly MyType2()
+{
+    // Content
+}
+
+private new extern MyType3()
+{
+    // Content
+}

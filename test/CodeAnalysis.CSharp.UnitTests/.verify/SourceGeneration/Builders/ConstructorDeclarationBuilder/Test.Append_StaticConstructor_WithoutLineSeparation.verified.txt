@@ -1,0 +1,8 @@
+﻿static MyType()
+{
+    // Content
+}
+static MyType()
+{
+    // Content
+}

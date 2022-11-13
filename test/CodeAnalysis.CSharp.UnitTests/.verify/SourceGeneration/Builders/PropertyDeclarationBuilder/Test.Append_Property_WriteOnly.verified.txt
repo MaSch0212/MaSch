@@ -1,0 +1,12 @@
+﻿string MyProperty1
+{
+    set
+    {
+        _data = value;
+    }
+}
+
+string MyProperty2
+{
+    set => _data = value;
+}

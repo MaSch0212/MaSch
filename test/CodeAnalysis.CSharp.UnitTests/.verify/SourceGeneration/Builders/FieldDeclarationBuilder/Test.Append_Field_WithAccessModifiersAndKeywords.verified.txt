@@ -1,0 +1,4 @@
+﻿public string MyField1;
+static string MyField2;
+internal sealed string MyField3;
+internal sealed partial string MyField4;

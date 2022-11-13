@@ -1,0 +1,33 @@
+﻿void MyMethod1()
+{
+    // Method Content
+}
+
+void MyMethod2(
+    string p1)
+{
+    // Method Content
+}
+
+void MyMethod3(
+    string p1,
+    int p2)
+{
+    // Method Content
+}
+
+void MyMethod4(
+    [MyAttr1]
+    string p1)
+{
+    // Method Content
+}
+
+void MyMethod5(
+    string p1,
+    [MyAttr1]
+    [MyAttr2(4711, "Test")]
+    string p2)
+{
+    // Method Content
+}

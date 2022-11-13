@@ -8,6 +8,8 @@ namespace MaSch.CodeAnalysis.CSharp.UnitTests.SourceGeneration;
 public class SourceBuilderTestBase<T> : VerifyBase
     where T : ISourceBuilder
 {
+    private static readonly Regex NewVerifyErrorMessageRegex = new("New:\\s*Received:", RegexOptions.Compiled);
+
     protected T Builder { get; private set; } = default!;
 
     [TestInitialize]
@@ -53,6 +55,13 @@ public class SourceBuilderTestBase<T> : VerifyBase
 
     protected async Task Verify(ISourceBuilder builder, VerifySettings? settings)
     {
-        await Verify(builder.ToString(), settings);
+        try
+        {
+            await Verify(builder.ToString(), settings);
+        }
+        catch (Exception ex) when (ex.GetType().Name == "VerifyException" && NewVerifyErrorMessageRegex.IsMatch(ex.Message))
+        {
+            throw new AssertInconclusiveException("A verify failed, because no verified file existed.", ex);
+        }
     }
 }

@@ -29,19 +29,16 @@ internal sealed class ParameterConfiguration : CodeConfigurationBase, IParameter
 
     public static void WriteParametersTo(IList<IParameterConfiguration> parameters, ISourceBuilder sourceBuilder, bool multiline)
     {
-        using (sourceBuilder.Indent())
+        for (int i = 0; i < parameters.Count; i++)
         {
-            for (int i = 0; i < parameters.Count; i++)
-            {
-                if (multiline)
-                    sourceBuilder.AppendLine();
-                else if (i > 0)
-                    sourceBuilder.Append(' ');
+            if (multiline)
+                sourceBuilder.AppendLine();
+            else if (i > 0)
+                sourceBuilder.Append(' ');
 
-                parameters[i].WriteTo(sourceBuilder, multiline);
-                if (i < parameters.Count - 1)
-                    sourceBuilder.Append(',');
-            }
+            parameters[i].WriteTo(sourceBuilder, multiline);
+            if (i < parameters.Count - 1)
+                sourceBuilder.Append(',');
         }
     }
 

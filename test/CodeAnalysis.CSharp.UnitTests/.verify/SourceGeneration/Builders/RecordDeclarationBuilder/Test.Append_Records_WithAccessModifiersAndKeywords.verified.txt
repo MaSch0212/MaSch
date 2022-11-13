@@ -1,0 +1,19 @@
+﻿public record MyRecord1
+{
+    // Record Content
+}
+
+static record MyRecord2
+{
+    // Record Content
+}
+
+internal sealed record MyRecord3
+{
+    // Record Content
+}
+
+internal sealed partial record MyRecord3
+{
+    // Record Content
+}

@@ -12,14 +12,17 @@ public interface IPropertyConfigurationBase<T> : IPropertyConfigurationBase, IMe
 public interface IPropertyHasGetConfiguration : IPropertyConfigurationBase
 {
     IPropertyMethodConfiguration GetMethod { get; }
+    string? Value { get; }
 
     IPropertyHasGetConfiguration ConfigureGet(Action<IPropertyMethodConfiguration> configurationFunc);
+    IPropertyHasGetConfiguration WithValue(string value);
 }
 
 public interface IPropertyHasGetConfiguration<T> : IPropertyHasGetConfiguration, IPropertyConfigurationBase<T>
     where T : IPropertyHasGetConfiguration<T>
 {
     new T ConfigureGet(Action<IPropertyMethodConfiguration> configurationFunc);
+    new T WithValue(string value);
 }
 
 public interface IPropertyHasSetConfiguration : IPropertyConfigurationBase
@@ -39,32 +42,33 @@ public interface IPropertyHasSetConfiguration<T> : IPropertyHasSetConfiguration,
 
 public interface IReadOnlyPropertyConfigurationBase : IPropertyHasGetConfiguration
 {
-    PropertyGetMethodType GetBodyType { get; }
+    MethodBodyType GetBodyType { get; }
 
-    IReadOnlyPropertyConfigurationBase AsExpression(bool placeInNewLine = true);
-    IReadOnlyPropertyConfigurationBase AsInitialize();
+    IReadOnlyPropertyConfigurationBase AsExpression(bool placeInNewLine = false);
 }
 
 public interface IReadOnlyPropertyConfigurationBase<T> : IReadOnlyPropertyConfigurationBase, IPropertyHasGetConfiguration<T>
     where T : IReadOnlyPropertyConfigurationBase<T>
 {
-    new T AsExpression(bool placeInNewLine = true);
-    new T AsInitialize();
+    new T AsExpression(bool placeInNewLine = false);
 }
 
 public interface IWriteOnlyPropertyConfigurationBase : IPropertyHasSetConfiguration
 {
+    IWriteOnlyPropertyConfigurationBase AsExpression();
 }
 
 public interface IWriteOnlyPropertyConfigurationBase<T> : IWriteOnlyPropertyConfigurationBase, IPropertyHasSetConfiguration<T>
     where T : IWriteOnlyPropertyConfigurationBase<T>
 {
+    new T AsExpression();
 }
 
 public interface IFullPropertyConfigurationBase : IPropertyHasGetConfiguration, IPropertyHasSetConfiguration
 {
     IReadOnlyPropertyConfigurationBase AsReadOnly();
     IWriteOnlyPropertyConfigurationBase AsWriteOnly();
+    IFullPropertyConfigurationBase AsExpression();
 }
 
 public interface IFullPropertyConfigurationBase<TConfig, TReadOnly, TWriteOnly> : IFullPropertyConfigurationBase, IPropertyHasGetConfiguration<TConfig>, IPropertyHasSetConfiguration<TConfig>
@@ -74,6 +78,7 @@ public interface IFullPropertyConfigurationBase<TConfig, TReadOnly, TWriteOnly> 
 {
     new TReadOnly AsReadOnly();
     new TWriteOnly AsWriteOnly();
+    new TConfig AsExpression();
 }
 
 internal abstract class PropertyConfiguration<TConfig, TReadOnly, TWriteOnly> : MemberConfiguration<TConfig>, IFullPropertyConfigurationBase<TConfig, TReadOnly, TWriteOnly>
@@ -96,7 +101,8 @@ internal abstract class PropertyConfiguration<TConfig, TReadOnly, TWriteOnly> : 
     public IPropertyMethodConfiguration GetMethod => _getMethodConfiguration;
     public IPropertyMethodConfiguration SetMethod => _setMethodConfiguration;
 
-    public PropertyGetMethodType GetBodyType { get; private set; } = PropertyGetMethodType.Block;
+    public MethodBodyType GetBodyType { get; private set; } = MethodBodyType.Block;
+    public string? Value { get; private set; }
 
     TReadOnly IFullPropertyConfigurationBase<TConfig, TReadOnly, TWriteOnly>.AsReadOnly()
         => AsReadOnly();
@@ -128,6 +134,18 @@ internal abstract class PropertyConfiguration<TConfig, TReadOnly, TWriteOnly> : 
     IPropertyHasSetConfiguration IPropertyHasSetConfiguration.AsInitOnly()
         => AsInitOnly();
 
+    TConfig IPropertyHasGetConfiguration<TConfig>.WithValue(string value)
+        => WithValue(value);
+
+    IPropertyHasGetConfiguration IPropertyHasGetConfiguration.WithValue(string value)
+        => WithValue(value);
+
+    TConfig IFullPropertyConfigurationBase<TConfig, TReadOnly, TWriteOnly>.AsExpression()
+        => AsExpression(false);
+
+    IFullPropertyConfigurationBase IFullPropertyConfigurationBase.AsExpression()
+        => AsExpression(false);
+
     protected override void WriteKeywordsTo(ISourceBuilder sourceBuilder)
     {
         base.WriteKeywordsTo(sourceBuilder);
@@ -152,15 +170,17 @@ internal abstract class PropertyConfiguration<TConfig, TReadOnly, TWriteOnly> : 
         return This;
     }
 
-    protected TConfig AsExpression(bool placeInNewLine = true)
+    protected TConfig WithValue(string value)
     {
-        GetBodyType = placeInNewLine ? PropertyGetMethodType.ExpressionNewLine : PropertyGetMethodType.Expression;
+        Value = value;
         return This;
     }
 
-    protected TConfig AsInitialize()
+    protected TConfig AsExpression(bool placeInNewLine = false)
     {
-        GetBodyType = PropertyGetMethodType.Initialize;
+        GetBodyType = placeInNewLine ? MethodBodyType.ExpressionNewLine : MethodBodyType.Expression;
+        GetMethod.AsExpression();
+        SetMethod.AsExpression();
         return This;
     }
 
@@ -228,15 +248,15 @@ internal sealed class PropertyConfiguration :
         return this;
     }
 
-    IReadOnlyPropertyConfiguration IReadOnlyPropertyConfigurationBase<IReadOnlyPropertyConfiguration>.AsInitialize()
+    IWriteOnlyPropertyConfiguration IWriteOnlyPropertyConfigurationBase<IWriteOnlyPropertyConfiguration>.AsExpression()
     {
-        AsInitialize();
+        AsExpression(false);
         return this;
     }
 
-    IReadOnlyPropertyConfigurationBase IReadOnlyPropertyConfigurationBase.AsInitialize()
+    IWriteOnlyPropertyConfigurationBase IWriteOnlyPropertyConfigurationBase.AsExpression()
     {
-        AsInitialize();
+        AsExpression(false);
         return this;
     }
 
@@ -303,6 +323,12 @@ internal sealed class PropertyConfiguration :
     IReadOnlyPropertyConfiguration IMemberConfiguration<IReadOnlyPropertyConfiguration>.WithKeyword(MemberKeyword keyword)
     {
         WithKeyword(keyword);
+        return this;
+    }
+
+    IReadOnlyPropertyConfiguration IPropertyHasGetConfiguration<IReadOnlyPropertyConfiguration>.WithValue(string value)
+    {
+        WithValue(value);
         return this;
     }
 }

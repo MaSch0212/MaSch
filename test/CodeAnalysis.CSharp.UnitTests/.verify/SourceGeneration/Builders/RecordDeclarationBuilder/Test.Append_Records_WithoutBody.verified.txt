@@ -1,0 +1,7 @@
+﻿record MyRecord1;
+
+record MyRecord2(
+    string DisplayName);
+
+record MyRecord3<T>
+    where T : class;

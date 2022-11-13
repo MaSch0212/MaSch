@@ -53,7 +53,7 @@ public sealed class SourceBuilderOptions
     /// <summary>
     /// Gets a value indicating whether it should be ensured that the line above a generated property, event or indexer is empty.
     /// </summary>
-    public bool EnsureEmptyLineBeforeProperties { get; init; } = false;
+    public bool EnsureEmptyLineBeforeProperties { get; init; } = true;
 
     /// <summary>
     /// Gets a value indicating whether it should be ensured that the line above a generated enum value is empty.

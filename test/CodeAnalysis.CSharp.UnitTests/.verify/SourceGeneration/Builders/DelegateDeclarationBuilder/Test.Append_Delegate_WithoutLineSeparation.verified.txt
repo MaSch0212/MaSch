@@ -1,0 +1,2 @@
+﻿delegate void MyDelegate1();
+delegate void MyDelegate2();

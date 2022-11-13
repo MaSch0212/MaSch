@@ -1,0 +1,19 @@
+﻿public interface MyInterface1
+{
+    // Interface Content
+}
+
+static interface MyInterface2
+{
+    // Interface Content
+}
+
+internal sealed interface MyInterface3
+{
+    // Interface Content
+}
+
+internal sealed partial interface MyInterface3
+{
+    // Interface Content
+}

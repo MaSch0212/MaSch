@@ -1,0 +1,9 @@
+﻿[Obsolete]
+event Action MyEvent1;
+
+[MyAttr(4711, "Test")]
+[Obsolete]
+event Action MyEvent2;
+
+[event: MyAttr3]
+event Action MyEvent3;

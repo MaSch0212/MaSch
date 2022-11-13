@@ -1,0 +1,18 @@
+﻿[Obsolete]
+enum MyEnum1
+{
+    // Enum Content
+}
+
+[MyAttr(4711, "Test")]
+[Obsolete]
+enum MyEnum2
+{
+    // Enum Content
+}
+
+[type: MyAttr3]
+enum MyEnum3
+{
+    // Enum Content
+}

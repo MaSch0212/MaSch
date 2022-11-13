@@ -1,0 +1,101 @@
+﻿string MyProperty1
+{
+    [MyAttr]
+    get;
+    set;
+}
+
+string MyProperty2
+{
+    get;
+    [MyAttr]
+    set;
+}
+
+string MyProperty3
+{
+    [MyAttr]
+    get;
+    [MyAttr]
+    set;
+}
+
+string MyProperty4
+{
+    [MyAttr]
+    get;
+}
+
+string MyProperty5
+{
+    [MyAttr]
+    get;
+} = "Test";
+
+string MyProperty6
+{
+    [MyAttr]
+    get
+    {
+        return _data;
+    }
+}
+
+string MyProperty7
+{
+    [MyAttr]
+    get => _data;
+}
+
+string MyProperty8
+{
+    [MyAttr]
+    set
+    {
+        _data = value;
+    }
+}
+
+string MyProperty9
+{
+    [MyAttr]
+    set => _data = value;
+}
+
+string MyProperty10
+{
+    [method: MyAttr]
+    get;
+    [method: MyAttr]
+    set;
+}
+
+string MyProperty11
+{
+    [return: MyAttr]
+    get;
+    [return: MyAttr]
+    set;
+}
+
+string MyProperty12
+{
+    [MyAttr]
+    get
+    {
+        return _data;
+    }
+    [MyAttr]
+    set
+    {
+        _data = value;
+    }
+}
+
+string MyProperty13
+{
+    [MyAttr]
+    get => _data;
+    [MyAttr]
+    set => _data = value;
+}

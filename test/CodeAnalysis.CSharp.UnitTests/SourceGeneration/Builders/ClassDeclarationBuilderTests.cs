@@ -1,5 +1,6 @@
 ﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration;
 using MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MaSch.CodeAnalysis.CSharp.UnitTests.SourceGeneration.Builders;
 
@@ -39,6 +40,7 @@ public class ClassDeclarationBuilderTests : SourceBuilderTestBase<IClassDeclarat
     {
         Builder.Append(Class("MyClass1").WithCodeAttribute("Obsolete"), ClassDummyContent);
         Builder.Append(Class("MyClass2").WithCodeAttribute("MyAttr", x => x.WithParameters("4711", "\"Test\"")).WithCodeAttribute("Obsolete"), ClassDummyContent);
+        Builder.Append(Class("MyClass3").WithCodeAttribute("MyAttr3", x => x.OnTarget(CodeAttributeTarget.Type)), ClassDummyContent);
 
         await VerifyBuilder();
     }
@@ -87,6 +89,7 @@ public class ClassDeclarationBuilderTests : SourceBuilderTestBase<IClassDeclarat
             Class("MyClass")
                 .WithCodeAttribute("MyAttr", x => x.WithParameters("4711", "\"Test\""))
                 .WithCodeAttribute("Obsolete")
+                .WithCodeAttribute("MyAttr3", x => x.OnTarget(CodeAttributeTarget.Type))
                 .WithAccessModifier(AccessModifier.Internal)
                 .WithKeyword(MemberKeyword.Sealed)
                 .WithKeyword(MemberKeyword.Partial)
@@ -98,6 +101,15 @@ public class ClassDeclarationBuilderTests : SourceBuilderTestBase<IClassDeclarat
             ClassDummyContent);
 
         await VerifyBuilder();
+    }
+
+    [TestMethod]
+    public void Append_Class_SetsCurrentTypeName()
+    {
+        Builder.Append(Class("MyClass"), x =>
+        {
+            x.CurrentTypeName.Should().Be("MyClass");
+        });
     }
 
     private void ClassDummyContent(IClassBuilder builder)

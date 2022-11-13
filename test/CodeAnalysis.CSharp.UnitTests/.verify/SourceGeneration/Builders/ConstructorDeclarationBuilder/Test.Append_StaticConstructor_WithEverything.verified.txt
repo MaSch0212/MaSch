@@ -1,0 +1,5 @@
+﻿[MyAttr(4711, "Test")]
+[Obsolete]
+[method: MyAttr3]
+static MyType()
+    => _myData = "Hello";

@@ -1,0 +1,19 @@
+﻿MyType1(string p1)
+{
+    // Content
+}
+
+MyType2(string p1, int p2)
+{
+    // Content
+}
+
+MyType3([MyAttr1] string p1)
+{
+    // Content
+}
+
+MyType4(string p1, [MyAttr1] [MyAttr2(4711, "Test")] string p2)
+{
+    // Content
+}

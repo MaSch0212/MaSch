@@ -6,4 +6,7 @@
     [MyAttribute(4711, "Hello")]
     [Obsolete]
     Value2,
+
+    [field: MyAttr3]
+    Value3,
 }

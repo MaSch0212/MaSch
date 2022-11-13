@@ -1,6 +1,4 @@
-﻿using static System.Net.WebRequestMethods;
-
-namespace MaSch.CodeAnalysis.CSharp;
+﻿namespace MaSch.CodeAnalysis.CSharp;
 
 /// <summary>
 /// Specifies an access modifier of a member in C#.
@@ -157,14 +155,6 @@ public enum MethodBodyType
     Block,
     Expression,
     ExpressionNewLine,
-}
-
-public enum PropertyGetMethodType
-{
-    Block,
-    Expression,
-    ExpressionNewLine,
-    Initialize,
 }
 
 public static class AccessModifierExtensions

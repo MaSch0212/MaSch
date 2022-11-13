@@ -1,0 +1,28 @@
+﻿record MyRecord1(
+    string p1)
+{
+    // Record Content
+}
+
+record MyRecord2(
+    string p1,
+    int p2)
+{
+    // Record Content
+}
+
+record MyRecord3(
+    [MyAttr1]
+    string p1)
+{
+    // Record Content
+}
+
+record MyRecord4(
+    string p1,
+    [MyAttr1]
+    [MyAttr2(4711, "Test")]
+    string p2)
+{
+    // Record Content
+}

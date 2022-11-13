@@ -1,0 +1,38 @@
+﻿interface MyInterface1<T>
+{
+    // Interface Content
+}
+
+interface MyInterface2<T>
+    where T : class
+{
+    // Interface Content
+}
+
+interface MyInterface3<T>
+    where T : class, IDisposable
+{
+    // Interface Content
+}
+
+interface MyInterface4<T1, T2>
+    where T1 : class
+    where T2 : struct
+{
+    // Interface Content
+}
+
+interface MyInterface5<T1, T2>
+{
+    // Interface Content
+}
+
+interface MyInterface6<in T>
+{
+    // Interface Content
+}
+
+interface MyInterface7<out T>
+{
+    // Interface Content
+}

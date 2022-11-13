@@ -1,0 +1,15 @@
+﻿[MyAttr(4711, "Test")]
+[Obsolete]
+[type: MyAttr3]
+internal sealed partial record MyRecord<in T1, out T2>(
+    [property: MyAttr3]
+    string p1,
+    [MyAttr1]
+    [MyAttr2(4711, "Test")]
+    string p2)
+    : object, IDisposable, ISerializable
+    where T1 : class, IDisposable
+    where T2 : struct
+{
+    // Record Content
+}

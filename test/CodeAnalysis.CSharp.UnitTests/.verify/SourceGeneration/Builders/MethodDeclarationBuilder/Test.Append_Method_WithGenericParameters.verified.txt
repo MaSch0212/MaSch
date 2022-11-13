@@ -1,0 +1,38 @@
+﻿void MyMethod1<T>()
+{
+    // Method Content
+}
+
+void MyMethod2<T>()
+    where T : class
+{
+    // Method Content
+}
+
+void MyMethod3<T>()
+    where T : class, IDisposable
+{
+    // Method Content
+}
+
+void MyMethod4<T1, T2>()
+    where T1 : class
+    where T2 : struct
+{
+    // Method Content
+}
+
+void MyMethod5<T1, T2>()
+{
+    // Method Content
+}
+
+void MyMethod6<in T>()
+{
+    // Method Content
+}
+
+void MyMethod7<out T>()
+{
+    // Method Content
+}

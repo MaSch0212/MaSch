@@ -1,0 +1,9 @@
+﻿enum MyEnum1
+{
+    // Enum Content
+}
+
+enum MyEnum2
+{
+    // Enum Content
+}

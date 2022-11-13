@@ -65,15 +65,15 @@ internal sealed class IndexerConfiguration :
         return this;
     }
 
-    IReadOnlyIndexerConfiguration IReadOnlyPropertyConfigurationBase<IReadOnlyIndexerConfiguration>.AsInitialize()
+    IWriteOnlyIndexerConfiguration IWriteOnlyPropertyConfigurationBase<IWriteOnlyIndexerConfiguration>.AsExpression()
     {
-        AsInitialize();
+        AsExpression(false);
         return this;
     }
 
-    IReadOnlyPropertyConfigurationBase IReadOnlyPropertyConfigurationBase.AsInitialize()
+    IWriteOnlyPropertyConfigurationBase IWriteOnlyPropertyConfigurationBase.AsExpression()
     {
-        AsInitialize();
+        AsExpression(false);
         return this;
     }
 
@@ -121,12 +121,14 @@ internal sealed class IndexerConfiguration :
 
     IReadOnlyIndexerConfiguration ISupportsCodeAttributeConfiguration<IReadOnlyIndexerConfiguration>.WithCodeAttribute(string attributeTypeName)
     {
-        throw new NotImplementedException();
+        WithCodeAttribute(attributeTypeName);
+        return this;
     }
 
     IWriteOnlyIndexerConfiguration ISupportsCodeAttributeConfiguration<IWriteOnlyIndexerConfiguration>.WithCodeAttribute(string attributeTypeName)
     {
-        throw new NotImplementedException();
+        WithCodeAttribute(attributeTypeName);
+        return this;
     }
 
     IReadOnlyIndexerConfiguration IMemberConfiguration<IReadOnlyIndexerConfiguration>.WithKeyword(MemberKeyword keyword)
@@ -138,6 +140,12 @@ internal sealed class IndexerConfiguration :
     IWriteOnlyIndexerConfiguration IMemberConfiguration<IWriteOnlyIndexerConfiguration>.WithKeyword(MemberKeyword keyword)
     {
         WithKeyword(keyword);
+        return this;
+    }
+
+    IReadOnlyIndexerConfiguration IPropertyHasGetConfiguration<IReadOnlyIndexerConfiguration>.WithValue(string value)
+    {
+        WithValue(value);
         return this;
     }
 

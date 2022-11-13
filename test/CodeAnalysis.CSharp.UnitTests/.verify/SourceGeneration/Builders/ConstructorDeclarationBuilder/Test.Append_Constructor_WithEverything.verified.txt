@@ -1,0 +1,10 @@
+﻿[MyAttr(4711, "Test")]
+[Obsolete]
+[method: MyAttr3]
+private new extern MyType(
+    string p1,
+    [MyAttr1]
+    [MyAttr2(4711, "Test")]
+    string p2)
+    : base(p1, p2)
+    => _myData = 4711;

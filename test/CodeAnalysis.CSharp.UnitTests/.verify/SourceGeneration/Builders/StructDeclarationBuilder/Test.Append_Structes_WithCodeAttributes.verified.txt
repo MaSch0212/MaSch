@@ -1,0 +1,18 @@
+﻿[Obsolete]
+struct MyStruct1
+{
+    // Struct Content
+}
+
+[MyAttr(4711, "Test")]
+[Obsolete]
+struct MyStruct2
+{
+    // Struct Content
+}
+
+[type: MyAttr3]
+struct MyStruct3
+{
+    // Struct Content
+}

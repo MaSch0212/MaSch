@@ -1,0 +1,24 @@
+﻿record MyRecord1 : object
+{
+    // Record Content
+}
+
+record MyRecord2 : IDisposable
+{
+    // Record Content
+}
+
+record MyRecord3 : IDisposable, ISerializable
+{
+    // Record Content
+}
+
+record MyRecord4 : object, IDisposable
+{
+    // Record Content
+}
+
+record MyRecord5 : object, IDisposable, ISerializable
+{
+    // Record Content
+}

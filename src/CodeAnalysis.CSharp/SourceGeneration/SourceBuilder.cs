@@ -259,6 +259,7 @@ public sealed partial class SourceBuilder
                 Append(' ');
             Append("=> ");
             builderFunc(builder);
+            Append(';').AppendLine();
         }
 
         return this;
@@ -346,54 +347,73 @@ public sealed partial class SourceBuilder
     private SourceBuilder Append(IEventMethodConfiguration eventMethodConfiguration, Action<ISourceBuilder> builderFunc)
         => AppendAs(eventMethodConfiguration.BodyType, eventMethodConfiguration, builderFunc);
 
-    private SourceBuilder Append(IPropertyConfigurationBase propertyConfiguration, Action<ISourceBuilder>? getBuilderFunc, Action<ISourceBuilder>? setBuilderFunc)
+    private SourceBuilder Append<T>(T propertyConfiguration, Action<ISourceBuilder>? getBuilderFunc, Action<ISourceBuilder>? setBuilderFunc)
+        where T : IPropertyConfigurationBase
     {
         EnsurePreviousLineEmpty(Options.EnsureEmptyLineBeforeProperties);
 
-        var readOnlyPropertyConfiguration = propertyConfiguration as IReadOnlyPropertyConfigurationBase;
-        if (readOnlyPropertyConfiguration?.GetBodyType is PropertyGetMethodType.Expression or PropertyGetMethodType.ExpressionNewLine &&
+        var hasGetConfig = typeof(IPropertyHasGetConfiguration).IsAssignableFrom(typeof(T)) ? (IPropertyHasGetConfiguration)propertyConfiguration : null;
+        var hasSetConfig = typeof(IPropertyHasSetConfiguration).IsAssignableFrom(typeof(T)) ? (IPropertyHasSetConfiguration)propertyConfiguration : null;
+        var readonlyConfig = typeof(IReadOnlyPropertyConfigurationBase).IsAssignableFrom(typeof(T)) ? (IReadOnlyPropertyConfigurationBase)propertyConfiguration : null;
+
+        if (readonlyConfig?.GetBodyType is MethodBodyType.Expression or MethodBodyType.ExpressionNewLine &&
             getBuilderFunc is not null)
         {
-            return AppendAsExpression(propertyConfiguration, this, getBuilderFunc, readOnlyPropertyConfiguration.GetBodyType is PropertyGetMethodType.ExpressionNewLine);
+            return AppendAsExpression(propertyConfiguration, this, getBuilderFunc, readonlyConfig.GetBodyType is MethodBodyType.ExpressionNewLine);
         }
 
         propertyConfiguration.WriteTo(this);
-        var getConfig = (propertyConfiguration as IPropertyHasGetConfiguration)?.GetMethod;
-        var setConfig = (propertyConfiguration as IPropertyHasSetConfiguration)?.SetMethod;
+        var getConfig = hasGetConfig?.GetMethod;
+        var setConfig = hasSetConfig?.SetMethod;
         var multiline =
-            getConfig.ShouldBeOnItsOwnLine ||
-            setConfig.ShouldBeOnItsOwnLine ||
+            getConfig?.ShouldBeOnItsOwnLine == true ||
+            setConfig?.ShouldBeOnItsOwnLine == true ||
             getBuilderFunc is not null ||
             setBuilderFunc is not null;
 
         SourceBuilderCodeBlock block;
         if (multiline)
         {
-            block = AppendLine().AppendBlock();
+            block = AppendLine().Append('{').Indent();
+            AppendLine();
         }
         else
         {
-            Append("{ ");
-            block = Indent();
+            block = Append(" { ").Indent();
         }
 
         using (block)
         {
-            if (getConfig is not null && readOnlyPropertyConfiguration?.GetBodyType is not PropertyGetMethodType.Initialize)
+            if (getConfig is not null)
                 Append(getConfig, getBuilderFunc, multiline);
+
+            if (getConfig is not null && setConfig is not null && !multiline)
+                Append(' ');
+
             if (setConfig is not null)
-                Append(setConfig, getBuilderFunc, multiline);
+                Append(setConfig, setBuilderFunc, multiline);
         }
 
-        if (!multiline)
+        if (multiline)
+        {
+            if (!IsCurrentLineEmpty)
+                AppendLine();
+            Append('}');
+        }
+        else
+        {
             Append(" }");
+        }
 
-        if (readOnlyPropertyConfiguration?.GetBodyType is PropertyGetMethodType.Initialize && getBuilderFunc is not null)
+        var value = hasGetConfig?.Value;
+        if (getBuilderFunc is null && setBuilderFunc is null && value is not null)
         {
             Append(" = ");
-            getBuilderFunc(this);
+            Append(value);
             Append(';');
         }
+
+        AppendLine();
 
         return this;
     }

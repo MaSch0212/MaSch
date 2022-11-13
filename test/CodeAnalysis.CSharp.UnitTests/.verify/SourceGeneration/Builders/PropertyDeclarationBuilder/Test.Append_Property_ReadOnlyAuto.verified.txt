@@ -1,0 +1,2 @@
+﻿string MyProperty1 { get; }
+string MyProperty2 { get; } = "Test";

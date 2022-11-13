@@ -71,13 +71,10 @@ internal abstract class GenericMemberConfiguration<T> : MemberConfiguration<T>, 
         if (_genericParameters.Count == 0)
             return;
 
-        using (sourceBuilder.Indent())
+        foreach (var genericParameter in _genericParameters.Where(x => x.HasConstraints))
         {
-            foreach (var genericParameter in _genericParameters.Where(x => x.HasConstraints))
-            {
-                sourceBuilder.AppendLine();
-                genericParameter.WriteConstraintTo(sourceBuilder);
-            }
+            sourceBuilder.AppendLine();
+            genericParameter.WriteConstraintTo(sourceBuilder);
         }
     }
 }

@@ -1,0 +1,4 @@
+﻿~MyType1() => _myData = "Hello";
+
+~MyType2()
+    => _myData = "Hello";

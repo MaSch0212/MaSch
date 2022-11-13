@@ -1,0 +1,8 @@
+﻿namespace MyNamespace1
+{
+    // Namespace Content
+}
+namespace MyNamespace2
+{
+    // Namespace Content
+}

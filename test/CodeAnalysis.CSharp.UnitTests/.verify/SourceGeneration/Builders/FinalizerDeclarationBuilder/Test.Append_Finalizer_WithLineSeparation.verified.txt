@@ -1,0 +1,9 @@
+﻿~MyType()
+{
+    // Finalizer Content
+}
+
+~MyType()
+{
+    // Finalizer Content
+}

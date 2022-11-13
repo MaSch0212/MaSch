@@ -1,0 +1,7 @@
+﻿[Obsolete]
+string MyField1;
+[MyAttr(4711, "Test")]
+[Obsolete]
+string MyField2;
+[field: MyAttr3]
+string MyField1;

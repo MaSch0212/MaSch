@@ -84,7 +84,7 @@ public static class CodeConfiguration
         return new EventConfiguration(eventType, eventName);
     }
 
-    public static IPropertyConfigurationBase Property(string propertyTypeName, string propertyName)
+    public static IPropertyConfiguration Property(string propertyTypeName, string propertyName)
     {
         return new PropertyConfiguration(propertyTypeName, propertyName);
     }

@@ -1,0 +1,18 @@
+﻿[Obsolete]
+interface MyInterface1
+{
+    // Interface Content
+}
+
+[MyAttr(4711, "Test")]
+[Obsolete]
+interface MyInterface2
+{
+    // Interface Content
+}
+
+[type: MyAttr3]
+interface MyInterface3
+{
+    // Interface Content
+}

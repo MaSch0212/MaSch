@@ -37,9 +37,8 @@ public class EnumBuilderTests : SourceBuilderTestBase<IEnumBuilder>
         using (Builder.AppendBlock("enum MyEnum"))
         {
             Builder.Append(EnumValue("Value1").WithCodeAttribute("Obsolete"));
-            Builder.Append(EnumValue("Value2")
-                .WithCodeAttribute("MyAttribute", x => x.WithParameters("4711", "\"Hello\""))
-                .WithCodeAttribute("Obsolete"));
+            Builder.Append(EnumValue("Value2").WithCodeAttribute("MyAttribute", x => x.WithParameters("4711", "\"Hello\"")).WithCodeAttribute("Obsolete"));
+            Builder.Append(EnumValue("Value3").WithCodeAttribute("MyAttr3", x => x.OnTarget(CodeAttributeTarget.Field)));
         }
 
         await VerifyBuilder();
@@ -50,5 +49,20 @@ public class EnumBuilderTests : SourceBuilderTestBase<IEnumBuilder>
     public async Task Append_EnumValuesWithSpaces()
     {
         await Append_EnumValue_WithCodeAttribute();
+    }
+
+    [TestMethod]
+    public async Task Append_EnumValue_WithEverything()
+    {
+        using (Builder.AppendBlock("enum MyEnum"))
+        {
+            Builder.Append(
+                EnumValue("Value2", "1")
+                    .WithCodeAttribute("MyAttribute", x => x.WithParameters("4711", "\"Hello\""))
+                    .WithCodeAttribute("Obsolete")
+                    .WithCodeAttribute("MyAttr3", x => x.OnTarget(CodeAttributeTarget.Field)));
+        }
+
+        await VerifyBuilder();
     }
 }

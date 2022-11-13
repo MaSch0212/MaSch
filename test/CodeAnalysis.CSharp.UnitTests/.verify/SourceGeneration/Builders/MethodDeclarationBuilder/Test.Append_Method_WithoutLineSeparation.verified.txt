@@ -1,0 +1,8 @@
+﻿void MyMethod1()
+{
+    // Method Content
+}
+void MyMethod2()
+{
+    // Method Content
+}

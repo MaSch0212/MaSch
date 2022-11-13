@@ -1,0 +1,21 @@
+﻿string MyProperty1 { get; }
+
+string MyProperty2 { get; } = "Test";
+
+string MyProperty3
+{
+    get
+    {
+        return _data;
+    }
+}
+
+string MyProperty4
+{
+    get => _data;
+}
+
+string MyProperty5 => _data;
+
+string MyProperty6
+    => _data;

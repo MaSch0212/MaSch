@@ -47,9 +47,22 @@ internal sealed class RecordConfiguration : TypeConfiguration<IRecordConfigurati
         WriteKeywordsTo(sourceBuilder);
         sourceBuilder.Append("record ");
         WriteNameTo(sourceBuilder);
-        WriteParametersTo(sourceBuilder);
-        WriteBaseTypesTo(sourceBuilder);
-        WriteGenericConstraintsTo(sourceBuilder);
+
+        using (sourceBuilder.Indent())
+        {
+            WriteParametersTo(sourceBuilder);
+
+            if (HasBaseTypes)
+            {
+                if (_parameters.Count > 0 && MultilineParameters)
+                    sourceBuilder.AppendLine();
+                else
+                    sourceBuilder.Append(' ');
+            }
+
+            WriteBaseTypesTo(sourceBuilder);
+            WriteGenericConstraintsTo(sourceBuilder);
+        }
     }
 
     private void WriteParametersTo(ISourceBuilder sourceBuilder)

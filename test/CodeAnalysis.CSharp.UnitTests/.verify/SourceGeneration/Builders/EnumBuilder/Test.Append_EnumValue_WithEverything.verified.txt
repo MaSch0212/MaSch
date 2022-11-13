@@ -1,0 +1,7 @@
+﻿enum MyEnum
+{
+    [MyAttribute(4711, "Hello")]
+    [Obsolete]
+    [field: MyAttr3]
+    Value2 = 1,
+}

@@ -1,0 +1,9 @@
+﻿interface MyInterface2 : IDisposable
+{
+    // Interface Content
+}
+
+interface MyInterface3 : IDisposable, ISerializable
+{
+    // Interface Content
+}

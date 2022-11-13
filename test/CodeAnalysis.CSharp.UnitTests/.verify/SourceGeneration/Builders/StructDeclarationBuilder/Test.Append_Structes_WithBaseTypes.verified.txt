@@ -1,0 +1,9 @@
+﻿struct MyStruct2 : IDisposable
+{
+    // Struct Content
+}
+
+struct MyStruct3 : IDisposable, ISerializable
+{
+    // Struct Content
+}

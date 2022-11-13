@@ -1,0 +1,9 @@
+﻿record MyRecord1
+{
+    // Record Content
+}
+
+record MyRecord2
+{
+    // Record Content
+}

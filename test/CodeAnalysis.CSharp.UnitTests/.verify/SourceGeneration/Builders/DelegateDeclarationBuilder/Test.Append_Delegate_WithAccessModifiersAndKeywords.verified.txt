@@ -1,0 +1,7 @@
+﻿public delegate void MyDelegate1();
+
+static delegate void MyDelegate2();
+
+internal sealed delegate void MyDelegate3();
+
+internal sealed partial delegate void MyDelegate4();

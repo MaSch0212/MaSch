@@ -29,12 +29,14 @@ internal sealed class EventConfiguration : MemberConfiguration<IEventConfigurati
 
     public IEventConfiguration ConfigureAdd(Action<IEventMethodConfiguration> configurationFunc)
     {
-        throw new NotImplementedException();
+        configurationFunc(AddMethod);
+        return this;
     }
 
     public IEventConfiguration ConfigureRemove(Action<IEventMethodConfiguration> configurationFunc)
     {
-        throw new NotImplementedException();
+        configurationFunc(RemoveMethod);
+        return this;
     }
 
     public override void WriteTo(ISourceBuilder sourceBuilder)

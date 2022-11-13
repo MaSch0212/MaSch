@@ -1,0 +1,4 @@
+﻿static MyType1() => _myData = "Hello";
+
+static MyType2()
+    => _myData = "Hello";

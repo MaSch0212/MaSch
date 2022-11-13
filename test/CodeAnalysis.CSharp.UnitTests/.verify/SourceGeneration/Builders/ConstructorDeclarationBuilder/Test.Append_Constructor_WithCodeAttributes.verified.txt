@@ -1,0 +1,18 @@
+﻿[Obsolete]
+MyType1()
+{
+    // Content
+}
+
+[MyAttr(4711, "Test")]
+[Obsolete]
+MyType2()
+{
+    // Content
+}
+
+[method: MyAttr3]
+MyType3()
+{
+    // Content
+}

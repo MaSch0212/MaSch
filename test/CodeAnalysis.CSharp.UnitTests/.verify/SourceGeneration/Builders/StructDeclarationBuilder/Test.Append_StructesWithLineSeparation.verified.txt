@@ -1,0 +1,9 @@
+﻿struct MyStruct1
+{
+    // Struct Content
+}
+
+struct MyStruct2
+{
+    // Struct Content
+}

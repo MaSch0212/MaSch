@@ -1,0 +1,19 @@
+﻿public enum MyEnum1
+{
+    // Enum Content
+}
+
+static enum MyEnum2
+{
+    // Enum Content
+}
+
+internal sealed enum MyEnum3
+{
+    // Enum Content
+}
+
+internal sealed partial enum MyEnum3
+{
+    // Enum Content
+}

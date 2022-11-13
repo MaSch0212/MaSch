@@ -1,0 +1,9 @@
+﻿interface MyInterface1
+{
+    // Interface Content
+}
+
+interface MyInterface2
+{
+    // Interface Content
+}

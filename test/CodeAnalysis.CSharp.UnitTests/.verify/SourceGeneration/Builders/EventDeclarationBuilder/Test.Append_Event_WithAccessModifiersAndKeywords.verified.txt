@@ -1,0 +1,7 @@
+﻿public event Action MyEvent1;
+
+static event Action MyEvent2;
+
+internal sealed event Action MyEvent3;
+
+internal sealed partial event Action MyEvent4;

@@ -1,0 +1,2 @@
+﻿event Action MyEvent1;
+event Action MyEvent2;

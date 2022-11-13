@@ -1,0 +1,65 @@
+﻿event EventHandler MyEvent1
+{
+    add
+    {
+        // Add Content
+    }
+    remove
+    {
+        // Remove Content
+    }
+}
+
+event EventHandler MyEvent1
+{
+    add => OtherEvent += value;
+    remove
+    {
+        // Remove Content
+    }
+}
+
+event EventHandler MyEvent1
+{
+    add
+    {
+        // Add Content
+    }
+    remove => OtherEvent -= value;
+}
+
+event EventHandler MyEvent1
+{
+    [MyAttr1]
+    add
+    {
+        // Add Content
+    }
+    [MyAttr1]
+    [MyAttr2(4711, "Test")]
+    remove
+    {
+        // Remove Content
+    }
+}
+
+event EventHandler MyEvent1
+{
+    [MyAttr1]
+    add => OtherEvent += value;
+    [MyAttr1]
+    [MyAttr2(4711, "Test")]
+    remove => OtherEvent -= value;
+}
+
+event EventHandler MyEvent1
+{
+    [method: MyAttr3]
+    [param: MyAttr4]
+    [return: MyAttr5]
+    add => OtherEvent += value;
+    [method: MyAttr3]
+    [param: MyAttr4]
+    [return: MyAttr5]
+    remove => OtherEvent -= value;
+}

@@ -10,3 +10,9 @@ class MyClass2
 {
     // Class Content
 }
+
+[type: MyAttr3]
+class MyClass3
+{
+    // Class Content
+}

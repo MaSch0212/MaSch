@@ -1,0 +1,17 @@
+﻿delegate void MyDelegate1<T>();
+
+delegate void MyDelegate2<T>()
+    where T : class;
+
+delegate void MyDelegate3<T>()
+    where T : class, IDisposable;
+
+delegate void MyDelegate4<T1, T2>()
+    where T1 : class
+    where T2 : struct;
+
+delegate void MyDelegate5<T1, T2>();
+
+delegate void MyDelegate6<in T>();
+
+delegate void MyDelegate7<out T>();

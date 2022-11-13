@@ -1,0 +1,3 @@
+﻿string MyField1;
+
+string MyField2;

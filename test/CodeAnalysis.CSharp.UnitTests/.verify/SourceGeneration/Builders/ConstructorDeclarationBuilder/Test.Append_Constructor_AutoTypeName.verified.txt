@@ -1,0 +1,4 @@
+﻿AutoTypeNameType()
+{
+    // Content
+}

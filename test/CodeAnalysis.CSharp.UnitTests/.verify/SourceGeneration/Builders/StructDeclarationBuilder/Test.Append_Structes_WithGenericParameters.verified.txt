@@ -1,0 +1,38 @@
+﻿struct MyStruct1<T>
+{
+    // Struct Content
+}
+
+struct MyStruct2<T>
+    where T : class
+{
+    // Struct Content
+}
+
+struct MyStruct3<T>
+    where T : class, IDisposable
+{
+    // Struct Content
+}
+
+struct MyStruct4<T1, T2>
+    where T1 : class
+    where T2 : struct
+{
+    // Struct Content
+}
+
+struct MyStruct5<T1, T2>
+{
+    // Struct Content
+}
+
+struct MyStruct6<in T>
+{
+    // Struct Content
+}
+
+struct MyStruct7<out T>
+{
+    // Struct Content
+}

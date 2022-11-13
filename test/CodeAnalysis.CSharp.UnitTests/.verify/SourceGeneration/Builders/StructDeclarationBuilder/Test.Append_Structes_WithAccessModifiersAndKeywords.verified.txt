@@ -1,0 +1,19 @@
+﻿public struct MyStruct1
+{
+    // Struct Content
+}
+
+static struct MyStruct2
+{
+    // Struct Content
+}
+
+internal sealed struct MyStruct3
+{
+    // Struct Content
+}
+
+internal sealed partial struct MyStruct3
+{
+    // Struct Content
+}

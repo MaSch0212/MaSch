@@ -21,7 +21,13 @@ internal sealed class InterfaceConfguration : TypeConfiguration<IInterfaceConfgu
         WriteKeywordsTo(sourceBuilder);
         sourceBuilder.Append("interface ");
         WriteNameTo(sourceBuilder);
-        WriteBaseTypesTo(sourceBuilder);
-        WriteGenericConstraintsTo(sourceBuilder);
+
+        using (sourceBuilder.Indent())
+        {
+            if (HasBaseTypes)
+                sourceBuilder.Append(' ');
+            WriteBaseTypesTo(sourceBuilder);
+            WriteGenericConstraintsTo(sourceBuilder);
+        }
     }
 }

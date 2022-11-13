@@ -25,7 +25,11 @@ internal sealed class DelegateConfiguration : MethodConfiguration<IDelegateConfi
         sourceBuilder.Append("delegate ");
         WriteReturnTypeTo(sourceBuilder);
         WriteNameTo(sourceBuilder);
-        WriteParametersTo(sourceBuilder);
-        WriteGenericConstraintsTo(sourceBuilder);
+
+        using (sourceBuilder.Indent())
+        {
+            WriteParametersTo(sourceBuilder);
+            WriteGenericConstraintsTo(sourceBuilder);
+        }
     }
 }

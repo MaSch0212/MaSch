@@ -1,0 +1,14 @@
+﻿string MyProperty1 { get; init; }
+
+string MyProperty1
+{
+    init
+    {
+        _data = value;
+    }
+}
+
+string MyProperty1
+{
+    init => _data = value;
+}

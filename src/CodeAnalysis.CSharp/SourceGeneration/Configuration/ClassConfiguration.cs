@@ -21,7 +21,13 @@ internal sealed class ClassConfiguration : TypeConfiguration<IClassConfiguration
         WriteKeywordsTo(sourceBuilder);
         sourceBuilder.Append("class ");
         WriteNameTo(sourceBuilder);
-        WriteBaseTypesTo(sourceBuilder);
-        WriteGenericConstraintsTo(sourceBuilder);
+
+        using (sourceBuilder.Indent())
+        {
+            if (HasBaseTypes)
+                sourceBuilder.Append(' ');
+            WriteBaseTypesTo(sourceBuilder);
+            WriteGenericConstraintsTo(sourceBuilder);
+        }
     }
 }
