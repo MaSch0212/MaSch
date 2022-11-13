@@ -1,0 +1,12 @@
+﻿string this[]
+{
+    set
+    {
+        _data = value;
+    }
+}
+
+string this[]
+{
+    set => _data = value;
+}

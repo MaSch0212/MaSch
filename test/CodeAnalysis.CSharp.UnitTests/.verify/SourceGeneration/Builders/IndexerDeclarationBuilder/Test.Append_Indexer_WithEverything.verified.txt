@@ -1,0 +1,15 @@
+﻿[MyAttr(4711, "Test")]
+[Obsolete]
+[property: MyAttr3]
+[field: MyAttr4]
+internal sealed partial string this[]
+{
+    [MyAttr]
+    [method: MyAttr3]
+    [return: MyAttr4]
+    get;
+    [MyAttr]
+    [method: MyAttr3]
+    [return: MyAttr4]
+    init;
+} = "Test";

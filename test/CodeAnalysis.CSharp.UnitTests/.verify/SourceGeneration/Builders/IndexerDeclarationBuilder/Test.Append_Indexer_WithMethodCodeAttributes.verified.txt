@@ -1,0 +1,101 @@
+﻿string this[]
+{
+    [MyAttr]
+    get;
+    set;
+}
+
+string this[]
+{
+    get;
+    [MyAttr]
+    set;
+}
+
+string this[]
+{
+    [MyAttr]
+    get;
+    [MyAttr]
+    set;
+}
+
+string this[]
+{
+    [MyAttr]
+    get;
+}
+
+string this[]
+{
+    [MyAttr]
+    get;
+} = "Test";
+
+string this[]
+{
+    [MyAttr]
+    get
+    {
+        return _data;
+    }
+}
+
+string this[]
+{
+    [MyAttr]
+    get => _data;
+}
+
+string this[]
+{
+    [MyAttr]
+    set
+    {
+        _data = value;
+    }
+}
+
+string this[]
+{
+    [MyAttr]
+    set => _data = value;
+}
+
+string this[]
+{
+    [method: MyAttr]
+    get;
+    [method: MyAttr]
+    set;
+}
+
+string this[]
+{
+    [return: MyAttr]
+    get;
+    [return: MyAttr]
+    set;
+}
+
+string this[]
+{
+    [MyAttr]
+    get
+    {
+        _data = value;
+    }
+    [MyAttr]
+    set
+    {
+        _data = value;
+    }
+}
+
+string this[]
+{
+    [MyAttr]
+    get => _data = value;
+    [MyAttr]
+    set => _data = value;
+}

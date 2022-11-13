@@ -1,0 +1,21 @@
+﻿string this[] { get; }
+
+string this[] { get; } = "Test";
+
+string this[]
+{
+    get
+    {
+        return _data;
+    }
+}
+
+string this[]
+{
+    get => _data;
+}
+
+string this[] => _data;
+
+string this[]
+    => _data;

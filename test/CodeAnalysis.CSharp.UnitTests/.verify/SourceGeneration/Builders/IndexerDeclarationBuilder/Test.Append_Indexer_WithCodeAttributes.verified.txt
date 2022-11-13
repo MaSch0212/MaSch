@@ -1,0 +1,12 @@
+﻿[Obsolete]
+string this[] { get; set; }
+
+[MyAttr(4711, "Test")]
+[Obsolete]
+string this[] { get; set; }
+
+[property: MyAttr3]
+string this[] { get; set; }
+
+[field: MyAttr4]
+string this[] { get; set; }
