@@ -5,12 +5,11 @@
     <TargetFramework>netstandard2.0</TargetFramework>
 
     <!-- Output info -->
-    <BuildOutputTargetFolder>analyzers</BuildOutputTargetFolder>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
 
     <!-- Package Info -->
     <Description>Contains supporting code for implementation of C# source generators and code analyzers.</Description>
-    <Version>0.1.2</Version>
+    <Version>0.1.3</Version>
     <PackageTags>masch generator sourcegenerator analyzer</PackageTags>
 
     <!-- Disable warnings that occur in the Resources.Designer.cs -->
