@@ -10,7 +10,7 @@
 
     <!-- Package Info -->
     <Description>Contains supporting code for implementation of C# source generators and code analyzers.</Description>
-    <Version>0.1.0</Version>
+    <Version>0.1.2</Version>
     <PackageTags>masch generator sourcegenerator analyzer</PackageTags>
 
     <!-- Disable warnings that occur in the Resources.Designer.cs -->

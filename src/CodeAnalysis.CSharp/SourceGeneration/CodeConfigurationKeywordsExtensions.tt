@@ -38,8 +38,10 @@
         ["IFieldConfiguration"] = (
             new[] { "public", "private", "protected", "internal", "protected internal", "private protected" },
             Combine(
-                new[] { "static", "new", "readonly", "ref readonly" },
-                "unsafe").ToArray()
+                Combine(
+                    new[] { "static", "new" },
+                    "unsafe"),
+                new[] { "readonly", "ref readonly" }).ToArray()
         ),
         ["IPropertyConfigurationBase<T>"] = (
             new[] { "public", "private", "protected", "internal", "protected internal", "private protected" },
@@ -144,17 +146,30 @@
         return Combine(a, b, Enumerable.Empty<string>());
     }
 
+    static IEnumerable<string> Combine(IEnumerable<string> a, IEnumerable<string> b)
+    {
+        return Combine(a, b, Enumerable.Empty<string>());
+    }
+    
     static IEnumerable<string> Combine(IEnumerable<string> a, string b, IEnumerable<string> blacklist)
+    {
+        return Combine(a, new[] { b }, blacklist);
+    }
+
+    static IEnumerable<string> Combine(IEnumerable<string> a, IEnumerable<string> b, IEnumerable<string> blacklist)
     {
         foreach (var i in a)
             yield return i;
-        yield return b;
+
+        foreach (var i in b)
+            yield return i;
     
         foreach (var i in a)
         {
             if (blacklist.Any(x => i.Contains(x)))
                 continue;
-            yield return $"{i} {b}";
+            foreach (var j in b)
+                yield return $"{i} {j}";
         }
     }
 

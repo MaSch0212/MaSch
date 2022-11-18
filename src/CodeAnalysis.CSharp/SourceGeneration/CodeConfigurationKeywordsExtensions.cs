@@ -6365,32 +6365,6 @@ public static class FieldConfigurationKeywordsExtensions
     }
 
     /// <summary>
-    /// Marks the code configuration as <c>readonly</c>.
-    /// </summary>
-    /// <typeparam name="T">The type of code configuration.</typeparam>
-    /// <param name="config">The code configuration to change.</param>
-    /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsReadOnly<T>(this T config)
-        where T : IFieldConfiguration
-    {
-        config.WithKeyword(MemberKeyword.ReadOnly);
-        return config;
-    }
-
-    /// <summary>
-    /// Marks the code configuration as <c>ref readonly</c>.
-    /// </summary>
-    /// <typeparam name="T">The type of code configuration.</typeparam>
-    /// <param name="config">The code configuration to change.</param>
-    /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsRefReadOnly<T>(this T config)
-        where T : IFieldConfiguration
-    {
-        config.WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly);
-        return config;
-    }
-
-    /// <summary>
     /// Marks the code configuration as <c>unsafe</c>.
     /// </summary>
     /// <typeparam name="T">The type of code configuration.</typeparam>
@@ -6430,28 +6404,158 @@ public static class FieldConfigurationKeywordsExtensions
     }
 
     /// <summary>
-    /// Marks the code configuration as <c>readonly unsafe</c>.
+    /// Marks the code configuration as <c>readonly</c>.
     /// </summary>
     /// <typeparam name="T">The type of code configuration.</typeparam>
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsReadOnlyUnsafe<T>(this T config)
+    public static T AsReadOnly<T>(this T config)
         where T : IFieldConfiguration
     {
-        config.WithKeyword(MemberKeyword.ReadOnly | MemberKeyword.Unsafe);
+        config.WithKeyword(MemberKeyword.ReadOnly);
         return config;
     }
 
     /// <summary>
-    /// Marks the code configuration as <c>ref readonly unsafe</c>.
+    /// Marks the code configuration as <c>ref readonly</c>.
     /// </summary>
     /// <typeparam name="T">The type of code configuration.</typeparam>
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsRefReadOnlyUnsafe<T>(this T config)
+    public static T AsRefReadOnly<T>(this T config)
         where T : IFieldConfiguration
     {
-        config.WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly | MemberKeyword.Unsafe);
+        config.WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>static readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsStaticReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithKeyword(MemberKeyword.Static | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>static ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsStaticRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithKeyword(MemberKeyword.Static | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>new readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsNewReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithKeyword(MemberKeyword.New | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>new ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsNewRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithKeyword(MemberKeyword.New | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithKeyword(MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithKeyword(MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>static unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsStaticUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>static unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsStaticUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>new unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsNewUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>new unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsNewUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
         return config;
     }
 
@@ -6478,32 +6582,6 @@ public static class FieldConfigurationKeywordsExtensions
         where T : IFieldConfiguration
     {
         config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.New);
-        return config;
-    }
-
-    /// <summary>
-    /// Marks the code configuration as <c>public readonly</c>.
-    /// </summary>
-    /// <typeparam name="T">The type of code configuration.</typeparam>
-    /// <param name="config">The code configuration to change.</param>
-    /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsPublicReadOnly<T>(this T config)
-        where T : IFieldConfiguration
-    {
-        config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.ReadOnly);
-        return config;
-    }
-
-    /// <summary>
-    /// Marks the code configuration as <c>public ref readonly</c>.
-    /// </summary>
-    /// <typeparam name="T">The type of code configuration.</typeparam>
-    /// <param name="config">The code configuration to change.</param>
-    /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsPublicRefReadOnly<T>(this T config)
-        where T : IFieldConfiguration
-    {
-        config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly);
         return config;
     }
 
@@ -6547,28 +6625,158 @@ public static class FieldConfigurationKeywordsExtensions
     }
 
     /// <summary>
-    /// Marks the code configuration as <c>public readonly unsafe</c>.
+    /// Marks the code configuration as <c>public readonly</c>.
     /// </summary>
     /// <typeparam name="T">The type of code configuration.</typeparam>
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsPublicReadOnlyUnsafe<T>(this T config)
+    public static T AsPublicReadOnly<T>(this T config)
         where T : IFieldConfiguration
     {
-        config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.ReadOnly | MemberKeyword.Unsafe);
+        config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.ReadOnly);
         return config;
     }
 
     /// <summary>
-    /// Marks the code configuration as <c>public ref readonly unsafe</c>.
+    /// Marks the code configuration as <c>public ref readonly</c>.
     /// </summary>
     /// <typeparam name="T">The type of code configuration.</typeparam>
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsPublicRefReadOnlyUnsafe<T>(this T config)
+    public static T AsPublicRefReadOnly<T>(this T config)
         where T : IFieldConfiguration
     {
-        config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly | MemberKeyword.Unsafe);
+        config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>public static readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPublicStaticReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.Static | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>public static ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPublicStaticRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.Static | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>public new readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPublicNewReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.New | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>public new ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPublicNewRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.New | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>public unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPublicUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>public unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPublicUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>public static unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPublicStaticUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>public static unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPublicStaticUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>public new unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPublicNewUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>public new unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPublicNewUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
         return config;
     }
 
@@ -6595,32 +6803,6 @@ public static class FieldConfigurationKeywordsExtensions
         where T : IFieldConfiguration
     {
         config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.New);
-        return config;
-    }
-
-    /// <summary>
-    /// Marks the code configuration as <c>private readonly</c>.
-    /// </summary>
-    /// <typeparam name="T">The type of code configuration.</typeparam>
-    /// <param name="config">The code configuration to change.</param>
-    /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsPrivateReadOnly<T>(this T config)
-        where T : IFieldConfiguration
-    {
-        config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.ReadOnly);
-        return config;
-    }
-
-    /// <summary>
-    /// Marks the code configuration as <c>private ref readonly</c>.
-    /// </summary>
-    /// <typeparam name="T">The type of code configuration.</typeparam>
-    /// <param name="config">The code configuration to change.</param>
-    /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsPrivateRefReadOnly<T>(this T config)
-        where T : IFieldConfiguration
-    {
-        config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly);
         return config;
     }
 
@@ -6664,28 +6846,158 @@ public static class FieldConfigurationKeywordsExtensions
     }
 
     /// <summary>
-    /// Marks the code configuration as <c>private readonly unsafe</c>.
+    /// Marks the code configuration as <c>private readonly</c>.
     /// </summary>
     /// <typeparam name="T">The type of code configuration.</typeparam>
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsPrivateReadOnlyUnsafe<T>(this T config)
+    public static T AsPrivateReadOnly<T>(this T config)
         where T : IFieldConfiguration
     {
-        config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.ReadOnly | MemberKeyword.Unsafe);
+        config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.ReadOnly);
         return config;
     }
 
     /// <summary>
-    /// Marks the code configuration as <c>private ref readonly unsafe</c>.
+    /// Marks the code configuration as <c>private ref readonly</c>.
     /// </summary>
     /// <typeparam name="T">The type of code configuration.</typeparam>
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsPrivateRefReadOnlyUnsafe<T>(this T config)
+    public static T AsPrivateRefReadOnly<T>(this T config)
         where T : IFieldConfiguration
     {
-        config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly | MemberKeyword.Unsafe);
+        config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>private static readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPrivateStaticReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.Static | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>private static ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPrivateStaticRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.Static | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>private new readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPrivateNewReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.New | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>private new ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPrivateNewRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.New | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>private unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPrivateUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>private unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPrivateUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>private static unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPrivateStaticUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>private static unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPrivateStaticUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>private new unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPrivateNewUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>private new unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPrivateNewUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
         return config;
     }
 
@@ -6712,32 +7024,6 @@ public static class FieldConfigurationKeywordsExtensions
         where T : IFieldConfiguration
     {
         config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.New);
-        return config;
-    }
-
-    /// <summary>
-    /// Marks the code configuration as <c>protected readonly</c>.
-    /// </summary>
-    /// <typeparam name="T">The type of code configuration.</typeparam>
-    /// <param name="config">The code configuration to change.</param>
-    /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsProtectedReadOnly<T>(this T config)
-        where T : IFieldConfiguration
-    {
-        config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.ReadOnly);
-        return config;
-    }
-
-    /// <summary>
-    /// Marks the code configuration as <c>protected ref readonly</c>.
-    /// </summary>
-    /// <typeparam name="T">The type of code configuration.</typeparam>
-    /// <param name="config">The code configuration to change.</param>
-    /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsProtectedRefReadOnly<T>(this T config)
-        where T : IFieldConfiguration
-    {
-        config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly);
         return config;
     }
 
@@ -6781,28 +7067,158 @@ public static class FieldConfigurationKeywordsExtensions
     }
 
     /// <summary>
-    /// Marks the code configuration as <c>protected readonly unsafe</c>.
+    /// Marks the code configuration as <c>protected readonly</c>.
     /// </summary>
     /// <typeparam name="T">The type of code configuration.</typeparam>
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsProtectedReadOnlyUnsafe<T>(this T config)
+    public static T AsProtectedReadOnly<T>(this T config)
         where T : IFieldConfiguration
     {
-        config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.ReadOnly | MemberKeyword.Unsafe);
+        config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.ReadOnly);
         return config;
     }
 
     /// <summary>
-    /// Marks the code configuration as <c>protected ref readonly unsafe</c>.
+    /// Marks the code configuration as <c>protected ref readonly</c>.
     /// </summary>
     /// <typeparam name="T">The type of code configuration.</typeparam>
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsProtectedRefReadOnlyUnsafe<T>(this T config)
+    public static T AsProtectedRefReadOnly<T>(this T config)
         where T : IFieldConfiguration
     {
-        config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly | MemberKeyword.Unsafe);
+        config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>protected static readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsProtectedStaticReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.Static | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>protected static ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsProtectedStaticRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.Static | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>protected new readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsProtectedNewReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.New | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>protected new ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsProtectedNewRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.New | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>protected unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsProtectedUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>protected unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsProtectedUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>protected static unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsProtectedStaticUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>protected static unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsProtectedStaticUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>protected new unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsProtectedNewUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>protected new unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsProtectedNewUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
         return config;
     }
 
@@ -6829,32 +7245,6 @@ public static class FieldConfigurationKeywordsExtensions
         where T : IFieldConfiguration
     {
         config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.New);
-        return config;
-    }
-
-    /// <summary>
-    /// Marks the code configuration as <c>internal readonly</c>.
-    /// </summary>
-    /// <typeparam name="T">The type of code configuration.</typeparam>
-    /// <param name="config">The code configuration to change.</param>
-    /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsInternalReadOnly<T>(this T config)
-        where T : IFieldConfiguration
-    {
-        config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.ReadOnly);
-        return config;
-    }
-
-    /// <summary>
-    /// Marks the code configuration as <c>internal ref readonly</c>.
-    /// </summary>
-    /// <typeparam name="T">The type of code configuration.</typeparam>
-    /// <param name="config">The code configuration to change.</param>
-    /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsInternalRefReadOnly<T>(this T config)
-        where T : IFieldConfiguration
-    {
-        config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly);
         return config;
     }
 
@@ -6898,28 +7288,158 @@ public static class FieldConfigurationKeywordsExtensions
     }
 
     /// <summary>
-    /// Marks the code configuration as <c>internal readonly unsafe</c>.
+    /// Marks the code configuration as <c>internal readonly</c>.
     /// </summary>
     /// <typeparam name="T">The type of code configuration.</typeparam>
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsInternalReadOnlyUnsafe<T>(this T config)
+    public static T AsInternalReadOnly<T>(this T config)
         where T : IFieldConfiguration
     {
-        config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.ReadOnly | MemberKeyword.Unsafe);
+        config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.ReadOnly);
         return config;
     }
 
     /// <summary>
-    /// Marks the code configuration as <c>internal ref readonly unsafe</c>.
+    /// Marks the code configuration as <c>internal ref readonly</c>.
     /// </summary>
     /// <typeparam name="T">The type of code configuration.</typeparam>
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsInternalRefReadOnlyUnsafe<T>(this T config)
+    public static T AsInternalRefReadOnly<T>(this T config)
         where T : IFieldConfiguration
     {
-        config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly | MemberKeyword.Unsafe);
+        config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>internal static readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsInternalStaticReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.Static | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>internal static ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsInternalStaticRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.Static | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>internal new readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsInternalNewReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.New | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>internal new ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsInternalNewRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.New | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>internal unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsInternalUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>internal unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsInternalUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>internal static unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsInternalStaticUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>internal static unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsInternalStaticUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>internal new unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsInternalNewUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>internal new unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsInternalNewUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
         return config;
     }
 
@@ -6946,32 +7466,6 @@ public static class FieldConfigurationKeywordsExtensions
         where T : IFieldConfiguration
     {
         config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.New);
-        return config;
-    }
-
-    /// <summary>
-    /// Marks the code configuration as <c>protected internal readonly</c>.
-    /// </summary>
-    /// <typeparam name="T">The type of code configuration.</typeparam>
-    /// <param name="config">The code configuration to change.</param>
-    /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsProtectedInternalReadOnly<T>(this T config)
-        where T : IFieldConfiguration
-    {
-        config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.ReadOnly);
-        return config;
-    }
-
-    /// <summary>
-    /// Marks the code configuration as <c>protected internal ref readonly</c>.
-    /// </summary>
-    /// <typeparam name="T">The type of code configuration.</typeparam>
-    /// <param name="config">The code configuration to change.</param>
-    /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsProtectedInternalRefReadOnly<T>(this T config)
-        where T : IFieldConfiguration
-    {
-        config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly);
         return config;
     }
 
@@ -7015,28 +7509,158 @@ public static class FieldConfigurationKeywordsExtensions
     }
 
     /// <summary>
-    /// Marks the code configuration as <c>protected internal readonly unsafe</c>.
+    /// Marks the code configuration as <c>protected internal readonly</c>.
     /// </summary>
     /// <typeparam name="T">The type of code configuration.</typeparam>
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsProtectedInternalReadOnlyUnsafe<T>(this T config)
+    public static T AsProtectedInternalReadOnly<T>(this T config)
         where T : IFieldConfiguration
     {
-        config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.ReadOnly | MemberKeyword.Unsafe);
+        config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.ReadOnly);
         return config;
     }
 
     /// <summary>
-    /// Marks the code configuration as <c>protected internal ref readonly unsafe</c>.
+    /// Marks the code configuration as <c>protected internal ref readonly</c>.
     /// </summary>
     /// <typeparam name="T">The type of code configuration.</typeparam>
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsProtectedInternalRefReadOnlyUnsafe<T>(this T config)
+    public static T AsProtectedInternalRefReadOnly<T>(this T config)
         where T : IFieldConfiguration
     {
-        config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly | MemberKeyword.Unsafe);
+        config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>protected internal static readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsProtectedInternalStaticReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.Static | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>protected internal static ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsProtectedInternalStaticRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.Static | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>protected internal new readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsProtectedInternalNewReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.New | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>protected internal new ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsProtectedInternalNewRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.New | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>protected internal unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsProtectedInternalUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>protected internal unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsProtectedInternalUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>protected internal static unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsProtectedInternalStaticUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>protected internal static unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsProtectedInternalStaticUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>protected internal new unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsProtectedInternalNewUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>protected internal new unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsProtectedInternalNewUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
         return config;
     }
 
@@ -7063,32 +7687,6 @@ public static class FieldConfigurationKeywordsExtensions
         where T : IFieldConfiguration
     {
         config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.New);
-        return config;
-    }
-
-    /// <summary>
-    /// Marks the code configuration as <c>private protected readonly</c>.
-    /// </summary>
-    /// <typeparam name="T">The type of code configuration.</typeparam>
-    /// <param name="config">The code configuration to change.</param>
-    /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsPrivateProtectedReadOnly<T>(this T config)
-        where T : IFieldConfiguration
-    {
-        config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.ReadOnly);
-        return config;
-    }
-
-    /// <summary>
-    /// Marks the code configuration as <c>private protected ref readonly</c>.
-    /// </summary>
-    /// <typeparam name="T">The type of code configuration.</typeparam>
-    /// <param name="config">The code configuration to change.</param>
-    /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsPrivateProtectedRefReadOnly<T>(this T config)
-        where T : IFieldConfiguration
-    {
-        config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly);
         return config;
     }
 
@@ -7132,28 +7730,158 @@ public static class FieldConfigurationKeywordsExtensions
     }
 
     /// <summary>
-    /// Marks the code configuration as <c>private protected readonly unsafe</c>.
+    /// Marks the code configuration as <c>private protected readonly</c>.
     /// </summary>
     /// <typeparam name="T">The type of code configuration.</typeparam>
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsPrivateProtectedReadOnlyUnsafe<T>(this T config)
+    public static T AsPrivateProtectedReadOnly<T>(this T config)
         where T : IFieldConfiguration
     {
-        config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.ReadOnly | MemberKeyword.Unsafe);
+        config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.ReadOnly);
         return config;
     }
 
     /// <summary>
-    /// Marks the code configuration as <c>private protected ref readonly unsafe</c>.
+    /// Marks the code configuration as <c>private protected ref readonly</c>.
     /// </summary>
     /// <typeparam name="T">The type of code configuration.</typeparam>
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
-    public static T AsPrivateProtectedRefReadOnlyUnsafe<T>(this T config)
+    public static T AsPrivateProtectedRefReadOnly<T>(this T config)
         where T : IFieldConfiguration
     {
-        config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly | MemberKeyword.Unsafe);
+        config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>private protected static readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPrivateProtectedStaticReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.Static | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>private protected static ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPrivateProtectedStaticRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.Static | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>private protected new readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPrivateProtectedNewReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.New | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>private protected new ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPrivateProtectedNewRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.New | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>private protected unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPrivateProtectedUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>private protected unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPrivateProtectedUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>private protected static unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPrivateProtectedStaticUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>private protected static unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPrivateProtectedStaticUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>private protected new unsafe readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPrivateProtectedNewUnsafeReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe | MemberKeyword.ReadOnly);
+        return config;
+    }
+
+    /// <summary>
+    /// Marks the code configuration as <c>private protected new unsafe ref readonly</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of code configuration.</typeparam>
+    /// <param name="config">The code configuration to change.</param>
+    /// <returns>A self-reference to <paramref name="config"/>.</returns>
+    public static T AsPrivateProtectedNewUnsafeRefReadOnly<T>(this T config)
+        where T : IFieldConfiguration
+    {
+        config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe | MemberKeyword.Ref | MemberKeyword.ReadOnly);
         return config;
     }
 }
