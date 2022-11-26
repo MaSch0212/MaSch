@@ -8,7 +8,7 @@
     
     <!-- Package Info -->
     <Description>Contains an icon set for Material Design provided by https://materialdesignicons.com/ for use in .NET WPF applications.</Description>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <PackageTags>masch presentation ui frontend wpf icons materialdesign</PackageTags>
 
     <NpmTempDir>$(GitSourceDir).npm</NpmTempDir>
@@ -32,7 +32,7 @@
 
   <Target Name="InstallMdiFont" BeforeTargets="DispatchToInnerBuilds">
     <MakeDir Directories="$(NpmTempDir)" />
-    <Exec Command="npm install @mdi/font@6.5.95" WorkingDirectory="$(NpmTempDir)" />
+    <Exec Command="npm install @mdi/font@7.0.96" WorkingDirectory="$(NpmTempDir)" />
   </Target>
   
 </Project>

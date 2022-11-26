@@ -6,3 +6,5 @@
 - Added methods to build Delegates for BitwiseOr and BitwiseAnd for System.Enum.
 - Added BitwiseOr and BitwiseAnd extension methods for System.Enum.
 - Added NextEnum extension methods for System.Random.
+- Removed binaries for net5.0.
+- Added binaries for net7.0.

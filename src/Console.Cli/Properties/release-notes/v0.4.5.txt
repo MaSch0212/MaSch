@@ -1,0 +1,2 @@
+﻿- Removed binaries for net5.0.
+- Added binaries for net7.0.

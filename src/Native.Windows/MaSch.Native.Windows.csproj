@@ -8,7 +8,7 @@
     
     <!-- Package Info -->
     <Description>A small collection of native API calls.</Description>
-    <Version>0.1.3</Version>
+    <Version>0.1.4</Version>
     <PackageTags>masch native windows pinvoke</PackageTags>
   </PropertyGroup>
   

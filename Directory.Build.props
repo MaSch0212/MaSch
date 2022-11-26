@@ -1,14 +1,14 @@
-<!-- This file is imported for each csproj pretty early in the MSBuild process -->
+﻿<!-- This file is imported for each csproj pretty early in the MSBuild process -->
 <Project>
 
   <Import Project="$(MSBuildThisFileDirectory)build/Constants.props" Condition=" '$(MaSchConstantsImported)' != 'true' " />
   <Import Project="$(MSBuildThisFileDirectory)build/GlobalUsings.props" />
 
   <PropertyGroup>
-    <TfmNetCoreApp>net6.0</TfmNetCoreApp>
+    <TfmNetCoreApp>net7.0</TfmNetCoreApp>
     <TfmNetFramework>net48</TfmNetFramework>
-    <TfmsNetCoreApp>net6.0;net5.0</TfmsNetCoreApp>
-    <TfmsNetCoreAppWindows>net6.0-windows;net5.0-windows</TfmsNetCoreAppWindows>
+    <TfmsNetCoreApp>net7.0;net6.0</TfmsNetCoreApp>
+    <TfmsNetCoreAppWindows>net7.0-windows;net6.0-windows</TfmsNetCoreAppWindows>
     <TfmsNetFramework>$(TfmNetFramework)</TfmsNetFramework>
     <TfmsNetStandard>netstandard2.1;netstandard2.0</TfmsNetStandard>
     

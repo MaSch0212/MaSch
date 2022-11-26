@@ -34,12 +34,13 @@
     <PackageReference Update="Prism.Wpf" Version="[7.2.0.1367,8.0.0)" />
     <PackageReference Update="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Update="System.Diagnostics.EventLog" Version="6.0.0" />
+    <PackageReference Update="DotNet.Glob" Version="3.1.3" />
   </ItemGroup>
 
   <!-- Global packages (analyzers and stuff) -->
   <ItemGroup>
-    <GlobalPackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.406" Condition=" '$(EnableStyleCopAnalyzers)' != 'false' " />
-    <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="8.36.1.44192" Condition=" '$(EnableSonarAnalyzers)' != 'false' " />
+    <GlobalPackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435" Condition=" '$(EnableStyleCopAnalyzers)' != 'false' " />
+    <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="8.49.0.57237" Condition=" '$(EnableSonarAnalyzers)' != 'false' " />
     <GlobalPackageReference Include="ReflectionAnalyzers" Version="0.3.1" Condition=" '$(EnableReflectionAnalyzers)' != 'false' " />
     <GlobalPackageReference Include="IDisposableAnalyzers" Version="4.0.2" Condition=" '$(EnableIDisposableAnalyzers)' != 'false' " />
   </ItemGroup>

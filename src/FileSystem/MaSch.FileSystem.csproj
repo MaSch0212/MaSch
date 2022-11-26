@@ -7,7 +7,7 @@
 
     <!-- Package Info -->
     <Description>Contains an abstraction layer for the file system to easily test .NET applications.</Description>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <PackageTags>masch file directory filesystem path</PackageTags>
   </PropertyGroup>
 

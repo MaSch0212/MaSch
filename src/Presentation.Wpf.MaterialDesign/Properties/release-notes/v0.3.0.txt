@@ -1,0 +1,3 @@
+﻿- Updated @mdi/font to version 7.0.96.
+- Removed binaries for net5.0-windows.
+- Added binaries for net7.0-windows.

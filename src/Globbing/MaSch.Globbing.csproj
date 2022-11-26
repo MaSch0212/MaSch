@@ -1,23 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
+
   <PropertyGroup>
     <!-- General Project info -->
     <TargetFrameworks>$(TfmsNetCoreApp);$(TfmsNetFramework);$(TfmsNetStandard)</TargetFrameworks>
     <EnableMaSchGenerators>true</EnableMaSchGenerators>
 
     <!-- Package Info -->
-    <Description>Contains supporting code for console CLI applications.</Description>
-    <Version>0.4.5</Version>
-    <PackageTags>masch console terminal cli commandline parser</PackageTags>
+    <Description>Contains extensions for the DotNet.Glob package.</Description>
+    <Version>0.1.0</Version>
+    <PackageTags>masch glob globbing</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="DotNet.Glob" />
   </ItemGroup>
 
   <ItemGroup>
-    <MaSchReference Include="Console" />
     <MaSchReference Include="Core" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework) == 'net48'">
+    <Reference Include="System.IO.Compression" />
   </ItemGroup>
   
 </Project>

@@ -24,7 +24,11 @@ public class WpfScreen
     /// <summary>
     /// Gets a <see cref="WpfScreen"/> that represents the primary monitor.
     /// </summary>
+#if NET7_0_OR_GREATER
+    public static WpfScreen? Primary => Screen.PrimaryScreen is null ? null : new(Screen.PrimaryScreen);
+#else
     public static WpfScreen Primary => new(Screen.PrimaryScreen);
+#endif
 
     /// <summary>
     /// Gets a value indicating whether the screen represented by this <see cref="WpfScreen"/> is the primary monitor.
