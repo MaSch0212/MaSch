@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- General Project info -->
+    <TargetFrameworks>$(TfmsNetCoreApp);$(TfmsNetFramework);$(TfmsNetStandard)</TargetFrameworks>
+    <EnableMaSchGenerators>true</EnableMaSchGenerators>
+
+    <!-- Package Info -->
+    <Description>Contains extensions for the DotNet.Glob package.</Description>
+    <Version>0.1.0</Version>
+    <PackageTags>masch glob globbing</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotNet.Glob" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <MaSchReference Include="Core" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework) == 'net48'">
+    <Reference Include="System.IO.Compression" />
+  </ItemGroup>
+  
+</Project>

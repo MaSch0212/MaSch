@@ -14,7 +14,11 @@ public class AssertBaseTests
         _ = mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns((string?)null);
         _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
+#if NET48
+        mock.Object.ThrowAssertError(9, null);
+#else
         mock.Object.ThrowAssertError(12, null);
+#endif
 
         mock.Protected().Verify("HandleFailedAssertion", Times.Once(), $"{nameof(ThrowAssertError_NullNamePrefix)} failed.");
     }
@@ -28,7 +32,11 @@ public class AssertBaseTests
         _ = mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
         _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
+#if NET48
+        mock.Object.ThrowAssertError(9, null);
+#else
         mock.Object.ThrowAssertError(12, null);
+#endif
 
         mock.Protected().Verify("HandleFailedAssertion", Times.Once(), $"AssertBaseTests.{nameof(ThrowAssertError_NullMessage)} failed.");
     }
@@ -42,7 +50,11 @@ public class AssertBaseTests
         _ = mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
         _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
+#if NET48
+        mock.Object.ThrowAssertError(9, "My error message.");
+#else
         mock.Object.ThrowAssertError(12, "My error message.");
+#endif
 
         mock.Protected().Verify("HandleFailedAssertion", Times.Once(), $"AssertBaseTests.{nameof(ThrowAssertError_WithMessage)} failed. My error message.");
     }
@@ -62,7 +74,11 @@ public class AssertBaseTests
 
         void TestMethod()
         {
+#if NET48
+            mock.Object.ThrowAssertError(10, "My error message.");
+#else
             mock.Object.ThrowAssertError(13, "My error message.");
+#endif
         }
     }
 
@@ -98,7 +114,11 @@ public class AssertBaseTests
         _ = mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
         _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
+#if NET48
+        mock.Object.ThrowAssertError(9, "My error message.", null);
+#else
         mock.Object.ThrowAssertError(12, "My error message.", null);
+#endif
 
         mock.Protected().Verify("HandleFailedAssertion", Times.Once(), $"AssertBaseTests.{nameof(ThrowAssertError_NullValuesArray)} failed. My error message.");
     }
@@ -112,7 +132,11 @@ public class AssertBaseTests
         _ = mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
         _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
+#if NET48
+        mock.Object.ThrowAssertError(9, "My error message.", null, ("Test", 1), null);
+#else
         mock.Object.ThrowAssertError(12, "My error message.", null, ("Test", 1), null);
+#endif
 
         mock.Protected().Verify("HandleFailedAssertion", Times.Once(), $"AssertBaseTests.{nameof(ThrowAssertError_NullValues)} failed. Test:<1>. My error message.");
     }
@@ -126,7 +150,11 @@ public class AssertBaseTests
         _ = mock.Protected().SetupGet<string?>("AssertNamePrefix").Returns("AssertBaseTests");
         _ = mock.Protected().Setup("HandleFailedAssertion", ItExpr.IsAny<string>());
 
+#if NET48
+        mock.Object.ThrowAssertError(9, "My error message.", ("blub", 456.123), ("test", "My test value"));
+#else
         mock.Object.ThrowAssertError(12, "My error message.", ("blub", 456.123), ("test", "My test value"));
+#endif
 
         mock.Protected().Verify("HandleFailedAssertion", Times.Once(), $"AssertBaseTests.{nameof(ThrowAssertError_WithValues)} failed. blub:<456.123>. test:<My test value>. My error message.");
     }

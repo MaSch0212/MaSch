@@ -7,7 +7,7 @@
 
     <!-- Package Info -->
     <Description>Contains supporting code for .NET front-end applications.</Description>
-    <Version>0.2.4</Version>
+    <Version>0.2.5</Version>
     <PackageTags>masch presentation ui frontend translation localization validation</PackageTags>
   </PropertyGroup>
 

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <!-- General Project info -->
     <RootNamespace>MaSch.Test.Assertion.UnitTests</RootNamespace>
-    <TargetFrameworks>$(TfmNetCoreApp);$(TfmNetFramework)</TargetFrameworks>
+    <TargetFrameworks>$(TfmsNetCoreApp);$(TfmsNetFramework)</TargetFrameworks>
     <EnableMaSchTest>false</EnableMaSchTest>
     <EnableMaSchGenerators>true</EnableMaSchGenerators>
     <DefineConstants>$(DefineConstants);MSTEST</DefineConstants>

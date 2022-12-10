@@ -6,7 +6,7 @@
 
     <!-- Package Info -->
     <Description>Contains supporting code for data access in .NET applications.</Description>
-    <Version>0.1.6</Version>
+    <Version>0.1.7</Version>
     <PackageTags>masch data database</PackageTags>
   </PropertyGroup>
   

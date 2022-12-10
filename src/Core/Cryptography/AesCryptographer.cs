@@ -133,7 +133,11 @@ public class AesCryptographer
 
     private void EncryptImpl(Stream output, Stream input, string passPhrase, byte[]? saltBytes)
     {
+#if NETSTANDARD2_1_OR_GREATER || NET472_OR_GREATER || NETCOREAPP2_0_OR_GREATER
+        using var password = new Rfc2898DeriveBytes(passPhrase, saltBytes ?? DefaultSaltBytes, 1000, HashAlgorithmName.SHA1);
+#else
         using var password = new Rfc2898DeriveBytes(passPhrase, saltBytes ?? DefaultSaltBytes);
+#endif
         var key = password.GetBytes(KeySize / 8);
         using var aes = Aes.Create();
         var encryptor = aes.CreateEncryptor(key, _initVector);
@@ -147,7 +151,11 @@ public class AesCryptographer
 
     private void DecryptImpl(Stream output, Stream input, string passPhrase, byte[]? saltBytes)
     {
+#if NETSTANDARD2_1_OR_GREATER || NET472_OR_GREATER || NETCOREAPP2_0_OR_GREATER
+        using var password = new Rfc2898DeriveBytes(passPhrase, saltBytes ?? DefaultSaltBytes, 1000, HashAlgorithmName.SHA1);
+#else
         using var password = new Rfc2898DeriveBytes(passPhrase, saltBytes ?? DefaultSaltBytes);
+#endif
         var key = password.GetBytes(KeySize / 8);
         using var aes = Aes.Create();
         var decryptor = aes.CreateDecryptor(key, _initVector);

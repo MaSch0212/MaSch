@@ -8,7 +8,7 @@
 
     <!-- Package Info -->
     <Description>Contains the icon set used in Windows 10 provided by Microsoft for use in .NET WPF applications.</Description>
-    <Version>0.1.8</Version>
+    <Version>0.1.9</Version>
     <PackageTags>masch presentation ui frontend wpf icons mdl2 windows</PackageTags>
   </PropertyGroup>
 

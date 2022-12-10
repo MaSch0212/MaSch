@@ -7,7 +7,7 @@
     
     <!-- Package Info -->
     <Description>Contains some supporting code for Unit Tests in regards to the MaSch.FileSystem library.</Description>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <PackageTags>masch test file directory filesystem path</PackageTags>
 
     <DoesNotReturnAttribute>DoesNotReturnAttribute</DoesNotReturnAttribute>

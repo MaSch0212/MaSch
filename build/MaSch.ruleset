@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="New Rule Set" Description=" " ToolsVersion="16.0">
+<RuleSet Name="New Rule Set" Description=" " ToolsVersion="17.0">
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
     <Rule Id="CS1591" Action="None" />
     <Rule Id="CS8019" Action="Warning" />
@@ -9,11 +9,11 @@
     <Rule Id="IDE0011" Action="None" />
     <Rule Id="IDE0046" Action="None" />
     <Rule Id="IDE0061" Action="None" />
-    <Rule Id="IDE0079" Action="Warning" />
   </Rules>
   <Rules AnalyzerId="SonarAnalyzer.CSharp" RuleNamespace="SonarAnalyzer.CSharp">
     <Rule Id="S1135" Action="Info" />
     <Rule Id="S1699" Action="None" />
+    <Rule Id="S3236" Action="None" />
     <Rule Id="S3358" Action="None" />
     <Rule Id="S3963" Action="None" />
     <Rule Id="S5542" Action="None" />

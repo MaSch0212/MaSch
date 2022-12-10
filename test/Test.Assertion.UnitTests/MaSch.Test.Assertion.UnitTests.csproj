@@ -2,7 +2,7 @@
 
     <PropertyGroup>
       <!-- General Project info -->
-      <TargetFrameworks>$(TfmNetCoreApp);$(TfmNetFramework)</TargetFrameworks>
+      <TargetFrameworks>$(TfmsNetCoreApp);$(TfmsNetFramework)</TargetFrameworks>
       <EnableMaSchTest>false</EnableMaSchTest>
       <EnableMaSchGenerators>true</EnableMaSchGenerators>
     </PropertyGroup>
