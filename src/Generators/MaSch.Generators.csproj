@@ -19,24 +19,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Generators\ObservableObject\**" />
-    <EmbeddedResource Remove="Generators\ObservableObject\**" />
-    <None Remove="Generators\ObservableObject\**" />
     <Using Remove="*" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="Shims\IndexAndRange.cs" />
-    <Compile Remove="Shims\OSVersioning.cs" />
-    <Compile Remove="Shims\Records.cs" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <None Include="Shims\OSVersioning.cs" />
-    <None Include="Shims\Records.cs" />
-    <None Include="Shims\IndexAndRange.cs" />
-  </ItemGroup>
-  
   <ItemGroup>
     <Content Include="MaSch.Generators.targets" Pack="true" PackagePath="build;buildCrossTargeting" />
   </ItemGroup>
@@ -46,7 +31,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Compile Update="Properties/Resources.Designer.cs">
+    <Compile Update="Shims\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
@@ -54,18 +39,14 @@
   </ItemGroup>
   
   <ItemGroup>
-    <EmbeddedResource Update="Properties/Resources.resx">
+    <EmbeddedResource Update="Shims\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   
   <ItemGroup>
-    <Folder Include="Generators\" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\CodeAnalysis.CSharp\MaSch.CodeAnalysis.CSharp.csproj" />
+    <MaSchReference Include="CodeAnalysis.CSharp" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -30,6 +30,7 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CodeConfigurationKeywordsExtensions.cs</LastGenOutput>
     </None>
+    <None Include="$(GitRootDir)bin/$(Configuration)/netstandard2.0/MaSch.CodeAnalysis.CSharp.Generators.dll" Pack="true" PackagePath="analyzers/netstandard2.0" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>

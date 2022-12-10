@@ -1,30 +1,39 @@
-﻿using MaSch.Core;
-using MaSch.Generators.Common;
-using MaSch.Generators.Properties;
+﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration;
+using MaSch.Core;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Linq;
 using System.Threading;
+using ShimsEnum = MaSch.Core.Shims;
 
-namespace MaSch.Generators;
+namespace MaSch.Generators.Shims;
 
 /// <summary>
 /// A C# 9 Source Generator that generates shims.
 /// </summary>
 /// <seealso cref="ISourceGenerator" />
 [Generator]
-public class ShimsGenerator : IIncrementalGenerator
+public class Generator : IIncrementalGenerator
 {
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
+        context.RegisterPostInitializationOutput(AddPostInitializationSources);
+
         var shims = context.SyntaxProvider
             .CreateSyntaxProvider(
                 predicate: FilterSyntax,
                 transform: Transform)
-            .Where(x => x != Shims.None);
+            .Where(x => x != ShimsEnum.None);
 
-        context.RegisterSourceOutput(shims, (ctx, source) => Execute(ctx, source));
+        context.RegisterSourceOutput(shims, Execute);
+    }
+
+    private static void AddPostInitializationSources(IncrementalGeneratorPostInitializationContext context)
+    {
+        new StaticSourceCreator(context.AddSource)
+            .AddSource(Resources.Shims)
+            .AddSource(Resources.ShimsAttribute);
     }
 
     private static bool FilterSyntax(SyntaxNode node, CancellationToken cancellation)
@@ -34,7 +43,7 @@ public class ShimsGenerator : IIncrementalGenerator
                attributeListSyntax.Target?.Identifier.ValueText == "assembly";
     }
 
-    private static Shims Transform(GeneratorSyntaxContext context, CancellationToken cancellation)
+    private static ShimsEnum Transform(GeneratorSyntaxContext context, CancellationToken cancellation)
     {
         if (context.Node is not AttributeSyntax attributeSyntax ||
             context.SemanticModel.GetSymbolInfo(attributeSyntax, cancellation).Symbol is not IMethodSymbol methodSymbol ||
@@ -44,21 +53,21 @@ public class ShimsGenerator : IIncrementalGenerator
         }
 
         var shimsAttributeData = context.SemanticModel.Compilation.Assembly.GetAttributes().FirstOrDefault(x => SymbolEqualityComparer.Default.Equals(x.AttributeConstructor, methodSymbol));
-        return (Shims)(shimsAttributeData?.ConstructorArguments.FirstOrDefault().Value as int? ?? 0);
+        return (ShimsEnum)(shimsAttributeData?.ConstructorArguments.FirstOrDefault().Value as int? ?? 0);
     }
 
-    private static void Execute(SourceProductionContext context, Shims shims)
+    private static void Execute(SourceProductionContext context, ShimsEnum shims)
     {
         var creator = new StaticSourceCreator(context.AddSource);
-        if (shims.HasFlag(Shims.Records))
+        if (shims.HasFlag(ShimsEnum.Records))
             creator.AddSource(Resources.Records);
-        if (shims.HasFlag(Shims.IndexAndRange))
+        if (shims.HasFlag(ShimsEnum.IndexAndRange))
             creator.AddSource(Resources.IndexAndRange);
-        if (shims.HasFlag(Shims.NullableReferenceTypes))
+        if (shims.HasFlag(ShimsEnum.NullableReferenceTypes))
             creator.AddSource(Resources.NullableReferenceTypes);
-        if (shims.HasFlag(Shims.OSVersioning))
+        if (shims.HasFlag(ShimsEnum.OSVersioning))
             creator.AddSource(Resources.OSVersioning);
-        if (shims.HasFlag(Shims.CallerArgumentExpression))
+        if (shims.HasFlag(ShimsEnum.CallerArgumentExpression))
             creator.AddSource(Resources.CallerArgumentExpression);
     }
 }

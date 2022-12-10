@@ -1,4 +1,7 @@
-﻿namespace MaSch.CodeAnalysis.CSharp;
+﻿#pragma warning disable SA1649 // File name should match first type name
+#pragma warning disable SA1402 // File may only contain a single type
+
+namespace MaSch.CodeAnalysis.CSharp;
 
 /// <summary>
 /// Specifies an access modifier of a member in C#.
@@ -124,6 +127,9 @@ public enum CodeAttributeTarget
     Type,
 }
 
+/// <summary>
+/// Specified the variance of a generic parameter.
+/// </summary>
 public enum GenericParameterVariance
 {
     /// <summary>
@@ -150,15 +156,95 @@ public enum GenericParameterVariance
     Out = Covariant,
 }
 
+/// <summary>
+/// Specifies the style to use when writing a method body.
+/// </summary>
 public enum MethodBodyType
 {
+    /// <summary>
+    /// Creates a C# code block around the method body.
+    /// </summary>
+    /// <remarks>
+    /// Example:
+    /// <code>
+    /// void MyMethod()
+    /// {
+    ///     // Method body
+    /// }
+    /// </code>
+    /// </remarks>
     Block,
+
+    /// <summary>
+    /// Uses the expression body syntax (=>).
+    /// </summary>
+    /// <remarks>
+    /// Example:
+    /// <code>
+    /// void MyMethod() => [...];
+    /// </code>
+    /// </remarks>
     Expression,
+
+    /// <summary>
+    /// Uses the expression body syntax (=>) and makes sure the expression starts in a new line that is indented.
+    /// </summary>
+    /// <remarks>
+    /// Example:
+    /// <code>
+    /// void MyMethod()
+    ///     => [...];
+    /// </code>
+    /// </remarks>
     ExpressionNewLine,
 }
 
+/// <summary>
+/// Specifies the case style of a string.
+/// </summary>
+public enum CaseStyle
+{
+    /// <summary>
+    /// Uses pascal case.
+    /// </summary>
+    /// <remarks><code>ThisIsATest</code></remarks>
+    PascalCase,
+
+    /// <summary>
+    /// Uses camel case.
+    /// </summary>
+    /// <remarks><code>thisIsATest</code></remarks>
+    CamelCase,
+
+    /// <summary>
+    /// Uses kebab case.
+    /// </summary>
+    /// <remarks><code>this-is-a-test</code></remarks>
+    KebabCase,
+
+    /// <summary>
+    /// Uses snake case.
+    /// </summary>
+    /// <remarks><code>this_is_a_test</code></remarks>
+    SnakeCase,
+
+    /// <summary>
+    /// Uses snake case in all upper case letters.
+    /// </summary>
+    /// <remarks><code>THIS_IS_A_TEST</code></remarks>
+    UpperSnakeCase,
+}
+
+/// <summary>
+/// Provides extension methods for the <see cref="AccessModifier"/> enum.
+/// </summary>
 public static class AccessModifierExtensions
 {
+    /// <summary>
+    /// Converts this <see cref="AccessModifier"/> to the prefix for a C# member.
+    /// </summary>
+    /// <param name="accessModifier">The access modifier to convert.</param>
+    /// <returns>The prefix for a C# member representing the given access modifier.</returns>
     public static string ToMemberPrefix(this AccessModifier accessModifier)
     {
         return accessModifier switch
@@ -175,8 +261,16 @@ public static class AccessModifierExtensions
     }
 }
 
+/// <summary>
+/// Provides extension methods for the <see cref="MemberKeyword"/> enum.
+/// </summary>
 public static class MemberKeywordExtensions
 {
+    /// <summary>
+    /// Converts this <see cref="MemberKeyword"/> to the prefix for a C# member.
+    /// </summary>
+    /// <param name="keyword">The keyword to convert.</param>
+    /// <returns>The prefix for a C# member representing the given keyword.</returns>
     public static string ToMemberPrefix(this MemberKeyword keyword)
     {
         string prefix = string.Empty;
@@ -208,8 +302,16 @@ public static class MemberKeywordExtensions
     }
 }
 
+/// <summary>
+/// Provides extension methods for the <see cref="CodeAttributeTarget"/> enum.
+/// </summary>
 public static class CodeAttributeTargetExtensions
 {
+    /// <summary>
+    /// Converts this <see cref="CodeAttributeTarget"/> to the prefix for a C# code attribute.
+    /// </summary>
+    /// <param name="target">The target to convert.</param>
+    /// <returns>The prefix for a C# code attribute representing the given target.</returns>
     public static string ToAttributePrefix(this CodeAttributeTarget target)
     {
         return target switch
@@ -228,8 +330,16 @@ public static class CodeAttributeTargetExtensions
     }
 }
 
+/// <summary>
+/// Provides extension methods for the <see cref="GenericParameterVariance"/> enum.
+/// </summary>
 public static class GenericParameterVarianceExtensions
 {
+    /// <summary>
+    /// Converts this <see cref="GenericParameterVariance"/> to the prefix for a generic parameter in C#.
+    /// </summary>
+    /// <param name="variance">The variance to convert.</param>
+    /// <returns>The prefix for a generic parameter in C# representing the given variance.</returns>
     public static string ToParameterPrefix(this GenericParameterVariance variance)
     {
         return variance switch

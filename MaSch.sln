@@ -127,6 +127,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaSch.CodeAnalysis.CSharp",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaSch.CodeAnalysis.CSharp.UnitTests", "test\CodeAnalysis.CSharp.UnitTests\MaSch.CodeAnalysis.CSharp.UnitTests.csproj", "{FA21B598-BA4A-4552-9940-C545A4C8E9F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaSch.CodeAnalysis.CSharp.Generators", "src\CodeAnalysis.CSharp.Generators\MaSch.CodeAnalysis.CSharp.Generators.csproj", "{B787D08E-73CD-45FD-8B07-D183C1B722C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -617,6 +619,18 @@ Global
 		{FA21B598-BA4A-4552-9940-C545A4C8E9F0}.Release|x64.Build.0 = Release|Any CPU
 		{FA21B598-BA4A-4552-9940-C545A4C8E9F0}.Release|x86.ActiveCfg = Release|Any CPU
 		{FA21B598-BA4A-4552-9940-C545A4C8E9F0}.Release|x86.Build.0 = Release|Any CPU
+		{B787D08E-73CD-45FD-8B07-D183C1B722C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B787D08E-73CD-45FD-8B07-D183C1B722C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B787D08E-73CD-45FD-8B07-D183C1B722C0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B787D08E-73CD-45FD-8B07-D183C1B722C0}.Debug|x64.Build.0 = Debug|Any CPU
+		{B787D08E-73CD-45FD-8B07-D183C1B722C0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B787D08E-73CD-45FD-8B07-D183C1B722C0}.Debug|x86.Build.0 = Debug|Any CPU
+		{B787D08E-73CD-45FD-8B07-D183C1B722C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B787D08E-73CD-45FD-8B07-D183C1B722C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B787D08E-73CD-45FD-8B07-D183C1B722C0}.Release|x64.ActiveCfg = Release|Any CPU
+		{B787D08E-73CD-45FD-8B07-D183C1B722C0}.Release|x64.Build.0 = Release|Any CPU
+		{B787D08E-73CD-45FD-8B07-D183C1B722C0}.Release|x86.ActiveCfg = Release|Any CPU
+		{B787D08E-73CD-45FD-8B07-D183C1B722C0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
