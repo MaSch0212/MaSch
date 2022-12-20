@@ -1,0 +1,42 @@
+﻿// Single Line Line Comment
+interface MyInterface1
+{
+    // Interface Content
+}
+
+// Multi Line Line Comment (Line 1)
+// Multi Line Line Comment (Line 2)
+// Multi Line Line Comment (Line 3)
+interface MyInterface2
+{
+    // Interface Content
+}
+
+/* Single Line Block Comment */
+interface MyInterface3
+{
+    // Interface Content
+}
+
+/* Multi Line Block Comment (Line 1)
+ * Multi Line Block Comment (Line 2)
+ * Multi Line Block Comment (Line 3)
+ */
+interface MyInterface4
+{
+    // Interface Content
+}
+
+/// Single Line Doc Comment
+interface MyInterface5
+{
+    // Interface Content
+}
+
+/// Multi Line Doc Comment (Line 1)
+/// Multi Line Doc Comment (Line 2)
+/// Multi Line Doc Comment (Line 3)
+interface MyInterface6
+{
+    // Interface Content
+}

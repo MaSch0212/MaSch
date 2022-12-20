@@ -104,7 +104,8 @@ public class SourceBuilderTests : SourceBuilderTestBase<ISourceBuilder>
     [DataRow("{", DisplayName = "Only opening squirly bracket")]
     [DataRow("    {", DisplayName = "Opening squirly bracket with spaces")]
     [DataRow("\t{", DisplayName = "Opening squirly bracket with tabs")]
-    [DataRow("// Text", DisplayName = "Text")]
+    [DataRow("// Text", DisplayName = "Comment")]
+    [DataRow("private string _test;", DisplayName = "Not empty line")]
     public async Task EnsurePreviousLineEmpty(string lineContent)
     {
         Builder.AppendLine(lineContent);
@@ -117,7 +118,7 @@ public class SourceBuilderTests : SourceBuilderTestBase<ISourceBuilder>
     [TestMethod]
     public async Task EnsurePreviousLineEmpty_CurrentLineNotEmpty()
     {
-        Builder.Append("// Test");
+        Builder.Append("private string _test;");
         Builder.EnsurePreviousLineEmpty();
         Builder.AppendLine("// Line above should be empty!");
 

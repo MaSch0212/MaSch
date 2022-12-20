@@ -31,6 +31,7 @@ public sealed partial class SourceBuilder
     private bool _isLineIndented = false;
     private bool _isLastLineEmpty;
     private bool _isCurrentLineEmpty;
+    private bool _isCurrentLineComment;
 
     private SourceBuilder(SourceBuilderOptions options)
     {
@@ -166,12 +167,16 @@ public sealed partial class SourceBuilder
                 _isLastLineEmpty = _isCurrentLineEmpty;
                 _ = _builder.AppendLine();
                 _isCurrentLineEmpty = true;
+                _isCurrentLineComment = false;
                 _isLineIndented = false;
 
                 lineStartIndex = i + 1;
             }
 
-            if (!char.IsWhiteSpace(value[i]) && value[i] is not '{')
+            if (!_isCurrentLineComment && value[i] is '/' && i < value.Length - 2 && value[i + 1] is '/')
+                _isCurrentLineComment = true;
+
+            if (!char.IsWhiteSpace(value[i]) && value[i] is not '{' && !_isCurrentLineComment)
                 _isCurrentLineEmpty = false;
         }
 
@@ -199,6 +204,7 @@ public sealed partial class SourceBuilder
         {
             _isLastLineEmpty = _isCurrentLineEmpty;
             _isCurrentLineEmpty = true;
+            _isCurrentLineComment = false;
             _isLineIndented = false;
         }
         else if (value is not '{')
@@ -275,15 +281,21 @@ public sealed partial class SourceBuilder
         return this;
     }
 
-    private SourceBuilder EnsurePreviousLineEmpty(bool condition)
-        => condition ? EnsurePreviousLineEmpty() : this;
+    private SourceBuilder EnsurePreviousLineEmpty(ICodeConfiguration configuration, bool condition)
+    {
+        if (!condition && Options.EnsureEmptyLineBeforeMembersWithComments && configuration is ISupportsLineCommentsConfiguration supportsLineCommentsConfiguration)
+            condition = condition || supportsLineCommentsConfiguration.HasComments;
+        if (!condition && Options.EnsureEmptyLineBeforeMembersWithAttributes && configuration is ISupportsCodeAttributeConfiguration supportsCodeAttributeConfiguration)
+            condition = condition || supportsCodeAttributeConfiguration.HasAttributes;
+        return condition ? EnsurePreviousLineEmpty() : this;
+    }
 
     private SourceBuilder Append(INamespaceImportConfiguration namespaceImportConfiguration)
         => AppendWithLineTerminator(namespaceImportConfiguration);
 
     private SourceBuilder Append(INamespaceConfiguration namespaceConfiguration, Action<INamespaceBuilder>? builderFunc)
     {
-        EnsurePreviousLineEmpty(Options.EnsureEmptyLineBeforeNamespaces);
+        EnsurePreviousLineEmpty(namespaceConfiguration, Options.EnsureEmptyLineBeforeNamespaces);
 
         if (builderFunc is null)
             return AppendWithLineTerminator(namespaceConfiguration);
@@ -292,14 +304,14 @@ public sealed partial class SourceBuilder
     }
 
     private SourceBuilder Append(IClassConfiguration classConfiguration, Action<IClassBuilder> builderFunc)
-        => EnsurePreviousLineEmpty(Options.EnsureEmptyLineBeforeTypes).AppendAsBlock(classConfiguration, this, builderFunc);
+        => EnsurePreviousLineEmpty(classConfiguration, Options.EnsureEmptyLineBeforeTypes).AppendAsBlock(classConfiguration, this, builderFunc);
 
     private SourceBuilder Append(IInterfaceConfguration interfaceConfguration, Action<IInterfaceBuilder> builderFunc)
-        => EnsurePreviousLineEmpty(Options.EnsureEmptyLineBeforeTypes).AppendAsBlock(interfaceConfguration, this, builderFunc);
+        => EnsurePreviousLineEmpty(interfaceConfguration, Options.EnsureEmptyLineBeforeTypes).AppendAsBlock(interfaceConfguration, this, builderFunc);
 
     private SourceBuilder Append(IRecordConfiguration recordConfiguration, Action<IRecordBuilder>? builderFunc)
     {
-        EnsurePreviousLineEmpty(Options.EnsureEmptyLineBeforeTypes);
+        EnsurePreviousLineEmpty(recordConfiguration, Options.EnsureEmptyLineBeforeTypes);
 
         if (builderFunc is null)
             return AppendWithLineTerminator(recordConfiguration);
@@ -308,29 +320,29 @@ public sealed partial class SourceBuilder
     }
 
     private SourceBuilder Append(IStructConfiguration structConfiguration, Action<IStructBuilder> builderFunc)
-        => EnsurePreviousLineEmpty(Options.EnsureEmptyLineBeforeTypes).AppendAsBlock(structConfiguration, this, builderFunc);
+        => EnsurePreviousLineEmpty(structConfiguration, Options.EnsureEmptyLineBeforeTypes).AppendAsBlock(structConfiguration, this, builderFunc);
 
     private SourceBuilder Append(IEnumConfiguration enumConfiguration, Action<IEnumBuilder> builderFunc)
-        => EnsurePreviousLineEmpty(Options.EnsureEmptyLineBeforeTypes).AppendAsBlock(enumConfiguration, this, builderFunc);
+        => EnsurePreviousLineEmpty(enumConfiguration, Options.EnsureEmptyLineBeforeTypes).AppendAsBlock(enumConfiguration, this, builderFunc);
 
     private SourceBuilder Append(IDelegateConfiguration delegateConfiguration)
-        => EnsurePreviousLineEmpty(Options.EnsureEmptyLineBeforeTypes).AppendWithLineTerminator(delegateConfiguration);
+        => EnsurePreviousLineEmpty(delegateConfiguration, Options.EnsureEmptyLineBeforeTypes).AppendWithLineTerminator(delegateConfiguration);
 
     private SourceBuilder Append(IConstructorConfiguration constructorConfiguration, Action<ISourceBuilder> builderFunc)
-        => EnsurePreviousLineEmpty(Options.EnsureEmptyLineBeforeConstructors).AppendAs(constructorConfiguration.BodyType, constructorConfiguration, builderFunc);
+        => EnsurePreviousLineEmpty(constructorConfiguration, Options.EnsureEmptyLineBeforeConstructors).AppendAs(constructorConfiguration.BodyType, constructorConfiguration, builderFunc);
 
     private SourceBuilder Append(IStaticConstructorConfiguration staticConstructorConfiguration, Action<ISourceBuilder> builderFunc)
-        => EnsurePreviousLineEmpty(Options.EnsureEmptyLineBeforeConstructors).AppendAs(staticConstructorConfiguration.BodyType, staticConstructorConfiguration, builderFunc);
+        => EnsurePreviousLineEmpty(staticConstructorConfiguration, Options.EnsureEmptyLineBeforeConstructors).AppendAs(staticConstructorConfiguration.BodyType, staticConstructorConfiguration, builderFunc);
 
     private SourceBuilder Append(IFinalizerConfiguration finalizerConfiguration, Action<ISourceBuilder> builderFunc)
-        => EnsurePreviousLineEmpty(Options.EnsureEmptyLineBeforeConstructors).AppendAs(finalizerConfiguration.BodyType, finalizerConfiguration, builderFunc);
+        => EnsurePreviousLineEmpty(finalizerConfiguration, Options.EnsureEmptyLineBeforeConstructors).AppendAs(finalizerConfiguration.BodyType, finalizerConfiguration, builderFunc);
 
     private SourceBuilder Append(IFieldConfiguration fieldConfiguration)
-        => EnsurePreviousLineEmpty(Options.EnsureEmptyLineBeforeFields).AppendWithLineTerminator(fieldConfiguration);
+        => EnsurePreviousLineEmpty(fieldConfiguration, Options.EnsureEmptyLineBeforeFields).AppendWithLineTerminator(fieldConfiguration);
 
     private SourceBuilder Append(IEventConfiguration eventConfiguration, Action<ISourceBuilder>? addMethodBuilderFunc, Action<ISourceBuilder>? removeMethodBuilderFunc)
     {
-        EnsurePreviousLineEmpty(Options.EnsureEmptyLineBeforeProperties);
+        EnsurePreviousLineEmpty(eventConfiguration, Options.EnsureEmptyLineBeforeProperties);
 
         if (addMethodBuilderFunc is null || removeMethodBuilderFunc is null)
             return AppendWithLineTerminator(eventConfiguration);
@@ -351,7 +363,7 @@ public sealed partial class SourceBuilder
     private SourceBuilder Append<T>(T propertyConfiguration, Action<ISourceBuilder>? getBuilderFunc, Action<ISourceBuilder>? setBuilderFunc)
         where T : IPropertyConfigurationBase
     {
-        EnsurePreviousLineEmpty(Options.EnsureEmptyLineBeforeProperties);
+        EnsurePreviousLineEmpty(propertyConfiguration, Options.EnsureEmptyLineBeforeProperties);
 
         var hasGetConfig = typeof(IPropertyHasGetConfiguration).IsAssignableFrom(typeof(T)) ? (IPropertyHasGetConfiguration)propertyConfiguration : null;
         var hasSetConfig = typeof(IPropertyHasSetConfiguration).IsAssignableFrom(typeof(T)) ? (IPropertyHasSetConfiguration)propertyConfiguration : null;
@@ -423,11 +435,11 @@ public sealed partial class SourceBuilder
         => AppendAs(propertyMethodConfiguration.BodyType, propertyMethodConfiguration, builderFunc, multiline);
 
     private SourceBuilder Append(IMethodConfiguration methodConfiguration, Action<ISourceBuilder>? builderFunc)
-        => EnsurePreviousLineEmpty(Options.EnsureEmptyLineBeforeMethods).AppendAs(methodConfiguration.BodyType, methodConfiguration, builderFunc);
+        => EnsurePreviousLineEmpty(methodConfiguration, Options.EnsureEmptyLineBeforeMethods).AppendAs(methodConfiguration.BodyType, methodConfiguration, builderFunc);
 
     private SourceBuilder Append(IEnumValueConfiguration enumValueConfiguration)
     {
-        EnsurePreviousLineEmpty(Options.EnsureEmptyLineBeforeEnumValues);
+        EnsurePreviousLineEmpty(enumValueConfiguration, Options.EnsureEmptyLineBeforeEnumValues);
         enumValueConfiguration.WriteTo(this);
         return Append(',').AppendLine();
     }

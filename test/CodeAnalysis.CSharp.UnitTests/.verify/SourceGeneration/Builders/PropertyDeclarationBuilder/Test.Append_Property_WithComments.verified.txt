@@ -1,0 +1,24 @@
+﻿// Single Line Line Comment
+string MyProperty1 { get; set; }
+
+// Multi Line Line Comment (Line 1)
+// Multi Line Line Comment (Line 2)
+// Multi Line Line Comment (Line 3)
+string MyProperty2 { get; set; }
+
+/* Single Line Block Comment */
+string MyProperty3 { get; set; }
+
+/* Multi Line Block Comment (Line 1)
+ * Multi Line Block Comment (Line 2)
+ * Multi Line Block Comment (Line 3)
+ */
+string MyProperty4 { get; set; }
+
+/// Single Line Doc Comment
+string MyProperty5 { get; set; }
+
+/// Multi Line Doc Comment (Line 1)
+/// Multi Line Doc Comment (Line 2)
+/// Multi Line Doc Comment (Line 3)
+string MyProperty6 { get; set; }

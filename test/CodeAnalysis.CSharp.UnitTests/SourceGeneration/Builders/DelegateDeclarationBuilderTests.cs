@@ -96,6 +96,19 @@ public class DelegateDeclarationBuilderTests : SourceBuilderTestBase<IDelegateDe
     }
 
     [TestMethod]
+    public async Task Append_Delegate_WithComments()
+    {
+        Builder.Append(Delegate("MyDelegate1").WithLineComment("Single Line Line Comment"));
+        Builder.Append(Delegate("MyDelegate2").WithLineComment("Multi Line Line Comment (Line 1)\r\nMulti Line Line Comment (Line 2)\nMulti Line Line Comment (Line 3)"));
+        Builder.Append(Delegate("MyDelegate3").WithBlockComment("Single Line Block Comment"));
+        Builder.Append(Delegate("MyDelegate4").WithBlockComment("Multi Line Block Comment (Line 1)\r\nMulti Line Block Comment (Line 2)\nMulti Line Block Comment (Line 3)"));
+        Builder.Append(Delegate("MyDelegate5").WithDocComment("Single Line Doc Comment"));
+        Builder.Append(Delegate("MyDelegate6").WithDocComment("Multi Line Doc Comment (Line 1)\r\nMulti Line Doc Comment (Line 2)\nMulti Line Doc Comment (Line 3)"));
+
+        await VerifyBuilder();
+    }
+
+    [TestMethod]
     public async Task Append_Delegate_WithEverything()
     {
         Builder.Append(

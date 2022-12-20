@@ -1,0 +1,42 @@
+﻿// Single Line Line Comment
+class MyClass1
+{
+    // Class Content
+}
+
+// Multi Line Line Comment (Line 1)
+// Multi Line Line Comment (Line 2)
+// Multi Line Line Comment (Line 3)
+class MyClass2
+{
+    // Class Content
+}
+
+/* Single Line Block Comment */
+class MyClass3
+{
+    // Class Content
+}
+
+/* Multi Line Block Comment (Line 1)
+ * Multi Line Block Comment (Line 2)
+ * Multi Line Block Comment (Line 3)
+ */
+class MyClass4
+{
+    // Class Content
+}
+
+/// Single Line Doc Comment
+class MyClass5
+{
+    // Class Content
+}
+
+/// Multi Line Doc Comment (Line 1)
+/// Multi Line Doc Comment (Line 2)
+/// Multi Line Doc Comment (Line 3)
+class MyClass6
+{
+    // Class Content
+}

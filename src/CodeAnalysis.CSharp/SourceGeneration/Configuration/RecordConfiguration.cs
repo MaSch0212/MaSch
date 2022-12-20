@@ -43,6 +43,7 @@ internal sealed class RecordConfiguration : TypeConfiguration<IRecordConfigurati
 
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
+        WriteCommentsTo(sourceBuilder);
         WriteCodeAttributesTo(sourceBuilder);
         WriteKeywordsTo(sourceBuilder);
         sourceBuilder.Append("record ");

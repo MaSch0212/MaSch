@@ -1,0 +1,42 @@
+﻿// Single Line Line Comment
+enum MyEnum1
+{
+    // Enum Content
+}
+
+// Multi Line Line Comment (Line 1)
+// Multi Line Line Comment (Line 2)
+// Multi Line Line Comment (Line 3)
+enum MyEnum2
+{
+    // Enum Content
+}
+
+/* Single Line Block Comment */
+enum MyEnum3
+{
+    // Enum Content
+}
+
+/* Multi Line Block Comment (Line 1)
+ * Multi Line Block Comment (Line 2)
+ * Multi Line Block Comment (Line 3)
+ */
+enum MyEnum4
+{
+    // Enum Content
+}
+
+/// Single Line Doc Comment
+enum MyEnum5
+{
+    // Enum Content
+}
+
+/// Multi Line Doc Comment (Line 1)
+/// Multi Line Doc Comment (Line 2)
+/// Multi Line Doc Comment (Line 3)
+enum MyEnum6
+{
+    // Enum Content
+}

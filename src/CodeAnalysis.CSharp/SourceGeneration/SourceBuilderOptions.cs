@@ -59,4 +59,14 @@ public sealed class SourceBuilderOptions
     /// Gets a value indicating whether it should be ensured that the line above a generated enum value is empty.
     /// </summary>
     public bool EnsureEmptyLineBeforeEnumValues { get; init; } = false;
+
+    /// <summary>
+    /// Gets a value indicating whether it should be ensured that the line above a member that has comments defined is empty.
+    /// </summary>
+    public bool EnsureEmptyLineBeforeMembersWithComments { get; init; } = true;
+
+    /// <summary>
+    /// Gets a value indicating whether it should be ensured that the line above a member that has code attributes defined is empty.
+    /// </summary>
+    public bool EnsureEmptyLineBeforeMembersWithAttributes { get; init; } = true;
 }

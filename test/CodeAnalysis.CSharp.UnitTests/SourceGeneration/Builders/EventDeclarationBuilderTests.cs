@@ -105,6 +105,19 @@ public class EventDeclarationBuilderTests : SourceBuilderTestBase<IEventDeclarat
     }
 
     [TestMethod]
+    public async Task Append_Event_WithComments()
+    {
+        Builder.Append(Event("EventHandler", "MyEvent1").WithLineComment("Single Line Line Comment"));
+        Builder.Append(Event("EventHandler", "MyEvent2").WithLineComment("Multi Line Line Comment (Line 1)\r\nMulti Line Line Comment (Line 2)\nMulti Line Line Comment (Line 3)"));
+        Builder.Append(Event("EventHandler", "MyEvent3").WithBlockComment("Single Line Block Comment"));
+        Builder.Append(Event("EventHandler", "MyEvent4").WithBlockComment("Multi Line Block Comment (Line 1)\r\nMulti Line Block Comment (Line 2)\nMulti Line Block Comment (Line 3)"));
+        Builder.Append(Event("EventHandler", "MyEvent5").WithDocComment("Single Line Doc Comment"));
+        Builder.Append(Event("EventHandler", "MyEvent6").WithDocComment("Multi Line Doc Comment (Line 1)\r\nMulti Line Doc Comment (Line 2)\nMulti Line Doc Comment (Line 3)"));
+
+        await VerifyBuilder();
+    }
+
+    [TestMethod]
     public async Task Append_Event_WithEverything()
     {
         Builder.Append(

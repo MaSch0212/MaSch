@@ -1,6 +1,7 @@
 ﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration;
 using MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Threading.Tasks;
 
 namespace MaSch.CodeAnalysis.CSharp.UnitTests.SourceGeneration.Builders;
 
@@ -78,6 +79,19 @@ public class ClassDeclarationBuilderTests : SourceBuilderTestBase<IClassDeclarat
         Builder.Append(Class("MyClass3").Implements("IDisposable").Implements("ISerializable"), ClassDummyContent);
         Builder.Append(Class("MyClass4").DerivesFrom("object").Implements("IDisposable"), ClassDummyContent);
         Builder.Append(Class("MyClass5").DerivesFrom("object").Implements("IDisposable").Implements("ISerializable"), ClassDummyContent);
+
+        await VerifyBuilder();
+    }
+
+    [TestMethod]
+    public async Task Append_Class_WithComments()
+    {
+        Builder.Append(Class("MyClass1").WithLineComment("Single Line Line Comment"), ClassDummyContent);
+        Builder.Append(Class("MyClass2").WithLineComment("Multi Line Line Comment (Line 1)\r\nMulti Line Line Comment (Line 2)\nMulti Line Line Comment (Line 3)"), ClassDummyContent);
+        Builder.Append(Class("MyClass3").WithBlockComment("Single Line Block Comment"), ClassDummyContent);
+        Builder.Append(Class("MyClass4").WithBlockComment("Multi Line Block Comment (Line 1)\r\nMulti Line Block Comment (Line 2)\nMulti Line Block Comment (Line 3)"), ClassDummyContent);
+        Builder.Append(Class("MyClass5").WithDocComment("Single Line Doc Comment"), ClassDummyContent);
+        Builder.Append(Class("MyClass6").WithDocComment("Multi Line Doc Comment (Line 1)\r\nMulti Line Doc Comment (Line 2)\nMulti Line Doc Comment (Line 3)"), ClassDummyContent);
 
         await VerifyBuilder();
     }

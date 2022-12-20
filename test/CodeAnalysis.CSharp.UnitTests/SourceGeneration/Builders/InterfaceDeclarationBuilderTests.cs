@@ -79,6 +79,19 @@ public class InterfaceDeclarationBuilderTests : SourceBuilderTestBase<IInterface
     }
 
     [TestMethod]
+    public async Task Append_Interface_WithComments()
+    {
+        Builder.Append(Interface("MyInterface1").WithLineComment("Single Line Line Comment"), InterfaceDummyContent);
+        Builder.Append(Interface("MyInterface2").WithLineComment("Multi Line Line Comment (Line 1)\r\nMulti Line Line Comment (Line 2)\nMulti Line Line Comment (Line 3)"), InterfaceDummyContent);
+        Builder.Append(Interface("MyInterface3").WithBlockComment("Single Line Block Comment"), InterfaceDummyContent);
+        Builder.Append(Interface("MyInterface4").WithBlockComment("Multi Line Block Comment (Line 1)\r\nMulti Line Block Comment (Line 2)\nMulti Line Block Comment (Line 3)"), InterfaceDummyContent);
+        Builder.Append(Interface("MyInterface5").WithDocComment("Single Line Doc Comment"), InterfaceDummyContent);
+        Builder.Append(Interface("MyInterface6").WithDocComment("Multi Line Doc Comment (Line 1)\r\nMulti Line Doc Comment (Line 2)\nMulti Line Doc Comment (Line 3)"), InterfaceDummyContent);
+
+        await VerifyBuilder();
+    }
+
+    [TestMethod]
     public async Task Append_Interface_WithEverything()
     {
         Builder.Append(

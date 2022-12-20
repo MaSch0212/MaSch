@@ -124,6 +124,19 @@ public class IndexerDeclarationBuilderTests : SourceBuilderTestBase<IIndexerDecl
     }
 
     [TestMethod]
+    public async Task Append_Indexer_WithComments()
+    {
+        Builder.Append(Indexer("string").WithLineComment("Single Line Line Comment"));
+        Builder.Append(Indexer("string").WithLineComment("Multi Line Line Comment (Line 1)\r\nMulti Line Line Comment (Line 2)\nMulti Line Line Comment (Line 3)"));
+        Builder.Append(Indexer("string").WithBlockComment("Single Line Block Comment"));
+        Builder.Append(Indexer("string").WithBlockComment("Multi Line Block Comment (Line 1)\r\nMulti Line Block Comment (Line 2)\nMulti Line Block Comment (Line 3)"));
+        Builder.Append(Indexer("string").WithDocComment("Single Line Doc Comment"));
+        Builder.Append(Indexer("string").WithDocComment("Multi Line Doc Comment (Line 1)\r\nMulti Line Doc Comment (Line 2)\nMulti Line Doc Comment (Line 3)"));
+
+        await VerifyBuilder();
+    }
+
+    [TestMethod]
     public async Task Append_Indexer_WithEverything()
     {
         Builder.Append(

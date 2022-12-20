@@ -11,7 +11,7 @@ namespace MaSch.Generators.Shims;
 /// <summary>
 /// A C# 9 Source Generator that generates shims.
 /// </summary>
-/// <seealso cref="ISourceGenerator" />
+/// <seealso cref="IIncrementalGenerator" />
 [Generator]
 public class Generator : IIncrementalGenerator
 {

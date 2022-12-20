@@ -20,6 +20,7 @@ internal sealed class DelegateConfiguration : MethodConfiguration<IDelegateConfi
     /// <inheritdoc/>
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
+        WriteCommentsTo(sourceBuilder);
         WriteCodeAttributesTo(sourceBuilder);
         WriteKeywordsTo(sourceBuilder);
         sourceBuilder.Append("delegate ");

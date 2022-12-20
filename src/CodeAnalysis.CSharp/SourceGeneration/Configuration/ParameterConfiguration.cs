@@ -1,7 +1,11 @@
-﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
+﻿using MaSch.CodeAnalysis.CSharp.Extensions;
+
+namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
 public interface IParameterConfiguration : ISupportsCodeAttributeConfiguration<IParameterConfiguration>
 {
+    IParameterConfiguration WithDefaultValue(string defaultValue);
+
     void WriteTo(ISourceBuilder sourceBuilder, bool lineBreakAfterCodeAttribute);
 }
 
@@ -10,12 +14,15 @@ internal sealed class ParameterConfiguration : CodeConfigurationBase, IParameter
     private readonly string _type;
     private readonly string _name;
     private readonly List<ICodeAttributeConfiguration> _codeAttributes = new();
+    private string? _defaultValue;
 
     public ParameterConfiguration(string type, string name)
     {
         _type = type;
         _name = name;
     }
+
+    public bool HasAttributes => _codeAttributes.Count > 0;
 
     protected override int StartCapacity => 16;
 
@@ -57,6 +64,12 @@ internal sealed class ParameterConfiguration : CodeConfigurationBase, IParameter
     ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
         => WithCodeAttribute(attributeTypeName, attributeConfiguration);
 
+    public IParameterConfiguration WithDefaultValue(string defaultValue)
+    {
+        _defaultValue = defaultValue;
+        return this;
+    }
+
     public override void WriteTo(ISourceBuilder sourceBuilder)
         => WriteTo(sourceBuilder, false);
 
@@ -72,5 +85,8 @@ internal sealed class ParameterConfiguration : CodeConfigurationBase, IParameter
         }
 
         sourceBuilder.Append(_type).Append(' ').Append(_name);
+
+        if (_defaultValue != null)
+            sourceBuilder.Append(" = ").Append(_defaultValue);
     }
 }

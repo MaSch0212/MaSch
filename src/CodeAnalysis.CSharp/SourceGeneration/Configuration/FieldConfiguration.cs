@@ -32,6 +32,7 @@ internal sealed class FieldConfiguration : MemberConfiguration<IFieldConfigurati
     /// <inheritdoc/>
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
+        WriteCommentsTo(sourceBuilder);
         WriteCodeAttributesTo(sourceBuilder);
         WriteKeywordsTo(sourceBuilder);
         sourceBuilder.Append($"{_fieldTypeName} ");

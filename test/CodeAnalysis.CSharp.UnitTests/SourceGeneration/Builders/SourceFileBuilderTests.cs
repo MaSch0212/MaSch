@@ -9,7 +9,7 @@ public class SourceFileBuilderTests : SourceBuilderTestBase<ISourceFileBuilder>
     [SourceBuilderOptions(EnsureEmptyLineBeforeNamespaces = true)]
     public async Task Append_FileScopedNamespace_WithLineSeparation()
     {
-        Builder.AppendLine("// Header");
+        Builder.AppendLine("stuff");
         Builder.Append(Namespace("My.Fancy.Namespace"));
 
         await VerifyBuilder();

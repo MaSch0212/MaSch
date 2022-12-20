@@ -41,6 +41,7 @@ internal sealed class IndexerConfiguration :
 
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
+        WriteCommentsTo(sourceBuilder);
         WriteCodeAttributesTo(sourceBuilder);
         WriteKeywordsTo(sourceBuilder);
         WriteNameTo(sourceBuilder);
@@ -176,6 +177,42 @@ internal sealed class IndexerConfiguration :
     private IndexerConfiguration WithParameter(string type, string name, Action<IParameterConfiguration>? parameterConfiguration)
     {
         ParameterConfiguration.AddParameter(_parameters, type, name, parameterConfiguration);
+        return this;
+    }
+
+    IReadOnlyIndexerConfiguration ISupportsLineCommentsConfiguration<IReadOnlyIndexerConfiguration>.WithLineComment(string comment)
+    {
+        WithLineComment(comment);
+        return this;
+    }
+
+    IReadOnlyIndexerConfiguration ISupportsLineCommentsConfiguration<IReadOnlyIndexerConfiguration>.WithBlockComment(string comment)
+    {
+        WithBlockComment(comment);
+        return this;
+    }
+
+    IReadOnlyIndexerConfiguration ISupportsLineCommentsConfiguration<IReadOnlyIndexerConfiguration>.WithDocComment(string comment)
+    {
+        WithDocComment(comment);
+        return this;
+    }
+
+    IWriteOnlyIndexerConfiguration ISupportsLineCommentsConfiguration<IWriteOnlyIndexerConfiguration>.WithLineComment(string comment)
+    {
+        WithLineComment(comment);
+        return this;
+    }
+
+    IWriteOnlyIndexerConfiguration ISupportsLineCommentsConfiguration<IWriteOnlyIndexerConfiguration>.WithBlockComment(string comment)
+    {
+        WithBlockComment(comment);
+        return this;
+    }
+
+    IWriteOnlyIndexerConfiguration ISupportsLineCommentsConfiguration<IWriteOnlyIndexerConfiguration>.WithDocComment(string comment)
+    {
+        WithDocComment(comment);
         return this;
     }
 }

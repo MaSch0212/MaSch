@@ -88,6 +88,7 @@ internal sealed class ConstructorConfiguration : MemberConfiguration<IConstructo
 
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
+        WriteCommentsTo(sourceBuilder);
         WriteCodeAttributesTo(sourceBuilder);
         WriteKeywordsTo(sourceBuilder);
         WriteNameTo(sourceBuilder);

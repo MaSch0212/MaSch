@@ -33,6 +33,7 @@ internal sealed class EnumConfiguration : MemberConfiguration<IEnumConfiguration
     /// <inheritdoc/>
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
+        WriteCommentsTo(sourceBuilder);
         WriteCodeAttributesTo(sourceBuilder);
         WriteKeywordsTo(sourceBuilder);
         sourceBuilder.Append("enum ");

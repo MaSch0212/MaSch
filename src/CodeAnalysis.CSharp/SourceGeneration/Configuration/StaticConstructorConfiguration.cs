@@ -18,6 +18,7 @@ internal sealed class StaticConstructorConfiguration : CodeConfigurationBase, IS
     }
 
     public MethodBodyType BodyType { get; private set; } = MethodBodyType.Block;
+    public bool HasAttributes => _codeAttributes.Count > 0;
 
     protected override int StartCapacity => 16;
 

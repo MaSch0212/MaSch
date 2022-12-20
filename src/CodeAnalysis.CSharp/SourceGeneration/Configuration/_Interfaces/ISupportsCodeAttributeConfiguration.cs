@@ -2,6 +2,8 @@
 
 public interface ISupportsCodeAttributeConfiguration : ICodeConfiguration
 {
+    bool HasAttributes { get; }
+
     ISupportsCodeAttributeConfiguration WithCodeAttribute(string attributeTypeName);
     ISupportsCodeAttributeConfiguration WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration);
 }

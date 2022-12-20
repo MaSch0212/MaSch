@@ -22,6 +22,7 @@
     <PackageReference Update="Avalonia.Desktop" Version="0.10.13" />
     <PackageReference Update="Avalonia.Diagnostics" Version="0.10.13" />
     <PackageReference Update="Avalonia.ReactiveUI" Version="0.10.13" />
+    <PackageReference Update="Microsoft.Bcl.AsyncInterfaces" Version="7.0.0" />
     <PackageReference Update="Microsoft.CodeAnalysis.CSharp" Version="4.2.0" />
     <PackageReference Update="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Update="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
@@ -37,7 +38,7 @@
     <PackageReference Update="System.Diagnostics.EventLog" Version="6.0.0" />
     <PackageReference Update="DotNet.Glob" Version="3.1.3" />
     <PackageReference Update="Verify.SourceGenerators" Version="1.5.0" />
-    <PackageReference Update="Verify.MSTest" Version="17.5.0" />
+    <PackageReference Update="Verify" Version="19.0.0" />
     <PackageReference Update="Verify.MSTest" Version="19.0.0" />
     <PackageReference Update="FluentAssertions" Version="6.8.0" />
   </ItemGroup>

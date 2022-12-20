@@ -56,6 +56,19 @@ public class FieldDeclarationBuilderTests : SourceBuilderTestBase<IFieldDeclarat
     }
 
     [TestMethod]
+    public async Task Append_Field_WithComments()
+    {
+        Builder.Append(Field("string", "MyField1").WithLineComment("Single Line Line Comment"));
+        Builder.Append(Field("string", "MyField2").WithLineComment("Multi Line Line Comment (Line 1)\r\nMulti Line Line Comment (Line 2)\nMulti Line Line Comment (Line 3)"));
+        Builder.Append(Field("string", "MyField3").WithBlockComment("Single Line Block Comment"));
+        Builder.Append(Field("string", "MyField4").WithBlockComment("Multi Line Block Comment (Line 1)\r\nMulti Line Block Comment (Line 2)\nMulti Line Block Comment (Line 3)"));
+        Builder.Append(Field("string", "MyField5").WithDocComment("Single Line Doc Comment"));
+        Builder.Append(Field("string", "MyField6").WithDocComment("Multi Line Doc Comment (Line 1)\r\nMulti Line Doc Comment (Line 2)\nMulti Line Doc Comment (Line 3)"));
+
+        await VerifyBuilder();
+    }
+
+    [TestMethod]
     public async Task Append_Field_WithEverything()
     {
         Builder.Append(

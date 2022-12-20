@@ -102,6 +102,19 @@ public class MethodDeclarationBuilderTests : SourceBuilderTestBase<IMethodDeclar
     }
 
     [TestMethod]
+    public async Task Append_Method_WithComments()
+    {
+        Builder.Append(Method("MyMethod1").WithLineComment("Single Line Line Comment"), DummyMethodContent);
+        Builder.Append(Method("MyMethod2").WithLineComment("Multi Line Line Comment (Line 1)\r\nMulti Line Line Comment (Line 2)\nMulti Line Line Comment (Line 3)"), DummyMethodContent);
+        Builder.Append(Method("MyMethod3").WithBlockComment("Single Line Block Comment"), DummyMethodContent);
+        Builder.Append(Method("MyMethod4").WithBlockComment("Multi Line Block Comment (Line 1)\r\nMulti Line Block Comment (Line 2)\nMulti Line Block Comment (Line 3)"), DummyMethodContent);
+        Builder.Append(Method("MyMethod5").WithDocComment("Single Line Doc Comment"), DummyMethodContent);
+        Builder.Append(Method("MyMethod6").WithDocComment("Multi Line Doc Comment (Line 1)\r\nMulti Line Doc Comment (Line 2)\nMulti Line Doc Comment (Line 3)"), DummyMethodContent);
+
+        await VerifyBuilder();
+    }
+
+    [TestMethod]
     public async Task Append_Method_WithEverything()
     {
         Builder.Append(
@@ -118,6 +131,7 @@ public class MethodDeclarationBuilderTests : SourceBuilderTestBase<IMethodDeclar
                 .WithGenericParameter("T2", g => g.WithConstraint("struct"))
                 .WithParameter("string", "p1")
                 .WithParameter("string", "p2", p => p.WithCodeAttribute("MyAttr1").WithCodeAttribute("MyAttr2", a => a.WithParameters("4711", "\"Test\"")))
+                .WithParameter("string", "p3", p => p.WithDefaultValue("null"))
                 .WithMultilineParameters()
                 .AsExpression(),
             x => x.Append("Something()"));

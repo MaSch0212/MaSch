@@ -1,0 +1,42 @@
+﻿// Single Line Line Comment
+MyType1()
+{
+    // Content
+}
+
+// Multi Line Line Comment (Line 1)
+// Multi Line Line Comment (Line 2)
+// Multi Line Line Comment (Line 3)
+MyType2()
+{
+    // Content
+}
+
+/* Single Line Block Comment */
+MyType3()
+{
+    // Content
+}
+
+/* Multi Line Block Comment (Line 1)
+ * Multi Line Block Comment (Line 2)
+ * Multi Line Block Comment (Line 3)
+ */
+MyType4()
+{
+    // Content
+}
+
+/// Single Line Doc Comment
+MyType5()
+{
+    // Content
+}
+
+/// Multi Line Doc Comment (Line 1)
+/// Multi Line Doc Comment (Line 2)
+/// Multi Line Doc Comment (Line 3)
+MyType6()
+{
+    // Content
+}

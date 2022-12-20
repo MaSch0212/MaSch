@@ -1,0 +1,42 @@
+﻿// Single Line Line Comment
+record MyRecord1
+{
+    // Record Content
+}
+
+// Multi Line Line Comment (Line 1)
+// Multi Line Line Comment (Line 2)
+// Multi Line Line Comment (Line 3)
+record MyRecord2
+{
+    // Record Content
+}
+
+/* Single Line Block Comment */
+record MyRecord3
+{
+    // Record Content
+}
+
+/* Multi Line Block Comment (Line 1)
+ * Multi Line Block Comment (Line 2)
+ * Multi Line Block Comment (Line 3)
+ */
+record MyRecord4
+{
+    // Record Content
+}
+
+/// Single Line Doc Comment
+record MyRecord5
+{
+    // Record Content
+}
+
+/// Multi Line Doc Comment (Line 1)
+/// Multi Line Doc Comment (Line 2)
+/// Multi Line Doc Comment (Line 3)
+record MyRecord6
+{
+    // Record Content
+}

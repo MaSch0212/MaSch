@@ -87,6 +87,7 @@ internal sealed class MethodConfiguration : MethodConfiguration<IMethodConfigura
 
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
+        WriteCommentsTo(sourceBuilder);
         WriteCodeAttributesTo(sourceBuilder);
         WriteKeywordsTo(sourceBuilder);
         WriteReturnTypeTo(sourceBuilder);

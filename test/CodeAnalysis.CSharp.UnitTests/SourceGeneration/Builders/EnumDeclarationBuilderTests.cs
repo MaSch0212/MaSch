@@ -56,6 +56,19 @@ public class EnumDeclarationBuilderTests : SourceBuilderTestBase<IEnumDeclaratio
     }
 
     [TestMethod]
+    public async Task Append_Delegate_WithComments()
+    {
+        Builder.Append(Enum("MyEnum1").WithLineComment("Single Line Line Comment"), EnumDummyContent);
+        Builder.Append(Enum("MyEnum2").WithLineComment("Multi Line Line Comment (Line 1)\r\nMulti Line Line Comment (Line 2)\nMulti Line Line Comment (Line 3)"), EnumDummyContent);
+        Builder.Append(Enum("MyEnum3").WithBlockComment("Single Line Block Comment"), EnumDummyContent);
+        Builder.Append(Enum("MyEnum4").WithBlockComment("Multi Line Block Comment (Line 1)\r\nMulti Line Block Comment (Line 2)\nMulti Line Block Comment (Line 3)"), EnumDummyContent);
+        Builder.Append(Enum("MyEnum5").WithDocComment("Single Line Doc Comment"), EnumDummyContent);
+        Builder.Append(Enum("MyEnum6").WithDocComment("Multi Line Doc Comment (Line 1)\r\nMulti Line Doc Comment (Line 2)\nMulti Line Doc Comment (Line 3)"), EnumDummyContent);
+
+        await VerifyBuilder();
+    }
+
+    [TestMethod]
     public async Task Append_Enum_WithEverything()
     {
         Builder.Append(

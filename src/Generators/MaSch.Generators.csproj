@@ -20,6 +20,8 @@
 
   <ItemGroup>
     <Using Remove="*" />
+    <Using Include="MaSch.CodeAnalysis.CSharp.SourceGeneration" />
+    <Using Include="MaSch.CodeAnalysis.CSharp.SourceGeneration.CodeConfiguration" Static="true" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +33,11 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Compile Update="ObservableObject\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Update="Shims\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -39,6 +46,10 @@
   </ItemGroup>
   
   <ItemGroup>
+    <EmbeddedResource Update="ObservableObject\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Shims\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

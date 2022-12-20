@@ -79,6 +79,19 @@ public class StructDeclarationBuilderTests : SourceBuilderTestBase<IStructDeclar
     }
 
     [TestMethod]
+    public async Task Append_Structs_WithComments()
+    {
+        Builder.Append(Struct("MyStruct1").WithLineComment("Single Line Line Comment"), StructDummyContent);
+        Builder.Append(Struct("MyStruct2").WithLineComment("Multi Line Line Comment (Line 1)\r\nMulti Line Line Comment (Line 2)\nMulti Line Line Comment (Line 3)"), StructDummyContent);
+        Builder.Append(Struct("MyStruct3").WithBlockComment("Single Line Block Comment"), StructDummyContent);
+        Builder.Append(Struct("MyStruct4").WithBlockComment("Multi Line Block Comment (Line 1)\r\nMulti Line Block Comment (Line 2)\nMulti Line Block Comment (Line 3)"), StructDummyContent);
+        Builder.Append(Struct("MyStruct5").WithDocComment("Single Line Doc Comment"), StructDummyContent);
+        Builder.Append(Struct("MyStruct6").WithDocComment("Multi Line Doc Comment (Line 1)\r\nMulti Line Doc Comment (Line 2)\nMulti Line Doc Comment (Line 3)"), StructDummyContent);
+
+        await VerifyBuilder();
+    }
+
+    [TestMethod]
     public async Task Append_Struct_WithEverything()
     {
         Builder.Append(

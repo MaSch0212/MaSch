@@ -21,6 +21,7 @@ internal sealed class PropertyMethodConfiguration : CodeConfigurationBase, IProp
     public bool ShouldBeOnItsOwnLine => _codeAttributes.Count > 0;
     public MethodBodyType BodyType { get; private set; } = MethodBodyType.Block;
     public string MethodKeyword { get; set; }
+    public bool HasAttributes => _codeAttributes.Count > 0;
 
     protected override int StartCapacity => 16;
 

@@ -1,7 +1,8 @@
-﻿using MaSch.Test.CodeAnalysis.CSharp.Validators;
+﻿using MaSch.Test.Assertion;
+using MaSch.Test.CodeAnalysis.CSharp.Validators;
 using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
-using System.Reflection;
+using VerifyTests;
 
 namespace MaSch.Test.CodeAnalysis.CSharp;
 
@@ -10,6 +11,9 @@ namespace MaSch.Test.CodeAnalysis.CSharp;
 /// </summary>
 public class CompilationResult
 {
+    private static readonly Regex HintNameExtensionRegex = new(@"(?<name>.*?)(\.g)?(\.cs)?$", RegexOptions.Compiled);
+    private static readonly Regex NewVerifyErrorMessageRegex = new("New:\\s*Received:", RegexOptions.Compiled);
+
     internal CompilationResult(
         Compilation initialCompilation,
         Compilation finalCompilation,
@@ -106,5 +110,81 @@ public class CompilationResult
 
         stream.Seek(0, SeekOrigin.Begin);
         return Assembly.Load(stream.ToArray());
+    }
+
+    public async Task Verify(Func<object?, VerifySettings, Task> verifyFunc, CompilationVerifyOptions options)
+    {
+        await Verify(verifyFunc, options, new VerifySettings());
+    }
+
+    public async Task Verify(Func<object?, VerifySettings, Task> verifyFunc, CompilationVerifyOptions options, VerifySettings verifySettings)
+    {
+        var exceptions = new List<Exception>();
+
+        try
+        {
+            var settings = new VerifySettings(verifySettings);
+            settings.UseTextForParameters(options.GetTextForParameters("Diagnostics"));
+            await verifyFunc(Diagnostics.Select(x => x.ToString()), settings);
+        }
+        catch (Exception ex)
+        {
+            exceptions.Add(ex);
+        }
+
+        foreach (var source in GeneratedSourceResults)
+        {
+            if (!options.ExpectedSourceFiles.Contains(source.HintName) || options.SkipVerifyForFiles.Contains(source.HintName))
+                continue;
+
+            try
+            {
+                var settings = new VerifySettings(verifySettings);
+                settings.UseTextForParameters(options.GetTextForParameters(TrimExtension(source.HintName)));
+                await verifyFunc(source.SourceText.ToString(), settings);
+            }
+            catch (Exception ex)
+            {
+                exceptions.Add(ex);
+            }
+        }
+
+        try
+        {
+            Assert.Instance.AreCollectionsEquivalent(options.ExpectedSourceFiles, GeneratedSourceResults.Select(x => x.HintName));
+        }
+        catch (Exception ex)
+        {
+            exceptions.Add(ex);
+        }
+
+        AssertBase assert = Assert.Instance;
+        if (exceptions.All(ex => ex.GetType().Name == "VerifyException" && NewVerifyErrorMessageRegex.IsMatch(ex.Message)))
+            assert = Assert.Instance.Inc;
+
+        if (exceptions.Count > 0)
+        {
+            const string separator = "------------";
+            assert.Fail($"One or more assertions failed.\n{separator}\n{string.Join($"\n{separator}\n", exceptions.Select(x => x.Message))}");
+        }
+
+        static string TrimExtension(string hintName)
+        {
+            return HintNameExtensionRegex.Match(hintName).Groups["name"].Value;
+        }
+    }
+}
+
+public class CompilationVerifyOptions
+{
+    public string[] ExpectedSourceFiles { get; set; } = Array.Empty<string>();
+    public string[] SkipVerifyForFiles { get; set; } = Array.Empty<string>();
+    public string? TestRunName { get; set; }
+
+    internal string GetTextForParameters(string name)
+    {
+        if (TestRunName is null or "")
+            return name;
+        return $"{TestRunName}_{name}";
     }
 }

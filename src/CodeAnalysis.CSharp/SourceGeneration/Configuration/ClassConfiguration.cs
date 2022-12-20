@@ -17,6 +17,7 @@ internal sealed class ClassConfiguration : TypeConfiguration<IClassConfiguration
     /// <inheritdoc/>
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
+        WriteCommentsTo(sourceBuilder);
         WriteCodeAttributesTo(sourceBuilder);
         WriteKeywordsTo(sourceBuilder);
         sourceBuilder.Append("class ");

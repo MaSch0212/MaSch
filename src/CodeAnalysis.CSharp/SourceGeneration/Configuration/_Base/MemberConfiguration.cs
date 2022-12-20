@@ -5,6 +5,7 @@ internal abstract class MemberConfiguration<T> : CodeConfigurationBase, IMemberC
 {
     private readonly string _memberName;
     private readonly List<ICodeAttributeConfiguration> _codeAttributes = new();
+    private readonly List<CommentConfiguration> _comments = new();
     private AccessModifier _accessModifier = AccessModifier.Default;
     private MemberKeyword _keywords = MemberKeyword.None;
 
@@ -14,6 +15,8 @@ internal abstract class MemberConfiguration<T> : CodeConfigurationBase, IMemberC
     }
 
     public virtual string MemberName => _memberName;
+    public virtual bool HasComments => _comments.Count > 0;
+    public virtual bool HasAttributes => _codeAttributes.Count > 0;
 
     protected abstract T This { get; }
 
@@ -51,6 +54,39 @@ internal abstract class MemberConfiguration<T> : CodeConfigurationBase, IMemberC
 
     IMemberConfiguration IMemberConfiguration.WithKeyword(MemberKeyword keyword)
         => WithKeyword(keyword);
+
+    public T WithLineComment(string comment)
+    {
+        _comments.Add(new CommentConfiguration(CommentConfiguration.CommentType.Line, comment));
+        return This;
+    }
+
+    ISupportsLineCommentsConfiguration ISupportsLineCommentsConfiguration.WithLineComment(string comment)
+        => WithLineComment(comment);
+
+    public T WithBlockComment(string comment)
+    {
+        _comments.Add(new CommentConfiguration(CommentConfiguration.CommentType.Block, comment));
+        return This;
+    }
+
+    ISupportsLineCommentsConfiguration ISupportsLineCommentsConfiguration.WithBlockComment(string comment)
+        => WithBlockComment(comment);
+
+    public T WithDocComment(string comment)
+    {
+        _comments.Add(new CommentConfiguration(CommentConfiguration.CommentType.Doc, comment));
+        return This;
+    }
+
+    ISupportsLineCommentsConfiguration ISupportsLineCommentsConfiguration.WithDocComment(string comment)
+        => WithDocComment(comment);
+
+    protected virtual void WriteCommentsTo(ISourceBuilder sourceBuilder)
+    {
+        foreach (var comment in _comments)
+            comment.WriteTo(sourceBuilder);
+    }
 
     protected virtual void WriteCodeAttributesTo(ISourceBuilder sourceBuilder)
     {

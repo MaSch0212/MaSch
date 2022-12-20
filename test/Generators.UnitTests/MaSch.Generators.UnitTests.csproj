@@ -1,19 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>$(TfmNetCoreApp);$(TfmNetFramework)</TargetFrameworks>
+    <TargetFramework>$(TfmNetFramework)</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <Using Include="MaSch.Generators" />
-    <Using Include="MaSch.Generators.Support"/>
-    <Using Include="MaSch.Test.CodeAnalysis.CSharp"/>
-    <Using Include="MaSch.Test.CodeAnalysis.CSharp.Validators"/>
+    <Using Include="MaSch.Test.CodeAnalysis.CSharp" />
+    <Using Include="MaSch.Test.CodeAnalysis.CSharp.Validators" />
   </ItemGroup>
   
   <ItemGroup>
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    <PackageReference Include="Verify.MSTest" />
   </ItemGroup>
 
   <ItemGroup>

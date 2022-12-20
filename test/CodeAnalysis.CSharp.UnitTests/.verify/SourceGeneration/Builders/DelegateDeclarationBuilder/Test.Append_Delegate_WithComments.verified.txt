@@ -1,0 +1,24 @@
+﻿// Single Line Line Comment
+delegate void MyDelegate1();
+
+// Multi Line Line Comment (Line 1)
+// Multi Line Line Comment (Line 2)
+// Multi Line Line Comment (Line 3)
+delegate void MyDelegate2();
+
+/* Single Line Block Comment */
+delegate void MyDelegate3();
+
+/* Multi Line Block Comment (Line 1)
+ * Multi Line Block Comment (Line 2)
+ * Multi Line Block Comment (Line 3)
+ */
+delegate void MyDelegate4();
+
+/// Single Line Doc Comment
+delegate void MyDelegate5();
+
+/// Multi Line Doc Comment (Line 1)
+/// Multi Line Doc Comment (Line 2)
+/// Multi Line Doc Comment (Line 3)
+delegate void MyDelegate6();

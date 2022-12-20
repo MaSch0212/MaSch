@@ -110,6 +110,19 @@ public class ConstructorDeclarationBuilderTests : SourceBuilderTestBase<IConstru
     }
 
     [TestMethod]
+    public async Task Append_Constructor_WithComments()
+    {
+        Builder.Append(Constructor("MyType1").WithLineComment("Single Line Line Comment"), DummyConstructorContent);
+        Builder.Append(Constructor("MyType2").WithLineComment("Multi Line Line Comment (Line 1)\r\nMulti Line Line Comment (Line 2)\nMulti Line Line Comment (Line 3)"), DummyConstructorContent);
+        Builder.Append(Constructor("MyType3").WithBlockComment("Single Line Block Comment"), DummyConstructorContent);
+        Builder.Append(Constructor("MyType4").WithBlockComment("Multi Line Block Comment (Line 1)\r\nMulti Line Block Comment (Line 2)\nMulti Line Block Comment (Line 3)"), DummyConstructorContent);
+        Builder.Append(Constructor("MyType5").WithDocComment("Single Line Doc Comment"), DummyConstructorContent);
+        Builder.Append(Constructor("MyType6").WithDocComment("Multi Line Doc Comment (Line 1)\r\nMulti Line Doc Comment (Line 2)\nMulti Line Doc Comment (Line 3)"), DummyConstructorContent);
+
+        await VerifyBuilder();
+    }
+
+    [TestMethod]
     public async Task Append_Constructor_WithEverything()
     {
         Builder.CurrentTypeName = "MyType";

@@ -1,3 +1,2 @@
 ﻿// Text
-
 // Line above should be empty!

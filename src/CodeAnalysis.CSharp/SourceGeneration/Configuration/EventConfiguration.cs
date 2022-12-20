@@ -41,6 +41,7 @@ internal sealed class EventConfiguration : MemberConfiguration<IEventConfigurati
 
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
+        WriteCommentsTo(sourceBuilder);
         WriteCodeAttributesTo(sourceBuilder);
         WriteKeywordsTo(sourceBuilder);
         sourceBuilder.Append("event ").Append(_eventType).Append(' ');

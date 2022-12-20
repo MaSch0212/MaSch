@@ -1,0 +1,24 @@
+﻿// Single Line Line Comment
+string this[] { get; set; }
+
+// Multi Line Line Comment (Line 1)
+// Multi Line Line Comment (Line 2)
+// Multi Line Line Comment (Line 3)
+string this[] { get; set; }
+
+/* Single Line Block Comment */
+string this[] { get; set; }
+
+/* Multi Line Block Comment (Line 1)
+ * Multi Line Block Comment (Line 2)
+ * Multi Line Block Comment (Line 3)
+ */
+string this[] { get; set; }
+
+/// Single Line Doc Comment
+string this[] { get; set; }
+
+/// Multi Line Doc Comment (Line 1)
+/// Multi Line Doc Comment (Line 2)
+/// Multi Line Doc Comment (Line 3)
+string this[] { get; set; }

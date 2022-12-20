@@ -111,6 +111,19 @@ public class PropertyDeclarationBuilderTests : SourceBuilderTestBase<IPropertyDe
     }
 
     [TestMethod]
+    public async Task Append_Property_WithComments()
+    {
+        Builder.Append(Property("string", "MyProperty1").WithLineComment("Single Line Line Comment"));
+        Builder.Append(Property("string", "MyProperty2").WithLineComment("Multi Line Line Comment (Line 1)\r\nMulti Line Line Comment (Line 2)\nMulti Line Line Comment (Line 3)"));
+        Builder.Append(Property("string", "MyProperty3").WithBlockComment("Single Line Block Comment"));
+        Builder.Append(Property("string", "MyProperty4").WithBlockComment("Multi Line Block Comment (Line 1)\r\nMulti Line Block Comment (Line 2)\nMulti Line Block Comment (Line 3)"));
+        Builder.Append(Property("string", "MyProperty5").WithDocComment("Single Line Doc Comment"));
+        Builder.Append(Property("string", "MyProperty6").WithDocComment("Multi Line Doc Comment (Line 1)\r\nMulti Line Doc Comment (Line 2)\nMulti Line Doc Comment (Line 3)"));
+
+        await VerifyBuilder();
+    }
+
+    [TestMethod]
     public async Task Append_Property_WithEverything()
     {
         Builder.Append(

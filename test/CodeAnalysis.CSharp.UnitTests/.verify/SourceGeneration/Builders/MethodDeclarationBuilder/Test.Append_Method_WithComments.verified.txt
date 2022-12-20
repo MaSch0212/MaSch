@@ -1,0 +1,42 @@
+﻿// Single Line Line Comment
+void MyMethod1()
+{
+    // Method Content
+}
+
+// Multi Line Line Comment (Line 1)
+// Multi Line Line Comment (Line 2)
+// Multi Line Line Comment (Line 3)
+void MyMethod2()
+{
+    // Method Content
+}
+
+/* Single Line Block Comment */
+void MyMethod3()
+{
+    // Method Content
+}
+
+/* Multi Line Block Comment (Line 1)
+ * Multi Line Block Comment (Line 2)
+ * Multi Line Block Comment (Line 3)
+ */
+void MyMethod4()
+{
+    // Method Content
+}
+
+/// Single Line Doc Comment
+void MyMethod5()
+{
+    // Method Content
+}
+
+/// Multi Line Doc Comment (Line 1)
+/// Multi Line Doc Comment (Line 2)
+/// Multi Line Doc Comment (Line 3)
+void MyMethod6()
+{
+    // Method Content
+}

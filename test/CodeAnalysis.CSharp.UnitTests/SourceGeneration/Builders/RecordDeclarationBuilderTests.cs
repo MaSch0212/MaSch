@@ -116,6 +116,19 @@ public class RecordDeclarationBuilderTests : SourceBuilderTestBase<IRecordDeclar
     }
 
     [TestMethod]
+    public async Task Append_Records_WithComments()
+    {
+        Builder.Append(Record("MyRecord1").WithLineComment("Single Line Line Comment"), RecordDummyContent);
+        Builder.Append(Record("MyRecord2").WithLineComment("Multi Line Line Comment (Line 1)\r\nMulti Line Line Comment (Line 2)\nMulti Line Line Comment (Line 3)"), RecordDummyContent);
+        Builder.Append(Record("MyRecord3").WithBlockComment("Single Line Block Comment"), RecordDummyContent);
+        Builder.Append(Record("MyRecord4").WithBlockComment("Multi Line Block Comment (Line 1)\r\nMulti Line Block Comment (Line 2)\nMulti Line Block Comment (Line 3)"), RecordDummyContent);
+        Builder.Append(Record("MyRecord5").WithDocComment("Single Line Doc Comment"), RecordDummyContent);
+        Builder.Append(Record("MyRecord6").WithDocComment("Multi Line Doc Comment (Line 1)\r\nMulti Line Doc Comment (Line 2)\nMulti Line Doc Comment (Line 3)"), RecordDummyContent);
+
+        await VerifyBuilder();
+    }
+
+    [TestMethod]
     public async Task Append_Record_WithEverything()
     {
         Builder.Append(

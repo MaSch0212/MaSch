@@ -1,0 +1,42 @@
+﻿// Single Line Line Comment
+struct MyStruct1
+{
+    // Struct Content
+}
+
+// Multi Line Line Comment (Line 1)
+// Multi Line Line Comment (Line 2)
+// Multi Line Line Comment (Line 3)
+struct MyStruct2
+{
+    // Struct Content
+}
+
+/* Single Line Block Comment */
+struct MyStruct3
+{
+    // Struct Content
+}
+
+/* Multi Line Block Comment (Line 1)
+ * Multi Line Block Comment (Line 2)
+ * Multi Line Block Comment (Line 3)
+ */
+struct MyStruct4
+{
+    // Struct Content
+}
+
+/// Single Line Doc Comment
+struct MyStruct5
+{
+    // Struct Content
+}
+
+/// Multi Line Doc Comment (Line 1)
+/// Multi Line Doc Comment (Line 2)
+/// Multi Line Doc Comment (Line 3)
+struct MyStruct6
+{
+    // Struct Content
+}

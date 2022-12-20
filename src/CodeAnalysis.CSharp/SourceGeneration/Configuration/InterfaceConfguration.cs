@@ -17,6 +17,7 @@ internal sealed class InterfaceConfguration : TypeConfiguration<IInterfaceConfgu
     /// <inheritdoc/>
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
+        WriteCommentsTo(sourceBuilder);
         WriteCodeAttributesTo(sourceBuilder);
         WriteKeywordsTo(sourceBuilder);
         sourceBuilder.Append("interface ");

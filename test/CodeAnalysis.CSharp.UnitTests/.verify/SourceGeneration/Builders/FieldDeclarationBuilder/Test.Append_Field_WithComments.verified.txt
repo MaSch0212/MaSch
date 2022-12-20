@@ -1,0 +1,24 @@
+﻿// Single Line Line Comment
+string MyField1;
+
+// Multi Line Line Comment (Line 1)
+// Multi Line Line Comment (Line 2)
+// Multi Line Line Comment (Line 3)
+string MyField2;
+
+/* Single Line Block Comment */
+string MyField3;
+
+/* Multi Line Block Comment (Line 1)
+ * Multi Line Block Comment (Line 2)
+ * Multi Line Block Comment (Line 3)
+ */
+string MyField4;
+
+/// Single Line Doc Comment
+string MyField5;
+
+/// Multi Line Doc Comment (Line 1)
+/// Multi Line Doc Comment (Line 2)
+/// Multi Line Doc Comment (Line 3)
+string MyField6;

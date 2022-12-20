@@ -221,6 +221,7 @@ internal sealed class PropertyConfiguration :
 
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
+        WriteCommentsTo(sourceBuilder);
         WriteCodeAttributesTo(sourceBuilder);
         WriteKeywordsTo(sourceBuilder);
         WriteNameTo(sourceBuilder);
@@ -290,6 +291,18 @@ internal sealed class PropertyConfiguration :
         return this;
     }
 
+    IReadOnlyPropertyConfiguration ISupportsLineCommentsConfiguration<IReadOnlyPropertyConfiguration>.WithBlockComment(string comment)
+    {
+        WithBlockComment(comment);
+        return this;
+    }
+
+    IWriteOnlyPropertyConfiguration ISupportsLineCommentsConfiguration<IWriteOnlyPropertyConfiguration>.WithBlockComment(string comment)
+    {
+        WithBlockComment(comment);
+        return this;
+    }
+
     IWriteOnlyPropertyConfiguration ISupportsCodeAttributeConfiguration<IWriteOnlyPropertyConfiguration>.WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
     {
         WithCodeAttribute(attributeTypeName, attributeConfiguration);
@@ -314,6 +327,18 @@ internal sealed class PropertyConfiguration :
         return this;
     }
 
+    IReadOnlyPropertyConfiguration ISupportsLineCommentsConfiguration<IReadOnlyPropertyConfiguration>.WithDocComment(string comment)
+    {
+        WithDocComment(comment);
+        return this;
+    }
+
+    IWriteOnlyPropertyConfiguration ISupportsLineCommentsConfiguration<IWriteOnlyPropertyConfiguration>.WithDocComment(string comment)
+    {
+        WithDocComment(comment);
+        return this;
+    }
+
     IWriteOnlyPropertyConfiguration IMemberConfiguration<IWriteOnlyPropertyConfiguration>.WithKeyword(MemberKeyword keyword)
     {
         WithKeyword(keyword);
@@ -323,6 +348,18 @@ internal sealed class PropertyConfiguration :
     IReadOnlyPropertyConfiguration IMemberConfiguration<IReadOnlyPropertyConfiguration>.WithKeyword(MemberKeyword keyword)
     {
         WithKeyword(keyword);
+        return this;
+    }
+
+    IReadOnlyPropertyConfiguration ISupportsLineCommentsConfiguration<IReadOnlyPropertyConfiguration>.WithLineComment(string comment)
+    {
+        WithLineComment(comment);
+        return this;
+    }
+
+    IWriteOnlyPropertyConfiguration ISupportsLineCommentsConfiguration<IWriteOnlyPropertyConfiguration>.WithLineComment(string comment)
+    {
+        WithLineComment(comment);
         return this;
     }
 

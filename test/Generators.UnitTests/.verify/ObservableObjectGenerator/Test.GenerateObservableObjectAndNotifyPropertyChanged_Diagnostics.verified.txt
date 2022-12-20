@@ -1,0 +1,3 @@
+﻿[
+  (3,6): warning MSCG011: The 'GenerateNotifyPropertyChangedAttribute' attribute on type 'MyClass' will be ignored because it also has the 'GenerateObservableObjectAttribute' attribute.
+]
