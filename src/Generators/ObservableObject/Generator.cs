@@ -1,5 +1,4 @@
-﻿using MaSch.Core;
-using MaSch.Generators.ObservableObject.Generation;
+﻿using MaSch.Generators.ObservableObject.Generation;
 using MaSch.Generators.ObservableObject.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -30,8 +29,8 @@ public class Generator : IIncrementalGenerator
     private static void AddPostInitializationSources(IncrementalGeneratorPostInitializationContext context)
     {
         new StaticSourceCreator(context.AddSource)
-            .AddSource(Resources.GenerateNotifyPropertyChangedAttribute)
-            .AddSource(Resources.GenerateObservableObjectAttribute);
+            .AddSource(StaticSources.GenerateNotifyPropertyChangedAttribute)
+            .AddSource(StaticSources.GenerateObservableObjectAttribute);
     }
 
     private static bool FilterSyntax(SyntaxNode node, CancellationToken cancellation)
@@ -53,10 +52,8 @@ public class Generator : IIncrementalGenerator
 
     private static void Execute(SourceProductionContext context, TargetTypeInfo targetTypeInfo)
     {
-        if (targetTypeInfo.InterfaceType == (InterfaceType.ObservableObject | InterfaceType.NotifyPropertyChanged))
-        {
-            context.ReportDiagnostic(DiagnosticsFactory.AttributeIgnored(targetTypeInfo.Name, targetTypeInfo.Attributes, nameof(GenerateNotifyPropertyChangedAttribute), nameof(GenerateObservableObjectAttribute)));
-        }
+        foreach (var diag in targetTypeInfo.Diagnostics)
+            context.ReportDiagnostic(diag);
 
         var builder = SourceBuilder.Create(new SourceBuilderOptions());
 

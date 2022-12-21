@@ -1,4 +1,6 @@
-﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
+﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
+
+namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
 
 public interface ISourceBuilder
 {
@@ -6,6 +8,11 @@ public interface ISourceBuilder
     /// Gets the options of this <see cref="ISourceBuilder"/>.
     /// </summary>
     SourceBuilderOptions Options { get; }
+
+    /// <summary>
+    /// Gets the length of the current <see cref="ISourceBuilder"/> object.
+    /// </summary>
+    int Length { get; }
 
     /// <summary>
     /// Gets or sets the current indentation level.
@@ -18,45 +25,11 @@ public interface ISourceBuilder
     string? CurrentTypeName { get; set; }
 
     /// <summary>
-    /// Appends a new region to the source file.
+    /// Gets the character at the specified index.
     /// </summary>
-    /// <param name="regionName">Name of the region.</param>
-    /// <returns>Returns an <see cref="IDisposable"/> object, which closes the region when disposed.</returns>
-    SourceBuilderCodeBlock AppendRegion(string regionName);
-
-    /// <summary>
-    /// Appends a new code block to the source file.
-    /// </summary>
-    /// <param name="blockLine">The line before the code block.</param>
-    /// <returns>Returns an <see cref="IDisposable"/> object, which closes the code block when disposed.</returns>
-    SourceBuilderCodeBlock AppendBlock(string blockLine);
-
-    /// <summary>
-    /// Appends a new code block to the source file.
-    /// </summary>
-    /// <param name="blockLine">The line before the code block.</param>
-    /// <param name="addSemicolon">if <c>true</c> adds a semicolon after the end of the block.</param>
-    /// <returns>Returns an <see cref="IDisposable"/> object, which closes the code block when disposed.</returns>
-    SourceBuilderCodeBlock AppendBlock(string blockLine, bool addSemicolon);
-
-    /// <summary>
-    /// Appends a new code block to the source file.
-    /// </summary>
-    /// <returns>Returns an <see cref="IDisposable"/> object, which closes the code block when disposed.</returns>
-    SourceBuilderCodeBlock AppendBlock();
-
-    /// <summary>
-    /// Appends a new code block to the source file.
-    /// </summary>
-    /// <param name="addSemicolon">if <c>true</c> adds a semicolon after the end of the block.</param>
-    /// <returns>Returns an <see cref="IDisposable"/> object, which closes the code block when disposed.</returns>
-    SourceBuilderCodeBlock AppendBlock(bool addSemicolon);
-
-    /// <summary>
-    /// Adds one indentation level. If the current line already contains characters, only subsequent lines are affected.
-    /// </summary>
-    /// <returns>Returns an <see cref="IDisposable"/> object, which closes the code block when disposed.</returns>
-    SourceBuilderCodeBlock Indent();
+    /// <param name="index">The index of the character to get.</param>
+    /// <returns>The character at <paramref name="index"/>.</returns>
+    char this[int index] { get; }
 
     /// <summary>
     /// Appends the default line terminator to the end of the current <see cref="SourceBuilder"/> object.
@@ -72,12 +45,6 @@ public interface ISourceBuilder
     ISourceBuilder AppendLine(string value);
 
     /// <summary>
-    /// Ensures that the line above the current line is empty or consists only of whitespace characters.
-    /// </summary>
-    /// <returns>A value indicating whether the line above the current line is empty.</returns>
-    ISourceBuilder EnsurePreviousLineEmpty();
-
-    /// <summary>
     /// Appends a copy of the specified string to this instance.
     /// </summary>
     /// <param name="value">The value.</param>
@@ -90,6 +57,41 @@ public interface ISourceBuilder
     /// <param name="value">The value.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
     ISourceBuilder Append(char value);
+
+    /// <summary>
+    /// Adds a region. Will ensure the region is placed in its own line.
+    /// </summary>
+    /// <param name="regionConfiguration">The region configuration.</param>
+    /// <param name="builderFunc">The function to add indented content.</param>
+    /// <returns>A reference to this instance after the append operation has completed.</returns>
+    ISourceBuilder Append(IRegionConfiguration regionConfiguration, Action<ISourceBuilder> builderFunc);
+
+    /// <summary>
+    /// Adds a code block.
+    /// </summary>
+    /// <param name="codeBlockConfiguration">The block configuration.</param>
+    /// <param name="builderFunc">The function to add indented content.</param>
+    /// <returns>A reference to this instance after the append operation has completed.</returns>
+    ISourceBuilder Append(ICodeBlockConfiguration codeBlockConfiguration, Action<ISourceBuilder> builderFunc);
+
+    /// <summary>
+    /// Ensures that the line above the current line is empty or consists only of whitespace characters.
+    /// </summary>
+    /// <returns>A value indicating whether the line above the current line is empty.</returns>
+    ISourceBuilder EnsurePreviousLineEmpty();
+
+    /// <summary>
+    /// Ensures that the current line is empty or consists only of whitespace characters.
+    /// </summary>
+    /// <returns>A value indicating whether the current line is empty.</returns>
+    ISourceBuilder EnsureCurrentLineEmpty();
+
+    /// <summary>
+    /// Adds one indentation level. If the current line already contains characters, only subsequent lines are affected.
+    /// </summary>
+    /// <param name="builderFunc">The function to add indented content.</param>
+    /// <returns>A reference to this instance after the append operation has completed.</returns>
+    ISourceBuilder Indent(Action<ISourceBuilder> builderFunc);
 
     /// <summary>
     /// Converts the value of this instance to a <see cref="SourceText"/>.
@@ -117,14 +119,26 @@ public interface ISourceBuilder<T> : ISourceBuilder
     /// <inheritdoc cref="ISourceBuilder.AppendLine(string)" />
     new T AppendLine(string value);
 
-    /// <inheritdoc cref="ISourceBuilder.EnsurePreviousLineEmpty()" />
-    new T EnsurePreviousLineEmpty();
-
     /// <inheritdoc cref="ISourceBuilder.Append(string)" />
     new T Append(string value);
 
     /// <inheritdoc cref="ISourceBuilder.Append(char)" />
     new T Append(char value);
+
+    /// <inheritdoc cref="ISourceBuilder.Append(IRegionConfiguration, Action{ISourceBuilder})" />
+    T Append(IRegionConfiguration regionConfiguration, Action<T> builderFunc);
+
+    /// <inheritdoc cref="ISourceBuilder.Append(ICodeBlockConfiguration, Action{ISourceBuilder})" />
+    T Append(ICodeBlockConfiguration codeBlockConfiguration, Action<T> builderFunc);
+
+    /// <inheritdoc cref="ISourceBuilder.EnsurePreviousLineEmpty()" />
+    new T EnsurePreviousLineEmpty();
+
+    /// <inheritdoc cref="ISourceBuilder.EnsureCurrentLineEmpty()" />
+    new T EnsureCurrentLineEmpty();
+
+    /// <inheritdoc cref="ISourceBuilder.Indent(Action{ISourceBuilder})" />
+    T Indent(Action<T> builderFunc);
 }
 
 [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1601:Partial elements should be documented", Justification = "Already has documentation")]
@@ -141,22 +155,24 @@ public partial class SourceBuilder : ISourceBuilder
     }
 
     /// <inheritdoc/>
+    public int Length => _builder.Length;
+
+    /// <inheritdoc/>
+    public char this[int index] => _builder[index];
+
+    /// <inheritdoc/>
     ISourceBuilder ISourceBuilder.Append(string value) => Append(value);
 
     /// <inheritdoc/>
     ISourceBuilder ISourceBuilder.Append(char value) => Append(value);
 
     /// <inheritdoc/>
-    SourceBuilderCodeBlock ISourceBuilder.AppendBlock(string blockLine) => AppendBlock(blockLine);
+    ISourceBuilder ISourceBuilder.Append(IRegionConfiguration regionConfiguration, Action<ISourceBuilder> builderFunc)
+        => Append(regionConfiguration, builderFunc);
 
     /// <inheritdoc/>
-    SourceBuilderCodeBlock ISourceBuilder.AppendBlock(string blockLine, bool addSemicolon) => AppendBlock(blockLine, addSemicolon);
-
-    /// <inheritdoc/>
-    SourceBuilderCodeBlock ISourceBuilder.AppendBlock() => AppendBlock();
-
-    /// <inheritdoc/>
-    SourceBuilderCodeBlock ISourceBuilder.AppendBlock(bool addSemicolon) => AppendBlock(addSemicolon);
+    ISourceBuilder ISourceBuilder.Append(ICodeBlockConfiguration codeBlockConfiguration, Action<ISourceBuilder> builderFunc)
+        => Append(codeBlockConfiguration, builderFunc);
 
     /// <inheritdoc/>
     ISourceBuilder ISourceBuilder.AppendLine() => AppendLine();
@@ -165,65 +181,17 @@ public partial class SourceBuilder : ISourceBuilder
     ISourceBuilder ISourceBuilder.AppendLine(string value) => AppendLine(value);
 
     /// <inheritdoc/>
-    SourceBuilderCodeBlock ISourceBuilder.AppendRegion(string regionName) => AppendRegion(regionName);
-
-    /// <inheritdoc/>
     T ISourceBuilder.As<T>() => As<T>();
 
     /// <inheritdoc/>
     ISourceBuilder ISourceBuilder.EnsurePreviousLineEmpty() => EnsurePreviousLineEmpty();
 
     /// <inheritdoc/>
-    SourceBuilderCodeBlock ISourceBuilder.Indent() => Indent();
+    ISourceBuilder ISourceBuilder.EnsureCurrentLineEmpty() => EnsureCurrentLineEmpty();
+
+    /// <inheritdoc/>
+    ISourceBuilder ISourceBuilder.Indent(Action<ISourceBuilder> builderFunc) => Indent(builderFunc);
 
     /// <inheritdoc/>
     SourceText ISourceBuilder.ToSourceText(Encoding? encoding, SourceHashAlgorithm checksumAlgorithm) => ToSourceText(encoding, checksumAlgorithm);
-}
-
-/// <summary>
-/// Provides extension methods for the <see cref="SourceBuilder"/> class and <see cref="ISourceBuilder"/> and <see cref="ISourceBuilder{T}"/> interfaces.
-/// </summary>
-[SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1204:Static elements should appear before instance elements", Justification = "Extensions should be in the bottom of the file.")]
-[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Extensions for ISourceBuilder")]
-public static class SourceBuilderExtensions
-{
-    public static TBuilder AppendRegion<TBuilder>(this TBuilder builder, string regionName, Action<TBuilder> action)
-        where TBuilder : ISourceBuilder
-    {
-        using (builder.AppendRegion(regionName))
-            action(builder);
-        return builder;
-    }
-
-    public static TBuilder AppendBlock<TBuilder>(this TBuilder builder, string blockLine, Action<TBuilder> action)
-        where TBuilder : ISourceBuilder
-    {
-        using (builder.AppendBlock(blockLine))
-            action(builder);
-        return builder;
-    }
-
-    public static TBuilder AppendBlock<TBuilder>(this TBuilder builder, string blockLine, bool addSemicolon, Action<TBuilder> action)
-        where TBuilder : ISourceBuilder
-    {
-        using (builder.AppendBlock(blockLine, addSemicolon))
-            action(builder);
-        return builder;
-    }
-
-    public static TBuilder AppendBlock<TBuilder>(this TBuilder builder, Action<TBuilder> action)
-        where TBuilder : ISourceBuilder
-    {
-        using (builder.AppendBlock())
-            action(builder);
-        return builder;
-    }
-
-    public static TBuilder AppendBlock<TBuilder>(this TBuilder builder, bool addSemicolon, Action<TBuilder> action)
-        where TBuilder : ISourceBuilder
-    {
-        using (builder.AppendBlock(addSemicolon))
-            action(builder);
-        return builder;
-    }
 }

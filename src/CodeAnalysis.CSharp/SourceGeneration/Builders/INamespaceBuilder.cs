@@ -57,6 +57,14 @@ partial class SourceBuilder : INamespaceBuilder
         => Append(value);
 
     /// <inheritdoc/>
+    INamespaceBuilder ISourceBuilder<INamespaceBuilder>.Append(IRegionConfiguration regionConfiguration, Action<INamespaceBuilder> builderFunc)
+        => Append(regionConfiguration, builderFunc);
+
+    /// <inheritdoc/>
+    INamespaceBuilder ISourceBuilder<INamespaceBuilder>.Append(ICodeBlockConfiguration codeBlockConfiguration, Action<INamespaceBuilder> builderFunc)
+        => Append(codeBlockConfiguration, builderFunc);
+
+    /// <inheritdoc/>
     INamespaceBuilder ISourceBuilder<INamespaceBuilder>.AppendLine()
         => AppendLine();
 
@@ -65,6 +73,14 @@ partial class SourceBuilder : INamespaceBuilder
         => AppendLine(value);
 
     /// <inheritdoc/>
+    INamespaceBuilder ISourceBuilder<INamespaceBuilder>.EnsureCurrentLineEmpty()
+        => EnsureCurrentLineEmpty();
+
+    /// <inheritdoc/>
     INamespaceBuilder ISourceBuilder<INamespaceBuilder>.EnsurePreviousLineEmpty()
         => EnsurePreviousLineEmpty();
+
+    /// <inheritdoc/>
+    INamespaceBuilder ISourceBuilder<INamespaceBuilder>.Indent(Action<INamespaceBuilder> builderFunc)
+        => Indent(builderFunc);
 }

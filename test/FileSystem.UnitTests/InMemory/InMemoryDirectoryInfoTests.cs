@@ -1,7 +1,6 @@
 ﻿using MaSch.Core.Extensions;
 using MaSch.FileSystem.InMemory;
 using MaSch.FileSystem.InMemory.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MaSch.FileSystem.UnitTests.InMemory;
 

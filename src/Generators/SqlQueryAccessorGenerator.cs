@@ -1,5 +1,4 @@
 ﻿using MaSch.CodeAnalysis.CSharp.Extensions;
-using MaSch.CodeAnalysis.CSharp.SourceGeneration;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using System;
@@ -66,9 +65,13 @@ public class SqlQueryAccessorGenerator : ISourceGenerator
         }
 
         var builder = SourceBuilder.Create();
-        using (builder.AppendBlock($"namespace {rootNamespace}"))
-        using (builder.AppendBlock($"internal static class {className}"))
-            rootNode.WriteMembers(builder);
+        builder.Append(Block($"namespace {rootNamespace}"), builder =>
+        {
+            builder.Append(Block($"internal static class {className}"), builder =>
+            {
+                rootNode.WriteMembers(builder);
+            });
+        });
 
         return builder.ToString();
     }
@@ -105,8 +108,7 @@ public class SqlQueryAccessorGenerator : ISourceGenerator
 
         public void Write(ISourceBuilder builder)
         {
-            using (builder.AppendBlock($"internal static class {Name}"))
-                WriteMembers(builder);
+            builder.Append(Block($"internal static class {Name}"), WriteMembers);
         }
 
         public void WriteMembers(ISourceBuilder builder)

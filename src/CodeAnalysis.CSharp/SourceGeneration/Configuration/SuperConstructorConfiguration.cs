@@ -29,7 +29,7 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration
         {
             sourceBuilder.Append(": ").Append(_superConstructorKeyword).Append('(');
 
-            using (sourceBuilder.Indent())
+            sourceBuilder.Indent(sourceBuilder =>
             {
                 for (int i = 0; i < _parameterValues.Count; i++)
                 {
@@ -37,7 +37,7 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration
                     if (i < _parameterValues.Count - 1)
                         sourceBuilder.Append(", ");
                 }
-            }
+            });
 
             sourceBuilder.Append(')');
         }

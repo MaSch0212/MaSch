@@ -1,12 +1,9 @@
-﻿enum MyEnum
-{
-    [Obsolete]
-    Value1,
+﻿[Obsolete]
+Value1,
 
-    [MyAttribute(4711, "Hello")]
-    [Obsolete]
-    Value2,
+[MyAttribute(4711, "Hello")]
+[Obsolete]
+Value2,
 
-    [field: MyAttr3]
-    Value3,
-}
+[field: MyAttr3]
+Value3,

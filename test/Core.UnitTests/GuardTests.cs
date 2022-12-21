@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-namespace MaSch.Core.UnitTests;
+﻿namespace MaSch.Core.UnitTests;
 
 [TestClass]
 public class GuardTests : TestClassBase

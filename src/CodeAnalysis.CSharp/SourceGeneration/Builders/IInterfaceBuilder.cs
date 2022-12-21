@@ -112,6 +112,14 @@ partial class SourceBuilder : IInterfaceBuilder
         => Append(value);
 
     /// <inheritdoc/>
+    IInterfaceBuilder ISourceBuilder<IInterfaceBuilder>.Append(IRegionConfiguration regionConfiguration, Action<IInterfaceBuilder> builderFunc)
+        => Append(regionConfiguration, builderFunc);
+
+    /// <inheritdoc/>
+    IInterfaceBuilder ISourceBuilder<IInterfaceBuilder>.Append(ICodeBlockConfiguration codeBlockConfiguration, Action<IInterfaceBuilder> builderFunc)
+        => Append(codeBlockConfiguration, builderFunc);
+
+    /// <inheritdoc/>
     IInterfaceBuilder ISourceBuilder<IInterfaceBuilder>.AppendLine()
         => AppendLine();
 
@@ -120,6 +128,14 @@ partial class SourceBuilder : IInterfaceBuilder
         => AppendLine(value);
 
     /// <inheritdoc/>
+    IInterfaceBuilder ISourceBuilder<IInterfaceBuilder>.EnsureCurrentLineEmpty()
+        => EnsureCurrentLineEmpty();
+
+    /// <inheritdoc/>
     IInterfaceBuilder ISourceBuilder<IInterfaceBuilder>.EnsurePreviousLineEmpty()
         => EnsurePreviousLineEmpty();
+
+    /// <inheritdoc/>
+    IInterfaceBuilder ISourceBuilder<IInterfaceBuilder>.Indent(Action<IInterfaceBuilder> builderFunc)
+        => Indent(builderFunc);
 }

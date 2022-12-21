@@ -1,5 +1,4 @@
 ﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MaSch.CodeAnalysis.CSharp.UnitTests.SourceGeneration;
 

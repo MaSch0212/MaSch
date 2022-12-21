@@ -33,26 +33,26 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Compile Update="ObservableObject\Resources.Designer.cs">
+    <Compile Update="ObservableObject\StaticSources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
+      <DependentUpon>StaticSources.resx</DependentUpon>
     </Compile>
-    <Compile Update="Shims\Resources.Designer.cs">
+    <Compile Update="Shims\StaticSources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
+      <DependentUpon>StaticSources.resx</DependentUpon>
     </Compile>
   </ItemGroup>
   
   <ItemGroup>
-    <EmbeddedResource Update="ObservableObject\Resources.resx">
+    <EmbeddedResource Update="ObservableObject\StaticSources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <LastGenOutput>StaticSources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Shims\Resources.resx">
+    <EmbeddedResource Update="Shims\StaticSources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <LastGenOutput>StaticSources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   

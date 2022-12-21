@@ -22,6 +22,14 @@ partial class SourceBuilder : IEnumBuilder
         => Append(value);
 
     /// <inheritdoc/>
+    IEnumBuilder ISourceBuilder<IEnumBuilder>.Append(IRegionConfiguration regionConfiguration, Action<IEnumBuilder> builderFunc)
+        => Append(regionConfiguration, builderFunc);
+
+    /// <inheritdoc/>
+    IEnumBuilder ISourceBuilder<IEnumBuilder>.Append(ICodeBlockConfiguration codeBlockConfiguration, Action<IEnumBuilder> builderFunc)
+        => Append(codeBlockConfiguration, builderFunc);
+
+    /// <inheritdoc/>
     IEnumBuilder ISourceBuilder<IEnumBuilder>.AppendLine()
         => AppendLine();
 
@@ -30,6 +38,14 @@ partial class SourceBuilder : IEnumBuilder
         => AppendLine(value);
 
     /// <inheritdoc/>
+    IEnumBuilder ISourceBuilder<IEnumBuilder>.EnsureCurrentLineEmpty()
+        => EnsureCurrentLineEmpty();
+
+    /// <inheritdoc/>
     IEnumBuilder ISourceBuilder<IEnumBuilder>.EnsurePreviousLineEmpty()
         => EnsurePreviousLineEmpty();
+
+    /// <inheritdoc/>
+    IEnumBuilder ISourceBuilder<IEnumBuilder>.Indent(Action<IEnumBuilder> builderFunc)
+        => Indent(builderFunc);
 }

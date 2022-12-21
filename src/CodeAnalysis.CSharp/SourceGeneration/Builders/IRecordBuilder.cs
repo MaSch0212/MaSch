@@ -131,6 +131,14 @@ partial class SourceBuilder : IRecordBuilder
         => Append(value);
 
     /// <inheritdoc/>
+    IRecordBuilder ISourceBuilder<IRecordBuilder>.Append(IRegionConfiguration regionConfiguration, Action<IRecordBuilder> builderFunc)
+        => Append(regionConfiguration, builderFunc);
+
+    /// <inheritdoc/>
+    IRecordBuilder ISourceBuilder<IRecordBuilder>.Append(ICodeBlockConfiguration codeBlockConfiguration, Action<IRecordBuilder> builderFunc)
+        => Append(codeBlockConfiguration, builderFunc);
+
+    /// <inheritdoc/>
     IRecordBuilder ISourceBuilder<IRecordBuilder>.AppendLine()
         => AppendLine();
 
@@ -139,6 +147,14 @@ partial class SourceBuilder : IRecordBuilder
         => AppendLine(value);
 
     /// <inheritdoc/>
+    IRecordBuilder ISourceBuilder<IRecordBuilder>.EnsureCurrentLineEmpty()
+        => EnsureCurrentLineEmpty();
+
+    /// <inheritdoc/>
     IRecordBuilder ISourceBuilder<IRecordBuilder>.EnsurePreviousLineEmpty()
         => EnsurePreviousLineEmpty();
+
+    /// <inheritdoc/>
+    IRecordBuilder ISourceBuilder<IRecordBuilder>.Indent(Action<IRecordBuilder> builderFunc)
+        => Indent(builderFunc);
 }

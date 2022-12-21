@@ -1,5 +1,4 @@
 ﻿using MaSch.CodeAnalysis.CSharp.Extensions;
-using MaSch.CodeAnalysis.CSharp.SourceGeneration;
 using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
@@ -46,7 +45,6 @@ public class WpfIconFontGenerator : ISourceGenerator
 
         foreach (var (typeSymbol, iconFont, extraGeoms) in query)
         {
-
             var fontName = iconFont.ConstructorArguments.FirstOrDefault().Value as string;
             var cssFileName = iconFont.ConstructorArguments.Skip(1).FirstOrDefault().Value as string;
             var cssClassPrefix = iconFont.ConstructorArguments.Skip(2).FirstOrDefault().Value as string;
@@ -76,7 +74,7 @@ public class WpfIconFontGenerator : ISourceGenerator
                    .AppendLine("using System.Windows.Media;")
                    .AppendLine();
 
-            using (builder.AppendBlock($"namespace {typeSymbol.ContainingNamespace}"))
+            builder.Append(Block($"namespace {typeSymbol.ContainingNamespace}"), builder =>
             {
                 CreatePartialIconClass(builder, context.Compilation.AssemblyName, typeSymbol.Name, fontName);
 
@@ -86,23 +84,23 @@ public class WpfIconFontGenerator : ISourceGenerator
 
                 _ = builder.AppendLine();
 
-                using (builder.AppendBlock($"internal static class {typeSymbol.Name}CodeCharMapper"))
+                builder.Append(Block($"internal static class {typeSymbol.Name}CodeCharMapper"), builder =>
                 {
-                    using (builder.AppendBlock($"private static readonly Dictionary<{typeSymbol.Name}Code, string> GeometryPaths = new Dictionary<{typeSymbol.Name}Code, string>", true))
+                    builder.Append(Block($"private static readonly Dictionary<{typeSymbol.Name}Code, string> GeometryPaths = new Dictionary<{typeSymbol.Name}Code, string>", ";"), builder =>
                     {
                         foreach (var (name, path) in extraGeoms)
                             _ = builder.AppendLine($"[{typeSymbol.Name}Code.{name}] = \"{path}\",");
-                    }
+                    });
 
                     _ = builder.AppendLine()
                            .AppendLine($"public static string GetChar(this {typeSymbol.Name}Code iconCode) => Encoding.UTF32.GetString(BitConverter.GetBytes((uint)iconCode));")
                            .AppendLine($"public static {typeSymbol.Name}Code Get{typeSymbol.Name}Code(this string s) => ({typeSymbol.Name}Code)BitConverter.ToUInt32(Encoding.UTF32.GetBytes(s), 0);")
                            .AppendLine($"public static bool IsGeometry(this {typeSymbol.Name}Code iconCode, out string geometryPath) => GeometryPaths.TryGetValue(iconCode, out geometryPath);");
-                }
+                });
 
                 _ = builder.AppendLine();
 
-                using (builder.AppendBlock($"public enum {typeSymbol.Name}Code : uint"))
+                builder.Append(Block($"public enum {typeSymbol.Name}Code : uint"), builder =>
                 {
                     _ = builder.AppendLine("// Custom extra codes");
                     for (int i = 0; i < extraGeoms.Length; i++)
@@ -111,8 +109,8 @@ public class WpfIconFontGenerator : ISourceGenerator
                     _ = builder.AppendLine().AppendLine("// Codes from CSS");
                     foreach (var (name, code) in codes)
                         _ = builder.AppendLine($"{name} = 0x{code}u,");
-                }
-            }
+                });
+            });
 
             context.AddSource(builder.ToSourceText(), typeSymbol);
         }
@@ -120,54 +118,56 @@ public class WpfIconFontGenerator : ISourceGenerator
 
     private static void CreatePartialIconClass(ISourceBuilder builder, string? assemblyName, string typeName, string? fontName)
     {
-        using (builder.AppendBlock($"partial class {typeName} : Icon"))
+        builder.Append(Block($"partial class {typeName} : Icon"), builder =>
         {
             _ = builder.AppendLine($"/// <summary>The font family to use for the <see cref=\"{typeName}\"/> class.</summary>")
                    .AppendLine("public static readonly FontFamily FontFamily;")
                    .AppendLine();
-            using (builder.AppendBlock($"static {typeName}()"))
+            builder.Append(Block($"static {typeName}()"), builder =>
             {
-                using (builder.AppendBlock("if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))"))
+                builder.Append(Block("if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))"), builder =>
+                {
                     _ = builder.AppendLine($"FontFamily = new FontFamily(\"{fontName}\");");
-                using (builder.AppendBlock("else"))
+                });
+                builder.Append(Block("else"), builder =>
                 {
                     _ = builder.AppendLine("FontFamily = Application.Current != null")
                            .AppendLine($"    ? new FontFamily(new Uri(\"pack://application:,,,/{assemblyName};component/\"), \"./#{fontName}\")")
                            .AppendLine($"    : new FontFamily(\"{fontName}\");");
-                }
-            }
+                });
+            });
 
             _ = builder.AppendLine()
                    .AppendLine("/// <summary>Gets or sets the icon.</summary>");
-            using (builder.AppendBlock($"public {typeName}Code Icon"))
+            builder.Append(Block($"public {typeName}Code Icon"), builder =>
             {
                 _ = builder.AppendLine($"get => Character == null ? 0 : Character.Get{typeName}Code();");
-                using (builder.AppendBlock("set"))
+                builder.Append(Block("set"), builder =>
                 {
-                    using (builder.AppendBlock("if (value.IsGeometry(out var geom))"))
+                    builder.Append(Block("if (value.IsGeometry(out var geom))"), builder =>
                     {
                         _ = builder.AppendLine("Character = null;")
                                .AppendLine("Geometry = Geometry.Parse(geom);")
                                .AppendLine("Type = SymbolType.Geometry;");
-                    }
+                    });
 
-                    using (builder.AppendBlock("else"))
+                    builder.Append(Block("else"), builder =>
                     {
                         _ = builder.AppendLine("Character = value.GetChar();")
                                .AppendLine("Geometry = null;")
                                .AppendLine("Type = SymbolType.Character;");
-                    }
-                }
-            }
+                    });
+                });
+            });
 
             _ = builder.AppendLine()
                    .AppendLine($"/// <summary>Initializes a new instance of the <see cref=\"{typeName}\"/> class.</summary>");
-            using (builder.AppendBlock($"public {typeName}()"))
+            builder.Append(Block($"public {typeName}()"), builder =>
             {
                 _ = builder.AppendLine("Font = FontFamily;")
                        .AppendLine("Type = SymbolType.Character;")
                        .AppendLine("SetTransform();");
-            }
+            });
 
             _ = builder.AppendLine()
                    .AppendLine($"/// <summary>Initializes a new instance of the <see cref=\"{typeName}\"/> class.</summary>")
@@ -189,17 +189,21 @@ public class WpfIconFontGenerator : ISourceGenerator
                    .AppendLine("/// <param name=\"icon\">The icon to use.</param>")
                    .AppendLine("/// <param name=\"stretch\">The stretch mode.</param>")
                    .AppendLine("/// <param name=\"fontSize\">Size of the font.</param>");
-            using (builder.AppendBlock($"public {typeName}({typeName}Code icon, Stretch? stretch, double? fontSize) : this(icon)"))
+            builder.Append(Block($"public {typeName}({typeName}Code icon, Stretch? stretch, double? fontSize) : this(icon)"), builder =>
             {
-                using (builder.AppendBlock("if (stretch.HasValue)"))
+                builder.Append(Block("if (stretch.HasValue)"), builder =>
+                {
                     _ = builder.AppendLine("Stretch = stretch.Value;");
-                using (builder.AppendBlock("if (fontSize.HasValue)"))
+                });
+                builder.Append(Block("if (fontSize.HasValue)"), builder =>
+                {
                     _ = builder.AppendLine("FontSize = fontSize.Value;");
-            }
+                });
+            });
 
             _ = builder.AppendLine()
                    .AppendLine("partial void SetTransform();");
-        }
+        });
     }
 
     private static void CreateMarkupExtensionClass(ISourceBuilder builder, INamedTypeSymbol typeSymbol, uint? defaultIconCode)
@@ -208,7 +212,7 @@ public class WpfIconFontGenerator : ISourceGenerator
                                    .AppendLine("/// <seealso cref=\"MarkupExtension\" />")
                                    .AppendLine("[MarkupExtensionReturnType(typeof(MaSch.Presentation.Wpf.Icon))]");
 
-        using (builder.AppendBlock($"public class {typeSymbol.Name}Extension : MarkupExtension"))
+        builder.Append(Block($"public class {typeSymbol.Name}Extension : MarkupExtension"), builder =>
         {
             _ = builder.AppendLine("/// <summary>Gets or sets the icon.</summary>")
                    .AppendLine("[ConstructorArgument(\"icon\")]")
@@ -221,23 +225,29 @@ public class WpfIconFontGenerator : ISourceGenerator
                    .AppendLine("public Stretch? Stretch { get; set; }")
                    .AppendLine()
                    .AppendLine($"/// <summary>Initializes a new instance of the <see cref=\"{typeSymbol.Name}Extension\"/> class.</summary>");
-            using (builder.AppendBlock($"public {typeSymbol.Name}Extension()"))
+            builder.Append(Block($"public {typeSymbol.Name}Extension()"), builder =>
+            {
                 _ = builder.AppendLine($"Icon = ({typeSymbol.Name}Code){defaultIconCode ?? 0};");
+            });
             _ = builder.AppendLine()
                    .AppendLine($"/// <summary>Initializes a new instance of the <see cref=\"{typeSymbol.Name}Extension\"/> class.</summary>")
                    .AppendLine("/// <param name=\"icon\">The icon to use.</param>");
-            using (builder.AppendBlock($"public {typeSymbol.Name}Extension({typeSymbol.Name}Code icon)"))
+            builder.Append(Block($"public {typeSymbol.Name}Extension({typeSymbol.Name}Code icon)"), builder =>
+            {
                 _ = builder.AppendLine($"Icon = icon;");
+            });
             _ = builder.AppendLine()
                    .AppendLine("/// <inheritdoc />");
-            using (builder.AppendBlock("public override object ProvideValue(IServiceProvider serviceProvider)"))
+            builder.Append(Block("public override object ProvideValue(IServiceProvider serviceProvider)"), builder =>
             {
                 _ = builder.AppendLine("var pvt = serviceProvider.GetService(typeof(IProvideValueTarget)) as IProvideValueTarget;");
-                using (builder.AppendBlock("if (pvt?.TargetObject is Setter)"))
+                builder.Append(Block("if (pvt?.TargetObject is Setter)"), builder =>
+                {
                     _ = builder.AppendLine("return this;");
+                });
                 _ = builder.AppendLine($"return new {typeSymbol.Name}(Icon, Stretch, FontSize);");
-            }
-        }
+            });
+        });
     }
 
     private static IEnumerable<(string Name, string Code)> GetCodes(Regex regex, string? fileContent)

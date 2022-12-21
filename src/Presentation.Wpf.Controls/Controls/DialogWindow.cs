@@ -1,5 +1,4 @@
-﻿using MaSch.Core.Attributes;
-using MaSch.Core.Observable;
+﻿using MaSch.Core.Observable;
 using System.Windows;
 
 namespace MaSch.Presentation.Wpf.Controls;

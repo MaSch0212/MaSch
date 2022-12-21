@@ -1,6 +1,4 @@
 ﻿using Microsoft.CodeAnalysis;
-using System.Collections.Immutable;
-using System.Linq;
 
 namespace MaSch.Generators.ObservableObject;
 
@@ -16,10 +14,9 @@ internal static class DiagnosticsFactory
         DiagnosticSeverity.Warning,
         true);
 
-    public static Diagnostic AttributeIgnored(string typeName, ImmutableArray<AttributeData> attributes, string ignoredAttributeName, string otherAttributeName)
+    public static Diagnostic AttributeIgnored(string typeName, string ignoredAttributeName, string otherAttributeName, Location ignoredAttributeLocation)
     {
-        var attributeLocation = attributes.FirstOrDefault(x => x.AttributeClass.Name == ignoredAttributeName)?.ApplicationSyntaxReference.GetSyntax().GetLocation();
-        return Diagnostic.Create(AttributeIgnoredDescriptor, attributeLocation, ignoredAttributeName, typeName, otherAttributeName);
+        return Diagnostic.Create(AttributeIgnoredDescriptor, ignoredAttributeLocation, ignoredAttributeName, typeName, otherAttributeName);
     }
 
     private static string GetId(int id) => $"MSCG01{id}";

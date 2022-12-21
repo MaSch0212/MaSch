@@ -1,6 +1,4 @@
-﻿using MaSch.CodeAnalysis.CSharp.Extensions;
-
-namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
+﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
 public interface IParameterConfiguration : ISupportsCodeAttributeConfiguration<IParameterConfiguration>
 {

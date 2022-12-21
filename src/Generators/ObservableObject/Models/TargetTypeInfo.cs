@@ -8,19 +8,27 @@ internal record TargetTypeInfo(
     string ContainingNamespace,
     string Name,
     InterfaceType InterfaceType,
-    ImmutableArray<AttributeData> Attributes)
+    ImmutableArray<Diagnostic> Diagnostics)
 {
     public static TargetTypeInfo Get(ITypeSymbol typeSymbol)
     {
         var attributes = typeSymbol.GetAttributes();
-        var interfaceType = GetInterfaceType(attributes);
+        var interfaceType = GetInterfaceType(attributes, out var generateNotifyPropertyChangedAttribute);
+        var diagnostics = ImmutableArray.CreateBuilder<Diagnostic>();
 
-        return new TargetTypeInfo(typeSymbol.ContainingNamespace.ToString(), typeSymbol.Name, interfaceType, attributes);
+        if (interfaceType == (InterfaceType.ObservableObject | InterfaceType.NotifyPropertyChanged))
+        {
+            var attributeLocation = generateNotifyPropertyChangedAttribute.ApplicationSyntaxReference.GetSyntax().GetLocation();
+            diagnostics.Add(DiagnosticsFactory.AttributeIgnored(typeSymbol.Name, nameof(GenerateNotifyPropertyChangedAttribute), nameof(GenerateObservableObjectAttribute), attributeLocation));
+        }
+
+        return new TargetTypeInfo(typeSymbol.ContainingNamespace.ToString(), typeSymbol.Name, interfaceType, diagnostics.ToImmutable());
     }
 
-    private static InterfaceType GetInterfaceType(ImmutableArray<AttributeData> attributes)
+    private static InterfaceType GetInterfaceType(ImmutableArray<AttributeData> attributes, out AttributeData? generateNotifyPropertyChangedAttribute)
     {
         var result = InterfaceType.None;
+        generateNotifyPropertyChangedAttribute = null;
 
         foreach (var attribute in attributes)
         {
@@ -29,7 +37,10 @@ internal record TargetTypeInfo(
             if (attributeTypeFullName == typeof(GenerateObservableObjectAttribute).FullName)
                 result |= InterfaceType.ObservableObject;
             if (attributeTypeFullName == typeof(GenerateNotifyPropertyChangedAttribute).FullName)
+            {
                 result |= InterfaceType.NotifyPropertyChanged;
+                generateNotifyPropertyChangedAttribute = attribute;
+            }
         }
 
         return result;

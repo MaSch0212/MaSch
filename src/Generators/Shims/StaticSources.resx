@@ -118,10 +118,25 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="GenerateNotifyPropertyChangedAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\generatenotifypropertychangedattribute.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="CallerArgumentExpression" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>staticsources\callerargumentexpression.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="GenerateObservableObjectAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\generateobservableobjectattribute.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="IndexAndRange" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>staticsources\indexandrange.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="NullableReferenceTypes" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>staticsources\nullablereferencetypes.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="OSVersioning" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>staticsources\osversioning.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="Records" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>staticsources\records.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="Shims" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>staticsources\shims.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="ShimsAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>staticsources\shimsattribute.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>

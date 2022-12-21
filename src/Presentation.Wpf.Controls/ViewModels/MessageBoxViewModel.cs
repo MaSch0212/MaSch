@@ -1,5 +1,4 @@
 ﻿using MaSch.Core;
-using MaSch.Core.Attributes;
 using MaSch.Core.Observable;
 using MaSch.Presentation.Wpf.Themes;
 using MaSch.Presentation.Wpf.ThemeValues;

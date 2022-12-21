@@ -76,45 +76,6 @@ public sealed partial class SourceBuilder
         return new SourceBuilder(SourceBuilderOptions.Default);
     }
 
-    /// <inheritdoc cref="ISourceBuilder.AppendRegion(string)" />
-    public SourceBuilderCodeBlock AppendRegion(string regionName)
-    {
-        _ = AppendLine($"#region {regionName}");
-        return new SourceBuilderCodeBlock(this, "#endregion", false);
-    }
-
-    /// <inheritdoc cref="ISourceBuilder.AppendBlock(string)" />
-    public SourceBuilderCodeBlock AppendBlock(string blockLine)
-    {
-        return AppendBlock(blockLine, false);
-    }
-
-    /// <inheritdoc cref="ISourceBuilder.AppendBlock(string, bool)" />
-    public SourceBuilderCodeBlock AppendBlock(string blockLine, bool addSemicolon)
-    {
-        _ = AppendLine(blockLine);
-        return AppendBlock(addSemicolon);
-    }
-
-    /// <inheritdoc cref="ISourceBuilder.AppendBlock()" />
-    public SourceBuilderCodeBlock AppendBlock()
-    {
-        return AppendBlock(false);
-    }
-
-    /// <inheritdoc cref="ISourceBuilder.AppendBlock(bool)" />
-    public SourceBuilderCodeBlock AppendBlock(bool addSemicolon)
-    {
-        _ = AppendLine("{");
-        return new SourceBuilderCodeBlock(this, addSemicolon ? "};" : "}", true);
-    }
-
-    /// <inheritdoc cref="ISourceBuilder.Indent()" />
-    public SourceBuilderCodeBlock Indent()
-    {
-        return new SourceBuilderCodeBlock(this, null, true);
-    }
-
     /// <inheritdoc cref="ISourceBuilder.AppendLine()" />
     public SourceBuilder AppendLine()
     {
@@ -127,16 +88,6 @@ public sealed partial class SourceBuilder
         return Append(value + Environment.NewLine);
     }
 
-    /// <inheritdoc cref="ISourceBuilder.EnsurePreviousLineEmpty()" />
-    public SourceBuilder EnsurePreviousLineEmpty()
-    {
-        if (!_isCurrentLineEmpty)
-            AppendLine();
-        if (!_isLastLineEmpty)
-            AppendLine();
-        return this;
-    }
-
     /// <inheritdoc cref="ISourceBuilder.Append(string)" />
     public SourceBuilder Append(string value)
     {
@@ -146,7 +97,7 @@ public sealed partial class SourceBuilder
         var indentCount = CurrentIndentLevel * Options.IndentSize;
         var lineStartIndex = 0;
 
-        for (int i = 0; i < value.Length - 1; i++)
+        for (int i = 0; i < value.Length; i++)
         {
             if (value[i] is '\r')
                 i++;
@@ -180,7 +131,7 @@ public sealed partial class SourceBuilder
                 _isCurrentLineEmpty = false;
         }
 
-        if (!_isLineIndented && lineStartIndex < value.Length - 1)
+        if (!_isLineIndented && lineStartIndex < value.Length)
         {
             _ = _builder.Append(IndentChar, indentCount);
             _isLineIndented = true;
@@ -196,7 +147,7 @@ public sealed partial class SourceBuilder
         if (!_isLineIndented)
         {
             _builder.Append(IndentChar, CurrentIndentLevel * Options.IndentSize);
-            _isLineIndented = CurrentIndentLevel > 0;
+            _isLineIndented = true;// CurrentIndentLevel > 0;
         }
 
         _builder.Append(value);
@@ -210,6 +161,61 @@ public sealed partial class SourceBuilder
         else if (value is not '{')
         {
             _isCurrentLineEmpty = false;
+        }
+
+        return this;
+    }
+
+    /// <inheritdoc cref="ISourceBuilder.Append(IRegionConfiguration, Action{ISourceBuilder})" />
+    public SourceBuilder Append(IRegionConfiguration regionConfiguration, Action<SourceBuilder> builderFunc)
+    {
+        regionConfiguration.WriteStartTo(this);
+        builderFunc(this);
+        regionConfiguration.WriteEndTo(this);
+        return this;
+    }
+
+    /// <inheritdoc cref="ISourceBuilder.Append(ICodeBlockConfiguration, Action{ISourceBuilder})" />
+    public SourceBuilder Append(ICodeBlockConfiguration codeBlockConfiguration, Action<SourceBuilder> builderFunc)
+    {
+        codeBlockConfiguration.WriteStartTo(this);
+        Indent(builderFunc);
+        codeBlockConfiguration.WriteEndTo(this);
+        return this;
+    }
+
+    /// <inheritdoc cref="ISourceBuilder.EnsurePreviousLineEmpty()" />
+    public SourceBuilder EnsurePreviousLineEmpty()
+    {
+        if (!_isCurrentLineEmpty)
+            AppendLine();
+        if (!_isLastLineEmpty)
+            AppendLine();
+        return this;
+    }
+
+    /// <inheritdoc cref="ISourceBuilder.EnsureCurrentLineEmpty()" />
+    public SourceBuilder EnsureCurrentLineEmpty()
+    {
+        if (!_isCurrentLineEmpty)
+            AppendLine();
+        return this;
+    }
+
+    /// <inheritdoc cref="ISourceBuilder.Indent(Action{ISourceBuilder})" />
+    public SourceBuilder Indent(Action<SourceBuilder> builderFunc)
+    {
+        var lastTypeName = CurrentTypeName;
+        CurrentIndentLevel++;
+
+        try
+        {
+            builderFunc(this);
+        }
+        finally
+        {
+            CurrentIndentLevel--;
+            CurrentTypeName = lastTypeName;
         }
 
         return this;
@@ -240,16 +246,15 @@ public sealed partial class SourceBuilder
         return _builder.ToString();
     }
 
-    private SourceBuilder AppendAsBlock<T>(ICodeConfiguration configuration, T builder, Action<T> builderFunc)
-        where T : ISourceBuilder
+    private SourceBuilder AppendAsBlock(ICodeConfiguration configuration, Action<SourceBuilder> builderFunc)
     {
         configuration.WriteTo(this);
-        using (AppendLine().AppendBlock())
+        Append(CodeConfiguration.Block(), _ =>
         {
             if (configuration is ITypeConfiguration typeConfiguration)
                 CurrentTypeName = typeConfiguration.MemberNameWithoutGenericParameters;
-            builderFunc(builder);
-        }
+            builderFunc(this);
+        });
 
         return this;
     }
@@ -258,7 +263,7 @@ public sealed partial class SourceBuilder
         where T : ISourceBuilder
     {
         configuration.WriteTo(this);
-        using (Indent())
+        Indent(_ =>
         {
             if (appendLineBreak)
                 AppendLine();
@@ -267,7 +272,7 @@ public sealed partial class SourceBuilder
             Append("=> ");
             builderFunc(builder);
             Append(';').AppendLine();
-        }
+        });
 
         return this;
     }
@@ -284,9 +289,9 @@ public sealed partial class SourceBuilder
     private SourceBuilder EnsurePreviousLineEmpty(ICodeConfiguration configuration, bool condition)
     {
         if (!condition && Options.EnsureEmptyLineBeforeMembersWithComments && configuration is ISupportsLineCommentsConfiguration supportsLineCommentsConfiguration)
-            condition = condition || supportsLineCommentsConfiguration.HasComments;
+            condition = supportsLineCommentsConfiguration.HasComments;
         if (!condition && Options.EnsureEmptyLineBeforeMembersWithAttributes && configuration is ISupportsCodeAttributeConfiguration supportsCodeAttributeConfiguration)
-            condition = condition || supportsCodeAttributeConfiguration.HasAttributes;
+            condition = supportsCodeAttributeConfiguration.HasAttributes;
         return condition ? EnsurePreviousLineEmpty() : this;
     }
 
@@ -300,14 +305,14 @@ public sealed partial class SourceBuilder
         if (builderFunc is null)
             return AppendWithLineTerminator(namespaceConfiguration);
 
-        return AppendAsBlock(namespaceConfiguration, this, builderFunc);
+        return AppendAsBlock(namespaceConfiguration, builderFunc);
     }
 
     private SourceBuilder Append(IClassConfiguration classConfiguration, Action<IClassBuilder> builderFunc)
-        => EnsurePreviousLineEmpty(classConfiguration, Options.EnsureEmptyLineBeforeTypes).AppendAsBlock(classConfiguration, this, builderFunc);
+        => EnsurePreviousLineEmpty(classConfiguration, Options.EnsureEmptyLineBeforeTypes).AppendAsBlock(classConfiguration, builderFunc);
 
     private SourceBuilder Append(IInterfaceConfguration interfaceConfguration, Action<IInterfaceBuilder> builderFunc)
-        => EnsurePreviousLineEmpty(interfaceConfguration, Options.EnsureEmptyLineBeforeTypes).AppendAsBlock(interfaceConfguration, this, builderFunc);
+        => EnsurePreviousLineEmpty(interfaceConfguration, Options.EnsureEmptyLineBeforeTypes).AppendAsBlock(interfaceConfguration, builderFunc);
 
     private SourceBuilder Append(IRecordConfiguration recordConfiguration, Action<IRecordBuilder>? builderFunc)
     {
@@ -316,14 +321,14 @@ public sealed partial class SourceBuilder
         if (builderFunc is null)
             return AppendWithLineTerminator(recordConfiguration);
 
-        return AppendAsBlock(recordConfiguration, this, builderFunc);
+        return AppendAsBlock(recordConfiguration, builderFunc);
     }
 
     private SourceBuilder Append(IStructConfiguration structConfiguration, Action<IStructBuilder> builderFunc)
-        => EnsurePreviousLineEmpty(structConfiguration, Options.EnsureEmptyLineBeforeTypes).AppendAsBlock(structConfiguration, this, builderFunc);
+        => EnsurePreviousLineEmpty(structConfiguration, Options.EnsureEmptyLineBeforeTypes).AppendAsBlock(structConfiguration, builderFunc);
 
     private SourceBuilder Append(IEnumConfiguration enumConfiguration, Action<IEnumBuilder> builderFunc)
-        => EnsurePreviousLineEmpty(enumConfiguration, Options.EnsureEmptyLineBeforeTypes).AppendAsBlock(enumConfiguration, this, builderFunc);
+        => EnsurePreviousLineEmpty(enumConfiguration, Options.EnsureEmptyLineBeforeTypes).AppendAsBlock(enumConfiguration, builderFunc);
 
     private SourceBuilder Append(IDelegateConfiguration delegateConfiguration)
         => EnsurePreviousLineEmpty(delegateConfiguration, Options.EnsureEmptyLineBeforeTypes).AppendWithLineTerminator(delegateConfiguration);
@@ -348,11 +353,11 @@ public sealed partial class SourceBuilder
             return AppendWithLineTerminator(eventConfiguration);
 
         eventConfiguration.WriteTo(this);
-        using (AppendLine().AppendBlock())
+        Append(CodeConfiguration.Block(), _ =>
         {
             Append(eventConfiguration.AddMethod, addMethodBuilderFunc);
             Append(eventConfiguration.RemoveMethod, removeMethodBuilderFunc);
-        }
+        });
 
         return this;
     }
@@ -384,18 +389,11 @@ public sealed partial class SourceBuilder
             getBuilderFunc is not null ||
             setBuilderFunc is not null;
 
-        SourceBuilderCodeBlock block;
-        if (multiline)
-        {
-            block = AppendLine().Append('{').Indent();
-            AppendLine();
-        }
-        else
-        {
-            block = Append(" { ").Indent();
-        }
+        var blockStyle = multiline
+            ? CodeBlockStyle.Default & ~CodeBlockStyle.AppendLineAfterBlock
+            : CodeBlockStyle.EnsureBracketSpacing;
 
-        using (block)
+        Append(CodeConfiguration.Block().WithStyle(blockStyle), _ =>
         {
             if (getConfig is not null)
                 Append(getConfig, getBuilderFunc, multiline);
@@ -405,18 +403,7 @@ public sealed partial class SourceBuilder
 
             if (setConfig is not null)
                 Append(setConfig, setBuilderFunc, multiline);
-        }
-
-        if (multiline)
-        {
-            if (!IsCurrentLineEmpty)
-                AppendLine();
-            Append('}');
-        }
-        else
-        {
-            Append(" }");
-        }
+        });
 
         var value = hasGetConfig?.Value;
         if (getBuilderFunc is null && setBuilderFunc is null && value is not null)
@@ -458,6 +445,6 @@ public sealed partial class SourceBuilder
         if (bodyType is MethodBodyType.Expression or MethodBodyType.ExpressionNewLine)
             return AppendAsExpression(codeConfiguration, this, builderFunc, bodyType is MethodBodyType.ExpressionNewLine);
 
-        return AppendAsBlock(codeConfiguration, this, builderFunc);
+        return AppendAsBlock(codeConfiguration, builderFunc);
     }
 }

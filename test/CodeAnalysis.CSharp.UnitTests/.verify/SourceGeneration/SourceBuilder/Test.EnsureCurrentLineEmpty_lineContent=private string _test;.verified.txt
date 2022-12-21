@@ -1,0 +1,3 @@
+﻿private string _test;
+// Current Line
+// Next line

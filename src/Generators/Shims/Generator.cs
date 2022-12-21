@@ -1,5 +1,4 @@
-﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration;
-using MaSch.Core;
+﻿using MaSch.Core;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Linq;
@@ -32,8 +31,8 @@ public class Generator : IIncrementalGenerator
     private static void AddPostInitializationSources(IncrementalGeneratorPostInitializationContext context)
     {
         new StaticSourceCreator(context.AddSource)
-            .AddSource(Resources.Shims)
-            .AddSource(Resources.ShimsAttribute);
+            .AddSource(StaticSources.Shims)
+            .AddSource(StaticSources.ShimsAttribute);
     }
 
     private static bool FilterSyntax(SyntaxNode node, CancellationToken cancellation)
@@ -60,14 +59,14 @@ public class Generator : IIncrementalGenerator
     {
         var creator = new StaticSourceCreator(context.AddSource);
         if (shims.HasFlag(ShimsEnum.Records))
-            creator.AddSource(Resources.Records);
+            creator.AddSource(StaticSources.Records);
         if (shims.HasFlag(ShimsEnum.IndexAndRange))
-            creator.AddSource(Resources.IndexAndRange);
+            creator.AddSource(StaticSources.IndexAndRange);
         if (shims.HasFlag(ShimsEnum.NullableReferenceTypes))
-            creator.AddSource(Resources.NullableReferenceTypes);
+            creator.AddSource(StaticSources.NullableReferenceTypes);
         if (shims.HasFlag(ShimsEnum.OSVersioning))
-            creator.AddSource(Resources.OSVersioning);
+            creator.AddSource(StaticSources.OSVersioning);
         if (shims.HasFlag(ShimsEnum.CallerArgumentExpression))
-            creator.AddSource(Resources.CallerArgumentExpression);
+            creator.AddSource(StaticSources.CallerArgumentExpression);
     }
 }

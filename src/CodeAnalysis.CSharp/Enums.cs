@@ -235,6 +235,21 @@ public enum CaseStyle
     UpperSnakeCase,
 }
 
+[Flags]
+public enum CodeBlockStyle
+{
+    NoLineBreaks = 0,
+    EnsureBlockPrefixOnEmptyLine = 1,
+    EnsureOpeningBracketOnEmptyLine = 2,
+    AppendLineAfterOpeningBracket = 4,
+    EnsureClosingBracketOnEmptyLine = 8,
+    EnsureBlockSuffixOnEmptyLine = 16,
+    AppendLineAfterBlock = 32,
+    EnsureBracketSpacing = 64,
+
+    Default = EnsureBlockPrefixOnEmptyLine | EnsureOpeningBracketOnEmptyLine | AppendLineAfterOpeningBracket | EnsureClosingBracketOnEmptyLine | AppendLineAfterBlock | EnsureBracketSpacing,
+}
+
 /// <summary>
 /// Provides extension methods for the <see cref="AccessModifier"/> enum.
 /// </summary>

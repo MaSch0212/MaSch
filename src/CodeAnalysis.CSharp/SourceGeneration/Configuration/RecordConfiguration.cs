@@ -49,7 +49,7 @@ internal sealed class RecordConfiguration : TypeConfiguration<IRecordConfigurati
         sourceBuilder.Append("record ");
         WriteNameTo(sourceBuilder);
 
-        using (sourceBuilder.Indent())
+        sourceBuilder.Indent(sourceBuilder =>
         {
             WriteParametersTo(sourceBuilder);
 
@@ -63,7 +63,7 @@ internal sealed class RecordConfiguration : TypeConfiguration<IRecordConfigurati
 
             WriteBaseTypesTo(sourceBuilder);
             WriteGenericConstraintsTo(sourceBuilder);
-        }
+        });
     }
 
     private void WriteParametersTo(ISourceBuilder sourceBuilder)

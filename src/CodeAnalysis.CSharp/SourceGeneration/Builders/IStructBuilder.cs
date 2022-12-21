@@ -126,6 +126,14 @@ public partial class SourceBuilder : IStructBuilder
         => Append(value);
 
     /// <inheritdoc/>
+    IStructBuilder ISourceBuilder<IStructBuilder>.Append(IRegionConfiguration regionConfiguration, Action<IStructBuilder> builderFunc)
+        => Append(regionConfiguration, builderFunc);
+
+    /// <inheritdoc/>
+    IStructBuilder ISourceBuilder<IStructBuilder>.Append(ICodeBlockConfiguration codeBlockConfiguration, Action<IStructBuilder> builderFunc)
+        => Append(codeBlockConfiguration, builderFunc);
+
+    /// <inheritdoc/>
     IStructBuilder ISourceBuilder<IStructBuilder>.AppendLine()
         => AppendLine();
 
@@ -134,6 +142,14 @@ public partial class SourceBuilder : IStructBuilder
         => AppendLine(value);
 
     /// <inheritdoc/>
+    IStructBuilder ISourceBuilder<IStructBuilder>.EnsureCurrentLineEmpty()
+        => EnsureCurrentLineEmpty();
+
+    /// <inheritdoc/>
     IStructBuilder ISourceBuilder<IStructBuilder>.EnsurePreviousLineEmpty()
         => EnsurePreviousLineEmpty();
+
+    /// <inheritdoc/>
+    IStructBuilder ISourceBuilder<IStructBuilder>.Indent(Action<IStructBuilder> builderFunc)
+        => Indent(builderFunc);
 }

@@ -93,10 +93,10 @@ internal sealed class MethodConfiguration : MethodConfiguration<IMethodConfigura
         WriteReturnTypeTo(sourceBuilder);
         WriteNameTo(sourceBuilder);
 
-        using (sourceBuilder.Indent())
+        sourceBuilder.Indent(sourceBuilder =>
         {
             WriteParametersTo(sourceBuilder);
             WriteGenericConstraintsTo(sourceBuilder);
-        }
+        });
     }
 }

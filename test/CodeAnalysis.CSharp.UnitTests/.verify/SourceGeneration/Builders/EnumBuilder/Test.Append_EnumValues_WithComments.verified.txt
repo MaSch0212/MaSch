@@ -1,27 +1,24 @@
-﻿enum MyEnum
-{
-    // Single Line Line Comment
-    Value1,
+﻿// Single Line Line Comment
+Value1,
 
-    // Multi Line Line Comment (Line 1)
-    // Multi Line Line Comment (Line 2)
-    // Multi Line Line Comment (Line 3)
-    Value2,
+// Multi Line Line Comment (Line 1)
+// Multi Line Line Comment (Line 2)
+// Multi Line Line Comment (Line 3)
+Value2,
 
-    /* Single Line Block Comment */
-    Value3,
+/* Single Line Block Comment */
+Value3,
 
-    /* Multi Line Block Comment (Line 1)
-     * Multi Line Block Comment (Line 2)
-     * Multi Line Block Comment (Line 3)
-     */
-    Value4,
+/* Multi Line Block Comment (Line 1)
+ * Multi Line Block Comment (Line 2)
+ * Multi Line Block Comment (Line 3)
+ */
+Value4,
 
-    /// Single Line Doc Comment
-    Value5,
+/// Single Line Doc Comment
+Value5,
 
-    /// Multi Line Doc Comment (Line 1)
-    /// Multi Line Doc Comment (Line 2)
-    /// Multi Line Doc Comment (Line 3)
-    Value6,
-}
+/// Multi Line Doc Comment (Line 1)
+/// Multi Line Doc Comment (Line 2)
+/// Multi Line Doc Comment (Line 3)
+Value6,

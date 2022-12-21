@@ -118,4 +118,24 @@ public static class CodeConfiguration
     {
         return new CodeAttributeConfiguration(attributeTypeName).OnAssembly();
     }
+
+    public static IRegionConfiguration Region(string name)
+    {
+        return new RegionConfiguration(name);
+    }
+
+    public static ICodeBlockConfiguration Block()
+    {
+        return new CodeBlockConfiguration();
+    }
+
+    public static ICodeBlockConfiguration Block(string? blockPrefix)
+    {
+        return new CodeBlockConfiguration(blockPrefix);
+    }
+
+    public static ICodeBlockConfiguration Block(string? blockPrefix, string? blockSuffix)
+    {
+        return new CodeBlockConfiguration(blockPrefix, blockSuffix);
+    }
 }

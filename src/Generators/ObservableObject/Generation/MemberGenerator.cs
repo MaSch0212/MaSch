@@ -78,11 +78,11 @@ internal static class MemberGenerator
                 if (interfaceType == InterfaceType.ObservableObject)
                 {
                     builder
-                        .AppendBlock("if (_attributes.ContainsKey(propertyName))", builder =>
+                        .Append(Block("if (_attributes.ContainsKey(propertyName))"), builder =>
                             builder.AppendLine("_attributes[propertyName].UnsubscribeEvent(this);"))
                         .AppendLine("property = value;")
                         .AppendLine("NotifyPropertyChanged(propertyName);")
-                        .AppendBlock("if (_attributes.ContainsKey(propertyName))", builder =>
+                        .Append(Block("if (_attributes.ContainsKey(propertyName))"), builder =>
                             builder.AppendLine("_attributes[propertyName].SubscribeEvent(this);"));
                 }
                 else
@@ -106,9 +106,9 @@ internal static class MemberGenerator
                 .WithParameter("bool", "notifyDependencies", p => p.WithDefaultValue("true"))
                 .WithDocComment("<inheritdoc/>"),
             builder => builder
-                .AppendBlock("if (IsNotifyEnabled)", builder => builder
+                .Append(Block("if (IsNotifyEnabled)"), builder => builder
                     .AppendLine("PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));")
-                    .AppendBlock("if (notifyDependencies)", builder => builder
+                    .Append(Block("if (notifyDependencies)"), builder => builder
                         .AppendLine("_module.NotifyDependentProperties(propertyName);"))));
 
         return builder;
@@ -123,7 +123,7 @@ internal static class MemberGenerator
                 .WithParameter("string", "propertyName", p => p.WithDefaultValue("\"\"").WithCodeAttribute(TypeNames.CallerMemberNameAttribute))
                 .WithDocComment("<inheritdoc/>"),
             builder => builder
-                .AppendBlock("if (IsNotifyEnabled)", builder => builder
+                .Append(Block("if (IsNotifyEnabled)"), builder => builder
                     .AppendLine("_module.NotifyCommandChanged(propertyName);")));
 
         return builder;

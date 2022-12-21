@@ -1,7 +1,5 @@
 ﻿using MaSch.CodeAnalysis.CSharp.SourceGeneration;
 using MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Threading.Tasks;
 
 namespace MaSch.CodeAnalysis.CSharp.UnitTests.SourceGeneration.Builders;
 

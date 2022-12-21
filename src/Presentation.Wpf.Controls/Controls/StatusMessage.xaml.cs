@@ -1,5 +1,4 @@
 ﻿using MaSch.Core;
-using MaSch.Core.Attributes;
 using MaSch.Presentation.Wpf.Services;
 using System.Windows;
 using System.Windows.Controls;

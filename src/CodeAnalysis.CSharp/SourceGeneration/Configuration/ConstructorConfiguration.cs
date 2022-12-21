@@ -92,7 +92,7 @@ internal sealed class ConstructorConfiguration : MemberConfiguration<IConstructo
         WriteCodeAttributesTo(sourceBuilder);
         WriteKeywordsTo(sourceBuilder);
         WriteNameTo(sourceBuilder);
-        using (sourceBuilder.Indent())
+        sourceBuilder.Indent(sourceBuilder =>
         {
             sourceBuilder.Append('(');
             ParameterConfiguration.WriteParametersTo(_parameters, sourceBuilder, MultilineParameters);
@@ -103,7 +103,7 @@ internal sealed class ConstructorConfiguration : MemberConfiguration<IConstructo
                 sourceBuilder.AppendLine();
                 _superConstructor.WriteTo(sourceBuilder);
             }
-        }
+        });
     }
 
     protected override void WriteNameTo(ISourceBuilder sourceBuilder)

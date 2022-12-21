@@ -23,27 +23,23 @@ public class SourceBuilderTests : SourceBuilderTestBase<ISourceBuilder>
     [TestMethod]
     public async Task AppendRegion()
     {
-        using (Builder.AppendRegion("Test Region"))
-            Builder.AppendLine("// Test Comment");
+        Builder.Append(Region("Test Region"), b => b.AppendLine("// Test Comment"));
 
         await VerifyBuilder();
     }
 
     [TestMethod]
-    [DataRow(false)]
-    [DataRow(true)]
-    public async Task AppendBlock_WithoutContent(bool addSemicolon)
+    public async Task AppendBlock_WithoutContent()
     {
-        Builder.AppendBlock(addSemicolon).Dispose();
+        Builder.Append(Block(), b => { });
 
-        await VerifyBuilder(addSemicolon);
+        await VerifyBuilder();
     }
 
     [TestMethod]
     public async Task AppendBlock_WithContent_DefaultIndent()
     {
-        using (Builder.AppendBlock())
-            Builder.AppendLine("// Test Comment");
+        Builder.Append(Block(), b => b.AppendLine("// Test Comment"));
 
         await VerifyBuilder();
     }
@@ -52,28 +48,64 @@ public class SourceBuilderTests : SourceBuilderTestBase<ISourceBuilder>
     [SourceBuilderOptions(IndentSize = 2)]
     public async Task AppendBlock_WithContent_CustomIndent()
     {
-        using (Builder.AppendBlock())
-            Builder.AppendLine("// Test Comment");
+        Builder.Append(Block(), b => b.AppendLine("// Test Comment"));
 
         await VerifyBuilder();
     }
 
     [TestMethod]
-    [DataRow(false)]
-    [DataRow(true)]
-    public async Task AppendBlock_WithBlockLine(bool addSemicolon)
+    public async Task AppendBlock_WithPrefix()
     {
-        Builder.AppendBlock("namespace Hello", addSemicolon).Dispose();
+        Builder.Append(Block("namespace Hello"), b => { });
 
-        await VerifyBuilder(addSemicolon);
+        await VerifyBuilder();
+    }
+
+    [TestMethod]
+    public async Task AppendBlock_WithSuffix()
+    {
+        Builder.Append(Block().WithSuffix(";"), b => { });
+
+        await VerifyBuilder();
+    }
+
+    [TestMethod]
+    public async Task AppendBlock_WithPrefixAndSuffix()
+    {
+        Builder.Append(Block("new string[]", ";"), b => { });
+
+        await VerifyBuilder();
+    }
+
+    [TestMethod]
+    [DataRow(CodeBlockStyle.NoLineBreaks)]
+    [DataRow(CodeBlockStyle.EnsureBlockPrefixOnEmptyLine)]
+    [DataRow(CodeBlockStyle.EnsureOpeningBracketOnEmptyLine)]
+    [DataRow(CodeBlockStyle.AppendLineAfterOpeningBracket)]
+    [DataRow(CodeBlockStyle.EnsureClosingBracketOnEmptyLine)]
+    [DataRow(CodeBlockStyle.EnsureBlockSuffixOnEmptyLine)]
+    [DataRow(CodeBlockStyle.AppendLineAfterBlock)]
+    [DataRow(CodeBlockStyle.EnsureBracketSpacing)]
+    public async Task AppendBlock_DifferentStyles(CodeBlockStyle style)
+    {
+        Builder.Append("/* Test */").Append(Block("new string[]", ";").WithStyle(style), b => b.Append("\"Test\""));
+
+        await VerifyBuilder(style);
+    }
+
+    [TestMethod]
+    public async Task AppendBlock_DifferentBrackets()
+    {
+        Builder.Append(Block().WithBrackets("[", "]"), b => { });
+
+        await VerifyBuilder();
     }
 
     [TestMethod]
     public async Task Indent()
     {
         Builder.AppendLine("// Not indented");
-        using (Builder.Indent())
-            Builder.AppendLine("// Indented");
+        Builder.Indent(b => b.AppendLine("// Indented"));
 
         await VerifyBuilder();
     }
@@ -82,8 +114,7 @@ public class SourceBuilderTests : SourceBuilderTestBase<ISourceBuilder>
     public async Task Indent_NoAutoNewLine()
     {
         Builder.Append("// Not indented");
-        using (Builder.Indent())
-            Builder.Append(" - extra content");
+        Builder.Indent(b => b.Append(" - extra content"));
 
         await VerifyBuilder();
     }
@@ -126,10 +157,28 @@ public class SourceBuilderTests : SourceBuilderTestBase<ISourceBuilder>
     }
 
     [TestMethod]
+    [DataRow("", DisplayName = "Empty")]
+    [DataRow("    ", DisplayName = "Only Spaces")]
+    [DataRow("\t", DisplayName = "Only Tabs")]
+    [DataRow("{", DisplayName = "Only opening squirly bracket")]
+    [DataRow("    {", DisplayName = "Opening squirly bracket with spaces")]
+    [DataRow("\t{", DisplayName = "Opening squirly bracket with tabs")]
+    [DataRow("// Text", DisplayName = "Comment")]
+    [DataRow("private string _test;", DisplayName = "Not empty line")]
+    public async Task EnsureCurrentLineEmpty(string lineContent)
+    {
+        Builder.Append(lineContent);
+        Builder.EnsureCurrentLineEmpty();
+        Builder.AppendLine("// Current Line");
+        Builder.AppendLine("// Next line");
+
+        await VerifyBuilder(lineContent.Replace("\t", "\\t"));
+    }
+
+    [TestMethod]
     public async Task AppendInCodeBlock()
     {
-        using (Builder.AppendBlock())
-            Builder.Append("//").Append(' ').Append("Test");
+        Builder.Append(Block(), b => b.Append("//").Append(' ').Append("Test"));
 
         await VerifyBuilder();
     }
@@ -137,7 +186,7 @@ public class SourceBuilderTests : SourceBuilderTestBase<ISourceBuilder>
     [TestMethod]
     public async Task ToSourceText()
     {
-        Builder.AppendBlock("namespace Test").Dispose();
+        Builder.Append(Block("namespace Test"), b => { });
 
         await Verify(Builder.ToSourceText());
     }

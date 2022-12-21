@@ -23,12 +23,12 @@ internal sealed class StructConfiguration : TypeConfiguration<IStructConfigurati
         sourceBuilder.Append("struct ");
         WriteNameTo(sourceBuilder);
 
-        using (sourceBuilder.Indent())
+        sourceBuilder.Indent(sourceBuilder =>
         {
             if (HasBaseTypes)
                 sourceBuilder.Append(' ');
             WriteBaseTypesTo(sourceBuilder);
             WriteGenericConstraintsTo(sourceBuilder);
-        }
+        });
     }
 }
