@@ -31,7 +31,6 @@ public sealed partial class SourceBuilder
     private bool _isLineIndented = false;
     private bool _isLastLineEmpty;
     private bool _isCurrentLineEmpty;
-    private bool _isCurrentLineComment;
 
     private SourceBuilder(SourceBuilderOptions options)
     {
@@ -53,9 +52,6 @@ public sealed partial class SourceBuilder
 
     /// <inheritdoc cref="ISourceBuilder.CurrentTypeName"/>
     public string? CurrentTypeName { get; set; }
-
-    internal bool IsCurrentLineEmpty => _isCurrentLineEmpty;
-    internal bool IsLastLineEmpty => _isLastLineEmpty;
 
     /// <summary>
     /// Creates a new source file builder.
@@ -100,12 +96,12 @@ public sealed partial class SourceBuilder
         for (int i = 0; i < value.Length; i++)
         {
             if (value[i] is '\r')
-                i++;
+                continue;
 
             if (value[i] is '\n')
             {
                 var lineLength = i - lineStartIndex;
-                if (i > 0 && value[i - 1] is '\r')
+                for (int j = i; j > 0 && value[j - 1] is '\r'; j--)
                     lineLength--;
 
                 if (lineLength > 0)
@@ -118,16 +114,12 @@ public sealed partial class SourceBuilder
                 _isLastLineEmpty = _isCurrentLineEmpty;
                 _ = _builder.AppendLine();
                 _isCurrentLineEmpty = true;
-                _isCurrentLineComment = false;
                 _isLineIndented = false;
 
                 lineStartIndex = i + 1;
             }
 
-            if (!_isCurrentLineComment && value[i] is '/' && i < value.Length - 2 && value[i + 1] is '/')
-                _isCurrentLineComment = true;
-
-            if (!char.IsWhiteSpace(value[i]) && value[i] is not '{' && !_isCurrentLineComment)
+            if (!char.IsWhiteSpace(value[i]) && value[i] is not '{')
                 _isCurrentLineEmpty = false;
         }
 
@@ -144,10 +136,13 @@ public sealed partial class SourceBuilder
     /// <inheritdoc cref="ISourceBuilder.Append(char)" />
     public SourceBuilder Append(char value)
     {
+        if (value is '\r')
+            return this;
+
         if (!_isLineIndented)
         {
             _builder.Append(IndentChar, CurrentIndentLevel * Options.IndentSize);
-            _isLineIndented = true;// CurrentIndentLevel > 0;
+            _isLineIndented = true;
         }
 
         _builder.Append(value);
@@ -155,7 +150,6 @@ public sealed partial class SourceBuilder
         {
             _isLastLineEmpty = _isCurrentLineEmpty;
             _isCurrentLineEmpty = true;
-            _isCurrentLineComment = false;
             _isLineIndented = false;
         }
         else if (value is not '{')
@@ -187,7 +181,7 @@ public sealed partial class SourceBuilder
     /// <inheritdoc cref="ISourceBuilder.EnsurePreviousLineEmpty()" />
     public SourceBuilder EnsurePreviousLineEmpty()
     {
-        if (!_isCurrentLineEmpty)
+        if (_isLineIndented)
             AppendLine();
         if (!_isLastLineEmpty)
             AppendLine();
@@ -197,7 +191,7 @@ public sealed partial class SourceBuilder
     /// <inheritdoc cref="ISourceBuilder.EnsureCurrentLineEmpty()" />
     public SourceBuilder EnsureCurrentLineEmpty()
     {
-        if (!_isCurrentLineEmpty)
+        if (_isLineIndented)
             AppendLine();
         return this;
     }
