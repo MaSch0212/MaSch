@@ -1,5 +1,9 @@
 ﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
+/// <summary>
+/// Represents configuration of a enum value code element. This is used to generate code in the <see cref="ISourceBuilder"/>.
+/// </summary>
+[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Interface")]
 public interface IEnumValueConfiguration : ISupportsCodeAttributeConfiguration<IEnumValueConfiguration>, ISupportsLineCommentsConfiguration<IEnumValueConfiguration>
 {
 }
@@ -7,7 +11,7 @@ public interface IEnumValueConfiguration : ISupportsCodeAttributeConfiguration<I
 internal sealed class EnumValueConfiguration : CodeConfigurationBase, IEnumValueConfiguration
 {
     private readonly List<ICodeAttributeConfiguration> _codeAttributes = new();
-    private readonly List<CommentConfiguration> _comments = new();
+    private readonly List<ICommentConfiguration> _comments = new();
     private readonly string _name;
     private readonly string? _value;
 
@@ -22,15 +26,12 @@ internal sealed class EnumValueConfiguration : CodeConfigurationBase, IEnumValue
         _value = value;
     }
 
-    public bool HasComments => _comments.Count > 0;
-    public bool HasAttributes => _codeAttributes.Count > 0;
+    public IReadOnlyList<ICodeAttributeConfiguration> Attributes => new ReadOnlyCollection<ICodeAttributeConfiguration>(_codeAttributes);
+    public IReadOnlyList<ICommentConfiguration> Comments => new ReadOnlyCollection<ICommentConfiguration>(_comments);
 
     protected override int StartCapacity => 16;
 
     public IEnumValueConfiguration WithCodeAttribute(string attributeTypeName)
-        => WithCodeAttribute(attributeTypeName, null);
-
-    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName)
         => WithCodeAttribute(attributeTypeName, null);
 
     public IEnumValueConfiguration WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration>? attributeConfiguration)
@@ -39,32 +40,35 @@ internal sealed class EnumValueConfiguration : CodeConfigurationBase, IEnumValue
         return this;
     }
 
-    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
-        => WithCodeAttribute(attributeTypeName, attributeConfiguration);
-
     public IEnumValueConfiguration WithLineComment(string comment)
     {
-        _comments.Add(new CommentConfiguration(CommentConfiguration.CommentType.Line, comment));
+        _comments.Add(new CommentConfiguration(CommentType.Line, comment));
         return this;
     }
+
+    public IEnumValueConfiguration WithBlockComment(string comment)
+    {
+        _comments.Add(new CommentConfiguration(CommentType.Block, comment));
+        return this;
+    }
+
+    public IEnumValueConfiguration WithDocComment(string comment)
+    {
+        _comments.Add(new CommentConfiguration(CommentType.Doc, comment));
+        return this;
+    }
+
+    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName)
+        => WithCodeAttribute(attributeTypeName, null);
+
+    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
+        => WithCodeAttribute(attributeTypeName, attributeConfiguration);
 
     ISupportsLineCommentsConfiguration ISupportsLineCommentsConfiguration.WithLineComment(string comment)
         => WithLineComment(comment);
 
-    public IEnumValueConfiguration WithBlockComment(string comment)
-    {
-        _comments.Add(new CommentConfiguration(CommentConfiguration.CommentType.Block, comment));
-        return this;
-    }
-
     ISupportsLineCommentsConfiguration ISupportsLineCommentsConfiguration.WithBlockComment(string comment)
         => WithBlockComment(comment);
-
-    public IEnumValueConfiguration WithDocComment(string comment)
-    {
-        _comments.Add(new CommentConfiguration(CommentConfiguration.CommentType.Doc, comment));
-        return this;
-    }
 
     ISupportsLineCommentsConfiguration ISupportsLineCommentsConfiguration.WithDocComment(string comment)
         => WithDocComment(comment);

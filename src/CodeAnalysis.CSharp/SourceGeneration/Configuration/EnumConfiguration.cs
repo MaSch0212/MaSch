@@ -1,36 +1,34 @@
 ﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
+/// <summary>
+/// Represents configuration of a enum code element. This is used to generate code in the <see cref="ISourceBuilder"/>.
+/// </summary>
+[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Interface")]
 public interface IEnumConfiguration : IMemberConfiguration<IEnumConfiguration>, ISupportsInheritanceConfiguration<IEnumConfiguration>
 {
 }
 
 internal sealed class EnumConfiguration : MemberConfiguration<IEnumConfiguration>, IEnumConfiguration
 {
-    private string _baseType;
-
     public EnumConfiguration(string enumName)
         : base(enumName)
     {
     }
 
-    /// <inheritdoc/>
-    protected override IEnumConfiguration This => this;
+    public string? BaseType { get; private set; }
 
-    /// <inheritdoc/>
+    protected override IEnumConfiguration This => this;
     protected override int StartCapacity => 128;
 
-    /// <inheritdoc/>
     public IEnumConfiguration DerivesFrom(string typeName)
     {
-        _baseType = typeName;
+        BaseType = typeName;
         return This;
     }
 
-    /// <inheritdoc/>
     ISupportsInheritanceConfiguration ISupportsInheritanceConfiguration.DerivesFrom(string typeName)
         => DerivesFrom(typeName);
 
-    /// <inheritdoc/>
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
         WriteCommentsTo(sourceBuilder);
@@ -38,7 +36,7 @@ internal sealed class EnumConfiguration : MemberConfiguration<IEnumConfiguration
         WriteKeywordsTo(sourceBuilder);
         sourceBuilder.Append("enum ");
         WriteNameTo(sourceBuilder);
-        if (_baseType is not null)
-            sourceBuilder.Append($" : {_baseType}");
+        if (BaseType is not null)
+            sourceBuilder.Append($" : {BaseType}");
     }
 }

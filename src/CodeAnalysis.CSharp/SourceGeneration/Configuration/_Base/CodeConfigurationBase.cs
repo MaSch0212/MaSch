@@ -8,16 +8,16 @@ internal abstract class CodeConfigurationBase : ICodeConfiguration
 
     public override string ToString()
     {
-        var builder = CreateSourceBuilderForToString();
+        var builder = CreateSourceBuilder(StartCapacity);
         WriteTo(builder);
         return builder.ToString();
     }
 
-    protected virtual ISourceBuilder CreateSourceBuilderForToString()
+    protected virtual ISourceBuilder CreateSourceBuilder(int capacity)
     {
         var options = new SourceBuilderOptions
         {
-            Capacity = StartCapacity,
+            Capacity = capacity,
             IncludeFileHeader = false,
         };
         var builder = SourceBuilder.Create(options);

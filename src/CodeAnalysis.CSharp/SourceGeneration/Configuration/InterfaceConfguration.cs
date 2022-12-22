@@ -1,5 +1,9 @@
 ﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
+/// <summary>
+/// Represents configuration of an interface code element. This is used to generate code in the <see cref="ISourceBuilder"/>.
+/// </summary>
+[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Interface")]
 public interface IInterfaceConfguration : ITypeConfiguration<IInterfaceConfguration>
 {
 }
@@ -11,10 +15,8 @@ internal sealed class InterfaceConfguration : TypeConfiguration<IInterfaceConfgu
     {
     }
 
-    /// <inheritdoc/>
     protected override IInterfaceConfguration This => this;
 
-    /// <inheritdoc/>
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
         WriteCommentsTo(sourceBuilder);
@@ -25,7 +27,7 @@ internal sealed class InterfaceConfguration : TypeConfiguration<IInterfaceConfgu
 
         sourceBuilder.Indent(sourceBuilder =>
         {
-            if (HasBaseTypes)
+            if (IsDerivingOrImplementingInterface)
                 sourceBuilder.Append(' ');
             WriteBaseTypesTo(sourceBuilder);
             WriteGenericConstraintsTo(sourceBuilder);

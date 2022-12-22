@@ -6,6 +6,7 @@ namespace MaSch.CodeAnalysis.CSharp;
 /// <summary>
 /// Specifies an access modifier of a member in C#.
 /// </summary>
+/// <seealso href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/access-modifiers"/>
 public enum AccessModifier
 {
     /// <summary>
@@ -52,6 +53,7 @@ public enum AccessModifier
 /// <summary>
 /// Specifies keywords for a member of a namespace, class, record, struct or interface.
 /// </summary>
+/// <seealso href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/"/>
 [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1602:Enumeration items should be documented", Justification = "Enum member names are self-explanatory.")]
 [Flags]
 public enum MemberKeyword : uint
@@ -74,6 +76,7 @@ public enum MemberKeyword : uint
 /// <summary>
 /// Specified the target for a code attribute.
 /// </summary>
+/// <seealso href="https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/attributes/#attribute-targets"/>
 public enum CodeAttributeTarget
 {
     /// <summary>
@@ -207,47 +210,190 @@ public enum CaseStyle
     /// <summary>
     /// Uses pascal case.
     /// </summary>
-    /// <remarks><code>ThisIsATest</code></remarks>
+    /// <remarks><code>MyImportantMember</code></remarks>
     PascalCase,
 
     /// <summary>
     /// Uses camel case.
     /// </summary>
-    /// <remarks><code>thisIsATest</code></remarks>
+    /// <remarks><code>myImportantMember</code></remarks>
     CamelCase,
 
     /// <summary>
     /// Uses kebab case.
     /// </summary>
-    /// <remarks><code>this-is-a-test</code></remarks>
+    /// <remarks><code>my-important-member</code></remarks>
     KebabCase,
 
     /// <summary>
     /// Uses snake case.
     /// </summary>
-    /// <remarks><code>this_is_a_test</code></remarks>
+    /// <remarks><code>my_important_member</code></remarks>
     SnakeCase,
 
     /// <summary>
     /// Uses snake case in all upper case letters.
     /// </summary>
-    /// <remarks><code>THIS_IS_A_TEST</code></remarks>
+    /// <remarks><code>MY_IMPORTANT_MEMBER</code></remarks>
     UpperSnakeCase,
 }
 
+/// <summary>
+/// Specifies the spacing style of a code block.
+/// </summary>
 [Flags]
+[SuppressMessage("Critical Code Smell", "S2346:Flags enumerations zero-value members should be named \"None\"", Justification = "This would not fit.")]
 public enum CodeBlockStyle
 {
+    /// <summary>
+    /// No line breaks or any spacing.
+    /// </summary>
+    /// <remarks>
+    /// <code>
+    /// [CodeBeforeBlock][Prefix]{[Content]}[Suffix][CodeAfterBlock]
+    /// </code>
+    /// </remarks>
     NoLineBreaks = 0,
+
+    /// <summary>
+    /// Ensures that the block prefix is on an empty line.
+    /// </summary>
+    /// <remarks>
+    /// <code>
+    /// [CodeBeforeBlock]
+    /// [Prefix]{[Content]}[Suffix][CodeAfterBlock]
+    /// </code>
+    /// </remarks>
     EnsureBlockPrefixOnEmptyLine = 1,
+
+    /// <summary>
+    /// Ensures that the opening bracket is on an empty line.
+    /// </summary>
+    /// <remarks>
+    /// <code>
+    /// [CodeBeforeBlock][Prefix]
+    /// {[Content]}[Suffix][CodeAfterBlock]
+    /// </code>
+    /// </remarks>
     EnsureOpeningBracketOnEmptyLine = 2,
+
+    /// <summary>
+    /// Appends a new line after the opening bracket.
+    /// </summary>
+    /// <remarks>
+    /// <code>
+    /// [CodeBeforeBlock][Prefix]{
+    /// [Content]}[Suffix][CodeAfterBlock]
+    /// </code>
+    /// </remarks>
     AppendLineAfterOpeningBracket = 4,
+
+    /// <summary>
+    /// Ensures that the closing bracket is on an empty line.
+    /// </summary>
+    /// <remarks>
+    /// <code>
+    /// [CodeBeforeBlock][Prefix]{[Content]
+    /// }[Suffix][CodeAfterBlock]
+    /// </code>
+    /// </remarks>
     EnsureClosingBracketOnEmptyLine = 8,
+
+    /// <summary>
+    /// Ensures that the block suffix is on an empty line.
+    /// </summary>
+    /// <remarks>
+    /// <code>
+    /// [CodeBeforeBlock][Prefix]{[Content]}
+    /// [Suffix][CodeAfterBlock]
+    /// </code>
+    /// </remarks>
     EnsureBlockSuffixOnEmptyLine = 16,
+
+    /// <summary>
+    /// Appends a new line after the code block.
+    /// </summary>
+    /// <remarks>
+    /// <code>
+    /// [CodeBeforeBlock][Prefix]{[Content]}[Suffix]
+    /// [CodeAfterBlock]
+    /// </code>
+    /// </remarks>
     AppendLineAfterBlock = 32,
+
+    /// <summary>
+    /// Ensures that the brackets are spaces either by new line or whitespace.
+    /// </summary>
+    /// <remarks>
+    /// <code>
+    /// [CodeBeforeBlock][Prefix] { [Content] } [Suffix][CodeAfterBlock]
+    /// </code>
+    /// </remarks>
     EnsureBracketSpacing = 64,
 
+    /// <summary>
+    /// The default code block spacing.
+    /// </summary>
+    /// <remarks>
+    /// <code>
+    /// [CodeBeforeBlock]
+    /// [Prefix]
+    /// {
+    ///     [Content]
+    /// }[Suffix]
+    /// [CodeAfterBlock]
+    /// </code>
+    /// </remarks>
     Default = EnsureBlockPrefixOnEmptyLine | EnsureOpeningBracketOnEmptyLine | AppendLineAfterOpeningBracket | EnsureClosingBracketOnEmptyLine | AppendLineAfterBlock | EnsureBracketSpacing,
+}
+
+/// <summary>
+/// Represents the type of comment.
+/// </summary>
+public enum CommentType
+{
+    /// <summary>
+    /// The comment is a line comment.
+    /// </summary>
+    /// <remarks>
+    /// <code>
+    /// // Single Comment Line
+    ///
+    /// // Multiple
+    /// // Comment
+    /// // Lines
+    /// </code>
+    /// </remarks>
+    Line,
+
+    /// <summary>
+    /// The comment is a block comment.
+    /// </summary>
+    /// <remarks>
+    /// <code>
+    /// /* Single Comment Line */
+    ///
+    /// /* Multiple
+    ///  * Comment
+    ///  * Lines
+    ///  */
+    /// </code>
+    /// </remarks>
+    Block,
+
+    /// <summary>
+    /// The comment is a XML documentation comment.
+    /// </summary>
+    /// <remarks>
+    /// <code>
+    /// /// Single Comment Line
+    ///
+    /// /// Multiple
+    /// /// Comment
+    /// /// Lines
+    /// </code>
+    /// </remarks>
+    Doc,
 }
 
 /// <summary>

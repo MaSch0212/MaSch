@@ -3,6 +3,9 @@ using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
 namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
 
+/// <summary>
+/// Represents a <see cref="ISourceBuilder"/> used to build the content of a namespace.
+/// </summary>
 public interface INamespaceBuilder :
     INamespaceDeclarationBuilder<INamespaceBuilder>,
     IDelegateDeclarationBuilder<INamespaceBuilder>,

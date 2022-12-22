@@ -3,6 +3,9 @@ using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
 namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
 
+/// <summary>
+/// Represents a <see cref="ISourceBuilder"/> used to build the content of an interface.
+/// </summary>
 public interface IInterfaceBuilder :
     IDelegateDeclarationBuilder<IInterfaceBuilder>,
     IPropertyDeclarationBuilder<IInterfaceBuilder>,
@@ -60,16 +63,8 @@ partial class SourceBuilder : IInterfaceBuilder
         => Append(eventConfiguration, addBuilderFunc, removeBuilderFunc);
 
     /// <inheritdoc/>
-    IInterfaceBuilder IIndexerDeclarationBuilder<IInterfaceBuilder>.Append(IIndexerConfiguration indexerConfiguration)
-        => Append(indexerConfiguration, null, null);
-
-    /// <inheritdoc/>
     IInterfaceBuilder IIndexerDeclarationBuilder<IInterfaceBuilder>.Append(IIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
         => Append(indexerConfiguration, getBuilderFunc, setBuilderFunc);
-
-    /// <inheritdoc/>
-    IInterfaceBuilder IIndexerDeclarationBuilder<IInterfaceBuilder>.Append(IReadOnlyIndexerConfiguration indexerConfiguration)
-        => Append(indexerConfiguration, null, null);
 
     /// <inheritdoc/>
     IInterfaceBuilder IIndexerDeclarationBuilder<IInterfaceBuilder>.Append(IReadOnlyIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc)

@@ -2,8 +2,16 @@
 
 namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
 
+/// <summary>
+/// Represents a <see cref="ISourceBuilder"/> used to build the content of an enum.
+/// </summary>
 public interface IEnumBuilder : ISourceBuilder<IEnumBuilder>
 {
+    /// <summary>
+    /// Appends an enum value to the current enum.
+    /// </summary>
+    /// <param name="enumValueConfiguration">The configuration of the enum value.</param>
+    /// <returns>A reference to this instance after the append operation has completed.</returns>
     IEnumBuilder Append(IEnumValueConfiguration enumValueConfiguration);
 }
 

@@ -2,6 +2,9 @@
 
 namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
 
+/// <summary>
+/// Represents an in-memory source file.
+/// </summary>
 public interface ISourceBuilder
 {
     /// <summary>
@@ -70,7 +73,7 @@ public interface ISourceBuilder
     /// Adds a code block.
     /// </summary>
     /// <param name="codeBlockConfiguration">The block configuration.</param>
-    /// <param name="builderFunc">The function to add indented content.</param>
+    /// <param name="builderFunc">The function to add content to the code block.</param>
     /// <returns>A reference to this instance after the append operation has completed.</returns>
     ISourceBuilder Append(ICodeBlockConfiguration codeBlockConfiguration, Action<ISourceBuilder> builderFunc);
 
@@ -110,6 +113,10 @@ public interface ISourceBuilder
         where T : ISourceBuilder;
 }
 
+/// <summary>
+/// Represents an in-memory source file.
+/// </summary>
+/// <typeparam name="T">The type of <see cref="ISourceBuilder{T}"/>.</typeparam>
 public interface ISourceBuilder<T> : ISourceBuilder
     where T : ISourceBuilder<T>
 {

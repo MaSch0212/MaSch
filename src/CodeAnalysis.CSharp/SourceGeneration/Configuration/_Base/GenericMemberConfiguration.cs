@@ -10,16 +10,12 @@ internal abstract class GenericMemberConfiguration<T> : MemberConfiguration<T>, 
     {
     }
 
+    [SuppressMessage("Critical Bug", "S4275:Getters and setters should access the expected fields", Justification = "The meaning is changed here because we want to include the generic parameters")]
     public override string MemberName
     {
         get
         {
-            var options = new SourceBuilderOptions
-            {
-                Capacity = 64,
-                IncludeFileHeader = false,
-            };
-            var builder = SourceBuilder.Create(options);
+            var builder = CreateSourceBuilder(64);
             WriteNameTo(builder);
             return builder.ToString();
         }
@@ -27,10 +23,9 @@ internal abstract class GenericMemberConfiguration<T> : MemberConfiguration<T>, 
 
     public string MemberNameWithoutGenericParameters => base.MemberName;
 
-    public T WithGenericParameter(string name)
-        => WithGenericParameter(name, null);
+    public IReadOnlyList<IGenericParameterConfiguration> GenericParameters => new ReadOnlyCollection<IGenericParameterConfiguration>(_genericParameters);
 
-    IGenericMemberConfiguration IGenericMemberConfiguration.WithGenericParameter(string name)
+    public T WithGenericParameter(string name)
         => WithGenericParameter(name, null);
 
     public T WithGenericParameter(string name, Action<IGenericParameterConfiguration>? parameterConfiguration)
@@ -40,6 +35,9 @@ internal abstract class GenericMemberConfiguration<T> : MemberConfiguration<T>, 
         _genericParameters.Add(config);
         return This;
     }
+
+    IGenericMemberConfiguration IGenericMemberConfiguration.WithGenericParameter(string name)
+        => WithGenericParameter(name, null);
 
     IGenericMemberConfiguration IGenericMemberConfiguration.WithGenericParameter(string name, Action<IGenericParameterConfiguration> parameterConfiguration)
         => WithGenericParameter(name, parameterConfiguration);

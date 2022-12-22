@@ -1,16 +1,30 @@
 ﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
 
-public readonly struct StaticSourceCreator
+/// <summary>
+/// Utility that can be used to add source texts from a resx for static sources (Post initialization output).
+/// </summary>
+public class StaticSourceCreator
 {
     private readonly Encoding _encoding;
     private readonly Action<string, SourceText> _addSourceFunc;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StaticSourceCreator"/> class.
+    /// </summary>
+    /// <param name="addSourceFunc">The function of the source generator context to add a source text to the compilation.</param>
+    /// <param name="encoding">The encoding to use. Default is UTF8.</param>
     public StaticSourceCreator(Action<string, SourceText> addSourceFunc, Encoding? encoding = null)
     {
         _encoding = encoding ?? Encoding.UTF8;
         _addSourceFunc = addSourceFunc;
     }
 
+    /// <summary>
+    /// Adds the given source to the compilation.
+    /// </summary>
+    /// <param name="source">The source text to add.</param>
+    /// <param name="name">The hint name of the source. If <paramref name="source"/> is provided as <c>[ResourceClass].[ResourceKey]</c> the <c>[ResourceKey</c> is automatically used.</param>
+    /// <returns>A self-reference to this <see cref="StaticSourceCreator"/>.</returns>
     public StaticSourceCreator AddSource(
         string source,
         [CallerArgumentExpression(nameof(source))] string name = "")

@@ -5,9 +5,7 @@ internal abstract class MemberConfiguration<T> : CodeConfigurationBase, IMemberC
 {
     private readonly string _memberName;
     private readonly List<ICodeAttributeConfiguration> _codeAttributes = new();
-    private readonly List<CommentConfiguration> _comments = new();
-    private AccessModifier _accessModifier = AccessModifier.Default;
-    private MemberKeyword _keywords = MemberKeyword.None;
+    private readonly List<ICommentConfiguration> _comments = new();
 
     protected MemberConfiguration(string memberName)
     {
@@ -15,24 +13,20 @@ internal abstract class MemberConfiguration<T> : CodeConfigurationBase, IMemberC
     }
 
     public virtual string MemberName => _memberName;
-    public virtual bool HasComments => _comments.Count > 0;
-    public virtual bool HasAttributes => _codeAttributes.Count > 0;
+    public IReadOnlyList<ICodeAttributeConfiguration> Attributes => new ReadOnlyCollection<ICodeAttributeConfiguration>(_codeAttributes);
+    public IReadOnlyList<ICommentConfiguration> Comments => new ReadOnlyCollection<ICommentConfiguration>(_comments);
+    public AccessModifier AccessModifier { get; private set; } = AccessModifier.Default;
+    public MemberKeyword Keywords { get; private set; } = MemberKeyword.None;
 
     protected abstract T This { get; }
 
     public T WithAccessModifier(AccessModifier accessModifier)
     {
-        _accessModifier = accessModifier;
+        AccessModifier = accessModifier;
         return This;
     }
 
-    ISupportsAccessModifierConfiguration ISupportsAccessModifierConfiguration.WithAccessModifier(AccessModifier accessModifier)
-        => WithAccessModifier(accessModifier);
-
     public T WithCodeAttribute(string attributeTypeName)
-        => WithCodeAttribute(attributeTypeName, null);
-
-    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName)
         => WithCodeAttribute(attributeTypeName, null);
 
     public T WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration>? attributeConfiguration)
@@ -43,41 +37,47 @@ internal abstract class MemberConfiguration<T> : CodeConfigurationBase, IMemberC
         return This;
     }
 
-    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
-        => WithCodeAttribute(attributeTypeName, attributeConfiguration);
-
     public T WithKeyword(MemberKeyword keyword)
     {
-        _keywords |= keyword;
+        Keywords |= keyword;
         return This;
     }
+
+    public T WithLineComment(string comment)
+    {
+        _comments.Add(new CommentConfiguration(CommentType.Line, comment));
+        return This;
+    }
+
+    public T WithBlockComment(string comment)
+    {
+        _comments.Add(new CommentConfiguration(CommentType.Block, comment));
+        return This;
+    }
+
+    public T WithDocComment(string comment)
+    {
+        _comments.Add(new CommentConfiguration(CommentType.Doc, comment));
+        return This;
+    }
+
+    ISupportsAccessModifierConfiguration ISupportsAccessModifierConfiguration.WithAccessModifier(AccessModifier accessModifier)
+        => WithAccessModifier(accessModifier);
+
+    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName)
+        => WithCodeAttribute(attributeTypeName, null);
+
+    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
+        => WithCodeAttribute(attributeTypeName, attributeConfiguration);
 
     IMemberConfiguration IMemberConfiguration.WithKeyword(MemberKeyword keyword)
         => WithKeyword(keyword);
 
-    public T WithLineComment(string comment)
-    {
-        _comments.Add(new CommentConfiguration(CommentConfiguration.CommentType.Line, comment));
-        return This;
-    }
-
     ISupportsLineCommentsConfiguration ISupportsLineCommentsConfiguration.WithLineComment(string comment)
         => WithLineComment(comment);
 
-    public T WithBlockComment(string comment)
-    {
-        _comments.Add(new CommentConfiguration(CommentConfiguration.CommentType.Block, comment));
-        return This;
-    }
-
     ISupportsLineCommentsConfiguration ISupportsLineCommentsConfiguration.WithBlockComment(string comment)
         => WithBlockComment(comment);
-
-    public T WithDocComment(string comment)
-    {
-        _comments.Add(new CommentConfiguration(CommentConfiguration.CommentType.Doc, comment));
-        return This;
-    }
 
     ISupportsLineCommentsConfiguration ISupportsLineCommentsConfiguration.WithDocComment(string comment)
         => WithDocComment(comment);
@@ -99,10 +99,10 @@ internal abstract class MemberConfiguration<T> : CodeConfigurationBase, IMemberC
 
     protected virtual void WriteKeywordsTo(ISourceBuilder sourceBuilder)
     {
-        if (_accessModifier is not AccessModifier.Default)
-            sourceBuilder.Append(_accessModifier.ToMemberPrefix());
-        if (_keywords is not MemberKeyword.None)
-            sourceBuilder.Append(_keywords.ToMemberPrefix());
+        if (AccessModifier is not AccessModifier.Default)
+            sourceBuilder.Append(AccessModifier.ToMemberPrefix());
+        if (Keywords is not MemberKeyword.None)
+            sourceBuilder.Append(Keywords.ToMemberPrefix());
     }
 
     protected virtual void WriteNameTo(ISourceBuilder sourceBuilder)

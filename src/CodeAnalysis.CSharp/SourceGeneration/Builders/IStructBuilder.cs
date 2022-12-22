@@ -3,6 +3,9 @@ using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
 namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
 
+/// <summary>
+/// Represents a <see cref="ISourceBuilder"/> used to build the content of a struct.
+/// </summary>
 public interface IStructBuilder :
     IFieldDeclarationBuilder<IStructBuilder>,
     IDelegateDeclarationBuilder<IStructBuilder>,
@@ -66,16 +69,8 @@ public partial class SourceBuilder : IStructBuilder
         => Append(eventConfiguration, addBuilderFunc, removeBuilderFunc);
 
     /// <inheritdoc/>
-    IStructBuilder IIndexerDeclarationBuilder<IStructBuilder>.Append(IIndexerConfiguration indexerConfiguration)
-        => Append(indexerConfiguration, null, null);
-
-    /// <inheritdoc/>
     IStructBuilder IIndexerDeclarationBuilder<IStructBuilder>.Append(IIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
         => Append(indexerConfiguration, getBuilderFunc, setBuilderFunc);
-
-    /// <inheritdoc/>
-    IStructBuilder IIndexerDeclarationBuilder<IStructBuilder>.Append(IReadOnlyIndexerConfiguration indexerConfiguration)
-        => Append(indexerConfiguration, null, null);
 
     /// <inheritdoc/>
     IStructBuilder IIndexerDeclarationBuilder<IStructBuilder>.Append(IReadOnlyIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc)

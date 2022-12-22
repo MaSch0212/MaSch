@@ -283,9 +283,9 @@ public sealed partial class SourceBuilder
     private SourceBuilder EnsurePreviousLineEmpty(ICodeConfiguration configuration, bool condition)
     {
         if (!condition && Options.EnsureEmptyLineBeforeMembersWithComments && configuration is ISupportsLineCommentsConfiguration supportsLineCommentsConfiguration)
-            condition = supportsLineCommentsConfiguration.HasComments;
+            condition = supportsLineCommentsConfiguration.Comments.Count > 0;
         if (!condition && Options.EnsureEmptyLineBeforeMembersWithAttributes && configuration is ISupportsCodeAttributeConfiguration supportsCodeAttributeConfiguration)
-            condition = supportsCodeAttributeConfiguration.HasAttributes;
+            condition = supportsCodeAttributeConfiguration.Attributes.Count > 0;
         return condition ? EnsurePreviousLineEmpty() : this;
     }
 

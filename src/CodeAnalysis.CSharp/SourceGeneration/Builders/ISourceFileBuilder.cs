@@ -3,11 +3,25 @@ using MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
 namespace MaSch.CodeAnalysis.CSharp.SourceGeneration;
 
+/// <summary>
+/// Represents a <see cref="ISourceBuilder"/> used to build the content of a source file.
+/// </summary>
 public interface ISourceFileBuilder :
     INamespaceDeclarationBuilder<ISourceFileBuilder>,
     INamespaceImportBuilder<ISourceFileBuilder>
 {
+    /// <summary>
+    /// Appends a file-scoped namespace to the current source file.
+    /// </summary>
+    /// <param name="namespaceConfiguration">The configuration of the file-scoped namespace.</param>
+    /// <returns>A reference to this instance after the append operation has completed.</returns>
     ISourceFileBuilder Append(INamespaceConfiguration namespaceConfiguration);
+
+    /// <summary>
+    /// Appends a code attribute to the current source file.
+    /// </summary>
+    /// <param name="codeAttributeConfiguration">The configuration of the code attribute.</param>
+    /// <returns>A reference to this instance after the append operation has completed.</returns>
     ISourceFileBuilder Append(ICodeAttributeConfiguration codeAttributeConfiguration);
 }
 
