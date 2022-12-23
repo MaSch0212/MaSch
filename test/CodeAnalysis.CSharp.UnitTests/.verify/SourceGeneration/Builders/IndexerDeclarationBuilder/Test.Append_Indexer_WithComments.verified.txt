@@ -1,24 +1,84 @@
 ﻿// Single Line Line Comment
-string this[] { get; set; }
+string this[]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}
 
 // Multi Line Line Comment (Line 1)
 // Multi Line Line Comment (Line 2)
 // Multi Line Line Comment (Line 3)
-string this[] { get; set; }
+string this[]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}
 
 /* Single Line Block Comment */
-string this[] { get; set; }
+string this[]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}
 
 /* Multi Line Block Comment (Line 1)
  * Multi Line Block Comment (Line 2)
  * Multi Line Block Comment (Line 3)
  */
-string this[] { get; set; }
+string this[]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}
 
 /// Single Line Doc Comment
-string this[] { get; set; }
+string this[]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}
 
 /// Multi Line Doc Comment (Line 1)
 /// Multi Line Doc Comment (Line 2)
 /// Multi Line Doc Comment (Line 3)
-string this[] { get; set; }
+string this[]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}

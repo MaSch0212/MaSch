@@ -34,24 +34,24 @@ partial class SourceBuilder : IRecordBuilder
         => Append(delegateConfiguration);
 
     /// <inheritdoc/>
-    IRecordBuilder IPropertyDeclarationBuilder<IRecordBuilder>.Append(IPropertyConfiguration propertyConfiguration)
+    IRecordBuilder IPropertyDeclarationBuilder<IRecordBuilder>.Append(IReadWritePropertyConfiguration propertyConfiguration)
         => Append(propertyConfiguration, null, null);
 
     /// <inheritdoc/>
-    IRecordBuilder IPropertyDeclarationBuilder<IRecordBuilder>.Append(IPropertyConfiguration propertyConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
+    IRecordBuilder IPropertyDeclarationBuilder<IRecordBuilder>.Append(IReadWritePropertyConfiguration propertyConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
         => Append(propertyConfiguration, getBuilderFunc, setBuilderFunc);
 
     /// <inheritdoc/>
     IRecordBuilder IPropertyDeclarationBuilder<IRecordBuilder>.Append(IReadOnlyPropertyConfiguration propertyConfiguration)
-        => Append(propertyConfiguration, null, null);
+        => Append(propertyConfiguration, null);
 
     /// <inheritdoc/>
     IRecordBuilder IPropertyDeclarationBuilder<IRecordBuilder>.Append(IReadOnlyPropertyConfiguration propertyConfiguration, Action<ISourceBuilder> getBuilderFunc)
-        => Append(propertyConfiguration, getBuilderFunc, null);
+        => Append(propertyConfiguration, getBuilderFunc);
 
     /// <inheritdoc/>
     IRecordBuilder IPropertyDeclarationBuilder<IRecordBuilder>.Append(IWriteOnlyPropertyConfiguration propertyConfiguration, Action<ISourceBuilder> setBuilderFunc)
-        => Append(propertyConfiguration, null, setBuilderFunc);
+        => Append(propertyConfiguration, setBuilderFunc);
 
     /// <inheritdoc/>
     IRecordBuilder IMethodDeclarationBuilder<IRecordBuilder>.Append(IMethodConfiguration methodConfiguration)
@@ -70,16 +70,16 @@ partial class SourceBuilder : IRecordBuilder
         => Append(eventConfiguration, addBuilderFunc, removeBuilderFunc);
 
     /// <inheritdoc/>
-    IRecordBuilder IIndexerDeclarationBuilder<IRecordBuilder>.Append(IIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
+    IRecordBuilder IIndexerDeclarationBuilder<IRecordBuilder>.Append(IReadWriteIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
         => Append(indexerConfiguration, getBuilderFunc, setBuilderFunc);
 
     /// <inheritdoc/>
     IRecordBuilder IIndexerDeclarationBuilder<IRecordBuilder>.Append(IReadOnlyIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc)
-        => Append(indexerConfiguration, getBuilderFunc, null);
+        => Append(indexerConfiguration, getBuilderFunc);
 
     /// <inheritdoc/>
     IRecordBuilder IIndexerDeclarationBuilder<IRecordBuilder>.Append(IWriteOnlyIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> setBuilderFunc)
-        => Append(indexerConfiguration, null, setBuilderFunc);
+        => Append(indexerConfiguration, setBuilderFunc);
 
     /// <inheritdoc/>
     IRecordBuilder IConstructorDeclarationBuilder<IRecordBuilder>.Append(IConstructorConfiguration constructorConfiguration, Action<ISourceBuilder> builderFunc)

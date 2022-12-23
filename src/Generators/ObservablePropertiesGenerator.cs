@@ -16,15 +16,18 @@ public class ObservablePropertiesGenerator : ISourceGenerator
     /// <inheritdoc />
     public void Initialize(GeneratorInitializationContext context)
     {
-        // No initialization required for this one
+        context.RegisterForPostInitialization(static ctx =>
+        {
+            new StaticSourceCreator(ctx.AddSource)
+                .AddSource(StaticFiles.AccessModifier)
+                .AddSource(StaticFiles.ObservablePropertyDefinitionAttribute)
+                .AddSource(StaticFiles.ObservablePropertyAccessModifierAttribute);
+        });
     }
 
     /// <inheritdoc />
     public void Execute(GeneratorExecutionContext context)
     {
-        if (!context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.nullable", out var nullableProperty))
-            nullableProperty = "disable";
-
         var definitionAttributeSymbol = context.Compilation.GetTypeByMetadataName(typeof(ObservablePropertyDefinitionAttribute).FullName);
         var observableObjectSymbol = context.Compilation.GetTypeByMetadataName("MaSch.Core.Observable.IObservableObject");
         var observableObjectAttributeSymbol = context.Compilation.GetTypeByMetadataName(typeof(GenerateObservableObjectAttribute).FullName);
@@ -34,6 +37,7 @@ public class ObservablePropertiesGenerator : ISourceGenerator
         if (definitionAttributeSymbol == null || (observableObjectSymbol == null && observableObjectAttributeSymbol == null))
             return;
 
+#pragma warning disable RS1024 // Symbols should be compared for equality
         var query = from typeSymbol in context.Compilation.SourceModule.GlobalNamespace.EnumerateNamespaceTypes()
                     where (observableObjectSymbol != null && typeSymbol.AllInterfaces.Contains(observableObjectSymbol)) ||
                           (observableObjectAttributeSymbol != null && typeSymbol.EnumerateAllAttributes().FirstOrDefault(x =>
@@ -45,12 +49,13 @@ public class ObservablePropertiesGenerator : ISourceGenerator
                     from property in propertySource.GetMembers().OfType<IPropertySymbol>()
                     group property by typeSymbol into g
                     select g;
+#pragma warning restore RS1024 // Symbols should be compared for equality
 
         foreach (var type in query)
         {
             var builder = SourceBuilder.Create();
 
-            _ = builder.AppendLine($"#nullable {nullableProperty}")
+            _ = builder.AppendLine($"#nullable enable")
                    .AppendLine()
                    .AppendLine("using System.Diagnostics.CodeAnalysis;")
                    .AppendLine();

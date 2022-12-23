@@ -1,4 +1,5 @@
-﻿using MaSch.Core.Observable;
+﻿using MaSch.Core;
+using MaSch.Core.Observable;
 using System.Windows;
 
 namespace MaSch.Presentation.Wpf.ViewModels.MessageBox;

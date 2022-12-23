@@ -1,0 +1,74 @@
+﻿string this[]
+{
+    private get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}
+
+string this[]
+{
+    get
+    {
+        // Get Content
+    }
+    private set
+    {
+        // Set Content
+    }
+}
+
+string this[]
+{
+    private get
+    {
+        // Get Content
+    }
+}
+
+string this[]
+{
+    private get
+    {
+        return _data;
+    }
+}
+
+string this[]
+{
+    private get => _data;
+}
+
+string this[]
+{
+    private set
+    {
+        _data = value;
+    }
+}
+
+string this[]
+{
+    private set => _data = value;
+}
+
+string this[]
+{
+    private get
+    {
+        return _data;
+    }
+    internal set
+    {
+        _data = value;
+    }
+}
+
+string this[]
+{
+    private get => _data;
+}

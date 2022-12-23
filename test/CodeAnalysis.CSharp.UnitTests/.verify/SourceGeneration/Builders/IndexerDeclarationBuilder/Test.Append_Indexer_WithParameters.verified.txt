@@ -1,11 +1,71 @@
-﻿string this[int i] { get; set; }
+﻿string this[int i]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}
 
-string this[[MyAttr] int i] { get; set; }
+string this[[MyAttr] int i]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}
 
-string this[[MyAttr(4711, "Test")] int i] { get; set; }
+string this[[MyAttr(4711, "Test")] int i]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}
 
-string this[int i, string s] { get; set; }
+string this[int i, string s]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}
 
-string this[[MyAttr] int i, string s] { get; set; }
+string this[[MyAttr] int i, string s]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}
 
-string this[[MyAttr(4711, "Test")] int i, string s] { get; set; }
+string this[[MyAttr(4711, "Test")] int i, string s]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}

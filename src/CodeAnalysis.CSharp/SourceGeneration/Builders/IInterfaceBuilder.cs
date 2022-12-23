@@ -27,24 +27,24 @@ partial class SourceBuilder : IInterfaceBuilder
         => Append(delegateConfiguration);
 
     /// <inheritdoc/>
-    IInterfaceBuilder IPropertyDeclarationBuilder<IInterfaceBuilder>.Append(IPropertyConfiguration propertyConfiguration)
+    IInterfaceBuilder IPropertyDeclarationBuilder<IInterfaceBuilder>.Append(IReadWritePropertyConfiguration propertyConfiguration)
         => Append(propertyConfiguration, null, null);
 
     /// <inheritdoc/>
-    IInterfaceBuilder IPropertyDeclarationBuilder<IInterfaceBuilder>.Append(IPropertyConfiguration propertyConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
+    IInterfaceBuilder IPropertyDeclarationBuilder<IInterfaceBuilder>.Append(IReadWritePropertyConfiguration propertyConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
         => Append(propertyConfiguration, getBuilderFunc, setBuilderFunc);
 
     /// <inheritdoc/>
     IInterfaceBuilder IPropertyDeclarationBuilder<IInterfaceBuilder>.Append(IReadOnlyPropertyConfiguration propertyConfiguration)
-        => Append(propertyConfiguration, null, null);
+        => Append(propertyConfiguration, null);
 
     /// <inheritdoc/>
     IInterfaceBuilder IPropertyDeclarationBuilder<IInterfaceBuilder>.Append(IReadOnlyPropertyConfiguration propertyConfiguration, Action<ISourceBuilder> getBuilderFunc)
-        => Append(propertyConfiguration, getBuilderFunc, null);
+        => Append(propertyConfiguration, getBuilderFunc);
 
     /// <inheritdoc/>
     IInterfaceBuilder IPropertyDeclarationBuilder<IInterfaceBuilder>.Append(IWriteOnlyPropertyConfiguration propertyConfiguration, Action<ISourceBuilder> setBuilderFunc)
-        => Append(propertyConfiguration, null, setBuilderFunc);
+        => Append(propertyConfiguration, setBuilderFunc);
 
     /// <inheritdoc/>
     IInterfaceBuilder IMethodDeclarationBuilder<IInterfaceBuilder>.Append(IMethodConfiguration methodConfiguration)
@@ -63,16 +63,16 @@ partial class SourceBuilder : IInterfaceBuilder
         => Append(eventConfiguration, addBuilderFunc, removeBuilderFunc);
 
     /// <inheritdoc/>
-    IInterfaceBuilder IIndexerDeclarationBuilder<IInterfaceBuilder>.Append(IIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
+    IInterfaceBuilder IIndexerDeclarationBuilder<IInterfaceBuilder>.Append(IReadWriteIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
         => Append(indexerConfiguration, getBuilderFunc, setBuilderFunc);
 
     /// <inheritdoc/>
     IInterfaceBuilder IIndexerDeclarationBuilder<IInterfaceBuilder>.Append(IReadOnlyIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc)
-        => Append(indexerConfiguration, getBuilderFunc, null);
+        => Append(indexerConfiguration, getBuilderFunc);
 
     /// <inheritdoc/>
     IInterfaceBuilder IIndexerDeclarationBuilder<IInterfaceBuilder>.Append(IWriteOnlyIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> setBuilderFunc)
-        => Append(indexerConfiguration, null, setBuilderFunc);
+        => Append(indexerConfiguration, setBuilderFunc);
 
     /// <inheritdoc/>
     IInterfaceBuilder IEnumDeclarationBuilder<IInterfaceBuilder>.Append(IEnumConfiguration enumConfiguration, Action<IEnumBuilder> builderFunc)

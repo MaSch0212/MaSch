@@ -16,7 +16,11 @@ public class WrapperClassGenerator : ISourceGenerator
     /// <inheritdoc />
     public void Initialize(GeneratorInitializationContext context)
     {
-        // No initialization required
+        context.RegisterForPostInitialization(ctx =>
+        {
+            new StaticSourceCreator(ctx.AddSource)
+                .AddSource(StaticFiles.WrappingAttribute);
+        });
     }
 
     /// <inheritdoc />

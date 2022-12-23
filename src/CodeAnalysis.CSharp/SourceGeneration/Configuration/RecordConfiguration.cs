@@ -1,9 +1,17 @@
 ﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
+/// <summary>
+/// Represents configuration of a record code element. This is used to generate code in the <see cref="ISourceBuilder"/>.
+/// </summary>
+[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Interface")]
 public interface IRecordConfiguration :
     ITypeConfiguration<IRecordConfiguration>,
     IDefinesParametersConfiguration<IRecordConfiguration>
 {
+    /// <summary>
+    /// Sets <see cref="IDefinesParametersConfiguration.MultilineParameters"/> to <c>false</c>.
+    /// </summary>
+    /// <returns>A reference to this instance after the operation has completed.</returns>
     IRecordConfiguration WithSinglelineParameters();
 }
 
@@ -17,13 +25,11 @@ internal sealed class RecordConfiguration : TypeConfiguration<IRecordConfigurati
     }
 
     public bool MultilineParameters { get; set; } = true;
+    public IReadOnlyList<IParameterConfiguration> Parameters => new ReadOnlyCollection<IParameterConfiguration>(_parameters);
 
     protected override IRecordConfiguration This => this;
 
     public IRecordConfiguration WithParameter(string type, string name)
-        => WithParameter(type, name, null);
-
-    IDefinesParametersConfiguration IDefinesParametersConfiguration.WithParameter(string type, string name)
         => WithParameter(type, name, null);
 
     public IRecordConfiguration WithParameter(string type, string name, Action<IParameterConfiguration>? parameterConfiguration)
@@ -32,14 +38,17 @@ internal sealed class RecordConfiguration : TypeConfiguration<IRecordConfigurati
         return This;
     }
 
-    IDefinesParametersConfiguration IDefinesParametersConfiguration.WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration)
-        => WithParameter(type, name, parameterConfiguration);
-
     public IRecordConfiguration WithSinglelineParameters()
     {
         MultilineParameters = false;
         return This;
     }
+
+    IDefinesParametersConfiguration IDefinesParametersConfiguration.WithParameter(string type, string name)
+        => WithParameter(type, name, null);
+
+    IDefinesParametersConfiguration IDefinesParametersConfiguration.WithParameter(string type, string name, Action<IParameterConfiguration> parameterConfiguration)
+        => WithParameter(type, name, parameterConfiguration);
 
     public override void WriteTo(ISourceBuilder sourceBuilder)
     {
@@ -53,7 +62,7 @@ internal sealed class RecordConfiguration : TypeConfiguration<IRecordConfigurati
         {
             WriteParametersTo(sourceBuilder);
 
-            if (HasBaseTypes)
+            if (IsDerivingOrImplementingInterface)
             {
                 if (_parameters.Count > 0 && MultilineParameters)
                     sourceBuilder.AppendLine();

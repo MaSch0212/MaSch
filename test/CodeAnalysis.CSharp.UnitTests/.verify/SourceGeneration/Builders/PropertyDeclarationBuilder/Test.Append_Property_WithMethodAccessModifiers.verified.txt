@@ -1,0 +1,50 @@
+﻿string MyProperty1 { private get; set; }
+
+string MyProperty2 { get; private set; }
+
+string MyProperty3 { private get; }
+
+string MyProperty4 { private get; } = "Test";
+
+string MyProperty5
+{
+    private get
+    {
+        return _data;
+    }
+}
+
+string MyProperty6
+{
+    private get => _data;
+}
+
+string MyProperty7
+{
+    private set
+    {
+        _data = value;
+    }
+}
+
+string MyProperty8
+{
+    private set => _data = value;
+}
+
+string MyProperty9
+{
+    private get
+    {
+        return _data;
+    }
+    internal set
+    {
+        _data = value;
+    }
+}
+
+string MyProperty10
+{
+    private get => _data;
+}

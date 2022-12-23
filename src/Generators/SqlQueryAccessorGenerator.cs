@@ -33,8 +33,6 @@ public class SqlQueryAccessorGenerator : ISourceGenerator
         if (!context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.generatesqlqueryaccessor", out var strShouldGenerate) || !bool.TryParse(strShouldGenerate, out var shouldGenerate) || !shouldGenerate)
             return;
 
-        var assemblyAttributes = context.Compilation.Assembly.GetAttributes();
-
         _ = context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.rootnamespace", out var globalNamespaceName);
         _ = context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.projectdir", out var projectDir);
         _ = context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.sqlqueryaccessorrootdir", out var rootDir);

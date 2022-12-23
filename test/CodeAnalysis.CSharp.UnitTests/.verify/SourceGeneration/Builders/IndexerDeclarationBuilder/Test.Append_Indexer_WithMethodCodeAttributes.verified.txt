@@ -1,36 +1,51 @@
 ﻿string this[]
 {
     [MyAttr]
-    get;
-    set;
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
 }
 
 string this[]
 {
-    get;
+    get
+    {
+        // Get Content
+    }
     [MyAttr]
-    set;
+    set
+    {
+        // Set Content
+    }
 }
 
 string this[]
 {
     [MyAttr]
-    get;
+    get
+    {
+        // Get Content
+    }
     [MyAttr]
-    set;
+    set
+    {
+        // Set Content
+    }
 }
 
 string this[]
 {
     [MyAttr]
-    get;
+    get
+    {
+        // Get Content
+    }
 }
-
-string this[]
-{
-    [MyAttr]
-    get;
-} = "Test";
 
 string this[]
 {
@@ -65,17 +80,29 @@ string this[]
 string this[]
 {
     [method: MyAttr]
-    get;
+    get
+    {
+        // Get Content
+    }
     [method: MyAttr]
-    set;
+    set
+    {
+        // Set Content
+    }
 }
 
 string this[]
 {
     [return: MyAttr]
-    get;
+    get
+    {
+        // Get Content
+    }
     [return: MyAttr]
-    set;
+    set
+    {
+        // Set Content
+    }
 }
 
 string this[]
@@ -83,7 +110,7 @@ string this[]
     [MyAttr]
     get
     {
-        _data = value;
+        return _data;
     }
     [MyAttr]
     set
@@ -95,7 +122,13 @@ string this[]
 string this[]
 {
     [MyAttr]
-    get => _data = value;
+    get => _data;
     [MyAttr]
     set => _data = value;
+}
+
+string this[]
+{
+    [MyAttr]
+    get => _data;
 }

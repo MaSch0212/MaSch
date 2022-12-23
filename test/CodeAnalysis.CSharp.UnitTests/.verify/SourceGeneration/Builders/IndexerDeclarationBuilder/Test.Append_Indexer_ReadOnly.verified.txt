@@ -1,8 +1,4 @@
-﻿string this[] { get; }
-
-string this[] { get; } = "Test";
-
-string this[]
+﻿string this[]
 {
     get
     {
@@ -10,10 +6,7 @@ string this[]
     }
 }
 
-string this[]
-{
-    get => _data;
-}
+string this[] => _data;
 
 string this[] => _data;
 

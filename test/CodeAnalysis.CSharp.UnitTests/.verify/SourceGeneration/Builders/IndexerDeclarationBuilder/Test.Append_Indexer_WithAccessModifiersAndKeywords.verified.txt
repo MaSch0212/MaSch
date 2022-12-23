@@ -1,7 +1,47 @@
-﻿public string this[] { get; set; }
+﻿public string this[]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}
 
-static string this[] { get; set; }
+static string this[]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}
 
-internal sealed string this[] { get; set; }
+internal sealed string this[]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}
 
-internal sealed partial string this[] { get; set; }
+internal sealed partial string this[]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}

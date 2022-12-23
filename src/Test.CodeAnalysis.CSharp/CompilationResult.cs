@@ -100,6 +100,11 @@ public class CompilationResult
         System.Diagnostics.Trace.WriteLine(genLog.ToString());
     }
 
+    /// <summary>
+    /// Loads the assembly of the final compilation.
+    /// </summary>
+    /// <returns>The assembly of the final compilation.</returns>
+    /// <exception cref="InvalidOperationException">Emitting assembly from compilation failed.</exception>
     public Assembly GetFinalAssembly()
     {
         using var stream = new MemoryStream();
@@ -112,11 +117,24 @@ public class CompilationResult
         return Assembly.Load(stream.ToArray());
     }
 
+    /// <summary>
+    /// Verify this <see cref="CompilationResult"/> using the Verify NuGet package.
+    /// </summary>
+    /// <param name="verifyFunc">The function to verify (depends on used test framework).</param>
+    /// <param name="options">The options for the verification.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task Verify(Func<object?, VerifySettings, Task> verifyFunc, CompilationVerifyOptions options)
     {
         await Verify(verifyFunc, options, new VerifySettings());
     }
 
+    /// <summary>
+    /// Verify this <see cref="CompilationResult"/> using the Verify NuGet package.
+    /// </summary>
+    /// <param name="verifyFunc">The function to verify (depends on used test framework).</param>
+    /// <param name="options">The options for the verification.</param>
+    /// <param name="verifySettings">The verification settings.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task Verify(Func<object?, VerifySettings, Task> verifyFunc, CompilationVerifyOptions options, VerifySettings verifySettings)
     {
         var exceptions = new List<Exception>();
@@ -172,19 +190,5 @@ public class CompilationResult
         {
             return HintNameExtensionRegex.Match(hintName).Groups["name"].Value;
         }
-    }
-}
-
-public class CompilationVerifyOptions
-{
-    public string[] ExpectedSourceFiles { get; set; } = Array.Empty<string>();
-    public string[] SkipVerifyForFiles { get; set; } = Array.Empty<string>();
-    public string? TestRunName { get; set; }
-
-    internal string GetTextForParameters(string name)
-    {
-        if (TestRunName is null or "")
-            return name;
-        return $"{TestRunName}_{name}";
     }
 }

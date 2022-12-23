@@ -1,12 +1,52 @@
 ﻿[Obsolete]
-string this[] { get; set; }
+string this[]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}
 
 [MyAttr(4711, "Test")]
 [Obsolete]
-string this[] { get; set; }
+string this[]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}
 
 [property: MyAttr3]
-string this[] { get; set; }
+string this[]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}
 
 [field: MyAttr4]
-string this[] { get; set; }
+string this[]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}

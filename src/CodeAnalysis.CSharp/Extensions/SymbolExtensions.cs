@@ -10,7 +10,7 @@ namespace MaSch.CodeAnalysis.CSharp.Extensions;
 public static class SymbolExtensions
 {
     /// <summary>
-    /// Format that can be used to get the usage syntax of a Symbol.
+    /// Format that can be used to get the usage syntax of a Symbol in a <c>#nullable enable</c> context.
     /// </summary>
     public static readonly SymbolDisplayFormat UsageFormat = new(
         SymbolDisplayGlobalNamespaceStyle.Included,
@@ -23,7 +23,12 @@ public static class SymbolExtensions
         SymbolDisplayPropertyStyle.NameOnly,
         SymbolDisplayLocalOptions.None,
         SymbolDisplayKindOptions.None,
-        SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
+        SymbolDisplayMiscellaneousOptions.UseSpecialTypes | SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier);
+
+    /// <summary>
+    /// Format that can be used to get the usage syntax of a Symbol in a <c>#nullable disable</c> context.
+    /// </summary>
+    public static readonly SymbolDisplayFormat UsageFormatWithoutNullable = UsageFormat.WithMiscellaneousOptions(SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
 
     /// <summary>
     /// Format that can be used to get the type definition syntax of a Symbol.
@@ -63,7 +68,19 @@ public static class SymbolExtensions
     /// <param name="symbol">The symbol to convert.</param>
     /// <returns>A formatted string representation of the symbol.</returns>
     public static string ToUsageString(this ISymbol symbol)
-        => symbol.ToDisplayString(UsageFormat);
+    {
+        if (symbol is ITypeSymbol typeSymbol && typeSymbol.NullableAnnotation == NullableAnnotation.None)
+            symbol = typeSymbol.WithNullableAnnotation(NullableAnnotation.Annotated);
+        return symbol.ToDisplayString(UsageFormat);
+    }
+
+    /// <summary>
+    /// Converts the symbol to a string representation using the <see cref="UsageFormatWithoutNullable"/> format.
+    /// </summary>
+    /// <param name="symbol">The symbol to convert.</param>
+    /// <returns>A formatted string representation of the symbol.</returns>
+    public static string ToUsageStringWithoutNullable(this ISymbol symbol)
+        => symbol.ToDisplayString(UsageFormatWithoutNullable);
 
     /// <summary>
     /// Converts the symbol to a string representation using the <see cref="TypeDefinitionFormat"/> format.

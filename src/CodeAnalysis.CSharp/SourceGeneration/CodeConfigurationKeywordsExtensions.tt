@@ -43,7 +43,7 @@
                     "unsafe"),
                 new[] { "readonly", "ref readonly" }).ToArray()
         ),
-        ["IPropertyConfigurationBase<T>"] = (
+        ["IPropertyConfiguration<T>"] = (
             new[] { "public", "private", "protected", "internal", "protected internal", "private protected" },
             Combine(
                 new[] { "static", "new", "override", "abstract", "virtual", "new abstract", "new virtual" },

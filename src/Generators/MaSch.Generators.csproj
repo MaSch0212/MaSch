@@ -43,6 +43,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>StaticSources.resx</DependentUpon>
     </Compile>
+    <Compile Update="StaticFiles.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>StaticFiles.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   
   <ItemGroup>
@@ -53,6 +58,10 @@
     <EmbeddedResource Update="Shims\StaticSources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>StaticSources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="StaticFiles.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>StaticFiles.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   

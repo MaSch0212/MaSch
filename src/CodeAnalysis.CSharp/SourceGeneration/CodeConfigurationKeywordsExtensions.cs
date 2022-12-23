@@ -7889,7 +7889,7 @@ public static class FieldConfigurationKeywordsExtensions
 /// <summary>
 /// Provides extension methods for the different possible keyword combinations of code configurations.
 /// </summary>
-public static class PropertyConfigurationBaseKeywordsExtensions
+public static class PropertyConfigurationKeywordsExtensions
 {
     /// <summary>
     /// Marks the code configuration as <c>static</c>.
@@ -7898,7 +7898,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsStatic<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithKeyword(MemberKeyword.Static);
         return config;
@@ -7911,7 +7911,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsNew<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithKeyword(MemberKeyword.New);
         return config;
@@ -7924,7 +7924,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsOverride<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithKeyword(MemberKeyword.Override);
         return config;
@@ -7937,7 +7937,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsAbstract<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithKeyword(MemberKeyword.Abstract);
         return config;
@@ -7950,7 +7950,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsVirtual<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithKeyword(MemberKeyword.Virtual);
         return config;
@@ -7963,7 +7963,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsNewAbstract<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithKeyword(MemberKeyword.New | MemberKeyword.Abstract);
         return config;
@@ -7976,7 +7976,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsNewVirtual<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithKeyword(MemberKeyword.New | MemberKeyword.Virtual);
         return config;
@@ -7989,7 +7989,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithKeyword(MemberKeyword.Unsafe);
         return config;
@@ -8002,7 +8002,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsStaticUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe);
         return config;
@@ -8015,7 +8015,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsNewUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe);
         return config;
@@ -8028,7 +8028,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsOverrideUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithKeyword(MemberKeyword.Override | MemberKeyword.Unsafe);
         return config;
@@ -8041,7 +8041,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsAbstractUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithKeyword(MemberKeyword.Abstract | MemberKeyword.Unsafe);
         return config;
@@ -8054,7 +8054,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsVirtualUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithKeyword(MemberKeyword.Virtual | MemberKeyword.Unsafe);
         return config;
@@ -8067,7 +8067,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsNewAbstractUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithKeyword(MemberKeyword.New | MemberKeyword.Abstract | MemberKeyword.Unsafe);
         return config;
@@ -8080,7 +8080,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsNewVirtualUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithKeyword(MemberKeyword.New | MemberKeyword.Virtual | MemberKeyword.Unsafe);
         return config;
@@ -8093,7 +8093,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPublicStatic<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.Static);
         return config;
@@ -8106,7 +8106,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPublicNew<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.New);
         return config;
@@ -8119,7 +8119,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPublicOverride<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.Override);
         return config;
@@ -8132,7 +8132,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPublicAbstract<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.Abstract);
         return config;
@@ -8145,7 +8145,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPublicVirtual<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.Virtual);
         return config;
@@ -8158,7 +8158,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPublicNewAbstract<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.New | MemberKeyword.Abstract);
         return config;
@@ -8171,7 +8171,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPublicNewVirtual<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.New | MemberKeyword.Virtual);
         return config;
@@ -8184,7 +8184,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPublicUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.Unsafe);
         return config;
@@ -8197,7 +8197,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPublicStaticUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe);
         return config;
@@ -8210,7 +8210,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPublicNewUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe);
         return config;
@@ -8223,7 +8223,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPublicOverrideUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.Override | MemberKeyword.Unsafe);
         return config;
@@ -8236,7 +8236,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPublicAbstractUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.Abstract | MemberKeyword.Unsafe);
         return config;
@@ -8249,7 +8249,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPublicVirtualUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.Virtual | MemberKeyword.Unsafe);
         return config;
@@ -8262,7 +8262,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPublicNewAbstractUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.New | MemberKeyword.Abstract | MemberKeyword.Unsafe);
         return config;
@@ -8275,7 +8275,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPublicNewVirtualUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Public).WithKeyword(MemberKeyword.New | MemberKeyword.Virtual | MemberKeyword.Unsafe);
         return config;
@@ -8288,7 +8288,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateStatic<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.Static);
         return config;
@@ -8301,7 +8301,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateNew<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.New);
         return config;
@@ -8314,7 +8314,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateOverride<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.Override);
         return config;
@@ -8327,7 +8327,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateAbstract<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.Abstract);
         return config;
@@ -8340,7 +8340,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateVirtual<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.Virtual);
         return config;
@@ -8353,7 +8353,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateNewAbstract<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.New | MemberKeyword.Abstract);
         return config;
@@ -8366,7 +8366,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateNewVirtual<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.New | MemberKeyword.Virtual);
         return config;
@@ -8379,7 +8379,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.Unsafe);
         return config;
@@ -8392,7 +8392,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateStaticUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe);
         return config;
@@ -8405,7 +8405,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateNewUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe);
         return config;
@@ -8418,7 +8418,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateOverrideUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.Override | MemberKeyword.Unsafe);
         return config;
@@ -8431,7 +8431,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateAbstractUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.Abstract | MemberKeyword.Unsafe);
         return config;
@@ -8444,7 +8444,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateVirtualUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.Virtual | MemberKeyword.Unsafe);
         return config;
@@ -8457,7 +8457,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateNewAbstractUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.New | MemberKeyword.Abstract | MemberKeyword.Unsafe);
         return config;
@@ -8470,7 +8470,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateNewVirtualUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Private).WithKeyword(MemberKeyword.New | MemberKeyword.Virtual | MemberKeyword.Unsafe);
         return config;
@@ -8483,7 +8483,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedStatic<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.Static);
         return config;
@@ -8496,7 +8496,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedNew<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.New);
         return config;
@@ -8509,7 +8509,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedOverride<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.Override);
         return config;
@@ -8522,7 +8522,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedAbstract<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.Abstract);
         return config;
@@ -8535,7 +8535,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedVirtual<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.Virtual);
         return config;
@@ -8548,7 +8548,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedNewAbstract<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.New | MemberKeyword.Abstract);
         return config;
@@ -8561,7 +8561,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedNewVirtual<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.New | MemberKeyword.Virtual);
         return config;
@@ -8574,7 +8574,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.Unsafe);
         return config;
@@ -8587,7 +8587,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedStaticUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe);
         return config;
@@ -8600,7 +8600,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedNewUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe);
         return config;
@@ -8613,7 +8613,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedOverrideUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.Override | MemberKeyword.Unsafe);
         return config;
@@ -8626,7 +8626,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedAbstractUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.Abstract | MemberKeyword.Unsafe);
         return config;
@@ -8639,7 +8639,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedVirtualUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.Virtual | MemberKeyword.Unsafe);
         return config;
@@ -8652,7 +8652,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedNewAbstractUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.New | MemberKeyword.Abstract | MemberKeyword.Unsafe);
         return config;
@@ -8665,7 +8665,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedNewVirtualUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Protected).WithKeyword(MemberKeyword.New | MemberKeyword.Virtual | MemberKeyword.Unsafe);
         return config;
@@ -8678,7 +8678,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsInternalStatic<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.Static);
         return config;
@@ -8691,7 +8691,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsInternalNew<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.New);
         return config;
@@ -8704,7 +8704,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsInternalOverride<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.Override);
         return config;
@@ -8717,7 +8717,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsInternalAbstract<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.Abstract);
         return config;
@@ -8730,7 +8730,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsInternalVirtual<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.Virtual);
         return config;
@@ -8743,7 +8743,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsInternalNewAbstract<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.New | MemberKeyword.Abstract);
         return config;
@@ -8756,7 +8756,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsInternalNewVirtual<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.New | MemberKeyword.Virtual);
         return config;
@@ -8769,7 +8769,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsInternalUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.Unsafe);
         return config;
@@ -8782,7 +8782,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsInternalStaticUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe);
         return config;
@@ -8795,7 +8795,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsInternalNewUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe);
         return config;
@@ -8808,7 +8808,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsInternalOverrideUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.Override | MemberKeyword.Unsafe);
         return config;
@@ -8821,7 +8821,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsInternalAbstractUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.Abstract | MemberKeyword.Unsafe);
         return config;
@@ -8834,7 +8834,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsInternalVirtualUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.Virtual | MemberKeyword.Unsafe);
         return config;
@@ -8847,7 +8847,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsInternalNewAbstractUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.New | MemberKeyword.Abstract | MemberKeyword.Unsafe);
         return config;
@@ -8860,7 +8860,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsInternalNewVirtualUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.Internal).WithKeyword(MemberKeyword.New | MemberKeyword.Virtual | MemberKeyword.Unsafe);
         return config;
@@ -8873,7 +8873,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedInternalStatic<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.Static);
         return config;
@@ -8886,7 +8886,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedInternalNew<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.New);
         return config;
@@ -8899,7 +8899,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedInternalOverride<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.Override);
         return config;
@@ -8912,7 +8912,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedInternalAbstract<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.Abstract);
         return config;
@@ -8925,7 +8925,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedInternalVirtual<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.Virtual);
         return config;
@@ -8938,7 +8938,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedInternalNewAbstract<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.New | MemberKeyword.Abstract);
         return config;
@@ -8951,7 +8951,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedInternalNewVirtual<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.New | MemberKeyword.Virtual);
         return config;
@@ -8964,7 +8964,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedInternalUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.Unsafe);
         return config;
@@ -8977,7 +8977,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedInternalStaticUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe);
         return config;
@@ -8990,7 +8990,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedInternalNewUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe);
         return config;
@@ -9003,7 +9003,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedInternalOverrideUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.Override | MemberKeyword.Unsafe);
         return config;
@@ -9016,7 +9016,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedInternalAbstractUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.Abstract | MemberKeyword.Unsafe);
         return config;
@@ -9029,7 +9029,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedInternalVirtualUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.Virtual | MemberKeyword.Unsafe);
         return config;
@@ -9042,7 +9042,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedInternalNewAbstractUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.New | MemberKeyword.Abstract | MemberKeyword.Unsafe);
         return config;
@@ -9055,7 +9055,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsProtectedInternalNewVirtualUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.ProtectedInternal).WithKeyword(MemberKeyword.New | MemberKeyword.Virtual | MemberKeyword.Unsafe);
         return config;
@@ -9068,7 +9068,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateProtectedStatic<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.Static);
         return config;
@@ -9081,7 +9081,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateProtectedNew<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.New);
         return config;
@@ -9094,7 +9094,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateProtectedOverride<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.Override);
         return config;
@@ -9107,7 +9107,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateProtectedAbstract<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.Abstract);
         return config;
@@ -9120,7 +9120,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateProtectedVirtual<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.Virtual);
         return config;
@@ -9133,7 +9133,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateProtectedNewAbstract<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.New | MemberKeyword.Abstract);
         return config;
@@ -9146,7 +9146,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateProtectedNewVirtual<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.New | MemberKeyword.Virtual);
         return config;
@@ -9159,7 +9159,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateProtectedUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.Unsafe);
         return config;
@@ -9172,7 +9172,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateProtectedStaticUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.Static | MemberKeyword.Unsafe);
         return config;
@@ -9185,7 +9185,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateProtectedNewUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.New | MemberKeyword.Unsafe);
         return config;
@@ -9198,7 +9198,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateProtectedOverrideUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.Override | MemberKeyword.Unsafe);
         return config;
@@ -9211,7 +9211,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateProtectedAbstractUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.Abstract | MemberKeyword.Unsafe);
         return config;
@@ -9224,7 +9224,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateProtectedVirtualUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.Virtual | MemberKeyword.Unsafe);
         return config;
@@ -9237,7 +9237,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateProtectedNewAbstractUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.New | MemberKeyword.Abstract | MemberKeyword.Unsafe);
         return config;
@@ -9250,7 +9250,7 @@ public static class PropertyConfigurationBaseKeywordsExtensions
     /// <param name="config">The code configuration to change.</param>
     /// <returns>A self-reference to <paramref name="config"/>.</returns>
     public static T AsPrivateProtectedNewVirtualUnsafe<T>(this T config)
-        where T : IPropertyConfigurationBase<T>
+        where T : IPropertyConfiguration<T>
     {
         config.WithAccessModifier(AccessModifier.PrivateProtected).WithKeyword(MemberKeyword.New | MemberKeyword.Virtual | MemberKeyword.Unsafe);
         return config;

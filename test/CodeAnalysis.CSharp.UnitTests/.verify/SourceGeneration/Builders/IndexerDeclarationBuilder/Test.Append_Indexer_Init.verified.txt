@@ -1,4 +1,14 @@
-﻿string this[] { get; init; }
+﻿string this[]
+{
+    get
+    {
+        // Get Content
+    }
+    init
+    {
+        // Set Content
+    }
+}
 
 string this[]
 {

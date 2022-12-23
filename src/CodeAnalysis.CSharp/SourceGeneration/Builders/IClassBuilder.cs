@@ -34,24 +34,24 @@ partial class SourceBuilder : IClassBuilder
         => Append(delegateConfiguration);
 
     /// <inheritdoc/>
-    IClassBuilder IPropertyDeclarationBuilder<IClassBuilder>.Append(IPropertyConfiguration propertyConfiguration)
+    IClassBuilder IPropertyDeclarationBuilder<IClassBuilder>.Append(IReadWritePropertyConfiguration propertyConfiguration)
         => Append(propertyConfiguration, null, null);
 
     /// <inheritdoc/>
-    IClassBuilder IPropertyDeclarationBuilder<IClassBuilder>.Append(IPropertyConfiguration propertyConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
+    IClassBuilder IPropertyDeclarationBuilder<IClassBuilder>.Append(IReadWritePropertyConfiguration propertyConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
         => Append(propertyConfiguration, getBuilderFunc, setBuilderFunc);
 
     /// <inheritdoc/>
     IClassBuilder IPropertyDeclarationBuilder<IClassBuilder>.Append(IReadOnlyPropertyConfiguration propertyConfiguration)
-        => Append(propertyConfiguration, null, null);
+        => Append(propertyConfiguration, null);
 
     /// <inheritdoc/>
     IClassBuilder IPropertyDeclarationBuilder<IClassBuilder>.Append(IReadOnlyPropertyConfiguration propertyConfiguration, Action<ISourceBuilder> getBuilderFunc)
-        => Append(propertyConfiguration, getBuilderFunc, null);
+        => Append(propertyConfiguration, getBuilderFunc);
 
     /// <inheritdoc/>
     IClassBuilder IPropertyDeclarationBuilder<IClassBuilder>.Append(IWriteOnlyPropertyConfiguration propertyConfiguration, Action<ISourceBuilder> setBuilderFunc)
-        => Append(propertyConfiguration, null, setBuilderFunc);
+        => Append(propertyConfiguration, setBuilderFunc);
 
     /// <inheritdoc/>
     IClassBuilder IMethodDeclarationBuilder<IClassBuilder>.Append(IMethodConfiguration methodConfiguration)
@@ -70,16 +70,16 @@ partial class SourceBuilder : IClassBuilder
         => Append(eventConfiguration, addBuilderFunc, removeBuilderFunc);
 
     /// <inheritdoc/>
-    IClassBuilder IIndexerDeclarationBuilder<IClassBuilder>.Append(IIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
+    IClassBuilder IIndexerDeclarationBuilder<IClassBuilder>.Append(IReadWriteIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
         => Append(indexerConfiguration, getBuilderFunc, setBuilderFunc);
 
     /// <inheritdoc/>
     IClassBuilder IIndexerDeclarationBuilder<IClassBuilder>.Append(IReadOnlyIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc)
-        => Append(indexerConfiguration, getBuilderFunc, null);
+        => Append(indexerConfiguration, getBuilderFunc);
 
     /// <inheritdoc/>
     IClassBuilder IIndexerDeclarationBuilder<IClassBuilder>.Append(IWriteOnlyIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> setBuilderFunc)
-        => Append(indexerConfiguration, null, setBuilderFunc);
+        => Append(indexerConfiguration, setBuilderFunc);
 
     /// <inheritdoc/>
     IClassBuilder IConstructorDeclarationBuilder<IClassBuilder>.Append(IConstructorConfiguration constructorConfiguration, Action<ISourceBuilder> builderFunc)

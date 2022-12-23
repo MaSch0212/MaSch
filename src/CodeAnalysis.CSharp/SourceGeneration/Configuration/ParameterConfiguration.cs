@@ -1,26 +1,58 @@
-﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
+﻿using MaSch.CodeAnalysis.CSharp.Extensions;
 
+namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
+
+/// <summary>
+/// Represents configuration of a parameter code element. This is used to generate code in the <see cref="ISourceBuilder"/>.
+/// </summary>
+[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Interface")]
 public interface IParameterConfiguration : ISupportsCodeAttributeConfiguration<IParameterConfiguration>
 {
+    /// <summary>
+    /// Gets the type of the parameter represented by this <see cref="IParameterConfiguration"/>.
+    /// </summary>
+    string Type { get; }
+
+    /// <summary>
+    /// Gets the name of the parameter represented by this <see cref="IParameterConfiguration"/>.
+    /// </summary>
+    string Name { get; }
+
+    /// <summary>
+    /// Gets the default value of the parameter represented by this <see cref="IParameterConfiguration"/>.
+    /// </summary>
+    string? DefaultValue { get; }
+
+    /// <summary>
+    /// Sets the default value of the parameter represented by this <see cref="IParameterConfiguration"/>.
+    /// </summary>
+    /// <param name="defaultValue">The default value to use.</param>
+    /// <returns>A reference to this instance after the operation has completed.</returns>
+    /// <remarks>The <paramref name="defaultValue"/> is interpreted as C# code. If you want to add a string value as a parameter call the <see cref="StringExtensions.ToCSharpLiteral(string?, bool)"/> extension method on the string.</remarks>
     IParameterConfiguration WithDefaultValue(string defaultValue);
 
+    /// <summary>
+    /// Writes the code represented by this <see cref="ICodeConfiguration"/> to the target <see cref="ISourceBuilder"/>.
+    /// </summary>
+    /// <param name="sourceBuilder">The <see cref="ISourceBuilder"/> to write the code to.</param>
+    /// <param name="lineBreakAfterCodeAttribute">Determines whether a line break should be appended after each code attribute of the parameter.</param>
     void WriteTo(ISourceBuilder sourceBuilder, bool lineBreakAfterCodeAttribute);
 }
 
 internal sealed class ParameterConfiguration : CodeConfigurationBase, IParameterConfiguration
 {
-    private readonly string _type;
-    private readonly string _name;
     private readonly List<ICodeAttributeConfiguration> _codeAttributes = new();
-    private string? _defaultValue;
 
     public ParameterConfiguration(string type, string name)
     {
-        _type = type;
-        _name = name;
+        Type = type;
+        Name = name;
     }
 
-    public bool HasAttributes => _codeAttributes.Count > 0;
+    public string Type { get; }
+    public string Name { get; }
+    public string? DefaultValue { get; private set; }
+    public IReadOnlyList<ICodeAttributeConfiguration> Attributes => new ReadOnlyCollection<ICodeAttributeConfiguration>(_codeAttributes);
 
     protected override int StartCapacity => 16;
 
@@ -50,23 +82,23 @@ internal sealed class ParameterConfiguration : CodeConfigurationBase, IParameter
     public IParameterConfiguration WithCodeAttribute(string attributeTypeName)
         => WithCodeAttribute(attributeTypeName, null);
 
-    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName)
-        => WithCodeAttribute(attributeTypeName, null);
-
     public IParameterConfiguration WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration>? attributeConfiguration)
     {
         CodeAttributeConfiguration.AddCodeAttribute(_codeAttributes, attributeTypeName, attributeConfiguration);
         return this;
     }
 
-    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
-        => WithCodeAttribute(attributeTypeName, attributeConfiguration);
-
     public IParameterConfiguration WithDefaultValue(string defaultValue)
     {
-        _defaultValue = defaultValue;
+        DefaultValue = defaultValue;
         return this;
     }
+
+    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName)
+        => WithCodeAttribute(attributeTypeName, null);
+
+    ISupportsCodeAttributeConfiguration ISupportsCodeAttributeConfiguration.WithCodeAttribute(string attributeTypeName, Action<ICodeAttributeConfiguration> attributeConfiguration)
+        => WithCodeAttribute(attributeTypeName, attributeConfiguration);
 
     public override void WriteTo(ISourceBuilder sourceBuilder)
         => WriteTo(sourceBuilder, false);
@@ -82,9 +114,9 @@ internal sealed class ParameterConfiguration : CodeConfigurationBase, IParameter
                 sourceBuilder.Append(' ');
         }
 
-        sourceBuilder.Append(_type).Append(' ').Append(_name);
+        sourceBuilder.Append(Type).Append(' ').Append(Name);
 
-        if (_defaultValue != null)
-            sourceBuilder.Append(" = ").Append(_defaultValue);
+        if (DefaultValue != null)
+            sourceBuilder.Append(" = ").Append(DefaultValue);
     }
 }

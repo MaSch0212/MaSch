@@ -1,39 +1,57 @@
 ﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
+/// <summary>
+/// Represents configuration of a constructor code element. This is used to generate code in the <see cref="ISourceBuilder"/>.
+/// </summary>
+[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Interface")]
 public interface IPropertyMethodConfiguration : ISupportsCodeAttributeConfiguration<IPropertyMethodConfiguration>, ISupportsAccessModifierConfiguration<IPropertyMethodConfiguration>
 {
-    bool ShouldBeOnItsOwnLine { get; }
+    /// <summary>
+    /// Gets the method keyword (<c>get</c>/<c>set</c>) of the property method represented by this <see cref="IPropertyMethodConfiguration"/>.
+    /// </summary>
+    string MethodKeyword { get; }
+
+    /// <summary>
+    /// Gets the body type of the property method represented by this <see cref="IPropertyMethodConfiguration"/>.
+    /// </summary>
     MethodBodyType BodyType { get; }
 
-    IPropertyMethodConfiguration AsExpression();
+    /// <summary>
+    /// Sets the body type of the property method represented by this <see cref="IPropertyMethodConfiguration"/> to <see cref="MethodBodyType.Expression"/>.
+    /// </summary>
+    /// <param name="placeInNewLine">Determines whether to use <see cref="MethodBodyType.Expression"/> or <see cref="MethodBodyType.ExpressionNewLine"/>.</param>
+    /// <returns>A reference to this instance after the operation has completed.</returns>
+    /// <remarks>
+    /// If <paramref name="placeInNewLine"/> is set to <c>true</c> <see cref="MethodBodyType.ExpressionNewLine"/> is used; otherwise <see cref="MethodBodyType.Expression"/>.
+    /// </remarks>
+    IPropertyMethodConfiguration AsExpression(bool placeInNewLine = false);
 }
 
 internal sealed class PropertyMethodConfiguration : CodeConfigurationBase, IPropertyMethodConfiguration
 {
     private readonly List<ICodeAttributeConfiguration> _codeAttributes = new();
-    private AccessModifier _accessModifier = AccessModifier.Default;
 
     public PropertyMethodConfiguration(string methodKeyword)
     {
         MethodKeyword = methodKeyword;
     }
 
-    public bool ShouldBeOnItsOwnLine => _codeAttributes.Count > 0;
+    public string MethodKeyword { get; internal set; }
     public MethodBodyType BodyType { get; private set; } = MethodBodyType.Block;
-    public string MethodKeyword { get; set; }
-    public bool HasAttributes => _codeAttributes.Count > 0;
+    public AccessModifier AccessModifier { get; private set; } = AccessModifier.Default;
+    public IReadOnlyList<ICodeAttributeConfiguration> Attributes => new ReadOnlyCollection<ICodeAttributeConfiguration>(_codeAttributes);
 
     protected override int StartCapacity => 16;
 
-    public IPropertyMethodConfiguration AsExpression()
+    public IPropertyMethodConfiguration AsExpression(bool placeInNewLine = false)
     {
-        BodyType = MethodBodyType.Expression;
+        BodyType = placeInNewLine ? MethodBodyType.ExpressionNewLine : MethodBodyType.Expression;
         return this;
     }
 
     public IPropertyMethodConfiguration WithAccessModifier(AccessModifier accessModifier)
     {
-        _accessModifier = accessModifier;
+        AccessModifier = accessModifier;
         return this;
     }
 
@@ -54,7 +72,7 @@ internal sealed class PropertyMethodConfiguration : CodeConfigurationBase, IProp
             sourceBuilder.AppendLine();
         }
 
-        sourceBuilder.Append(_accessModifier.ToMemberPrefix());
+        sourceBuilder.Append(AccessModifier.ToMemberPrefix());
         sourceBuilder.Append(MethodKeyword);
     }
 

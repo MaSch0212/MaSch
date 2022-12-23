@@ -1,4 +1,5 @@
-﻿using MaSch.Core.Observable;
+﻿using MaSch.Core;
+using MaSch.Core.Observable;
 using MaSch.Presentation.Services;
 using MaSch.Presentation.Wpf.Services;
 using System.ComponentModel;

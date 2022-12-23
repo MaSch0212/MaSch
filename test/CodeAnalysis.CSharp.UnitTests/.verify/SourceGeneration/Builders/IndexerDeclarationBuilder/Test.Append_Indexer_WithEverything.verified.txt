@@ -7,9 +7,15 @@ internal sealed partial string this[]
     [MyAttr]
     [method: MyAttr3]
     [return: MyAttr4]
-    get;
+    get
+    {
+        // Get Content
+    }
     [MyAttr]
     [method: MyAttr3]
     [return: MyAttr4]
-    init;
-} = "Test";
+    init
+    {
+        // Set Content
+    }
+}

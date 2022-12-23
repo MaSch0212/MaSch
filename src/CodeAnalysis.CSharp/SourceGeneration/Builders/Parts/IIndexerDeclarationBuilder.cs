@@ -15,7 +15,7 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders
         /// <param name="getBuilderFunc">The function to add content to the get method of the indexer.</param>
         /// <param name="setBuilderFunc">The function to add content to the set method of the indexer.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
-        IIndexerDeclarationBuilder Append(IIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc);
+        IIndexerDeclarationBuilder Append(IReadWriteIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc);
 
         /// <summary>
         /// Appends a read-only indexer to the current context.
@@ -39,8 +39,8 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Builders
     public interface IIndexerDeclarationBuilder<T> : IIndexerDeclarationBuilder, ISourceBuilder<T>
         where T : IIndexerDeclarationBuilder<T>
     {
-        /// <inheritdoc cref="IIndexerDeclarationBuilder.Append(IIndexerConfiguration, Action{ISourceBuilder}, Action{ISourceBuilder})"/>
-        new T Append(IIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc);
+        /// <inheritdoc cref="IIndexerDeclarationBuilder.Append(IReadWriteIndexerConfiguration, Action{ISourceBuilder}, Action{ISourceBuilder})"/>
+        new T Append(IReadWriteIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc);
 
         /// <inheritdoc cref="IIndexerDeclarationBuilder.Append(IReadOnlyIndexerConfiguration, Action{ISourceBuilder})"/>
         new T Append(IReadOnlyIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc);
@@ -55,15 +55,15 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
     partial class SourceBuilder : IIndexerDeclarationBuilder
     {
         /// <inheritdoc/>
-        IIndexerDeclarationBuilder IIndexerDeclarationBuilder.Append(IIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
-            => Append(indexerConfiguration, setBuilderFunc, setBuilderFunc);
+        IIndexerDeclarationBuilder IIndexerDeclarationBuilder.Append(IReadWriteIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc, Action<ISourceBuilder> setBuilderFunc)
+            => Append(indexerConfiguration, getBuilderFunc, setBuilderFunc);
 
         /// <inheritdoc/>
         IIndexerDeclarationBuilder IIndexerDeclarationBuilder.Append(IReadOnlyIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> getBuilderFunc)
-            => Append(indexerConfiguration, getBuilderFunc, null);
+            => Append(indexerConfiguration, getBuilderFunc);
 
         /// <inheritdoc/>
         IIndexerDeclarationBuilder IIndexerDeclarationBuilder.Append(IWriteOnlyIndexerConfiguration indexerConfiguration, Action<ISourceBuilder> setBuilderFunc)
-            => Append(indexerConfiguration, null, setBuilderFunc);
+            => Append(indexerConfiguration, setBuilderFunc);
     }
 }

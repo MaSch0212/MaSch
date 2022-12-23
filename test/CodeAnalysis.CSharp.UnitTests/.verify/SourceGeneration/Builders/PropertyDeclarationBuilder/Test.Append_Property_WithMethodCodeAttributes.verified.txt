@@ -99,3 +99,9 @@ string MyProperty13
     [MyAttr]
     set => _data = value;
 }
+
+string MyProperty14
+{
+    [MyAttr]
+    get => _data;
+}

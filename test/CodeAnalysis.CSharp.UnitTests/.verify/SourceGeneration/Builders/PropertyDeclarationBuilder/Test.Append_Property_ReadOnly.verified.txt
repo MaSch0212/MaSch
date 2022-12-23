@@ -10,10 +10,7 @@ string MyProperty3
     }
 }
 
-string MyProperty4
-{
-    get => _data;
-}
+string MyProperty4 => _data;
 
 string MyProperty5 => _data;
 

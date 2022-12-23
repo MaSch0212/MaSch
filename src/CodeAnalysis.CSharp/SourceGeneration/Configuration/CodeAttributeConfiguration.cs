@@ -189,7 +189,7 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
             => config.OnTarget(CodeAttributeTarget.Type);
 
         /// <summary>
-        /// Adds parameters to the parameters used for initialization of the code attribute represented by this <see cref="ISupportsAccessModifierConfiguration"/> to <see cref="CodeAttributeTarget.Assembly"/>.
+        /// Adds parameters to the parameters used for initialization of the code attribute represented by this <see cref="ISupportsAccessModifierConfiguration"/>.
         /// </summary>
         /// <param name="config">The extended <see cref="ICodeConfiguration"/>.</param>
         /// <param name="param1">The first parameter value to add.</param>
@@ -198,7 +198,7 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
             => config.WithParameter(param1);
 
         /// <summary>
-        /// Adds parameters to the parameters used for initialization of the code attribute represented by this <see cref="ISupportsAccessModifierConfiguration"/> to <see cref="CodeAttributeTarget.Assembly"/>.
+        /// Adds parameters to the parameters used for initialization of the code attribute represented by this <see cref="ISupportsAccessModifierConfiguration"/>.
         /// </summary>
         /// <param name="config">The extended <see cref="ICodeConfiguration"/>.</param>
         /// <param name="param1">The first parameter value to add.</param>
@@ -208,7 +208,7 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
             => config.WithParameter(param1).WithParameter(param2);
 
         /// <summary>
-        /// Adds parameters to the parameters used for initialization of the code attribute represented by this <see cref="ISupportsAccessModifierConfiguration"/> to <see cref="CodeAttributeTarget.Assembly"/>.
+        /// Adds parameters to the parameters used for initialization of the code attribute represented by this <see cref="ISupportsAccessModifierConfiguration"/>.
         /// </summary>
         /// <param name="config">The extended <see cref="ICodeConfiguration"/>.</param>
         /// <param name="param1">The first parameter value to add.</param>
@@ -219,7 +219,7 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
             => config.WithParameter(param1).WithParameter(param2).WithParameter(param3);
 
         /// <summary>
-        /// Adds parameters to the parameters used for initialization of the code attribute represented by this <see cref="ISupportsAccessModifierConfiguration"/> to <see cref="CodeAttributeTarget.Assembly"/>.
+        /// Adds parameters to the parameters used for initialization of the code attribute represented by this <see cref="ISupportsAccessModifierConfiguration"/>.
         /// </summary>
         /// <param name="config">The extended <see cref="ICodeConfiguration"/>.</param>
         /// <param name="param1">The first parameter value to add.</param>
@@ -231,7 +231,7 @@ namespace MaSch.CodeAnalysis.CSharp.SourceGeneration
             => config.WithParameter(param1).WithParameter(param2).WithParameter(param3).WithParameter(param4);
 
         /// <summary>
-        /// Adds parameters to the parameters used for initialization of the code attribute represented by this <see cref="ISupportsAccessModifierConfiguration"/> to <see cref="CodeAttributeTarget.Assembly"/>.
+        /// Adds parameters to the parameters used for initialization of the code attribute represented by this <see cref="ISupportsAccessModifierConfiguration"/>.
         /// </summary>
         /// <param name="config">The extended <see cref="ICodeConfiguration"/>.</param>
         /// <param name="params">The parameter values to add.</param>

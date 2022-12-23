@@ -1,2 +1,22 @@
-﻿string this[] { get; set; }
-string this[] { get; set; }
+﻿string this[]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}
+string this[]
+{
+    get
+    {
+        // Get Content
+    }
+    set
+    {
+        // Set Content
+    }
+}

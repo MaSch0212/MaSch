@@ -172,7 +172,7 @@ public static class CodeConfiguration
     /// <param name="propertyTypeName">The type of the property to define.</param>
     /// <param name="propertyName">The name of the property to define.</param>
     /// <returns>An instance of <see cref="IPropertyConfiguration"/> that represents a property definition.</returns>
-    public static IPropertyConfiguration Property(string propertyTypeName, string propertyName)
+    public static IReadWritePropertyConfiguration Property(string propertyTypeName, string propertyName)
     {
         return new PropertyConfiguration(propertyTypeName, propertyName);
     }
@@ -182,7 +182,7 @@ public static class CodeConfiguration
     /// </summary>
     /// <param name="indexerType">The type of the indexer to define.</param>
     /// <returns>An instance of <see cref="IPropertyConfiguration"/> that represents an indexer definition.</returns>
-    public static IIndexerConfiguration Indexer(string indexerType)
+    public static IReadWriteIndexerConfiguration Indexer(string indexerType)
     {
         return new IndexerConfiguration(indexerType);
     }

@@ -1,4 +1,6 @@
-﻿namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
+﻿using MaSch.CodeAnalysis.CSharp.Extensions;
+
+namespace MaSch.CodeAnalysis.CSharp.SourceGeneration.Configuration;
 
 /// <summary>
 /// Represents configuration of a field code element. This is used to generate code in the <see cref="ISourceBuilder"/>.
@@ -21,6 +23,7 @@ public interface IFieldConfiguration : IMemberConfiguration<IFieldConfiguration>
     /// </summary>
     /// <param name="value">The value to use.</param>
     /// <returns>A reference to this instance after the operation has completed.</returns>
+    /// <remarks>The <paramref name="value"/> is interpreted as C# code. If you want to add a string value as a parameter call the <see cref="StringExtensions.ToCSharpLiteral(string?, bool)"/> extension method on the string.</remarks>
     IFieldConfiguration WithValue(string value);
 }
 

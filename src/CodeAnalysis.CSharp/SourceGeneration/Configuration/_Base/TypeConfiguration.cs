@@ -14,7 +14,7 @@ internal abstract class TypeConfiguration<T> : GenericMemberConfiguration<T>, IT
     public string? BaseType { get; private set; }
 
     protected override int StartCapacity => 128;
-    protected bool IsDerivingOrImplementingInterface => BaseType is not null && _interfaceImplementations.Count > 0;
+    protected bool IsDerivingOrImplementingInterface => BaseType is not null || _interfaceImplementations.Count > 0;
 
     public T DerivesFrom(string typeName)
     {

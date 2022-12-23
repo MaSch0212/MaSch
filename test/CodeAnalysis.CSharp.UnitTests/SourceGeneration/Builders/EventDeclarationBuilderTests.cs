@@ -6,15 +6,6 @@ namespace MaSch.CodeAnalysis.CSharp.UnitTests.SourceGeneration.Builders;
 [TestClass]
 public class EventDeclarationBuilderTests : SourceBuilderTestBase<IEventDeclarationBuilder>
 {
-    public event Action Event1;
-
-    public event Action Event2
-    {
-        [field: Obsolete]
-        add => Event1 += value;
-        remove => Event2 -= value;
-    }
-
     [TestMethod]
     [SourceBuilderOptions(EnsureEmptyLineBeforeProperties = true)]
     public async Task Append_Event_WithLineSeparation()

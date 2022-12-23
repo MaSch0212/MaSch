@@ -1,7 +1,15 @@
 ﻿namespace MaSch.Test.UnitTests.Extensions;
 
+/// <summary>
+/// Provides extension methods for the <see cref="TestContext"/> class.
+/// </summary>
 public static class TestContextExtensions
 {
+    /// <summary>
+    /// Gets the <see cref="MethodInfo"/> of the currently executing test.
+    /// </summary>
+    /// <param name="testContext">The extended <see cref="TestContext"/>.</param>
+    /// <returns>The <see cref="MethodInfo"/> of the currently executing test.</returns>
     public static MethodInfo GetTestMethod(this TestContext testContext)
     {
         var type = GetType(testContext.FullyQualifiedTestClassName);

@@ -7,6 +7,11 @@
 public interface IEventMethodConfiguration : ISupportsCodeAttributeConfiguration<IEventMethodConfiguration>
 {
     /// <summary>
+    /// Gets the method keyword (<c>add</c>/<c>remove</c>) of the event method represented by this <see cref="IEventMethodConfiguration"/>.
+    /// </summary>
+    string MethodKeyword { get; }
+
+    /// <summary>
     /// Gets the body type of the event method represented by this <see cref="IEventMethodConfiguration"/>.
     /// </summary>
     MethodBodyType BodyType { get; }
@@ -20,14 +25,14 @@ public interface IEventMethodConfiguration : ISupportsCodeAttributeConfiguration
 
 internal sealed class EventMethodConfiguration : CodeConfigurationBase, IEventMethodConfiguration
 {
-    private readonly string _methodKeyword;
     private readonly List<ICodeAttributeConfiguration> _codeAttributes = new();
 
     public EventMethodConfiguration(string methodKeyword)
     {
-        _methodKeyword = methodKeyword;
+        MethodKeyword = methodKeyword;
     }
 
+    public string MethodKeyword { get; }
     public MethodBodyType BodyType { get; private set; } = MethodBodyType.Block;
     public IReadOnlyList<ICodeAttributeConfiguration> Attributes => new ReadOnlyCollection<ICodeAttributeConfiguration>(_codeAttributes);
 
@@ -62,6 +67,6 @@ internal sealed class EventMethodConfiguration : CodeConfigurationBase, IEventMe
             sourceBuilder.AppendLine();
         }
 
-        sourceBuilder.Append(_methodKeyword);
+        sourceBuilder.Append(MethodKeyword);
     }
 }

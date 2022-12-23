@@ -359,27 +359,47 @@ public sealed partial class SourceBuilder
     private SourceBuilder Append(IEventMethodConfiguration eventMethodConfiguration, Action<ISourceBuilder> builderFunc)
         => AppendAs(eventMethodConfiguration.BodyType, eventMethodConfiguration, builderFunc);
 
-    private SourceBuilder Append<T>(T propertyConfiguration, Action<ISourceBuilder>? getBuilderFunc, Action<ISourceBuilder>? setBuilderFunc)
-        where T : IPropertyConfigurationBase
+    private SourceBuilder Append(IReadWritePropertyConfiguration propertyConfiguration, Action<ISourceBuilder>? getBuilderFunc, Action<ISourceBuilder>? setBuilderFunc)
+        => Append(propertyConfiguration, propertyConfiguration.GetMethod, propertyConfiguration.SetMethod, propertyConfiguration.Value, getBuilderFunc, setBuilderFunc);
+
+    private SourceBuilder Append(IReadOnlyPropertyConfiguration propertyConfiguration, Action<ISourceBuilder>? getBuilderFunc)
+        => Append(propertyConfiguration, propertyConfiguration.GetMethod, null, propertyConfiguration.Value, getBuilderFunc, null);
+
+    private SourceBuilder Append(IWriteOnlyPropertyConfiguration propertyConfiguration, Action<ISourceBuilder>? setBuilderFunc)
+        => Append(propertyConfiguration, null, propertyConfiguration.SetMethod, null, null, setBuilderFunc);
+
+    private SourceBuilder Append(IReadWriteIndexerConfiguration indexerConfiguration, Action<ISourceBuilder>? getBuilderFunc, Action<ISourceBuilder>? setBuilderFunc)
+        => Append(indexerConfiguration, indexerConfiguration.GetMethod, indexerConfiguration.SetMethod, null, getBuilderFunc, setBuilderFunc);
+
+    private SourceBuilder Append(IReadOnlyIndexerConfiguration indexerConfiguration, Action<ISourceBuilder>? getBuilderFunc)
+        => Append(indexerConfiguration, indexerConfiguration.GetMethod, null, null, getBuilderFunc, null);
+
+    private SourceBuilder Append(IWriteOnlyIndexerConfiguration indexerConfiguration, Action<ISourceBuilder>? setBuilderFunc)
+        => Append(indexerConfiguration, null, indexerConfiguration.SetMethod, null, null, setBuilderFunc);
+
+    private SourceBuilder Append(
+        IPropertyConfiguration propertyConfiguration,
+        IPropertyMethodConfiguration? getMethod,
+        IPropertyMethodConfiguration? setMethod,
+        string? value,
+        Action<ISourceBuilder>? getBuilderFunc,
+        Action<ISourceBuilder>? setBuilderFunc)
     {
         EnsurePreviousLineEmpty(propertyConfiguration, Options.EnsureEmptyLineBeforeProperties);
 
-        var hasGetConfig = typeof(IPropertyHasGetConfiguration).IsAssignableFrom(typeof(T)) ? (IPropertyHasGetConfiguration)propertyConfiguration : null;
-        var hasSetConfig = typeof(IPropertyHasSetConfiguration).IsAssignableFrom(typeof(T)) ? (IPropertyHasSetConfiguration)propertyConfiguration : null;
-        var readonlyConfig = typeof(IReadOnlyPropertyConfigurationBase).IsAssignableFrom(typeof(T)) ? (IReadOnlyPropertyConfigurationBase)propertyConfiguration : null;
-
-        if (readonlyConfig?.GetBodyType is MethodBodyType.Expression or MethodBodyType.ExpressionNewLine &&
+        if (getMethod is not null && setMethod is null &&
+            getMethod.BodyType is MethodBodyType.Expression or MethodBodyType.ExpressionNewLine &&
+            getMethod.AccessModifier == AccessModifier.Default &&
+            getMethod.Attributes.Count == 0 &&
             getBuilderFunc is not null)
         {
-            return AppendAsExpression(propertyConfiguration, this, getBuilderFunc, readonlyConfig.GetBodyType is MethodBodyType.ExpressionNewLine);
+            return AppendAsExpression(propertyConfiguration, this, getBuilderFunc, getMethod.BodyType is MethodBodyType.ExpressionNewLine);
         }
 
         propertyConfiguration.WriteTo(this);
-        var getConfig = hasGetConfig?.GetMethod;
-        var setConfig = hasSetConfig?.SetMethod;
         var multiline =
-            getConfig?.ShouldBeOnItsOwnLine == true ||
-            setConfig?.ShouldBeOnItsOwnLine == true ||
+            getMethod?.Attributes.Count > 0 ||
+            setMethod?.Attributes.Count > 0 ||
             getBuilderFunc is not null ||
             setBuilderFunc is not null;
 
@@ -389,17 +409,16 @@ public sealed partial class SourceBuilder
 
         Append(CodeConfiguration.Block().WithStyle(blockStyle), _ =>
         {
-            if (getConfig is not null)
-                Append(getConfig, getBuilderFunc, multiline);
+            if (getMethod is not null)
+                Append(getMethod, getBuilderFunc, multiline);
 
-            if (getConfig is not null && setConfig is not null && !multiline)
+            if (getMethod is not null && setMethod is not null && !multiline)
                 Append(' ');
 
-            if (setConfig is not null)
-                Append(setConfig, setBuilderFunc, multiline);
+            if (setMethod is not null)
+                Append(setMethod, setBuilderFunc, multiline);
         });
 
-        var value = hasGetConfig?.Value;
         if (getBuilderFunc is null && setBuilderFunc is null && value is not null)
         {
             Append(" = ");
