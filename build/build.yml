@@ -1,4 +1,4 @@
-﻿trigger:
+trigger:
   paths:
     include:
     - build
@@ -10,6 +10,9 @@
 
 pool:
   vmImage: 'windows-2022'
+
+variables:
+- group: 'NuGet'
 
 steps:
 - checkout: self
