@@ -742,7 +742,7 @@ public class ServiceContextStaticTests : TestClassBase
     [TestMethod]
     public void GetService()
     {
-        _ = SetMockInstance().Setup(x => x.GetService(typeof(string), null)).Returns("MyTest").Verifiable(this, Times.Once());
+        _ = SetMockInstance().Setup(x => x.GetService(typeof(string))).Returns("MyTest").Verifiable(this, Times.Once());
 
         var result = ServiceContext.GetService(typeof(string));
 
