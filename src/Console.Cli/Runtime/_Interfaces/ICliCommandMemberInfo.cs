@@ -18,6 +18,7 @@ public interface ICliCommandMemberInfo
     /// <summary>
     /// Gets the type of the property refered by the <see cref="PropertyName"/>.
     /// </summary>
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
     Type PropertyType { get; }
 
     /// <summary>

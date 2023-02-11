@@ -8,7 +8,7 @@ namespace MaSch.Console.Cli.Runtime.Executors;
 
 internal static class ExternalExecutor
 {
-    public static ICliCommandExecutor GetExecutor(Type executorType, Type commandType, object? executorInstance)
+    public static ICliCommandExecutor GetExecutor([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)] Type executorType, Type commandType, object? executorInstance)
     {
         _ = Guard.NotNull(executorType);
         _ = Guard.NotNull(commandType);
@@ -29,12 +29,14 @@ internal static class ExternalExecutor
 
 internal class ExternalExecutor<T> : ICliCommandExecutor
 {
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
     private readonly Type _executorType;
     private object? _executorInstance;
 
-    public ExternalExecutor(Type executorType, object? executorInstance)
+    public ExternalExecutor([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type executorType, object? executorInstance)
     {
-        _executorType = Guard.NotNull(executorType);
+        Guard.NotNull(executorType);
+        _executorType = executorType;
         _executorInstance = Guard.OfType(executorInstance, executorType, allowNull: true);
 
         if (!typeof(ICliExecutor<T>).IsAssignableFrom(executorType) && !typeof(ICliAsyncExecutor<T>).IsAssignableFrom(executorType))

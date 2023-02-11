@@ -7,6 +7,7 @@ namespace MaSch.Core.Observable.Modules;
 /// Handler for data errors in classes that implement the <see cref="IDataErrorObject"/> interface.
 /// </summary>
 /// <seealso cref="IDataErrorHandler" />
+[RequiresUnreferencedCode("Calls Validator.TryValidateProperty.")]
 public class DataErrorHandler : IDataErrorHandler
 {
     private readonly ICollection<PropertyInfo> _properties;

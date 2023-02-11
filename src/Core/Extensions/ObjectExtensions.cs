@@ -104,9 +104,10 @@ public static class ObjectExtensions
     /// <param name="obj">The object to convert to <paramref name="targetType"/>.</param>
     /// <param name="targetType">The type to which <paramref name="obj"/> should be converted to.</param>
     /// <returns>The converted <paramref name="obj"/> to <paramref name="targetType"/>.</returns>
-    public static object? ConvertTo(this object? obj, Type targetType)
+    public static object? ConvertTo(this object? obj, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type targetType)
     {
-        return ConvertManager.Convert(obj, Guard.NotNull(targetType));
+        Guard.NotNull(targetType);
+        return ConvertManager.Convert(obj, targetType);
     }
 
     /// <summary>
@@ -116,9 +117,10 @@ public static class ObjectExtensions
     /// <param name="targetType">The type to which <paramref name="obj"/> should be converted to.</param>
     /// <param name="formatProvider">The <see cref="IFormatProvider"/> to use for conversion.</param>
     /// <returns>The converted <paramref name="obj"/> to <paramref name="targetType"/>.</returns>
-    public static object? ConvertTo(this object? obj, Type targetType, IFormatProvider formatProvider)
+    public static object? ConvertTo(this object? obj, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type targetType, IFormatProvider formatProvider)
     {
-        return ConvertManager.Convert(obj, Guard.NotNull(targetType), Guard.NotNull(formatProvider));
+        Guard.NotNull(targetType);
+        return ConvertManager.Convert(obj, targetType, Guard.NotNull(formatProvider));
     }
 
     /// <summary>
@@ -129,11 +131,8 @@ public static class ObjectExtensions
     /// <returns>The converted <paramref name="obj"/> to <paramref name="targetType"/>.</returns>
     public static object? CastTo(this object? obj, Type targetType)
     {
-        var method = typeof(ObjectExtensions).GetMethods(BindingFlags.Static | BindingFlags.Public)
-            .FirstOrDefault(x => x.Name == nameof(CastTo) && x.IsGenericMethod && x.GetGenericArguments().Length == 1);
-        if (method == null)
-            throw new InvalidOperationException("The generic method \"Cast\" was not found.");
-        return method.MakeGenericMethod(targetType).Invoke(null, new[] { obj });
+        var method = typeof(ObjectExtensions).GetMethod(nameof(CastTo), BindingFlags.Static | BindingFlags.Public | BindingFlags.DeclaredOnly, null, CallingConventions.Standard, new[] { typeof(object) }, null);
+        return method!.MakeGenericMethod(targetType).Invoke(null, new[] { obj });
     }
 
     /// <summary>

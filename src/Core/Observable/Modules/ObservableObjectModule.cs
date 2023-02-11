@@ -11,6 +11,7 @@ public class ObservableObjectModule
     private static readonly Dictionary<Type, Dictionary<string, List<string>>> PropertyDependencyCache = new();
     private static readonly object FillCacheLock = new();
 
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)]
     private readonly Type _objectType;
     private readonly IObservableObject _observableObject;
     private readonly Dictionary<string, List<string>> _propertyDependencies;
@@ -70,7 +71,7 @@ public class ObservableObjectModule
         }
     }
 
-    private static Dictionary<string, List<string>> FillCache(Type type)
+    private static Dictionary<string, List<string>> FillCache([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type type)
     {
         lock (FillCacheLock)
         {

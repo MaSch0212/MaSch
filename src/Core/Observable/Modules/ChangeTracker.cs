@@ -13,6 +13,7 @@ public class ChangeTracker : IChangeTracker
     private const string FixedChangeKey = "{FixedChange}";
 
     private readonly IDictionary<string, ChangeTrackingEntry> _baseValues = new Dictionary<string, ChangeTrackingEntry>();
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)]
     private readonly Type _trackedObjectType;
 
     private Func<bool, bool> _hasChangesExtension;
@@ -25,7 +26,7 @@ public class ChangeTracker : IChangeTracker
     /// </summary>
     /// <param name="trackedObjectType">Type of the tracked object.</param>
     /// <param name="implicitlyRecurse">If set to <c>true</c> change tracking for <see cref="IChangeTrackedObject"/> properties is used recursively.</param>
-    public ChangeTracker(Type trackedObjectType, bool implicitlyRecurse)
+    public ChangeTracker([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type trackedObjectType, bool implicitlyRecurse)
     {
         ImplicitlyRecurse = implicitlyRecurse;
         _trackedObjectType = trackedObjectType;

@@ -34,20 +34,37 @@ public class DelegateObjectConverter<TSource, TTarget> : IObjectConverter
     }
 
     /// <inheritdoc />
-    public bool CanConvert(Type? sourceType, Type targetType, IObjectConvertManager convertManager)
+    [SuppressMessage("Trimming", "IL2092:'DynamicallyAccessedMemberTypes' on the parameter of method don't match overridden parameter of method. All overridden members must have the same 'DynamicallyAccessedMembersAttribute' usage.", Justification = "Not needed here")]
+    public bool CanConvert(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type? sourceType,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type targetType,
+        IObjectConvertManager convertManager)
     {
         return ((sourceType == null && typeof(TSource).IsClass) || typeof(TSource).IsAssignableFrom(sourceType)) &&
                typeof(TTarget).IsAssignableFrom(targetType);
     }
 
     /// <inheritdoc />
-    public int GetPriority(Type? sourceType, Type targetType)
+    public int GetPriority(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type? sourceType,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type targetType)
     {
         return _basePriority;
     }
 
     /// <inheritdoc />
-    public object? Convert(object? obj, Type? sourceType, Type targetType, IObjectConvertManager convertManager, IFormatProvider formatProvider)
+    public object? Convert(
+        object? obj,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type? sourceType,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type targetType,
+        IObjectConvertManager convertManager,
+        IFormatProvider formatProvider)
     {
         return _converterFunctionWithFormatProvider != null
             ? _converterFunctionWithFormatProvider((TSource?)obj, formatProvider)

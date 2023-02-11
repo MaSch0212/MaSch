@@ -5,6 +5,7 @@ using MaSch.Core;
 using MaSch.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using static MaSch.Console.Cli.Globals;
 
 #pragma warning disable SA1402 // File may only contain a single type
 #pragma warning disable SA1649 // File name should match first type name
@@ -16,7 +17,7 @@ namespace MaSch.Console.Cli;
 /// </summary>
 /// <typeparam name="TApplication">The type of application that is built.</typeparam>
 /// <typeparam name="TBuilder">The type of the builder (the class that derived from this class).</typeparam>
-public abstract class CliApplicationBuilderBase<TApplication, TBuilder>
+public abstract class CliApplicationBuilderBase<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] TApplication, TBuilder>
     where TApplication : class, ICliApplicationBase
     where TBuilder : CliApplicationBuilderBase<TApplication, TBuilder>
 {
@@ -98,7 +99,7 @@ public abstract class CliApplicationBuilderBase<TApplication, TBuilder>
     /// </summary>
     /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/> and implements either the <see cref="ICliExecutable"/> or the <see cref="ICliAsyncExecutable"/> interface.</param>
     /// <returns>Self reference to this builder.</returns>
-    public virtual TBuilder WithCommand(Type commandType)
+    public virtual TBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType)
     {
         Commands.Add(CommandFactory.Create(commandType));
         AddTypeToServices(commandType, null);
@@ -111,7 +112,7 @@ public abstract class CliApplicationBuilderBase<TApplication, TBuilder>
     /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/> and implements either the <see cref="ICliExecutable"/> or the <see cref="ICliAsyncExecutable"/> interface.</param>
     /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
     /// <returns>Self reference to this builder.</returns>
-    public virtual TBuilder WithCommand(Type commandType, object? optionsInstance)
+    public virtual TBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType, object? optionsInstance)
     {
         Commands.Add(CommandFactory.Create(commandType, optionsInstance));
         AddTypeToServices(commandType, optionsInstance);
@@ -124,7 +125,7 @@ public abstract class CliApplicationBuilderBase<TApplication, TBuilder>
     /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
     /// <param name="executorType">The executor type that implements either the <see cref="ICliExecutor{TCommand}"/> or the <see cref="ICliAsyncExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
     /// <returns>Self reference to this builder.</returns>
-    public virtual TBuilder WithCommand(Type commandType, Type? executorType)
+    public virtual TBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | ExecutorTypeDAMT)] Type? executorType)
     {
         Commands.Add(CommandFactory.Create(commandType, executorType));
         AddTypeToServices(commandType, null);
@@ -139,7 +140,7 @@ public abstract class CliApplicationBuilderBase<TApplication, TBuilder>
     /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
     /// <param name="executorType">The executor type that implements either the <see cref="ICliExecutor{TCommand}"/> or the <see cref="ICliAsyncExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
     /// <returns>Self reference to this builder.</returns>
-    public virtual TBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType)
+    public virtual TBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType, object? optionsInstance, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | ExecutorTypeDAMT)] Type? executorType)
     {
         Commands.Add(CommandFactory.Create(commandType, optionsInstance, executorType));
         AddTypeToServices(commandType, optionsInstance);
@@ -154,7 +155,7 @@ public abstract class CliApplicationBuilderBase<TApplication, TBuilder>
     /// <param name="executorType">The executor type that implements either the <see cref="ICliExecutor{TCommand}"/> or the <see cref="ICliAsyncExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
     /// <param name="executorInstance">An instance of <paramref name="executorType"/> that should be used when the command is executed.</param>
     /// <returns>Self reference to this builder.</returns>
-    public virtual TBuilder WithCommand(Type commandType, Type? executorType, object? executorInstance)
+    public virtual TBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | ExecutorTypeDAMT)] Type? executorType, object? executorInstance)
     {
         Commands.Add(CommandFactory.Create(commandType, executorType, executorInstance));
         AddTypeToServices(commandType, null);
@@ -170,7 +171,7 @@ public abstract class CliApplicationBuilderBase<TApplication, TBuilder>
     /// <param name="executorType">The executor type that implements either the <see cref="ICliExecutor{TCommand}"/> or the <see cref="ICliAsyncExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
     /// <param name="executorInstance">An instance of <paramref name="executorType"/> that should be used when the command is executed.</param>
     /// <returns>Self reference to this builder.</returns>
-    public virtual TBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType, object? executorInstance)
+    public virtual TBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType, object? optionsInstance, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | ExecutorTypeDAMT)] Type? executorType, object? executorInstance)
     {
         Commands.Add(CommandFactory.Create(commandType, optionsInstance, executorType, executorInstance));
         AddTypeToServices(commandType, optionsInstance);
@@ -244,7 +245,7 @@ public abstract class CliApplicationBuilderBase<TApplication, TBuilder>
     /// </summary>
     /// <param name="type">The type to add.</param>
     /// <param name="instance">The instance to use.</param>
-    protected void AddTypeToServices(Type? type, object? instance)
+    protected void AddTypeToServices([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type? type, object? instance)
     {
         if (type is null)
             return;
@@ -260,7 +261,7 @@ public abstract class CliApplicationBuilderBase<TApplication, TBuilder>
     /// </summary>
     /// <typeparam name="T">The type to add.</typeparam>
     /// <param name="instance">The instance to use.</param>
-    protected void AddTypeToServices<T>(T? instance)
+    protected void AddTypeToServices<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(T? instance)
     {
         AddTypeToServices(typeof(T), instance);
     }
@@ -306,7 +307,7 @@ public class CliApplicationBuilder : CliApplicationBuilderBase<ICliApplication, 
     /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/> and implements the <see cref="ICliExecutable"/> interface.</param>
     /// <returns>Self reference to this builder.</returns>
     [ExcludeFromCodeCoverage]
-    public new CliApplicationBuilder WithCommand(Type commandType)
+    public new CliApplicationBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType)
     {
         return base.WithCommand(commandType);
     }
@@ -318,7 +319,7 @@ public class CliApplicationBuilder : CliApplicationBuilderBase<ICliApplication, 
     /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
     /// <returns>Self reference to this builder.</returns>
     [ExcludeFromCodeCoverage]
-    public new CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance)
+    public new CliApplicationBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType, object? optionsInstance)
     {
         return base.WithCommand(commandType, optionsInstance);
     }
@@ -330,7 +331,7 @@ public class CliApplicationBuilder : CliApplicationBuilderBase<ICliApplication, 
     /// <param name="executorType">The executor type that implements the <see cref="ICliExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
     /// <returns>Self reference to this builder.</returns>
     [ExcludeFromCodeCoverage]
-    public new CliApplicationBuilder WithCommand(Type commandType, Type? executorType)
+    public new CliApplicationBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | ExecutorTypeDAMT)] Type? executorType)
     {
         return base.WithCommand(commandType, executorType);
     }
@@ -343,7 +344,7 @@ public class CliApplicationBuilder : CliApplicationBuilderBase<ICliApplication, 
     /// <param name="executorType">The executor type that implements the <see cref="ICliExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
     /// <returns>Self reference to this builder.</returns>
     [ExcludeFromCodeCoverage]
-    public new CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType)
+    public new CliApplicationBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType, object? optionsInstance, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | ExecutorTypeDAMT)] Type? executorType)
     {
         return base.WithCommand(commandType, optionsInstance, executorType);
     }
@@ -356,7 +357,7 @@ public class CliApplicationBuilder : CliApplicationBuilderBase<ICliApplication, 
     /// <param name="executorInstance">An instance of <paramref name="executorType"/> that should be used when the command is executed.</param>
     /// <returns>Self reference to this builder.</returns>
     [ExcludeFromCodeCoverage]
-    public new CliApplicationBuilder WithCommand(Type commandType, Type? executorType, object? executorInstance)
+    public new CliApplicationBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | ExecutorTypeDAMT)] Type? executorType, object? executorInstance)
     {
         return base.WithCommand(commandType, executorType, executorInstance);
     }
@@ -370,7 +371,7 @@ public class CliApplicationBuilder : CliApplicationBuilderBase<ICliApplication, 
     /// <param name="executorInstance">An instance of <paramref name="executorType"/> that should be used when the command is executed.</param>
     /// <returns>Self reference to this builder.</returns>
     [ExcludeFromCodeCoverage]
-    public new CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType, object? executorInstance)
+    public new CliApplicationBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType, object? optionsInstance, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | ExecutorTypeDAMT)] Type? executorType, object? executorInstance)
     {
         return base.WithCommand(commandType, optionsInstance, executorType, executorInstance);
     }
@@ -381,7 +382,7 @@ public class CliApplicationBuilder : CliApplicationBuilderBase<ICliApplication, 
     /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
     /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
     /// <returns>Self reference to this builder.</returns>
-    public CliApplicationBuilder WithCommand(Type commandType, Func<CliExecutionContext, object, int> executorFunction)
+    public CliApplicationBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType, Func<CliExecutionContext, object, int> executorFunction)
     {
         Commands.Add(CommandFactory.Create(commandType, executorFunction));
         AddTypeToServices(commandType, null);
@@ -395,7 +396,7 @@ public class CliApplicationBuilder : CliApplicationBuilderBase<ICliApplication, 
     /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
     /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
     /// <returns>Self reference to this builder.</returns>
-    public CliApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Func<CliExecutionContext, object, int> executorFunction)
+    public CliApplicationBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType, object? optionsInstance, Func<CliExecutionContext, object, int> executorFunction)
     {
         Commands.Add(CommandFactory.Create(commandType, optionsInstance, executorFunction));
         AddTypeToServices(commandType, optionsInstance);
@@ -408,7 +409,7 @@ public class CliApplicationBuilder : CliApplicationBuilderBase<ICliApplication, 
     /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
     /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
     /// <returns>Self reference to this builder.</returns>
-    public CliApplicationBuilder WithCommand<TCommand>(Func<CliExecutionContext, TCommand, int> executorFunction)
+    public CliApplicationBuilder WithCommand<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TCommand>(Func<CliExecutionContext, TCommand, int> executorFunction)
     {
         Commands.Add(CommandFactory.Create(executorFunction));
         AddTypeToServices<TCommand>(default);
@@ -434,7 +435,7 @@ public class CliApplicationBuilder : CliApplicationBuilderBase<ICliApplication, 
     /// </summary>
     /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
     /// <returns>Self reference to this builder.</returns>
-    public CliApplicationBuilder WithCommand<TCommand>()
+    public CliApplicationBuilder WithCommand<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] TCommand>()
     {
         Commands.Add(CommandFactory.Create<TCommand>());
         AddTypeToServices<TCommand>(default);
@@ -460,7 +461,7 @@ public class CliApplicationBuilder : CliApplicationBuilderBase<ICliApplication, 
     /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
     /// <typeparam name="TExecutor">The executor type.</typeparam>
     /// <returns>Self reference to this builder.</returns>
-    public CliApplicationBuilder WithCommand<TCommand, TExecutor>()
+    public CliApplicationBuilder WithCommand<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] TCommand, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | ExecutorTypeDAMT)] TExecutor>()
         where TExecutor : ICliExecutor<TCommand>
     {
         Commands.Add(CommandFactory.Create<TCommand, TExecutor>());
@@ -476,7 +477,7 @@ public class CliApplicationBuilder : CliApplicationBuilderBase<ICliApplication, 
     /// <typeparam name="TExecutor">The executor type.</typeparam>
     /// <param name="executorInstance">An instance of <typeparamref name="TExecutor"/> that should be used when the command is executed.</param>
     /// <returns>Self reference to this builder.</returns>
-    public CliApplicationBuilder WithCommand<TCommand, TExecutor>(TExecutor executorInstance)
+    public CliApplicationBuilder WithCommand<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] TCommand, [DynamicallyAccessedMembers(ExecutorTypeDAMT)] TExecutor>(TExecutor executorInstance)
         where TExecutor : ICliExecutor<TCommand>
     {
         Commands.Add(CommandFactory.Create<TCommand, TExecutor>(executorInstance));
@@ -492,7 +493,7 @@ public class CliApplicationBuilder : CliApplicationBuilderBase<ICliApplication, 
     /// <typeparam name="TExecutor">The executor type.</typeparam>
     /// <param name="optionsInstance">An instance of <typeparamref name="TCommand"/> that should be used when the command is executed.</param>
     /// <returns>Self reference to this builder.</returns>
-    public CliApplicationBuilder WithCommand<TCommand, TExecutor>(TCommand optionsInstance)
+    public CliApplicationBuilder WithCommand<[DynamicallyAccessedMembers(CommandTypeDAMT)] TCommand, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | ExecutorTypeDAMT)] TExecutor>(TCommand optionsInstance)
         where TExecutor : ICliExecutor<TCommand>
     {
         Commands.Add(CommandFactory.Create<TCommand, TExecutor>(optionsInstance));
@@ -570,7 +571,7 @@ public class CliAsyncApplicationBuilder : CliApplicationBuilderBase<ICliAsyncApp
     /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/> and implements the <see cref="ICliAsyncExecutable"/> interface.</param>
     /// <returns>Self reference to this builder.</returns>
     [ExcludeFromCodeCoverage]
-    public new CliAsyncApplicationBuilder WithCommand(Type commandType)
+    public new CliAsyncApplicationBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType)
     {
         return base.WithCommand(commandType);
     }
@@ -582,7 +583,7 @@ public class CliAsyncApplicationBuilder : CliApplicationBuilderBase<ICliAsyncApp
     /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
     /// <returns>Self reference to this builder.</returns>
     [ExcludeFromCodeCoverage]
-    public new CliAsyncApplicationBuilder WithCommand(Type commandType, object? optionsInstance)
+    public new CliAsyncApplicationBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType, object? optionsInstance)
     {
         return base.WithCommand(commandType, optionsInstance);
     }
@@ -594,7 +595,7 @@ public class CliAsyncApplicationBuilder : CliApplicationBuilderBase<ICliAsyncApp
     /// <param name="executorType">The executor type that implements the <see cref="ICliAsyncExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
     /// <returns>Self reference to this builder.</returns>
     [ExcludeFromCodeCoverage]
-    public new CliAsyncApplicationBuilder WithCommand(Type commandType, Type? executorType)
+    public new CliAsyncApplicationBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | ExecutorTypeDAMT)] Type? executorType)
     {
         return base.WithCommand(commandType, executorType);
     }
@@ -607,7 +608,7 @@ public class CliAsyncApplicationBuilder : CliApplicationBuilderBase<ICliAsyncApp
     /// <param name="executorType">The executor type that implements the <see cref="ICliAsyncExecutor{TCommand}"/> interface for the <paramref name="commandType"/>.</param>
     /// <returns>Self reference to this builder.</returns>
     [ExcludeFromCodeCoverage]
-    public new CliAsyncApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType)
+    public new CliAsyncApplicationBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType, object? optionsInstance, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | ExecutorTypeDAMT)] Type? executorType)
     {
         return base.WithCommand(commandType, optionsInstance, executorType);
     }
@@ -620,7 +621,7 @@ public class CliAsyncApplicationBuilder : CliApplicationBuilderBase<ICliAsyncApp
     /// <param name="executorInstance">An instance of <paramref name="executorType"/> that should be used when the command is executed.</param>
     /// <returns>Self reference to this builder.</returns>
     [ExcludeFromCodeCoverage]
-    public new CliAsyncApplicationBuilder WithCommand(Type commandType, Type? executorType, object? executorInstance)
+    public new CliAsyncApplicationBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | ExecutorTypeDAMT)] Type? executorType, object? executorInstance)
     {
         return base.WithCommand(commandType, executorType, executorInstance);
     }
@@ -634,7 +635,7 @@ public class CliAsyncApplicationBuilder : CliApplicationBuilderBase<ICliAsyncApp
     /// <param name="executorInstance">An instance of <paramref name="executorType"/> that should be used when the command is executed.</param>
     /// <returns>Self reference to this builder.</returns>
     [ExcludeFromCodeCoverage]
-    public new CliAsyncApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Type? executorType, object? executorInstance)
+    public new CliAsyncApplicationBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType, object? optionsInstance, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | ExecutorTypeDAMT)] Type? executorType, object? executorInstance)
     {
         return base.WithCommand(commandType, optionsInstance, executorType, executorInstance);
     }
@@ -645,7 +646,7 @@ public class CliAsyncApplicationBuilder : CliApplicationBuilderBase<ICliAsyncApp
     /// <param name="commandType">The command type that has a <see cref="CliCommandAttribute"/>.</param>
     /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
     /// <returns>Self reference to this builder.</returns>
-    public CliAsyncApplicationBuilder WithCommand(Type commandType, Func<CliExecutionContext, object, Task<int>> executorFunction)
+    public CliAsyncApplicationBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType, Func<CliExecutionContext, object, Task<int>> executorFunction)
     {
         Commands.Add(CommandFactory.Create(commandType, executorFunction));
         AddTypeToServices(commandType, null);
@@ -659,7 +660,7 @@ public class CliAsyncApplicationBuilder : CliApplicationBuilderBase<ICliAsyncApp
     /// <param name="optionsInstance">An instance of <paramref name="commandType"/> that should be used when the command is executed.</param>
     /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
     /// <returns>Self reference to this builder.</returns>
-    public CliAsyncApplicationBuilder WithCommand(Type commandType, object? optionsInstance, Func<CliExecutionContext, object, Task<int>> executorFunction)
+    public CliAsyncApplicationBuilder WithCommand([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] Type commandType, object? optionsInstance, Func<CliExecutionContext, object, Task<int>> executorFunction)
     {
         Commands.Add(CommandFactory.Create(commandType, optionsInstance, executorFunction));
         AddTypeToServices(commandType, optionsInstance);
@@ -672,7 +673,7 @@ public class CliAsyncApplicationBuilder : CliApplicationBuilderBase<ICliAsyncApp
     /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
     /// <param name="executorFunction">The executor function that is called when the created command is executed.</param>
     /// <returns>Self reference to this builder.</returns>
-    public CliAsyncApplicationBuilder WithCommand<TCommand>(Func<CliExecutionContext, TCommand, Task<int>> executorFunction)
+    public CliAsyncApplicationBuilder WithCommand<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TCommand>(Func<CliExecutionContext, TCommand, Task<int>> executorFunction)
     {
         Commands.Add(CommandFactory.Create(executorFunction));
         AddTypeToServices<TCommand>(default);
@@ -698,7 +699,7 @@ public class CliAsyncApplicationBuilder : CliApplicationBuilderBase<ICliAsyncApp
     /// </summary>
     /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
     /// <returns>Self reference to this builder.</returns>
-    public CliAsyncApplicationBuilder WithCommand<TCommand>()
+    public CliAsyncApplicationBuilder WithCommand<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] TCommand>()
     {
         Commands.Add(CommandFactory.Create<TCommand>());
         AddTypeToServices<TCommand>(default);
@@ -724,7 +725,7 @@ public class CliAsyncApplicationBuilder : CliApplicationBuilderBase<ICliAsyncApp
     /// <typeparam name="TCommand">The command type that has a <see cref="CliCommandAttribute"/>.</typeparam>
     /// <typeparam name="TExecutor">The executor type.</typeparam>
     /// <returns>Self reference to this builder.</returns>
-    public CliAsyncApplicationBuilder WithCommand<TCommand, TExecutor>()
+    public CliAsyncApplicationBuilder WithCommand<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] TCommand, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | ExecutorTypeDAMT)] TExecutor>()
         where TExecutor : ICliAsyncExecutor<TCommand>
     {
         Commands.Add(CommandFactory.Create<TCommand, TExecutor>());
@@ -740,7 +741,7 @@ public class CliAsyncApplicationBuilder : CliApplicationBuilderBase<ICliAsyncApp
     /// <typeparam name="TExecutor">The executor type.</typeparam>
     /// <param name="executorInstance">An instance of <typeparamref name="TExecutor"/> that should be used when the command is executed.</param>
     /// <returns>Self reference to this builder.</returns>
-    public CliAsyncApplicationBuilder WithCommand<TCommand, TExecutor>(TExecutor executorInstance)
+    public CliAsyncApplicationBuilder WithCommand<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | CommandTypeDAMT)] TCommand, [DynamicallyAccessedMembers(ExecutorTypeDAMT)] TExecutor>(TExecutor executorInstance)
         where TExecutor : ICliAsyncExecutor<TCommand>
     {
         Commands.Add(CommandFactory.Create<TCommand, TExecutor>(executorInstance));
@@ -756,7 +757,7 @@ public class CliAsyncApplicationBuilder : CliApplicationBuilderBase<ICliAsyncApp
     /// <typeparam name="TExecutor">The executor type.</typeparam>
     /// <param name="optionsInstance">An instance of <typeparamref name="TCommand"/> that should be used when the command is executed.</param>
     /// <returns>Self reference to this builder.</returns>
-    public CliAsyncApplicationBuilder WithCommand<TCommand, TExecutor>(TCommand optionsInstance)
+    public CliAsyncApplicationBuilder WithCommand<[DynamicallyAccessedMembers(CommandTypeDAMT)] TCommand, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | ExecutorTypeDAMT)] TExecutor>(TCommand optionsInstance)
         where TExecutor : ICliAsyncExecutor<TCommand>
     {
         Commands.Add(CommandFactory.Create<TCommand, TExecutor>(optionsInstance));

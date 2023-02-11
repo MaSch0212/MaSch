@@ -11,7 +11,11 @@ public interface IObjectConverter
     /// <param name="sourceType">The source type.</param>
     /// <param name="targetType">The target type.</param>
     /// <returns>A number representing the priority of this <see cref="IObjectConverter"/> for this specific convertion.</returns>
-    int GetPriority(Type? sourceType, Type targetType);
+    int GetPriority(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type? sourceType,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type targetType);
 
     /// <summary>
     /// Checks wether an object can be converted to another type using this <see cref="IObjectConverter"/>.
@@ -20,7 +24,12 @@ public interface IObjectConverter
     /// <param name="targetType">The target type.</param>
     /// <param name="convertManager">The <see cref="IObjectConvertManager"/> that is used for nested convertions.</param>
     /// <returns><c>true</c> if the source type can be converted to the target type; otherwise, <c>false</c>.</returns>
-    bool CanConvert(Type? sourceType, Type targetType, IObjectConvertManager convertManager);
+    bool CanConvert(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type? sourceType,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type targetType,
+        IObjectConvertManager convertManager);
 
     /// <summary>
     /// Converts the given object the another type using the registered <see cref="IObjectConverter"/> objects.
@@ -31,5 +40,12 @@ public interface IObjectConverter
     /// <param name="convertManager">The <see cref="IObjectConvertManager"/> that is used for nested convertions.</param>
     /// <param name="formatProvider">A provider that is used for formatting.</param>
     /// <returns>An instance of the target type representing the object that was given to convert.</returns>
-    object? Convert(object? obj, Type? sourceType, Type targetType, IObjectConvertManager convertManager, IFormatProvider formatProvider);
+    object? Convert(
+        object? obj,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type? sourceType,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type targetType,
+        IObjectConvertManager convertManager,
+        IFormatProvider formatProvider);
 }

@@ -146,7 +146,7 @@ public partial class ServiceContext
     /// <param name="serviceType">The type of the service to retrieve.</param>
     /// <returns>The resultung service.</returns>
     /// <exception cref="KeyNotFoundException">A service of type <paramref name="serviceType"/> was not found in the current <see cref="ServiceContext"/>.</exception>
-    public static object GetService(Type serviceType)
+    public static object? GetService(Type serviceType)
     {
         return Instance.GetService(serviceType);
     }

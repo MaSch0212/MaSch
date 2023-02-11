@@ -3,10 +3,11 @@
   <PropertyGroup>
     <!-- General Project info -->
     <TargetFrameworks>$(TfmsNetCoreApp);$(TfmsNetFramework);$(TfmsNetStandard)</TargetFrameworks>
+    <IsTrimmable>true</IsTrimmable>
 
     <!-- Package Info -->
     <Description>Contains supporting code for data access in .NET applications.</Description>
-    <Version>0.1.7</Version>
+    <Version>0.1.8</Version>
     <PackageTags>masch data database</PackageTags>
   </PropertyGroup>
   

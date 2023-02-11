@@ -4,10 +4,11 @@
     <!-- General Project info -->
     <RootNamespace>MaSch.Core</RootNamespace>
     <TargetFrameworks>$(TfmsNetCoreAppWindows);$(TfmsNetFramework);$(TfmsNetStandard)</TargetFrameworks>
+    <IsTrimmable>true</IsTrimmable>
 
     <!-- Package Info -->
     <Description>Contains a logging provider for windows Event Logging.</Description>
-    <Version>0.1.7</Version>
+    <Version>0.1.8</Version>
     <PackageTags>masch generator sourcegenerator wrapper observable wpf</PackageTags>
   </PropertyGroup>
 

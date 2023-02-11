@@ -33,7 +33,12 @@ public static class TypeExtensions
     /// <param name="to">The type to which the object should be casted.</param>
     /// <param name="implicitly">if true only implicitly casts are checked, otherwise also explicit casts are checked.</param>
     /// <returns>true if this type is castable to the given type, otherwise false.</returns>
-    public static bool IsCastableTo(this Type from, Type to, bool implicitly = false)
+    public static bool IsCastableTo(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)]
+        this Type from,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)]
+        Type to,
+        bool implicitly = false)
     {
         _ = Guard.NotNull(from);
         _ = Guard.NotNull(to);
@@ -88,6 +93,7 @@ public static class TypeExtensions
     /// <returns>
     ///   <c>true</c> if the specified method is hiding a method from a base class; otherwise, <c>false</c>.
     /// </returns>
+    [RequiresUnreferencedCode("Accesses all methods from the base type of the type this method is declared on.")]
     public static bool IsHiding(this MethodInfo methodInfo)
     {
         _ = Guard.NotNull(methodInfo);
@@ -138,6 +144,7 @@ public static class TypeExtensions
     ///   <c>true</c> if the specified property is hiding a property from a base class; otherwise, <c>false</c>.
     /// </returns>
     /// <exception cref="ArgumentException">The property does not have a setter nor a getter. - <paramref name="propertyInfo"/>.</exception>
+    [RequiresUnreferencedCode("Calls IsHiding(MethodInfo) for either the SetMethod or GetMethod of this property.")]
     public static bool IsHiding(this PropertyInfo propertyInfo)
     {
         _ = Guard.NotNull(propertyInfo);
@@ -152,6 +159,7 @@ public static class TypeExtensions
     ///   <c>true</c> if the specified event is hiding an event from a base class; otherwise, <c>false</c>.
     /// </returns>
     /// <exception cref="ArgumentException">The event does not have an add method nor a remove method. - <paramref name="eventInfo"/>.</exception>
+    [RequiresUnreferencedCode("Calls IsHiding(MethodInfo) for either the AddMethod or RemoveMethod of this event.")]
     public static bool IsHiding(this EventInfo eventInfo)
     {
         _ = Guard.NotNull(eventInfo);
@@ -165,6 +173,7 @@ public static class TypeExtensions
     /// <returns>
     ///   <c>true</c> if the specified field is hiding a field from a base class; otherwise, <c>false</c>.
     /// </returns>
+    [RequiresUnreferencedCode("Accesses all fields of the base type of the type this field is declared on.")]
     public static bool IsHiding(this FieldInfo fieldInfo)
     {
         _ = Guard.NotNull(fieldInfo);
@@ -184,7 +193,10 @@ public static class TypeExtensions
     /// <returns>
     ///   <c>true</c> if the specified method is hidden in the specified type; otherwise, <c>false</c>.
     /// </returns>
-    public static bool IsHiddenInType(this MethodInfo methodInfo, Type type)
+    public static bool IsHiddenInType(
+        this MethodInfo methodInfo,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)]
+        Type type)
     {
         _ = Guard.NotNull(methodInfo);
         _ = Guard.NotNull(type);
@@ -226,7 +238,10 @@ public static class TypeExtensions
     ///   <c>true</c> if the specified property is hidden in the specified type; otherwise, <c>false</c>.
     /// </returns>
     /// <exception cref="ArgumentException">The property does not have a setter nor a getter. - <paramref name="propertyInfo"/>.</exception>
-    public static bool IsHiddenInType(this PropertyInfo propertyInfo, Type type)
+    public static bool IsHiddenInType(
+        this PropertyInfo propertyInfo,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)]
+        Type type)
     {
         _ = Guard.NotNull(propertyInfo);
         _ = Guard.NotNull(type);
@@ -242,7 +257,10 @@ public static class TypeExtensions
     ///   <c>true</c> if the specified event is hidden in the specified type; otherwise, <c>false</c>.
     /// </returns>
     /// <exception cref="ArgumentException">The event does not have an add method nor a remove method. - <paramref name="eventInfo"/>.</exception>
-    public static bool IsHiddenInType(this EventInfo eventInfo, Type type)
+    public static bool IsHiddenInType(
+        this EventInfo eventInfo,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)]
+        Type type)
     {
         _ = Guard.NotNull(eventInfo);
         _ = Guard.NotNull(type);
@@ -257,7 +275,10 @@ public static class TypeExtensions
     /// <returns>
     ///   <c>true</c> if the specified field is hidden in the specified type; otherwise, <c>false</c>.
     /// </returns>
-    public static bool IsHiddenInType(this FieldInfo fieldInfo, Type type)
+    public static bool IsHiddenInType(
+        this FieldInfo fieldInfo,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)]
+        Type type)
     {
         _ = Guard.NotNull(fieldInfo);
         _ = Guard.NotNull(type);
@@ -275,6 +296,7 @@ public static class TypeExtensions
     /// <param name="types">The parameter types of the method.</param>
     /// <returns>The method that matches the specified filters if found in any base types of <paramref name="t"/>; otherwise, <see langword="null"/>.</returns>
     [SuppressMessage("ReflectionAnalyzers.SystemReflection", "REFL045:These flags are insufficient to match any members.", Justification = "False positive.")]
+    [RequiresUnreferencedCode("Accesses recursively all base types of parameter t.")]
     public static MethodInfo? GetMethodRecursive(this Type? t, string name, BindingFlags bindingFlags, params Type[] types)
     {
         _ = Guard.NotNullOrEmpty(name);
@@ -297,6 +319,7 @@ public static class TypeExtensions
     /// <param name="t">The type to query.</param>
     /// <param name="func">The function to get results from.</param>
     /// <returns>A combined <see cref="IEnumerable{T}"/> of all results of <paramref name="func"/>.</returns>
+    [RequiresUnreferencedCode("Accesses recursively all interfaceas of parameter t.")]
     public static IEnumerable<T> QueryTypesRecursive<T>(this Type t, Func<Type, IEnumerable<T>> func)
     {
         _ = Guard.NotNull(t);
@@ -318,7 +341,7 @@ public static class TypeExtensions
         _ = Guard.NotNull(t);
         string name = t.Name;
         int index = name.IndexOf('`');
-        return index == -1 ? name : name.Substring(0, index);
+        return index == -1 ? name : name[..index];
     }
 
     /// <summary>
@@ -326,7 +349,7 @@ public static class TypeExtensions
     /// </summary>
     /// <param name="type">The type to get the default of.</param>
     /// <returns>The default value of <paramref name="type"/>.</returns>
-    public static object? GetDefault(this Type type)
+    public static object? GetDefault([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] this Type type)
     {
         _ = Guard.NotNull(type);
         if (type.IsValueType)
@@ -422,7 +445,7 @@ public static class TypeExtensions
     /// </summary>
     /// <param name="type">The type from which to get the flattened type hierarchy.</param>
     /// <returns>An enumerable that iterates through the flattened type hierarchy.</returns>
-    public static IEnumerable<Type> FlattenHierarchy(this Type? type)
+    public static IEnumerable<Type> FlattenHierarchy([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)] this Type? type)
     {
         if (type == null)
         {
@@ -441,7 +464,12 @@ public static class TypeExtensions
         }
     }
 
-    private static bool HasCastDefined(this Type from, Type to, bool implicitly)
+    private static bool HasCastDefined(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)]
+        this Type from,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)]
+        Type to,
+        bool implicitly)
     {
         _ = Guard.NotNull(from);
         _ = Guard.NotNull(to);
@@ -474,7 +502,13 @@ public static class TypeExtensions
             || IsCastDefined(from, _ => to, m => m.ReturnType, implicitly, true);
     }
 
-    private static bool IsCastDefined(IReflect type, Func<MethodInfo, Type> baseType, Func<MethodInfo, Type> derivedType, bool implicitly, bool lookInBase)
+    private static bool IsCastDefined(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)]
+        IReflect type,
+        Func<MethodInfo, Type> baseType,
+        Func<MethodInfo, Type> derivedType,
+        bool implicitly,
+        bool lookInBase)
     {
         _ = Guard.NotNull(type);
         _ = Guard.NotNull(baseType);

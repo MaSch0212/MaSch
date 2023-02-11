@@ -30,7 +30,7 @@ public static class EnumerationExtensions
     /// <returns>Combined values of enum <typeparamref name="T"/> using the bitwise or operator.</returns>
     [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:Field names should not use Hungarian notation", Justification = "false positive.")]
     [SuppressMessage("Minor Code Smell", "S3247:Duplicate casts should not be made", Justification = "false positive.")]
-    public static T BitwiseOr<T>(this T a, T b)
+    public static T BitwiseOr<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this T a, T b)
         where T : struct, Enum, IConvertible
     {
         var valueField = typeof(T).GetField("value__", BindingFlags.Public | BindingFlags.Instance)
@@ -61,7 +61,7 @@ public static class EnumerationExtensions
     /// <returns>Combined values of enum <typeparamref name="T"/> using the bitwise and operator.</returns>
     [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:Field names should not use Hungarian notation", Justification = "false positive.")]
     [SuppressMessage("Minor Code Smell", "S3247:Duplicate casts should not be made", Justification = "false positive.")]
-    public static T BitwiseAnd<T>(this T a, T b)
+    public static T BitwiseAnd<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(this T a, T b)
         where T : struct, Enum, IConvertible
     {
         var valueField = typeof(T).GetField("value__", BindingFlags.Public | BindingFlags.Instance)

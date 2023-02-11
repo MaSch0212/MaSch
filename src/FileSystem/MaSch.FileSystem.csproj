@@ -4,10 +4,11 @@
     <!-- General Project info -->
     <TargetFrameworks>$(TfmsNetCoreApp);$(TfmsNetFramework);$(TfmsNetStandard)</TargetFrameworks>
     <EnableMaSchGenerators>true</EnableMaSchGenerators>
+    <IsTrimmable>true</IsTrimmable>
 
     <!-- Package Info -->
     <Description>Contains an abstraction layer for the file system to easily test .NET applications.</Description>
-    <Version>0.1.1</Version>
+    <Version>0.1.2</Version>
     <PackageTags>masch file directory filesystem path</PackageTags>
   </PropertyGroup>
 

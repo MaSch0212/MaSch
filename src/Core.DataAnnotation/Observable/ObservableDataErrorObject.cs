@@ -9,6 +9,7 @@ namespace MaSch.Core.Observable;
 /// </summary>
 /// <seealso cref="ObservableObject" />
 /// <seealso cref="IDataErrorObject" />
+[RequiresUnreferencedCode("Uses DataErrorHandler.")]
 public class ObservableDataErrorObject : ObservableObject, IDataErrorObject
 {
     private readonly DataErrorHandler _dataErrorHandler;

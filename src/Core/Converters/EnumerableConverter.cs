@@ -29,7 +29,12 @@ public class EnumerableConverter : IObjectConverter
     }
 
     /// <inheritdoc />
-    public bool CanConvert(Type? sourceType, Type targetType, IObjectConvertManager convertManager)
+    public bool CanConvert(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type? sourceType,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type targetType,
+        IObjectConvertManager convertManager)
     {
         if (targetType.IsInterface)
             return InterfaceToClassMap.ContainsKey(targetType.IsGenericType ? targetType.GetGenericTypeDefinition() : targetType);
@@ -55,14 +60,21 @@ public class EnumerableConverter : IObjectConverter
     }
 
     /// <inheritdoc />
-    public object? Convert(object? obj, Type? sourceType, Type targetType, IObjectConvertManager convertManager, IFormatProvider formatProvider)
+    [RequiresUnreferencedCode("Does a bunch of things like creating array types.")]
+    [SuppressMessage("Trimming", "IL2046:'RequiresUnreferencedCodeAttribute' annotations must match across all interface implementations or overrides.", Justification = "It is what it is.")]
+    public object? Convert(
+        object? obj,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type? sourceType,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type targetType,
+        IObjectConvertManager convertManager,
+        IFormatProvider formatProvider)
     {
-        var originalSourceType = sourceType;
-
         var exceptions = new List<Exception>();
         try
         {
-            if (obj is IEnumerable e && ConvertImpl(e, out var res))
+            if (obj is IEnumerable e && ConvertImpl(sourceType, targetType, convertManager, formatProvider, e, out var res))
                 return res;
         }
         catch (Exception ex)
@@ -72,11 +84,11 @@ public class EnumerableConverter : IObjectConverter
 
         try
         {
-            sourceType = (obj?.GetType() ?? sourceType)?.MakeArrayType();
+            var arraySourceType = (obj?.GetType() ?? sourceType)?.MakeArrayType();
             IEnumerable e;
-            if (sourceType != null)
+            if (arraySourceType != null)
             {
-                Array arr = (Array)Activator.CreateInstance(sourceType, new object[] { 1 })!;
+                Array arr = (Array)Activator.CreateInstance(arraySourceType, new object[] { 1 })!;
                 arr.SetValue(obj, 0);
                 e = arr;
             }
@@ -85,7 +97,7 @@ public class EnumerableConverter : IObjectConverter
                 e = new[] { obj };
             }
 
-            if (ConvertImpl(e, out var res))
+            if (ConvertImpl(arraySourceType, targetType, convertManager, formatProvider, e, out var res))
                 return res;
         }
         catch (Exception ex)
@@ -93,9 +105,9 @@ public class EnumerableConverter : IObjectConverter
             exceptions.Add(ex);
         }
 
-        throw new AggregateException($"Could not convert \"{originalSourceType?.FullName ?? "(null)"}\" to \"{targetType.FullName}\".", exceptions);
+        throw new AggregateException($"Could not convert \"{sourceType?.FullName ?? "(null)"}\" to \"{targetType.FullName}\".", exceptions);
 
-        bool ConvertImpl(IEnumerable obj, out object? r)
+        static bool ConvertImpl(Type? sourceType, Type targetType, IObjectConvertManager convertManager, IFormatProvider formatProvider, IEnumerable obj, out object? r)
         {
             var actualSourceType = obj?.GetType() ?? sourceType;
             if (actualSourceType?.IsCastableTo(targetType) == true)
@@ -195,7 +207,11 @@ public class EnumerableConverter : IObjectConverter
     }
 
     /// <inheritdoc />
-    public int GetPriority(Type? sourceType, Type targetType)
+    public int GetPriority(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type? sourceType,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type targetType)
     {
         return _priority;
     }

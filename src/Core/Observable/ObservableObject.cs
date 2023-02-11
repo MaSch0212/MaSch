@@ -17,6 +17,7 @@ public abstract class ObservableObject : IObservableObject
     /// <summary>
     /// Initializes a new instance of the <see cref="ObservableObject"/> class.
     /// </summary>
+    [RequiresUnreferencedCode("Scans for all NotifyPropertyChangedAttributes and accesses the getter and setter methods of these properties.")]
     protected ObservableObject()
     {
         _module = new ObservableObjectModule(this);

@@ -3,12 +3,16 @@
 /// <summary>
 /// Provides helper methods for Service Location.
 /// </summary>
+[RequiresUnreferencedCode("If trimming is enabled, this might not automatically find the service locator from CommonServiceLocator library.")]
 public static class ServiceLocatorHelper
 {
     private static bool _serviceLocatorLoaded;
-    private static object? _currentServiceLocator;
+    private static IServiceProvider? _currentServiceLocator;
 
-    private static object? CurrentServiceLocator
+    /// <summary>
+    /// Gets or sets the current service locator.
+    /// </summary>
+    public static IServiceProvider? CurrentServiceLocator
     {
         get
         {
@@ -20,7 +24,7 @@ public static class ServiceLocatorHelper
                     var assembly = Assembly.Load("CommonServiceLocator");
                     var serviceLocatorType = assembly.GetType("CommonServiceLocator.ServiceLocator", true, true) ?? throw new Exception("ServiceLocator type not found.");
                     _currentServiceLocator =
-                        serviceLocatorType.GetProperty("Current", BindingFlags.Static | BindingFlags.Public)?.GetValue(null);
+                        (IServiceProvider?)serviceLocatorType.GetProperty("Current", BindingFlags.Static | BindingFlags.Public)?.GetValue(null);
                 }
                 catch (Exception)
                 {
@@ -29,7 +33,7 @@ public static class ServiceLocatorHelper
                         var assembly = Assembly.Load("Microsoft.Practices.ServiceLocation");
                         var serviceLocatorType = assembly.GetType("Microsoft.Practices.ServiceLocation.ServiceLocator", true, true) ?? throw new Exception("ServiceLocator type not found.");
                         _currentServiceLocator =
-                            serviceLocatorType.GetProperty("Current", BindingFlags.Static | BindingFlags.Public)?.GetValue(null);
+                            (IServiceProvider?)serviceLocatorType.GetProperty("Current", BindingFlags.Static | BindingFlags.Public)?.GetValue(null);
                     }
                     catch (Exception)
                     {
@@ -40,6 +44,10 @@ public static class ServiceLocatorHelper
 
             return _currentServiceLocator;
         }
+        set
+        {
+            _currentServiceLocator = value;
+        }
     }
 
     /// <summary>
@@ -47,14 +55,12 @@ public static class ServiceLocatorHelper
     /// </summary>
     /// <typeparam name="T">The type of the instance to retrieve.</typeparam>
     /// <returns>An instance of <typeparamref name="T"/> that is provided by the current service locator.</returns>
-    [SuppressMessage("ReflectionAnalyzers.SystemReflection", "REFL009:The referenced member is not known to exist.", Justification = "Actual type is unknown")]
     public static T? GetInstance<T>()
     {
-        if (CurrentServiceLocator == null)
+        var serviceLocator = CurrentServiceLocator;
+        if (serviceLocator == null)
             return ServiceContext.Instance.TryGetService<T>();
-        var method = CurrentServiceLocator.GetType().GetMethod("GetInstance", Type.EmptyTypes) ?? throw new InvalidOperationException("GetInstance method not found in ServiceLocator.");
-        var genericMethod = method.MakeGenericMethod(typeof(T));
-        return (T?)genericMethod.Invoke(CurrentServiceLocator, null);
+        return (T?)serviceLocator.GetService(typeof(T));
     }
 
     /// <summary>
@@ -63,13 +69,14 @@ public static class ServiceLocatorHelper
     /// <typeparam name="T">The type of the instance to retrieve.</typeparam>
     /// <param name="key">The key of the instance to get.</param>
     /// <returns>An instance of <typeparamref name="T"/> with the specified <paramref name="key"/> that is provided by the current service locator.</returns>
-    [SuppressMessage("ReflectionAnalyzers.SystemReflection", "REFL009:The referenced member is not known to exist.", Justification = "Actual type is unknown")]
+    [SuppressMessage("ReflectionAnalyzers.SystemReflection", "REFL003:The member does not exist", Justification = "It has if it is from the ServiceLocator library.")]
     public static T? GetInstance<T>(string key)
     {
-        if (CurrentServiceLocator == null)
-            return ServiceContext.Instance.TryGetService<T>();
-        var method = CurrentServiceLocator.GetType().GetMethod("GetInstance", new[] { typeof(string) }) ?? throw new InvalidOperationException("GetInstance method not found in ServiceLocator.");
+        var serviceLocator = CurrentServiceLocator;
+        if (serviceLocator == null)
+            return ServiceContext.Instance.TryGetService<T>(key);
+        var method = serviceLocator.GetType().GetMethod("GetInstance", new[] { typeof(string) }) ?? throw new InvalidOperationException("GetInstance method not found in ServiceLocator.");
         var genericMethod = method.MakeGenericMethod(typeof(T));
-        return (T?)genericMethod.Invoke(CurrentServiceLocator, new object[] { key });
+        return (T?)genericMethod.Invoke(serviceLocator, new object[] { key });
     }
 }

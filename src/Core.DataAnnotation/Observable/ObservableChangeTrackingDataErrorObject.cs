@@ -9,6 +9,7 @@ namespace MaSch.Core.Observable;
 /// </summary>
 /// <seealso cref="ObservableDataErrorObject" />
 /// <seealso cref="IChangeTrackedObject" />
+[RequiresUnreferencedCode("Uses DataErrorHandler.")]
 public class ObservableChangeTrackingDataErrorObject : ObservableDataErrorObject, IChangeTrackedObject
 {
     /// <summary>

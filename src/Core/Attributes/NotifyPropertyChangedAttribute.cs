@@ -37,6 +37,7 @@ public class NotifyPropertyChangedAttribute : Attribute
     /// <param name="classObject">The object on which to initialize the <see cref="NotifyParentPropertyAttribute"/>s to.</param>
     /// <param name="reinitialize">Determines wether the attributes should do the initialization even if they already are initialized.</param>
     /// <returns>Returns a dictionary that contains the <see cref="NotifyParentPropertyAttribute"/> of all properties.</returns>
+    [RequiresUnreferencedCode("Calls Initialize.")]
     public static Dictionary<string, NotifyPropertyChangedAttribute> InitializeAll(object classObject, bool reinitialize = false)
     {
         _ = Guard.NotNull(classObject);
@@ -81,6 +82,7 @@ public class NotifyPropertyChangedAttribute : Attribute
     /// The method could not be found in the class.
     /// </exception>
     [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "Member name is given into this attribute.")]
+    [RequiresUnreferencedCode("Accesses public and non-public methods on the declaring type of parameter property.")]
     public void Initialize(PropertyInfo property, bool reinitialize = false)
     {
         _ = Guard.NotNull(property);
@@ -154,7 +156,7 @@ public class NotifyPropertyChangedAttribute : Attribute
     }
 
     [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "Just scanning for all properties that use this attribute.")]
-    private static Dictionary<PropertyInfo, NotifyPropertyChangedAttribute> GetAttributes(Type classType)
+    private static Dictionary<PropertyInfo, NotifyPropertyChangedAttribute> GetAttributes([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.NonPublicProperties)] Type classType)
     {
         Dictionary<PropertyInfo, NotifyPropertyChangedAttribute> result;
         if (AttributeCache.ContainsKey(classType))

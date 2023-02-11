@@ -3,7 +3,7 @@
 /// <summary>
 /// Provides functionalities to manage services in an application.
 /// </summary>
-public interface IServiceContext : IDisposable
+public interface IServiceContext : IServiceProvider, IDisposable
 {
     /// <summary>
     /// Occurs before a service changes.

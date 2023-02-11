@@ -35,7 +35,10 @@ public abstract class CliCommandMemberInfo : ICliCommandMemberInfo
     public string PropertyName => Property.Name;
 
     /// <inheritdoc/>
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+#pragma warning disable IL2073 // Target method return value does not satisfy 'DynamicallyAccessedMembersAttribute' requirements. The return value of the source method does not have matching annotations.
     public Type PropertyType => Property.PropertyType;
+#pragma warning restore IL2073 // Target method return value does not satisfy 'DynamicallyAccessedMembersAttribute' requirements. The return value of the source method does not have matching annotations.
 
     /// <inheritdoc/>
     public abstract bool IsRequired { get; }
@@ -98,7 +101,9 @@ public abstract class CliCommandMemberInfo : ICliCommandMemberInfo
 
         try
         {
+#pragma warning disable IL2072 // Target parameter argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method. The return value of the source method does not have matching annotations.
             Property.SetValue(options, value.ConvertTo(Property.PropertyType, CultureInfo.InvariantCulture));
+#pragma warning restore IL2072 // Target parameter argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method. The return value of the source method does not have matching annotations.
         }
         catch (InvalidCastException ex)
         {

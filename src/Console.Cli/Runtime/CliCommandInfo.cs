@@ -3,6 +3,7 @@ using MaSch.Console.Cli.Internal;
 using MaSch.Console.Cli.Runtime.Executors;
 using MaSch.Core;
 using MaSch.Core.Extensions;
+using static MaSch.Console.Cli.Globals;
 
 namespace MaSch.Console.Cli.Runtime;
 
@@ -17,7 +18,7 @@ public class CliCommandInfo : ICliCommandInfo
     private readonly ICliCommandExecutor? _executor;
     private readonly Cache _cache = new();
 
-    internal CliCommandInfo(Type commandType, Type? executorType, object? optionsInstance, object? executorFunc, object? executorInstance)
+    internal CliCommandInfo([DynamicallyAccessedMembers(CommandTypeDAMT)] Type commandType, [DynamicallyAccessedMembers(ExecutorTypeDAMT)] Type? executorType, object? optionsInstance, object? executorFunc, object? executorInstance)
     {
         CommandType = Guard.NotNull(commandType);
         OptionsInstance = Guard.OfType(optionsInstance, commandType, allowNull: true);
@@ -43,6 +44,7 @@ public class CliCommandInfo : ICliCommandInfo
             _executor = new DirectExecutor(commandType);
 
         var extensionStorage = new ObjectExtensionDataStorage();
+#pragma warning disable IL2070 // 'this' argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method. The parameter of method does not have matching annotations.
         var members = from t in commandType.FlattenHierarchy()
                       from p in t.GetTypeInfo().GetProperties(BindingFlags.Public | BindingFlags.Instance)
                       from a in p.GetCustomAttributes()
@@ -56,6 +58,7 @@ public class CliCommandInfo : ICliCommandInfo
                           _ => throw new Exception("Impossible Exception"),
                       }
                       select m;
+#pragma warning restore IL2070 // 'this' argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method. The parameter of method does not have matching annotations.
         foreach (var member in members)
         {
             if (member is ICliCommandOptionInfo option)
@@ -69,6 +72,7 @@ public class CliCommandInfo : ICliCommandInfo
     public CliCommandAttribute Attribute { get; }
 
     /// <inheritdoc/>
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
     public Type CommandType { get; }
 
     /// <inheritdoc/>
@@ -157,7 +161,7 @@ public class CliCommandInfo : ICliCommandInfo
             cc.ParentCommand = null;
     }
 
-    private static CliParserOptions GetParserOptions(Type type)
+    private static CliParserOptions GetParserOptions([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)] Type type)
     {
         var result = new CliParserOptions();
         var attributes = from t in type.FlattenHierarchy()

@@ -24,7 +24,11 @@ public class ObjectConvertManager : IObjectConvertManager
     internal IReadOnlyCollection<IObjectConverter> ObjectConverters => _objectConverters.AsReadOnly();
 
     /// <inheritdoc/>
-    public virtual bool CanConvert(Type? sourceType, Type targetType)
+    public virtual bool CanConvert(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type? sourceType,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type targetType)
     {
         return (from c in _objectConverters
                 where c.CanConvert(sourceType, targetType, this)
@@ -32,7 +36,13 @@ public class ObjectConvertManager : IObjectConvertManager
     }
 
     /// <inheritdoc/>
-    public virtual object? Convert(object? objectToConvert, Type? sourceType, Type targetType, IFormatProvider formatProvider)
+    public virtual object? Convert(
+        object? objectToConvert,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type? sourceType,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type targetType,
+        IFormatProvider formatProvider)
     {
         _ = Guard.NotNull(targetType);
         _ = Guard.NotNull(formatProvider);
@@ -47,6 +57,7 @@ public class ObjectConvertManager : IObjectConvertManager
                 throw new ArgumentException($"The object is not an instance of the sourceType \"{sourceType.FullName}\".");
         }
 
+#pragma warning disable IL2072 // Target parameter argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method. The return value of the source method does not have matching annotations.
         var converters = from c in _objectConverters
                          let canConvertType = CanConvertWithConverter(c, sourceType, targetType)
                          let canConvertNull = !canConvertType && objectToConvert == null && sourceType != null && CanConvertWithConverter(c, null, targetType)
@@ -54,6 +65,7 @@ public class ObjectConvertManager : IObjectConvertManager
                          let type = canConvertType ? sourceType : null
                          orderby GetPriorityForConverter(c, type, targetType) descending
                          select (Converter: c, Type: type);
+#pragma warning restore IL2072 // Target parameter argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method. The return value of the source method does not have matching annotations.
 
         var errors = new List<string>();
         foreach (var (converter, type) in converters)
@@ -81,7 +93,12 @@ public class ObjectConvertManager : IObjectConvertManager
         _objectConverters.Add(converter);
     }
 
-    private static int GetPriorityForConverter(IObjectConverter converter, Type? sourceType, Type targetType)
+    private static int GetPriorityForConverter(
+        IObjectConverter converter,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type? sourceType,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type targetType)
     {
         try
         {
@@ -93,7 +110,12 @@ public class ObjectConvertManager : IObjectConvertManager
         }
     }
 
-    private bool CanConvertWithConverter(IObjectConverter converter, Type? sourceType, Type targetType)
+    private bool CanConvertWithConverter(
+        IObjectConverter converter,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type? sourceType,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type targetType)
     {
         try
         {

@@ -66,6 +66,12 @@ public sealed partial class ServiceContext : IServiceContext
     }
 
     /// <inheritdoc/>
+    object? IServiceProvider.GetService(Type serviceType)
+    {
+        return ((IServiceContext)this).GetService(serviceType, null);
+    }
+
+    /// <inheritdoc/>
     /// <exception cref="KeyNotFoundException">A service of type <paramref name="serviceType"/> and name <paramref name="name"/> was not found in this <see cref="IServiceContext"/>.</exception>
     object IServiceContext.GetService(Type serviceType, string? name)
     {

@@ -16,7 +16,7 @@ public static class ObjectConvertManagerExtensions
     /// <returns>
     ///   <c>true</c> if the source type can be converted to the target type; otherwise, <c>false</c>.
     /// </returns>
-    public static bool CanConvert<TSource, TTarget>(this IObjectConvertManager manager)
+    public static bool CanConvert<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TSource, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TTarget>(this IObjectConvertManager manager)
     {
         return manager.CanConvert(typeof(TSource), typeof(TTarget));
     }
@@ -29,7 +29,7 @@ public static class ObjectConvertManagerExtensions
     /// <param name="manager">The manager to use.</param>
     /// <param name="objectToConvert">The object to convert.</param>
     /// <returns>An instance of the target type representing the object that was given to convert.</returns>
-    public static TTarget? Convert<TSource, TTarget>(this IObjectConvertManager manager, TSource objectToConvert)
+    public static TTarget? Convert<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TSource, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TTarget>(this IObjectConvertManager manager, TSource objectToConvert)
     {
         return (TTarget?)manager.Convert(objectToConvert, typeof(TSource), typeof(TTarget), CultureInfo.CurrentCulture);
     }
@@ -43,7 +43,7 @@ public static class ObjectConvertManagerExtensions
     /// <param name="objectToConvert">The object to convert.</param>
     /// <param name="formatProvider">A provider that is used for formatting.</param>
     /// <returns>An instance of the target type representing the object that was given to convert.</returns>
-    public static TTarget? Convert<TSource, TTarget>(this IObjectConvertManager manager, TSource objectToConvert, IFormatProvider formatProvider)
+    public static TTarget? Convert<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TSource, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TTarget>(this IObjectConvertManager manager, TSource objectToConvert, IFormatProvider formatProvider)
     {
         return (TTarget?)manager.Convert(objectToConvert, typeof(TSource), typeof(TTarget), formatProvider);
     }
@@ -55,7 +55,7 @@ public static class ObjectConvertManagerExtensions
     /// <param name="manager">The manager to use.</param>
     /// <param name="objectToConvert">The object to convert.</param>
     /// <returns>An instance of the target type representing the object that was given to convert.</returns>
-    public static TTarget? Convert<TTarget>(this IObjectConvertManager manager, object? objectToConvert)
+    public static TTarget? Convert<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TTarget>(this IObjectConvertManager manager, object? objectToConvert)
     {
         return (TTarget?)manager.Convert(objectToConvert, objectToConvert?.GetType(), typeof(TTarget), CultureInfo.CurrentCulture);
     }
@@ -68,7 +68,7 @@ public static class ObjectConvertManagerExtensions
     /// <param name="objectToConvert">The object to convert.</param>
     /// <param name="formatProvider">A provider that is used for formatting.</param>
     /// <returns>An instance of the target type representing the object that was given to convert.</returns>
-    public static TTarget? Convert<TTarget>(this IObjectConvertManager manager, object? objectToConvert, IFormatProvider formatProvider)
+    public static TTarget? Convert<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TTarget>(this IObjectConvertManager manager, object? objectToConvert, IFormatProvider formatProvider)
     {
         return (TTarget?)manager.Convert(objectToConvert, objectToConvert?.GetType(), typeof(TTarget), formatProvider);
     }
@@ -80,7 +80,7 @@ public static class ObjectConvertManagerExtensions
     /// <param name="objectToConvert">The object to convert.</param>
     /// <param name="targetType">The desired target type.</param>
     /// <returns>An instance of the target type representing the object that was given to convert.</returns>
-    public static object? Convert(this IObjectConvertManager manager, object? objectToConvert, Type targetType)
+    public static object? Convert(this IObjectConvertManager manager, object? objectToConvert, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type targetType)
     {
         return manager.Convert(objectToConvert, objectToConvert?.GetType(), targetType, CultureInfo.CurrentCulture);
     }
@@ -93,7 +93,7 @@ public static class ObjectConvertManagerExtensions
     /// <param name="targetType">The desired target type.</param>
     /// <param name="formatProvider">A provider that is used for formatting.</param>
     /// <returns>An instance of the target type representing the object that was given to convert.</returns>
-    public static object? Convert(this IObjectConvertManager manager, object? objectToConvert, Type targetType, IFormatProvider formatProvider)
+    public static object? Convert(this IObjectConvertManager manager, object? objectToConvert, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type targetType, IFormatProvider formatProvider)
     {
         return manager.Convert(objectToConvert, objectToConvert?.GetType(), targetType, formatProvider);
     }
@@ -107,7 +107,7 @@ public static class ObjectConvertManagerExtensions
     /// <param name="objectToConvert">The object to convert.</param>
     /// <param name="convertedObject">An instance of the target type representing the object that was given to convert.</param>
     /// <returns><c>true</c> if the object could be converted; otherwise, <c>false</c>.</returns>
-    public static bool TryConvert<TSource, TTarget>(this IObjectConvertManager manager, TSource objectToConvert, out TTarget? convertedObject)
+    public static bool TryConvert<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TSource, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TTarget>(this IObjectConvertManager manager, TSource objectToConvert, out TTarget? convertedObject)
     {
         return TryConvert(manager, objectToConvert, typeof(TSource), typeof(TTarget), CultureInfo.CurrentCulture, out convertedObject);
     }
@@ -122,7 +122,7 @@ public static class ObjectConvertManagerExtensions
     /// <param name="formatProvider">A provider that is used for formatting.</param>
     /// <param name="convertedObject">An instance of the target type representing the object that was given to convert.</param>
     /// <returns><c>true</c> if the object could be converted; otherwise, <c>false</c>.</returns>
-    public static bool TryConvert<TSource, TTarget>(this IObjectConvertManager manager, TSource objectToConvert, IFormatProvider formatProvider, out TTarget? convertedObject)
+    public static bool TryConvert<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TSource, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TTarget>(this IObjectConvertManager manager, TSource objectToConvert, IFormatProvider formatProvider, out TTarget? convertedObject)
     {
         return TryConvert(manager, objectToConvert, typeof(TSource), typeof(TTarget), formatProvider, out convertedObject);
     }
@@ -135,7 +135,7 @@ public static class ObjectConvertManagerExtensions
     /// <param name="objectToConvert">The object to convert.</param>
     /// <param name="convertedObject">An instance of the target type representing the object that was given to convert.</param>
     /// <returns><c>true</c> if the object could be converted; otherwise, <c>false</c>.</returns>
-    public static bool TryConvert<TTarget>(this IObjectConvertManager manager, object? objectToConvert, out TTarget? convertedObject)
+    public static bool TryConvert<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TTarget>(this IObjectConvertManager manager, object? objectToConvert, out TTarget? convertedObject)
     {
         return TryConvert(manager, objectToConvert, objectToConvert?.GetType(), typeof(TTarget), CultureInfo.CurrentCulture, out convertedObject);
     }
@@ -149,7 +149,7 @@ public static class ObjectConvertManagerExtensions
     /// <param name="formatProvider">A provider that is used for formatting.</param>
     /// <param name="convertedObject">An instance of the target type representing the object that was given to convert.</param>
     /// <returns><c>true</c> if the object could be converted; otherwise, <c>false</c>.</returns>
-    public static bool TryConvert<TTarget>(this IObjectConvertManager manager, object? objectToConvert, IFormatProvider formatProvider, out TTarget? convertedObject)
+    public static bool TryConvert<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TTarget>(this IObjectConvertManager manager, object? objectToConvert, IFormatProvider formatProvider, out TTarget? convertedObject)
     {
         return TryConvert(manager, objectToConvert, objectToConvert?.GetType(), typeof(TTarget), formatProvider, out convertedObject);
     }
@@ -162,7 +162,7 @@ public static class ObjectConvertManagerExtensions
     /// <param name="targetType">The desired target type.</param>
     /// <param name="convertedObject">An instance of the target type representing the object that was given to convert.</param>
     /// <returns><c>true</c> if the object could be converted; otherwise, <c>false</c>.</returns>
-    public static bool TryConvert(this IObjectConvertManager manager, object? objectToConvert, Type targetType, out object? convertedObject)
+    public static bool TryConvert(this IObjectConvertManager manager, object? objectToConvert, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type targetType, out object? convertedObject)
     {
         return TryConvert(manager, objectToConvert, objectToConvert?.GetType(), targetType, CultureInfo.CurrentCulture, out convertedObject);
     }
@@ -176,7 +176,7 @@ public static class ObjectConvertManagerExtensions
     /// <param name="formatProvider">A provider that is used for formatting.</param>
     /// <param name="convertedObject">An instance of the target type representing the object that was given to convert.</param>
     /// <returns><c>true</c> if the object could be converted; otherwise, <c>false</c>.</returns>
-    public static bool TryConvert(this IObjectConvertManager manager, object? objectToConvert, Type targetType, IFormatProvider formatProvider, out object? convertedObject)
+    public static bool TryConvert(this IObjectConvertManager manager, object? objectToConvert, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type targetType, IFormatProvider formatProvider, out object? convertedObject)
     {
         return TryConvert(manager, objectToConvert, objectToConvert?.GetType(), targetType, formatProvider, out convertedObject);
     }
@@ -231,7 +231,7 @@ public static class ObjectConvertManagerExtensions
         manager.RegisterConverter(new DelegateObjectConverter<TSource, TTarget>(converterFunction, priority));
     }
 
-    private static bool TryConvert<T>(IObjectConvertManager manager, object? objectToConvert, Type? sourceType, Type targetType, IFormatProvider formatProvider, out T? convertedObject)
+    private static bool TryConvert<T>(IObjectConvertManager manager, object? objectToConvert, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type? sourceType, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type targetType, IFormatProvider formatProvider, out T? convertedObject)
     {
         if (manager.CanConvert(sourceType, targetType))
         {

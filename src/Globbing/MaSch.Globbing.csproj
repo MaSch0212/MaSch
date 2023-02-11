@@ -4,10 +4,11 @@
     <!-- General Project info -->
     <TargetFrameworks>$(TfmsNetCoreApp);$(TfmsNetFramework);$(TfmsNetStandard)</TargetFrameworks>
     <EnableMaSchGenerators>true</EnableMaSchGenerators>
+    <IsTrimmable>true</IsTrimmable>
 
     <!-- Package Info -->
     <Description>Contains extensions for the DotNet.Glob package.</Description>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <PackageTags>masch glob globbing</PackageTags>
   </PropertyGroup>
 

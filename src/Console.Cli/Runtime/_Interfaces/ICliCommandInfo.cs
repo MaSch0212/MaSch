@@ -15,6 +15,7 @@ public interface ICliCommandInfo : ICliValidator<object>
     /// <summary>
     /// Gets the command type.
     /// </summary>
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
     Type CommandType { get; }
 
     /// <summary>

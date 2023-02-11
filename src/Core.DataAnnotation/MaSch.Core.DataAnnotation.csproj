@@ -4,15 +4,17 @@
     <!-- General Project info -->
     <RootNamespace>MaSch.Core</RootNamespace>
     <TargetFrameworks>$(TfmsNetCoreApp);$(TfmsNetFramework);$(TfmsNetStandard)</TargetFrameworks>
+    <IsTrimmable>true</IsTrimmable>
 
     <!-- Package Info -->
     <Description>Contains common supporting code for .NET applications.</Description>
-    <Version>0.1.7</Version>
+    <Version>0.1.8</Version>
     <PackageTags>masch core common dataannotation annotation observable</PackageTags>
   </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations" />
+    <PackageReference Include="PolySharp" />
   </ItemGroup>
 
   <ItemGroup>

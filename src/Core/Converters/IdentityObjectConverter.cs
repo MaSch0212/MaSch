@@ -17,19 +17,35 @@ public class IdentityObjectConverter : IObjectConverter
     }
 
     /// <inheritdoc />
-    public int GetPriority(Type? sourceType, Type targetType)
+    public int GetPriority(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type? sourceType,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type targetType)
     {
         return _priority;
     }
 
     /// <inheritdoc />
-    public bool CanConvert(Type? sourceType, Type targetType, IObjectConvertManager convertManager)
+    public bool CanConvert(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type? sourceType,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type targetType,
+        IObjectConvertManager convertManager)
     {
         return sourceType == targetType || targetType == typeof(object);
     }
 
     /// <inheritdoc />
-    public object? Convert(object? obj, Type? sourceType, Type targetType, IObjectConvertManager convertManager, IFormatProvider formatProvider)
+    public object? Convert(
+        object? obj,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type? sourceType,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        Type targetType,
+        IObjectConvertManager convertManager,
+        IFormatProvider formatProvider)
     {
         return obj;
     }
